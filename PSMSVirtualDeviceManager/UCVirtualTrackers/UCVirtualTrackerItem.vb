@@ -8,6 +8,7 @@ Public Class UCVirtualTrackerItem
     Private g_mMessageLabel As Label
 
     Private g_mClassCaptureLogic As ClassCaptureLogic
+    Private g_iPreviousTrackerIdSelectedIndex As Integer = -1
 
     Public g_bIgnoreEvents As Boolean = False
 
@@ -161,7 +162,22 @@ Public Class UCVirtualTrackerItem
             Next
         End If
 
+        If (iSelectedTrackerId > -1 AndAlso g_iPreviousTrackerIdSelectedIndex > 0 AndAlso ComboBox_DeviceTrackerId.SelectedIndex <> g_iPreviousTrackerIdSelectedIndex) Then
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("You are about to change the tracker id associated with this video input device.")
+            sMessage.AppendLine("PSMoveService saves its virtual tracker settings using their tracker id and you will lose all settings configured for this device if you change the tracker id!")
+            sMessage.AppendLine("You will have to re-configure this virtual tracker in PSMoveService again. (e.g. distortion calibration, color calibration etc.)")
+            sMessage.AppendLine()
+            sMessage.AppendLine("Click OK to continue or CANCEL to abort.")
+
+            If (MessageBox.Show(sMessage.ToString, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                ComboBox_DeviceTrackerId.SelectedIndex = g_iPreviousTrackerIdSelectedIndex
+                Return
+            End If
+        End If
+
         g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId
+        g_iPreviousTrackerIdSelectedIndex = ComboBox_DeviceTrackerId.SelectedIndex
     End Sub
 
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
