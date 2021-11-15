@@ -60,10 +60,10 @@ Partial Class UCVirtualTrackerItem
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox_CaptureImage.BackColor = System.Drawing.Color.Black
         Me.PictureBox_CaptureImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(504, 29)
+        Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(504, 52)
         Me.PictureBox_CaptureImage.Margin = New System.Windows.Forms.Padding(16)
         Me.PictureBox_CaptureImage.Name = "PictureBox_CaptureImage"
-        Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(280, 224)
+        Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(280, 201)
         Me.PictureBox_CaptureImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox_CaptureImage.TabIndex = 0
         Me.PictureBox_CaptureImage.TabStop = False
@@ -192,7 +192,8 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Label_FPS.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label_FPS.AutoSize = True
-        Me.Label_FPS.Location = New System.Drawing.Point(501, 11)
+        Me.Label_FPS.Location = New System.Drawing.Point(501, 30)
+        Me.Label_FPS.Margin = New System.Windows.Forms.Padding(3)
         Me.Label_FPS.Name = "Label_FPS"
         Me.Label_FPS.Size = New System.Drawing.Size(37, 13)
         Me.Label_FPS.TabIndex = 12
@@ -202,11 +203,11 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_ShowCaptureImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_ShowCaptureImage.AutoSize = True
-        Me.CheckBox_ShowCaptureImage.Location = New System.Drawing.Point(653, 11)
+        Me.CheckBox_ShowCaptureImage.Location = New System.Drawing.Point(719, 29)
         Me.CheckBox_ShowCaptureImage.Name = "CheckBox_ShowCaptureImage"
-        Me.CheckBox_ShowCaptureImage.Size = New System.Drawing.Size(131, 17)
+        Me.CheckBox_ShowCaptureImage.Size = New System.Drawing.Size(65, 17)
         Me.CheckBox_ShowCaptureImage.TabIndex = 13
-        Me.CheckBox_ShowCaptureImage.Text = "Show capture image"
+        Me.CheckBox_ShowCaptureImage.Text = "Preview"
         Me.CheckBox_ShowCaptureImage.UseVisualStyleBackColor = True
         '
         'TrackBar_DeviceGamma
