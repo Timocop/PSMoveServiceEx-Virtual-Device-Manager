@@ -90,7 +90,7 @@
                 Try
                     g_mTrackerSettings(sKey).Load()
                 Catch ex As Exception
-                    Throw New ArgumentException(String.Format("Unable to load key '{0}'", sKey))
+                    Throw New ArgumentException(String.Format("Unable to load key '{0}'", g_mTrackerSettings(sKey).m_SettingsKey))
                 End Try
             Next
 

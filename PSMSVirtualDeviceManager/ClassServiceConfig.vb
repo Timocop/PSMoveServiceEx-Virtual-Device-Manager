@@ -27,6 +27,12 @@ Public Class ClassServiceConfig
             End Get
         End Property
 
+        ReadOnly Property m_SettingsKey As String
+            Get
+                Return g_sSettingKey
+            End Get
+        End Property
+
         Property m_Value As Object
             Get
                 If (Not g_bLoaded) Then
