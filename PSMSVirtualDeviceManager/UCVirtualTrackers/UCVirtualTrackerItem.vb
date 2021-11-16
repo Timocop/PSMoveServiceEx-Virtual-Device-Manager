@@ -201,6 +201,8 @@ Public Class UCVirtualTrackerItem
     Private Sub Button_ConfigSave_Click(sender As Object, e As EventArgs) Handles Button_ConfigSave.Click
         Try
             g_mClassCaptureLogic.g_mClassConfig.SaveConfig()
+
+            MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
