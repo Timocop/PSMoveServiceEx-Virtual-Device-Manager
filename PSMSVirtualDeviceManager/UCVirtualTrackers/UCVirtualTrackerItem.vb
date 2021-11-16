@@ -793,7 +793,7 @@ Public Class UCVirtualTrackerItem
 
                             If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
                                 Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-                                mFormMain.BeginInvoke(Sub() mFormMain.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1)))
+                                mFormMain.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1))
 
                                 mFramePrint.Restart()
                                 iFPS = 0
