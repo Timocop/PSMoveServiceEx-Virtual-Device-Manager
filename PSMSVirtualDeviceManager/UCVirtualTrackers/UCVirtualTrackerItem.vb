@@ -11,6 +11,7 @@ Public Class UCVirtualTrackerItem
     Private g_iPreviousTrackerIdSelectedIndex As Integer = -1
 
     Public g_bIgnoreEvents As Boolean = False
+    Private g_bLoaded As Boolean = False
 
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
@@ -56,8 +57,23 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles g_mFormMain.Load
+        If (g_bLoaded) Then
+            Return
+        End If
+
+        g_bLoaded = True
         g_mClassCaptureLogic.StartInitThread(False)
     End Sub
+
+    Private Sub UCVirtualTrackerItem_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If (g_bLoaded) Then
+            Return
+        End If
+
+        g_bLoaded = True
+        g_mClassCaptureLogic.StartInitThread(False)
+    End Sub
+
 
     ReadOnly Property m_DevicePath As String
         Get
