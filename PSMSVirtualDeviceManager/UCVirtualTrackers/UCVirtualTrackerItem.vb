@@ -42,6 +42,15 @@ Public Class UCVirtualTrackerItem
         ' Keep the UI disabled until we are finished
         Me.Enabled = False
 
+        ComboBox_ImageInterpolation.Items.Clear()
+        ComboBox_ImageInterpolation.Items.Add("Nearest Neighbot (fastest/worest)")
+        ComboBox_ImageInterpolation.Items.Add("Bilinear (default)")
+        ComboBox_ImageInterpolation.Items.Add("Bicubic")
+        ComboBox_ImageInterpolation.Items.Add("Lanczos (slowest/best)")
+        If ([Enum].GetNames(GetType(ClassCaptureLogic.ENUM_INTERPOLATION)).Count <> ComboBox_ImageInterpolation.Items.Count) Then
+            Throw New ArgumentException("Not equal")
+        End If
+
         ' Add a "Please wait" UI message while initalizing the video input device
         g_mMessageLabel = New Label()
         g_mMessageLabel.Parent = Me
@@ -201,6 +210,22 @@ Public Class UCVirtualTrackerItem
         g_iPreviousTrackerIdSelectedIndex = ComboBox_DeviceTrackerId.SelectedIndex
     End Sub
 
+    Private Sub CheckBox_FlipHorizontal_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_FlipHorizontal.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_FlipImage = CheckBox_FlipHorizontal.Checked
+    End Sub
+
+    Private Sub ComboBox_ImageInterpolation_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ImageInterpolation.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_ImageInterpolation = CType(ComboBox_ImageInterpolation.SelectedIndex, ClassCaptureLogic.ENUM_INTERPOLATION)
+    End Sub
+
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
         Try
             Me.Enabled = False
@@ -237,6 +262,13 @@ Public Class UCVirtualTrackerItem
             g_iPipeFps = iPipeFps
         End If
 
+        If (g_iCaptureFps < 20 OrElse g_iPipeFps < 20) Then
+            Label_FPS.ForeColor = Color.Red
+        ElseIf (g_iCaptureFps < 30 OrElse g_iPipeFps < 30) Then
+            Label_FPS.ForeColor = Color.DarkOrange
+        Else
+            Label_FPS.ForeColor = Color.Black
+        End If
         Label_FPS.Text = String.Format("FPS: {0}, I/O FPS: {1}", g_iCaptureFps, g_iPipeFps)
     End Sub
 
@@ -269,6 +301,15 @@ Public Class UCVirtualTrackerItem
 
         Private g_iDeviceIndex As Integer = -1
         Private g_sDevicePath As String = ""
+        Private g_bFlipImage As Boolean = False
+
+        Enum ENUM_INTERPOLATION
+            NEARST_NEIGHBOR
+            BILINEAR
+            BICUBIC
+            LANCZOS
+        End Enum
+        Private g_iImageInterpolation As ENUM_INTERPOLATION = ENUM_INTERPOLATION.NEARST_NEIGHBOR
 
         Public g_mClassConfig As ClassConfig
 
@@ -486,6 +527,55 @@ Public Class UCVirtualTrackerItem
             End Set
         End Property
 
+        Public Property m_FlipImage As Boolean
+            Get
+                SyncLock g_mThreadLock
+                    Return g_bFlipImage
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock g_mThreadLock
+                    g_bFlipImage = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Property m_ImageInterpolation As ENUM_INTERPOLATION
+            Get
+                SyncLock g_mThreadLock
+                    Return g_iImageInterpolation
+                End SyncLock
+            End Get
+            Set(value As ENUM_INTERPOLATION)
+                If (value < ENUM_INTERPOLATION.NEARST_NEIGHBOR) Then
+                    value = ENUM_INTERPOLATION.NEARST_NEIGHBOR
+                End If
+
+                If (value > [Enum].GetNames(GetType(ENUM_INTERPOLATION)).Count - 1) Then
+                    value = ENUM_INTERPOLATION.LANCZOS
+                End If
+
+                SyncLock g_mThreadLock
+                    g_iImageInterpolation = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Function GetImageInterpolation() As OpenCvSharp.InterpolationFlags
+            Select Case (m_ImageInterpolation)
+                Case ENUM_INTERPOLATION.NEARST_NEIGHBOR
+                    Return OpenCvSharp.InterpolationFlags.Nearest
+                Case ENUM_INTERPOLATION.BILINEAR
+                    Return OpenCvSharp.InterpolationFlags.Linear
+                Case ENUM_INTERPOLATION.BICUBIC
+                    Return OpenCvSharp.InterpolationFlags.Cubic
+                Case ENUM_INTERPOLATION.LANCZOS
+                    Return OpenCvSharp.InterpolationFlags.Lanczos4
+            End Select
+
+            Return OpenCvSharp.InterpolationFlags.Nearest
+        End Function
+
         Public Function IsDeviceValid() As Boolean
             Return (GetDeviceIndexByPath() = m_DeviceIndex)
         End Function
@@ -541,9 +631,9 @@ Public Class UCVirtualTrackerItem
                     m_Capture.AutoFocus = False
                     m_Capture.WhiteBalanceBlueU = -1
                     m_Capture.WhiteBalanceRedV = -1
-
                     m_Capture.FrameHeight = 480
                     m_Capture.FrameWidth = 640
+                    m_Capture.Fps = 30 ' Probably does not work
 
                     mFormMain.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
@@ -642,7 +732,7 @@ Public Class UCVirtualTrackerItem
                     m_Capture.Gamma = iGammaDefault
                 End If
 
-                ' Probing saturation
+                ' Probing constrast
                 Dim iContrastDefault As Double = m_Capture.Contrast
                 Dim iContrastMin As Double = 0
                 Dim iContrastMax As Double = 0
@@ -748,6 +838,8 @@ Public Class UCVirtualTrackerItem
                 mFormMain.Invoke(Sub()
                                      m_ShowCaptureImage = g_mUCVirtualTrackerItem.CheckBox_ShowCaptureImage.Checked
                                      m_PipeIndex = CInt(g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedItem)
+                                     m_FlipImage = g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked
+                                     m_ImageInterpolation = CType(g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex, ENUM_INTERPOLATION)
                                  End Sub)
 
                 mFormMain.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
@@ -821,9 +913,17 @@ Public Class UCVirtualTrackerItem
 
                         ' Sometimes setting resolutions on devices wont work. (e.g. Kinect One)
                         ' We NEED to resize the image to 640x480 because our buffer is only that size!
-                        Using mNewMat = mFrame.Resize(New OpenCvSharp.Size(640, 480), 0, 0, OpenCvSharp.InterpolationFlags.Nearest)
-                            mNewMat.CopyTo(mFrame)
+                        Using mNewFrame = mFrame.Resize(New OpenCvSharp.Size(640, 480), 0, 0, GetImageInterpolation())
+                            mNewFrame.CopyTo(mFrame)
                         End Using
+
+                        ' PSEyes have their Y flipped.
+                        ' But some video input devices do Not. So flip them here instead.
+                        If (m_FlipImage) Then
+                            Using mNewMat = mFrame.Flip(OpenCvSharp.FlipMode.Y)
+                                mNewMat.CopyTo(mFrame)
+                            End Using
+                        End If
 
                         ' Copy to global frame
                         mFrame.CopyTo(m_CaptureFrame)
@@ -1000,6 +1100,8 @@ Public Class UCVirtualTrackerItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceContrast", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value)))
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "TrackerId", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FlipImageHorizontal", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked, "True", "False")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ImageInterpolation", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex)))
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
@@ -1019,6 +1121,8 @@ Public Class UCVirtualTrackerItem
                         SetTrackBarClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceContrast", "0")))
 
                         SetComboBoxClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
+                        g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "False") = "True")
+                        SetComboBoxClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
 
                         g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using
