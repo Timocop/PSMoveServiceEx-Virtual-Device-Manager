@@ -143,10 +143,10 @@ Partial Class FormMain
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip_StartPage
-        Me.MinimumSize = New System.Drawing.Size(640, 480)
+        Me.MinimumSize = New System.Drawing.Size(800, 600)
         Me.Name = "FormMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "PSMoveService - Virtual Device Manager"
+        Me.Text = "PSMoveServiceEx - Virtual Device Manager"
         Me.MenuStrip_StartPage.ResumeLayout(False)
         Me.MenuStrip_StartPage.PerformLayout()
         Me.Panel2.ResumeLayout(False)

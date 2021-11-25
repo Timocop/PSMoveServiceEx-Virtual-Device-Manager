@@ -48,10 +48,11 @@ Partial Class UCVirtualTrackerItem
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
         Me.TabPage_TrackerProperties = New System.Windows.Forms.TabPage()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.CheckBox_FlipHorizontal = New System.Windows.Forms.CheckBox()
-        Me.Label5 = New System.Windows.Forms.Label()
         Me.ComboBox_ImageInterpolation = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.CheckBox_FlipHorizontal = New System.Windows.Forms.CheckBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -322,37 +323,6 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
         Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
         '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 31)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(119, 13)
-        Me.Label2.TabIndex = 11
-        Me.Label2.Text = "Flip image horizontal:"
-        '
-        'CheckBox_FlipHorizontal
-        '
-        Me.CheckBox_FlipHorizontal.AutoSize = True
-        Me.CheckBox_FlipHorizontal.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_FlipHorizontal.Location = New System.Drawing.Point(152, 29)
-        Me.CheckBox_FlipHorizontal.Name = "CheckBox_FlipHorizontal"
-        Me.CheckBox_FlipHorizontal.Size = New System.Drawing.Size(35, 18)
-        Me.CheckBox_FlipHorizontal.TabIndex = 12
-        Me.CheckBox_FlipHorizontal.Text = " "
-        Me.CheckBox_FlipHorizontal.UseVisualStyleBackColor = True
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(6, 53)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(112, 13)
-        Me.Label5.TabIndex = 13
-        Me.Label5.Text = "Image interpolation:"
-        '
         'ComboBox_ImageInterpolation
         '
         Me.ComboBox_ImageInterpolation.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -365,11 +335,55 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(317, 21)
         Me.ComboBox_ImageInterpolation.TabIndex = 14
         '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(6, 53)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(112, 13)
+        Me.Label5.TabIndex = 13
+        Me.Label5.Text = "Image interpolation:"
+        '
+        'CheckBox_FlipHorizontal
+        '
+        Me.CheckBox_FlipHorizontal.AutoSize = True
+        Me.CheckBox_FlipHorizontal.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_FlipHorizontal.Location = New System.Drawing.Point(152, 29)
+        Me.CheckBox_FlipHorizontal.Name = "CheckBox_FlipHorizontal"
+        Me.CheckBox_FlipHorizontal.Size = New System.Drawing.Size(35, 18)
+        Me.CheckBox_FlipHorizontal.TabIndex = 12
+        Me.CheckBox_FlipHorizontal.Text = " "
+        Me.CheckBox_FlipHorizontal.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(6, 31)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(127, 13)
+        Me.Label2.TabIndex = 11
+        Me.Label2.Text = "Flip image horizontally:"
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.Location = New System.Drawing.Point(246, 258)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(117, 23)
+        Me.Button1.TabIndex = 22
+        Me.Button1.Text = "Help"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'UCVirtualTrackerItem
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.CheckBox_Autostart)
         Me.Controls.Add(Me.Button_ConfigSave)
@@ -424,4 +438,5 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Label2 As Label
     Friend WithEvents ComboBox_ImageInterpolation As ComboBox
     Friend WithEvents Label5 As Label
+    Friend WithEvents Button1 As Button
 End Class

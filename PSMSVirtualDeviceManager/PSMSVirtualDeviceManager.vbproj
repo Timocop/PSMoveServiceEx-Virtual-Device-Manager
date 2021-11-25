@@ -139,6 +139,12 @@
     <Compile Include="UCVirtualHMDs\UCVirtualHMDs.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualTrackers\FormHelp.Designer.vb">
+      <DependentUpon>FormHelp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualTrackers\FormHelp.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UCVirtualTrackers\UCVirtualTrackerItem.Designer.vb">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>
     </Compile>
@@ -168,6 +174,9 @@
     <EmbeddedResource Include="UCVirtualHMDs\UCVirtualHMDs.resx">
       <DependentUpon>UCVirtualHMDs.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualTrackers\FormHelp.resx">
+      <DependentUpon>FormHelp.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualTrackers\UCVirtualTrackerItem.resx">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>
     </EmbeddedResource>
@@ -190,6 +199,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\Exposure_Ref.png" />
+    <None Include="Resources\Exposure_Good.png" />
+    <None Include="Resources\Exposure_BadDark.png" />
+    <None Include="Resources\Exposure_BadBright.png" />
+    <None Include="Resources\YFlip_Good.png" />
+    <None Include="Resources\YFlip_Bad.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
