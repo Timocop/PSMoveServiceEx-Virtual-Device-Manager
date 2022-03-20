@@ -148,6 +148,18 @@ Public Class UCRemoteDeviceItem
         End If
     End Sub
 
+    Private Sub Button_Recenter_GotFocus(sender As Object, e As EventArgs) Handles Button_Recenter.GotFocus
+        Me.ActiveControl = Nothing
+    End Sub
+
+    Private Sub Button_SaveSettings_GotFocus(sender As Object, e As EventArgs) Handles Button_SaveSettings.GotFocus
+        Me.ActiveControl = Nothing
+    End Sub
+
+    Private Sub ComboBox_ControllerID_GotFocus(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.GotFocus
+        Me.ActiveControl = Nothing
+    End Sub
+
     Public Class ClassIO
         Implements IDisposable
 

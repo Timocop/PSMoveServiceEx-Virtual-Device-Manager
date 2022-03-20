@@ -46,7 +46,6 @@ Partial Class UCRemoteDevices
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_RemoteDevices.AutoScroll = True
-        Me.Panel_RemoteDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_RemoteDevices.Location = New System.Drawing.Point(16, 45)
         Me.Panel_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_RemoteDevices.Name = "Panel_RemoteDevices"
