@@ -1,6 +1,8 @@
 ﻿Public Class UCVirtualControllers
     Private g_mFormMain As FormMain
 
+    Public mUCRemoteDevices As UCRemoteDevices
+
     Private g_mControllerSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
 
     Private g_bIgnoreEvents As Boolean = False
@@ -11,6 +13,10 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        mUCRemoteDevices = New UCRemoteDevices
+        mUCRemoteDevices.Parent = TabPage_RemoteSettings
+        mUCRemoteDevices.Dock = DockStyle.Fill
+        mUCRemoteDevices.Show()
 
         Try
             g_bIgnoreEvents = True
@@ -46,6 +52,109 @@
             MessageBox.Show("Restart PSMoveService to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ComboBox_PSmoveEmu_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PSmoveEmu.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Try
+            g_bIgnoreEvents = True
+
+            If (ComboBox_PSmoveEmu.SelectedItem Is Nothing) Then
+                Return
+            End If
+
+            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
+            If (Not IO.Directory.Exists(sPsmsPath)) Then
+                Throw New ArgumentException("PSMoveService configs not found. Please setup PSMoveService first.")
+            End If
+
+            Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, String.Format("{0}.json", CStr(ComboBox_PSmoveEmu.SelectedItem)))
+            If (Not IO.File.Exists(sTrackerSettings)) Then
+                Return
+            End If
+
+            Dim mKey = New ClassServiceConfig.ClassSettingsKey(sTrackerSettings, "psmove_emulation", ClassServiceConfig.ClassSettingsKey.ENUM_TYPE.BOOL)
+
+            Try
+                mKey.Load()
+
+                CheckBox_PSmoveEmu.Checked = mKey.m_ValueB
+            Catch ex As Exception
+                MessageBox.Show(String.Format("Unable to load key '{0}'", mKey.m_SettingsKey), "Error", MessageBoxButtons.OK)
+            End Try
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+    End Sub
+
+    Private Sub ComboBox_PSmoveEmu_DropDown(sender As Object, e As EventArgs) Handles ComboBox_PSmoveEmu.DropDown
+        Try
+            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
+            If (Not IO.Directory.Exists(sPsmsPath)) Then
+                Throw New ArgumentException("PSMoveService configs not found. Please setup PSMoveService first.")
+            End If
+
+            Dim iSelectedIndex As Integer = ComboBox_PSmoveEmu.SelectedIndex
+
+            Try
+                g_bIgnoreEvents = True
+
+                ComboBox_PSmoveEmu.Items.Clear()
+                For Each sFile As String In IO.Directory.GetFiles(sPsmsPath, "VirtualController_*.json")
+                    ComboBox_PSmoveEmu.Items.Add(IO.Path.GetFileNameWithoutExtension(sFile))
+                Next
+            Finally
+                g_bIgnoreEvents = False
+            End Try
+
+            If (ComboBox_PSmoveEmu.Items.Count > 0 AndAlso iSelectedIndex <> ComboBox_PSmoveEmu.SelectedIndex) Then
+                ComboBox_PSmoveEmu.SelectedIndex = Math.Min(iSelectedIndex, ComboBox_PSmoveEmu.Items.Count - 1)
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub CheckBox_PSmoveEmu_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_PSmoveEmu.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Try
+            g_bIgnoreEvents = True
+
+            If (ComboBox_PSmoveEmu.SelectedItem Is Nothing) Then
+                CheckBox_PSmoveEmu.Checked = Not CheckBox_PSmoveEmu.Checked
+                Return
+            End If
+
+            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
+            If (Not IO.Directory.Exists(sPsmsPath)) Then
+                Throw New ArgumentException("PSMoveService configs not found. Please setup PSMoveService first.")
+            End If
+
+            Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, String.Format("{0}.json", CStr(ComboBox_PSmoveEmu.SelectedItem)))
+            If (Not IO.File.Exists(sTrackerSettings)) Then
+                Return
+            End If
+
+            Dim mKey = New ClassServiceConfig.ClassSettingsKey(sTrackerSettings, "psmove_emulation", ClassServiceConfig.ClassSettingsKey.ENUM_TYPE.BOOL)
+
+            Try
+                mKey.m_ValueB = CheckBox_PSmoveEmu.Checked
+                mKey.Save()
+
+                MessageBox.Show("Restart PSMoveService to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Catch ex As Exception
+                MessageBox.Show(String.Format("Unable to load key '{0}'", mKey.m_SettingsKey), "Error", MessageBoxButtons.OK)
+            End Try
+        Finally
+            g_bIgnoreEvents = False
         End Try
     End Sub
 
@@ -137,4 +246,10 @@
         mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iValue))
     End Sub
 
+    Private Sub CleanUp()
+        If (mUCRemoteDevices IsNot Nothing AndAlso Not mUCRemoteDevices.IsDisposed) Then
+            mUCRemoteDevices.Dispose()
+            mUCRemoteDevices = Nothing
+        End If
+    End Sub
 End Class

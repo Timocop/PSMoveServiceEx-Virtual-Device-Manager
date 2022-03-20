@@ -81,6 +81,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Management.Instrumentation" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -127,6 +128,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UCVirtualControllers\UCRemoteDeviceItem.Designer.vb">
+      <DependentUpon>UCRemoteDeviceItem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCRemoteDeviceItem.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualControllers.Designer.vb">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
     </Compile>
@@ -144,6 +151,12 @@
     </Compile>
     <Compile Include="UCVirtualTrackers\FormHelp.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCRemoteDevices.Designer.vb">
+      <DependentUpon>UCRemoteDevices.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCRemoteDevices.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UCVirtualTrackers\UCVirtualTrackerItem.Designer.vb">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>
@@ -168,6 +181,9 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualControllers\UCRemoteDeviceItem.resx">
+      <DependentUpon>UCRemoteDeviceItem.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualControllers.resx">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
     </EmbeddedResource>
@@ -176,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualTrackers\FormHelp.resx">
       <DependentUpon>FormHelp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices.resx">
+      <DependentUpon>UCRemoteDevices.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualTrackers\UCVirtualTrackerItem.resx">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>

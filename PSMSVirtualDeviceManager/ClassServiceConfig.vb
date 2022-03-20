@@ -84,7 +84,7 @@ Public Class ClassServiceConfig
         Public Sub Load()
             Dim sText As String = IO.File.ReadAllText(g_sPath)
 
-            Dim mMatchBool = Regex.Match(sText, "^\s*""" & g_sSettingKey & """:\s*""(?<Value>true|false)"",{0,1}\s*$")
+            Dim mMatchBool = Regex.Match(sText, "^\s*""" & g_sSettingKey & """:\s*""(?<Value>true|false)"",{0,1}\s*$", RegexOptions.Multiline)
             If (mMatchBool.Success) Then
                 g_iType = ENUM_TYPE.BOOL
                 g_mValue = (mMatchBool.Groups("Value").Value = "true")
