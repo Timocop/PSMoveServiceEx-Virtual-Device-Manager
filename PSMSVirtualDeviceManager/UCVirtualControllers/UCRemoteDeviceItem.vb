@@ -10,6 +10,7 @@ Public Class UCRemoteDeviceItem
     Public g_mClassConfig As ClassConfig
 
     Private g_sTrackerName As String = ""
+    Private g_sNickname As String = ""
 
     Private g_mRotationWait As New Stopwatch
     Private g_mBatteryWait As New Stopwatch
@@ -24,8 +25,8 @@ Public Class UCRemoteDeviceItem
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        Label_TrackerName.Text = sTrackerName
+        ' Add any initialization after the InitializeComponent() call.  
+        TextBox_TrackerName.Text = sTrackerName
 
         Try
             g_bIgnoreEvents = True
@@ -86,7 +87,8 @@ Public Class UCRemoteDeviceItem
         TimerFPS.Stop()
 
         SyncLock _ThreadLock
-            Label_Fps.Text = String.Format("FPS: {0}", g_iFpsCounter)
+            TextBox_Fps.Text = String.Format("FPS: {0}", g_iFpsCounter)
+
             g_iFpsCounter = 0
         End SyncLock
 
@@ -110,7 +112,7 @@ Public Class UCRemoteDeviceItem
             Dim mAngle As Vector3 = ClassQuaternionTools.FromQ2(New Quaternion(iX, iY, iZ, iW))
 
             Me.BeginInvoke(Sub()
-                               Label_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z))
+                               TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z))
                            End Sub)
         End If
 
@@ -125,8 +127,16 @@ Public Class UCRemoteDeviceItem
         If (g_mBatteryWait.ElapsedMilliseconds > 1000) Then
             g_mBatteryWait.Restart()
             Me.BeginInvoke(Sub()
-                               Label_Battery.Text = String.Format("Battery: {0}%", iBatteryPercent)
+                               TextBox_Battery.Text = String.Format("Battery: {0}%", iBatteryPercent)
                            End Sub)
+        End If
+    End Sub
+
+    Private Sub SetTrackerNameText()
+        TextBox_TrackerName.Text = m_TrackerName
+
+        If (Not String.IsNullOrEmpty(m_Nickname)) Then
+            TextBox_TrackerName.Text &= String.Format(" ({0})", m_Nickname)
         End If
     End Sub
 
@@ -135,6 +145,31 @@ Public Class UCRemoteDeviceItem
             Return g_sTrackerName
         End Get
     End Property
+
+    Property m_Nickname As String
+        Get
+            Return g_sNickname
+        End Get
+        Set(value As String)
+            g_sNickname = value
+            SetTrackerNameText()
+        End Set
+    End Property
+
+    Private Sub LinkLabel_EditName_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EditName.LinkClicked
+        Dim sName As String = InputBox("Enter a new device name:", "New device name", m_Nickname)
+
+        If (String.IsNullOrEmpty(sName)) Then
+            Return
+        End If
+
+        If (sName.Length > 128) Then
+            MessageBox.Show("Name is too long!", "Unable to set name", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            Return
+        End If
+
+        m_Nickname = sName
+    End Sub
 
     Private Sub CleanUp()
         If (g_mUCRemoteDevices.g_mClassStrackerSocket IsNot Nothing) Then
@@ -146,18 +181,6 @@ Public Class UCRemoteDeviceItem
             g_mClassIO.Dispose()
             g_mClassIO = Nothing
         End If
-    End Sub
-
-    Private Sub Button_Recenter_GotFocus(sender As Object, e As EventArgs) Handles Button_Recenter.GotFocus
-        Me.ActiveControl = Nothing
-    End Sub
-
-    Private Sub Button_SaveSettings_GotFocus(sender As Object, e As EventArgs) Handles Button_SaveSettings.GotFocus
-        Me.ActiveControl = Nothing
-    End Sub
-
-    Private Sub ComboBox_ControllerID_GotFocus(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.GotFocus
-        Me.ActiveControl = Nothing
     End Sub
 
     Public Class ClassIO
@@ -360,6 +383,7 @@ Public Class UCRemoteDeviceItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.W", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerID", CStr(CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedIndex))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
                     End SyncLock
@@ -380,6 +404,7 @@ Public Class UCRemoteDeviceItem
                     g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation = New Quaternion(iX, iY, iZ, iW)
 
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ControllerID", "0")))
+                    g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
                 End Using
             End Using
         End Sub
