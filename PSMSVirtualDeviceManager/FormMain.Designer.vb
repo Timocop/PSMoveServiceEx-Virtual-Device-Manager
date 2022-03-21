@@ -38,6 +38,7 @@ Partial Class FormMain
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Button_RestartPSMS = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label_Version = New System.Windows.Forms.Label()
         Me.MenuStrip_StartPage.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -102,6 +103,7 @@ Partial Class FormMain
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.SystemColors.Control
+        Me.Panel2.Controls.Add(Me.Label_Version)
         Me.Panel2.Controls.Add(Me.Button_RestartPSMS)
         Me.Panel2.Controls.Add(Me.Label1)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -131,6 +133,16 @@ Partial Class FormMain
         Me.Label1.Size = New System.Drawing.Size(784, 1)
         Me.Label1.TabIndex = 0
         '
+        'Label_Version
+        '
+        Me.Label_Version.AutoSize = True
+        Me.Label_Version.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.Label_Version.Location = New System.Drawing.Point(12, 26)
+        Me.Label_Version.Name = "Label_Version"
+        Me.Label_Version.Size = New System.Drawing.Size(66, 13)
+        Me.Label_Version.TabIndex = 2
+        Me.Label_Version.Text = "Version: 1.0"
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -150,6 +162,7 @@ Partial Class FormMain
         Me.MenuStrip_StartPage.ResumeLayout(False)
         Me.MenuStrip_StartPage.PerformLayout()
         Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -166,4 +179,5 @@ Partial Class FormMain
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Label1 As Label
     Friend WithEvents Button_RestartPSMS As Button
+    Friend WithEvents Label_Version As Label
 End Class

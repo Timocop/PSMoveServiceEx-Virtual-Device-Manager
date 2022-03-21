@@ -41,6 +41,8 @@ Public Class FormMain
         g_mUCVirtualTrackers.Visible = True
         g_mUCVirtualTrackers.Visible = False
         g_mUCVirtualTrackers.ResumeLayout()
+
+        Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
