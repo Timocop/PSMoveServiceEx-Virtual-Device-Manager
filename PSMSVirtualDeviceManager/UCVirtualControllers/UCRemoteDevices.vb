@@ -462,14 +462,14 @@ Public Class UCRemoteDevices
                 Return NormalizeAngles(v * (180 / Math.PI))
             End Function
 
-            Private Shared Function NormalizeAngles(angles As Vector3) As Vector3
+            Public Shared Function NormalizeAngles(angles As Vector3) As Vector3
                 angles.X = NormalizeAngle(angles.X)
                 angles.Y = NormalizeAngle(angles.Y)
                 angles.Z = NormalizeAngle(angles.Z)
                 Return angles
             End Function
 
-            Private Shared Function NormalizeAngle(angle As Single) As Single
+            Public Shared Function NormalizeAngle(angle As Single) As Single
                 While (angle > 360)
                     angle -= 360
                 End While

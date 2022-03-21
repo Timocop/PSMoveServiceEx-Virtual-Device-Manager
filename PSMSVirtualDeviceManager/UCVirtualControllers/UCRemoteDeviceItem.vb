@@ -13,6 +13,7 @@ Public Class UCRemoteDeviceItem
     Private g_sNickname As String = ""
 
     Private g_mRotationWait As New Stopwatch
+    Private g_mGyroWait As New Stopwatch
     Private g_mBatteryWait As New Stopwatch
 
     Private g_bIgnoreEvents As Boolean = False
@@ -44,9 +45,12 @@ Public Class UCRemoteDeviceItem
         g_mClassConfig = New ClassConfig(Me)
 
         AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerRotation, AddressOf OnTrackerRotation
+        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerGyro, AddressOf OnTrackerGyro
         AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerBattery, AddressOf OnTrackerBattery
+        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerPacket, AddressOf OnTrackerPacket
 
         g_mRotationWait.Start()
+        g_mGyroWait.Start()
         g_mBatteryWait.Start()
 
         g_mClassIO.Enable()
@@ -100,16 +104,16 @@ Public Class UCRemoteDeviceItem
             Return
         End If
 
-        SyncLock _ThreadLock
-            g_iFpsCounter += 1
-        End SyncLock
-
         g_mClassIO.m_Orientation = New Quaternion(iX, iY, iZ, iW)
 
         If (g_mRotationWait.ElapsedMilliseconds > 100) Then
             g_mRotationWait.Restart()
 
             Dim mAngle As Vector3 = ClassQuaternionTools.FromQ2(New Quaternion(iX, iY, iZ, iW))
+            Dim mResetAngle As Vector3 = ClassQuaternionTools.FromQ2(g_mClassIO.m_ResetOrientation)
+            Dim iOffsetAngle As Integer = +g_mClassIO.m_YawOrientationOffset
+
+            mAngle = ClassQuaternionTools.NormalizeAngles(New Vector3(mAngle.X - mResetAngle.X, mAngle.Y - mResetAngle.Y, mAngle.Z - mResetAngle.Z - iOffsetAngle))
 
             Me.BeginInvoke(Sub()
                                TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z))
@@ -117,6 +121,34 @@ Public Class UCRemoteDeviceItem
         End If
 
 
+    End Sub
+
+    Private Sub OnTrackerGyro(mTracker As ClassTracker, iX As Single, iY As Single, iZ As Single)
+        If (mTracker.m_Name <> m_TrackerName) Then
+            Return
+        End If
+
+        'g_mClassIO.m_Orientation = g_mClassIO.m_Orientation * ClassQuaternionTools.ToQ(iY, iX, iZ)
+
+        If (g_mGyroWait.ElapsedMilliseconds > 100) Then
+            g_mGyroWait.Restart()
+
+            Me.BeginInvoke(Sub()
+                               TextBox_Gyro.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, iX.ToString(Globalization.CultureInfo.InvariantCulture), iY.ToString(Globalization.CultureInfo.InvariantCulture), iZ.ToString(Globalization.CultureInfo.InvariantCulture))
+                           End Sub)
+        End If
+
+
+    End Sub
+
+    Private Sub OnTrackerPacket(mTracker As ClassTracker)
+        If (mTracker.m_Name <> m_TrackerName) Then
+            Return
+        End If
+
+        SyncLock _ThreadLock
+            g_iFpsCounter += 1
+        End SyncLock
     End Sub
 
     Private Sub OnTrackerBattery(mTracker As ClassTracker, iBatteryPercent As Integer)
@@ -171,10 +203,24 @@ Public Class UCRemoteDeviceItem
         m_Nickname = sName
     End Sub
 
+    Private Sub NumericUpDown_YawOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_YawOffset.ValueChanged
+        g_mClassIO.m_YawOrientationOffset = CInt(NumericUpDown_YawOffset.Value)
+    End Sub
+
+    Private Sub Button_YawOffsetNeg_Click(sender As Object, e As EventArgs) Handles Button_YawOffsetNeg.Click
+        NumericUpDown_YawOffset.Value -= 5
+    End Sub
+
+    Private Sub Button_YawOffsetPos_Click(sender As Object, e As EventArgs) Handles Button_YawOffsetPos.Click
+        NumericUpDown_YawOffset.Value += 5
+    End Sub
+
     Private Sub CleanUp()
         If (g_mUCRemoteDevices.g_mClassStrackerSocket IsNot Nothing) Then
             RemoveHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerRotation, AddressOf OnTrackerRotation
+            RemoveHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerGyro, AddressOf OnTrackerGyro
             RemoveHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerBattery, AddressOf OnTrackerBattery
+            RemoveHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerPacket, AddressOf OnTrackerPacket
         End If
 
         If (g_mClassIO IsNot Nothing) Then
@@ -193,6 +239,8 @@ Public Class UCRemoteDeviceItem
 
         Private g_mOrientation As Quaternion = Quaternion.Identity
         Private g_mResetOrentation As Quaternion = Quaternion.Identity
+
+        Private g_iYawOrientationOffset As Integer = 0
 
         Public Sub New()
         End Sub
@@ -236,6 +284,20 @@ Public Class UCRemoteDeviceItem
                     g_mResetOrentation = value
                 End SyncLock
             End Set
+        End Property
+
+        Property m_YawOrientationOffset As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iYawOrientationOffset
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iYawOrientationOffset = value
+                End SyncLock
+            End Set
+
         End Property
 
         Public Sub RecenterOrientation()
@@ -293,14 +355,17 @@ Public Class UCRemoteDeviceItem
                                         Bw.Write(Encoding.ASCII.GetBytes(m_Orientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
 
-                                        ' Send Reset Orientation
-                                        Bw.Write(Encoding.ASCII.GetBytes(m_ResetOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        ' Send Reset Orientation 
+                                        Dim mNewResetOrientation = Quaternion.CreateFromAxisAngle(New Vector3(0, 0, 1), CSng(g_iYawOrientationOffset * (Math.PI / 180)))
+                                        mNewResetOrientation = m_ResetOrientation * mNewResetOrientation
+
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewResetOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
-                                        Bw.Write(Encoding.ASCII.GetBytes(m_ResetOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewResetOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
-                                        Bw.Write(Encoding.ASCII.GetBytes((-m_ResetOrientation.Y).ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(Encoding.ASCII.GetBytes((-mNewResetOrientation.Y).ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
-                                        Bw.Write(Encoding.ASCII.GetBytes(m_ResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
                                     End SyncLock
                                 End Using
@@ -382,7 +447,8 @@ Public Class UCRemoteDeviceItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.W", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerID", CStr(CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedIndex))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "YawOffset", CStr(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset.Value)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
@@ -403,10 +469,15 @@ Public Class UCRemoteDeviceItem
 
                     g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation = New Quaternion(iX, iY, iZ, iW)
 
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset, CInt(mIni.ReadKeyValue(sDevicePath, "YawOffset", "0")))
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ControllerID", "0")))
                     g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
                 End Using
             End Using
+        End Sub
+
+        Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Integer)
+            mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue))
         End Sub
 
         Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
