@@ -114,6 +114,9 @@ Public Class UCRemoteDevices
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
 
+            g_mSocket.ReceiveTimeout = 5000
+            g_mSocket.SendTimeout = 5000
+
             g_mLastKeepup.Start()
         End Sub
 
@@ -265,11 +268,10 @@ Public Class UCRemoteDevices
                                 End Select
                             End Using
                         End Using
-
-
                     Catch ex As Threading.ThreadAbortException
                         Throw
                     Catch ex As SocketException
+                        Threading.Thread.Sleep(100)
                     Catch ex As Exception
                         Threading.Thread.Sleep(100)
                     End Try
