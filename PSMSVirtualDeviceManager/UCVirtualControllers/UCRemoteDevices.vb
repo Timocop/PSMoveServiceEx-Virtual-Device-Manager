@@ -10,6 +10,8 @@ Public Class UCRemoteDevices
 
     Private g_mRemoveDevices As New Dictionary(Of String, UCRemoteDeviceItem)
 
+    Private g_iSocketPort As Integer = 0
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -19,7 +21,20 @@ Public Class UCRemoteDevices
         g_mClassStrackerSocket = New ClassTrackerSocket(Me)
 
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
+
+        m_SocketPort = 6970
     End Sub
+
+    Property m_SocketPort As Integer
+        Get
+            Return g_iSocketPort
+        End Get
+        Set(value As Integer)
+            g_iSocketPort = value
+
+            Label_Port.Text = String.Format("Listening Socket Port: {0}", g_iSocketPort)
+        End Set
+    End Property
 
     Private Sub OnTrackerConnected(mTracker As ClassTrackerSocket.ClassTracker)
         SyncLock _ThreadLock
@@ -41,7 +56,17 @@ Public Class UCRemoteDevices
     End Sub
 
     Private Sub Button_StartSocket_Click(sender As Object, e As EventArgs) Handles Button_StartSocket.Click
-        g_mClassStrackerSocket.Init()
+        Try
+            g_mClassStrackerSocket.Init()
+
+            LinkLabel_EditPort.Enabled = False
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub CheckBox_AllowNewDevices_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_AllowNewDevices.CheckedChanged
+        g_mClassStrackerSocket.m_AllowNewDevices = CheckBox_AllowNewDevices.Checked
     End Sub
 
     Private Sub CleanUp()
@@ -69,6 +94,24 @@ Public Class UCRemoteDevices
         End Try
     End Sub
 
+    Private Sub LinkLabel_EditPort_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EditPort.LinkClicked
+        Try
+            Dim sValue As String = InputBox("Enter a new port number:", "Edit Port Number", CStr(m_SocketPort))
+            If (String.IsNullOrEmpty(sValue)) Then
+                Return
+            End If
+
+            Dim iPort As Integer = -1
+            If (Not Integer.TryParse(sValue, iPort) OrElse iPort < 0 OrElse iPort > UShort.MaxValue) Then
+                Throw New ArgumentException("Invalid port number")
+            End If
+
+            m_SocketPort = iPort
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Class ClassTrackerSocket
         Implements IDisposable
 
@@ -79,9 +122,43 @@ Public Class UCRemoteDevices
 
         Private g_mLastKeepup As New Stopwatch
         Private g_mTrackers As New Dictionary(Of String, ClassTracker)
+        Private g_bAllowNewDevices As Boolean = False
 
         Shared HANDSHAKE_BUFFER As Byte() = New Byte(64) {}
         Shared KEEPUP_BUFFER As Byte() = New Byte(64) {}
+
+        Enum ENUM_PACKET_RECEIVE_TYPE
+            HEARTBEAT = 0
+            ROTATION
+            GYRO
+            HANDSHAKE
+            ACCEL
+            MAG
+            RAW_CALIBRATION_DATA
+            CALIBRATION_FINISHED
+            CONFIG
+            RAW_MAGENTOMETER
+            PING_PONG
+            SERIAL
+            BATTERY_LEVEL
+            TAP
+            RESET_REASON
+            SENSOR_INFO
+            ROTATION_2
+            ROTATION_DATA
+            MAGENTOMETER_ACCURACY
+
+            BUTTON_PUSHED = 60
+            SEND_MAG_STATUS
+            CHANGE_MAG_STATUS
+        End Enum
+
+        Enum ENUM_PACKET_SEND_TYPE
+            RECIEVE_HEARTBEAT = 1
+            RECIEVE_VIBRATE
+            RECIEVE_HANDSHAKE
+            RECIEVE_COMMAND
+        End Enum
 
         Private g_mSocketListenerThread As Threading.Thread = Nothing
         Private g_mPipeThread As Threading.Thread = Nothing
@@ -94,12 +171,12 @@ Public Class UCRemoteDevices
         Public Event OnTrackerBattery(mTracker As ClassTracker, iBatteryPercent As Integer)
 
         Shared Sub New()
-            HANDSHAKE_BUFFER(0) = 3
+            HANDSHAKE_BUFFER(0) = CByte(ENUM_PACKET_SEND_TYPE.RECIEVE_HANDSHAKE)
 
             Dim iHandshakeMsg As Byte() = Encoding.ASCII.GetBytes("Hey OVR =D 5")
             Array.Copy(iHandshakeMsg, 0, HANDSHAKE_BUFFER, 1, iHandshakeMsg.Length)
 
-            KEEPUP_BUFFER(3) = 1
+            KEEPUP_BUFFER(3) = CByte(ENUM_PACKET_SEND_TYPE.RECIEVE_HEARTBEAT)
         End Sub
 
         Public Sub New(_UCRemoteDevices As UCRemoteDevices)
@@ -108,17 +185,24 @@ Public Class UCRemoteDevices
             g_mSocket = New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
             g_mBuffer = New Byte(512) {}
 
-            Try
-                g_mSocket.Bind(New IPEndPoint(IPAddress.Any, 6970))
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-
             g_mSocket.ReceiveTimeout = 5000
             g_mSocket.SendTimeout = 5000
 
             g_mLastKeepup.Start()
         End Sub
+
+        Property m_AllowNewDevices As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bAllowNewDevices
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bAllowNewDevices = value
+                End SyncLock
+            End Set
+        End Property
 
         ReadOnly Property m_Trackers As Dictionary(Of String, ClassTracker)
             Get
@@ -127,6 +211,8 @@ Public Class UCRemoteDevices
         End Property
 
         Public Sub Init()
+            g_mSocket.Bind(New IPEndPoint(IPAddress.Any, g_mUCRemoteDevices.m_SocketPort))
+
             StartSocketListening()
         End Sub
 
@@ -156,7 +242,7 @@ Public Class UCRemoteDevices
 
                 While True
                     Try
-                        Dim mEndPoint As New IPEndPoint(IPAddress.Any, 6970)
+                        Dim mEndPoint As New IPEndPoint(IPAddress.Any, 0)
                         Dim __EndPoint As EndPoint = mEndPoint
                         g_mSocket.ReceiveFrom(g_mBuffer, SocketFlags.None, __EndPoint)
                         mEndPoint = CType(__EndPoint, IPEndPoint)
@@ -173,6 +259,10 @@ Public Class UCRemoteDevices
                             mTracker.ReceivedPacket()
 
                             RaiseEvent OnTrackerPacket(mTracker)
+                        Else
+                            If (Not m_AllowNewDevices) Then
+                                Continue While
+                            End If
                         End If
 
                         Using mMemStream As New IO.MemoryStream(g_mBuffer)
@@ -180,11 +270,13 @@ Public Class UCRemoteDevices
                                 Dim iPacketId As Integer = BR_ReadInt32(mBinReader)
 
                                 Select Case (iPacketId)
-                                    Case 0 ' Nothing
-                                    Case 3 ' Inital Connection
+                                    Case ENUM_PACKET_RECEIVE_TYPE.HEARTBEAT
+                                        'Nothing
+
+                                    Case ENUM_PACKET_RECEIVE_TYPE.HANDSHAKE
                                         SetupNewTracker(mBinReader, mEndPoint)
 
-                                    Case 1, 16 ' PACKET_ROTATION, PACKET_ROTATION_2
+                                    Case ENUM_PACKET_RECEIVE_TYPE.ROTATION, ENUM_PACKET_RECEIVE_TYPE.ROTATION_2
                                         If (mTracker Is Nothing) Then
                                             Exit Select
                                         End If
@@ -207,7 +299,7 @@ Public Class UCRemoteDevices
                                             mTracker.m_Orentation = mQuat
                                         End SyncLock
 
-                                    Case 2 ' GYRO
+                                    Case ENUM_PACKET_RECEIVE_TYPE.GYRO
                                         If (mTracker Is Nothing) Then
                                             Exit Select
                                         End If
@@ -220,7 +312,7 @@ Public Class UCRemoteDevices
 
                                         RaiseEvent OnTrackerGyro(mTracker, iX, iY, iZ)
 
-                                    Case 4 ' ACCEL
+                                    Case ENUM_PACKET_RECEIVE_TYPE.ACCEL
                                         If (mTracker Is Nothing) Then
                                             Exit Select
                                         End If
@@ -233,7 +325,7 @@ Public Class UCRemoteDevices
 
                                         RaiseEvent OnTrackerAccel(mTracker, iX, iY, iZ)
 
-                                    Case 12 ' PACKET_BATTERY_VOLTAGE
+                                    Case ENUM_PACKET_RECEIVE_TYPE.BATTERY_LEVEL
                                         If (mTracker Is Nothing) Then
                                             Exit Select
                                         End If
@@ -259,10 +351,6 @@ Public Class UCRemoteDevices
 
                                         RaiseEvent OnTrackerBattery(mTracker, CInt(iVoltage))
 
-                                    Case 14 ' PACKET_RESET_REASON
-
-                                    Case 15 ' PACKET_SENSOR_INFO
-
                                     Case Else
                                         'Unknown packet
                                 End Select
@@ -271,9 +359,7 @@ Public Class UCRemoteDevices
                     Catch ex As Threading.ThreadAbortException
                         Throw
                     Catch ex As SocketException
-                        Threading.Thread.Sleep(100)
                     Catch ex As Exception
-                        Threading.Thread.Sleep(100)
                     End Try
 
                     If (g_mLastKeepup.ElapsedMilliseconds > 500) Then
