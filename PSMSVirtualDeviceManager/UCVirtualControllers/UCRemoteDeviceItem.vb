@@ -17,7 +17,8 @@ Public Class UCRemoteDeviceItem
     Private g_mBatteryWait As New Stopwatch
 
     Private g_bIgnoreEvents As Boolean = False
-    Private g_iFpsCounter As Integer = 0
+    Private g_iFpsPacketCounter As Integer = 0
+    Private g_iFpsOrientationCounter As Integer = 0
 
     Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
         g_mUCRemoteDevices = _UCRemoteDevices
@@ -91,9 +92,11 @@ Public Class UCRemoteDeviceItem
         TimerFPS.Stop()
 
         SyncLock _ThreadLock
-            TextBox_Fps.Text = String.Format("FPS: {0}", g_iFpsCounter)
+            TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
 
-            g_iFpsCounter = 0
+            g_iFpsPacketCounter = 0
+            g_iFpsOrientationCounter = 0
+            g_mClassIO.m_FpsPipeCounter = 0
         End SyncLock
 
         TimerFPS.Start()
@@ -105,6 +108,10 @@ Public Class UCRemoteDeviceItem
         End If
 
         g_mClassIO.m_Orientation = New Quaternion(iX, iY, iZ, iW)
+
+        SyncLock _ThreadLock
+            g_iFpsOrientationCounter += 1
+        End SyncLock
 
         If (g_mRotationWait.ElapsedMilliseconds > 100) Then
             g_mRotationWait.Restart()
@@ -147,7 +154,7 @@ Public Class UCRemoteDeviceItem
         End If
 
         SyncLock _ThreadLock
-            g_iFpsCounter += 1
+            g_iFpsPacketCounter += 1
         End SyncLock
     End Sub
 
@@ -241,6 +248,7 @@ Public Class UCRemoteDeviceItem
         Private g_mResetOrentation As Quaternion = Quaternion.Identity
 
         Private g_iYawOrientationOffset As Integer = 0
+        Private g_iFpsPipeCounter As Integer = 0
 
         Public Sub New()
         End Sub
@@ -318,6 +326,19 @@ Public Class UCRemoteDeviceItem
             g_PipeThread.Start()
         End Sub
 
+        Property m_FpsPipeCounter As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iFpsPipeCounter
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iFpsPipeCounter = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub Disable()
             If (g_PipeThread Is Nothing OrElse Not g_PipeThread.IsAlive) Then
                 Return
@@ -367,6 +388,8 @@ Public Class UCRemoteDeviceItem
                                         Bw.Write(CByte(0))
                                         Bw.Write(Encoding.ASCII.GetBytes(mNewResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
+
+                                        g_iFpsPipeCounter += 1
                                     End SyncLock
                                 End Using
 

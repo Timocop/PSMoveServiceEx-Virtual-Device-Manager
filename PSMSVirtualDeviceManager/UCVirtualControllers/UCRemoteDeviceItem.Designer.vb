@@ -150,7 +150,7 @@ Partial Class UCRemoteDeviceItem
         Me.TextBox_Battery.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
         Me.TextBox_Battery.Name = "TextBox_Battery"
         Me.TextBox_Battery.ReadOnly = True
-        Me.TextBox_Battery.Size = New System.Drawing.Size(293, 15)
+        Me.TextBox_Battery.Size = New System.Drawing.Size(446, 15)
         Me.TextBox_Battery.TabIndex = 11
         Me.TextBox_Battery.Text = "Battery: Unknown"
         Me.TextBox_Battery.WordWrap = False
@@ -165,7 +165,7 @@ Partial Class UCRemoteDeviceItem
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
-        Me.TextBox_Fps.Size = New System.Drawing.Size(293, 15)
+        Me.TextBox_Fps.Size = New System.Drawing.Size(446, 15)
         Me.TextBox_Fps.TabIndex = 12
         Me.TextBox_Fps.Text = "FPS: Unknown"
         Me.TextBox_Fps.WordWrap = False
