@@ -33,12 +33,15 @@ Partial Class UCVirtualControllers
         Me.ComboBox_VirtualControllerCount = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage_RemoteSettings = New System.Windows.Forms.TabPage()
-        Me.ComboBox_PSmoveEmu = New System.Windows.Forms.ComboBox()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TabPage_General = New System.Windows.Forms.TabPage()
         Me.CheckBox_PSmoveEmu = New System.Windows.Forms.CheckBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.ComboBox_PSmoveEmu = New System.Windows.Forms.ComboBox()
+        Me.TabPage_RemoteSettings = New System.Windows.Forms.TabPage()
+        Me.TabPage_ControllerAttachments = New System.Windows.Forms.TabPage()
         Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
+        Me.TabPage_General.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -92,15 +95,16 @@ Partial Class UCVirtualControllers
         Me.ComboBox_VirtualControllerCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_VirtualControllerCount.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VirtualControllerCount.FormattingEnabled = True
-        Me.ComboBox_VirtualControllerCount.Location = New System.Drawing.Point(199, 80)
+        Me.ComboBox_VirtualControllerCount.Location = New System.Drawing.Point(184, 16)
+        Me.ComboBox_VirtualControllerCount.Margin = New System.Windows.Forms.Padding(3, 16, 32, 3)
         Me.ComboBox_VirtualControllerCount.Name = "ComboBox_VirtualControllerCount"
-        Me.ComboBox_VirtualControllerCount.Size = New System.Drawing.Size(488, 21)
+        Me.ComboBox_VirtualControllerCount.Size = New System.Drawing.Size(512, 21)
         Me.ComboBox_VirtualControllerCount.TabIndex = 10
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(32, 83)
+        Me.Label5.Location = New System.Drawing.Point(32, 19)
         Me.Label5.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(130, 13)
@@ -112,23 +116,52 @@ Partial Class UCVirtualControllers
         Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TabControl1.Controls.Add(Me.TabPage_General)
         Me.TabControl1.Controls.Add(Me.TabPage_RemoteSettings)
-        Me.TabControl1.Location = New System.Drawing.Point(32, 163)
-        Me.TabControl1.Margin = New System.Windows.Forms.Padding(32)
+        Me.TabControl1.Controls.Add(Me.TabPage_ControllerAttachments)
+        Me.TabControl1.Location = New System.Drawing.Point(32, 75)
+        Me.TabControl1.Margin = New System.Windows.Forms.Padding(32, 8, 32, 32)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(736, 397)
+        Me.TabControl1.Size = New System.Drawing.Size(736, 493)
         Me.TabControl1.TabIndex = 11
         '
-        'TabPage_RemoteSettings
+        'TabPage_General
         '
-        Me.TabPage_RemoteSettings.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage_RemoteSettings.Name = "TabPage_RemoteSettings"
-        Me.TabPage_RemoteSettings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_RemoteSettings.Size = New System.Drawing.Size(728, 371)
-        Me.TabPage_RemoteSettings.TabIndex = 0
-        Me.TabPage_RemoteSettings.Text = "Remote Devices"
-        Me.TabPage_RemoteSettings.UseVisualStyleBackColor = True
+        Me.TabPage_General.Controls.Add(Me.CheckBox_PSmoveEmu)
+        Me.TabPage_General.Controls.Add(Me.Label5)
+        Me.TabPage_General.Controls.Add(Me.Label3)
+        Me.TabPage_General.Controls.Add(Me.ComboBox_VirtualControllerCount)
+        Me.TabPage_General.Controls.Add(Me.ComboBox_PSmoveEmu)
+        Me.TabPage_General.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_General.Name = "TabPage_General"
+        Me.TabPage_General.Size = New System.Drawing.Size(728, 467)
+        Me.TabPage_General.TabIndex = 2
+        Me.TabPage_General.Text = "General"
+        Me.TabPage_General.UseVisualStyleBackColor = True
+        '
+        'CheckBox_PSmoveEmu
+        '
+        Me.CheckBox_PSmoveEmu.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox_PSmoveEmu.AutoSize = True
+        Me.CheckBox_PSmoveEmu.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_PSmoveEmu.Location = New System.Drawing.Point(622, 53)
+        Me.CheckBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 3, 32, 3)
+        Me.CheckBox_PSmoveEmu.Name = "CheckBox_PSmoveEmu"
+        Me.CheckBox_PSmoveEmu.Size = New System.Drawing.Size(74, 18)
+        Me.CheckBox_PSmoveEmu.TabIndex = 14
+        Me.CheckBox_PSmoveEmu.Text = "Enabled"
+        Me.CheckBox_PSmoveEmu.UseVisualStyleBackColor = True
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(32, 54)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(104, 13)
+        Me.Label3.TabIndex = 13
+        Me.Label3.Text = "PSmove Emulation:"
         '
         'ComboBox_PSmoveEmu
         '
@@ -137,53 +170,46 @@ Partial Class UCVirtualControllers
         Me.ComboBox_PSmoveEmu.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_PSmoveEmu.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_PSmoveEmu.FormattingEnabled = True
-        Me.ComboBox_PSmoveEmu.Location = New System.Drawing.Point(199, 115)
+        Me.ComboBox_PSmoveEmu.Location = New System.Drawing.Point(184, 51)
         Me.ComboBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 6, 16, 3)
         Me.ComboBox_PSmoveEmu.Name = "ComboBox_PSmoveEmu"
-        Me.ComboBox_PSmoveEmu.Size = New System.Drawing.Size(401, 21)
+        Me.ComboBox_PSmoveEmu.Size = New System.Drawing.Size(425, 21)
         Me.ComboBox_PSmoveEmu.TabIndex = 12
         '
-        'Label3
+        'TabPage_RemoteSettings
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(32, 118)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(104, 13)
-        Me.Label3.TabIndex = 13
-        Me.Label3.Text = "PSmove Emulation:"
+        Me.TabPage_RemoteSettings.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_RemoteSettings.Name = "TabPage_RemoteSettings"
+        Me.TabPage_RemoteSettings.Size = New System.Drawing.Size(728, 467)
+        Me.TabPage_RemoteSettings.TabIndex = 0
+        Me.TabPage_RemoteSettings.Text = "Remote Devices"
+        Me.TabPage_RemoteSettings.UseVisualStyleBackColor = True
         '
-        'CheckBox_PSmoveEmu
+        'TabPage_ControllerAttachments
         '
-        Me.CheckBox_PSmoveEmu.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CheckBox_PSmoveEmu.AutoSize = True
-        Me.CheckBox_PSmoveEmu.Location = New System.Drawing.Point(619, 117)
-        Me.CheckBox_PSmoveEmu.Name = "CheckBox_PSmoveEmu"
-        Me.CheckBox_PSmoveEmu.Size = New System.Drawing.Size(68, 17)
-        Me.CheckBox_PSmoveEmu.TabIndex = 14
-        Me.CheckBox_PSmoveEmu.Text = "Enabled"
-        Me.CheckBox_PSmoveEmu.UseVisualStyleBackColor = True
+        Me.TabPage_ControllerAttachments.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_ControllerAttachments.Name = "TabPage_ControllerAttachments"
+        Me.TabPage_ControllerAttachments.Size = New System.Drawing.Size(728, 467)
+        Me.TabPage_ControllerAttachments.TabIndex = 1
+        Me.TabPage_ControllerAttachments.Text = "Controller Attachments"
+        Me.TabPage_ControllerAttachments.UseVisualStyleBackColor = True
         '
         'UCVirtualControllers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.CheckBox_PSmoveEmu)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.ComboBox_PSmoveEmu)
         Me.Controls.Add(Me.TabControl1)
-        Me.Controls.Add(Me.ComboBox_VirtualControllerCount)
-        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualControllers"
-        Me.Size = New System.Drawing.Size(800, 592)
+        Me.Size = New System.Drawing.Size(800, 600)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
+        Me.TabPage_General.ResumeLayout(False)
+        Me.TabPage_General.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
@@ -198,4 +224,6 @@ Partial Class UCVirtualControllers
     Friend WithEvents ComboBox_PSmoveEmu As ComboBox
     Friend WithEvents Label3 As Label
     Friend WithEvents CheckBox_PSmoveEmu As CheckBox
+    Friend WithEvents TabPage_ControllerAttachments As TabPage
+    Friend WithEvents TabPage_General As TabPage
 End Class

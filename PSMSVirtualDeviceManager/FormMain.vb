@@ -21,7 +21,7 @@ Public Class FormMain
         g_mUCVirtualControllers = New UCVirtualControllers(Me)
         g_mUCVirtualControllers.SuspendLayout()
         g_mUCVirtualControllers.Parent = Panel_Pages
-        g_mUCVirtualControllers.Dock = DockStyle.Top
+        g_mUCVirtualControllers.Dock = DockStyle.Fill
         g_mUCVirtualControllers.Visible = True
         g_mUCVirtualControllers.Visible = False
         g_mUCVirtualControllers.ResumeLayout()
@@ -29,7 +29,7 @@ Public Class FormMain
         g_mUCVirtualHMDs = New UCVirtualHMDs(Me)
         g_mUCVirtualHMDs.SuspendLayout()
         g_mUCVirtualHMDs.Parent = Panel_Pages
-        g_mUCVirtualHMDs.Dock = DockStyle.Top
+        g_mUCVirtualHMDs.Dock = DockStyle.Fill
         g_mUCVirtualHMDs.Visible = True
         g_mUCVirtualHMDs.Visible = False
         g_mUCVirtualHMDs.ResumeLayout()
@@ -37,7 +37,7 @@ Public Class FormMain
         g_mUCVirtualTrackers = New UCVirtualTrackers(Me)
         g_mUCVirtualTrackers.SuspendLayout()
         g_mUCVirtualTrackers.Parent = Panel_Pages
-        g_mUCVirtualTrackers.Dock = DockStyle.Top
+        g_mUCVirtualTrackers.Dock = DockStyle.Fill
         g_mUCVirtualTrackers.Visible = True
         g_mUCVirtualTrackers.Visible = False
         g_mUCVirtualTrackers.ResumeLayout()

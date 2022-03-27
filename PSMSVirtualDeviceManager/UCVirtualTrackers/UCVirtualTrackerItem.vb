@@ -4,7 +4,8 @@ Public Class UCVirtualTrackerItem
     Const MAX_PSMOVESERIVCE_TRACKERS = 8
     Const PROBE_MULTIPLY = 64
 
-    Private WithEvents g_mFormMain As FormMain
+    Public WithEvents g_mFormMain As FormMain
+
     Private g_mMessageLabel As Label
 
     Private g_mClassCaptureLogic As ClassCaptureLogic
@@ -1209,7 +1210,7 @@ Public Class UCVirtualTrackerItem
     End Class
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim mHelp As New FormHelp
+        Dim mHelp As New FormAttachmentsHelp
         mHelp.ShowDialog(Me)
     End Sub
 End Class

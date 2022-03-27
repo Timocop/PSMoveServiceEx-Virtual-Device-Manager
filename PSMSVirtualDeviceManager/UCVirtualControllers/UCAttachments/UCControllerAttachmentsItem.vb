@@ -1,0 +1,505 @@
+﻿Imports System.Numerics
+Imports System.Text
+
+Public Class UCControllerAttachmentsItem
+    Shared _ThreadLock As New Object
+
+    Public WithEvents g_mUCControllerAttachments As UCControllerAttachments
+    Public WithEvents g_mFormMain As FormMain
+
+    Public g_mClassIO As ClassIO
+    Public g_mClassConfig As ClassConfig
+    Private g_bLoaded As Boolean = False
+
+    Private g_sTrackerName As String = ""
+    Private g_sNickname As String = ""
+
+    Private g_bIgnoreEvents As Boolean = False
+    Private g_iFpsPacketCounter As Integer = 0
+    Private g_iFpsOrientationCounter As Integer = 0
+
+    Const MAX_CONTROLLERS = 6
+
+    Public Sub New(iControllerID As Integer, _UCControllerAttachments As UCControllerAttachments)
+        g_mUCControllerAttachments = _UCControllerAttachments
+        g_mFormMain = g_mUCControllerAttachments.g_mFormMain
+
+        If (iControllerID < 0 OrElse iControllerID > MAX_CONTROLLERS - 1) Then
+            iControllerID = -1
+        End If
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.  
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_ControllerID.Items.Clear()
+            For i = -1 To MAX_CONTROLLERS - 1
+                ComboBox_ControllerID.Items.Add(CStr(i))
+            Next
+            ComboBox_ControllerID.SelectedIndex = 0
+
+            If (iControllerID > -1) Then
+                ComboBox_ControllerID.SelectedIndex = iControllerID + 1
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_ParentControllerID.Items.Clear()
+            For i = -1 To MAX_CONTROLLERS - 1
+                ComboBox_ParentControllerID.Items.Add(CStr(i))
+            Next
+            ComboBox_ParentControllerID.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        g_mClassIO = New ClassIO()
+        g_mClassConfig = New ClassConfig(Me)
+
+        g_mClassIO.Enable()
+    End Sub
+
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles g_mFormMain.Load
+        If (g_bLoaded) Then
+            Return
+        End If
+
+        g_bLoaded = True
+
+        Try
+            g_mClassConfig.LoadConfig()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If (g_bLoaded) Then
+            Return
+        End If
+
+        g_bLoaded = True
+
+        Try
+            g_mClassConfig.LoadConfig()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassConfig.LoadConfig()
+
+        g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
+        g_mClassIO.Enable()
+    End Sub
+
+    Private Sub ComboBox_ParentControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ParentControllerID.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassIO.m_ParentController = CInt(ComboBox_ParentControllerID.SelectedItem)
+    End Sub
+
+    Private Sub NumericUpDown_JointOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointOffsetX.ValueChanged
+        g_mClassIO.m_JointOffset = New Vector3(NumericUpDown_JointOffsetX.Value, NumericUpDown_JointOffsetY.Value, NumericUpDown_JointOffsetZ.Value)
+    End Sub
+
+    Private Sub NumericUpDown_JointOffsetY_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointOffsetY.ValueChanged
+        g_mClassIO.m_JointOffset = New Vector3(NumericUpDown_JointOffsetX.Value, NumericUpDown_JointOffsetY.Value, NumericUpDown_JointOffsetZ.Value)
+    End Sub
+
+    Private Sub NumericUpDown_JointOffsetZ_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointOffsetZ.ValueChanged
+        g_mClassIO.m_JointOffset = New Vector3(NumericUpDown_JointOffsetX.Value, NumericUpDown_JointOffsetY.Value, NumericUpDown_JointOffsetZ.Value)
+    End Sub
+
+    Private Sub NumericUpDown_ControllerOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerOffsetX.ValueChanged
+        g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
+    End Sub
+
+    Private Sub NumericUpDown_ControllerOffsetY_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerOffsetY.ValueChanged
+        g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
+    End Sub
+
+    Private Sub NumericUpDown_ControllerOffsetZ_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerOffsetZ.ValueChanged
+        g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
+    End Sub
+
+    Private Sub Button_JointNegX_Click(sender As Object, e As EventArgs) Handles Button_JointNegX.Click
+        NumericUpDown_JointOffsetX.Value -= 5
+    End Sub
+
+    Private Sub Button_JointNegY_Click(sender As Object, e As EventArgs) Handles Button_JointNegY.Click
+        NumericUpDown_JointOffsetY.Value -= 5
+    End Sub
+
+    Private Sub Button_JointNegZ_Click(sender As Object, e As EventArgs) Handles Button_JointNegZ.Click
+        NumericUpDown_JointOffsetZ.Value -= 5
+    End Sub
+
+    Private Sub Button_JointPosX_Click(sender As Object, e As EventArgs) Handles Button_JointPosX.Click
+        NumericUpDown_JointOffsetX.Value += 5
+    End Sub
+
+    Private Sub Button_JointPosY_Click(sender As Object, e As EventArgs) Handles Button_JointPosY.Click
+        NumericUpDown_JointOffsetY.Value += 5
+    End Sub
+
+    Private Sub Button_JointPosZ_Click(sender As Object, e As EventArgs) Handles Button_JointPosZ.Click
+        NumericUpDown_JointOffsetZ.Value += 5
+    End Sub
+
+    Private Sub Button_ControllerNegX_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegX.Click
+        NumericUpDown_ControllerOffsetX.Value -= 5
+    End Sub
+
+    Private Sub Button_ControllerNegY_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegY.Click
+        NumericUpDown_ControllerOffsetY.Value -= 5
+    End Sub
+
+    Private Sub Button_ControllerNegZ_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegZ.Click
+        NumericUpDown_ControllerOffsetZ.Value -= 5
+    End Sub
+
+    Private Sub Button_ControllerPosX_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosX.Click
+        NumericUpDown_ControllerOffsetX.Value += 5
+    End Sub
+
+    Private Sub Button_ControllerPosY_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosY.Click
+        NumericUpDown_ControllerOffsetY.Value += 5
+    End Sub
+
+    Private Sub Button_ControllerPosZ_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosZ.Click
+        NumericUpDown_ControllerOffsetZ.Value += 5
+    End Sub
+
+    Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
+        Try
+            g_mClassConfig.SaveConfig()
+
+            MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
+        TimerFPS.Stop()
+
+        SyncLock _ThreadLock
+            'TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
+
+            g_iFpsPacketCounter = 0
+            g_iFpsOrientationCounter = 0
+            g_mClassIO.m_FpsPipeCounter = 0
+        End SyncLock
+
+        TimerFPS.Start()
+    End Sub
+
+
+    Private Sub CleanUp()
+        If (g_mClassIO IsNot Nothing) Then
+            g_mClassIO.Dispose()
+            g_mClassIO = Nothing
+        End If
+    End Sub
+
+    Public Class ClassIO
+        Implements IDisposable
+
+        Public _ThreadLock As New Object
+
+        Private g_iIndex As Integer = -1
+        Private g_iParentIndex As Integer = -1
+        Private g_PipeThread As Threading.Thread = Nothing
+
+        Private g_mJointOffset As New Vector3(0, 0, 0)
+        Private g_mControllerOffset As New Vector3(0, 0, 0)
+
+        Private g_iFpsPipeCounter As Integer = 0
+
+        Public Sub New()
+        End Sub
+
+        Property m_Index As Integer
+            Get
+                Return g_iIndex
+            End Get
+            Set(value As Integer)
+                If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+                    Disable()
+                    g_iIndex = value
+                    Enable()
+                Else
+                    g_iIndex = value
+                End If
+            End Set
+        End Property
+
+        Property m_ParentController As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iParentIndex
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iParentIndex = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_JointOffset As Vector3
+            Get
+                SyncLock _ThreadLock
+                    Return g_mJointOffset
+                End SyncLock
+            End Get
+            Set(value As Vector3)
+                SyncLock _ThreadLock
+                    g_mJointOffset = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_ControllerOffset As Vector3
+            Get
+                SyncLock _ThreadLock
+                    Return g_mControllerOffset
+                End SyncLock
+            End Get
+            Set(value As Vector3)
+                SyncLock _ThreadLock
+                    g_mControllerOffset = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Sub Enable()
+            If (g_iIndex < 0) Then
+                Return
+            End If
+
+            If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+                Return
+            End If
+
+            g_PipeThread = New Threading.Thread(AddressOf ThreadPipe)
+            g_PipeThread.IsBackground = True
+            g_PipeThread.Start()
+        End Sub
+
+        Property m_FpsPipeCounter As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iFpsPipeCounter
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iFpsPipeCounter = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Sub Disable()
+            If (g_PipeThread Is Nothing OrElse Not g_PipeThread.IsAlive) Then
+                Return
+            End If
+
+            g_PipeThread.Abort()
+            g_PipeThread.Join()
+            g_PipeThread = Nothing
+        End Sub
+
+        Private Sub ThreadPipe()
+            While True
+                Try
+                    If (g_iIndex < 0) Then
+                        Return
+                    End If
+
+                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", "PSMoveSerivceEx\AttachPSmoveStream_" & g_iIndex, IO.Pipes.PipeDirection.Out)
+                        ' The thread when aborting will hang if we dont put a timeout.
+                        mPipe.Connect(5000)
+
+                        While True
+                            Dim iBytes = New Byte(128) {}
+
+                            Using mMem As New IO.MemoryStream(iBytes)
+                                Using Bw As New IO.BinaryWriter(mMem)
+                                    SyncLock _ThreadLock
+                                        ' Set target parent controller
+                                        Bw.Write(Encoding.ASCII.GetBytes(CStr(m_ParentController)))
+                                        Bw.Write(CByte(0))
+
+                                        ' Send joint offset
+                                        Bw.Write(Encoding.ASCII.GetBytes(m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(m_JointOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+
+                                        ' Send Reset Orientation 
+                                        Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+
+                                        g_iFpsPipeCounter += 1
+                                    End SyncLock
+                                End Using
+
+                                iBytes = mMem.ToArray
+                            End Using
+
+                            ' Write to pipe and wait for response.
+                            ' $TODO Latency is quite ok but somewhat noticeable
+                            mPipe.Write(iBytes, 0, iBytes.Length)
+                            mPipe.WaitForPipeDrain()
+                        End While
+                    End Using
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    Threading.Thread.Sleep(1000)
+                End Try
+            End While
+        End Sub
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+
+                    If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+                        g_PipeThread.Abort()
+                        g_PipeThread.Join()
+                        g_PipeThread = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
+
+    Class ClassConfig
+        Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "attach_devices.ini")
+
+        Private g_mUCRemoteDeviceItem As UCControllerAttachmentsItem
+
+        Public Sub New(_UCRemoteDeviceItem As UCControllerAttachmentsItem)
+            g_mUCRemoteDeviceItem = _UCRemoteDeviceItem
+        End Sub
+
+        Public Sub SaveConfig()
+            If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
+                Return
+            End If
+
+            Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
+
+            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    SyncLock _ThreadLock
+                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.X", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ParentControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID.SelectedIndex)))
+
+                        mIni.WriteKeyValue(mIniContent.ToArray)
+                    End SyncLock
+                End Using
+            End Using
+        End Sub
+
+        Public Sub LoadConfig()
+            If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
+                Return
+            End If
+
+            Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
+
+            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    Dim iJointX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iJointY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iJointZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iControllerX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iControllerY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iControllerZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetZ, iJointZ)
+
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetX, iControllerX)
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetY, iControllerY)
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetZ, iControllerZ)
+
+                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
+                End Using
+            End Using
+        End Sub
+
+        Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Single)
+            mControl.Value = CDec(Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue)))
+        End Sub
+
+        Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
+            If (mControl.Items.Count = 0) Then
+                Return
+            End If
+
+            mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
+        End Sub
+    End Class
+
+    Private Sub Label_Close_Click(sender As Object, e As EventArgs) Handles Label_Close.Click
+        Me.Dispose()
+    End Sub
+End Class

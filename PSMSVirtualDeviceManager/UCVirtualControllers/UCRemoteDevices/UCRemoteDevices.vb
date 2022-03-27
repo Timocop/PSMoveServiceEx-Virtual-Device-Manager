@@ -7,12 +7,14 @@ Public Class UCRemoteDevices
     Shared _ThreadLock As New Object
 
     Public g_mClassStrackerSocket As ClassTrackerSocket
+    Public WithEvents g_mFormMain As FormMain
 
     Private g_mRemoveDevices As New Dictionary(Of String, UCRemoteDeviceItem)
 
     Private g_iSocketPort As Integer = 0
 
-    Public Sub New()
+    Public Sub New(_FormMain As FormMain)
+        g_mFormMain = _FormMain
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -679,4 +681,9 @@ Public Class UCRemoteDevices
 
         End Class
     End Class
+
+    Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
+        Dim mMsg As New FormRemoteDevicesHelp
+        mMsg.ShowDialog(Me)
+    End Sub
 End Class

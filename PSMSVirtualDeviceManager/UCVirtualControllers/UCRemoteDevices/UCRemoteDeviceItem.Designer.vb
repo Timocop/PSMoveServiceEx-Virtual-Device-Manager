@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UCRemoteDeviceItem
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If (disposing) Then
@@ -24,7 +24,7 @@ Partial Class UCRemoteDeviceItem
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Button_Recenter = New System.Windows.Forms.Button()
@@ -48,6 +48,7 @@ Partial Class UCRemoteDeviceItem
         'Button_Recenter
         '
         Me.Button_Recenter.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Recenter.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_Recenter.Location = New System.Drawing.Point(493, 150)
         Me.Button_Recenter.Margin = New System.Windows.Forms.Padding(3, 3, 16, 16)
         Me.Button_Recenter.Name = "Button_Recenter"
@@ -87,6 +88,7 @@ Partial Class UCRemoteDeviceItem
         'Button_SaveSettings
         '
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 121)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
@@ -184,6 +186,7 @@ Partial Class UCRemoteDeviceItem
         'Button_YawOffsetNeg
         '
         Me.Button_YawOffsetNeg.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_YawOffsetNeg.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_YawOffsetNeg.Location = New System.Drawing.Point(108, 150)
         Me.Button_YawOffsetNeg.Name = "Button_YawOffsetNeg"
         Me.Button_YawOffsetNeg.Size = New System.Drawing.Size(23, 23)
@@ -194,6 +197,7 @@ Partial Class UCRemoteDeviceItem
         'Button_YawOffsetPos
         '
         Me.Button_YawOffsetPos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_YawOffsetPos.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_YawOffsetPos.Location = New System.Drawing.Point(235, 150)
         Me.Button_YawOffsetPos.Name = "Button_YawOffsetPos"
         Me.Button_YawOffsetPos.Size = New System.Drawing.Size(23, 23)

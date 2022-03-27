@@ -1,7 +1,8 @@
 ﻿Public Class UCVirtualControllers
     Private g_mFormMain As FormMain
 
-    Public mUCRemoteDevices As UCRemoteDevices
+    Public g_mUCRemoteDevices As UCRemoteDevices
+    Public g_mUCControllerAttachments As UCControllerAttachments
 
     Private g_mControllerSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
 
@@ -9,14 +10,20 @@
 
     Public Sub New(_FormMain As FormMain)
         g_mFormMain = _FormMain
+
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        mUCRemoteDevices = New UCRemoteDevices
-        mUCRemoteDevices.Parent = TabPage_RemoteSettings
-        mUCRemoteDevices.Dock = DockStyle.Fill
-        mUCRemoteDevices.Show()
+        g_mUCRemoteDevices = New UCRemoteDevices(g_mFormMain)
+        g_mUCRemoteDevices.Parent = TabPage_RemoteSettings
+        g_mUCRemoteDevices.Dock = DockStyle.Fill
+        g_mUCRemoteDevices.Show()
+
+        g_mUCControllerAttachments = New UCControllerAttachments(g_mFormMain)
+        g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
+        g_mUCControllerAttachments.Dock = DockStyle.Fill
+        g_mUCControllerAttachments.Show()
 
         Try
             g_bIgnoreEvents = True
@@ -247,9 +254,14 @@
     End Sub
 
     Private Sub CleanUp()
-        If (mUCRemoteDevices IsNot Nothing AndAlso Not mUCRemoteDevices.IsDisposed) Then
-            mUCRemoteDevices.Dispose()
-            mUCRemoteDevices = Nothing
+        If (g_mUCRemoteDevices IsNot Nothing AndAlso Not g_mUCRemoteDevices.IsDisposed) Then
+            g_mUCRemoteDevices.Dispose()
+            g_mUCRemoteDevices = Nothing
+        End If
+
+        If (g_mUCControllerAttachments IsNot Nothing AndAlso Not g_mUCControllerAttachments.IsDisposed) Then
+            g_mUCControllerAttachments.Dispose()
+            g_mUCControllerAttachments = Nothing
         End If
     End Sub
 End Class

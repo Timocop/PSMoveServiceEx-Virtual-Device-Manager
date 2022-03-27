@@ -6,6 +6,10 @@ Public Class UCRemoteDeviceItem
     Shared _ThreadLock As New Object
 
     Public g_mUCRemoteDevices As UCRemoteDevices
+    Public WithEvents g_mFormMain As FormMain
+
+    Private g_bLoaded As Boolean = False
+
     Public g_mClassIO As ClassIO
     Public g_mClassConfig As ClassConfig
 
@@ -20,8 +24,11 @@ Public Class UCRemoteDeviceItem
     Private g_iFpsPacketCounter As Integer = 0
     Private g_iFpsOrientationCounter As Integer = 0
 
+    Const MAX_CONTROLLERS = 6
+
     Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
         g_mUCRemoteDevices = _UCRemoteDevices
+        g_mFormMain = g_mUCRemoteDevices.g_mFormMain
         g_sTrackerName = sTrackerName
 
         ' This call is required by the designer.
@@ -34,7 +41,7 @@ Public Class UCRemoteDeviceItem
             g_bIgnoreEvents = True
 
             ComboBox_ControllerID.Items.Clear()
-            For i = -1 To 6
+            For i = -1 To MAX_CONTROLLERS - 1
                 ComboBox_ControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ControllerID.SelectedIndex = 0
@@ -57,7 +64,27 @@ Public Class UCRemoteDeviceItem
         g_mClassIO.Enable()
     End Sub
 
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles g_mFormMain.Load
+        If (g_bLoaded) Then
+            Return
+        End If
+
+        g_bLoaded = True
+
+        Try
+            g_mClassConfig.LoadConfig()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If (g_bLoaded) Then
+            Return
+        End If
+
+        g_bLoaded = True
+
         Try
             g_mClassConfig.LoadConfig()
         Catch ex As Exception
