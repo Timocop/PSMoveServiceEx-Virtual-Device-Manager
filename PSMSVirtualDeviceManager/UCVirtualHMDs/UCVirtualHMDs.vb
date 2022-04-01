@@ -1,13 +1,9 @@
 ﻿Public Class UCVirtualHMDs
-    Private g_mFormMain As FormMain
-
     Private g_mHMDSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
 
     Private g_bIgnoreEvents As Boolean = False
 
-    Public Sub New(_FormMain As FormMain)
-        g_mFormMain = _FormMain
-
+    Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -33,6 +29,11 @@
         Finally
             g_bIgnoreEvents = False
         End Try
+    End Sub
+
+    Public Sub Init()
+        Me.Visible = False
+        Me.Visible = True
     End Sub
 
     Private Sub ComboBox_VirtualHMDCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualHMDCount.SelectedIndexChanged

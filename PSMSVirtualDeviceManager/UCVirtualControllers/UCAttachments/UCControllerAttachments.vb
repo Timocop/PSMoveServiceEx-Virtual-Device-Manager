@@ -1,19 +1,13 @@
 ﻿Imports System.ComponentModel
 
 Public Class UCControllerAttachments
-    Public WithEvents g_mFormMain As FormMain
-
-    Private g_bLoaded As Boolean = False
-
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
     Private g_mAttachments As New List(Of UCControllerAttachmentsItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "attach_devices.ini")
 
     Const MAX_ATTACHMENTS = 6
 
-    Public Sub New(_FormMain As FormMain)
-        g_mFormMain = _FormMain
-
+    Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -27,25 +21,16 @@ Public Class UCControllerAttachments
 
             ContextMenuStrip_Autostart.Items.Add(mItem)
         Next
+
+        Init()
     End Sub
 
-    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles g_mFormMain.Load
-        If (g_bLoaded) Then
-            Return
-        End If
-
-        g_bLoaded = True
-
-        AutostartLoad()
+    Public Sub Init()
+        Me.Visible = False
+        Me.Visible = True
     End Sub
 
-    Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If (g_bLoaded) Then
-            Return
-        End If
-
-        g_bLoaded = True
-
+    Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
         AutostartLoad()
     End Sub
 
@@ -92,7 +77,7 @@ Public Class UCControllerAttachments
 
         mItem.Parent = Panel_Attachments
         mItem.Dock = DockStyle.Top
-        mItem.Show()
+        mItem.InitializeLifetimeService()
     End Sub
 
     Private Sub Button_Autostart_Click(sender As Object, e As EventArgs) Handles Button_Autostart.Click

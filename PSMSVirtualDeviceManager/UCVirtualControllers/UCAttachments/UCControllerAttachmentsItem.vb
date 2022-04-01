@@ -4,12 +4,10 @@ Imports System.Text
 Public Class UCControllerAttachmentsItem
     Shared _ThreadLock As New Object
 
-    Public WithEvents g_mUCControllerAttachments As UCControllerAttachments
-    Public WithEvents g_mFormMain As FormMain
+    Public g_mUCControllerAttachments As UCControllerAttachments
 
     Public g_mClassIO As ClassIO
     Public g_mClassConfig As ClassConfig
-    Private g_bLoaded As Boolean = False
 
     Private g_sTrackerName As String = ""
     Private g_sNickname As String = ""
@@ -22,7 +20,6 @@ Public Class UCControllerAttachmentsItem
 
     Public Sub New(iControllerID As Integer, _UCControllerAttachments As UCControllerAttachments)
         g_mUCControllerAttachments = _UCControllerAttachments
-        g_mFormMain = g_mUCControllerAttachments.g_mFormMain
 
         If (iControllerID < 0 OrElse iControllerID > MAX_CONTROLLERS - 1) Then
             iControllerID = -1
@@ -63,30 +60,16 @@ Public Class UCControllerAttachmentsItem
         g_mClassIO = New ClassIO()
         g_mClassConfig = New ClassConfig(Me)
 
+        g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
     End Sub
 
-    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles g_mFormMain.Load
-        If (g_bLoaded) Then
-            Return
-        End If
-
-        g_bLoaded = True
-
-        Try
-            g_mClassConfig.LoadConfig()
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+    Public Sub Init()
+        Me.Visible = False
+        Me.Visible = True
     End Sub
 
     Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If (g_bLoaded) Then
-            Return
-        End If
-
-        g_bLoaded = True
-
         Try
             g_mClassConfig.LoadConfig()
         Catch ex As Exception

@@ -1,13 +1,9 @@
 ﻿Public Class UCVirtualTrackers
-    Private g_mFormMain As FormMain
-
     Private g_mTrackerSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
 
     Private g_bIgnoreEvents As Boolean = False
 
-    Public Sub New(_FormMain As FormMain)
-        g_mFormMain = _FormMain
-
+    Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -55,6 +51,11 @@
         Finally
             g_bIgnoreEvents = False
         End Try
+    End Sub
+
+    Public Sub Init()
+        Me.Visible = False
+        Me.Visible = True
     End Sub
 
     Private Sub ComboBox_VirtualTrackerCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualTrackerCount.SelectedIndexChanged
@@ -205,10 +206,10 @@
             End If
         Next
 
-        mUCVirtualTrackerItem = New UCVirtualTrackerItem(g_mFormMain, mDeviceInfo)
+        mUCVirtualTrackerItem = New UCVirtualTrackerItem(Me, mDeviceInfo)
         mUCVirtualTrackerItem.Parent = Panel_Devices
         mUCVirtualTrackerItem.Dock = DockStyle.Top
-        mUCVirtualTrackerItem.Show()
+        mUCVirtualTrackerItem.Init()
     End Sub
 
     Public Function GetAllDevices() As UCVirtualTrackerItem()

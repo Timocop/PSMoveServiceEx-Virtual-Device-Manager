@@ -6,9 +6,6 @@ Public Class UCRemoteDeviceItem
     Shared _ThreadLock As New Object
 
     Public g_mUCRemoteDevices As UCRemoteDevices
-    Public WithEvents g_mFormMain As FormMain
-
-    Private g_bLoaded As Boolean = False
 
     Public g_mClassIO As ClassIO
     Public g_mClassConfig As ClassConfig
@@ -28,7 +25,6 @@ Public Class UCRemoteDeviceItem
 
     Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
         g_mUCRemoteDevices = _UCRemoteDevices
-        g_mFormMain = g_mUCRemoteDevices.g_mFormMain
         g_sTrackerName = sTrackerName
 
         ' This call is required by the designer.
@@ -64,27 +60,12 @@ Public Class UCRemoteDeviceItem
         g_mClassIO.Enable()
     End Sub
 
-    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles g_mFormMain.Load
-        If (g_bLoaded) Then
-            Return
-        End If
-
-        g_bLoaded = True
-
-        Try
-            g_mClassConfig.LoadConfig()
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+    Public Sub Init()
+        Me.Visible = False
+        Me.Visible = True
     End Sub
 
     Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If (g_bLoaded) Then
-            Return
-        End If
-
-        g_bLoaded = True
-
         Try
             g_mClassConfig.LoadConfig()
         Catch ex As Exception

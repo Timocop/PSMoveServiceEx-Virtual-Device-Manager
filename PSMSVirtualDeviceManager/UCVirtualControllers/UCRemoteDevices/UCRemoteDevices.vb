@@ -7,15 +7,12 @@ Public Class UCRemoteDevices
     Shared _ThreadLock As New Object
 
     Public g_mClassStrackerSocket As ClassTrackerSocket
-    Public WithEvents g_mFormMain As FormMain
 
     Private g_mRemoveDevices As New Dictionary(Of String, UCRemoteDeviceItem)
 
     Private g_iSocketPort As Integer = 0
 
-    Public Sub New(_FormMain As FormMain)
-        g_mFormMain = _FormMain
-
+    Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -25,6 +22,11 @@ Public Class UCRemoteDevices
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
 
         m_SocketPort = 6970
+    End Sub
+
+    Public Sub Init()
+        Me.Visible = False
+        Me.Visible = True
     End Sub
 
     Property m_SocketPort As Integer
@@ -52,7 +54,7 @@ Public Class UCRemoteDevices
 
                           mNewDevice.Parent = Panel_RemoteDevices
                           mNewDevice.Dock = DockStyle.Top
-                          mNewDevice.Show()
+                          mNewDevice.Init()
                       End Sub)
         End SyncLock
     End Sub
