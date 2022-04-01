@@ -1195,7 +1195,7 @@ Public Class UCVirtualTrackerItem
     End Class
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim mHelp As New FormAttachmentsHelp
+        Dim mHelp As New FormVirtualTrackersHelp
         mHelp.ShowDialog(Me)
     End Sub
 End Class

@@ -170,10 +170,10 @@
     <Compile Include="UCVirtualHMDs\UCVirtualHMDs.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCVirtualTrackers\FormHelp.Designer.vb">
-      <DependentUpon>FormHelp.vb</DependentUpon>
+    <Compile Include="UCVirtualTrackers\FormVirtualTrackersHelp.Designer.vb">
+      <DependentUpon>FormVirtualTrackersHelp.vb</DependentUpon>
     </Compile>
-    <Compile Include="UCVirtualTrackers\FormHelp.vb">
+    <Compile Include="UCVirtualTrackers\FormVirtualTrackersHelp.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.Designer.vb">
@@ -226,8 +226,8 @@
     <EmbeddedResource Include="UCVirtualHMDs\UCVirtualHMDs.resx">
       <DependentUpon>UCVirtualHMDs.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCVirtualTrackers\FormHelp.resx">
-      <DependentUpon>FormHelp.vb</DependentUpon>
+    <EmbeddedResource Include="UCVirtualTrackers\FormVirtualTrackersHelp.resx">
+      <DependentUpon>FormVirtualTrackersHelp.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.resx">
       <DependentUpon>UCRemoteDevices.vb</DependentUpon>

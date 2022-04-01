@@ -1,4 +1,4 @@
-﻿Public Class FormHelp
+﻿Public Class FormVirtualTrackersHelp
     Public Sub New()
 
         ' This call is required by the designer.
