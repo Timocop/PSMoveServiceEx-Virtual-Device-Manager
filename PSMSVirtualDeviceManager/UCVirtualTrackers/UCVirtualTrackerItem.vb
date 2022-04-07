@@ -254,7 +254,7 @@ Public Class UCVirtualTrackerItem
 
         If (g_iCaptureFps < 20 OrElse g_iPipeFps < 20) Then
             Label_FPS.ForeColor = Color.Red
-        ElseIf (g_iCaptureFps < 30 OrElse g_iPipeFps < 30) Then
+        ElseIf (g_iCaptureFps < 27 OrElse g_iPipeFps < 27) Then
             Label_FPS.ForeColor = Color.DarkOrange
         Else
             Label_FPS.ForeColor = Color.Black
@@ -281,6 +281,7 @@ Public Class UCVirtualTrackerItem
 
         Private g_mCapture As OpenCvSharp.VideoCapture
         Private g_mCaptureFrame As OpenCvSharp.Mat
+        Private g_mPipEvent As New Threading.AutoResetEvent(False)
 
         Private g_mThreadLock As New Object
 
@@ -914,6 +915,8 @@ Public Class UCVirtualTrackerItem
                         ' Copy to global frame
                         mFrame.CopyTo(m_CaptureFrame)
 
+                        g_mPipEvent.Set()
+
                         ' Preview captured image
                         ' $TODO: Quite performance heavy, find a better way.
                         If (mFrameImage.ElapsedMilliseconds > 100) Then
@@ -1006,6 +1009,8 @@ Public Class UCVirtualTrackerItem
                                     iFpsCount = 0
                                 End If
                             End If
+
+                            g_mPipEvent.WaitOne(New TimeSpan(0, 0, 5))
 
                             Dim iBytes = New Byte(VIRT_BUFFER_SIZE) {}
                             Marshal.Copy(m_CaptureFrame.Data, iBytes, 0, iBytes.Length)
