@@ -253,13 +253,14 @@ Public Class UCVirtualTrackerItem
         End If
 
         If (g_iCaptureFps < 20 OrElse g_iPipeFps < 20) Then
-            Label_FPS.ForeColor = Color.Red
+            TextBox_Fps.ForeColor = Color.Red
         ElseIf (g_iCaptureFps < 27 OrElse g_iPipeFps < 27) Then
-            Label_FPS.ForeColor = Color.DarkOrange
+            TextBox_Fps.ForeColor = Color.DarkOrange
         Else
-            Label_FPS.ForeColor = Color.Black
+            TextBox_Fps.ForeColor = Color.Black
         End If
-        Label_FPS.Text = String.Format("FPS: {0}, I/O FPS: {1}", g_iCaptureFps, g_iPipeFps)
+
+        TextBox_Fps.Text = String.Format("FPS: {0}, I/O FPS: {1}", g_iCaptureFps, g_iPipeFps)
     End Sub
 
     Private Sub CleanUp()

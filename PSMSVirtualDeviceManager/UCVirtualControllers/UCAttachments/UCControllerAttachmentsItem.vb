@@ -13,8 +13,6 @@ Public Class UCControllerAttachmentsItem
     Private g_sNickname As String = ""
 
     Private g_bIgnoreEvents As Boolean = False
-    Private g_iFpsPacketCounter As Integer = 0
-    Private g_iFpsOrientationCounter As Integer = 0
 
     Const MAX_CONTROLLERS = 6
 
@@ -182,10 +180,8 @@ Public Class UCControllerAttachmentsItem
         TimerFPS.Stop()
 
         SyncLock _ThreadLock
-            'TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
+            TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsPipeCounter)
 
-            g_iFpsPacketCounter = 0
-            g_iFpsOrientationCounter = 0
             g_mClassIO.m_FpsPipeCounter = 0
         End SyncLock
 

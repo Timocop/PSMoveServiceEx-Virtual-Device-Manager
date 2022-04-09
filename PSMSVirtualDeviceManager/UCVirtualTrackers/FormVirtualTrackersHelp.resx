@@ -125,7 +125,7 @@ Adjust the exposure or gain so that only the tracking light of your device you w
   <data name="Label11.Text" xml:space="preserve">
     <value>Output is too bright! Set the device's exposure/gain settings lower until you only see the tracking light.
 If exposure and gain settings are unavailable there are a few workarounds:
- - (Recommended) Use black sunglasses and put them in front of your device's lens to darken the output.
+ - (Recommended) Use black sunglasses or black window tint and put them in front of your device's lens to darken the output.
  - Lower the brightness of the tracking light LED.
  - Use white paper (or other diffusers) and put them around the tracking light to lower the brightness of the light instead.
 
@@ -137,7 +137,7 @@ If exposure and gain settings are unavailable there are a few workarounds:
  - Turn up the brightness of the tracking light LED.</value>
   </data>
   <data name="Label13.Text" xml:space="preserve">
-    <value>If you want your device to track correctly you have to make sure the video input device output is mirrored correctly as the images below demonstrate.
+    <value>If you want your device to track correctly you have to make sure the video input device output is mirrored correctly as the images below demonstrates.
 Use the "Flip image horizontally" option in the "Tracker properties" page to flip the output if it's flipped the wrong way.
 
 

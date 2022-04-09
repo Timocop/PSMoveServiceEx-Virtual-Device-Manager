@@ -304,7 +304,7 @@ Partial Class FormVirtualTrackersHelp
         Me.Label13.TabIndex = 3
         Me.Label13.Text = resources.GetString("Label13.Text")
         '
-        'FormHelp
+        'FormVirtualTrackersHelp
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
@@ -314,7 +314,7 @@ Partial Class FormVirtualTrackersHelp
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimizeBox = False
-        Me.Name = "FormHelp"
+        Me.Name = "FormVirtualTrackersHelp"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Help"
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()

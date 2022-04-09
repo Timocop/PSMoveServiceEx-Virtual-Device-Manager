@@ -36,7 +36,6 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceGain = New System.Windows.Forms.TrackBar()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Button_Close = New System.Windows.Forms.Label()
-        Me.Label_FPS = New System.Windows.Forms.Label()
         Me.CheckBox_ShowCaptureImage = New System.Windows.Forms.CheckBox()
         Me.TrackBar_DeviceGamma = New System.Windows.Forms.TrackBar()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -53,6 +52,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_FlipHorizontal = New System.Windows.Forms.CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -174,18 +174,6 @@ Partial Class UCVirtualTrackerItem
         Me.Button_Close.Size = New System.Drawing.Size(26, 13)
         Me.Button_Close.TabIndex = 11
         Me.Button_Close.Text = "  X  "
-        '
-        'Label_FPS
-        '
-        Me.Label_FPS.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label_FPS.AutoSize = True
-        Me.Label_FPS.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_FPS.Location = New System.Drawing.Point(501, 30)
-        Me.Label_FPS.Margin = New System.Windows.Forms.Padding(3)
-        Me.Label_FPS.Name = "Label_FPS"
-        Me.Label_FPS.Size = New System.Drawing.Size(38, 13)
-        Me.Label_FPS.TabIndex = 12
-        Me.Label_FPS.Text = "FPS: 0"
         '
         'CheckBox_ShowCaptureImage
         '
@@ -378,17 +366,30 @@ Partial Class UCVirtualTrackerItem
         Me.Button1.Text = "Help"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'TextBox_Fps
+        '
+        Me.TextBox_Fps.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBox_Fps.BackColor = System.Drawing.Color.White
+        Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.TextBox_Fps.Location = New System.Drawing.Point(504, 29)
+        Me.TextBox_Fps.Name = "TextBox_Fps"
+        Me.TextBox_Fps.ReadOnly = True
+        Me.TextBox_Fps.Size = New System.Drawing.Size(209, 15)
+        Me.TextBox_Fps.TabIndex = 23
+        Me.TextBox_Fps.Text = "FPS: 0 / I/O FPS: 0"
+        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.TextBox_Fps)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.CheckBox_Autostart)
         Me.Controls.Add(Me.Button_ConfigSave)
         Me.Controls.Add(Me.Button_RestartDevice)
-        Me.Controls.Add(Me.Label_FPS)
         Me.Controls.Add(Me.Button_Close)
         Me.Controls.Add(Me.Label_FriendlyName)
         Me.Controls.Add(Me.Label1)
@@ -422,7 +423,6 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents TrackBar_DeviceGain As TrackBar
     Friend WithEvents Label6 As Label
     Friend WithEvents Button_Close As Label
-    Friend WithEvents Label_FPS As Label
     Friend WithEvents CheckBox_ShowCaptureImage As CheckBox
     Friend WithEvents TrackBar_DeviceGamma As TrackBar
     Friend WithEvents Label7 As Label
@@ -439,4 +439,5 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents ComboBox_ImageInterpolation As ComboBox
     Friend WithEvents Label5 As Label
     Friend WithEvents Button1 As Button
+    Friend WithEvents TextBox_Fps As TextBox
 End Class
