@@ -203,7 +203,7 @@ Public Class UCControllerAttachmentsItem
 
         Private g_iIndex As Integer = -1
         Private g_iParentIndex As Integer = -1
-        Private g_PipeThread As Threading.Thread = Nothing
+        Private g_mPipeThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
         Private g_mControllerOffset As New Vector3(0, 0, 0)
@@ -218,7 +218,7 @@ Public Class UCControllerAttachmentsItem
                 Return g_iIndex
             End Get
             Set(value As Integer)
-                If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+                If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
                     Disable()
                     g_iIndex = value
                     Enable()
@@ -272,13 +272,13 @@ Public Class UCControllerAttachmentsItem
                 Return
             End If
 
-            If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+            If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
                 Return
             End If
 
-            g_PipeThread = New Threading.Thread(AddressOf ThreadPipe)
-            g_PipeThread.IsBackground = True
-            g_PipeThread.Start()
+            g_mPipeThread = New Threading.Thread(AddressOf ThreadPipe)
+            g_mPipeThread.IsBackground = True
+            g_mPipeThread.Start()
         End Sub
 
         Property m_FpsPipeCounter As Integer
@@ -295,13 +295,13 @@ Public Class UCControllerAttachmentsItem
         End Property
 
         Public Sub Disable()
-            If (g_PipeThread Is Nothing OrElse Not g_PipeThread.IsAlive) Then
+            If (g_mPipeThread Is Nothing OrElse Not g_mPipeThread.IsAlive) Then
                 Return
             End If
 
-            g_PipeThread.Abort()
-            g_PipeThread.Join()
-            g_PipeThread = Nothing
+            g_mPipeThread.Abort()
+            g_mPipeThread.Join()
+            g_mPipeThread = Nothing
         End Sub
 
         Private Sub ThreadPipe()
@@ -371,10 +371,10 @@ Public Class UCControllerAttachmentsItem
                 If disposing Then
                     ' TODO: dispose managed state (managed objects).
 
-                    If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
-                        g_PipeThread.Abort()
-                        g_PipeThread.Join()
-                        g_PipeThread = Nothing
+                    If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
+                        g_mPipeThread.Abort()
+                        g_mPipeThread.Join()
+                        g_mPipeThread = Nothing
                     End If
                 End If
 

@@ -250,7 +250,8 @@ Public Class UCRemoteDeviceItem
         Public _ThreadLock As New Object
 
         Private g_iIndex As Integer = -1
-        Private g_PipeThread As Threading.Thread = Nothing
+        Private g_mPipeThread As Threading.Thread = Nothing
+        Private g_mPipeEvent As New Threading.AutoResetEvent(False)
 
         Private g_mOrientation As Quaternion = Quaternion.Identity
         Private g_mResetOrentation As Quaternion = Quaternion.Identity
@@ -266,7 +267,7 @@ Public Class UCRemoteDeviceItem
                 Return g_iIndex
             End Get
             Set(value As Integer)
-                If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+                If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
                     Disable()
                     g_iIndex = value
                     Enable()
@@ -286,6 +287,8 @@ Public Class UCRemoteDeviceItem
                 SyncLock _ThreadLock
                     g_mOrientation = value
                 End SyncLock
+
+                g_mPipeEvent.Set()
             End Set
         End Property
 
@@ -318,6 +321,7 @@ Public Class UCRemoteDeviceItem
 
         Public Sub RecenterOrientation()
             m_ResetOrientation = m_Orientation
+            g_mPipeEvent.Set()
         End Sub
 
         Public Sub Enable()
@@ -325,13 +329,13 @@ Public Class UCRemoteDeviceItem
                 Return
             End If
 
-            If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
+            If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
                 Return
             End If
 
-            g_PipeThread = New Threading.Thread(AddressOf ThreadPipe)
-            g_PipeThread.IsBackground = True
-            g_PipeThread.Start()
+            g_mPipeThread = New Threading.Thread(AddressOf ThreadPipe)
+            g_mPipeThread.IsBackground = True
+            g_mPipeThread.Start()
         End Sub
 
         Property m_FpsPipeCounter As Integer
@@ -348,13 +352,13 @@ Public Class UCRemoteDeviceItem
         End Property
 
         Public Sub Disable()
-            If (g_PipeThread Is Nothing OrElse Not g_PipeThread.IsAlive) Then
+            If (g_mPipeThread Is Nothing OrElse Not g_mPipeThread.IsAlive) Then
                 Return
             End If
 
-            g_PipeThread.Abort()
-            g_PipeThread.Join()
-            g_PipeThread = Nothing
+            g_mPipeThread.Abort()
+            g_mPipeThread.Join()
+            g_mPipeThread = Nothing
         End Sub
 
         Private Sub ThreadPipe()
@@ -369,6 +373,8 @@ Public Class UCRemoteDeviceItem
                         mPipe.Connect(5000)
 
                         While True
+                            g_mPipeEvent.WaitOne()
+
                             Dim iBytes = New Byte(128) {}
 
                             Using mMem As New IO.MemoryStream(iBytes)
@@ -427,10 +433,10 @@ Public Class UCRemoteDeviceItem
                 If disposing Then
                     ' TODO: dispose managed state (managed objects).
 
-                    If (g_PipeThread IsNot Nothing AndAlso g_PipeThread.IsAlive) Then
-                        g_PipeThread.Abort()
-                        g_PipeThread.Join()
-                        g_PipeThread = Nothing
+                    If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
+                        g_mPipeThread.Abort()
+                        g_mPipeThread.Join()
+                        g_mPipeThread = Nothing
                     End If
                 End If
 
