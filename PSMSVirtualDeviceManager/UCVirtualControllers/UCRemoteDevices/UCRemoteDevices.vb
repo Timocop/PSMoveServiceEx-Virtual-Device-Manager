@@ -238,6 +238,7 @@ Public Class UCRemoteDevices
             Return False
         End Function
 
+        'https://github.com/abb128/SlimeVR-Server/blob/main/src/main/java/io/eiren/vr/trackers/TrackersUDPServer.java
         Private Sub ThreadSocketListener()
             Try
                 If (g_mSocket Is Nothing) Then
@@ -272,6 +273,8 @@ Public Class UCRemoteDevices
                         Using mMemStream As New IO.MemoryStream(g_mBuffer)
                             Using mBinReader As New IO.BinaryReader(mMemStream)
                                 Dim iPacketId As Integer = BR_ReadInt32(mBinReader)
+
+                                'Debug.WriteLine("Packet: " & iPacketId)
 
                                 Select Case (iPacketId)
                                     Case ENUM_PACKET_RECEIVE_TYPE.HEARTBEAT
@@ -336,24 +339,60 @@ Public Class UCRemoteDevices
 
                                         mBinReader.ReadInt64()
 
-                                        Dim iVoltage As Single = BR_ReadSingle(mBinReader)
+                                        Dim iBattery As Single = BR_ReadSingle(mBinReader)
 
-                                        'Dim iMinVolt As Single = 3.6F
-                                        'Dim iMaxVolt As Single = 4.2F
+                                        If (mTracker.m_ProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR) Then
+                                            Dim iMinVolt As Single = 3.6F
+                                            Dim iMaxVolt As Single = 4.2F
 
-                                        'Dim iVal As Single = (iVoltage - iMinVolt)
-                                        'Dim iMaxVal As Single = (iMaxVolt - iMinVolt)
-                                        'Dim iPercent As Integer = CInt(Math.Ceiling((iVal / iMaxVal) * 100))
+                                            Dim iVal As Single = (iBattery - iMinVolt)
+                                            Dim iMaxVal As Single = (iMaxVolt - iMinVolt)
+                                            Dim iPercent As Integer = CInt(Math.Ceiling((iVal / iMaxVal) * 100))
 
-                                        'If (iPercent < 0) Then
-                                        '    iPercent = 0
-                                        'End If
+                                            If (iPercent < 0) Then
+                                                iPercent = 0
+                                            End If
 
-                                        'If (iPercent > 100) Then
-                                        '    iPercent = 100
-                                        'End If
+                                            If (iPercent > 100) Then
+                                                iPercent = 100
+                                            End If
+                                        End If
 
-                                        RaiseEvent OnTrackerBattery(mTracker, CInt(iVoltage))
+                                        RaiseEvent OnTrackerBattery(mTracker, CInt(iBattery))
+
+                                    Case ENUM_PACKET_RECEIVE_TYPE.ROTATION_DATA
+                                        If (mTracker Is Nothing) Then
+                                            Exit Select
+                                        End If
+
+                                        If (mTracker.m_ProtocolType <> ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR) Then
+                                            Exit Select
+                                        End If
+
+                                        mBinReader.ReadInt64()
+
+                                        Dim iSensorId As Integer = (mBinReader.ReadByte And &HFF)
+
+                                        ' $TODO Add multiple sensors.
+                                        If (iSensorId <> 0) Then
+                                            Exit Select
+                                        End If
+
+                                        Dim iDataType As Integer = (mBinReader.ReadByte And &HFF)
+
+                                        Dim iX As Single = BR_ReadSingle(mBinReader)
+                                        Dim iY As Single = BR_ReadSingle(mBinReader)
+                                        Dim iZ As Single = BR_ReadSingle(mBinReader)
+                                        Dim iW As Single = BR_ReadSingle(mBinReader)
+                                        Dim mQuat As New Quaternion(iX, iY, iZ, iW)
+
+                                        RaiseEvent OnTrackerRotation(mTracker, iX, iY, iZ, iW)
+
+                                        SyncLock _ThreadLock
+                                            mTracker.m_Orentation = mQuat
+                                        End SyncLock
+
+                                        'Dim iCalibrationInfo As Integer = (mBinReader.ReadByte And &HFF)
 
                                     Case Else
                                         'Unknown packet
@@ -405,6 +444,7 @@ Public Class UCRemoteDevices
                 Dim iFirmwareBuild As Integer = -1
                 Dim sFirmwareName As String = ""
                 Dim sMacAddress As String = ""
+                Dim iProtocolType As ClassTracker.ENUM_PROTOCOL_TYPE = ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR
 
                 mBinReader.ReadInt64() ' Skip packet number
 
@@ -448,6 +488,11 @@ Public Class UCRemoteDevices
                         sFirmwareName = sFirmware.ToString
                     End If
 
+                    ' We assume OwOtrack
+                    If (String.IsNullOrEmpty(sFirmwareName)) Then
+                        iProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
+                    End If
+
                     Dim iMacAddress As Byte() = New Byte(6) {}
                     If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > iMacAddress.Length) Then
                         iMacAddress = mBinReader.ReadBytes(iMacAddress.Length)
@@ -467,7 +512,7 @@ Public Class UCRemoteDevices
                     End If
 
                     SyncLock _ThreadLock
-                        mTracker = New ClassTracker(sTrackerName, mEndPoint)
+                        mTracker = New ClassTracker(sTrackerName, iProtocolType, mEndPoint)
                         g_mTrackers(mEndPoint.Address.ToString) = mTracker
                     End SyncLock
                 End If
@@ -624,20 +669,24 @@ Public Class UCRemoteDevices
         Public Class ClassTracker
             Private g_sName As String = ""
 
+            Enum ENUM_PROTOCOL_TYPE
+                INVALID = -1
+                OWOTRACK
+                SLIMEVR
+            End Enum
+
             Private g_mEndPoint As IPEndPoint
             Private g_mLastPacket As New Stopwatch
             Private g_iLastPacketId As Integer = -1
             Private g_mOrientation As New Quaternion
+            Private g_iProtocolType As ENUM_PROTOCOL_TYPE = ENUM_PROTOCOL_TYPE.INVALID
 
-            'Public ReadOnly mClassIO As ClassIO = Nothing
-
-            Public Sub New(_Name As String, _mEndPoint As IPEndPoint)
+            Public Sub New(_Name As String, _ProtocolType As ENUM_PROTOCOL_TYPE, _mEndPoint As IPEndPoint)
                 g_sName = _Name
                 g_mEndPoint = _mEndPoint
+                g_iProtocolType = _ProtocolType
 
                 g_mLastPacket.Start()
-
-                'mClassIO = New ClassIO(Me)
             End Sub
 
             ReadOnly Property m_Name As String
@@ -673,6 +722,15 @@ Public Class UCRemoteDevices
                 End Get
                 Set(value As Quaternion)
                     g_mOrientation = value
+                End Set
+            End Property
+
+            Property m_ProtocolType As ENUM_PROTOCOL_TYPE
+                Get
+                    Return g_iProtocolType
+                End Get
+                Set(value As ENUM_PROTOCOL_TYPE)
+                    g_iProtocolType = value
                 End Set
             End Property
 
