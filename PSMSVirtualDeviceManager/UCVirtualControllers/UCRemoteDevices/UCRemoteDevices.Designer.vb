@@ -44,7 +44,7 @@ Partial Class UCRemoteDevices
         Me.Label_Port.Name = "Label_Port"
         Me.Label_Port.Size = New System.Drawing.Size(147, 13)
         Me.Label_Port.TabIndex = 0
-        Me.Label_Port.Text = "Listening Socket Port: 6970"
+        Me.Label_Port.Text = "Listening Socket Port: 0"
         '
         'Panel_RemoteDevices
         '

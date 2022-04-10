@@ -4,6 +4,8 @@ Imports System.Numerics
 Imports System.Text
 
 Public Class UCRemoteDevices
+    Const DEFAULT_SOCKET_PORT As Integer = 6969
+
     Shared _ThreadLock As New Object
 
     Public g_mClassStrackerSocket As ClassTrackerSocket
@@ -21,7 +23,7 @@ Public Class UCRemoteDevices
 
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
 
-        m_SocketPort = 6970
+        m_SocketPort = DEFAULT_SOCKET_PORT
     End Sub
 
     Public Sub Init()
