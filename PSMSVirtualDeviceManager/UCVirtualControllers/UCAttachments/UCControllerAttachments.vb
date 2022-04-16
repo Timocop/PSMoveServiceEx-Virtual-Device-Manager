@@ -5,14 +5,12 @@ Public Class UCControllerAttachments
     Private g_mAttachments As New List(Of UCControllerAttachmentsItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "attach_devices.ini")
 
-    Const MAX_ATTACHMENTS = 6
-
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        For i = 0 To MAX_ATTACHMENTS - 1
+        For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
             g_mAutostartMenuStrips(i) = mItem
@@ -39,7 +37,7 @@ Public Class UCControllerAttachments
 
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                For i = 0 To MAX_ATTACHMENTS - 1
+                For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If
@@ -68,7 +66,7 @@ Public Class UCControllerAttachments
             End If
         Next
 
-        If (g_mAttachments.Count >= MAX_ATTACHMENTS) Then
+        If (g_mAttachments.Count >= ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
             Throw New ArgumentException("Maximum of attachments reached")
         End If
 
@@ -108,7 +106,7 @@ Public Class UCControllerAttachments
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                For i = 0 To MAX_ATTACHMENTS - 1
+                For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If

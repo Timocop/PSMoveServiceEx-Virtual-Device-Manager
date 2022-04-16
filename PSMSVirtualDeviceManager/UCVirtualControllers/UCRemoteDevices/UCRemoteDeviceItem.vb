@@ -21,8 +21,6 @@ Public Class UCRemoteDeviceItem
     Private g_iFpsPacketCounter As Integer = 0
     Private g_iFpsOrientationCounter As Integer = 0
 
-    Const MAX_CONTROLLERS = 6
-
     Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
         g_mUCRemoteDevices = _UCRemoteDevices
         g_sTrackerName = sTrackerName
@@ -37,7 +35,7 @@ Public Class UCRemoteDeviceItem
             g_bIgnoreEvents = True
 
             ComboBox_ControllerID.Items.Clear()
-            For i = -1 To MAX_CONTROLLERS - 1
+            For i = -1 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_ControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ControllerID.SelectedIndex = 0

@@ -14,12 +14,10 @@ Public Class UCControllerAttachmentsItem
 
     Private g_bIgnoreEvents As Boolean = False
 
-    Const MAX_CONTROLLERS = 6
-
     Public Sub New(iControllerID As Integer, _UCControllerAttachments As UCControllerAttachments)
         g_mUCControllerAttachments = _UCControllerAttachments
 
-        If (iControllerID < 0 OrElse iControllerID > MAX_CONTROLLERS - 1) Then
+        If (iControllerID < 0 OrElse iControllerID > ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
             iControllerID = -1
         End If
 
@@ -31,7 +29,7 @@ Public Class UCControllerAttachmentsItem
             g_bIgnoreEvents = True
 
             ComboBox_ControllerID.Items.Clear()
-            For i = -1 To MAX_CONTROLLERS - 1
+            For i = -1 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_ControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ControllerID.SelectedIndex = 0
@@ -47,7 +45,7 @@ Public Class UCControllerAttachmentsItem
             g_bIgnoreEvents = True
 
             ComboBox_ParentControllerID.Items.Clear()
-            For i = -1 To MAX_CONTROLLERS - 1
+            For i = -1 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_ParentControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ParentControllerID.SelectedIndex = 0
