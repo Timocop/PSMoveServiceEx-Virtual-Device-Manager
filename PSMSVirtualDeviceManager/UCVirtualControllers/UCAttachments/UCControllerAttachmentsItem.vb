@@ -116,6 +116,14 @@ Public Class UCControllerAttachmentsItem
         g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
     End Sub
 
+    Private Sub NumericUpDown_JointYawCorrection_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointYawCorrection.ValueChanged
+        g_mClassIO.m_JointYawCorrection = CInt(NumericUpDown_JointYawCorrection.Value)
+    End Sub
+
+    Private Sub NumericUpDown_ControllerYawCorrection_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerYawCorrection.ValueChanged
+        g_mClassIO.m_ControllerYawCorrection = CInt(NumericUpDown_ControllerYawCorrection.Value)
+    End Sub
+
     Private Sub Button_JointNegX_Click(sender As Object, e As EventArgs) Handles Button_JointNegX.Click
         NumericUpDown_JointOffsetX.Value -= 5
     End Sub
@@ -164,6 +172,22 @@ Public Class UCControllerAttachmentsItem
         NumericUpDown_ControllerOffsetZ.Value += 5
     End Sub
 
+    Private Sub Button_JointNegYaw_Click(sender As Object, e As EventArgs) Handles Button_JointNegYaw.Click
+        NumericUpDown_JointYawCorrection.Value -= 5
+    End Sub
+
+    Private Sub Button_JointPosYaw_Click(sender As Object, e As EventArgs) Handles Button_JointPosYaw.Click
+        NumericUpDown_JointYawCorrection.Value += 5
+    End Sub
+
+    Private Sub Button_ControllerNegYaw_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegYaw.Click
+        NumericUpDown_ControllerYawCorrection.Value -= 5
+    End Sub
+
+    Private Sub Button_ControllerPosYaw_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosYaw.Click
+        NumericUpDown_ControllerYawCorrection.Value += 5
+    End Sub
+
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
@@ -205,6 +229,8 @@ Public Class UCControllerAttachmentsItem
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
         Private g_mControllerOffset As New Vector3(0, 0, 0)
+        Private g_iJointYawCorrection As Integer = 0
+        Private g_iControllerYawCorrection As Integer = 0
 
         Private g_iFpsPipeCounter As Integer = 0
 
@@ -265,6 +291,32 @@ Public Class UCControllerAttachmentsItem
             End Set
         End Property
 
+        Property m_JointYawCorrection As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iJointYawCorrection
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iJointYawCorrection = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_ControllerYawCorrection As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iControllerYawCorrection
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iControllerYawCorrection = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub Enable()
             If (g_iIndex < 0) Then
                 Return
@@ -314,7 +366,7 @@ Public Class UCControllerAttachmentsItem
                         mPipe.Connect(5000)
 
                         While True
-                            Dim iBytes = New Byte(128) {}
+                            Dim iBytes = New Byte(512) {}
 
                             Using mMem As New IO.MemoryStream(iBytes)
                                 Using Bw As New IO.BinaryWriter(mMem)
@@ -331,12 +383,36 @@ Public Class UCControllerAttachmentsItem
                                         Bw.Write(Encoding.ASCII.GetBytes(m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
 
-                                        ' Send Reset Orientation 
+                                        ' Send controller offset 
                                         Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
                                         Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
                                         Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+
+                                        ' Send joint yaw correction orientation 
+                                        Dim mNewJointYawCorrection = Quaternion.CreateFromAxisAngle(New Vector3(0, 0, 1), CSng(g_iJointYawCorrection * (Math.PI / 180)))
+
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewJointYawCorrection.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewJointYawCorrection.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes((-mNewJointYawCorrection.Y).ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewJointYawCorrection.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+
+                                        ' Send controller yaw correction orientation 
+                                        Dim mNewControllerYawCorrection = Quaternion.CreateFromAxisAngle(New Vector3(0, 0, 1), CSng(g_iControllerYawCorrection * (Math.PI / 180)))
+
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewControllerYawCorrection.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewControllerYawCorrection.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes((-mNewControllerYawCorrection.Y).ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(CByte(0))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mNewControllerYawCorrection.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
 
                                         g_iFpsPipeCounter += 1
@@ -423,9 +499,11 @@ Public Class UCControllerAttachmentsItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.X", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "JointYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_JointYawCorrection)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerYawCorrection)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ParentControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID.SelectedIndex)))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
@@ -446,17 +524,21 @@ Public Class UCControllerAttachmentsItem
                     Dim iJointX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iJointY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iJointZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iJointYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "JointYawCorrection", "0"))
                     Dim iControllerX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iControllerY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iControllerZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    Dim iControllerYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "ControllerYawCorrection", "0"))
 
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetZ, iJointZ)
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointYawCorrection, iJointYawCorrection)
 
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetX, iControllerX)
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetY, iControllerY)
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetZ, iControllerZ)
+                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerYawCorrection, iControllerYawCorrection)
 
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
                 End Using
