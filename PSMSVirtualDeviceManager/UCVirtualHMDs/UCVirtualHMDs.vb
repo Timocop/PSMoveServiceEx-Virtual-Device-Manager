@@ -29,11 +29,8 @@
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
 
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
+        CreateControl()
     End Sub
 
     Private Sub ComboBox_VirtualHMDCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualHMDCount.SelectedIndexChanged

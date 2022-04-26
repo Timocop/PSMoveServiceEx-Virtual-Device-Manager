@@ -21,7 +21,6 @@ Public Class FormMain
         g_mUCVirtualControllers.SuspendLayout()
         g_mUCVirtualControllers.Parent = Panel_Pages
         g_mUCVirtualControllers.Dock = DockStyle.Fill
-        g_mUCVirtualControllers.Init()
         g_mUCVirtualControllers.Visible = False
         g_mUCVirtualControllers.ResumeLayout()
 
@@ -29,7 +28,6 @@ Public Class FormMain
         g_mUCVirtualHMDs.SuspendLayout()
         g_mUCVirtualHMDs.Parent = Panel_Pages
         g_mUCVirtualHMDs.Dock = DockStyle.Fill
-        g_mUCVirtualHMDs.Init()
         g_mUCVirtualHMDs.Visible = False
         g_mUCVirtualHMDs.ResumeLayout()
 
@@ -37,11 +35,12 @@ Public Class FormMain
         g_mUCVirtualTrackers.SuspendLayout()
         g_mUCVirtualTrackers.Parent = Panel_Pages
         g_mUCVirtualTrackers.Dock = DockStyle.Fill
-        g_mUCVirtualTrackers.Init()
         g_mUCVirtualTrackers.Visible = False
         g_mUCVirtualTrackers.ResumeLayout()
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
+
+        CreateControl()
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)

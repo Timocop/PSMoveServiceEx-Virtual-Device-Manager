@@ -14,12 +14,10 @@
         g_mUCRemoteDevices = New UCRemoteDevices()
         g_mUCRemoteDevices.Parent = TabPage_RemoteSettings
         g_mUCRemoteDevices.Dock = DockStyle.Fill
-        g_mUCRemoteDevices.Init()
 
         g_mUCControllerAttachments = New UCControllerAttachments()
         g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
         g_mUCControllerAttachments.Dock = DockStyle.Fill
-        g_mUCControllerAttachments.Init()
 
         Try
             g_bIgnoreEvents = True
@@ -41,11 +39,8 @@
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
 
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
+        CreateControl()
     End Sub
 
     Private Sub ComboBox_VirtualControllerCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualControllerCount.SelectedIndexChanged

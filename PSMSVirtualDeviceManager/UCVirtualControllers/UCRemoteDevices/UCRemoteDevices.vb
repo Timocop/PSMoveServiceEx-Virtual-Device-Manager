@@ -24,11 +24,8 @@ Public Class UCRemoteDevices
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
 
         m_SocketPort = DEFAULT_SOCKET_PORT
-    End Sub
 
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
+        CreateControl()
     End Sub
 
     Property m_SocketPort As Integer

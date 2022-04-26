@@ -9,7 +9,7 @@ Public Class UCControllerAttachments
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        ' Add any initialization after the InitializeComponent() call. 
         For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
@@ -20,12 +20,7 @@ Public Class UCControllerAttachments
             ContextMenuStrip_Autostart.Items.Add(mItem)
         Next
 
-        Init()
-    End Sub
-
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
+        CreateControl()
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
