@@ -553,6 +553,7 @@ Partial Class UCControllerAttachmentsItem
         '
         'CheckBox_JointOnly
         '
+        Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_JointOnly.AutoSize = True
         Me.CheckBox_JointOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 246)
