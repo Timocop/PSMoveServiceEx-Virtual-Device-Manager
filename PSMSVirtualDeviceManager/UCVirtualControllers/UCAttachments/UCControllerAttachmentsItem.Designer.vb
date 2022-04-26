@@ -530,11 +530,11 @@ Partial Class UCControllerAttachmentsItem
         Me.Label_Close.Dock = System.Windows.Forms.DockStyle.Right
         Me.Label_Close.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_Close.ForeColor = System.Drawing.Color.White
-        Me.Label_Close.Location = New System.Drawing.Point(579, 0)
+        Me.Label_Close.Location = New System.Drawing.Point(591, 0)
         Me.Label_Close.Name = "Label_Close"
-        Me.Label_Close.Size = New System.Drawing.Size(38, 13)
+        Me.Label_Close.Size = New System.Drawing.Size(26, 13)
         Me.Label_Close.TabIndex = 31
-        Me.Label_Close.Text = "    X    "
+        Me.Label_Close.Text = "  X  "
         Me.Label_Close.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TextBox_Fps
@@ -553,11 +553,11 @@ Partial Class UCControllerAttachmentsItem
         '
         'CheckBox_JointOnly
         '
-        Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_JointOnly.AutoSize = True
-        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(333, 247)
+        Me.CheckBox_JointOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 246)
         Me.CheckBox_JointOnly.Name = "CheckBox_JointOnly"
-        Me.CheckBox_JointOnly.Size = New System.Drawing.Size(109, 17)
+        Me.CheckBox_JointOnly.Size = New System.Drawing.Size(115, 18)
         Me.CheckBox_JointOnly.TabIndex = 33
         Me.CheckBox_JointOnly.Text = "Joint offset only"
         Me.CheckBox_JointOnly.UseVisualStyleBackColor = True
