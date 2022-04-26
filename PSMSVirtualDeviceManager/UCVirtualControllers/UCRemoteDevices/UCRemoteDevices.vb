@@ -53,7 +53,6 @@ Public Class UCRemoteDevices
 
                           mNewDevice.Parent = Panel_RemoteDevices
                           mNewDevice.Dock = DockStyle.Top
-                          mNewDevice.Init()
                       End Sub)
         End SyncLock
     End Sub

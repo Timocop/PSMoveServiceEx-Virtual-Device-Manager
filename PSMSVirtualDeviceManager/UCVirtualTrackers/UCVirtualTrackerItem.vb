@@ -12,6 +12,7 @@ Public Class UCVirtualTrackerItem
     Private g_iPreviousTrackerIdSelectedIndex As Integer = -1
 
     Public g_bIgnoreEvents As Boolean = False
+    Public g_bIgnoreUnsaved As Boolean = False
 
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
@@ -63,15 +64,27 @@ Public Class UCVirtualTrackerItem
         g_mMessageLabel.Show()
 
         SetFpsText(0, 0)
+        SetUnsavedState(False)
+
+        CreateControl()
+    End Sub
+
+    Private Sub SetUnsavedState(bIsUnsaved As Boolean)
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        If (bIsUnsaved) Then
+            Button_ConfigSave.Text = String.Format("Save Settings*")
+            Button_ConfigSave.Font = New Font(Button_ConfigSave.Font, FontStyle.Bold)
+        Else
+            Button_ConfigSave.Text = String.Format("Save Settings")
+            Button_ConfigSave.Font = New Font(Button_ConfigSave.Font, FontStyle.Regular)
+        End If
     End Sub
 
     Private Sub UCVirtualTrackerItem_Load(sender As Object, e As EventArgs) Handles Me.Load
         g_mClassCaptureLogic.StartInitThread(False)
-    End Sub
-
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
     End Sub
 
     ReadOnly Property m_DevicePath As String
@@ -94,6 +107,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         g_mClassCaptureLogic.m_Capture.Exposure = TrackBar_DeviceExposure.Value
+        SetUnsavedState(True)
     End Sub
 
     Private Sub TrackBar_DeviceGain_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceGain.ValueChanged
@@ -106,6 +120,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         g_mClassCaptureLogic.m_Capture.Gain = TrackBar_DeviceGain.Value
+        SetUnsavedState(True)
     End Sub
 
     Private Sub TrackBar_DeviceGamma_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceGamma.ValueChanged
@@ -118,6 +133,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         g_mClassCaptureLogic.m_Capture.Gamma = TrackBar_DeviceGamma.Value
+        SetUnsavedState(True)
     End Sub
 
     Private Sub TrackBar_DeviceConstrast_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceConstrast.ValueChanged
@@ -130,6 +146,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         g_mClassCaptureLogic.m_Capture.Contrast = TrackBar_DeviceConstrast.Value
+        SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_ShowCaptureImage_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowCaptureImage.CheckedChanged
@@ -198,6 +215,7 @@ Public Class UCVirtualTrackerItem
 
         g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId
         g_iPreviousTrackerIdSelectedIndex = ComboBox_DeviceTrackerId.SelectedIndex
+        SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_FlipHorizontal_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_FlipHorizontal.CheckedChanged
@@ -206,6 +224,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         g_mClassCaptureLogic.m_FlipImage = CheckBox_FlipHorizontal.Checked
+        SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_ImageInterpolation_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ImageInterpolation.SelectedIndexChanged
@@ -214,6 +233,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         g_mClassCaptureLogic.m_ImageInterpolation = CType(ComboBox_ImageInterpolation.SelectedIndex, ClassCaptureLogic.ENUM_INTERPOLATION)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
@@ -232,11 +252,20 @@ Public Class UCVirtualTrackerItem
     Private Sub Button_ConfigSave_Click(sender As Object, e As EventArgs) Handles Button_ConfigSave.Click
         Try
             g_mClassCaptureLogic.g_mClassConfig.SaveConfig()
+            SetUnsavedState(False)
 
             MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
+
+    Private Sub CheckBox_Autostart_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_Autostart.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_Close_Click(sender As Object, e As EventArgs) Handles Button_Close.Click
@@ -756,6 +785,7 @@ Public Class UCVirtualTrackerItem
                 g_mUCVirtualTrackerItem.Invoke(Sub()
                                                    Try
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
                                                        Dim bDisabled As Boolean = (iExposureMin = iExposureMax)
                                                        If (bDisabled) Then
@@ -768,12 +798,14 @@ Public Class UCVirtualTrackerItem
                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Max(iExposureMin, Math.Min(iExposureMax, iExposureDefault)))
                                                    Finally
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
                                                    End Try
                                                End Sub)
 
                 g_mUCVirtualTrackerItem.Invoke(Sub()
                                                    Try
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
                                                        Dim bDisabled As Boolean = (iGainMin = iGainMax)
                                                        If (bDisabled) Then
@@ -786,12 +818,14 @@ Public Class UCVirtualTrackerItem
                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Max(iGainMin, Math.Min(iGainMax, iGainDefault)))
                                                    Finally
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
                                                    End Try
                                                End Sub)
 
                 g_mUCVirtualTrackerItem.Invoke(Sub()
                                                    Try
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
                                                        Dim bDisabled As Boolean = (iGammaMin = iGammaMax)
                                                        If (bDisabled) Then
@@ -804,12 +838,14 @@ Public Class UCVirtualTrackerItem
                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value = CInt(Math.Max(iGammaMin, Math.Min(iGammaMax, iGammaDefault)))
                                                    Finally
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
                                                    End Try
                                                End Sub)
 
                 g_mUCVirtualTrackerItem.Invoke(Sub()
                                                    Try
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
                                                        Dim bDisabled As Boolean = (iContrastMin = iContrastMax)
                                                        If (bDisabled) Then
@@ -822,6 +858,7 @@ Public Class UCVirtualTrackerItem
                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value = CInt(Math.Max(iContrastMin, Math.Min(iContrastMax, iContrastDefault)))
                                                    Finally
                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
                                                    End Try
                                                End Sub)
 
@@ -844,7 +881,15 @@ Public Class UCVirtualTrackerItem
 
                 ' Load saved config for this device
                 g_mUCVirtualTrackerItem.BeginInvoke(Sub()
-                                                        g_mClassConfig.LoadConfig()
+                                                        Try
+                                                            g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+
+                                                            g_mClassConfig.LoadConfig()
+                                                        Finally
+                                                            g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                        End Try
+
+                                                        g_mUCVirtualTrackerItem.SetUnsavedState(False)
                                                     End Sub)
 
             Catch ex As Threading.ThreadAbortException

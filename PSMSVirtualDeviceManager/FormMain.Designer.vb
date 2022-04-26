@@ -36,9 +36,9 @@ Partial Class FormMain
         Me.ToolStripMenuItem_VDTrackers = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel_Pages = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label_Version = New System.Windows.Forms.Label()
         Me.Button_RestartPSMS = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label_Version = New System.Windows.Forms.Label()
         Me.MenuStrip_StartPage.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -97,7 +97,7 @@ Partial Class FormMain
         Me.Panel_Pages.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel_Pages.Location = New System.Drawing.Point(0, 24)
         Me.Panel_Pages.Name = "Panel_Pages"
-        Me.Panel_Pages.Size = New System.Drawing.Size(784, 473)
+        Me.Panel_Pages.Size = New System.Drawing.Size(784, 673)
         Me.Panel_Pages.TabIndex = 1
         '
         'Panel2
@@ -107,10 +107,20 @@ Partial Class FormMain
         Me.Panel2.Controls.Add(Me.Button_RestartPSMS)
         Me.Panel2.Controls.Add(Me.Label1)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 497)
+        Me.Panel2.Location = New System.Drawing.Point(0, 697)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(784, 64)
         Me.Panel2.TabIndex = 2
+        '
+        'Label_Version
+        '
+        Me.Label_Version.AutoSize = True
+        Me.Label_Version.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.Label_Version.Location = New System.Drawing.Point(12, 26)
+        Me.Label_Version.Name = "Label_Version"
+        Me.Label_Version.Size = New System.Drawing.Size(66, 13)
+        Me.Label_Version.TabIndex = 2
+        Me.Label_Version.Text = "Version: 1.0"
         '
         'Button_RestartPSMS
         '
@@ -133,22 +143,12 @@ Partial Class FormMain
         Me.Label1.Size = New System.Drawing.Size(784, 1)
         Me.Label1.TabIndex = 0
         '
-        'Label_Version
-        '
-        Me.Label_Version.AutoSize = True
-        Me.Label_Version.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.Label_Version.Location = New System.Drawing.Point(12, 26)
-        Me.Label_Version.Name = "Label_Version"
-        Me.Label_Version.Size = New System.Drawing.Size(66, 13)
-        Me.Label_Version.TabIndex = 2
-        Me.Label_Version.Text = "Version: 1.0"
-        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(784, 561)
+        Me.ClientSize = New System.Drawing.Size(784, 761)
         Me.Controls.Add(Me.Panel_Pages)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.MenuStrip_StartPage)

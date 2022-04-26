@@ -206,7 +206,6 @@
         mUCVirtualTrackerItem = New UCVirtualTrackerItem(Me, mDeviceInfo)
         mUCVirtualTrackerItem.Parent = Panel_Devices
         mUCVirtualTrackerItem.Dock = DockStyle.Top
-        mUCVirtualTrackerItem.Init()
     End Sub
 
     Public Function GetAllDevices() As UCVirtualTrackerItem()

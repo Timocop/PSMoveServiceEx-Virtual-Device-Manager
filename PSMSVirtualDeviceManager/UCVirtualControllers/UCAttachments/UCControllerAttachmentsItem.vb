@@ -13,6 +13,7 @@ Public Class UCControllerAttachmentsItem
     Private g_sNickname As String = ""
 
     Private g_bIgnoreEvents As Boolean = False
+    Private g_bIgnoreUnsaved As Boolean = False
 
     Public Sub New(iControllerID As Integer, _UCControllerAttachments As UCControllerAttachments)
         g_mUCControllerAttachments = _UCControllerAttachments
@@ -58,16 +59,36 @@ Public Class UCControllerAttachmentsItem
 
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
+
+        SetUnsavedState(False)
+
+        CreateControl()
     End Sub
 
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
+    Private Sub SetUnsavedState(bIsUnsaved As Boolean)
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        If (bIsUnsaved) Then
+            Button_SaveSettings.Text = String.Format("Save Settings*")
+            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Bold)
+        Else
+            Button_SaveSettings.Text = String.Format("Save Settings")
+            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Regular)
+        End If
     End Sub
 
     Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
-            g_mClassConfig.LoadConfig()
+            Try
+                g_bIgnoreUnsaved = True
+                g_mClassConfig.LoadConfig()
+            Finally
+                g_bIgnoreUnsaved = False
+            End Try
+
+            SetUnsavedState(False)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -78,10 +99,17 @@ Public Class UCControllerAttachmentsItem
             Return
         End If
 
-        g_mClassConfig.LoadConfig()
+        Try
+            g_bIgnoreUnsaved = True
+            g_mClassConfig.LoadConfig()
+        Finally
+            g_bIgnoreUnsaved = False
+        End Try
 
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
+
+        SetUnsavedState(False)
     End Sub
 
     Private Sub ComboBox_ParentControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ParentControllerID.SelectedIndexChanged
@@ -90,111 +118,138 @@ Public Class UCControllerAttachmentsItem
         End If
 
         g_mClassIO.m_ParentController = CInt(ComboBox_ParentControllerID.SelectedItem)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_JointOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointOffsetX.ValueChanged
         g_mClassIO.m_JointOffset = New Vector3(NumericUpDown_JointOffsetX.Value, NumericUpDown_JointOffsetY.Value, NumericUpDown_JointOffsetZ.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_JointOffsetY_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointOffsetY.ValueChanged
         g_mClassIO.m_JointOffset = New Vector3(NumericUpDown_JointOffsetX.Value, NumericUpDown_JointOffsetY.Value, NumericUpDown_JointOffsetZ.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_JointOffsetZ_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointOffsetZ.ValueChanged
         g_mClassIO.m_JointOffset = New Vector3(NumericUpDown_JointOffsetX.Value, NumericUpDown_JointOffsetY.Value, NumericUpDown_JointOffsetZ.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_ControllerOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerOffsetX.ValueChanged
         g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_ControllerOffsetY_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerOffsetY.ValueChanged
         g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_ControllerOffsetZ_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerOffsetZ.ValueChanged
         g_mClassIO.m_ControllerOffset = New Vector3(NumericUpDown_ControllerOffsetX.Value, NumericUpDown_ControllerOffsetY.Value, NumericUpDown_ControllerOffsetZ.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_JointYawCorrection_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JointYawCorrection.ValueChanged
         g_mClassIO.m_JointYawCorrection = CInt(NumericUpDown_JointYawCorrection.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_ControllerYawCorrection_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_ControllerYawCorrection.ValueChanged
         g_mClassIO.m_ControllerYawCorrection = CInt(NumericUpDown_ControllerYawCorrection.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointNegX_Click(sender As Object, e As EventArgs) Handles Button_JointNegX.Click
         NumericUpDown_JointOffsetX.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointNegY_Click(sender As Object, e As EventArgs) Handles Button_JointNegY.Click
         NumericUpDown_JointOffsetY.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointNegZ_Click(sender As Object, e As EventArgs) Handles Button_JointNegZ.Click
         NumericUpDown_JointOffsetZ.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointPosX_Click(sender As Object, e As EventArgs) Handles Button_JointPosX.Click
         NumericUpDown_JointOffsetX.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointPosY_Click(sender As Object, e As EventArgs) Handles Button_JointPosY.Click
         NumericUpDown_JointOffsetY.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointPosZ_Click(sender As Object, e As EventArgs) Handles Button_JointPosZ.Click
         NumericUpDown_JointOffsetZ.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerNegX_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegX.Click
         NumericUpDown_ControllerOffsetX.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerNegY_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegY.Click
         NumericUpDown_ControllerOffsetY.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerNegZ_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegZ.Click
         NumericUpDown_ControllerOffsetZ.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerPosX_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosX.Click
         NumericUpDown_ControllerOffsetX.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerPosY_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosY.Click
         NumericUpDown_ControllerOffsetY.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerPosZ_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosZ.Click
         NumericUpDown_ControllerOffsetZ.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointNegYaw_Click(sender As Object, e As EventArgs) Handles Button_JointNegYaw.Click
         NumericUpDown_JointYawCorrection.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_JointPosYaw_Click(sender As Object, e As EventArgs) Handles Button_JointPosYaw.Click
         NumericUpDown_JointYawCorrection.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerNegYaw_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegYaw.Click
         NumericUpDown_ControllerYawCorrection.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_ControllerPosYaw_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosYaw.Click
         NumericUpDown_ControllerYawCorrection.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_JointOnly_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JointOnly.CheckedChanged
         g_mClassIO.m_OnlyJointOffset = CheckBox_JointOnly.Checked
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
+            SetUnsavedState(False)
 
             MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception

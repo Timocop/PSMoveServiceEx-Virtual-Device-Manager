@@ -18,6 +18,7 @@ Public Class UCRemoteDeviceItem
     Private g_mBatteryWait As New Stopwatch
 
     Private g_bIgnoreEvents As Boolean = False
+    Private g_bIgnoreUnsaved As Boolean = False
     Private g_iFpsPacketCounter As Integer = 0
     Private g_iFpsOrientationCounter As Integer = 0
 
@@ -56,16 +57,36 @@ Public Class UCRemoteDeviceItem
         g_mBatteryWait.Start()
 
         g_mClassIO.Enable()
+
+        SetUnsavedState(False)
+
+        CreateControl()
     End Sub
 
-    Public Sub Init()
-        Me.Visible = False
-        Me.Visible = True
+    Private Sub SetUnsavedState(bIsUnsaved As Boolean)
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        If (bIsUnsaved) Then
+            Button_SaveSettings.Text = String.Format("Save Settings*")
+            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Bold)
+        Else
+            Button_SaveSettings.Text = String.Format("Save Settings")
+            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Regular)
+        End If
     End Sub
 
     Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
-            g_mClassConfig.LoadConfig()
+            Try
+                g_bIgnoreUnsaved = True
+                g_mClassConfig.LoadConfig()
+            Finally
+                g_bIgnoreUnsaved = False
+            End Try
+
+            SetUnsavedState(False)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -78,15 +99,19 @@ Public Class UCRemoteDeviceItem
 
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
+
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_Recenter_Click(sender As Object, e As EventArgs) Handles Button_Recenter.Click
         g_mClassIO.RecenterOrientation()
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
+            SetUnsavedState(False)
 
             MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
@@ -214,18 +239,22 @@ Public Class UCRemoteDeviceItem
         End If
 
         m_Nickname = sName
+        SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_YawOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_YawOffset.ValueChanged
         g_mClassIO.m_YawOrientationOffset = CInt(NumericUpDown_YawOffset.Value)
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_YawOffsetNeg_Click(sender As Object, e As EventArgs) Handles Button_YawOffsetNeg.Click
         NumericUpDown_YawOffset.Value -= 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub Button_YawOffsetPos_Click(sender As Object, e As EventArgs) Handles Button_YawOffsetPos.Click
         NumericUpDown_YawOffset.Value += 5
+        SetUnsavedState(True)
     End Sub
 
     Private Sub CleanUp()
