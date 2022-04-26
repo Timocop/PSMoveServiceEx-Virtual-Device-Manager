@@ -39,8 +39,6 @@ Public Class FormMain
         g_mUCVirtualTrackers.ResumeLayout()
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
-
-        CreateControl()
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
