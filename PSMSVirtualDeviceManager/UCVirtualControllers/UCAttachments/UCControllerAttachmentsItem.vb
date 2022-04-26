@@ -188,6 +188,10 @@ Public Class UCControllerAttachmentsItem
         NumericUpDown_ControllerYawCorrection.Value += 5
     End Sub
 
+    Private Sub CheckBox_JointOnly_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JointOnly.CheckedChanged
+        g_mClassIO.m_OnlyJointOffset = CheckBox_JointOnly.Checked
+    End Sub
+
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
@@ -231,6 +235,7 @@ Public Class UCControllerAttachmentsItem
         Private g_mControllerOffset As New Vector3(0, 0, 0)
         Private g_iJointYawCorrection As Integer = 0
         Private g_iControllerYawCorrection As Integer = 0
+        Private g_bOnlyJointOffset As Boolean = False
 
         Private g_iFpsPipeCounter As Integer = 0
 
@@ -317,6 +322,19 @@ Public Class UCControllerAttachmentsItem
             End Set
         End Property
 
+        Property m_OnlyJointOffset As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bOnlyJointOffset
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bOnlyJointOffset = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub Enable()
             If (g_iIndex < 0) Then
                 Return
@@ -384,11 +402,18 @@ Public Class UCControllerAttachmentsItem
                                         Bw.Write(CByte(0))
 
                                         ' Send controller offset 
-                                        Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Dim mControllerOffset As Vector3
+                                        If (m_OnlyJointOffset) Then
+                                            mControllerOffset = New Vector3(0, 0, 0)
+                                        Else
+                                            mControllerOffset = m_ControllerOffset
+                                        End If
+
+                                        Bw.Write(Encoding.ASCII.GetBytes(mControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
-                                        Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
-                                        Bw.Write(Encoding.ASCII.GetBytes(m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                        Bw.Write(Encoding.ASCII.GetBytes(mControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
 
                                         ' Send joint yaw correction orientation 
@@ -505,6 +530,7 @@ Public Class UCControllerAttachmentsItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerYawCorrection)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ParentControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "OnlyJointOffset", If(g_mUCRemoteDeviceItem.g_mClassIO.m_OnlyJointOffset, "True", "False")))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
                     End SyncLock
@@ -529,6 +555,7 @@ Public Class UCControllerAttachmentsItem
                     Dim iControllerY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iControllerZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iControllerYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "ControllerYawCorrection", "0"))
+                    Dim bOnlyJointOffset As Boolean = (mIni.ReadKeyValue(sDevicePath, "OnlyJointOffset", "False") = "True")
 
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
@@ -541,6 +568,8 @@ Public Class UCControllerAttachmentsItem
                     SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerYawCorrection, iControllerYawCorrection)
 
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
+
+                    g_mUCRemoteDeviceItem.CheckBox_JointOnly.Checked = bOnlyJointOffset
                 End Using
             End Using
         End Sub

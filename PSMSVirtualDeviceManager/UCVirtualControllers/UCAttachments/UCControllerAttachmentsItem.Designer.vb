@@ -69,6 +69,7 @@ Partial Class UCControllerAttachmentsItem
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label_Close = New System.Windows.Forms.Label()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
+        Me.CheckBox_JointOnly = New System.Windows.Forms.CheckBox()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_JointOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -542,7 +543,7 @@ Partial Class UCControllerAttachmentsItem
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 243)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 248)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -550,12 +551,24 @@ Partial Class UCControllerAttachmentsItem
         Me.TextBox_Fps.TabIndex = 32
         Me.TextBox_Fps.Text = "I/O FPS: 0"
         '
+        'CheckBox_JointOnly
+        '
+        Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox_JointOnly.AutoSize = True
+        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(333, 247)
+        Me.CheckBox_JointOnly.Name = "CheckBox_JointOnly"
+        Me.CheckBox_JointOnly.Size = New System.Drawing.Size(109, 17)
+        Me.CheckBox_JointOnly.TabIndex = 33
+        Me.CheckBox_JointOnly.Text = "Joint offset only"
+        Me.CheckBox_JointOnly.UseVisualStyleBackColor = True
+        '
         'UCControllerAttachmentsItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.CheckBox_JointOnly)
         Me.Controls.Add(Me.TextBox_Fps)
         Me.Controls.Add(Me.Label_Close)
         Me.Controls.Add(Me.GroupBox2)
@@ -626,4 +639,5 @@ Partial Class UCControllerAttachmentsItem
     Friend WithEvents Button_ControllerPosYaw As Button
     Friend WithEvents NumericUpDown_ControllerYawCorrection As NumericUpDown
     Friend WithEvents Label10 As Label
+    Friend WithEvents CheckBox_JointOnly As CheckBox
 End Class
