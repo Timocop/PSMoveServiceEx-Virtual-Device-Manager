@@ -32,6 +32,7 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -42,7 +43,7 @@ Partial Class UCRemoteDevices
         Me.Label_Port.Location = New System.Drawing.Point(16, 78)
         Me.Label_Port.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label_Port.Name = "Label_Port"
-        Me.Label_Port.Size = New System.Drawing.Size(147, 13)
+        Me.Label_Port.Size = New System.Drawing.Size(129, 13)
         Me.Label_Port.TabIndex = 0
         Me.Label_Port.Text = "Listening Socket Port: 0"
         '
@@ -132,11 +133,23 @@ Partial Class UCRemoteDevices
         Me.PictureBox1.TabIndex = 16
         Me.PictureBox1.TabStop = False
         '
+        'Label_ConnectedDevices
+        '
+        Me.Label_ConnectedDevices.AutoSize = True
+        Me.Label_ConnectedDevices.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_ConnectedDevices.Location = New System.Drawing.Point(16, 94)
+        Me.Label_ConnectedDevices.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
+        Me.Label_ConnectedDevices.Name = "Label_ConnectedDevices"
+        Me.Label_ConnectedDevices.Size = New System.Drawing.Size(116, 13)
+        Me.Label_ConnectedDevices.TabIndex = 19
+        Me.Label_ConnectedDevices.Text = "Connected devices: 0"
+        '
         'UCRemoteDevices
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.Label_ConnectedDevices)
         Me.Controls.Add(Me.LinkLabel_ReadMore)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox1)
@@ -163,4 +176,5 @@ Partial Class UCRemoteDevices
     Friend WithEvents LinkLabel_ReadMore As LinkLabel
     Friend WithEvents Label1 As Label
     Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents Label_ConnectedDevices As Label
 End Class

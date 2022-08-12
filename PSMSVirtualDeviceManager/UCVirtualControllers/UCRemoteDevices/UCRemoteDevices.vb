@@ -53,6 +53,8 @@ Public Class UCRemoteDevices
 
                           mNewDevice.Parent = Panel_RemoteDevices
                           mNewDevice.Dock = DockStyle.Top
+
+                          Label_ConnectedDevices.Text = String.Format("Connected devices: {0}", g_mRemoveDevices.Keys.Count)
                       End Sub)
         End SyncLock
     End Sub
