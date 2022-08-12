@@ -42,12 +42,18 @@ Partial Class UCRemoteDeviceItem
         Me.Button_YawOffsetPos = New System.Windows.Forms.Button()
         Me.NumericUpDown_YawOffset = New System.Windows.Forms.NumericUpDown()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Button_Recenter
         '
-        Me.Button_Recenter.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Recenter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_Recenter.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_Recenter.Location = New System.Drawing.Point(493, 150)
         Me.Button_Recenter.Margin = New System.Windows.Forms.Padding(3, 3, 16, 16)
@@ -59,7 +65,6 @@ Partial Class UCRemoteDeviceItem
         '
         'ComboBox_ControllerID
         '
-        Me.ComboBox_ControllerID.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ComboBox_ControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_ControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_ControllerID.FormattingEnabled = True
@@ -71,7 +76,6 @@ Partial Class UCRemoteDeviceItem
         '
         'Label1
         '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(16, 126)
         Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
@@ -87,7 +91,7 @@ Partial Class UCRemoteDeviceItem
         '
         'Button_SaveSettings
         '
-        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 121)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
@@ -174,7 +178,6 @@ Partial Class UCRemoteDeviceItem
         '
         'Label2
         '
-        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(16, 155)
         Me.Label2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
@@ -185,7 +188,6 @@ Partial Class UCRemoteDeviceItem
         '
         'Button_YawOffsetNeg
         '
-        Me.Button_YawOffsetNeg.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Button_YawOffsetNeg.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_YawOffsetNeg.Location = New System.Drawing.Point(108, 150)
         Me.Button_YawOffsetNeg.Name = "Button_YawOffsetNeg"
@@ -196,7 +198,6 @@ Partial Class UCRemoteDeviceItem
         '
         'Button_YawOffsetPos
         '
-        Me.Button_YawOffsetPos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Button_YawOffsetPos.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_YawOffsetPos.Location = New System.Drawing.Point(235, 150)
         Me.Button_YawOffsetPos.Name = "Button_YawOffsetPos"
@@ -207,7 +208,6 @@ Partial Class UCRemoteDeviceItem
         '
         'NumericUpDown_YawOffset
         '
-        Me.NumericUpDown_YawOffset.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.NumericUpDown_YawOffset.Location = New System.Drawing.Point(137, 151)
         Me.NumericUpDown_YawOffset.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_YawOffset.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
@@ -231,12 +231,59 @@ Partial Class UCRemoteDeviceItem
         Me.TextBox_Gyro.Text = "X: 0" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Y: 0" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Z: 0"
         Me.TextBox_Gyro.WordWrap = False
         '
+        'Panel1
+        '
+        Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel1.Controls.Add(Me.PictureBox1)
+        Me.Panel1.Controls.Add(Me.Label4)
+        Me.Panel1.Controls.Add(Me.Label3)
+        Me.Panel1.Location = New System.Drawing.Point(16, 195)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 16)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(585, 42)
+        Me.Panel1.TabIndex = 18
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(25, 3)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(140, 13)
+        Me.Label3.TabIndex = 0
+        Me.Label3.Text = "Device is not responding!"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(25, 19)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(549, 13)
+        Me.Label4.TabIndex = 1
+        Me.Label4.Text = "This device is not sending any IMU data. It either encountered an error or is cur" &
+    "rently in calibration mode."
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 2
+        Me.PictureBox1.TabStop = False
+        '
         'UCRemoteDeviceItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.TextBox_Gyro)
         Me.Controls.Add(Me.Button_YawOffsetPos)
         Me.Controls.Add(Me.Button_YawOffsetNeg)
@@ -253,8 +300,11 @@ Partial Class UCRemoteDeviceItem
         Me.Controls.Add(Me.Button_Recenter)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCRemoteDeviceItem"
-        Me.Size = New System.Drawing.Size(617, 189)
+        Me.Size = New System.Drawing.Size(617, 251)
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -275,4 +325,8 @@ Partial Class UCRemoteDeviceItem
     Friend WithEvents Button_YawOffsetPos As Button
     Friend WithEvents NumericUpDown_YawOffset As NumericUpDown
     Friend WithEvents TextBox_Gyro As TextBox
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label3 As Label
 End Class

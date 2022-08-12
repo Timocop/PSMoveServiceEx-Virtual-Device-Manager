@@ -254,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\netshell_1608_16x16-32.png" />
     <None Include="Resources\CustomIMU.png" />
     <None Include="Resources\ControllerAttachments.png" />
     <None Include="Resources\user32_104_16x16-32.png" />

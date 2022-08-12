@@ -22,6 +22,10 @@ Public Class UCRemoteDeviceItem
     Private g_iFpsPacketCounter As Integer = 0
     Private g_iFpsOrientationCounter As Integer = 0
 
+    Private g_iTimeoutHideHeight As Integer = 188
+    Private g_iTimeoutShowHeight As Integer = g_iTimeoutHideHeight
+    Private g_iTimeoutCount As Integer = 0
+
     Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
         g_mUCRemoteDevices = _UCRemoteDevices
         g_sTrackerName = sTrackerName
@@ -61,6 +65,10 @@ Public Class UCRemoteDeviceItem
         SetUnsavedState(False)
 
         CreateControl()
+
+        ' Hide timeout error
+        g_iTimeoutShowHeight = Me.Height
+        Me.Height = g_iTimeoutHideHeight
     End Sub
 
     Private Sub SetUnsavedState(bIsUnsaved As Boolean)
@@ -123,6 +131,20 @@ Public Class UCRemoteDeviceItem
         TimerFPS.Stop()
 
         SyncLock _ThreadLock
+            If (g_iFpsOrientationCounter = 0) Then
+                g_iTimeoutCount += 1
+
+                If (g_iTimeoutCount = 3) Then
+                    Me.Height = g_iTimeoutShowHeight
+                End If
+            Else
+                If (g_iTimeoutCount > 0) Then
+                    Me.Height = g_iTimeoutHideHeight
+                End If
+
+                g_iTimeoutCount = 0
+            End If
+
             TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
 
             g_iFpsPacketCounter = 0
