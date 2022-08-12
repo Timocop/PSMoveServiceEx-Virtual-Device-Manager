@@ -41,7 +41,9 @@ Partial Class FormRemoteDevicesHelp
         '
         'PictureBox1
         '
-        Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.PictureBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.CustomIMU
         Me.PictureBox1.Location = New System.Drawing.Point(12, 106)
         Me.PictureBox1.Name = "PictureBox1"

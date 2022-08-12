@@ -123,7 +123,8 @@ Adjust the exposure or gain so that only the tracking light of your device you w
 </value>
   </data>
   <data name="Label11.Text" xml:space="preserve">
-    <value>Output is too bright! Set the device's exposure/gain settings lower until you only see the tracking light.
+    <value>Output is too bright! 
+Set the device's exposure/gain settings lower until you only see the tracking light.
 If exposure and gain settings are unavailable there are a few workarounds:
  - (Recommended) Use black sunglasses or black window tint and put them in front of your device's lens to darken the output.
  - Lower the brightness of the tracking light LED.
@@ -132,7 +133,8 @@ If exposure and gain settings are unavailable there are a few workarounds:
 </value>
   </data>
   <data name="Label10.Text" xml:space="preserve">
-    <value>Output is too dark! Set the device's exposure/gain settings higher until you only see the tracking light.
+    <value>Output is too dark! 
+Set the device's exposure/gain settings higher until you only see the tracking light.
 If exposure and gain settings are unavailable there are a few workarounds:
  - Turn up the brightness of the tracking light LED.</value>
   </data>
