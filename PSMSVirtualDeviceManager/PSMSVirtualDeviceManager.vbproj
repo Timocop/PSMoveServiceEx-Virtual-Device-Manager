@@ -105,6 +105,7 @@
     <Compile Include="ClassDevices.vb" />
     <Compile Include="ClassIni.vb" />
     <Compile Include="ClassPSMoveSerivceConst.vb" />
+    <Compile Include="ClassQuaternionTools.vb" />
     <Compile Include="ClassServiceConfig.vb" />
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
@@ -162,6 +163,18 @@
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
     </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualControllers.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTrackerItem.Designer.vb">
+      <DependentUpon>UCVirtualMotionTrackerItem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTrackerItem.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker.Designer.vb">
+      <DependentUpon>UCVirtualMotionTracker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UCVirtualHMDs\UCVirtualHMDs.Designer.vb">
@@ -222,6 +235,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualControllers.resx">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTrackerItem.resx">
+      <DependentUpon>UCVirtualMotionTrackerItem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker.resx">
+      <DependentUpon>UCVirtualMotionTracker.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualHMDs\UCVirtualHMDs.resx">
       <DependentUpon>UCVirtualHMDs.vb</DependentUpon>

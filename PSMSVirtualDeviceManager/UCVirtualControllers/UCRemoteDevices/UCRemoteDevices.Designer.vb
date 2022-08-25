@@ -31,8 +31,8 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_EditPort = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -122,17 +122,6 @@ Partial Class UCRemoteDevices
         Me.Label1.Text = "Using custom remote devices with IMUs, you can override the default orientation d" &
     "ata of PSmove controllers and Virtual controllers within PSMoveServiceEx." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 16
-        Me.PictureBox1.TabStop = False
-        '
         'Label_ConnectedDevices
         '
         Me.Label_ConnectedDevices.AutoSize = True
@@ -143,6 +132,17 @@ Partial Class UCRemoteDevices
         Me.Label_ConnectedDevices.Size = New System.Drawing.Size(116, 13)
         Me.Label_ConnectedDevices.TabIndex = 19
         Me.Label_ConnectedDevices.Text = "Connected devices: 0"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 16
+        Me.PictureBox1.TabStop = False
         '
         'UCRemoteDevices
         '

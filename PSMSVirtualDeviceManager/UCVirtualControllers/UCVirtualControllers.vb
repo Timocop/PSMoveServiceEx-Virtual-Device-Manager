@@ -1,6 +1,7 @@
 ﻿Public Class UCVirtualControllers
     Public g_mUCRemoteDevices As UCRemoteDevices
     Public g_mUCControllerAttachments As UCControllerAttachments
+    Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
 
     Private g_mControllerSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
 
@@ -18,6 +19,10 @@
         g_mUCControllerAttachments = New UCControllerAttachments()
         g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
         g_mUCControllerAttachments.Dock = DockStyle.Fill
+
+        g_mUCVirtualMotionTracker = New UCVirtualMotionTracker()
+        g_mUCVirtualMotionTracker.Parent = TabPage_VMT
+        g_mUCVirtualMotionTracker.Dock = DockStyle.Fill
 
         Try
             g_bIgnoreEvents = True
@@ -258,6 +263,11 @@
         If (g_mUCControllerAttachments IsNot Nothing AndAlso Not g_mUCControllerAttachments.IsDisposed) Then
             g_mUCControllerAttachments.Dispose()
             g_mUCControllerAttachments = Nothing
+        End If
+
+        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso Not g_mUCVirtualMotionTracker.IsDisposed) Then
+            g_mUCVirtualMotionTracker.Dispose()
+            g_mUCVirtualMotionTracker = Nothing
         End If
     End Sub
 End Class
