@@ -38,8 +38,14 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
-        Me.TextBox_Log = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.PictureBox_StatusImage = New System.Windows.Forms.PictureBox()
+        Me.Label_StatusMessage = New System.Windows.Forms.Label()
+        Me.Label_StatusTitle = New System.Windows.Forms.Label()
+        Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
+        Me.ImageList_Status = New System.Windows.Forms.ImageList(Me.components)
+        Me.Panel_Status.SuspendLayout()
+        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ComboBox_ControllerID
@@ -70,9 +76,9 @@ Partial Class UCVirtualMotionTrackerItem
         '
         'Button_SaveSettings
         '
-        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 214)
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 142)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(108, 23)
@@ -118,11 +124,10 @@ Partial Class UCVirtualMotionTrackerItem
         '
         'TextBox_Fps
         '
-        Me.TextBox_Fps.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 219)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 147)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -166,30 +171,63 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.TimerPose.Enabled = True
         '
-        'TextBox_Log
+        'Panel_Status
         '
-        Me.TextBox_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_Status.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_Status.Controls.Add(Me.PictureBox_StatusImage)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 182)
+        Me.Panel_Status.Margin = New System.Windows.Forms.Padding(3, 6, 3, 16)
+        Me.Panel_Status.Name = "Panel_Status"
+        Me.Panel_Status.Size = New System.Drawing.Size(585, 75)
+        Me.Panel_Status.TabIndex = 36
+        '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
+        'Label_StatusMessage
+        '
+        Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBox_Log.BackColor = System.Drawing.Color.White
-        Me.TextBox_Log.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.TextBox_Log.Location = New System.Drawing.Point(16, 151)
-        Me.TextBox_Log.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
-        Me.TextBox_Log.Multiline = True
-        Me.TextBox_Log.Name = "TextBox_Log"
-        Me.TextBox_Log.ReadOnly = True
-        Me.TextBox_Log.Size = New System.Drawing.Size(585, 44)
-        Me.TextBox_Log.TabIndex = 36
+        Me.Label_StatusMessage.Location = New System.Drawing.Point(25, 19)
+        Me.Label_StatusMessage.Name = "Label_StatusMessage"
+        Me.Label_StatusMessage.Size = New System.Drawing.Size(555, 54)
+        Me.Label_StatusMessage.TabIndex = 1
+        Me.Label_StatusMessage.Text = "Message"
         '
-        'Label2
+        'Label_StatusTitle
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(16, 135)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(88, 13)
-        Me.Label2.TabIndex = 37
-        Me.Label2.Text = "Driver Message:"
+        Me.Label_StatusTitle.AutoSize = True
+        Me.Label_StatusTitle.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_StatusTitle.Location = New System.Drawing.Point(25, 3)
+        Me.Label_StatusTitle.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label_StatusTitle.Name = "Label_StatusTitle"
+        Me.Label_StatusTitle.Size = New System.Drawing.Size(29, 13)
+        Me.Label_StatusTitle.TabIndex = 0
+        Me.Label_StatusTitle.Text = "Title"
+        '
+        'Timer_Status
+        '
+        Me.Timer_Status.Enabled = True
+        Me.Timer_Status.Interval = 1000
+        '
+        'ImageList_Status
+        '
+        Me.ImageList_Status.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+        Me.ImageList_Status.ImageSize = New System.Drawing.Size(16, 16)
+        Me.ImageList_Status.TransparentColor = System.Drawing.Color.Transparent
         '
         'UCVirtualMotionTrackerItem
         '
@@ -197,8 +235,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.TextBox_Log)
+        Me.Controls.Add(Me.Panel_Status)
         Me.Controls.Add(Me.TextBox_Gyro)
         Me.Controls.Add(Me.TextBox_Pos)
         Me.Controls.Add(Me.TextBox_Fps)
@@ -210,7 +247,10 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Controls.Add(Me.ComboBox_ControllerID)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTrackerItem"
-        Me.Size = New System.Drawing.Size(617, 253)
+        Me.Size = New System.Drawing.Size(617, 273)
+        Me.Panel_Status.ResumeLayout(False)
+        Me.Panel_Status.PerformLayout()
+        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -226,6 +266,10 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents TextBox_Gyro As TextBox
     Friend WithEvents TextBox_Pos As TextBox
     Friend WithEvents TimerPose As Timer
-    Friend WithEvents TextBox_Log As TextBox
-    Friend WithEvents Label2 As Label
+    Friend WithEvents Panel_Status As Panel
+    Friend WithEvents PictureBox_StatusImage As PictureBox
+    Friend WithEvents Label_StatusMessage As Label
+    Friend WithEvents Label_StatusTitle As Label
+    Friend WithEvents Timer_Status As Timer
+    Friend WithEvents ImageList_Status As ImageList
 End Class

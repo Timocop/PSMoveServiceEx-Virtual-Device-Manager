@@ -3,6 +3,10 @@ Imports System.Text
 Imports Rug.Osc
 
 Public Class UCVirtualMotionTrackerItem
+    Const MAX_DRIVER_TIMEOUT As Integer = 5000
+    Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
+    Const VMT_DRIVER_VERSION_EXPECT As String = "VMT_013"
+
     Shared _ThreadLock As New Object
 
     Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
@@ -16,6 +20,17 @@ Public Class UCVirtualMotionTrackerItem
     Private g_bIgnoreEvents As Boolean = False
     Private g_bIgnoreUnsaved As Boolean = False
 
+
+    Private g_iStatusHideHeight As Integer = 0
+    Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
+
+    Public g_mDriverLastResponse As New Stopwatch
+    Public g_mControllerLastResponse As New Stopwatch
+    Public g_sDriverLastResponseCode As Integer = 0
+    Public g_sDriverLastResponseMessage As String = ""
+    Public g_sDriverVersion As String = ""
+    Public g_sDriverPath As String = ""
+
     Public Sub New(iControllerID As Integer, _UCVirtualMotionTracker As UCVirtualMotionTracker)
         g_mUCVirtualMotionTracker = _UCVirtualMotionTracker
 
@@ -26,7 +41,7 @@ Public Class UCVirtualMotionTrackerItem
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.  
+        ' Add any initialization after the InitializeComponent() call.   
         Try
             g_bIgnoreEvents = True
 
@@ -61,11 +76,20 @@ Public Class UCVirtualMotionTrackerItem
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
 
+        g_mDriverLastResponse.Start()
+        g_mControllerLastResponse.Start()
+
         SetUnsavedState(False)
 
         AddHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
 
         CreateControl()
+
+        ' Hide timeout error
+        Panel_Status.Visible = False
+        g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
+        g_iStatusShowHeight = Me.Height
+        Me.Height = g_iStatusHideHeight
     End Sub
 
     Private Sub OnOscProcessMessage(mMessage As OscMessage)
@@ -79,9 +103,8 @@ Public Class UCVirtualMotionTrackerItem
                     Dim iNum As Integer = CInt(mMessage(0))
                     Dim sMessage As String = CStr(mMessage(1))
 
-                    Me.Invoke(Sub()
-                                  TextBox_Log.Text = sMessage
-                              End Sub)
+                    ' #TODO Add log
+
                 Case "/VMT/Out/Alive"
                     If (mMessage.Count < 1) Then
                         Return
@@ -93,20 +116,12 @@ Public Class UCVirtualMotionTrackerItem
                         sDriverPath = CStr(mMessage(1))
                     End If
 
-                    Dim sGoodVersion = "VMT_013"
-                    If (sDriverVersion = sGoodVersion) Then
-                        Return
-                    End If
+                    Me.BeginInvoke(Sub()
+                                       g_mDriverLastResponse.Restart()
 
-                    Me.Invoke(Sub()
-                                  Dim sText As New Text.StringBuilder
-                                  sText.AppendLine("WARNING: Different driver version detected!")
-                                  sText.AppendFormat("Expected '{0}' but got '{1}'", "VMT_13", sGoodVersion).AppendLine()
-                                  If (sDriverPath.Length > 0) Then
-                                      sText.AppendFormat("Driver path: {0}", sDriverPath).AppendLine()
-                                  End If
-                                  TextBox_Log.Text = sText.ToString
-                              End Sub)
+                                       g_sDriverVersion = sDriverVersion
+                                       g_sDriverPath = sDriverPath
+                                   End Sub)
                 Case "/VMT/Out/Haptic"
                     ' No Le Hep
                 Case "/VMT/Out/Unavailable"
@@ -118,21 +133,21 @@ Public Class UCVirtualMotionTrackerItem
                     Dim sReason As String = CStr(mMessage(1))
 
                     If (iCode = 0) Then
-                        Me.Invoke(Sub()
-                                      Dim sText As New Text.StringBuilder
-                                      sText.Append("INFORMATION").AppendLine()
-                                      sText.AppendFormat("Message from driver: {0}", sReason).AppendLine()
-                                      TextBox_Log.Text = sText.ToString
-                                  End Sub)
-                        Return
+                        Me.BeginInvoke(Sub()
+                                           g_mDriverLastResponse.Restart()
+
+                                           g_sDriverLastResponseCode = iCode
+                                           g_sDriverLastResponseMessage = sReason
+                                       End Sub)
+                    Else
+                        Me.BeginInvoke(Sub()
+                                           g_mDriverLastResponse.Restart()
+
+                                           g_sDriverLastResponseCode = iCode
+                                           g_sDriverLastResponseMessage = sReason
+                                       End Sub)
                     End If
 
-                    Me.Invoke(Sub()
-                                  Dim sText As New Text.StringBuilder
-                                  sText.AppendFormat("ERROR {0}!", iCode).AppendLine()
-                                  sText.AppendFormat("Message from driver: {1}", sReason).AppendLine()
-                                  TextBox_Log.Text = sText.ToString
-                              End Sub)
             End Select
         Catch ex As Exception
             ' Something sussy is going on...
@@ -207,31 +222,147 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
-        TimerFPS.Stop()
+        Try
+            TimerFPS.Stop()
 
-        SyncLock _ThreadLock
-            TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsPipeCounter)
+            SyncLock _ThreadLock
+                TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsOscCounter)
 
-            g_mClassIO.m_FpsPipeCounter = 0
-        End SyncLock
+                If (g_mClassIO.m_FpsOscCounter > 0) Then
+                    g_mControllerLastResponse.Restart()
+                End If
 
-        TimerFPS.Start()
+                g_mClassIO.m_FpsOscCounter = 0
+            End SyncLock
+        Finally
+            TimerFPS.Start()
+        End Try
     End Sub
 
     Private Sub TimerPose_Tick(sender As Object, e As EventArgs) Handles TimerPose.Tick
-        TimerPose.Stop()
+        Try
+            TimerPose.Stop()
 
-        SyncLock _ThreadLock
-            TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_Data.mPosition.X), Math.Floor(g_mClassIO.m_Data.mPosition.Y), Math.Floor(g_mClassIO.m_Data.mPosition.Z), Environment.NewLine)
+            SyncLock _ThreadLock
+                TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_Data.mPosition.X), Math.Floor(g_mClassIO.m_Data.mPosition.Y), Math.Floor(g_mClassIO.m_Data.mPosition.Z), Environment.NewLine)
 
-            Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_Data.mOrientation)
-            TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
-
-        End SyncLock
-
-        TimerPose.Start()
+                Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_Data.mOrientation)
+                TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
+            End SyncLock
+        Finally
+            TimerPose.Start()
+        End Try
     End Sub
 
+
+    Private Sub Timer_Status_Tick(sender As Object, e As EventArgs) Handles Timer_Status.Tick
+        Try
+            Timer_Status.Stop()
+
+            Dim sTitle As String = ""
+            Dim sMessage As String = ""
+            Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
+
+            While True
+                ' Show driver timeouts
+                If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
+                    sTitle = "Driver not is responding!"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("The driver is not responding! Make sure the OSC server is running and the driver installed correctly.")
+
+                    If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                        sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                    End If
+                    If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                        sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                    End If
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+
+                If (g_sDriverLastResponseCode <> 0) Then
+                    sTitle = String.Format("Driver responded with an error (Code: {0})!", g_sDriverLastResponseCode)
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine(g_sDriverLastResponseMessage)
+
+                    If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                        sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                    End If
+                    If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                        sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                    End If
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                ' Show user wrong driver version
+                If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> VMT_DRIVER_VERSION_EXPECT) Then
+                    sTitle = "Driver running but might be incompatible"
+
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, VMT_DRIVER_VERSION_EXPECT).AppendLine()
+
+                    If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                        sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                    End If
+                    If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                        sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                    End If
+
+                    sMessage = sText.ToString
+                    iStatusType = 1
+
+                    Exit While
+                End If
+
+                ' Show tracker not working
+                If (g_mControllerLastResponse.ElapsedMilliseconds > MAX_CONTROLLER_TIMEOUT) Then
+                    sTitle = "Controller is not responding!"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("There are no new incoming pose data. Make sure PSMoveServiceEx is running.")
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                Exit While
+            End While
+
+            If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
+                Label_StatusTitle.Text = sTitle
+                Label_StatusMessage.Text = sMessage
+            End If
+
+            If (iStatusType < 0) Then
+                If (Panel_Status.Visible) Then
+                    Panel_Status.Visible = False
+
+                    Me.Height = g_iStatusHideHeight
+                End If
+            Else
+                If (Not Panel_Status.Visible) Then
+                    Panel_Status.Visible = True
+
+                    Me.Height = g_iStatusShowHeight
+                End If
+            End If
+        Finally
+            Timer_Status.Start()
+        End Try
+    End Sub
 
     Private Sub CleanUp()
         If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso g_mUCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
@@ -252,7 +383,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private g_iIndex As Integer = -1
         Private g_iVmtTracker As Integer = -1
-        Private g_mPipeThread As Threading.Thread = Nothing
+        Private g_mOscThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
         Private g_mControllerOffset As New Vector3(0, 0, 0)
@@ -260,7 +391,6 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iControllerYawCorrection As Integer = 0
         Private g_bOnlyJointOffset As Boolean = False
 
-        Private g_iFpsPipeCounter As Integer = 0
         Private g_iFpsOscCounter As Integer = 0
         Private g_mData As ClassServiceClient.STRUC_CONTROLLER_DATA
 
@@ -290,7 +420,7 @@ Public Class UCVirtualMotionTrackerItem
                 Return g_iIndex
             End Get
             Set(value As Integer)
-                If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
+                If (g_mOscThread IsNot Nothing AndAlso g_mOscThread.IsAlive) Then
                     Disable()
                     g_iIndex = value
                     Enable()
@@ -318,27 +448,14 @@ Public Class UCVirtualMotionTrackerItem
                 Return
             End If
 
-            If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
+            If (g_mOscThread IsNot Nothing AndAlso g_mOscThread.IsAlive) Then
                 Return
             End If
 
-            g_mPipeThread = New Threading.Thread(AddressOf ThreadPipe)
-            g_mPipeThread.IsBackground = True
-            g_mPipeThread.Start()
+            g_mOscThread = New Threading.Thread(AddressOf ThreadOsc)
+            g_mOscThread.IsBackground = True
+            g_mOscThread.Start()
         End Sub
-
-        Property m_FpsPipeCounter As Integer
-            Get
-                SyncLock _ThreadLock
-                    Return g_iFpsPipeCounter
-                End SyncLock
-            End Get
-            Set(value As Integer)
-                SyncLock _ThreadLock
-                    g_iFpsPipeCounter = value
-                End SyncLock
-            End Set
-        End Property
 
         Property m_FpsOscCounter As Integer
             Get
@@ -371,16 +488,21 @@ Public Class UCVirtualMotionTrackerItem
         End Property
 
         Public Sub Disable()
-            If (g_mPipeThread Is Nothing OrElse Not g_mPipeThread.IsAlive) Then
+            If (g_mOscThread Is Nothing OrElse Not g_mOscThread.IsAlive) Then
                 Return
             End If
 
-            g_mPipeThread.Abort()
-            g_mPipeThread.Join()
-            g_mPipeThread = Nothing
+            g_mOscThread.Abort()
+            g_mOscThread.Join()
+            g_mOscThread = Nothing
         End Sub
 
-        Private Sub ThreadPipe()
+        Private Sub ThreadOsc()
+            Dim mStartRoomMatrix As New Stopwatch
+            mStartRoomMatrix.Start()
+
+            Dim iLastOutputSeqNum As Integer = 0
+
             While True
                 Try
                     If (g_iIndex < 0) Then
@@ -392,10 +514,54 @@ Public Class UCVirtualMotionTrackerItem
                     End If
 
                     m_Data = ClassServiceClient.m_ControllerData(g_iIndex)
-                    If (m_Data IsNot Nothing) Then
-                        ProcessOscData()
 
-                        m_FpsPipeCounter += 1
+                    If (m_Data IsNot Nothing) Then
+                        ' We got any new data?
+                        If (iLastOutputSeqNum <> m_Data.iOutputSeqNum) Then
+                            iLastOutputSeqNum = m_Data.iOutputSeqNum
+
+                            Const ENABLE_TRACKER As Integer = 1
+                            'Const ENABLE_TRACKINGREFECNCE As Integer = 4
+
+                            If (m_VmtTracker < 3) Then
+                                Throw New ArgumentException("Unsupported VMT tracker id")
+                            End If
+
+                            SyncLock _ThreadLock
+                                g_mOscDataPack.mOrientation = m_Data.mOrientation
+
+                                If (m_Data.bIsTracking) Then
+                                    g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
+                                End If
+                            End SyncLock
+
+                            If (mStartRoomMatrix.ElapsedMilliseconds > 10000) Then
+                                mStartRoomMatrix.Reset()
+
+                                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
+                                    "/VMT/SetRoomMatrix/Temporary", New Object() {
+                                        1.0F, 0F, 0F, 0F,
+                                        0F, 1.0F, 0F, 0F,
+                                        0F, 0F, 1.0F, 0F
+                                    }))
+                            End If
+
+                            'Use Right-Handed space for SteamVR 
+                            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                New OscMessage(
+                                    "/VMT/Room/Driver",
+                                    m_VmtTracker, ENABLE_TRACKER, 0.0F,
+                                    g_mOscDataPack.mPosition.X,
+                                    g_mOscDataPack.mPosition.Y,
+                                    g_mOscDataPack.mPosition.Z,
+                                    g_mOscDataPack.mOrientation.X,
+                                    g_mOscDataPack.mOrientation.Y,
+                                    g_mOscDataPack.mOrientation.Z,
+                                    g_mOscDataPack.mOrientation.W
+                                ))
+
+                            m_FpsOscCounter += 1
+                        End If
                     End If
 
                     ClassPrecisionSleep.Sleep(1)
@@ -407,44 +573,6 @@ Public Class UCVirtualMotionTrackerItem
             End While
         End Sub
 
-        Private Sub ProcessOscData()
-            Const ENABLE_TRACKER As Integer = 1
-            'Const ENABLE_TRACKINGREFECNCE As Integer = 4
-
-            If (m_VmtTracker < 3) Then
-                Return
-            End If
-
-            SyncLock _ThreadLock
-                g_mOscDataPack.mOrientation = m_Data.mOrientation
-
-                If (m_Data.bIsTracking) Then
-                    g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
-                End If
-            End SyncLock
-
-            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
-                "/VMT/SetRoomMatrix/Temporary", New Object() {
-                    1.0F, 0F, 0F, 0F,
-                    0F, 1.0F, 0F, 0F,
-                    0F, 0F, 1.0F, 0F
-                }))
-
-            'Use Right-Handed space for SteamVR 
-            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                New OscMessage(
-                    "/VMT/Room/Driver",
-                    m_VmtTracker, ENABLE_TRACKER, 0.0F,
-                    g_mOscDataPack.mPosition.X,
-                    g_mOscDataPack.mPosition.Y,
-                    g_mOscDataPack.mPosition.Z,
-                    g_mOscDataPack.mOrientation.X,
-                    g_mOscDataPack.mOrientation.Y,
-                    g_mOscDataPack.mOrientation.Z,
-                    g_mOscDataPack.mOrientation.W
-                ))
-        End Sub
-
 #Region "IDisposable Support"
         Private disposedValue As Boolean ' To detect redundant calls
 
@@ -454,10 +582,10 @@ Public Class UCVirtualMotionTrackerItem
                 If disposing Then
                     ' TODO: dispose managed state (managed objects).
 
-                    If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
-                        g_mPipeThread.Abort()
-                        g_mPipeThread.Join()
-                        g_mPipeThread = Nothing
+                    If (g_mOscThread IsNot Nothing AndAlso g_mOscThread.IsAlive) Then
+                        g_mOscThread.Abort()
+                        g_mOscThread.Join()
+                        g_mOscThread = Nothing
                     End If
                 End If
 

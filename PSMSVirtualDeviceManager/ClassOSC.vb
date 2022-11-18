@@ -75,7 +75,7 @@ Public Class ClassOSC
     End Sub
 
     Private Sub ProcessPacket(mPacket As OscPacket)
-        g_iPacketCounter += 1L
+        g_iPacketCounter += CUInt(1)
 
         Dim mOscBundle As OscBundle = TryCast(mPacket, OscBundle)
         If (mOscBundle IsNot Nothing) Then

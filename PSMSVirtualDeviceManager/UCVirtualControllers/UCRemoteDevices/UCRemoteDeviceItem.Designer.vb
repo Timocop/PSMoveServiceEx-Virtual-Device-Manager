@@ -42,12 +42,12 @@ Partial Class UCRemoteDeviceItem
         Me.Button_YawOffsetPos = New System.Windows.Forms.Button()
         Me.NumericUpDown_YawOffset = New System.Windows.Forms.NumericUpDown()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Panel_Status = New System.Windows.Forms.Panel()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel1.SuspendLayout()
+        Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -231,20 +231,40 @@ Partial Class UCRemoteDeviceItem
         Me.TextBox_Gyro.Text = "X: 0" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Y: 0" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Z: 0"
         Me.TextBox_Gyro.WordWrap = False
         '
-        'Panel1
+        'Panel_Status
         '
-        Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel1.Controls.Add(Me.PictureBox1)
-        Me.Panel1.Controls.Add(Me.Label4)
-        Me.Panel1.Controls.Add(Me.Label3)
-        Me.Panel1.Location = New System.Drawing.Point(16, 195)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 16)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(585, 42)
-        Me.Panel1.TabIndex = 18
+        Me.Panel_Status.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_Status.Controls.Add(Me.PictureBox1)
+        Me.Panel_Status.Controls.Add(Me.Label4)
+        Me.Panel_Status.Controls.Add(Me.Label3)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 195)
+        Me.Panel_Status.Margin = New System.Windows.Forms.Padding(3, 6, 3, 16)
+        Me.Panel_Status.Name = "Panel_Status"
+        Me.Panel_Status.Size = New System.Drawing.Size(585, 42)
+        Me.Panel_Status.TabIndex = 18
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 2
+        Me.PictureBox1.TabStop = False
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(25, 19)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(549, 13)
+        Me.Label4.TabIndex = 1
+        Me.Label4.Text = "This device is not sending any IMU data. It either encountered an error or is cur" &
+    "rently in calibration mode."
         '
         'Label3
         '
@@ -257,33 +277,13 @@ Partial Class UCRemoteDeviceItem
         Me.Label3.TabIndex = 0
         Me.Label3.Text = "Device is not responding!"
         '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(25, 19)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(549, 13)
-        Me.Label4.TabIndex = 1
-        Me.Label4.Text = "This device is not sending any IMU data. It either encountered an error or is cur" &
-    "rently in calibration mode."
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 2
-        Me.PictureBox1.TabStop = False
-        '
         'UCRemoteDeviceItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.Panel_Status)
         Me.Controls.Add(Me.TextBox_Gyro)
         Me.Controls.Add(Me.Button_YawOffsetPos)
         Me.Controls.Add(Me.Button_YawOffsetNeg)
@@ -302,8 +302,8 @@ Partial Class UCRemoteDeviceItem
         Me.Name = "UCRemoteDeviceItem"
         Me.Size = New System.Drawing.Size(617, 251)
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
+        Me.Panel_Status.ResumeLayout(False)
+        Me.Panel_Status.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -325,7 +325,7 @@ Partial Class UCRemoteDeviceItem
     Friend WithEvents Button_YawOffsetPos As Button
     Friend WithEvents NumericUpDown_YawOffset As NumericUpDown
     Friend WithEvents TextBox_Gyro As TextBox
-    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel_Status As Panel
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
