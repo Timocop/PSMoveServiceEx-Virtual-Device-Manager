@@ -110,6 +110,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_VMTTrackers.AutoScroll = True
         Me.Panel_VMTTrackers.Location = New System.Drawing.Point(19, 58)
         Me.Panel_VMTTrackers.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
@@ -144,7 +145,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage2.Size = New System.Drawing.Size(760, 451)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Room Matrix"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -153,7 +154,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage3.Size = New System.Drawing.Size(760, 451)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "SteamVR Tracker Overwrites"
         Me.TabPage3.UseVisualStyleBackColor = True

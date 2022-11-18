@@ -19,7 +19,7 @@ Public Class UCVirtualMotionTrackerItem
     Public Sub New(iControllerID As Integer, _UCVirtualMotionTracker As UCVirtualMotionTracker)
         g_mUCVirtualMotionTracker = _UCVirtualMotionTracker
 
-        If (iControllerID < 0 OrElse iControllerID > ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
+        If (iControllerID < 0 OrElse iControllerID > ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
             iControllerID = -1
         End If
 
@@ -31,7 +31,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = True
 
             ComboBox_ControllerID.Items.Clear()
-            For i = -1 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_ControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ControllerID.SelectedIndex = 0
@@ -47,7 +47,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = True
 
             ComboBox_VMTTrackerID.Items.Clear()
-            For i = -1 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_VMTTrackerID.Items.Add(CStr(i))
             Next
             ComboBox_VMTTrackerID.SelectedIndex = 0
@@ -63,7 +63,80 @@ Public Class UCVirtualMotionTrackerItem
 
         SetUnsavedState(False)
 
+        AddHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
+
         CreateControl()
+    End Sub
+
+    Private Sub OnOscProcessMessage(mMessage As OscMessage)
+        Try
+            Select Case (mMessage.Address)
+                Case "/VMT/Out/Log"
+                    If (mMessage.Count < 2) Then
+                        Return
+                    End If
+
+                    Dim iNum As Integer = CInt(mMessage(0))
+                    Dim sMessage As String = CStr(mMessage(1))
+
+                    Me.Invoke(Sub()
+                                  TextBox_Log.Text = sMessage
+                              End Sub)
+                Case "/VMT/Out/Alive"
+                    If (mMessage.Count < 1) Then
+                        Return
+                    End If
+
+                    Dim sDriverVersion As String = CStr(mMessage(0))
+                    Dim sDriverPath As String = ""
+                    If (mMessage.Count > 1) Then
+                        sDriverPath = CStr(mMessage(1))
+                    End If
+
+                    Dim sGoodVersion = "VMT_013"
+                    If (sDriverVersion = sGoodVersion) Then
+                        Return
+                    End If
+
+                    Me.Invoke(Sub()
+                                  Dim sText As New Text.StringBuilder
+                                  sText.AppendLine("WARNING: Different driver version detected!")
+                                  sText.AppendFormat("Expected '{0}' but got '{1}'", "VMT_13", sGoodVersion).AppendLine()
+                                  If (sDriverPath.Length > 0) Then
+                                      sText.AppendFormat("Driver path: {0}", sDriverPath).AppendLine()
+                                  End If
+                                  TextBox_Log.Text = sText.ToString
+                              End Sub)
+                Case "/VMT/Out/Haptic"
+                    ' No Le Hep
+                Case "/VMT/Out/Unavailable"
+                    If (mMessage.Count < 2) Then
+                        Return
+                    End If
+
+                    Dim iCode As Integer = CInt(mMessage(0))
+                    Dim sReason As String = CStr(mMessage(1))
+
+                    If (iCode = 0) Then
+                        Me.Invoke(Sub()
+                                      Dim sText As New Text.StringBuilder
+                                      sText.Append("INFORMATION").AppendLine()
+                                      sText.AppendFormat("Message from driver: {0}", sReason).AppendLine()
+                                      TextBox_Log.Text = sText.ToString
+                                  End Sub)
+                        Return
+                    End If
+
+                    Me.Invoke(Sub()
+                                  Dim sText As New Text.StringBuilder
+                                  sText.AppendFormat("ERROR {0}!", iCode).AppendLine()
+                                  sText.AppendFormat("Message from driver: {1}", sReason).AppendLine()
+                                  TextBox_Log.Text = sText.ToString
+                              End Sub)
+            End Select
+        Catch ex As Exception
+            ' Something sussy is going on...
+        End Try
     End Sub
 
     Private Sub SetUnsavedState(bIsUnsaved As Boolean)
@@ -149,14 +222,11 @@ Public Class UCVirtualMotionTrackerItem
         TimerPose.Stop()
 
         SyncLock _ThreadLock
-            If (TypeOf g_mClassIO.m_Data Is ClassIO.STRUC_PSMOVE_DATA) Then
-                Dim mData = DirectCast(g_mClassIO.m_Data, ClassIO.STRUC_PSMOVE_DATA)
+            TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_Data.mPosition.X), Math.Floor(g_mClassIO.m_Data.mPosition.Y), Math.Floor(g_mClassIO.m_Data.mPosition.Z), Environment.NewLine)
 
-                TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(mData.mPosition.X), Math.Floor(mData.mPosition.Y), Math.Floor(mData.mPosition.Z), Environment.NewLine)
+            Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_Data.mOrientation)
+            TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
 
-                Dim iAng = ClassQuaternionTools.FromQ2(New Quaternion(mData.mOrientation.X, mData.mOrientation.Y, mData.mOrientation.Z, mData.mOrientation.W))
-                TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
-            End If
         End SyncLock
 
         TimerPose.Start()
@@ -164,6 +234,10 @@ Public Class UCVirtualMotionTrackerItem
 
 
     Private Sub CleanUp()
+        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso g_mUCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
+            RemoveHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
+        End If
+
         If (g_mClassIO IsNot Nothing) Then
             g_mClassIO.Dispose()
             g_mClassIO = Nothing
@@ -188,7 +262,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private g_iFpsPipeCounter As Integer = 0
         Private g_iFpsOscCounter As Integer = 0
-        Private g_mData As IControllerData = Nothing
+        Private g_mData As ClassServiceClient.STRUC_CONTROLLER_DATA
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
 
@@ -202,60 +276,9 @@ Public Class UCVirtualMotionTrackerItem
         Public Interface IControllerData
         End Interface
 
-        Class STRUC_PSMOVE_DATA
-            Implements IControllerData
-
-            Public Shared ReadOnly MAX_ITEMS As Integer = (11 + 4 + 3)
-
-            Dim iDeviceID As Integer
-            Public iSequenceNumber As Integer
-            Public bIsOpen As Boolean
-            Public iDeviceType As ENUM_CONTROLLER_TYPE
-
-            Public bIsValid As Boolean
-            Public bIsCurrentlyTracking As Boolean
-            Public bIsTrackingEnabled As Boolean
-            Public bIsOrientationStateValid As Boolean
-            Public bIsPositionStateValid As Boolean
-
-            Public mOrientation As New Vector4
-            Public mPosition As New Vector3
-
-            Public iTriggerValue As Integer
-            Public iBatteryValue As Integer
-
-            Sub New(_DeviceID As Integer,
-                    _SequenceNumber As Integer,
-                    _IsOpen As Boolean,
-                    _DeviceType As ENUM_CONTROLLER_TYPE,
-                    _IsValid As Boolean,
-                    _IsCurrentlyTracking As Boolean,
-                    _IsTrackingEnabled As Boolean,
-                    _IsOrientationStateValid As Boolean,
-                    _IsPositionStateValid As Boolean,
-                    _Orientation As Vector4,
-                    _Position As Vector3,
-                    _TriggerValue As Integer,
-                    _BatteryValue As Integer)
-                iDeviceID = _DeviceID
-                iSequenceNumber = _SequenceNumber
-                bIsOpen = _IsOpen
-                iDeviceType = _DeviceType
-                bIsValid = _IsValid
-                bIsCurrentlyTracking = _IsCurrentlyTracking
-                bIsTrackingEnabled = _IsTrackingEnabled
-                bIsOrientationStateValid = _IsOrientationStateValid
-                bIsPositionStateValid = _IsPositionStateValid
-                mOrientation = _Orientation
-                mPosition = _Position
-                iTriggerValue = _TriggerValue
-                iBatteryValue = _BatteryValue
-            End Sub
-        End Class
-
         Class STRUC_OSC_DATA_PACK
             Public mPosition As New Vector3(0, 0, 0)
-            Public mOrientation As New Vector4(0, 0, 0, 0)
+            Public mOrientation As New Quaternion(0, 0, 0, 1)
         End Class
 
         Public Sub New(_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem)
@@ -330,13 +353,17 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Property m_Data As IControllerData
+        Property m_Data As ClassServiceClient.STRUC_CONTROLLER_DATA
             Get
                 SyncLock _ThreadLock
+                    If (g_mData Is Nothing) Then
+                        Return New ClassServiceClient.STRUC_CONTROLLER_DATA
+                    End If
+
                     Return g_mData
                 End SyncLock
             End Get
-            Set(value As IControllerData)
+            Set(value As ClassServiceClient.STRUC_CONTROLLER_DATA)
                 SyncLock _ThreadLock
                     g_mData = value
                 End SyncLock
@@ -360,27 +387,18 @@ Public Class UCVirtualMotionTrackerItem
                         Return
                     End If
 
-                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", "PSMoveSerivceEx\ControllerDataStream_" & g_iIndex, IO.Pipes.PipeDirection.In)
-                        ' The thread when aborting will hang if we dont put a timeout.
-                        mPipe.Connect(1000)
+                    If (Not g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                        Throw New ArgumentException("OSC server is not running")
+                    End If
 
-                        While True
-                            Dim iBytes = New Byte(2048 * 4) {}
-                            mPipe.ReadAsync(iBytes, 0, iBytes.Length).Wait(1000)
+                    m_Data = ClassServiceClient.m_ControllerData(g_iIndex)
+                    If (m_Data IsNot Nothing) Then
+                        ProcessOscData()
 
-                            SyncLock _ThreadLock
-                                Dim sData As String = Encoding.ASCII.GetString(iBytes)
+                        m_FpsPipeCounter += 1
+                    End If
 
-                                m_Data = ParseData(sData)
-
-                                g_iFpsPipeCounter += 1
-                            End SyncLock
-
-                            ProcessOscData()
-
-                            'Threading.Thread.Sleep(1)
-                        End While
-                    End Using
+                    ClassPrecisionSleep.Sleep(1)
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -390,99 +408,42 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Private Sub ProcessOscData()
-            Try
-                Const ENABLE_TRACKER As Integer = 1
+            Const ENABLE_TRACKER As Integer = 1
+            'Const ENABLE_TRACKINGREFECNCE As Integer = 4
 
-                If (m_VmtTracker < 3) Then
-                    Return
+            If (m_VmtTracker < 3) Then
+                Return
+            End If
+
+            SyncLock _ThreadLock
+                g_mOscDataPack.mOrientation = m_Data.mOrientation
+
+                If (m_Data.bIsTracking) Then
+                    g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
                 End If
+            End SyncLock
 
-                SyncLock _ThreadLock
-                    If (TypeOf m_Data Is STRUC_PSMOVE_DATA) Then
-                        Dim mData = DirectCast(m_Data, STRUC_PSMOVE_DATA)
+            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
+                "/VMT/SetRoomMatrix/Temporary", New Object() {
+                    1.0F, 0F, 0F, 0F,
+                    0F, 1.0F, 0F, 0F,
+                    0F, 0F, 1.0F, 0F
+                }))
 
-                        g_mOscDataPack.mOrientation = mData.mOrientation
-
-                        If (mData.bIsCurrentlyTracking) Then
-                            g_mOscDataPack.mPosition = mData.mPosition
-                        End If
-                    End If
-                End SyncLock
-
-                Dim pack As New OscMessage(
-                    "/VMT/Joint/Unity", m_VmtTracker, ENABLE_TRACKER, 0.0F,
+            'Use Right-Handed space for SteamVR 
+            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                New OscMessage(
+                    "/VMT/Room/Driver",
+                    m_VmtTracker, ENABLE_TRACKER, 0.0F,
                     g_mOscDataPack.mPosition.X,
                     g_mOscDataPack.mPosition.Y,
                     g_mOscDataPack.mPosition.Z,
                     g_mOscDataPack.mOrientation.X,
                     g_mOscDataPack.mOrientation.Y,
                     g_mOscDataPack.mOrientation.Z,
-                    g_mOscDataPack.mOrientation.W,
-                    "VMT_20"
-                )
-
-                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(pack)
-            Catch ex As Exception
-
-            End Try
+                    g_mOscDataPack.mOrientation.W
+                ))
         End Sub
-
-        Private Function ParseData(sData As String) As STRUC_PSMOVE_DATA
-            Dim sDatas As String() = sData.Split(New String() {vbLf}, StringSplitOptions.None)
-
-            If (sDatas.Length < STRUC_PSMOVE_DATA.MAX_ITEMS + 1) Then
-                Return Nothing
-            End If
-
-            Dim iPipeVersion As Integer = Integer.Parse(sDatas(0))
-            If (iPipeVersion <> 1) Then
-                Return Nothing
-            End If
-
-            Dim iDeviceID As Integer = CInt(sDatas(1))
-            Dim iSequenceNumber As Integer = CInt(sDatas(2))
-            Dim bIsOpen As Boolean = CBool(sDatas(3))
-            Dim iDeviceType As ENUM_CONTROLLER_TYPE = CType(CInt(sDatas(4)), ENUM_CONTROLLER_TYPE)
-
-            Select Case (iDeviceType)
-                Case ENUM_CONTROLLER_TYPE.PSMOVE
-                    Dim bIsValid As Boolean = CBool(sDatas(5))
-                    Dim bIsCurrentlyTracking As Boolean = CBool(sDatas(6))
-                    Dim bIsTrackingEnabled As Boolean = CBool(sDatas(7))
-                    Dim bIsOrientationStateValid As Boolean = CBool(sDatas(8))
-                    Dim getIsPositionStateValid As Boolean = CBool(sDatas(9))
-
-                    Dim iOrientationW As Double = Double.Parse(sDatas(10), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iOrientationX As Double = Double.Parse(sDatas(11), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iOrientationY As Double = Double.Parse(sDatas(12), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iOrientationZ As Double = Double.Parse(sDatas(13), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-
-                    Dim iPositionX As Double = Double.Parse(sDatas(14), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iPositionY As Double = Double.Parse(sDatas(15), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iPositionZ As Double = Double.Parse(sDatas(16), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-
-                    Dim iTriggerValue As Integer = CInt(sDatas(17))
-                    Dim iBatteryValue As Integer = CInt(sDatas(18))
-
-                    Return New STRUC_PSMOVE_DATA(
-                        iDeviceID,
-                        iSequenceNumber,
-                        bIsOpen,
-                        iDeviceType,
-                        bIsValid,
-                        bIsCurrentlyTracking,
-                        bIsTrackingEnabled,
-                        bIsOrientationStateValid,
-                        getIsPositionStateValid,
-                        New Vector4(CSng(iOrientationX), CSng(iOrientationY), CSng(iOrientationZ), CSng(iOrientationW)),
-                        New Vector3(CSng(iPositionX), CSng(iPositionY), CSng(iPositionZ)),
-                        iTriggerValue,
-                        iBatteryValue
-                    )
-            End Select
-
-            Return Nothing
-        End Function
 
 #Region "IDisposable Support"
         Private disposedValue As Boolean ' To detect redundant calls

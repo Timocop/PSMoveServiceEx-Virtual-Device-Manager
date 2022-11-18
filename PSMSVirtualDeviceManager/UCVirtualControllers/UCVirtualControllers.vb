@@ -1,4 +1,6 @@
 ﻿Public Class UCVirtualControllers
+    Public g_mFormMain As FormMain
+
     Public g_mUCRemoteDevices As UCRemoteDevices
     Public g_mUCControllerAttachments As UCControllerAttachments
     Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
@@ -7,7 +9,9 @@
 
     Private g_bIgnoreEvents As Boolean = False
 
-    Public Sub New()
+    Public Sub New(_mFormMain As FormMain)
+        g_mFormMain = _mFormMain
+
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -20,7 +24,7 @@
         g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
         g_mUCControllerAttachments.Dock = DockStyle.Fill
 
-        g_mUCVirtualMotionTracker = New UCVirtualMotionTracker()
+        g_mUCVirtualMotionTracker = New UCVirtualMotionTracker(Me)
         g_mUCVirtualMotionTracker.Parent = TabPage_VMT
         g_mUCVirtualMotionTracker.Dock = DockStyle.Fill
 
@@ -28,7 +32,7 @@
             g_bIgnoreEvents = True
 
             ComboBox_VirtualControllerCount.Items.Clear()
-            For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT
                 ComboBox_VirtualControllerCount.Items.Add(CStr(i))
             Next
         Finally

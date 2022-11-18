@@ -38,6 +38,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
+        Me.TextBox_Log = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'ComboBox_ControllerID
@@ -70,7 +72,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 133)
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 214)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(108, 23)
@@ -120,7 +122,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 138)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 219)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -164,12 +166,39 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.TimerPose.Enabled = True
         '
+        'TextBox_Log
+        '
+        Me.TextBox_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBox_Log.BackColor = System.Drawing.Color.White
+        Me.TextBox_Log.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.TextBox_Log.Location = New System.Drawing.Point(16, 151)
+        Me.TextBox_Log.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
+        Me.TextBox_Log.Multiline = True
+        Me.TextBox_Log.Name = "TextBox_Log"
+        Me.TextBox_Log.ReadOnly = True
+        Me.TextBox_Log.Size = New System.Drawing.Size(585, 44)
+        Me.TextBox_Log.TabIndex = 36
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(16, 135)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(88, 13)
+        Me.Label2.TabIndex = 37
+        Me.Label2.Text = "Driver Message:"
+        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.TextBox_Log)
         Me.Controls.Add(Me.TextBox_Gyro)
         Me.Controls.Add(Me.TextBox_Pos)
         Me.Controls.Add(Me.TextBox_Fps)
@@ -181,7 +210,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Controls.Add(Me.ComboBox_ControllerID)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTrackerItem"
-        Me.Size = New System.Drawing.Size(617, 172)
+        Me.Size = New System.Drawing.Size(617, 253)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -197,4 +226,6 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents TextBox_Gyro As TextBox
     Friend WithEvents TextBox_Pos As TextBox
     Friend WithEvents TimerPose As Timer
+    Friend WithEvents TextBox_Log As TextBox
+    Friend WithEvents Label2 As Label
 End Class

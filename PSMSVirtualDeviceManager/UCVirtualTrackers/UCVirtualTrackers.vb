@@ -18,7 +18,7 @@
             g_bIgnoreEvents = True
 
             ComboBox_VirtualTrackerCount.Items.Clear()
-            For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT
                 ComboBox_VirtualTrackerCount.Items.Add(CStr(i))
             Next
         Finally

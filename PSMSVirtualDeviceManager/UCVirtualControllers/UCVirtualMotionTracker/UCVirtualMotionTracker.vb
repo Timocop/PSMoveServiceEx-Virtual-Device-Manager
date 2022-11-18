@@ -2,20 +2,24 @@
 Imports Rug.Osc
 
 Public Class UCVirtualMotionTracker
+    Public g_mUCVirtualControllers As UCVirtualControllers
+
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
     Private g_mVMTControllers As New List(Of UCVirtualMotionTrackerItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
 
-    Public Sub New()
+    Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
+        g_mUCVirtualControllers = _mUCVirtualControllers
+
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
         g_ClassOscServer = New ClassOscServer
 
-        For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+        For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
             g_mAutostartMenuStrips(i) = mItem
@@ -37,6 +41,9 @@ Public Class UCVirtualMotionTracker
             g_ClassOscServer.StartServer()
 
             Button_StartOscServer.Enabled = False
+
+            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartPoseStream()
+            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartProcessing()
         Catch ex As Exception
             With New Text.StringBuilder
                 .AppendLine("Unable to create OSC Server!")
@@ -53,7 +60,7 @@ Public Class UCVirtualMotionTracker
 
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If
@@ -82,7 +89,7 @@ Public Class UCVirtualMotionTracker
             End If
         Next
 
-        If (g_mVMTControllers.Count >= ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
+        If (g_mVMTControllers.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
             Throw New ArgumentException("Maximum of trackers reached")
         End If
 
@@ -121,7 +128,7 @@ Public Class UCVirtualMotionTracker
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If
@@ -187,6 +194,10 @@ Public Class UCVirtualMotionTracker
         Public Sub Send(mPacket As OscPacket)
             g_VmtOsc.Send(mPacket)
         End Sub
+
+        Public Function IsRunning() As Boolean
+            Return (g_VmtOsc IsNot Nothing)
+        End Function
 
         Private Sub __OnOscProcessBundle(mBundle As OscBundle)
             RaiseEvent OnOscProcessBundle(mBundle)

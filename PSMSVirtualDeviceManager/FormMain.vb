@@ -4,6 +4,7 @@ Public Class FormMain
     Public g_mUCVirtualControllers As UCVirtualControllers
     Public g_mUCVirtualHMDs As UCVirtualHMDs
     Public g_mUCVirtualTrackers As UCVirtualTrackers
+    Public g_mPSMoveServiceCAPI As ClassServiceClient
 
     Enum ENUM_PAGE
         VIRTUAL_CONTROLLERS
@@ -17,7 +18,7 @@ Public Class FormMain
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
-        g_mUCVirtualControllers = New UCVirtualControllers()
+        g_mUCVirtualControllers = New UCVirtualControllers(Me)
         g_mUCVirtualControllers.SuspendLayout()
         g_mUCVirtualControllers.Parent = Panel_Pages
         g_mUCVirtualControllers.Dock = DockStyle.Fill
@@ -37,6 +38,27 @@ Public Class FormMain
         g_mUCVirtualTrackers.Dock = DockStyle.Fill
         g_mUCVirtualTrackers.Visible = False
         g_mUCVirtualTrackers.ResumeLayout()
+
+        While True
+            Try
+                If (g_mPSMoveServiceCAPI IsNot Nothing) Then
+                    g_mPSMoveServiceCAPI.Dispose()
+                    g_mPSMoveServiceCAPI = Nothing
+                End If
+
+                g_mPSMoveServiceCAPI = New ClassServiceClient()
+                g_mPSMoveServiceCAPI.ServiceStart()
+                g_mPSMoveServiceCAPI.TheadStart()
+                Exit While
+            Catch ex As Exception
+                Dim sMsg As New Text.StringBuilder
+                sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error")
+                sMsg.AppendLine(ex.Message)
+                If (MessageBox.Show(sMsg.ToString, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Cancel) Then
+                    Exit While
+                End If
+            End Try
+        End While
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
     End Sub
@@ -73,6 +95,15 @@ Public Class FormMain
     End Sub
 
     Private Sub CleanUp()
+        Try
+            If (g_mPSMoveServiceCAPI IsNot Nothing) Then
+                g_mPSMoveServiceCAPI.Dispose()
+                g_mPSMoveServiceCAPI = Nothing
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
         If (g_mUCVirtualControllers IsNot Nothing AndAlso Not g_mUCVirtualControllers.IsDisposed) Then
             g_mUCVirtualControllers.Dispose()
             g_mUCVirtualControllers = Nothing

@@ -7,7 +7,7 @@ Public Class ClassOSC
 
     Public g_mOnBundle As Action(Of OscBundle) = Nothing
     Public g_mOnMessage As Action(Of OscMessage) = Nothing
-    Public g_iPacketCounter As Long = 0L
+    Public g_iPacketCounter As UInteger = 0
 
     Private g_mOscReceiver As OscReceiver = Nothing
     Private g_mOscSender As OscSender = Nothing

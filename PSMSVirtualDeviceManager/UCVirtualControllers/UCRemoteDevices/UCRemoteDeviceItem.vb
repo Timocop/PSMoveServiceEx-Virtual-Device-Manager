@@ -40,7 +40,7 @@ Public Class UCRemoteDeviceItem
             g_bIgnoreEvents = True
 
             ComboBox_ControllerID.Items.Clear()
-            For i = -1 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_ControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ControllerID.SelectedIndex = 0
