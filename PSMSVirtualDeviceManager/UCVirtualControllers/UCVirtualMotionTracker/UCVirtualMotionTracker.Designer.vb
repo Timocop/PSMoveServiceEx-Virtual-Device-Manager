@@ -35,7 +35,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers = New System.Windows.Forms.Panel()
         Me.Button_VMTControllers = New System.Windows.Forms.Button()
         Me.Button_AddVMTController = New System.Windows.Forms.Button()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Button_StartOscServer = New System.Windows.Forms.Button()
@@ -83,7 +82,6 @@ Partial Class UCVirtualMotionTracker
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Location = New System.Drawing.Point(16, 107)
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
@@ -140,16 +138,6 @@ Partial Class UCVirtualMotionTracker
         Me.Button_AddVMTController.Text = "Add tracker"
         Me.Button_AddVMTController.UseVisualStyleBackColor = True
         '
-        'TabPage2
-        '
-        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(760, 451)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Room Matrix"
-        Me.TabPage2.UseVisualStyleBackColor = True
-        '
         'TabPage3
         '
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
@@ -202,7 +190,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents TabPage2 As TabPage
     Friend WithEvents TabPage3 As TabPage
     Friend WithEvents Panel_VMTTrackers As Panel
     Friend WithEvents Button_VMTControllers As Button
