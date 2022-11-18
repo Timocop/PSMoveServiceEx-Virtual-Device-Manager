@@ -1,15 +1,20 @@
 ﻿Imports System.ComponentModel
+Imports Rug.Osc
 
 Public Class UCVirtualMotionTracker
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
     Private g_mVMTControllers As New List(Of UCVirtualMotionTrackerItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
+    Public g_ClassOscServer As ClassOscServer
+
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        g_ClassOscServer = New ClassOscServer
+
         For i = 0 To ClassPSMoveSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
@@ -25,6 +30,22 @@ Public Class UCVirtualMotionTracker
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
         AutostartLoad()
+    End Sub
+
+    Private Sub Button_StartOscServer_Click(sender As Object, e As EventArgs) Handles Button_StartOscServer.Click
+        Try
+            g_ClassOscServer.StartServer()
+
+            Button_StartOscServer.Enabled = False
+        Catch ex As Exception
+            With New Text.StringBuilder
+                .AppendLine("Unable to create OSC Server!")
+                .AppendLine()
+                .AppendLine(ex.Message)
+
+                MessageBox.Show(.ToString)
+            End With
+        End Try
     End Sub
 
     Private Sub AutostartLoad()
@@ -46,14 +67,14 @@ Public Class UCVirtualMotionTracker
 
         For i = 0 To mAutostartIndexes.Count - 1
             Try
-                AddVMTController(mAutostartIndexes(i))
+                AddVmtTracker(mAutostartIndexes(i))
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Next
     End Sub
 
-    Private Sub AddVMTController(id As Integer)
+    Private Sub AddVmtTracker(id As Integer)
         ' Remove disposed controls
         For i = g_mVMTControllers.Count - 1 To 0 Step -1
             If (g_mVMTControllers(i) Is Nothing OrElse g_mVMTControllers(i).IsDisposed) Then
@@ -70,7 +91,6 @@ Public Class UCVirtualMotionTracker
 
         mItem.Parent = Panel_VMTTrackers
         mItem.Dock = DockStyle.Top
-        mItem.InitializeLifetimeService()
     End Sub
 
     Private Sub Button_VMTControllers_Click(sender As Object, e As EventArgs) Handles Button_VMTControllers.Click
@@ -114,7 +134,7 @@ Public Class UCVirtualMotionTracker
 
     Private Sub Button_AddVMTController_Click(sender As Object, e As EventArgs) Handles Button_AddVMTController.Click
         Try
-            AddVMTController(-1)
+            AddVmtTracker(-1)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -138,5 +158,80 @@ Public Class UCVirtualMotionTracker
             End If
         Next
         g_mAutostartMenuStrips.Clear()
+
+        If (g_ClassOscServer IsNot Nothing) Then
+            g_ClassOscServer.Dispose()
+            g_ClassOscServer = Nothing
+        End If
     End Sub
+
+    Class ClassOscServer
+        Implements IDisposable
+
+        Private g_VmtOsc As ClassOSC = Nothing
+
+        Public Event OnOscProcessBundle(mBundle As OscBundle)
+        Public Event OnOscProcessMessage(mMessage As OscMessage)
+
+        Public Sub New()
+        End Sub
+
+        Public Sub StartServer()
+            If (g_VmtOsc IsNot Nothing) Then
+                Return
+            End If
+
+            g_VmtOsc = New ClassOSC("127.0.0.1", 39571, 39570, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
+        End Sub
+
+        Public Sub Send(mPacket As OscPacket)
+            g_VmtOsc.Send(mPacket)
+        End Sub
+
+        Private Sub __OnOscProcessBundle(mBundle As OscBundle)
+            RaiseEvent OnOscProcessBundle(mBundle)
+        End Sub
+
+        Private Sub __OnOscProcessMessage(mMessage As OscMessage)
+            RaiseEvent OnOscProcessMessage(mMessage)
+        End Sub
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    If (g_VmtOsc IsNot Nothing) Then
+                        g_VmtOsc.Dispose()
+                        g_VmtOsc = Nothing
+                    End If
+
+                    ' TODO: dispose managed state (managed objects).
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+
+    End Class
 End Class

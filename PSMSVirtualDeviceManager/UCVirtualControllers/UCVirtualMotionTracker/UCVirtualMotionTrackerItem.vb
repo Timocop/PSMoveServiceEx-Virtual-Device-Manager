@@ -1,5 +1,6 @@
 ﻿Imports System.Numerics
 Imports System.Text
+Imports Rug.Osc
 
 Public Class UCVirtualMotionTrackerItem
     Shared _ThreadLock As New Object
@@ -54,7 +55,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = False
         End Try
 
-        g_mClassIO = New ClassIO()
+        g_mClassIO = New ClassIO(Me)
         g_mClassConfig = New ClassConfig(Me)
 
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
@@ -117,7 +118,7 @@ Public Class UCVirtualMotionTrackerItem
             Return
         End If
 
-        g_mClassIO.m_ParentController = CInt(ComboBox_VMTTrackerID.SelectedItem)
+        g_mClassIO.m_VmtTracker = CInt(ComboBox_VMTTrackerID.SelectedItem)
         SetUnsavedState(True)
     End Sub
 
@@ -173,9 +174,10 @@ Public Class UCVirtualMotionTrackerItem
         Implements IDisposable
 
         Public _ThreadLock As New Object
+        Public g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
 
         Private g_iIndex As Integer = -1
-        Private g_iParentIndex As Integer = -1
+        Private g_iVmtTracker As Integer = -1
         Private g_mPipeThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
@@ -185,7 +187,10 @@ Public Class UCVirtualMotionTrackerItem
         Private g_bOnlyJointOffset As Boolean = False
 
         Private g_iFpsPipeCounter As Integer = 0
+        Private g_iFpsOscCounter As Integer = 0
         Private g_mData As IControllerData = Nothing
+
+        Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
 
         Enum ENUM_CONTROLLER_TYPE
             PSMOVE = &H0
@@ -248,7 +253,13 @@ Public Class UCVirtualMotionTrackerItem
             End Sub
         End Class
 
-        Public Sub New()
+        Class STRUC_OSC_DATA_PACK
+            Public mPosition As New Vector3(0, 0, 0)
+            Public mOrientation As New Vector4(0, 0, 0, 0)
+        End Class
+
+        Public Sub New(_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem)
+            g_UCVirtualMotionTrackerItem = _UCVirtualMotionTrackerItem
         End Sub
 
         Property m_Index As Integer
@@ -266,15 +277,15 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Property m_ParentController As Integer
+        Property m_VmtTracker As Integer
             Get
                 SyncLock _ThreadLock
-                    Return g_iParentIndex
+                    Return g_iVmtTracker
                 End SyncLock
             End Get
             Set(value As Integer)
                 SyncLock _ThreadLock
-                    g_iParentIndex = value
+                    g_iVmtTracker = value
                 End SyncLock
             End Set
         End Property
@@ -302,6 +313,19 @@ Public Class UCVirtualMotionTrackerItem
             Set(value As Integer)
                 SyncLock _ThreadLock
                     g_iFpsPipeCounter = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_FpsOscCounter As Integer
+            Get
+                SyncLock _ThreadLock
+                    Return g_iFpsOscCounter
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                SyncLock _ThreadLock
+                    g_iFpsOscCounter = value
                 End SyncLock
             End Set
         End Property
@@ -352,6 +376,8 @@ Public Class UCVirtualMotionTrackerItem
                                 g_iFpsPipeCounter += 1
                             End SyncLock
 
+                            ProcessOscData()
+
                             'Threading.Thread.Sleep(1)
                         End While
                     End Using
@@ -361,6 +387,44 @@ Public Class UCVirtualMotionTrackerItem
                     Threading.Thread.Sleep(1000)
                 End Try
             End While
+        End Sub
+
+        Private Sub ProcessOscData()
+            Try
+                Const ENABLE_TRACKER As Integer = 1
+
+                If (m_VmtTracker < 3) Then
+                    Return
+                End If
+
+                SyncLock _ThreadLock
+                    If (TypeOf m_Data Is STRUC_PSMOVE_DATA) Then
+                        Dim mData = DirectCast(m_Data, STRUC_PSMOVE_DATA)
+
+                        g_mOscDataPack.mOrientation = mData.mOrientation
+
+                        If (mData.bIsCurrentlyTracking) Then
+                            g_mOscDataPack.mPosition = mData.mPosition
+                        End If
+                    End If
+                End SyncLock
+
+                Dim pack As New OscMessage(
+                    "/VMT/Joint/Unity", m_VmtTracker, ENABLE_TRACKER, 0.0F,
+                    g_mOscDataPack.mPosition.X,
+                    g_mOscDataPack.mPosition.Y,
+                    g_mOscDataPack.mPosition.Z,
+                    g_mOscDataPack.mOrientation.X,
+                    g_mOscDataPack.mOrientation.Y,
+                    g_mOscDataPack.mOrientation.Z,
+                    g_mOscDataPack.mOrientation.W,
+                    "VMT_20"
+                )
+
+                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(pack)
+            Catch ex As Exception
+
+            End Try
         End Sub
 
         Private Function ParseData(sData As String) As STRUC_PSMOVE_DATA

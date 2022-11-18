@@ -70,7 +70,6 @@ Public Class UCControllerAttachments
 
         mItem.Parent = Panel_Attachments
         mItem.Dock = DockStyle.Top
-        mItem.InitializeLifetimeService()
     End Sub
 
     Private Sub Button_Autostart_Click(sender As Object, e As EventArgs) Handles Button_Autostart.Click

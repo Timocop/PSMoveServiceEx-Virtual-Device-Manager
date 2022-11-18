@@ -6,6 +6,10 @@ Partial Class UCVirtualMotionTracker
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
+            If (disposing) Then
+                CleanUp()
+            End If
+
             If disposing AndAlso components IsNot Nothing Then
                 components.Dispose()
             End If
@@ -34,6 +38,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.Button_StartOscServer = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -80,11 +85,11 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1.Controls.Add(Me.TabPage1)
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
-        Me.TabControl1.Location = New System.Drawing.Point(16, 78)
-        Me.TabControl1.Margin = New System.Windows.Forms.Padding(16)
+        Me.TabControl1.Location = New System.Drawing.Point(16, 107)
+        Me.TabControl1.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(768, 506)
+        Me.TabControl1.Size = New System.Drawing.Size(768, 477)
         Me.TabControl1.TabIndex = 22
         '
         'TabPage1
@@ -95,7 +100,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage1.Size = New System.Drawing.Size(760, 451)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Tracker Roles"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -108,7 +113,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers.Location = New System.Drawing.Point(19, 58)
         Me.Panel_VMTTrackers.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
-        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 403)
+        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 374)
         Me.Panel_VMTTrackers.TabIndex = 15
         '
         'Button_VMTControllers
@@ -158,11 +163,24 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
         '
+        'Button_StartOscServer
+        '
+        Me.Button_StartOscServer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_StartOscServer.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_StartOscServer.Location = New System.Drawing.Point(645, 78)
+        Me.Button_StartOscServer.Margin = New System.Windows.Forms.Padding(3, 16, 16, 3)
+        Me.Button_StartOscServer.Name = "Button_StartOscServer"
+        Me.Button_StartOscServer.Size = New System.Drawing.Size(139, 23)
+        Me.Button_StartOscServer.TabIndex = 23
+        Me.Button_StartOscServer.Text = "Start OSC Server"
+        Me.Button_StartOscServer.UseVisualStyleBackColor = True
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.Button_StartOscServer)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.LinkLabel_ReadMore)
         Me.Controls.Add(Me.Label1)
@@ -189,4 +207,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Button_VMTControllers As Button
     Friend WithEvents Button_AddVMTController As Button
     Friend WithEvents ContextMenuStrip_Autostart As ContextMenuStrip
+    Friend WithEvents Button_StartOscServer As Button
 End Class
