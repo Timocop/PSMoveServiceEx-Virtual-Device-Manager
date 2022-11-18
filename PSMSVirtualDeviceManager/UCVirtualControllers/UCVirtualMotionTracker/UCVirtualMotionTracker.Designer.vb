@@ -145,7 +145,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Size = New System.Drawing.Size(760, 451)
         Me.TabPage3.TabIndex = 2
-        Me.TabPage3.Text = "SteamVR Tracker Overwrites"
+        Me.TabPage3.Text = "SteamVR Tracker Overrides"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
         'ContextMenuStrip_Autostart
