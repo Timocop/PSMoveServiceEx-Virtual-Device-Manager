@@ -79,12 +79,12 @@ Public Class ClassServiceClient
         Try
             While True
                 Try
-                    SyncLock __ClientLock
-                        If (Not g_bProcessingEnabled) Then
-                            Threading.Thread.Sleep(1000)
-                            Continue While
-                        End If
+                    If (Not g_bProcessingEnabled) Then
+                        Threading.Thread.Sleep(1000)
+                        Continue While
+                    End If
 
+                    SyncLock __ClientLock
                         If (Not g_PSMoveServiceServer.IsConnected) Then
                             g_PSMoveServiceServer.Disconnect()
                             g_PSMoveServiceServer.Connect()
