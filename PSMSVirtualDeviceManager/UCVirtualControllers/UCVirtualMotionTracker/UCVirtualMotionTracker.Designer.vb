@@ -46,6 +46,7 @@ Partial Class UCVirtualMotionTracker
         'LinkLabel_ReadMore
         '
         Me.LinkLabel_ReadMore.AutoSize = True
+        Me.LinkLabel_ReadMore.Enabled = False
         Me.LinkLabel_ReadMore.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ReadMore.Location = New System.Drawing.Point(38, 49)
         Me.LinkLabel_ReadMore.Name = "LinkLabel_ReadMore"
