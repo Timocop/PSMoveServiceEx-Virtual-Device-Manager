@@ -36,11 +36,18 @@ Partial Class UCVirtualMotionTracker
         Me.Button_VMTControllers = New System.Windows.Forms.Button()
         Me.Button_AddVMTController = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.Button_Refresh = New System.Windows.Forms.Button()
+        Me.Button_Remove = New System.Windows.Forms.Button()
+        Me.Button_Add = New System.Windows.Forms.Button()
+        Me.ListView_Overrides = New System.Windows.Forms.ListView()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Button_StartOscServer = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        Me.TabPage3.SuspendLayout()
         Me.SuspendLayout()
         '
         'LinkLabel_ReadMore
@@ -141,12 +148,73 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage3
         '
+        Me.TabPage3.Controls.Add(Me.Button_Refresh)
+        Me.TabPage3.Controls.Add(Me.Button_Remove)
+        Me.TabPage3.Controls.Add(Me.Button_Add)
+        Me.TabPage3.Controls.Add(Me.ListView_Overrides)
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Size = New System.Drawing.Size(760, 451)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "SteamVR Tracker Overrides"
         Me.TabPage3.UseVisualStyleBackColor = True
+        '
+        'Button_Refresh
+        '
+        Me.Button_Refresh.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_Refresh.Location = New System.Drawing.Point(128, 223)
+        Me.Button_Refresh.Name = "Button_Refresh"
+        Me.Button_Refresh.Size = New System.Drawing.Size(109, 23)
+        Me.Button_Refresh.TabIndex = 3
+        Me.Button_Refresh.Text = "Refresh"
+        Me.Button_Refresh.UseVisualStyleBackColor = True
+        '
+        'Button_Remove
+        '
+        Me.Button_Remove.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Remove.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_Remove.Location = New System.Drawing.Point(408, 223)
+        Me.Button_Remove.Name = "Button_Remove"
+        Me.Button_Remove.Size = New System.Drawing.Size(109, 23)
+        Me.Button_Remove.TabIndex = 2
+        Me.Button_Remove.Text = "Remove"
+        Me.Button_Remove.UseVisualStyleBackColor = True
+        '
+        'Button_Add
+        '
+        Me.Button_Add.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Add.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_Add.Location = New System.Drawing.Point(523, 223)
+        Me.Button_Add.Name = "Button_Add"
+        Me.Button_Add.Size = New System.Drawing.Size(109, 23)
+        Me.Button_Add.TabIndex = 1
+        Me.Button_Add.Text = "Add"
+        Me.Button_Add.UseVisualStyleBackColor = True
+        '
+        'ListView_Overrides
+        '
+        Me.ListView_Overrides.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView_Overrides.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
+        Me.ListView_Overrides.FullRowSelect = True
+        Me.ListView_Overrides.HideSelection = False
+        Me.ListView_Overrides.Location = New System.Drawing.Point(128, 32)
+        Me.ListView_Overrides.Margin = New System.Windows.Forms.Padding(128, 32, 128, 3)
+        Me.ListView_Overrides.Name = "ListView_Overrides"
+        Me.ListView_Overrides.Size = New System.Drawing.Size(504, 185)
+        Me.ListView_Overrides.TabIndex = 0
+        Me.ListView_Overrides.UseCompatibleStateImageBehavior = False
+        Me.ListView_Overrides.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Tracker"
+        Me.ColumnHeader1.Width = 139
+        '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Override"
+        Me.ColumnHeader2.Width = 158
         '
         'ContextMenuStrip_Autostart
         '
@@ -181,6 +249,7 @@ Partial Class UCVirtualMotionTracker
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
+        Me.TabPage3.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -197,4 +266,10 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Button_AddVMTController As Button
     Friend WithEvents ContextMenuStrip_Autostart As ContextMenuStrip
     Friend WithEvents Button_StartOscServer As Button
+    Friend WithEvents ListView_Overrides As ListView
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents ColumnHeader2 As ColumnHeader
+    Friend WithEvents Button_Refresh As Button
+    Friend WithEvents Button_Remove As Button
+    Friend WithEvents Button_Add As Button
 End Class

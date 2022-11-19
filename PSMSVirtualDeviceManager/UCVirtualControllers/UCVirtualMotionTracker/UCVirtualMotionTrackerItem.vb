@@ -3,6 +3,7 @@ Imports System.Text
 Imports Rug.Osc
 
 Public Class UCVirtualMotionTrackerItem
+    Const MAX_VMT_TRACKER As Integer = 20
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
     Const VMT_DRIVER_VERSION_EXPECT As String = "VMT_013"
@@ -62,7 +63,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = True
 
             ComboBox_VMTTrackerID.Items.Clear()
-            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+            For i = -1 To MAX_VMT_TRACKER
                 ComboBox_VMTTrackerID.Items.Add(CStr(i))
             Next
             ComboBox_VMTTrackerID.SelectedIndex = 0

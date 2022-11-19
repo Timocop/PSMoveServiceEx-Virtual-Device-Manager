@@ -88,6 +88,7 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Management.Instrumentation" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -175,6 +176,12 @@
     <Compile Include="UCVirtualControllers\UCVirtualControllers.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\FormTrackerOverrideSetup.Designer.vb">
+      <DependentUpon>FormTrackerOverrideSetup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\FormTrackerOverrideSetup.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTrackerItem.Designer.vb">
       <DependentUpon>UCVirtualMotionTrackerItem.vb</DependentUpon>
     </Compile>
@@ -245,6 +252,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualControllers.resx">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\FormTrackerOverrideSetup.resx">
+      <DependentUpon>FormTrackerOverrideSetup.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTrackerItem.resx">
       <DependentUpon>UCVirtualMotionTrackerItem.vb</DependentUpon>
