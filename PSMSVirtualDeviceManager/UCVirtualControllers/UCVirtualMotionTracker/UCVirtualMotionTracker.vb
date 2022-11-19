@@ -33,6 +33,8 @@ Public Class UCVirtualMotionTracker
         Next
 
         CreateControl()
+
+        Panel_SteamVRRestart.Visible = False
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -472,8 +474,10 @@ Public Class UCVirtualMotionTracker
                         g_ClassTrackerOverrides.SetOverride(sTracker, sOverride)
                         g_ClassTrackerOverrides.SaveConfig()
 
-                        RefreshOverrides()
-                    End If
+                    RefreshOverrides()
+
+                    g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+                End If
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -502,6 +506,8 @@ Public Class UCVirtualMotionTracker
             g_ClassTrackerOverrides.SaveConfig()
 
             RefreshOverrides()
+
+            g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -524,5 +530,9 @@ Public Class UCVirtualMotionTracker
         For Each mOverride In g_ClassTrackerOverrides.GetOverrides()
             ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
         Next
+    End Sub
+
+    Private Sub LinkLabel_SteamVRRestartOff_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamVRRestartOff.LinkClicked
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
     End Sub
 End Class
