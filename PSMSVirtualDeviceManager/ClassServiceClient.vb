@@ -13,6 +13,8 @@ Public Class ClassServiceClient
     Private g_bPoseStreamEnabled As Boolean = False
     Private g_bProcessingEnabled As Boolean = False
 
+    Private g_bEnableSelectRecenter As Boolean = True
+
     Class STRUC_CONTROLLER_DATA
         Public bIsValid As Boolean
         Public bIsConnected As Boolean
@@ -72,9 +74,24 @@ Public Class ClassServiceClient
         End SyncLock
     End Sub
 
+    Property m_EnableSelectRecenter As Boolean
+        Get
+            SyncLock __ClientLock
+                Return g_bEnableSelectRecenter
+            End SyncLock
+        End Get
+        Set(value As Boolean)
+            SyncLock __ClientLock
+                g_bEnableSelectRecenter = value
+            End SyncLock
+        End Set
+    End Property
+
     Private Sub ProcessingThread()
         Dim mControllers As New List(Of Controllers)
         Dim bRefreshControllerList As Boolean = True
+
+        Dim mControllerRecenterTime As New Dictionary(Of Integer, Stopwatch)
 
         Try
             While True
@@ -115,6 +132,10 @@ Public Class ClassServiceClient
                     For Each mController As Controllers In mControllers
                         Try
                             SyncLock __ClientLock
+                                If (Not mControllerRecenterTime.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                    mControllerRecenterTime(mController.m_Info.m_ControllerId) = New Stopwatch
+                                End If
+
                                 If (g_bPoseStreamEnabled) Then
                                     If ((mController.m_DataStreamFlags And Constants.PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
                                         mController.m_DataStreamFlags = (mController.m_DataStreamFlags Or Constants.PSMStreamFlags.PSMStreamFlags_includePositionData)
@@ -142,6 +163,27 @@ Public Class ClassServiceClient
                                 Select Case (mController.m_Info.m_ControllerType)
                                     Case Constants.PSMControllerType.PSMController_Move
                                         mData.bIsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
+
+                                        ' Do recenter
+                                        ' #TODO Probably want to use HMD orientation instead
+                                        Dim mSelectRecenterTime = mControllerRecenterTime(mController.m_Info.m_ControllerId)
+                                        Select Case (mController.m_Info.m_PSMoveState.m_SelectButton)
+                                            Case Constants.PSMButtonState.PSMButtonState_PRESSED
+                                                mSelectRecenterTime.Restart()
+
+                                            Case Constants.PSMButtonState.PSMButtonState_RELEASED, Constants.PSMButtonState.PSMButtonState_UP
+                                                If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
+                                                    Dim mIdentity = New Constants.PSMQuatf With {
+                                                        .x = 0,
+                                                        .y = 0,
+                                                        .z = 0,
+                                                        .w = 1
+                                                    }
+                                                    mController.ResetControlerOrientation(mIdentity)
+                                                End If
+
+                                                mSelectRecenterTime.Reset()
+                                        End Select
 
                                     Case Else
                                         mData.bIsTracking = False
