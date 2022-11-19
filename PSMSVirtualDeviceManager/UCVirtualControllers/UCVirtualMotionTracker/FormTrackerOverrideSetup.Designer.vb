@@ -33,9 +33,9 @@ Partial Class FormTrackerOverrideSetup
         Me.ComboBox_VMTTracker = New System.Windows.Forms.ComboBox()
         Me.Label_VMTTracker = New System.Windows.Forms.Label()
         Me.Label_CustomTracker = New System.Windows.Forms.Label()
-        Me.TextBox_CustomTracker = New System.Windows.Forms.TextBox()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.ComboBox_CustomTracker = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -157,17 +157,6 @@ Partial Class FormTrackerOverrideSetup
         Me.Label_CustomTracker.TabIndex = 6
         Me.Label_CustomTracker.Text = "Custom Tracker:"
         '
-        'TextBox_CustomTracker
-        '
-        Me.TextBox_CustomTracker.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBox_CustomTracker.Location = New System.Drawing.Point(175, 139)
-        Me.TextBox_CustomTracker.Margin = New System.Windows.Forms.Padding(3, 3, 64, 3)
-        Me.TextBox_CustomTracker.MaxLength = 255
-        Me.TextBox_CustomTracker.Name = "TextBox_CustomTracker"
-        Me.TextBox_CustomTracker.Size = New System.Drawing.Size(229, 22)
-        Me.TextBox_CustomTracker.TabIndex = 7
-        '
         'Panel3
         '
         Me.Panel3.BackColor = System.Drawing.SystemColors.ControlDark
@@ -187,15 +176,27 @@ Partial Class FormTrackerOverrideSetup
         Me.Label3.TabIndex = 9
         Me.Label3.Text = "Tracker to Override:"
         '
+        'ComboBox_CustomTracker
+        '
+        Me.ComboBox_CustomTracker.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_CustomTracker.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_CustomTracker.FormattingEnabled = True
+        Me.ComboBox_CustomTracker.Location = New System.Drawing.Point(175, 139)
+        Me.ComboBox_CustomTracker.Margin = New System.Windows.Forms.Padding(16, 16, 64, 16)
+        Me.ComboBox_CustomTracker.Name = "ComboBox_CustomTracker"
+        Me.ComboBox_CustomTracker.Size = New System.Drawing.Size(229, 21)
+        Me.ComboBox_CustomTracker.TabIndex = 10
+        '
         'FormTrackerOverrideSetup
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(477, 336)
+        Me.Controls.Add(Me.ComboBox_CustomTracker)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Panel3)
-        Me.Controls.Add(Me.TextBox_CustomTracker)
         Me.Controls.Add(Me.Label_CustomTracker)
         Me.Controls.Add(Me.Label_VMTTracker)
         Me.Controls.Add(Me.ComboBox_VMTTracker)
@@ -227,7 +228,7 @@ Partial Class FormTrackerOverrideSetup
     Friend WithEvents ComboBox_VMTTracker As ComboBox
     Friend WithEvents Label_VMTTracker As Label
     Friend WithEvents Label_CustomTracker As Label
-    Friend WithEvents TextBox_CustomTracker As TextBox
     Friend WithEvents Panel3 As Panel
     Friend WithEvents Label3 As Label
+    Friend WithEvents ComboBox_CustomTracker As ComboBox
 End Class

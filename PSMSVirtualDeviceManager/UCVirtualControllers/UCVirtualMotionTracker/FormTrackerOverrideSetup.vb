@@ -39,6 +39,10 @@
     End Structure
 
     Public Sub New()
+        Me.New(New String() {})
+    End Sub
+
+    Public Sub New(sCustomTrackers As String())
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -51,6 +55,13 @@
             ComboBox_VMTTracker.Items.Add(i)
         Next
         ComboBox_VMTTracker.SelectedIndex = 0
+
+        ' Add custom trackers
+        ComboBox_CustomTracker.Items.Clear()
+        For i = 0 To sCustomTrackers.Length - 1
+            ComboBox_CustomTracker.Items.Add(sCustomTrackers(i))
+        Next
+        ComboBox_CustomTracker.SelectedText = ""
 
         ' Add override types
         ComboBox_OverrideType.Items.Clear()
@@ -74,7 +85,7 @@
                 Case RadioButton_Custom.Checked
                     mResult.bCustomTracker = True
 
-                    mResult.sCustomTrackerName = TextBox_CustomTracker.Text
+                    mResult.sCustomTrackerName = ComboBox_CustomTracker.SelectedText
 
             End Select
 
@@ -102,6 +113,14 @@
 
     Private Function CheckCustomTrackerValid() As Boolean
         Dim sText As String = m_DialogResult.sCustomTrackerName
+
+        If (String.IsNullOrWhiteSpace(sText)) Then
+            Return False
+        End If
+
+        If (sText.Length > Byte.MaxValue) Then
+            Return False
+        End If
 
         ' Check ASCII-only
         For i = 0 To sText.Length - 1
@@ -146,7 +165,7 @@
         Label_VMTTracker.Enabled = False
         ComboBox_VMTTracker.Enabled = False
         Label_CustomTracker.Enabled = False
-        TextBox_CustomTracker.Enabled = False
+        ComboBox_CustomTracker.Enabled = False
 
         Select Case (True)
             Case RadioButton_VMT.Checked
@@ -155,7 +174,7 @@
 
             Case RadioButton_Custom.Checked
                 Label_CustomTracker.Enabled = True
-                TextBox_CustomTracker.Enabled = True
+                ComboBox_CustomTracker.Enabled = True
         End Select
 
     End Sub

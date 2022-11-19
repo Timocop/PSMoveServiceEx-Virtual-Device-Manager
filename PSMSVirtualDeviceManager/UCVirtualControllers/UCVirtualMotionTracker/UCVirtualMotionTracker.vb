@@ -162,6 +162,105 @@ Public Class UCVirtualMotionTracker
 
     End Sub
 
+    Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
+        Try
+            Dim sKnownTrackers As String() = g_ClassTrackerOverrides.GetKnownTrackers()
+
+            Using i As New FormTrackerOverrideSetup(sKnownTrackers)
+                If (i.ShowDialog = DialogResult.OK) Then
+                    Dim mResult = i.m_DialogResult
+
+                    Dim sTracker As String = ""
+                    Dim sOverride As String = ""
+
+                    If (mResult.bCustomTracker) Then
+                        sTracker = mResult.sCustomTrackerName
+                    Else
+                        sTracker = String.Format("/devices/vmt/VMT_{0}", mResult.iVMTTracker)
+                    End If
+
+                    Select Case (mResult.iOverrideType)
+                        Case FormTrackerOverrideSetup.ENUM_OVERRIDE_TYPE.HEAD
+                            sOverride = "/user/head"
+                        Case FormTrackerOverrideSetup.ENUM_OVERRIDE_TYPE.LEFT_HAND
+                            sOverride = "/user/hand/left"
+                        Case FormTrackerOverrideSetup.ENUM_OVERRIDE_TYPE.RIGHT_HAND
+                            sOverride = "/user/hand/right"
+                        Case Else
+                            Throw New ArgumentException("Invalid")
+                    End Select
+
+                    If (g_ClassTrackerOverrides.GetOverride(sTracker) IsNot Nothing) Then
+                        If (MessageBox.Show(String.Format("A tracker with the name '{0}' already exists! Do you want to override the tracker override with the current one?", sTracker), "Override?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No) Then
+                            Return
+                        End If
+                    End If
+
+                    g_ClassTrackerOverrides.SetOverride(sTracker, sOverride)
+                    g_ClassTrackerOverrides.SaveConfig()
+
+                    RefreshOverrides()
+
+                    g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub Button_Remove_Click(sender As Object, e As EventArgs) Handles Button_Remove.Click
+        Try
+            If (ListView_Overrides.SelectedItems.Count < 1) Then
+                Return
+            End If
+
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("Are you sure you want to delere following trackers from the overrides?")
+            sMessage.AppendLine()
+            For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
+                sMessage.AppendLine(mSelectedItem.SubItems(0).Text)
+            Next
+            If (MessageBox.Show(sMessage.ToString, "Remove overrides", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No) Then
+                Return
+            End If
+
+            For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
+                g_ClassTrackerOverrides.RemoveOverride(mSelectedItem.SubItems(0).Text)
+            Next
+            g_ClassTrackerOverrides.SaveConfig()
+
+            RefreshOverrides()
+
+            g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub Button_Refresh_Click(sender As Object, e As EventArgs) Handles Button_Refresh.Click
+        Try
+            RefreshOverrides()
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub RefreshOverrides()
+        ListView_Overrides.Items.Clear()
+
+        g_ClassTrackerOverrides.LoadConfig()
+
+        For Each mOverride In g_ClassTrackerOverrides.GetOverrides()
+            ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
+        Next
+    End Sub
+
+    Private Sub LinkLabel_SteamVRRestartOff_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamVRRestartOff.LinkClicked
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
+    End Sub
+
     Private Sub CleanUp()
         For Each mItem In g_mVMTControllers
             If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
@@ -315,6 +414,25 @@ Public Class UCVirtualMotionTracker
             g_bConfigLoaded = True
         End Sub
 
+        Public Function GetKnownTrackers() As String()
+            Dim sTrackers As New List(Of String)
+
+            If (Not g_mConfig.ContainsKey("trackers")) Then
+                Return New String() {}
+            End If
+
+            Dim mOverrideDic = TryCast(g_mConfig("trackers"), Dictionary(Of String, Object))
+            If (mOverrideDic Is Nothing) Then
+                Return New String() {}
+            End If
+
+            For Each mItem In mOverrideDic
+                sTrackers.Add(mItem.Key)
+            Next
+
+            Return sTrackers.ToArray
+        End Function
+
         Public Sub SetOverride(sTrackerName As String, sTrackerToOverride As String)
             If (Not g_mConfig.ContainsKey("TrackingOverrides")) Then
                 g_mConfig("TrackingOverrides") = New Dictionary(Of String, Object)
@@ -439,100 +557,4 @@ Public Class UCVirtualMotionTracker
         End Function
     End Class
 
-    Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
-        Try
-            Using i As New FormTrackerOverrideSetup
-                If (i.ShowDialog = DialogResult.OK) Then
-                    Dim mResult = i.m_DialogResult
-
-                    Dim sTracker As String = ""
-                    Dim sOverride As String = ""
-
-                    If (mResult.bCustomTracker) Then
-                        sTracker = mResult.sCustomTrackerName
-                    Else
-                        sTracker = String.Format("/devices/vmt/VMT_{0}", mResult.iVMTTracker)
-                    End If
-
-                    Select Case (mResult.iOverrideType)
-                        Case FormTrackerOverrideSetup.ENUM_OVERRIDE_TYPE.HEAD
-                            sOverride = "/user/head"
-                        Case FormTrackerOverrideSetup.ENUM_OVERRIDE_TYPE.LEFT_HAND
-                            sOverride = "/user/hand/left"
-                        Case FormTrackerOverrideSetup.ENUM_OVERRIDE_TYPE.RIGHT_HAND
-                            sOverride = "/user/hand/right"
-                        Case Else
-                            Throw New ArgumentException("Invalid")
-                    End Select
-
-                    If (g_ClassTrackerOverrides.GetOverride(sTracker) IsNot Nothing) Then
-                        If (MessageBox.Show(String.Format("A tracker with the name '{0}' already exists! Do you want to override the tracker override with the current one?", sTracker), "Override?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No) Then
-                            Return
-                        End If
-                    End If
-
-                        g_ClassTrackerOverrides.SetOverride(sTracker, sOverride)
-                        g_ClassTrackerOverrides.SaveConfig()
-
-                    RefreshOverrides()
-
-                    g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
-                End If
-            End Using
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-    Private Sub Button_Remove_Click(sender As Object, e As EventArgs) Handles Button_Remove.Click
-        Try
-            If (ListView_Overrides.SelectedItems.Count < 1) Then
-                Return
-            End If
-
-            Dim sMessage As New Text.StringBuilder
-            sMessage.AppendLine("Are you sure you want to delere following trackers from the overrides?")
-            sMessage.AppendLine()
-            For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
-                sMessage.AppendLine(mSelectedItem.SubItems(0).Text)
-            Next
-            If (MessageBox.Show(sMessage.ToString, "Remove overrides", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No) Then
-                Return
-            End If
-
-            For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
-                g_ClassTrackerOverrides.RemoveOverride(mSelectedItem.SubItems(0).Text)
-            Next
-            g_ClassTrackerOverrides.SaveConfig()
-
-            RefreshOverrides()
-
-            g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-    Private Sub Button_Refresh_Click(sender As Object, e As EventArgs) Handles Button_Refresh.Click
-        Try
-            RefreshOverrides()
-
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-    Private Sub RefreshOverrides()
-        ListView_Overrides.Items.Clear()
-
-        g_ClassTrackerOverrides.LoadConfig()
-
-        For Each mOverride In g_ClassTrackerOverrides.GetOverrides()
-            ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
-        Next
-    End Sub
-
-    Private Sub LinkLabel_SteamVRRestartOff_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamVRRestartOff.LinkClicked
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
-    End Sub
 End Class
