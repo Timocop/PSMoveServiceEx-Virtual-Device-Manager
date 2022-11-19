@@ -135,7 +135,14 @@ Public Class UCVirtualMotionTrackerItem
 
                     Select Case (iCode)
                         Case 1 'Room matrix not setup
-                            g_mClassIO.UpdateRoomMatrix()
+                            If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                                g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
+                                    "/VMT/SetRoomMatrix/Temporary", New Object() {
+                                        1.0F, 0F, 0F, 0F,
+                                        0F, 1.0F, 0F, 0F,
+                                        0F, 0F, 1.0F, 0F
+                                    }))
+                            End If
                     End Select
 
                     If (iCode = 0) Then
@@ -396,7 +403,6 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iJointYawCorrection As Integer = 0
         Private g_iControllerYawCorrection As Integer = 0
         Private g_bOnlyJointOffset As Boolean = False
-        Private g_bSetRoomMatrix As Boolean = False
 
         Private g_iFpsOscCounter As Integer = 0
         Private g_mData As ClassServiceClient.STRUC_CONTROLLER_DATA
@@ -477,12 +483,6 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Public Sub UpdateRoomMatrix()
-            SyncLock _ThreadLock
-                g_bSetRoomMatrix = True
-            End SyncLock
-        End Sub
-
         Property m_Data As ClassServiceClient.STRUC_CONTROLLER_DATA
             Get
                 SyncLock _ThreadLock
@@ -542,19 +542,6 @@ Public Class UCVirtualMotionTrackerItem
 
                                 If (m_Data.bIsTracking) Then
                                     g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
-                                End If
-                            End SyncLock
-
-                            SyncLock _ThreadLock
-                                If (g_bSetRoomMatrix) Then
-                                    g_bSetRoomMatrix = False
-
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
-                                            "/VMT/SetRoomMatrix/Temporary", New Object() {
-                                                1.0F, 0F, 0F, 0F,
-                                                0F, 1.0F, 0F, 0F,
-                                                0F, 0F, 1.0F, 0F
-                                            }))
                                 End If
                             End SyncLock
 
