@@ -239,7 +239,7 @@ Public Class UCVirtualMotionTrackerItem
             TimerFPS.Stop()
 
             SyncLock _ThreadLock
-                TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsOscCounter)
+                TextBox_Fps.Text = String.Format("OSC IO: {0}/s", g_mClassIO.m_FpsOscCounter)
 
                 If (g_mClassIO.m_FpsOscCounter > 0) Then
                     g_mControllerLastResponse.Restart()
