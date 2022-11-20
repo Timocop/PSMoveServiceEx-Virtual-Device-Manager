@@ -10,7 +10,6 @@ Public Class UCVirtualMotionTracker
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
-    Public g_ClassTrackerOverrides As ClassTrackerOverrides
 
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
@@ -20,7 +19,6 @@ Public Class UCVirtualMotionTracker
 
         ' Add any initialization after the InitializeComponent() call. 
         g_ClassOscServer = New ClassOscServer
-        g_ClassTrackerOverrides = New ClassTrackerOverrides(Me)
 
         For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
@@ -164,7 +162,9 @@ Public Class UCVirtualMotionTracker
 
     Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
         Try
-            Dim sKnownTrackers As String() = g_ClassTrackerOverrides.GetKnownTrackers()
+            Dim mSteamCOnfig As New ClassSteamVRConfig
+            mSteamCOnfig.LoadConfig()
+            Dim sKnownTrackers As String() = mSteamCOnfig.m_ClassTrackerRoles.GetKnownTrackers
 
             Using i As New FormTrackerOverrideSetup(sKnownTrackers)
                 If (i.ShowDialog = DialogResult.OK) Then
@@ -190,14 +190,14 @@ Public Class UCVirtualMotionTracker
                             Throw New ArgumentException("Invalid")
                     End Select
 
-                    If (g_ClassTrackerOverrides.GetOverride(sTracker) IsNot Nothing) Then
+                    If (mSteamCOnfig.m_ClassOverrides.GetOverride(sTracker) IsNot Nothing) Then
                         If (MessageBox.Show(String.Format("A tracker with the name '{0}' already exists! Do you want to override the tracker override with the current one?", sTracker), "Override?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No) Then
                             Return
                         End If
                     End If
 
-                    g_ClassTrackerOverrides.SetOverride(sTracker, sOverride)
-                    g_ClassTrackerOverrides.SaveConfig()
+                    mSteamCOnfig.m_ClassOverrides.SetOverride(sTracker, sOverride)
+                    mSteamCOnfig.SaveConfig()
 
                     RefreshOverrides()
 
@@ -228,10 +228,12 @@ Public Class UCVirtualMotionTracker
                 Return
             End If
 
+            Dim mSteamCOnfig As New ClassSteamVRConfig
+            mSteamCOnfig.LoadConfig()
             For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
-                g_ClassTrackerOverrides.RemoveOverride(mSelectedItem.SubItems(0).Text)
+                mSteamCOnfig.m_ClassOverrides.RemoveOverride(mSelectedItem.SubItems(0).Text)
             Next
-            g_ClassTrackerOverrides.SaveConfig()
+            mSteamCOnfig.SaveConfig()
 
             RefreshOverrides()
 
@@ -256,9 +258,10 @@ Public Class UCVirtualMotionTracker
     Private Sub RefreshOverrides()
         ListView_Overrides.Items.Clear()
 
-        g_ClassTrackerOverrides.LoadConfig()
+        Dim mSteamCOnfig As New ClassSteamVRConfig
+        mSteamCOnfig.LoadConfig()
 
-        For Each mOverride In g_ClassTrackerOverrides.GetOverrides()
+        For Each mOverride In mSteamCOnfig.m_ClassOverrides.GetOverrides()
             ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
         Next
     End Sub
@@ -360,207 +363,6 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
 
-    End Class
-
-    Class ClassTrackerOverrides
-        Const STEAM_INSTALL_PATH_REGISTRY As String = "SOFTWARE\WOW6432Node\Valve\Steam"
-
-        Private g_mUCVirtualMotionTracker As UCVirtualMotionTracker
-
-        Private g_bConfigLoaded As Boolean = False
-        Private g_mConfig As New Dictionary(Of String, Object)
-
-        Enum ENUM_OVERRIDE_TYPE
-            HEAD
-            LEFT_HAND
-            RIGHT_HAND
-        End Enum
-
-        Sub New(_mUCVirtualMotionTracker As UCVirtualMotionTracker)
-            g_mUCVirtualMotionTracker = _mUCVirtualMotionTracker
-        End Sub
-
-        ReadOnly Property m_SteamPath As String
-            Get
-                Return CStr(My.Computer.Registry.LocalMachine.OpenSubKey(STEAM_INSTALL_PATH_REGISTRY, False).GetValue("InstallPath", Nothing))
-            End Get
-        End Property
-
-        ReadOnly Property m_OverrideTypeName(iType As ENUM_OVERRIDE_TYPE) As String
-            Get
-                Select Case (iType)
-                    Case ENUM_OVERRIDE_TYPE.HEAD
-                        Return "/user/head"
-                    Case ENUM_OVERRIDE_TYPE.LEFT_HAND
-                        Return "/user/hand/left"
-                    Case ENUM_OVERRIDE_TYPE.RIGHT_HAND
-                        Return "/user/hand/right"
-                End Select
-
-                Return Nothing
-            End Get
-        End Property
-
-        Public Sub LoadConfig()
-            Dim sSteamPath As String = m_SteamPath
-            If (sSteamPath Is Nothing) Then
-                Return
-            End If
-
-            Dim sConfigPath As String = IO.Path.Combine(sSteamPath, "config\steamvr.vrsettings")
-            If (Not IO.File.Exists(sConfigPath)) Then
-                Return
-            End If
-
-            Dim sContent As String = IO.File.ReadAllText(sConfigPath)
-
-            Dim mTmp As Object = Nothing
-            g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
-
-            g_bConfigLoaded = True
-        End Sub
-
-        Public Function GetKnownTrackers() As String()
-            Dim sTrackers As New List(Of String)
-
-            If (Not g_mConfig.ContainsKey("trackers")) Then
-                Return New String() {}
-            End If
-
-            Dim mOverrideDic = TryCast(g_mConfig("trackers"), Dictionary(Of String, Object))
-            If (mOverrideDic Is Nothing) Then
-                Return New String() {}
-            End If
-
-            For Each mItem In mOverrideDic
-                sTrackers.Add(mItem.Key)
-            Next
-
-            Return sTrackers.ToArray
-        End Function
-
-        Public Sub SetOverride(sTrackerName As String, sTrackerToOverride As String)
-            If (Not g_mConfig.ContainsKey("TrackingOverrides")) Then
-                g_mConfig("TrackingOverrides") = New Dictionary(Of String, Object)
-            End If
-
-            Dim mScansDic = TryCast(g_mConfig("TrackingOverrides"), Dictionary(Of String, Object))
-
-            mScansDic(sTrackerName) = sTrackerToOverride
-        End Sub
-
-        Public Sub RemoveOverride(sTrackerName As String)
-            If (Not g_mConfig.ContainsKey("TrackingOverrides")) Then
-                g_mConfig("TrackingOverrides") = New Dictionary(Of String, Object)
-            End If
-
-            Dim mScansDic = TryCast(g_mConfig("TrackingOverrides"), Dictionary(Of String, Object))
-            If (Not mScansDic.ContainsKey(sTrackerName)) Then
-                Return
-            End If
-
-            mScansDic.Remove(sTrackerName)
-        End Sub
-
-        Public Function GetOverride(sTrackerName As String) As String
-            Dim mOverrides = GetOverrides()
-
-            For Each mItem In mOverrides
-                If (mItem.Key = sTrackerName) Then
-                    Return mItem.Value
-                End If
-            Next
-
-            Return Nothing
-        End Function
-
-        Public Function GetOverrides() As KeyValuePair(Of String, String)()
-            Dim mOverides As New List(Of KeyValuePair(Of String, String))
-
-            If (Not g_mConfig.ContainsKey("TrackingOverrides")) Then
-                Return mOverides.ToArray
-            End If
-
-            Dim mOverrideDic = TryCast(g_mConfig("TrackingOverrides"), Dictionary(Of String, Object))
-            If (mOverrideDic Is Nothing) Then
-                Return mOverides.ToArray
-            End If
-
-            For Each mItem In mOverrideDic
-                mOverides.Add(New KeyValuePair(Of String, String)(mItem.Key, CStr(mItem.Value)))
-            Next
-
-            Return mOverides.ToArray
-        End Function
-
-        Public Sub SaveConfig()
-            If (Not g_bConfigLoaded) Then
-                Return
-            End If
-
-            Dim sSteamPath As String = m_SteamPath
-            If (sSteamPath Is Nothing) Then
-                Return
-            End If
-
-            Dim sConfigPath As String = IO.Path.Combine(sSteamPath, "config\steamvr.vrsettings")
-            If (Not IO.File.Exists(sConfigPath)) Then
-                Return
-            End If
-
-            Dim sContent = FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
-
-            IO.File.WriteAllText(sConfigPath, sContent)
-        End Sub
-
-        Private Function FormatOutput(ByVal sContent As String) As String
-            Dim mText = New Text.StringBuilder()
-            Dim bEscape As Boolean = False
-            Dim bQuotes As Boolean = False
-            Dim iInt As Integer = 0
-
-            For Each iChar As Char In sContent
-                If (bEscape) Then
-                    bEscape = False
-                    mText.Append(iChar)
-                Else
-                    If (iChar = "\"c) Then
-                        bEscape = True
-                        mText.Append(iChar)
-                    ElseIf (iChar = """"c) Then
-                        bQuotes = Not bQuotes
-                        mText.Append(iChar)
-                    ElseIf (Not bQuotes) Then
-                        If (iChar = ","c) Then
-                            mText.Append(iChar)
-                            mText.Append(vbCrLf)
-                            mText.Append(CChar(vbTab), iInt)
-                        ElseIf iChar = "["c OrElse iChar = "{"c Then
-                            iInt += 1
-
-                            mText.Append(iChar)
-                            mText.Append(vbCrLf)
-                            mText.Append(CChar(vbTab), iInt)
-                        ElseIf (iChar = "]"c) OrElse (iChar = "}"c) Then
-                            iInt -= 1
-
-                            mText.Append(vbCrLf)
-                            mText.Append(CChar(vbTab), iInt)
-                            mText.Append(iChar)
-                        ElseIf (iChar = ":"c) Then
-                            mText.Append(iChar)
-                            mText.Append(vbTab)
-                        ElseIf (Not Char.IsWhiteSpace(iChar)) Then
-                            mText.Append(iChar)
-                        End If
-                    Else
-                        mText.Append(iChar)
-                    End If
-                End If
-            Next
-
-            Return mText.ToString()
-        End Function
     End Class
 
 End Class

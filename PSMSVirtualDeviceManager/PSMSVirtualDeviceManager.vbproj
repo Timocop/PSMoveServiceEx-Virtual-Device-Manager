@@ -118,6 +118,7 @@
     <Compile Include="ClassQuaternionTools.vb" />
     <Compile Include="ClassServiceConfig.vb" />
     <Compile Include="ClassServiceClient.vb" />
+    <Compile Include="ClassSteamVRConfig.vb" />
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
