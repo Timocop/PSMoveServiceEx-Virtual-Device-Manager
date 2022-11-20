@@ -539,10 +539,7 @@ Public Class UCVirtualMotionTrackerItem
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_Data.mOrientation
-
-                                If (m_Data.bIsTracking) Then
-                                    g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
-                                End If
+                                g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
                             End SyncLock
 
                             'Use Right-Handed space for SteamVR 
