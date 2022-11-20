@@ -668,6 +668,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                         g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
 
+                                        '#TODO Add optical/move button joystick emulation
                                         g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
                                 End Select
                             End SyncLock
