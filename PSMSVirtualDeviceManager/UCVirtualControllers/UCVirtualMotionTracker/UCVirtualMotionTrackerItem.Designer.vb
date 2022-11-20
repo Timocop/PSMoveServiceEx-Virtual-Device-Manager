@@ -44,6 +44,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
         Me.ImageList_Status = New System.Windows.Forms.ImageList(Me.components)
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.ComboBox_VMTTrackerRole = New System.Windows.Forms.ComboBox()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -102,7 +104,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VMTTrackerID.FormattingEnabled = True
         Me.ComboBox_VMTTrackerID.Location = New System.Drawing.Point(134, 43)
-        Me.ComboBox_VMTTrackerID.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
         Me.ComboBox_VMTTrackerID.Name = "ComboBox_VMTTrackerID"
         Me.ComboBox_VMTTrackerID.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_VMTTrackerID.TabIndex = 17
@@ -141,7 +142,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Gyro.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Gyro.Cursor = System.Windows.Forms.Cursors.Default
         Me.TextBox_Gyro.HideSelection = False
-        Me.TextBox_Gyro.Location = New System.Drawing.Point(137, 77)
+        Me.TextBox_Gyro.Location = New System.Drawing.Point(134, 102)
         Me.TextBox_Gyro.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
         Me.TextBox_Gyro.Multiline = True
         Me.TextBox_Gyro.Name = "TextBox_Gyro"
@@ -157,7 +158,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Pos.Cursor = System.Windows.Forms.Cursors.Default
         Me.TextBox_Pos.HideSelection = False
-        Me.TextBox_Pos.Location = New System.Drawing.Point(16, 77)
+        Me.TextBox_Pos.Location = New System.Drawing.Point(13, 102)
         Me.TextBox_Pos.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.TextBox_Pos.Multiline = True
         Me.TextBox_Pos.Name = "TextBox_Pos"
@@ -229,12 +230,35 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ImageList_Status.ImageSize = New System.Drawing.Size(16, 16)
         Me.ImageList_Status.TransparentColor = System.Drawing.Color.Transparent
         '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(16, 73)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(95, 13)
+        Me.Label2.TabIndex = 38
+        Me.Label2.Text = "VMT Tracker role:"
+        '
+        'ComboBox_VMTTrackerRole
+        '
+        Me.ComboBox_VMTTrackerRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_VMTTrackerRole.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_VMTTrackerRole.FormattingEnabled = True
+        Me.ComboBox_VMTTrackerRole.Location = New System.Drawing.Point(134, 70)
+        Me.ComboBox_VMTTrackerRole.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.ComboBox_VMTTrackerRole.Name = "ComboBox_VMTTrackerRole"
+        Me.ComboBox_VMTTrackerRole.Size = New System.Drawing.Size(150, 21)
+        Me.ComboBox_VMTTrackerRole.TabIndex = 37
+        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.ComboBox_VMTTrackerRole)
         Me.Controls.Add(Me.Panel_Status)
         Me.Controls.Add(Me.TextBox_Gyro)
         Me.Controls.Add(Me.TextBox_Pos)
@@ -272,4 +296,6 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents Label_StatusTitle As Label
     Friend WithEvents Timer_Status As Timer
     Friend WithEvents ImageList_Status As ImageList
+    Friend WithEvents Label2 As Label
+    Friend WithEvents ComboBox_VMTTrackerRole As ComboBox
 End Class

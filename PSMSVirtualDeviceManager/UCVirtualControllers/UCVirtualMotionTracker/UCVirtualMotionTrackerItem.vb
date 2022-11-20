@@ -72,6 +72,18 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = False
         End Try
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_VMTTrackerRole.Items.Clear()
+            ComboBox_VMTTrackerRole.Items.Add("Generic Tracker")
+            ComboBox_VMTTrackerRole.Items.Add("Left Controller")
+            ComboBox_VMTTrackerRole.Items.Add("Right Controller")
+            ComboBox_VMTTrackerRole.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
         g_mClassIO = New ClassIO(Me)
         g_mClassConfig = New ClassConfig(Me)
 
@@ -224,6 +236,15 @@ Public Class UCVirtualMotionTrackerItem
         SetUnsavedState(True)
     End Sub
 
+    Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassIO.m_VmtTrackerRole = CType(ComboBox_VMTTrackerRole.SelectedIndex, ClassIO.ENUM_TRACKER_ROLE)
+        SetUnsavedState(True)
+    End Sub
+
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
@@ -258,10 +279,16 @@ Public Class UCVirtualMotionTrackerItem
             TimerPose.Stop()
 
             SyncLock _ThreadLock
-                TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_Data.mPosition.X), Math.Floor(g_mClassIO.m_Data.mPosition.Y), Math.Floor(g_mClassIO.m_Data.mPosition.Z), Environment.NewLine)
+                If (g_mClassIO.m_Data IsNot Nothing) Then
+                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_Data.m_Position.X), Math.Floor(g_mClassIO.m_Data.m_Position.Y), Math.Floor(g_mClassIO.m_Data.m_Position.Z), Environment.NewLine)
 
-                Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_Data.mOrientation)
-                TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
+                    Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_Data.m_Orientation)
+                    TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
+                Else
+                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                    TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                End If
+
             End SyncLock
         Finally
             TimerPose.Start()
@@ -395,8 +422,15 @@ Public Class UCVirtualMotionTrackerItem
         Public _ThreadLock As New Object
         Public g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
 
+        Enum ENUM_TRACKER_ROLE
+            GENERIC_TRACKER
+            LEFT_CONTROLLER
+            RIGHT_CONTROLLER
+        End Enum
+
         Private g_iIndex As Integer = -1
         Private g_iVmtTracker As Integer = -1
+        Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
         Private g_mOscThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
@@ -406,23 +440,17 @@ Public Class UCVirtualMotionTrackerItem
         Private g_bOnlyJointOffset As Boolean = False
 
         Private g_iFpsOscCounter As Integer = 0
-        Private g_mData As ClassServiceClient.STRUC_CONTROLLER_DATA
+        Private g_mData As ClassServiceClient.IControllerData
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
-
-        Enum ENUM_CONTROLLER_TYPE
-            PSMOVE = &H0
-            PSNAVI = &H1
-            PSDUALSHOCK = &H2
-            VIRTUALCONTROLLER = &H3
-        End Enum
-
-        Public Interface IControllerData
-        End Interface
 
         Class STRUC_OSC_DATA_PACK
             Public mPosition As New Vector3(0, 0, 0)
             Public mOrientation As New Quaternion(0, 0, 0, 1)
+
+            Public mButtons As New Dictionary(Of Integer, Boolean)
+            Public mTrigger As New Dictionary(Of Integer, Single)
+            Public mJoyStick As New Vector2()
         End Class
 
         Public Sub New(_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem)
@@ -457,6 +485,19 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
+        Property m_VmtTrackerRole As ENUM_TRACKER_ROLE
+            Get
+                SyncLock _ThreadLock
+                    Return g_iVmtTrackerRole
+                End SyncLock
+            End Get
+            Set(value As ENUM_TRACKER_ROLE)
+                SyncLock _ThreadLock
+                    g_iVmtTrackerRole = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub Enable()
             If (g_iIndex < 0) Then
                 Return
@@ -484,17 +525,13 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Property m_Data As ClassServiceClient.STRUC_CONTROLLER_DATA
+        Property m_Data As ClassServiceClient.IControllerData
             Get
                 SyncLock _ThreadLock
-                    If (g_mData Is Nothing) Then
-                        Return New ClassServiceClient.STRUC_CONTROLLER_DATA
-                    End If
-
                     Return g_mData
                 End SyncLock
             End Get
-            Set(value As ClassServiceClient.STRUC_CONTROLLER_DATA)
+            Set(value As ClassServiceClient.IControllerData)
                 SyncLock _ThreadLock
                     g_mData = value
                 End SyncLock
@@ -528,34 +565,104 @@ Public Class UCVirtualMotionTrackerItem
 
                     If (m_Data IsNot Nothing) Then
                         ' We got any new data?
-                        If (iLastOutputSeqNum <> m_Data.iOutputSeqNum) Then
-                            iLastOutputSeqNum = m_Data.iOutputSeqNum
+                        If (iLastOutputSeqNum <> m_Data.m_OutputSeqNum) Then
+                            iLastOutputSeqNum = m_Data.m_OutputSeqNum
 
                             Const ENABLE_TRACKER As Integer = 1
+                            Const ENABLE_CONTROLLER_L As Integer = 2
+                            Const ENABLE_CONTROLLER_R As Integer = 3
                             'Const ENABLE_TRACKINGREFECNCE As Integer = 4
 
-                            If (m_VmtTracker < 3) Then
-                                Throw New ArgumentException("Unsupported VMT tracker id")
-                            End If
-
                             SyncLock _ThreadLock
-                                g_mOscDataPack.mOrientation = m_Data.mOrientation
-                                g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                g_mOscDataPack.mOrientation = m_Data.m_Orientation
+                                g_mOscDataPack.mPosition = m_Data.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+
+                                Select Case (True)
+                                    Case TypeOf m_Data Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
+                                        Dim m_PSMoveData = DirectCast(m_Data, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+
+                                        g_mOscDataPack.mButtons(0) = m_PSMoveData.m_MoveButton
+                                        g_mOscDataPack.mButtons(1) = m_PSMoveData.m_PSButton
+                                        g_mOscDataPack.mButtons(2) = m_PSMoveData.m_StartButton
+                                        g_mOscDataPack.mButtons(3) = m_PSMoveData.m_SelectButton
+                                        g_mOscDataPack.mButtons(4) = m_PSMoveData.m_SquareButton
+                                        g_mOscDataPack.mButtons(5) = m_PSMoveData.m_CrossButton
+                                        g_mOscDataPack.mButtons(6) = m_PSMoveData.m_CircleButton
+                                        g_mOscDataPack.mButtons(7) = m_PSMoveData.m_TriangleButton
+
+                                        g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
+
+                                        g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+                                End Select
                             End SyncLock
 
-                            'Use Right-Handed space for SteamVR 
-                            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                New OscMessage(
-                                    "/VMT/Room/Driver",
-                                    m_VmtTracker, ENABLE_TRACKER, 0.0F,
-                                    g_mOscDataPack.mPosition.X,
-                                    g_mOscDataPack.mPosition.Y,
-                                    g_mOscDataPack.mPosition.Z,
-                                    g_mOscDataPack.mOrientation.X,
-                                    g_mOscDataPack.mOrientation.Y,
-                                    g_mOscDataPack.mOrientation.Z,
-                                    g_mOscDataPack.mOrientation.W
-                                ))
+                            Select Case (m_VmtTrackerRole)
+                                Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
+                                    'Use Right-Handed space for SteamVR 
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Room/Driver",
+                                            m_VmtTracker, ENABLE_TRACKER, 0.0F,
+                                            g_mOscDataPack.mPosition.X,
+                                            g_mOscDataPack.mPosition.Y,
+                                            g_mOscDataPack.mPosition.Z,
+                                            g_mOscDataPack.mOrientation.X,
+                                            g_mOscDataPack.mOrientation.Y,
+                                            g_mOscDataPack.mOrientation.Z,
+                                            g_mOscDataPack.mOrientation.W
+                                        ))
+
+                                Case ENUM_TRACKER_ROLE.LEFT_CONTROLLER,
+                                     ENUM_TRACKER_ROLE.RIGHT_CONTROLLER
+
+                                    Dim iController As Integer = ENABLE_TRACKER
+                                    Select Case (m_VmtTrackerRole)
+                                        Case ENUM_TRACKER_ROLE.LEFT_CONTROLLER
+                                            iController = ENABLE_CONTROLLER_L
+
+                                        Case ENUM_TRACKER_ROLE.RIGHT_CONTROLLER
+                                            iController = ENABLE_CONTROLLER_R
+                                    End Select
+
+                                    For i = 0 To g_mOscDataPack.mButtons.Keys.Count - 1
+                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                            New OscMessage(
+                                                "/VMT/Input/Button",
+                                                m_VmtTracker, i, 0.0F, CInt(g_mOscDataPack.mButtons(i))
+                                            ))
+                                    Next
+
+                                    For i = 0 To g_mOscDataPack.mTrigger.Keys.Count - 1
+                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                            New OscMessage(
+                                                "/VMT/Input/Trigger",
+                                                m_VmtTracker, i, 0.0F, g_mOscDataPack.mTrigger(i)
+                                            ))
+                                    Next
+
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Input/Joystick",
+                                            m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
+                                        ))
+
+                                    'Use Right-Handed space for SteamVR 
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Room/Driver",
+                                            m_VmtTracker, iController, 0.0F,
+                                            g_mOscDataPack.mPosition.X,
+                                            g_mOscDataPack.mPosition.Y,
+                                            g_mOscDataPack.mPosition.Z,
+                                            g_mOscDataPack.mOrientation.X,
+                                            g_mOscDataPack.mOrientation.Y,
+                                            g_mOscDataPack.mOrientation.Z,
+                                            g_mOscDataPack.mOrientation.W
+                                        ))
+
+                            End Select
+
+
 
                             m_FpsOscCounter += 1
                         End If
@@ -631,6 +738,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
                     End SyncLock
@@ -648,6 +756,7 @@ Public Class UCVirtualMotionTrackerItem
             Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "-1")))
+                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
                 End Using
             End Using
         End Sub
