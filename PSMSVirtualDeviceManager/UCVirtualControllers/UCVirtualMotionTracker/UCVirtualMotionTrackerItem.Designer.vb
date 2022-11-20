@@ -46,6 +46,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ImageList_Status = New System.Windows.Forms.ImageList(Me.components)
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ComboBox_VMTTrackerRole = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -81,7 +83,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 142)
-        Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16)
+        Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(108, 23)
         Me.Button_SaveSettings.TabIndex = 7
@@ -251,12 +253,36 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerRole.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_VMTTrackerRole.TabIndex = 37
         '
+        'Label4
+        '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(324, 48)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(117, 13)
+        Me.Label4.TabIndex = 39
+        Me.Label4.Text = "SteamVR Tracker role:"
+        '
+        'ComboBox_SteamTrackerRole
+        '
+        Me.ComboBox_SteamTrackerRole.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_SteamTrackerRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_SteamTrackerRole.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_SteamTrackerRole.FormattingEnabled = True
+        Me.ComboBox_SteamTrackerRole.Location = New System.Drawing.Point(447, 45)
+        Me.ComboBox_SteamTrackerRole.Name = "ComboBox_SteamTrackerRole"
+        Me.ComboBox_SteamTrackerRole.Size = New System.Drawing.Size(150, 21)
+        Me.ComboBox_SteamTrackerRole.TabIndex = 40
+        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.ComboBox_SteamTrackerRole)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ComboBox_VMTTrackerRole)
         Me.Controls.Add(Me.Panel_Status)
@@ -298,4 +324,6 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents ImageList_Status As ImageList
     Friend WithEvents Label2 As Label
     Friend WithEvents ComboBox_VMTTrackerRole As ComboBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents ComboBox_SteamTrackerRole As ComboBox
 End Class

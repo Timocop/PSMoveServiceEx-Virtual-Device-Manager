@@ -16,7 +16,12 @@ Public Class ClassSteamVRConfig
 
     ReadOnly Property m_SteamPath As String
         Get
-            Return CStr(My.Computer.Registry.LocalMachine.OpenSubKey(STEAM_INSTALL_PATH_REGISTRY, False).GetValue("InstallPath", Nothing))
+            Dim mSubKey = My.Computer.Registry.LocalMachine.OpenSubKey(STEAM_INSTALL_PATH_REGISTRY, False)
+            If (mSubKey Is Nothing) Then
+                Return Nothing
+            End If
+
+            Return CStr(mSubKey.GetValue("InstallPath", Nothing))
         End Get
     End Property
 
@@ -44,6 +49,7 @@ Public Class ClassSteamVRConfig
             __MAX
         End Enum
         Private g_sOverrideTypeNames(ENUM_OVERRIDE_TYPE.__MAX) As String
+        Private g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.__MAX) As String
 
         Public Sub New(_ClassSteamVRConfig As ClassSteamVRConfig)
             g_ClassSteamVRConfig = _ClassSteamVRConfig
@@ -51,7 +57,19 @@ Public Class ClassSteamVRConfig
             g_sOverrideTypeNames(ENUM_OVERRIDE_TYPE.HEAD) = "/user/head"
             g_sOverrideTypeNames(ENUM_OVERRIDE_TYPE.LEFT_HAND) = "/user/hand/left"
             g_sOverrideTypeNames(ENUM_OVERRIDE_TYPE.RIGHT_HAND) = "/user/hand/right"
+
+            g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.HEAD) = "Head Mount Device"
+            g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.LEFT_HAND) = "Left Controller"
+            g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.RIGHT_HAND) = "Right Controller"
         End Sub
+
+        Public Function GetOverrideTypeReadableName(iType As ENUM_OVERRIDE_TYPE) As String
+            If (iType = ENUM_OVERRIDE_TYPE.INVALID) Then
+                Return "Invalid"
+            End If
+
+            Return g_sOverrideTypeNamesReadable(iType)
+        End Function
 
         Public Function GetOverrideTypeName(iType As ENUM_OVERRIDE_TYPE) As String
             If (iType = ENUM_OVERRIDE_TYPE.INVALID) Then
@@ -149,6 +167,7 @@ Public Class ClassSteamVRConfig
             __MAX
         End Enum
         Private g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.__MAX) As String
+        Private g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.__MAX) As String
 
         Public Sub New(_ClassSteamVRConfig As ClassSteamVRConfig)
             g_ClassSteamVRConfig = _ClassSteamVRConfig
@@ -166,7 +185,29 @@ Public Class ClassSteamVRConfig
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.CHEST) = "TrackerRole_Chest"
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.CAMERA) = "TrackerRole_Camera"
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.KEYBOARD) = "TrackerRole_Keyboard"
+
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.HANDED) = "Handed"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.LEFT_FOOT) = "Left Foot"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.RIGHT_FOOT) = "Right Foot"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.LEFT_SHOULDER) = "Left Shoulder"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.RIGHT_SHOULDER) = "Right Shoulder"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.LEFT_ELBOW) = "Left Elbow"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.RIGHT_ELBOW) = "Right Elbow"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.LEFT_KNEE) = "Left Knee"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.RIGHT_KNEE) = "Right Knee"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.WAIST) = "Waist"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.CHEST) = "Chest"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.CAMERA) = "Camera"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.KEYBOARD) = "Keyboard"
         End Sub
+
+        Public Function GetTrackerRoleReadableName(iType As ENUM_TRACKER_ROLE_TYPE) As String
+            If (iType = ENUM_TRACKER_ROLE_TYPE.INVALID) Then
+                Return "Invalid"
+            End If
+
+            Return g_sTrackerRoleNamesReadable(iType)
+        End Function
 
         Public Function GetTrackerRoleName(iType As ENUM_TRACKER_ROLE_TYPE) As String
             If (iType = ENUM_TRACKER_ROLE_TYPE.INVALID) Then
@@ -197,7 +238,11 @@ Public Class ClassSteamVRConfig
 
             Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("trackers"), Dictionary(Of String, Object))
 
-            mScansDic(sTrackerName) = g_sTrackerRoleNames(iType)
+            If (iType = ENUM_TRACKER_ROLE_TYPE.HANDED) Then
+                mScansDic(sTrackerName) = g_sTrackerRoleNames(iType) & ",TrackedControllerRole_Invalid"
+            Else
+                mScansDic(sTrackerName) = g_sTrackerRoleNames(iType)
+            End If
         End Sub
 
         Public Sub RemoveTrackerRole(sTrackerName As String)
@@ -264,15 +309,15 @@ Public Class ClassSteamVRConfig
         End Function
     End Class
 
-    Public Sub LoadConfig()
+    Public Function LoadConfig() As Boolean
         Dim sSteamPath As String = m_SteamPath
         If (sSteamPath Is Nothing) Then
-            Return
+            Return False
         End If
 
         Dim sConfigPath As String = IO.Path.Combine(sSteamPath, "config\steamvr.vrsettings")
         If (Not IO.File.Exists(sConfigPath)) Then
-            Return
+            Return False
         End If
 
         Dim sContent As String = IO.File.ReadAllText(sConfigPath)
@@ -281,7 +326,8 @@ Public Class ClassSteamVRConfig
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
         g_bConfigLoaded = True
-    End Sub
+        Return True
+    End Function
 
     Public Sub SaveConfig()
         If (Not g_bConfigLoaded) Then

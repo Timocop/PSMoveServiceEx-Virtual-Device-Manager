@@ -1,5 +1,4 @@
 ﻿Imports System.ComponentModel
-Imports System.Web.Script.Serialization
 Imports Rug.Osc
 
 Public Class UCVirtualMotionTracker
@@ -162,9 +161,13 @@ Public Class UCVirtualMotionTracker
 
     Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
         Try
-            Dim mSteamCOnfig As New ClassSteamVRConfig
-            mSteamCOnfig.LoadConfig()
-            Dim sKnownTrackers As String() = mSteamCOnfig.m_ClassTrackerRoles.GetKnownTrackers
+            Dim mConfig As New ClassSteamVRConfig
+            mConfig.LoadConfig()
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to load SteamVR configs")
+            End If
+
+            Dim sKnownTrackers As String() = mConfig.m_ClassTrackerRoles.GetKnownTrackers
 
             Using i As New FormTrackerOverrideSetup(sKnownTrackers)
                 If (i.ShowDialog = DialogResult.OK) Then
@@ -190,14 +193,14 @@ Public Class UCVirtualMotionTracker
                             Throw New ArgumentException("Invalid")
                     End Select
 
-                    If (mSteamCOnfig.m_ClassOverrides.GetOverride(sTracker) IsNot Nothing) Then
+                    If (mConfig.m_ClassOverrides.GetOverride(sTracker) IsNot Nothing) Then
                         If (MessageBox.Show(String.Format("A tracker with the name '{0}' already exists! Do you want to override the tracker override with the current one?", sTracker), "Override?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No) Then
                             Return
                         End If
                     End If
 
-                    mSteamCOnfig.m_ClassOverrides.SetOverride(sTracker, sOverride)
-                    mSteamCOnfig.SaveConfig()
+                    mConfig.m_ClassOverrides.SetOverride(sTracker, sOverride)
+                    mConfig.SaveConfig()
 
                     RefreshOverrides()
 
@@ -219,7 +222,7 @@ Public Class UCVirtualMotionTracker
             End If
 
             Dim sMessage As New Text.StringBuilder
-            sMessage.AppendLine("Are you sure you want to delere following trackers from the overrides?")
+            sMessage.AppendLine("Are you sure you want to remove following trackers from the overrides?")
             sMessage.AppendLine()
             For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
                 sMessage.AppendLine(mSelectedItem.SubItems(0).Text)
@@ -228,12 +231,15 @@ Public Class UCVirtualMotionTracker
                 Return
             End If
 
-            Dim mSteamCOnfig As New ClassSteamVRConfig
-            mSteamCOnfig.LoadConfig()
+            Dim mConfig As New ClassSteamVRConfig
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to load SteamVR configs")
+            End If
+
             For Each mSelectedItem As ListViewItem In ListView_Overrides.SelectedItems
-                mSteamCOnfig.m_ClassOverrides.RemoveOverride(mSelectedItem.SubItems(0).Text)
+                mConfig.m_ClassOverrides.RemoveOverride(mSelectedItem.SubItems(0).Text)
             Next
-            mSteamCOnfig.SaveConfig()
+            mConfig.SaveConfig()
 
             RefreshOverrides()
 
@@ -259,11 +265,11 @@ Public Class UCVirtualMotionTracker
         ListView_Overrides.Items.Clear()
 
         Dim mSteamCOnfig As New ClassSteamVRConfig
-        mSteamCOnfig.LoadConfig()
-
-        For Each mOverride In mSteamCOnfig.m_ClassOverrides.GetOverrides()
-            ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
-        Next
+        If (mSteamCOnfig.LoadConfig()) Then
+            For Each mOverride In mSteamCOnfig.m_ClassOverrides.GetOverrides()
+                ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
+            Next
+        End If
     End Sub
 
     Private Sub LinkLabel_SteamVRRestartOff_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamVRRestartOff.LinkClicked

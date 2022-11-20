@@ -79,7 +79,25 @@ Public Class UCVirtualMotionTrackerItem
             ComboBox_VMTTrackerRole.Items.Add("Generic Tracker")
             ComboBox_VMTTrackerRole.Items.Add("Left Controller")
             ComboBox_VMTTrackerRole.Items.Add("Right Controller")
+
+            If (ComboBox_VMTTrackerRole.Items.Count <> ClassIO.ENUM_TRACKER_ROLE.__MAX) Then
+                Throw New ArgumentException("Size not equal")
+            End If
+
             ComboBox_VMTTrackerRole.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_SteamTrackerRole.Items.Clear()
+            Dim mConfig As New ClassSteamVRConfig
+            For i = ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE.INVALID To ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE.__MAX - 1
+                ComboBox_SteamTrackerRole.Items.Add(mConfig.m_ClassTrackerRoles.GetTrackerRoleReadableName(CType(i, ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE)))
+            Next
+            ComboBox_SteamTrackerRole.SelectedIndex = 0
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -194,6 +212,35 @@ Public Class UCVirtualMotionTrackerItem
         End If
     End Sub
 
+    Private Sub UpdateTrackerRoleComboBox()
+        Try
+            g_bIgnoreEvents = True
+
+            If (g_mClassIO.m_VmtTracker < 0) Then
+                ComboBox_SteamTrackerRole.SelectedIndex = 0
+                Return
+            End If
+
+            Dim mConfig As New ClassSteamVRConfig
+            If (mConfig.LoadConfig()) Then
+                Dim sTrackerName As String = String.Format("/devices/vmt/VMT_{0}", g_mClassIO.m_VmtTracker)
+                Dim sTrackerRole As String = mConfig.m_ClassTrackerRoles.GetTrackerRole(sTrackerName)
+                If (sTrackerRole Is Nothing) Then
+                    ComboBox_SteamTrackerRole.SelectedIndex = 0
+                    Return
+                End If
+
+                ComboBox_SteamTrackerRole.SelectedIndex = mConfig.m_ClassTrackerRoles.GetTrackerRoleFromName(sTrackerRole) + 1
+            Else
+                ComboBox_SteamTrackerRole.SelectedIndex = 0
+            End If
+        Catch ex As Exception
+            ComboBox_SteamTrackerRole.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+    End Sub
+
     Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
             Try
@@ -202,6 +249,8 @@ Public Class UCVirtualMotionTrackerItem
             Finally
                 g_bIgnoreUnsaved = False
             End Try
+
+            UpdateTrackerRoleComboBox()
 
             SetUnsavedState(False)
         Catch ex As Exception
@@ -224,16 +273,20 @@ Public Class UCVirtualMotionTrackerItem
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
 
+        UpdateTrackerRoleComboBox()
+
         SetUnsavedState(False)
     End Sub
 
-    Private Sub ComboBox_ParentControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerID.SelectedIndexChanged
+    Private Sub ComboBox_VMTTrackerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerID.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
         g_mClassIO.m_VmtTracker = CInt(ComboBox_VMTTrackerID.SelectedItem)
         SetUnsavedState(True)
+
+        UpdateTrackerRoleComboBox()
     End Sub
 
     Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
@@ -245,10 +298,31 @@ Public Class UCVirtualMotionTrackerItem
         SetUnsavedState(True)
     End Sub
 
+    Private Sub ComboBox_TrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_SteamTrackerRole.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        SetUnsavedState(True)
+    End Sub
+
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
             SetUnsavedState(False)
+
+            Dim mConfig As New ClassSteamVRConfig
+            If (mConfig.LoadConfig()) Then
+                Dim sTrackerName As String = String.Format("/devices/vmt/VMT_{0}", g_mClassIO.m_VmtTracker)
+
+                If (ComboBox_SteamTrackerRole.SelectedIndex - 1 <= ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE.INVALID) Then
+                    mConfig.m_ClassTrackerRoles.RemoveTrackerRole(sTrackerName)
+                Else
+                    mConfig.m_ClassTrackerRoles.SetTrackerRole(sTrackerName, CType(ComboBox_SteamTrackerRole.SelectedIndex - 1, ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE))
+                End If
+
+                mConfig.SaveConfig()
+            End If
 
             MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
@@ -426,6 +500,8 @@ Public Class UCVirtualMotionTrackerItem
             GENERIC_TRACKER
             LEFT_CONTROLLER
             RIGHT_CONTROLLER
+
+            __MAX
         End Enum
 
         Private g_iIndex As Integer = -1
