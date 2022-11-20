@@ -379,78 +379,80 @@ Public Class UCVirtualMotionTrackerItem
             Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
 
             While True
-                ' Show driver timeouts
-                If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
-                    sTitle = "Driver not is responding!"
+                If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                    ' Show driver timeouts
+                    If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
+                        sTitle = "Driver not is responding!"
 
-                    Dim sText As New Text.StringBuilder
-                    sText.AppendLine("The driver is not responding! Make sure the OSC server is running and the driver installed correctly.")
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("The driver is not responding! Make sure the OSC server is running and the driver installed correctly.")
 
-                    If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
-                        sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
-                    End If
-                    If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
-                        sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
-                    End If
+                        If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                            sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                        End If
+                        If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                            sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                        End If
 
-                    sMessage = sText.ToString
-                    iStatusType = 2
+                        sMessage = sText.ToString
+                        iStatusType = 2
 
-                    Exit While
-                End If
-
-
-                If (g_sDriverLastResponseCode <> 0) Then
-                    sTitle = String.Format("Driver responded with an error (Code: {0})!", g_sDriverLastResponseCode)
-
-                    Dim sText As New Text.StringBuilder
-                    sText.AppendLine(g_sDriverLastResponseMessage)
-
-                    If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
-                        sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
-                    End If
-                    If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
-                        sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                        Exit While
                     End If
 
-                    sMessage = sText.ToString
-                    iStatusType = 2
 
-                    Exit While
-                End If
+                    If (g_sDriverLastResponseCode <> 0) Then
+                        sTitle = String.Format("Driver responded with an error (Code: {0})!", g_sDriverLastResponseCode)
 
-                ' Show user wrong driver version
-                If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> VMT_DRIVER_VERSION_EXPECT) Then
-                    sTitle = "Driver running but might be incompatible"
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine(g_sDriverLastResponseMessage)
 
+                        If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                            sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                        End If
+                        If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                            sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                        End If
 
-                    Dim sText As New Text.StringBuilder
-                    sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, VMT_DRIVER_VERSION_EXPECT).AppendLine()
+                        sMessage = sText.ToString
+                        iStatusType = 2
 
-                    If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
-                        sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                        Exit While
                     End If
-                    If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
-                        sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+
+                    ' Show user wrong driver version
+                    If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> VMT_DRIVER_VERSION_EXPECT) Then
+                        sTitle = "Driver running but might be incompatible"
+
+
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, VMT_DRIVER_VERSION_EXPECT).AppendLine()
+
+                        If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                            sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                        End If
+                        If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                            sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                        End If
+
+                        sMessage = sText.ToString
+                        iStatusType = 1
+
+                        Exit While
                     End If
 
-                    sMessage = sText.ToString
-                    iStatusType = 1
+                    ' Show tracker not working
+                    If (g_mControllerLastResponse.ElapsedMilliseconds > MAX_CONTROLLER_TIMEOUT) Then
+                        sTitle = "Controller is not responding!"
 
-                    Exit While
-                End If
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("There are no new incoming pose data. Make sure PSMoveServiceEx is running.")
 
-                ' Show tracker not working
-                If (g_mControllerLastResponse.ElapsedMilliseconds > MAX_CONTROLLER_TIMEOUT) Then
-                    sTitle = "Controller is not responding!"
+                        sMessage = sText.ToString
+                        iStatusType = 2
 
-                    Dim sText As New Text.StringBuilder
-                    sText.AppendLine("There are no new incoming pose data. Make sure PSMoveServiceEx is running.")
-
-                    sMessage = sText.ToString
-                    iStatusType = 2
-
-                    Exit While
+                        Exit While
+                    End If
                 End If
 
                 Exit While
