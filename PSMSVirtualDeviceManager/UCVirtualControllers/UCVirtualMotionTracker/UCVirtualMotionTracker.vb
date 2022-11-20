@@ -201,7 +201,10 @@ Public Class UCVirtualMotionTracker
 
                     RefreshOverrides()
 
-                    g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+                    ' Check if SteamVR is running
+                    If (Process.GetProcessesByName("vrserver").Length > 0) Then
+                        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+                    End If
                 End If
             End Using
         Catch ex As Exception
@@ -232,7 +235,10 @@ Public Class UCVirtualMotionTracker
 
             RefreshOverrides()
 
-            g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+            ' Check if SteamVR is running
+            If (Process.GetProcessesByName("vrserver").Length > 0) Then
+                g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+            End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
