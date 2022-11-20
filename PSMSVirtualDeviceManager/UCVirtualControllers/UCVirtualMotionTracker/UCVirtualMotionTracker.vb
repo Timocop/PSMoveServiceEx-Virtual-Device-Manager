@@ -371,4 +371,10 @@ Public Class UCVirtualMotionTracker
 
     End Class
 
+    Private Sub LinkLabel_DownloadVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DownloadVMT.LinkClicked
+        Try
+            Process.Start("https://github.com/gpsnmeajp/VirtualMotionTracker/releases")
+        Catch ex As Exception
+        End Try
+    End Sub
 End Class
