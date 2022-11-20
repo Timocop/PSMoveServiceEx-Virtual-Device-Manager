@@ -1,6 +1,7 @@
 ﻿Imports System.Numerics
 Imports System.Text
 Imports Rug.Osc
+Imports PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants
 
 Public Class UCVirtualMotionTrackerItem
     Const MAX_VMT_TRACKER As Integer = 20
@@ -539,7 +540,7 @@ Public Class UCVirtualMotionTrackerItem
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_Data.mOrientation
-                                g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_CENTIMETERS_TO_METERS)
+                                g_mOscDataPack.mPosition = m_Data.mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
                             End SyncLock
 
                             'Use Right-Handed space for SteamVR 
