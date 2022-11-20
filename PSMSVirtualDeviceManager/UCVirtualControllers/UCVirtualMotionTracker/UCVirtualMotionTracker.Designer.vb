@@ -37,6 +37,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_AddVMTController = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
+        Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -49,7 +50,6 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Button_StartOscServer = New System.Windows.Forms.Button()
-        Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -180,10 +180,23 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_SteamVRRestart.Controls.Add(Me.LinkLabel_SteamVRRestartOff)
         Me.Panel_SteamVRRestart.Controls.Add(Me.PictureBox3)
         Me.Panel_SteamVRRestart.Controls.Add(Me.Label3)
-        Me.Panel_SteamVRRestart.Location = New System.Drawing.Point(128, 301)
+        Me.Panel_SteamVRRestart.Location = New System.Drawing.Point(64, 301)
         Me.Panel_SteamVRRestart.Name = "Panel_SteamVRRestart"
-        Me.Panel_SteamVRRestart.Size = New System.Drawing.Size(504, 42)
+        Me.Panel_SteamVRRestart.Size = New System.Drawing.Size(632, 42)
         Me.Panel_SteamVRRestart.TabIndex = 28
+        '
+        'LinkLabel_SteamVRRestartOff
+        '
+        Me.LinkLabel_SteamVRRestartOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LinkLabel_SteamVRRestartOff.AutoSize = True
+        Me.LinkLabel_SteamVRRestartOff.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_SteamVRRestartOff.Location = New System.Drawing.Point(569, 13)
+        Me.LinkLabel_SteamVRRestartOff.Margin = New System.Windows.Forms.Padding(16)
+        Me.LinkLabel_SteamVRRestartOff.Name = "LinkLabel_SteamVRRestartOff"
+        Me.LinkLabel_SteamVRRestartOff.Size = New System.Drawing.Size(45, 13)
+        Me.LinkLabel_SteamVRRestartOff.TabIndex = 28
+        Me.LinkLabel_SteamVRRestartOff.TabStop = True
+        Me.LinkLabel_SteamVRRestartOff.Text = "Dismiss"
         '
         'PictureBox3
         '
@@ -203,7 +216,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label3.Location = New System.Drawing.Point(38, -1)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(384, 41)
+        Me.Label3.Size = New System.Drawing.Size(512, 41)
         Me.Label3.TabIndex = 27
         Me.Label3.Text = "SteamVR needs to be restarted for changes to take effect."
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -235,7 +248,7 @@ Partial Class UCVirtualMotionTracker
         'Button_Refresh
         '
         Me.Button_Refresh.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_Refresh.Location = New System.Drawing.Point(128, 272)
+        Me.Button_Refresh.Location = New System.Drawing.Point(64, 272)
         Me.Button_Refresh.Name = "Button_Refresh"
         Me.Button_Refresh.Size = New System.Drawing.Size(109, 23)
         Me.Button_Refresh.TabIndex = 3
@@ -246,7 +259,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.Button_Remove.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_Remove.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_Remove.Location = New System.Drawing.Point(408, 272)
+        Me.Button_Remove.Location = New System.Drawing.Point(472, 272)
         Me.Button_Remove.Name = "Button_Remove"
         Me.Button_Remove.Size = New System.Drawing.Size(109, 23)
         Me.Button_Remove.TabIndex = 2
@@ -257,7 +270,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.Button_Add.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_Add.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_Add.Location = New System.Drawing.Point(523, 272)
+        Me.Button_Add.Location = New System.Drawing.Point(587, 272)
         Me.Button_Add.Name = "Button_Add"
         Me.Button_Add.Size = New System.Drawing.Size(109, 23)
         Me.Button_Add.TabIndex = 1
@@ -271,10 +284,10 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_Overrides.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
         Me.ListView_Overrides.FullRowSelect = True
         Me.ListView_Overrides.HideSelection = False
-        Me.ListView_Overrides.Location = New System.Drawing.Point(128, 81)
-        Me.ListView_Overrides.Margin = New System.Windows.Forms.Padding(128, 32, 128, 3)
+        Me.ListView_Overrides.Location = New System.Drawing.Point(64, 81)
+        Me.ListView_Overrides.Margin = New System.Windows.Forms.Padding(64, 32, 64, 3)
         Me.ListView_Overrides.Name = "ListView_Overrides"
-        Me.ListView_Overrides.Size = New System.Drawing.Size(504, 185)
+        Me.ListView_Overrides.Size = New System.Drawing.Size(632, 185)
         Me.ListView_Overrides.TabIndex = 0
         Me.ListView_Overrides.UseCompatibleStateImageBehavior = False
         Me.ListView_Overrides.View = System.Windows.Forms.View.Details
@@ -305,19 +318,6 @@ Partial Class UCVirtualMotionTracker
         Me.Button_StartOscServer.TabIndex = 23
         Me.Button_StartOscServer.Text = "Start OSC Server"
         Me.Button_StartOscServer.UseVisualStyleBackColor = True
-        '
-        'LinkLabel_SteamVRRestartOff
-        '
-        Me.LinkLabel_SteamVRRestartOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_SteamVRRestartOff.AutoSize = True
-        Me.LinkLabel_SteamVRRestartOff.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_SteamVRRestartOff.Location = New System.Drawing.Point(441, 13)
-        Me.LinkLabel_SteamVRRestartOff.Margin = New System.Windows.Forms.Padding(16)
-        Me.LinkLabel_SteamVRRestartOff.Name = "LinkLabel_SteamVRRestartOff"
-        Me.LinkLabel_SteamVRRestartOff.Size = New System.Drawing.Size(45, 13)
-        Me.LinkLabel_SteamVRRestartOff.TabIndex = 28
-        Me.LinkLabel_SteamVRRestartOff.TabStop = True
-        Me.LinkLabel_SteamVRRestartOff.Text = "Dismiss"
         '
         'UCVirtualMotionTracker
         '
