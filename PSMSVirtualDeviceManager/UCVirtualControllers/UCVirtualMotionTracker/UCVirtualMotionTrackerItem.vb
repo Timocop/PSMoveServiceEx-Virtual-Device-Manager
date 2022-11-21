@@ -289,6 +289,15 @@ Public Class UCVirtualMotionTrackerItem
         UpdateTrackerRoleComboBox()
     End Sub
 
+    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickShortcuts.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassIO.m_JoystickShortcuts = CheckBox_JoystickShortcuts.Checked
+        SetUnsavedState(True)
+    End Sub
+
     Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
@@ -509,6 +518,7 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iIndex As Integer = -1
         Private g_iVmtTracker As Integer = -1
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
+        Private g_bJoystickShortcuts As Boolean = False
         Private g_mOscThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
@@ -559,6 +569,19 @@ Public Class UCVirtualMotionTrackerItem
             Set(value As Integer)
                 SyncLock _ThreadLock
                     g_iVmtTracker = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_JoystickShortcuts As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bJoystickShortcuts
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bJoystickShortcuts = value
                 End SyncLock
             End Set
         End Property
@@ -630,10 +653,11 @@ Public Class UCVirtualMotionTrackerItem
             Const TOUCHPAD_AXIS_UNITS As Single = 7.5F
 
             Dim iLastOutputSeqNum As Integer = 0
-            Dim bTrackpadButtonPressed As Boolean = False
-            Dim mTrackpadButtonPressedTime As New Stopwatch
-            Dim mTrackpadPressedLastOrientation As New Quaternion
-            Dim mTrackpadPressedLastPosition As New Vector3
+            Dim bJoystickButtonPressed As Boolean = False
+            Dim mJoystickButtonPressedTime As New Stopwatch
+            Dim mJoystickPressedLastOrientation As New Quaternion
+            Dim mJoystickPressedLastPosition As New Vector3
+            Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
 
             While True
                 Try
@@ -665,43 +689,84 @@ Public Class UCVirtualMotionTrackerItem
                                     Case TypeOf m_Data Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
                                         Dim m_PSMoveData = DirectCast(m_Data, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
 
-                                        g_mOscDataPack.mButtons(0) = m_PSMoveData.m_MoveButton
-                                        g_mOscDataPack.mButtons(1) = m_PSMoveData.m_PSButton
-                                        g_mOscDataPack.mButtons(2) = m_PSMoveData.m_StartButton
-                                        g_mOscDataPack.mButtons(3) = m_PSMoveData.m_SelectButton
-                                        g_mOscDataPack.mButtons(4) = m_PSMoveData.m_SquareButton
-                                        g_mOscDataPack.mButtons(5) = m_PSMoveData.m_CrossButton
-                                        g_mOscDataPack.mButtons(6) = m_PSMoveData.m_CircleButton
-                                        g_mOscDataPack.mButtons(7) = m_PSMoveData.m_TriangleButton
+                                        Dim mButtons As Boolean() = New Boolean() {
+                                            m_PSMoveData.m_MoveButton,
+                                            m_PSMoveData.m_PSButton,
+                                            m_PSMoveData.m_StartButton,
+                                            m_PSMoveData.m_SelectButton,
+                                            m_PSMoveData.m_SquareButton,
+                                            m_PSMoveData.m_CrossButton,
+                                            m_PSMoveData.m_CircleButton,
+                                            m_PSMoveData.m_TriangleButton
+                                        }
 
+                                        ' Send buttons
+                                        For i = 0 To mButtons.Length - 1
+                                            g_mOscDataPack.mButtons(i) = mButtons(i)
+                                        Next
                                         g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
 
-                                        ' Joystick/trackpad emulation
+                                        ' Joystick emulation
                                         If (m_PSMoveData.m_MoveButton) Then
                                             ' Just pressed
-                                            If (Not bTrackpadButtonPressed) Then
-                                                bTrackpadButtonPressed = True
+                                            If (Not bJoystickButtonPressed) Then
+                                                bJoystickButtonPressed = True
 
-                                                mTrackpadButtonPressedTime.Restart()
+                                                mJoystickButtonPressedTime.Restart()
 
-                                                mTrackpadPressedLastOrientation = m_PSMoveData.m_Orientation
-                                                mTrackpadPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mTrackpadPressedLastOrientation, m_PSMoveData.m_Position)
+                                                mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
                                             End If
 
-                                            Dim mNewPos As Vector3 = ClassQuaternionTools.GetPositionInRotationSpace(mTrackpadPressedLastOrientation, m_PSMoveData.m_Position)
+                                            Dim mNewPos As Vector3 = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
 
-                                            mNewPos = (mNewPos - mTrackpadPressedLastPosition) / TOUCHPAD_AXIS_UNITS
-
+                                            mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
                                             mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
                                             mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
 
                                             g_mOscDataPack.mJoyStick = New Vector2(mNewPos.X, -mNewPos.Z)
+
+                                            If (m_JoystickShortcuts) Then
+                                                ' Record joystick shortcut while MOVE button is pressed
+                                                For i = 0 To mButtons.Length - 1
+                                                    If (mButtons(i)) Then
+                                                        If (Math.Abs(mNewPos.X) < 0.5F AndAlso Math.Abs(mNewPos.Z) < 0.5F) Then
+                                                            ' Remove shortcut
+                                                            If (mJoystickShortcuts.ContainsKey(i)) Then
+                                                                mJoystickShortcuts.Remove(i)
+                                                            End If
+                                                        Else
+                                                            ' Create shortcut
+                                                            mJoystickShortcuts(i) = g_mOscDataPack.mJoyStick
+                                                        End If
+                                                    End If
+                                                Next
+                                            End If
                                         Else
-                                            If (bTrackpadButtonPressed) Then
-                                                bTrackpadButtonPressed = False
+                                            If (bJoystickButtonPressed) Then
+                                                bJoystickButtonPressed = False
                                             End If
 
                                             g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+
+                                            If (m_JoystickShortcuts) Then
+                                                ' Record joystick shortcut while MOVE button is pressed
+                                                For i = 0 To mButtons.Length - 1
+                                                    If (mButtons(i)) Then
+                                                        ' Skip move button
+                                                        If (i = 0) Then
+                                                            Continue For
+                                                        End If
+
+                                                        If (mJoystickShortcuts.ContainsKey(i)) Then
+                                                            g_mOscDataPack.mJoyStick = mJoystickShortcuts(i)
+
+                                                            ' Never press the shortcut button, just in case its mapped
+                                                            g_mOscDataPack.mButtons(i) = False
+                                                        End If
+                                                    End If
+                                                Next
+                                            End If
                                         End If
                                 End Select
                             End SyncLock
@@ -849,6 +914,7 @@ Public Class UCVirtualMotionTrackerItem
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "EnableJoystickShortcuts", If(g_mUCRemoteDeviceItem.CheckBox_JoystickShortcuts.Checked, "1", "0")))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
                     End SyncLock
@@ -867,6 +933,7 @@ Public Class UCVirtualMotionTrackerItem
                 Using mIni As New ClassIni(mStream)
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "-1")))
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+                    g_mUCRemoteDeviceItem.CheckBox_JoystickShortcuts.Checked = CInt(mIni.ReadKeyValue(sDevicePath, "EnableJoystickShortcuts", "0")) > 0
                 End Using
             End Using
         End Sub
@@ -886,5 +953,22 @@ Public Class UCVirtualMotionTrackerItem
 
     Private Sub Label_Close_Click(sender As Object, e As EventArgs) Handles Label_Close.Click
         Me.Dispose()
+    End Sub
+
+    Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
+        Dim sHelp As New Text.StringBuilder
+        sHelp.AppendLine("Joystick values can be bound to buttons on the controller so you dont have to move your controller for joystick emulation.")
+        sHelp.AppendLine("For example if you want to bind SQUARE with joystick forward and CROSS with joystick backwards to move forward and backwards with 2 buttons instead of the MOVE button and moving the controller.")
+        sHelp.AppendLine("This makes it easier to navigate in games.")
+        sHelp.AppendLine()
+        sHelp.AppendLine("HOW TO BIND:")
+        sHelp.AppendLine("On your PSMove controller, hold both the MOVE button and the button you want to bind the joystick value to and move the controller in any direction.")
+        sHelp.AppendLine("Release both buttons to accept.")
+        sHelp.AppendLine("The saved joystick value will be applied when pressing the button now.")
+        sHelp.AppendLine()
+        sHelp.AppendLine("HOW TO UNBIND:")
+        sHelp.AppendLine("Quickly press both the MOVE button and the button you want to unbind. Done.")
+
+        MessageBox.Show(sHelp.ToString, "Joystick Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 End Class
