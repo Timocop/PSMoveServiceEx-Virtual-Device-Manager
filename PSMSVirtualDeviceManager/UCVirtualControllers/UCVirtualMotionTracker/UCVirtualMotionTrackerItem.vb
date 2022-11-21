@@ -776,11 +776,6 @@ Public Class UCVirtualMotionTrackerItem
                                                 ' Record joystick shortcut while MOVE button is pressed
                                                 For i = 0 To mButtons.Length - 1
                                                     If (mButtons(i)) Then
-                                                        ' Skip move button
-                                                        If (i = 0) Then
-                                                            Continue For
-                                                        End If
-
                                                         If (mJoystickShortcuts.ContainsKey(i)) Then
                                                             g_mOscDataPack.mJoyStick = mJoystickShortcuts(i)
 
