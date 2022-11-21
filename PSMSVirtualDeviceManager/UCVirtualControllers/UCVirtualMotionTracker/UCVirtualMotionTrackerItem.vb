@@ -114,14 +114,29 @@ Public Class UCVirtualMotionTrackerItem
         SetUnsavedState(False)
 
         AddHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
+        AddHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
 
         CreateControl()
+
+        OnOscSuspendChanged()
 
         ' Hide timeout error
         Panel_Status.Visible = False
         g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
         g_iStatusShowHeight = Me.Height
         Me.Height = g_iStatusHideHeight
+    End Sub
+
+    Private Sub OnOscSuspendChanged()
+        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
+            Return
+        End If
+
+        Dim bEnabled As Boolean = (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests)
+
+        ComboBox_ControllerID.Enabled = bEnabled
+        ComboBox_VMTTrackerID.Enabled = bEnabled
+        ComboBox_VMTTrackerRole.Enabled = bEnabled
     End Sub
 
     Private Sub OnOscProcessMessage(mMessage As OscMessage)
@@ -495,6 +510,10 @@ Public Class UCVirtualMotionTrackerItem
             RemoveHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
         End If
 
+        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso g_mUCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
+            RemoveHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
+        End If
+
         If (g_mClassIO IsNot Nothing) Then
             g_mClassIO.Dispose()
             g_mClassIO = Nothing
@@ -667,6 +686,10 @@ Public Class UCVirtualMotionTrackerItem
 
                     If (Not g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
                         Throw New ArgumentException("OSC server is not running")
+                    End If
+
+                    If (g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                        Throw New ArgumentException("OSC server is suspended")
                     End If
 
                     m_Data = ClassServiceClient.m_ControllerData(g_iIndex)

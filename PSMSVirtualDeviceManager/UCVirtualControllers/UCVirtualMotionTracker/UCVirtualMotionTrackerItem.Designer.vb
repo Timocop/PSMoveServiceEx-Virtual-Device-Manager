@@ -292,9 +292,11 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.LinkLabel_JoystickShortcutsInfo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LinkLabel_JoystickShortcutsInfo.AutoSize = True
+        Me.LinkLabel_JoystickShortcutsInfo.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel_JoystickShortcutsInfo.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_JoystickShortcutsInfo.Location = New System.Drawing.Point(541, 73)
         Me.LinkLabel_JoystickShortcutsInfo.Name = "LinkLabel_JoystickShortcutsInfo"
-        Me.LinkLabel_JoystickShortcutsInfo.Size = New System.Drawing.Size(24, 13)
+        Me.LinkLabel_JoystickShortcutsInfo.Size = New System.Drawing.Size(26, 13)
         Me.LinkLabel_JoystickShortcutsInfo.TabIndex = 42
         Me.LinkLabel_JoystickShortcutsInfo.TabStop = True
         Me.LinkLabel_JoystickShortcutsInfo.Text = "( ? )"

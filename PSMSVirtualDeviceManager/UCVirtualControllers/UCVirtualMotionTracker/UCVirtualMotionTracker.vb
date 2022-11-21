@@ -46,9 +46,18 @@ Public Class UCVirtualMotionTracker
 
     Private Sub Button_StartOscServer_Click(sender As Object, e As EventArgs) Handles Button_StartOscServer.Click
         Try
+            If (g_ClassOscServer.IsRunning) Then
+                g_ClassOscServer.m_SuspendRequests = False
+
+                Button_StartOscServer.Enabled = False
+                Button_PauseOscServer.Enabled = True
+                Return
+            End If
+
             g_ClassOscServer.StartServer()
 
             Button_StartOscServer.Enabled = False
+            Button_PauseOscServer.Enabled = True
 
             g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartPoseStream()
             g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartProcessing()
@@ -61,6 +70,16 @@ Public Class UCVirtualMotionTracker
                 MessageBox.Show(.ToString)
             End With
         End Try
+    End Sub
+
+    Private Sub Button_PauseOscServer_Click(sender As Object, e As EventArgs) Handles Button_PauseOscServer.Click
+        If (g_ClassOscServer.IsRunning) Then
+            g_ClassOscServer.m_SuspendRequests = True
+
+            Button_StartOscServer.Enabled = True
+            Button_PauseOscServer.Enabled = False
+            Return
+        End If
     End Sub
 
     Private Sub AutostartLoad()
@@ -305,6 +324,10 @@ Public Class UCVirtualMotionTracker
         Public Event OnOscProcessBundle(mBundle As OscBundle)
         Public Event OnOscProcessMessage(mMessage As OscMessage)
 
+        Public Event OnSuspendChanged()
+
+        Private g_bSuspendRequest As Boolean = False
+
         Public Sub New()
         End Sub
 
@@ -314,9 +337,26 @@ Public Class UCVirtualMotionTracker
             End If
 
             g_VmtOsc = New ClassOSC("127.0.0.1", 39571, 39570, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
+
+            RaiseEvent OnSuspendChanged()
         End Sub
 
+        Property m_SuspendRequests As Boolean
+            Get
+                Return g_bSuspendRequest
+            End Get
+            Set(value As Boolean)
+                g_bSuspendRequest = value
+
+                RaiseEvent OnSuspendChanged()
+            End Set
+        End Property
+
         Public Sub Send(mPacket As OscPacket)
+            If (g_bSuspendRequest) Then
+                Return
+            End If
+
             g_VmtOsc.Send(mPacket)
         End Sub
 
@@ -325,10 +365,18 @@ Public Class UCVirtualMotionTracker
         End Function
 
         Private Sub __OnOscProcessBundle(mBundle As OscBundle)
+            If (g_bSuspendRequest) Then
+                Return
+            End If
+
             RaiseEvent OnOscProcessBundle(mBundle)
         End Sub
 
         Private Sub __OnOscProcessMessage(mMessage As OscMessage)
+            If (g_bSuspendRequest) Then
+                Return
+            End If
+
             RaiseEvent OnOscProcessMessage(mMessage)
         End Sub
 
