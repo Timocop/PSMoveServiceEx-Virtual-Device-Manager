@@ -95,7 +95,7 @@ Partial Class UCVirtualMotionTrackerItem
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(16, 48)
+        Me.Label3.Location = New System.Drawing.Point(16, 46)
         Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(86, 13)
@@ -259,7 +259,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(324, 48)
+        Me.Label4.Location = New System.Drawing.Point(324, 46)
         Me.Label4.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(117, 13)
@@ -272,7 +272,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_SteamTrackerRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_SteamTrackerRole.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_SteamTrackerRole.FormattingEnabled = True
-        Me.ComboBox_SteamTrackerRole.Location = New System.Drawing.Point(447, 45)
+        Me.ComboBox_SteamTrackerRole.Location = New System.Drawing.Point(451, 43)
         Me.ComboBox_SteamTrackerRole.Name = "ComboBox_SteamTrackerRole"
         Me.ComboBox_SteamTrackerRole.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_SteamTrackerRole.TabIndex = 40
