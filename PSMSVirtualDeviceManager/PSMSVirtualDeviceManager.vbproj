@@ -72,8 +72,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dep\OpenCvSharp.WpfExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="PSMoveServiceExCAPI">
-      <HintPath>..\..\PSMS_CAPI_Test\PSMoveServiceExCAPI\bin\Debug\PSMoveServiceExCAPI.dll</HintPath>
+    <Reference Include="PSMoveServiceExCAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ThirdParty\PSMoveServiceExCAPI.dll</HintPath>
     </Reference>
     <Reference Include="Rug.Osc">
       <HintPath>ThirdParty\Rug.Osc.dll</HintPath>
@@ -97,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
-    <Import Include="PSMoveServiceExCAPI" />
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
