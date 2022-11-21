@@ -51,6 +51,7 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Button_StartOscServer = New System.Windows.Forms.Button()
         Me.LinkLabel_DownloadVMT = New System.Windows.Forms.LinkLabel()
+        Me.CheckBox_PauseOscServer = New System.Windows.Forms.CheckBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -327,16 +328,27 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_DownloadVMT.Location = New System.Drawing.Point(38, 65)
         Me.LinkLabel_DownloadVMT.Margin = New System.Windows.Forms.Padding(3)
         Me.LinkLabel_DownloadVMT.Name = "LinkLabel_DownloadVMT"
-        Me.LinkLabel_DownloadVMT.Size = New System.Drawing.Size(236, 13)
+        Me.LinkLabel_DownloadVMT.Size = New System.Drawing.Size(210, 13)
         Me.LinkLabel_DownloadVMT.TabIndex = 24
         Me.LinkLabel_DownloadVMT.TabStop = True
-        Me.LinkLabel_DownloadVMT.Text = "Download Virtual Motion Tracker (VMT) here"
+        Me.LinkLabel_DownloadVMT.Text = "Download Virtual Motion Tracker (VMT)"
+        '
+        'CheckBox_PauseOscServer
+        '
+        Me.CheckBox_PauseOscServer.AutoSize = True
+        Me.CheckBox_PauseOscServer.Location = New System.Drawing.Point(583, 82)
+        Me.CheckBox_PauseOscServer.Name = "CheckBox_PauseOscServer"
+        Me.CheckBox_PauseOscServer.Size = New System.Drawing.Size(56, 17)
+        Me.CheckBox_PauseOscServer.TabIndex = 25
+        Me.CheckBox_PauseOscServer.Text = "Pause"
+        Me.CheckBox_PauseOscServer.UseVisualStyleBackColor = True
         '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.CheckBox_PauseOscServer)
         Me.Controls.Add(Me.LinkLabel_DownloadVMT)
         Me.Controls.Add(Me.Button_StartOscServer)
         Me.Controls.Add(Me.TabControl1)
@@ -383,4 +395,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel_SteamVRRestart As Panel
     Friend WithEvents LinkLabel_SteamVRRestartOff As LinkLabel
     Friend WithEvents LinkLabel_DownloadVMT As LinkLabel
+    Friend WithEvents CheckBox_PauseOscServer As CheckBox
 End Class
