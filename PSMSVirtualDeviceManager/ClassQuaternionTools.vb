@@ -74,4 +74,14 @@ Public Class ClassQuaternionTools
 
         Return angle
     End Function
+
+    Public Shared Function RotateVector(q As Quaternion, v As Vector3) As Vector3
+        Return New Vector3(q.W * q.W * v.X + 2 * q.Y * q.W * v.Z - 2 * q.Z * q.W * v.Y + q.X * q.X * v.X + 2 * q.Y * q.X * v.Y + 2 * q.Z * q.X * v.Z - q.Z * q.Z * v.X - q.Y * q.Y * v.X,
+                            2 * q.X * q.Y * v.X + q.Y * q.Y * v.Y + 2 * q.Z * q.Y * v.Z + 2 * q.W * q.Z * v.X - q.Z * q.Z * v.Y + q.W * q.W * v.Y - 2 * q.X * q.W * v.Z - q.X * q.X * v.Y,
+                            2 * q.X * q.Z * v.X + 2 * q.Y * q.Z * v.Y + q.Z * q.Z * v.Z - 2 * q.W * q.Y * v.X - q.Y * q.Y * v.Z + 2 * q.W * q.X * v.Y - q.X * q.X * v.Z + q.W * q.W * v.Z)
+    End Function
+
+    Public Shared Function GetPositionInRotationSpace(mRotation As Quaternion, mPosition As Vector3) As Vector3
+        Return RotateVector(Quaternion.Conjugate(mRotation), mPosition)
+    End Function
 End Class

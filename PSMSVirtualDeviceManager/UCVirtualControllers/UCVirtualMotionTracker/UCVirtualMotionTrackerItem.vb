@@ -627,7 +627,13 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Private Sub ThreadOsc()
+            Const TOUCHPAD_AXIS_UNITS As Single = 7.5F
+
             Dim iLastOutputSeqNum As Integer = 0
+            Dim bTrackpadButtonPressed As Boolean = False
+            Dim mTrackpadButtonPressedTime As New Stopwatch
+            Dim mTrackpadPressedLastOrientation As New Quaternion
+            Dim mTrackpadPressedLastPosition As New Vector3
 
             While True
                 Try
@@ -670,8 +676,33 @@ Public Class UCVirtualMotionTrackerItem
 
                                         g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
 
-                                        '#TODO Add optical/move button joystick emulation
-                                        g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+                                        ' Joystick/trackpad emulation
+                                        If (m_PSMoveData.m_MoveButton) Then
+                                            ' Just pressed
+                                            If (Not bTrackpadButtonPressed) Then
+                                                bTrackpadButtonPressed = True
+
+                                                mTrackpadButtonPressedTime.Restart()
+
+                                                mTrackpadPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                mTrackpadPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mTrackpadPressedLastOrientation, m_PSMoveData.m_Position)
+                                            End If
+
+                                            Dim mNewPos As Vector3 = ClassQuaternionTools.GetPositionInRotationSpace(mTrackpadPressedLastOrientation, m_PSMoveData.m_Position)
+
+                                            mNewPos = (mNewPos - mTrackpadPressedLastPosition) / TOUCHPAD_AXIS_UNITS
+
+                                            mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
+                                            mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
+
+                                            g_mOscDataPack.mJoyStick = New Vector2(mNewPos.X, -mNewPos.Z)
+                                        Else
+                                            If (bTrackpadButtonPressed) Then
+                                                bTrackpadButtonPressed = False
+                                            End If
+
+                                            g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+                                        End If
                                 End Select
                             End SyncLock
 
