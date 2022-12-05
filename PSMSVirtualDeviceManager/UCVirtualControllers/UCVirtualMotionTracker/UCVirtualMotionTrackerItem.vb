@@ -7,7 +7,7 @@ Public Class UCVirtualMotionTrackerItem
     Const MAX_VMT_TRACKER As Integer = 20
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
-    Const VMT_DRIVER_VERSION_EXPECT As String = "VMT_013"
+    Const VMT_DRIVER_VERSION_EXPECT As String = "VMT_013_EX"
 
     Shared _ThreadLock As New Object
 
