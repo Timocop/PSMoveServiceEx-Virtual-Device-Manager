@@ -77,8 +77,11 @@ Public Class UCVirtualMotionTrackerItem
 
             ComboBox_VMTTrackerRole.Items.Clear()
             ComboBox_VMTTrackerRole.Items.Add("Generic Tracker")
-            ComboBox_VMTTrackerRole.Items.Add("Left Controller")
-            ComboBox_VMTTrackerRole.Items.Add("Right Controller")
+            ComboBox_VMTTrackerRole.Items.Add("Generic Left Controller")
+            ComboBox_VMTTrackerRole.Items.Add("Generic Right Controller")
+            ComboBox_VMTTrackerRole.Items.Add("HTC Vive Tracker")
+            ComboBox_VMTTrackerRole.Items.Add("HTC Vive Left Controller")
+            ComboBox_VMTTrackerRole.Items.Add("HTC Vive Right Controller")
 
             If (ComboBox_VMTTrackerRole.Items.Count <> ClassIO.ENUM_TRACKER_ROLE.__MAX) Then
                 Throw New ArgumentException("Size not equal")
@@ -528,8 +531,11 @@ Public Class UCVirtualMotionTrackerItem
 
         Enum ENUM_TRACKER_ROLE
             GENERIC_TRACKER
-            LEFT_CONTROLLER
-            RIGHT_CONTROLLER
+            GENERIC_LEFT_CONTROLLER
+            GENERIC_RIGHT_CONTROLLER
+            HTC_VIVE_TRACKER
+            HTC_VIVE_LEFT_CONTROLLER
+            HTC_VIVE_RIGHT_CONTROLLER
 
             __MAX
         End Enum
@@ -703,6 +709,10 @@ Public Class UCVirtualMotionTrackerItem
                             Const ENABLE_CONTROLLER_L As Integer = 2
                             Const ENABLE_CONTROLLER_R As Integer = 3
                             'Const ENABLE_TRACKINGREFECNCE As Integer = 4
+                            Const ENABLE_HTC_VIVE_TRACKER As Integer = 5
+                            Const ENABLE_HTC_VIVE_CONTROLLER_L As Integer = 6
+                            Const ENABLE_HTC_VIVE_CONTROLLER_R As Integer = 7
+                            'Const ENABLE_HTC_TRACKINGREFERENCE As Integer = 8
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_Data.m_Orientation
@@ -805,16 +815,79 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.LEFT_CONTROLLER,
-                                     ENUM_TRACKER_ROLE.RIGHT_CONTROLLER
+                                Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
+                                     ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
 
                                     Dim iController As Integer = ENABLE_TRACKER
                                     Select Case (m_VmtTrackerRole)
-                                        Case ENUM_TRACKER_ROLE.LEFT_CONTROLLER
+                                        Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
                                             iController = ENABLE_CONTROLLER_L
 
-                                        Case ENUM_TRACKER_ROLE.RIGHT_CONTROLLER
+                                        Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
                                             iController = ENABLE_CONTROLLER_R
+                                    End Select
+
+                                    For i = 0 To g_mOscDataPack.mButtons.Keys.Count - 1
+                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                            New OscMessage(
+                                                "/VMT/Input/Button",
+                                                m_VmtTracker, i, 0.0F, CInt(g_mOscDataPack.mButtons(i))
+                                            ))
+                                    Next
+
+                                    For i = 0 To g_mOscDataPack.mTrigger.Keys.Count - 1
+                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                            New OscMessage(
+                                                "/VMT/Input/Trigger",
+                                                m_VmtTracker, i, 0.0F, g_mOscDataPack.mTrigger(i)
+                                            ))
+                                    Next
+
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Input/Joystick",
+                                            m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
+                                        ))
+
+                                    'Use Right-Handed space for SteamVR 
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Room/Driver",
+                                            m_VmtTracker, iController, 0.0F,
+                                            g_mOscDataPack.mPosition.X,
+                                            g_mOscDataPack.mPosition.Y,
+                                            g_mOscDataPack.mPosition.Z,
+                                            g_mOscDataPack.mOrientation.X,
+                                            g_mOscDataPack.mOrientation.Y,
+                                            g_mOscDataPack.mOrientation.Z,
+                                            g_mOscDataPack.mOrientation.W
+                                        ))
+
+                                Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
+                                    'Use Right-Handed space for SteamVR 
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Room/Driver",
+                                            m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
+                                            g_mOscDataPack.mPosition.X,
+                                            g_mOscDataPack.mPosition.Y,
+                                            g_mOscDataPack.mPosition.Z,
+                                            g_mOscDataPack.mOrientation.X,
+                                            g_mOscDataPack.mOrientation.Y,
+                                            g_mOscDataPack.mOrientation.Z,
+                                            g_mOscDataPack.mOrientation.W
+                                        ))
+
+                                Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
+                                     ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+
+                                    Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
+                                    Select Case (m_VmtTrackerRole)
+                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
+                                            iController = ENABLE_HTC_VIVE_CONTROLLER_L
+
+                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                            iController = ENABLE_HTC_VIVE_CONTROLLER_R
                                     End Select
 
                                     For i = 0 To g_mOscDataPack.mButtons.Keys.Count - 1
