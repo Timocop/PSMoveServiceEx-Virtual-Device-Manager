@@ -679,7 +679,7 @@ Public Class UCVirtualMotionTrackerItem
             Const ENABLE_TRACKER As Integer = 1
             Const ENABLE_CONTROLLER_L As Integer = 2
             Const ENABLE_CONTROLLER_R As Integer = 3
-            'Const ENABLE_TRACKINGREFECNCE As Integer = 4
+            Const ENABLE_TRACKINGREFECNCE As Integer = 4
             Const ENABLE_HTC_VIVE_TRACKER As Integer = 5
             Const ENABLE_HTC_VIVE_CONTROLLER_L As Integer = 6
             Const ENABLE_HTC_VIVE_CONTROLLER_R As Integer = 7
@@ -1154,18 +1154,23 @@ Public Class UCVirtualMotionTrackerItem
                         For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
                             m_TrackerData(i) = ClassServiceClient.m_TrackerData(i)
 
+                            Dim mPosition As Vector3 = m_TrackerData(i).m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+
+                            ' Cameras are flipped, flip them correctly
+                            Dim mFlippedQ As Quaternion = m_TrackerData(i).m_Orientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
+
                             'Use Right-Handed space for SteamVR 
                             g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
-                                            m_TrackerData(i).m_Position.X,
-                                            m_TrackerData(i).m_Position.Y,
-                                            m_TrackerData(i).m_Position.Z,
-                                            m_TrackerData(i).m_Orientation.X,
-                                            m_TrackerData(i).m_Orientation.Y,
-                                            m_TrackerData(i).m_Orientation.Z,
-                                            m_TrackerData(i).m_Orientation.W
+                                            mPosition.X,
+                                            mPosition.Y,
+                                            mPosition.Z,
+                                            mFlippedQ.X,
+                                            mFlippedQ.Y,
+                                            mFlippedQ.Z,
+                                            mFlippedQ.W
                                         ))
                         Next
                     End If
