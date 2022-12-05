@@ -150,7 +150,9 @@ Public Class ClassSteamVRConfig
 
         Enum ENUM_TRACKER_ROLE_TYPE
             INVALID = -1
-            HANDED
+            HANDED_L
+            HANDED_R
+            HANDED_BOTH
             LEFT_FOOT
             RIGHT_FOOT
             LEFT_SHOULDER
@@ -172,7 +174,9 @@ Public Class ClassSteamVRConfig
         Public Sub New(_ClassSteamVRConfig As ClassSteamVRConfig)
             g_ClassSteamVRConfig = _ClassSteamVRConfig
 
-            g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.HANDED) = "TrackerRole_Handed"
+            g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.HANDED_L) = "TrackerRole_Handed,TrackedControllerRole_LeftHand"
+            g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.HANDED_R) = "TrackerRole_Handed,TrackedControllerRole_RightHand"
+            g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.HANDED_BOTH) = "TrackerRole_Handed"
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.LEFT_FOOT) = "TrackerRole_LeftFoot"
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.RIGHT_FOOT) = "TrackerRole_RightFoot"
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.LEFT_SHOULDER) = "TrackerRole_LeftShoulder"
@@ -186,7 +190,9 @@ Public Class ClassSteamVRConfig
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.CAMERA) = "TrackerRole_Camera"
             g_sTrackerRoleNames(ENUM_TRACKER_ROLE_TYPE.KEYBOARD) = "TrackerRole_Keyboard"
 
-            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.HANDED) = "Handed"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.HANDED_BOTH) = "Handed"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.HANDED_L) = "Handed Left"
+            g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.HANDED_R) = "Handed Right"
             g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.LEFT_FOOT) = "Left Foot"
             g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.RIGHT_FOOT) = "Right Foot"
             g_sTrackerRoleNamesReadable(ENUM_TRACKER_ROLE_TYPE.LEFT_SHOULDER) = "Left Shoulder"
@@ -238,7 +244,7 @@ Public Class ClassSteamVRConfig
 
             Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("trackers"), Dictionary(Of String, Object))
 
-            If (iType = ENUM_TRACKER_ROLE_TYPE.HANDED) Then
+            If (iType = ENUM_TRACKER_ROLE_TYPE.HANDED_BOTH) Then
                 mScansDic(sTrackerName) = g_sTrackerRoleNames(iType) & ",TrackedControllerRole_Invalid"
             Else
                 mScansDic(sTrackerName) = g_sTrackerRoleNames(iType)
