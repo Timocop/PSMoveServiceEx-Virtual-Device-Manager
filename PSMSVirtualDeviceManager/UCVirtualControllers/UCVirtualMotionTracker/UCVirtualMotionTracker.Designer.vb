@@ -35,6 +35,19 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers = New System.Windows.Forms.Panel()
         Me.Button_VMTControllers = New System.Windows.Forms.Button()
         Me.Button_AddVMTController = New System.Windows.Forms.Button()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.TabControl2 = New System.Windows.Forms.TabControl()
+        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox_JoystickShortcutClick = New System.Windows.Forms.CheckBox()
+        Me.CheckBox_JoystickShortcuts = New System.Windows.Forms.CheckBox()
+        Me.LinkLabel_JoystickShortcutsInfo = New System.Windows.Forms.LinkLabel()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.ComboBox_GrabButtonMethod = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
@@ -55,6 +68,11 @@ Partial Class UCVirtualMotionTracker
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
+        Me.TabControl2.SuspendLayout()
+        Me.TabPage4.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -101,6 +119,7 @@ Partial Class UCVirtualMotionTracker
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Location = New System.Drawing.Point(16, 107)
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
@@ -119,7 +138,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage1.Size = New System.Drawing.Size(760, 451)
         Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "Tracker Roles"
+        Me.TabPage1.Text = "Trackers"
         Me.TabPage1.UseVisualStyleBackColor = True
         '
         'Panel_VMTTrackers
@@ -156,6 +175,157 @@ Partial Class UCVirtualMotionTracker
         Me.Button_AddVMTController.TabIndex = 13
         Me.Button_AddVMTController.Text = "Add tracker"
         Me.Button_AddVMTController.UseVisualStyleBackColor = True
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.TabControl2)
+        Me.TabPage2.Controls.Add(Me.Button_SaveControllerSettings)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(760, 451)
+        Me.TabPage2.TabIndex = 3
+        Me.TabPage2.Text = "Controller Settings"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'TabControl2
+        '
+        Me.TabControl2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TabControl2.Controls.Add(Me.TabPage4)
+        Me.TabControl2.Location = New System.Drawing.Point(6, 6)
+        Me.TabControl2.Name = "TabControl2"
+        Me.TabControl2.SelectedIndex = 0
+        Me.TabControl2.Size = New System.Drawing.Size(748, 387)
+        Me.TabControl2.TabIndex = 47
+        '
+        'TabPage4
+        '
+        Me.TabPage4.Controls.Add(Me.GroupBox1)
+        Me.TabPage4.Controls.Add(Me.GroupBox2)
+        Me.TabPage4.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage4.Name = "TabPage4"
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage4.Size = New System.Drawing.Size(740, 361)
+        Me.TabPage4.TabIndex = 0
+        Me.TabPage4.Text = "PSMove Controller"
+        Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcutClick)
+        Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcuts)
+        Me.GroupBox1.Controls.Add(Me.LinkLabel_JoystickShortcutsInfo)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 6)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(728, 77)
+        Me.GroupBox1.TabIndex = 44
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "General"
+        '
+        'CheckBox_JoystickShortcutClick
+        '
+        Me.CheckBox_JoystickShortcutClick.AutoSize = True
+        Me.CheckBox_JoystickShortcutClick.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_JoystickShortcutClick.Location = New System.Drawing.Point(51, 44)
+        Me.CheckBox_JoystickShortcutClick.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_JoystickShortcutClick.Name = "CheckBox_JoystickShortcutClick"
+        Me.CheckBox_JoystickShortcutClick.Size = New System.Drawing.Size(332, 18)
+        Me.CheckBox_JoystickShortcutClick.TabIndex = 44
+        Me.CheckBox_JoystickShortcutClick.Text = "Click touchpad when using shortcuts (HTC Vive Emulation)"
+        Me.CheckBox_JoystickShortcutClick.UseVisualStyleBackColor = True
+        '
+        'CheckBox_JoystickShortcuts
+        '
+        Me.CheckBox_JoystickShortcuts.AutoSize = True
+        Me.CheckBox_JoystickShortcuts.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_JoystickShortcuts.Location = New System.Drawing.Point(19, 21)
+        Me.CheckBox_JoystickShortcuts.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_JoystickShortcuts.Name = "CheckBox_JoystickShortcuts"
+        Me.CheckBox_JoystickShortcuts.Size = New System.Drawing.Size(214, 18)
+        Me.CheckBox_JoystickShortcuts.TabIndex = 42
+        Me.CheckBox_JoystickShortcuts.Text = "Enable joystick emulation shortcuts"
+        Me.CheckBox_JoystickShortcuts.UseVisualStyleBackColor = True
+        '
+        'LinkLabel_JoystickShortcutsInfo
+        '
+        Me.LinkLabel_JoystickShortcutsInfo.AutoSize = True
+        Me.LinkLabel_JoystickShortcutsInfo.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel_JoystickShortcutsInfo.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_JoystickShortcutsInfo.Location = New System.Drawing.Point(233, 22)
+        Me.LinkLabel_JoystickShortcutsInfo.Name = "LinkLabel_JoystickShortcutsInfo"
+        Me.LinkLabel_JoystickShortcutsInfo.Size = New System.Drawing.Size(26, 13)
+        Me.LinkLabel_JoystickShortcutsInfo.TabIndex = 43
+        Me.LinkLabel_JoystickShortcutsInfo.TabStop = True
+        Me.LinkLabel_JoystickShortcutsInfo.Text = "( ? )"
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.ComboBox_GrabButtonMethod)
+        Me.GroupBox2.Controls.Add(Me.Label5)
+        Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadClickMethod)
+        Me.GroupBox2.Controls.Add(Me.Label4)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 89)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(728, 84)
+        Me.GroupBox2.TabIndex = 46
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "HTC Vive Emulation Settings"
+        '
+        'ComboBox_GrabButtonMethod
+        '
+        Me.ComboBox_GrabButtonMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_GrabButtonMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_GrabButtonMethod.FormattingEnabled = True
+        Me.ComboBox_GrabButtonMethod.Location = New System.Drawing.Point(154, 45)
+        Me.ComboBox_GrabButtonMethod.Name = "ComboBox_GrabButtonMethod"
+        Me.ComboBox_GrabButtonMethod.Size = New System.Drawing.Size(449, 21)
+        Me.ComboBox_GrabButtonMethod.TabIndex = 3
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(19, 48)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(117, 13)
+        Me.Label5.TabIndex = 2
+        Me.Label5.Text = "Grab button method:"
+        '
+        'ComboBox_TouchpadClickMethod
+        '
+        Me.ComboBox_TouchpadClickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_TouchpadClickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_TouchpadClickMethod.FormattingEnabled = True
+        Me.ComboBox_TouchpadClickMethod.Location = New System.Drawing.Point(154, 18)
+        Me.ComboBox_TouchpadClickMethod.Name = "ComboBox_TouchpadClickMethod"
+        Me.ComboBox_TouchpadClickMethod.Size = New System.Drawing.Size(449, 21)
+        Me.ComboBox_TouchpadClickMethod.TabIndex = 1
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(19, 21)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(129, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "Touchpad click method:"
+        '
+        'Button_SaveControllerSettings
+        '
+        Me.Button_SaveControllerSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveControllerSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(645, 412)
+        Me.Button_SaveControllerSettings.Margin = New System.Windows.Forms.Padding(16)
+        Me.Button_SaveControllerSettings.Name = "Button_SaveControllerSettings"
+        Me.Button_SaveControllerSettings.Size = New System.Drawing.Size(96, 23)
+        Me.Button_SaveControllerSettings.TabIndex = 45
+        Me.Button_SaveControllerSettings.Text = "Save settings"
+        Me.Button_SaveControllerSettings.UseVisualStyleBackColor = True
         '
         'TabPage3
         '
@@ -364,6 +534,13 @@ Partial Class UCVirtualMotionTracker
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
+        Me.TabPage2.ResumeLayout(False)
+        Me.TabControl2.ResumeLayout(False)
+        Me.TabPage4.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
@@ -399,4 +576,17 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents LinkLabel_SteamVRRestartOff As LinkLabel
     Friend WithEvents LinkLabel_DownloadVMT As LinkLabel
     Friend WithEvents Button_PauseOscServer As Button
+    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents CheckBox_JoystickShortcuts As CheckBox
+    Friend WithEvents LinkLabel_JoystickShortcutsInfo As LinkLabel
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents CheckBox_JoystickShortcutClick As CheckBox
+    Friend WithEvents Button_SaveControllerSettings As Button
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents ComboBox_TouchpadClickMethod As ComboBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents ComboBox_GrabButtonMethod As ComboBox
+    Friend WithEvents Label5 As Label
+    Friend WithEvents TabControl2 As TabControl
+    Friend WithEvents TabPage4 As TabPage
 End Class

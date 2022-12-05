@@ -9,6 +9,9 @@ Public Class UCVirtualMotionTracker
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
+    Public g_ClassControllerSettings As ClassControllerSettings
+
+    Private g_bIgnoreEvents As Boolean = False
 
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
@@ -18,6 +21,46 @@ Public Class UCVirtualMotionTracker
 
         ' Add any initialization after the InitializeComponent() call. 
         g_ClassOscServer = New ClassOscServer
+        g_ClassControllerSettings = New ClassControllerSettings(Me)
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_TouchpadClickMethod.Items.Clear()
+            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Left Controller: TRIANGLE [▲] / Right Controller: SQUARE [■])")
+            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: SQUARE [■])")
+            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: TRIANGLE [▲])")
+            ComboBox_TouchpadClickMethod.Items.Add("While holding MOVE [~] button")
+            ComboBox_TouchpadClickMethod.Items.Add("On MOVE [~] button release")
+
+            ComboBox_TouchpadClickMethod.SelectedIndex = 0
+
+            If (ComboBox_TouchpadClickMethod.Items.Count <> ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX) Then
+                Throw New ArgumentException("Invalid size")
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_GrabButtonMethod.Items.Clear()
+            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Left Controller: CIRCLE [O] / Right Controller: CROSS [X])")
+            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Both Controllers: CROSS [X])")
+            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Both Controllers: CIRCLE [O])")
+            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Left Controller: CIRCLE [O] / Right Controller: CROSS [X])")
+            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Both Controllers: CROSS [X])")
+            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Both Controllers: CIRCLE [O])")
+
+            ComboBox_GrabButtonMethod.SelectedIndex = 0
+
+            If (ComboBox_GrabButtonMethod.Items.Count <> ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.__MAX) Then
+                Throw New ArgumentException("Invalid size")
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
 
         For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
@@ -35,13 +78,37 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
-        AutostartLoad()
+        Try
+            g_ClassControllerSettings.LoadSettings()
+
+            Try
+                g_bIgnoreEvents = True
+
+                CheckBox_JoystickShortcuts.Checked = g_ClassControllerSettings.m_JoystickShortcutBinding
+                CheckBox_JoystickShortcutClick.Checked = g_ClassControllerSettings.m_JoystickShortcutTouchpadClick
+                ComboBox_TouchpadClickMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod
+                ComboBox_GrabButtonMethod.SelectedIndex = g_ClassControllerSettings.m_HtcGripButtonMethod
+
+                g_ClassControllerSettings.SetUnsavedState(False)
+            Finally
+                g_bIgnoreEvents = False
+            End Try
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Try
+            AutostartLoad()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
 
         Try
             RefreshOverrides()
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+
     End Sub
 
     Private Sub Button_StartOscServer_Click(sender As Object, e As EventArgs) Handles Button_StartOscServer.Click
@@ -295,6 +362,66 @@ Public Class UCVirtualMotionTracker
         g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
     End Sub
 
+    Private Sub LinkLabel_DownloadVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DownloadVMT.LinkClicked
+        Try
+            Process.Start("https://github.com/gpsnmeajp/VirtualMotionTracker/releases")
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
+        Dim sHelp As New Text.StringBuilder
+        sHelp.AppendLine("Joystick values can be bound to buttons on the controller so you dont have to move your controller for joystick emulation.")
+        sHelp.AppendLine("For example if you want to bind SQUARE with joystick forward and CROSS with joystick backwards to move forward and backwards with 2 buttons instead of the MOVE button and moving the controller.")
+        sHelp.AppendLine("This makes it easier to navigate in games.")
+        sHelp.AppendLine()
+        sHelp.AppendLine("HOW TO BIND:")
+        sHelp.AppendLine("On your PSMove controller, hold both the MOVE button and the button you want to bind the joystick value to and move the controller in any direction.")
+        sHelp.AppendLine("Release both buttons to accept.")
+        sHelp.AppendLine("The saved joystick value will be applied when pressing the button now.")
+        sHelp.AppendLine()
+        sHelp.AppendLine("HOW TO UNBIND:")
+        sHelp.AppendLine("Quickly press both the MOVE button and the button you want to unbind. Done.")
+
+        MessageBox.Show(sHelp.ToString, "Joystick Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    End Sub
+
+    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickShortcuts.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_JoystickShortcutBinding = CheckBox_JoystickShortcuts.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_JoystickShortcutClick_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickShortcutClick.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_JoystickShortcutTouchpadClick = CheckBox_JoystickShortcutClick.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_TouchpadClickMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_TouchpadClickMethod.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(ComboBox_TouchpadClickMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_GrabButtonMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_GrabButtonMethod.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_HtcGripButtonMethod = CType(ComboBox_GrabButtonMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub CleanUp()
         For Each mItem In g_mVMTControllers
             If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
@@ -419,10 +546,167 @@ Public Class UCVirtualMotionTracker
 
     End Class
 
-    Private Sub LinkLabel_DownloadVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DownloadVMT.LinkClicked
+    Class ClassControllerSettings
+        Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
+        Private Shared _ThreadLock As New Object
+
+        Private g_bSettingsLoaded As Boolean = False
+
+        Enum ENUM_HTC_TOUCHPAD_CLICK_METHOD
+            BUTTON_MIRRORED
+            BUTTON_STRICT_SQUARE
+            BUTTON_STRICT_TRIANGLE
+            MOVE_ALWAYS
+            MOVE_RELEASE
+
+            __MAX
+        End Enum
+
+        Enum ENUM_HTC_GRIP_BUTTON_METHOD
+            BUTTON_TOGGLE_MIRRORED
+            BUTTON_TOGGLE_STRICT_CROSS
+            BUTTON_TOGGLE_STRICT_CIRCLE
+            BUTTON_HOLDING_MIRRORED
+            BUTTON_HOLDING_STRICT_CROSS
+            BUTTON_HOLDING_STRICT_CIRCLE
+
+            __MAX
+        End Enum
+
+        Private g_bJoystickShortcutBinding As Boolean = False
+        Private g_bJoystickShortcutTouchpadClick As Boolean = False
+        Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
+        Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
+
+        Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
+            g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+        End Sub
+
+        Property m_JoystickShortcutBinding As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bJoystickShortcutBinding
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bJoystickShortcutBinding = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_JoystickShortcutTouchpadClick As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bJoystickShortcutTouchpadClick
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bJoystickShortcutTouchpadClick = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD
+            Get
+                SyncLock _ThreadLock
+                    Return g_iHtcTouchpadEmulationClickMethod
+                End SyncLock
+            End Get
+            Set(value As ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                If (value < 0) Then
+                    value = 0
+                End If
+
+                If (value > ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX - 1) Then
+                    value = CType(ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX - 1, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                End If
+
+                SyncLock _ThreadLock
+                    g_iHtcTouchpadEmulationClickMethod = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD
+            Get
+                SyncLock _ThreadLock
+                    Return g_iHtcGripButtonMethod
+                End SyncLock
+            End Get
+            Set(value As ENUM_HTC_GRIP_BUTTON_METHOD)
+                If (value < 0) Then
+                    value = 0
+                End If
+
+                If (value > ENUM_HTC_GRIP_BUTTON_METHOD.__MAX - 1) Then
+                    value = CType(ENUM_HTC_GRIP_BUTTON_METHOD.__MAX - 1, ENUM_HTC_GRIP_BUTTON_METHOD)
+                End If
+
+                SyncLock _ThreadLock
+                    g_iHtcGripButtonMethod = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Sub LoadSettings()
+            g_bSettingsLoaded = True
+
+            Dim tmp As Integer
+
+            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    m_JoystickShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutBindings", "false") = "true")
+                    m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
+
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmp)) Then
+                        m_HtcTouchpadEmulationClickMethod = CType(tmp, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                    End If
+
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmp)) Then
+                        m_HtcGripButtonMethod = CType(tmp, ENUM_HTC_GRIP_BUTTON_METHOD)
+                    End If
+                End Using
+            End Using
+        End Sub
+
+        Public Sub SaveSettings()
+            If (Not g_bSettingsLoaded) Then
+                Return
+            End If
+
+            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_JoystickShortcutBinding, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_JoystickShortcutTouchpadClick, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_HtcTouchpadEmulationClickMethod))))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_HtcGripButtonMethod))))
+
+                    mIni.WriteKeyValue(mIniContent.ToArray)
+                End Using
+            End Using
+        End Sub
+
+        Public Sub SetUnsavedState(bIsUnsaved As Boolean)
+            If (bIsUnsaved) Then
+                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Text = String.Format("Save Settings*")
+                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font, FontStyle.Bold)
+            Else
+                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Text = String.Format("Save Settings")
+                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font, FontStyle.Regular)
+            End If
+        End Sub
+    End Class
+
+    Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
-            Process.Start("https://github.com/gpsnmeajp/VirtualMotionTracker/releases")
+            g_ClassControllerSettings.SaveSettings()
+            g_ClassControllerSettings.SetUnsavedState(False)
         Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 End Class

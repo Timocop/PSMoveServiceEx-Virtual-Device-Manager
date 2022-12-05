@@ -307,15 +307,6 @@ Public Class UCVirtualMotionTrackerItem
         UpdateTrackerRoleComboBox()
     End Sub
 
-    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickShortcuts.CheckedChanged
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
-        g_mClassIO.m_JoystickShortcuts = CheckBox_JoystickShortcuts.Checked
-        SetUnsavedState(True)
-    End Sub
-
     Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
@@ -543,7 +534,6 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iIndex As Integer = -1
         Private g_iVmtTracker As Integer = -1
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
-        Private g_bJoystickShortcuts As Boolean = False
         Private g_mOscThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As New Vector3(0, 0, 0)
@@ -594,19 +584,6 @@ Public Class UCVirtualMotionTrackerItem
             Set(value As Integer)
                 SyncLock _ThreadLock
                     g_iVmtTracker = value
-                End SyncLock
-            End Set
-        End Property
-
-        Property m_JoystickShortcuts As Boolean
-            Get
-                SyncLock _ThreadLock
-                    Return g_bJoystickShortcuts
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
-                    g_bJoystickShortcuts = value
                 End SyncLock
             End Set
         End Property
@@ -698,6 +675,14 @@ Public Class UCVirtualMotionTrackerItem
                         Throw New ArgumentException("OSC server is suspended")
                     End If
 
+                    ' Get controller settings
+                    Dim mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
+                    Dim g_bJoystickShortcutBinding As Boolean = mClassControllerSettings.m_JoystickShortcutBinding
+                    Dim g_bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
+                    Dim g_iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
+                    Dim g_iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
+
+                    ' Get controller data
                     m_Data = ClassServiceClient.m_ControllerData(g_iIndex)
 
                     If (m_Data IsNot Nothing) Then
@@ -759,7 +744,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                             g_mOscDataPack.mJoyStick = New Vector2(mNewPos.X, -mNewPos.Z)
 
-                                            If (m_JoystickShortcuts) Then
+                                            If (g_bJoystickShortcutBinding) Then
                                                 ' Record joystick shortcut while MOVE button is pressed
                                                 For i = 0 To mButtons.Length - 1
                                                     If (mButtons(i)) Then
@@ -782,7 +767,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                             g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
 
-                                            If (m_JoystickShortcuts) Then
+                                            If (g_bJoystickShortcutBinding) Then
                                                 ' Record joystick shortcut while MOVE button is pressed
                                                 For i = 0 To mButtons.Length - 1
                                                     If (mButtons(i)) Then
@@ -1005,7 +990,6 @@ Public Class UCVirtualMotionTrackerItem
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "EnableJoystickShortcuts", If(g_mUCRemoteDeviceItem.CheckBox_JoystickShortcuts.Checked, "1", "0")))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
                     End SyncLock
@@ -1024,7 +1008,6 @@ Public Class UCVirtualMotionTrackerItem
                 Using mIni As New ClassIni(mStream)
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "-1")))
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
-                    g_mUCRemoteDeviceItem.CheckBox_JoystickShortcuts.Checked = CInt(mIni.ReadKeyValue(sDevicePath, "EnableJoystickShortcuts", "0")) > 0
                 End Using
             End Using
         End Sub
@@ -1044,22 +1027,5 @@ Public Class UCVirtualMotionTrackerItem
 
     Private Sub Label_Close_Click(sender As Object, e As EventArgs) Handles Label_Close.Click
         Me.Dispose()
-    End Sub
-
-    Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
-        Dim sHelp As New Text.StringBuilder
-        sHelp.AppendLine("Joystick values can be bound to buttons on the controller so you dont have to move your controller for joystick emulation.")
-        sHelp.AppendLine("For example if you want to bind SQUARE with joystick forward and CROSS with joystick backwards to move forward and backwards with 2 buttons instead of the MOVE button and moving the controller.")
-        sHelp.AppendLine("This makes it easier to navigate in games.")
-        sHelp.AppendLine()
-        sHelp.AppendLine("HOW TO BIND:")
-        sHelp.AppendLine("On your PSMove controller, hold both the MOVE button and the button you want to bind the joystick value to and move the controller in any direction.")
-        sHelp.AppendLine("Release both buttons to accept.")
-        sHelp.AppendLine("The saved joystick value will be applied when pressing the button now.")
-        sHelp.AppendLine()
-        sHelp.AppendLine("HOW TO UNBIND:")
-        sHelp.AppendLine("Quickly press both the MOVE button and the button you want to unbind. Done.")
-
-        MessageBox.Show(sHelp.ToString, "Joystick Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 End Class

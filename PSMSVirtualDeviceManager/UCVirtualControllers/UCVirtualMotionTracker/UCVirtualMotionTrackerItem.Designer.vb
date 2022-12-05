@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UCVirtualMotionTrackerItem
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If (disposing) Then
@@ -24,7 +24,7 @@ Partial Class UCVirtualMotionTrackerItem
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.ComboBox_ControllerID = New System.Windows.Forms.ComboBox()
@@ -48,8 +48,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerRole = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
-        Me.CheckBox_JoystickShortcuts = New System.Windows.Forms.CheckBox()
-        Me.LinkLabel_JoystickShortcutsInfo = New System.Windows.Forms.LinkLabel()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -277,38 +275,12 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_SteamTrackerRole.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_SteamTrackerRole.TabIndex = 40
         '
-        'CheckBox_JoystickShortcuts
-        '
-        Me.CheckBox_JoystickShortcuts.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CheckBox_JoystickShortcuts.AutoSize = True
-        Me.CheckBox_JoystickShortcuts.Location = New System.Drawing.Point(327, 72)
-        Me.CheckBox_JoystickShortcuts.Name = "CheckBox_JoystickShortcuts"
-        Me.CheckBox_JoystickShortcuts.Size = New System.Drawing.Size(208, 17)
-        Me.CheckBox_JoystickShortcuts.TabIndex = 41
-        Me.CheckBox_JoystickShortcuts.Text = "Enable joystick emulation shortcuts"
-        Me.CheckBox_JoystickShortcuts.UseVisualStyleBackColor = True
-        '
-        'LinkLabel_JoystickShortcutsInfo
-        '
-        Me.LinkLabel_JoystickShortcutsInfo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_JoystickShortcutsInfo.AutoSize = True
-        Me.LinkLabel_JoystickShortcutsInfo.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel_JoystickShortcutsInfo.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_JoystickShortcutsInfo.Location = New System.Drawing.Point(541, 73)
-        Me.LinkLabel_JoystickShortcutsInfo.Name = "LinkLabel_JoystickShortcutsInfo"
-        Me.LinkLabel_JoystickShortcutsInfo.Size = New System.Drawing.Size(26, 13)
-        Me.LinkLabel_JoystickShortcutsInfo.TabIndex = 42
-        Me.LinkLabel_JoystickShortcutsInfo.TabStop = True
-        Me.LinkLabel_JoystickShortcutsInfo.Text = "( ? )"
-        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Controls.Add(Me.LinkLabel_JoystickShortcutsInfo)
-        Me.Controls.Add(Me.CheckBox_JoystickShortcuts)
         Me.Controls.Add(Me.ComboBox_SteamTrackerRole)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label2)
@@ -354,6 +326,4 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents ComboBox_VMTTrackerRole As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents ComboBox_SteamTrackerRole As ComboBox
-    Friend WithEvents CheckBox_JoystickShortcuts As CheckBox
-    Friend WithEvents LinkLabel_JoystickShortcutsInfo As LinkLabel
 End Class
