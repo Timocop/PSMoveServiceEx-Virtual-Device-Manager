@@ -97,6 +97,8 @@ Partial Class FormMain
         'Panel1
         '
         Me.Panel1.AutoScroll = True
+        Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
+        Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.Panel1.Controls.Add(Me.LinkLabel2)
         Me.Panel1.Controls.Add(Me.LinkLabel1)
         Me.Panel1.Controls.Add(Me.Panel3)
@@ -110,29 +112,35 @@ Partial Class FormMain
         '
         'LinkLabel2
         '
+        Me.LinkLabel2.ActiveLinkColor = System.Drawing.Color.Black
         Me.LinkLabel2.AutoSize = True
+        Me.LinkLabel2.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel2.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel2.Location = New System.Drawing.Point(12, 180)
-        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
+        Me.LinkLabel2.Location = New System.Drawing.Point(17, 144)
+        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel2.Name = "LinkLabel2"
         Me.LinkLabel2.Size = New System.Drawing.Size(130, 13)
         Me.LinkLabel2.TabIndex = 2
         Me.LinkLabel2.TabStop = True
         Me.LinkLabel2.Text = "Manage Virtual Trackers"
+        Me.LinkLabel2.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel1
         '
+        Me.LinkLabel1.ActiveLinkColor = System.Drawing.Color.Black
         Me.LinkLabel1.AutoSize = True
+        Me.LinkLabel1.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel1.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel1.Location = New System.Drawing.Point(12, 138)
-        Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
+        Me.LinkLabel1.Location = New System.Drawing.Point(17, 107)
+        Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(8, 8, 3, 3)
         Me.LinkLabel1.Name = "LinkLabel1"
         Me.LinkLabel1.Size = New System.Drawing.Size(113, 26)
         Me.LinkLabel1.TabIndex = 1
         Me.LinkLabel1.TabStop = True
         Me.LinkLabel1.Text = "Manage Virtual" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Head Mount Devices"
+        Me.LinkLabel1.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'Panel3
         '
@@ -145,25 +153,29 @@ Partial Class FormMain
         '
         'LinkLabel_Controllers
         '
+        Me.LinkLabel_Controllers.ActiveLinkColor = System.Drawing.Color.Black
         Me.LinkLabel_Controllers.AutoSize = True
+        Me.LinkLabel_Controllers.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(12, 109)
-        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(3, 32, 3, 0)
+        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 86)
+        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
         Me.LinkLabel_Controllers.Size = New System.Drawing.Size(146, 13)
         Me.LinkLabel_Controllers.TabIndex = 0
         Me.LinkLabel_Controllers.TabStop = True
         Me.LinkLabel_Controllers.Text = "Manage Virtual Controllers"
+        Me.LinkLabel_Controllers.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(12, 64)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(3, 64, 3, 0)
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.Black
+        Me.Label2.Location = New System.Drawing.Point(17, 41)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(141, 13)
+        Me.Label2.Size = New System.Drawing.Size(144, 13)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Virtual Devices Navigation"
         '
