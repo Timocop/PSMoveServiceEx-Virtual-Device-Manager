@@ -78,22 +78,6 @@ Public Class FormMain
         End Select
     End Sub
 
-    Private Sub ToolStripMenuItem_VDControllers_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_VDControllers.Click
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-    End Sub
-
-    Private Sub ToolStripMenuItem_VDHeadMountDevices_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_VDHeadMountDevices.Click
-        SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
-    End Sub
-
-    Private Sub ToolStripMenuItem_VDTrackers_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_VDTrackers.Click
-        SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
-    End Sub
-
-    Private Sub ToolStripMenuItem_FileExit_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_FileExit.Click
-        Environment.Exit(0)
-    End Sub
-
     Private Sub CleanUp()
         Try
             If (g_mPSMoveServiceCAPI IsNot Nothing) Then
@@ -180,5 +164,17 @@ Public Class FormMain
         Catch ex As Exception
             MsgBox(ex.Message, MsgBoxStyle.Critical, "Error")
         End Try
+    End Sub
+
+    Private Sub LinkLabel_Controllers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Controllers.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+    End Sub
+
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
+    End Sub
+
+    Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
     End Sub
 End Class

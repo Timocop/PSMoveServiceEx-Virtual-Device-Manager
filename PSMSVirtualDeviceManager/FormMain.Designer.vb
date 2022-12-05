@@ -27,77 +27,28 @@ Partial Class FormMain
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
-        Me.MenuStrip_StartPage = New System.Windows.Forms.MenuStrip()
-        Me.ToolStripMenuItem_File = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_FileExit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_VirtualDevices = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_VDControllers = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_VDHeadMountDevices = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_VDTrackers = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel_Pages = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label_Version = New System.Windows.Forms.Label()
         Me.Button_RestartPSMS = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.MenuStrip_StartPage.SuspendLayout()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'MenuStrip_StartPage
-        '
-        Me.MenuStrip_StartPage.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_File, Me.ToolStripMenuItem_VirtualDevices})
-        Me.MenuStrip_StartPage.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip_StartPage.Name = "MenuStrip_StartPage"
-        Me.MenuStrip_StartPage.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.MenuStrip_StartPage.Size = New System.Drawing.Size(784, 24)
-        Me.MenuStrip_StartPage.TabIndex = 0
-        Me.MenuStrip_StartPage.Text = "MenuStrip1"
-        '
-        'ToolStripMenuItem_File
-        '
-        Me.ToolStripMenuItem_File.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_FileExit})
-        Me.ToolStripMenuItem_File.Name = "ToolStripMenuItem_File"
-        Me.ToolStripMenuItem_File.Size = New System.Drawing.Size(37, 20)
-        Me.ToolStripMenuItem_File.Text = "File"
-        '
-        'ToolStripMenuItem_FileExit
-        '
-        Me.ToolStripMenuItem_FileExit.Name = "ToolStripMenuItem_FileExit"
-        Me.ToolStripMenuItem_FileExit.Size = New System.Drawing.Size(93, 22)
-        Me.ToolStripMenuItem_FileExit.Text = "Exit"
-        '
-        'ToolStripMenuItem_VirtualDevices
-        '
-        Me.ToolStripMenuItem_VirtualDevices.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_VDControllers, Me.ToolStripMenuItem_VDHeadMountDevices, Me.ToolStripMenuItem_VDTrackers})
-        Me.ToolStripMenuItem_VirtualDevices.Name = "ToolStripMenuItem_VirtualDevices"
-        Me.ToolStripMenuItem_VirtualDevices.Size = New System.Drawing.Size(96, 20)
-        Me.ToolStripMenuItem_VirtualDevices.Text = "Virtual Devices"
-        '
-        'ToolStripMenuItem_VDControllers
-        '
-        Me.ToolStripMenuItem_VDControllers.Name = "ToolStripMenuItem_VDControllers"
-        Me.ToolStripMenuItem_VDControllers.Size = New System.Drawing.Size(184, 22)
-        Me.ToolStripMenuItem_VDControllers.Text = "Controllers"
-        '
-        'ToolStripMenuItem_VDHeadMountDevices
-        '
-        Me.ToolStripMenuItem_VDHeadMountDevices.Name = "ToolStripMenuItem_VDHeadMountDevices"
-        Me.ToolStripMenuItem_VDHeadMountDevices.Size = New System.Drawing.Size(184, 22)
-        Me.ToolStripMenuItem_VDHeadMountDevices.Text = "Head Mount Devices"
-        '
-        'ToolStripMenuItem_VDTrackers
-        '
-        Me.ToolStripMenuItem_VDTrackers.Name = "ToolStripMenuItem_VDTrackers"
-        Me.ToolStripMenuItem_VDTrackers.Size = New System.Drawing.Size(184, 22)
-        Me.ToolStripMenuItem_VDTrackers.Text = "Trackers"
         '
         'Panel_Pages
         '
         Me.Panel_Pages.AutoScroll = True
         Me.Panel_Pages.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel_Pages.Location = New System.Drawing.Point(0, 24)
+        Me.Panel_Pages.Location = New System.Drawing.Point(197, 0)
         Me.Panel_Pages.Name = "Panel_Pages"
-        Me.Panel_Pages.Size = New System.Drawing.Size(784, 673)
+        Me.Panel_Pages.Size = New System.Drawing.Size(858, 697)
         Me.Panel_Pages.TabIndex = 1
         '
         'Panel2
@@ -109,7 +60,7 @@ Partial Class FormMain
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel2.Location = New System.Drawing.Point(0, 697)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(784, 64)
+        Me.Panel2.Size = New System.Drawing.Size(1055, 64)
         Me.Panel2.TabIndex = 2
         '
         'Label_Version
@@ -126,7 +77,7 @@ Partial Class FormMain
         '
         Me.Button_RestartPSMS.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_RestartPSMS.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_RestartPSMS.Location = New System.Drawing.Point(622, 16)
+        Me.Button_RestartPSMS.Location = New System.Drawing.Point(893, 16)
         Me.Button_RestartPSMS.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
         Me.Button_RestartPSMS.Name = "Button_RestartPSMS"
         Me.Button_RestartPSMS.Size = New System.Drawing.Size(150, 32)
@@ -140,44 +91,113 @@ Partial Class FormMain
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Label1.Location = New System.Drawing.Point(0, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(784, 1)
+        Me.Label1.Size = New System.Drawing.Size(1055, 1)
         Me.Label1.TabIndex = 0
+        '
+        'Panel1
+        '
+        Me.Panel1.AutoScroll = True
+        Me.Panel1.Controls.Add(Me.LinkLabel2)
+        Me.Panel1.Controls.Add(Me.LinkLabel1)
+        Me.Panel1.Controls.Add(Me.Panel3)
+        Me.Panel1.Controls.Add(Me.LinkLabel_Controllers)
+        Me.Panel1.Controls.Add(Me.Label2)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Left
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(197, 697)
+        Me.Panel1.TabIndex = 2
+        '
+        'LinkLabel2
+        '
+        Me.LinkLabel2.AutoSize = True
+        Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel2.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel2.Location = New System.Drawing.Point(12, 180)
+        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
+        Me.LinkLabel2.Name = "LinkLabel2"
+        Me.LinkLabel2.Size = New System.Drawing.Size(130, 13)
+        Me.LinkLabel2.TabIndex = 2
+        Me.LinkLabel2.TabStop = True
+        Me.LinkLabel2.Text = "Manage Virtual Trackers"
+        '
+        'LinkLabel1
+        '
+        Me.LinkLabel1.AutoSize = True
+        Me.LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel1.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel1.Location = New System.Drawing.Point(12, 138)
+        Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
+        Me.LinkLabel1.Name = "LinkLabel1"
+        Me.LinkLabel1.Size = New System.Drawing.Size(113, 26)
+        Me.LinkLabel1.TabIndex = 1
+        Me.LinkLabel1.TabStop = True
+        Me.LinkLabel1.Text = "Manage Virtual" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Head Mount Devices"
+        '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Panel3.Location = New System.Drawing.Point(196, 0)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(1, 697)
+        Me.Panel3.TabIndex = 0
+        '
+        'LinkLabel_Controllers
+        '
+        Me.LinkLabel_Controllers.AutoSize = True
+        Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(12, 109)
+        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(3, 32, 3, 0)
+        Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
+        Me.LinkLabel_Controllers.Size = New System.Drawing.Size(146, 13)
+        Me.LinkLabel_Controllers.TabIndex = 0
+        Me.LinkLabel_Controllers.TabStop = True
+        Me.LinkLabel_Controllers.Text = "Manage Virtual Controllers"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(12, 64)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(3, 64, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(141, 13)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "Virtual Devices Navigation"
         '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(784, 761)
+        Me.ClientSize = New System.Drawing.Size(1055, 761)
         Me.Controls.Add(Me.Panel_Pages)
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.MenuStrip_StartPage)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MainMenuStrip = Me.MenuStrip_StartPage
         Me.MinimumSize = New System.Drawing.Size(800, 600)
         Me.Name = "FormMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "PSMoveServiceEx - Virtual Device Manager"
-        Me.MenuStrip_StartPage.ResumeLayout(False)
-        Me.MenuStrip_StartPage.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents MenuStrip_StartPage As MenuStrip
-    Friend WithEvents ToolStripMenuItem_File As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem_FileExit As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem_VirtualDevices As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem_VDControllers As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem_VDHeadMountDevices As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem_VDTrackers As ToolStripMenuItem
     Friend WithEvents Panel_Pages As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Label1 As Label
     Friend WithEvents Button_RestartPSMS As Button
     Friend WithEvents Label_Version As Label
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents LinkLabel_Controllers As LinkLabel
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents LinkLabel1 As LinkLabel
+    Friend WithEvents LinkLabel2 As LinkLabel
 End Class
