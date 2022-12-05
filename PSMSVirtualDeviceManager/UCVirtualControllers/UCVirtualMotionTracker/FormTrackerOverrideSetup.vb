@@ -61,7 +61,7 @@
         For i = 0 To sCustomTrackers.Length - 1
             ComboBox_CustomTracker.Items.Add(sCustomTrackers(i))
         Next
-        ComboBox_CustomTracker.SelectedText = ""
+        ComboBox_CustomTracker.Text = ""
 
         ' Add override types
         ComboBox_OverrideType.Items.Clear()
@@ -85,7 +85,7 @@
                 Case RadioButton_Custom.Checked
                     mResult.bCustomTracker = True
 
-                    mResult.sCustomTrackerName = ComboBox_CustomTracker.SelectedText
+                    mResult.sCustomTrackerName = ComboBox_CustomTracker.Text
 
             End Select
 
