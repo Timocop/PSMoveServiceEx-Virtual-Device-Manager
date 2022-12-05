@@ -11,7 +11,7 @@
     <AssemblyName>PSMSVirtualDeviceManager</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -74,10 +74,11 @@
     </Reference>
     <Reference Include="PSMoveServiceExCAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>ThirdParty\PSMoveServiceExCAPI.dll</HintPath>
+      <HintPath>lib\PSMoveServiceExCAPI.dll</HintPath>
     </Reference>
-    <Reference Include="Rug.Osc">
-      <HintPath>ThirdParty\Rug.Osc.dll</HintPath>
+    <Reference Include="Rug.Osc, Version=1.2.5.17694, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Rug.Osc.dll</HintPath>
     </Reference>
     <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -299,6 +300,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <Content Include="lib\PSMoveClient_CAPI.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\shell32_16739_16x16-32.png" />
     <None Include="Resources\shell32_16762_32x32-32.png" />
     <None Include="Resources\imageres_5315_16x16-32.png" />
