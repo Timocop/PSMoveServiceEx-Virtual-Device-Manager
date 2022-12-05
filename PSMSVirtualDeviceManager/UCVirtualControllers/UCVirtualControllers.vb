@@ -61,7 +61,9 @@
             SettingsChanged(sender)
             SaveSettings()
 
-            MessageBox.Show("Restart PSMoveService to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -161,7 +163,9 @@
                 mKey.m_ValueB = CheckBox_PSmoveEmu.Checked
                 mKey.Save()
 
-                MessageBox.Show("Restart PSMoveService to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                    MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
             Catch ex As Exception
                 MessageBox.Show(String.Format("Unable to load key '{0}'", mKey.m_SettingsKey), "Error", MessageBoxButtons.OK)
             End Try

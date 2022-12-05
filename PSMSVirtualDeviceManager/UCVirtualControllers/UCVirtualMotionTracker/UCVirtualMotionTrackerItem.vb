@@ -341,8 +341,6 @@ Public Class UCVirtualMotionTrackerItem
 
                 mConfig.SaveConfig()
             End If
-
-            MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try

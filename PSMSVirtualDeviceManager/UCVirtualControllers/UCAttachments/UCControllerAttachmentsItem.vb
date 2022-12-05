@@ -250,8 +250,6 @@ Public Class UCControllerAttachmentsItem
         Try
             g_mClassConfig.SaveConfig()
             SetUnsavedState(False)
-
-            MessageBox.Show("Device settings saved!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
