@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="ClassDevices.vb" />
     <Compile Include="ClassIni.vb" />
+    <Compile Include="ClassOpenVRConfig.vb" />
     <Compile Include="ClassOSC.vb" />
     <Compile Include="ClassPrecisionSleep.vb" />
     <Compile Include="ClassSerivceConst.vb" />
@@ -119,6 +120,7 @@
     <Compile Include="ClassServiceConfig.vb" />
     <Compile Include="ClassServiceClient.vb" />
     <Compile Include="ClassSteamVRConfig.vb" />
+    <Compile Include="ClassUtils.vb" />
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -294,6 +296,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\imageres_5305_16x16-32.png" />
+    <None Include="Resources\imageres_5303_16x16-32.png" />
     <None Include="Resources\netshell_1608_16x16-32.png" />
     <None Include="Resources\CustomIMU.png" />
     <None Include="Resources\ControllerAttachments.png" />

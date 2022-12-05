@@ -362,13 +362,6 @@ Public Class UCVirtualMotionTracker
         g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
     End Sub
 
-    Private Sub LinkLabel_DownloadVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DownloadVMT.LinkClicked
-        Try
-            Process.Start("https://github.com/gpsnmeajp/VirtualMotionTracker/releases")
-        Catch ex As Exception
-        End Try
-    End Sub
-
     Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
         Dim sHelp As New Text.StringBuilder
         sHelp.AppendLine("Joystick values can be bound to buttons on the controller so you dont have to move your controller for joystick emulation.")
@@ -705,6 +698,62 @@ Public Class UCVirtualMotionTracker
         Try
             g_ClassControllerSettings.SaveSettings()
             g_ClassControllerSettings.SetUnsavedState(False)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub Button_InstallVmtDriver_Click(sender As Object, e As EventArgs) Handles Button_InstallVmtDriver.Click
+        ContextMenuStrip_SteamVRDriver.Show(Button_InstallVmtDriver, New Point(0, Button_InstallVmtDriver.Height))
+    End Sub
+
+    Private Sub ToolStripMenuItem_DriverRegister_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_DriverRegister.Click
+        Try
+            If (Process.GetProcessesByName("SteamVR").Count > 0) Then
+                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
+            End If
+
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "psmove")
+            If (Not IO.Directory.Exists(sDriverRoot)) Then
+                Throw New ArgumentException("Could not find driver root folder!")
+            End If
+
+            Dim sDriverDLL As String = IO.Path.Combine(sDriverRoot, "bin\win64\driver_psmove.dll")
+            If (Not IO.File.Exists(sDriverDLL)) Then
+                Throw New ArgumentException("Could not find driver 'driver_psmove.dll'!")
+            End If
+
+            Dim mConfig As New ClassOpenVRConfig()
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to find and load OpenVR config!")
+            End If
+
+            mConfig.AddPath(sDriverRoot)
+            mConfig.SaveConfig()
+
+            MessageBox.Show("Driver has ben successfully registered!", "Driver added to SteamvR", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ToolStripMenuItem_DriverUnregister_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_DriverUnregister.Click
+        Try
+            If (Process.GetProcessesByName("SteamVR").Count > 0) Then
+                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
+            End If
+
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "psmove")
+
+            Dim mConfig As New ClassOpenVRConfig()
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to find and load OpenVR config!")
+            End If
+
+            mConfig.RemovePath(sDriverRoot)
+            mConfig.SaveConfig()
+
+            MessageBox.Show("Driver has ben successfully unregistered!", "Driver removed from SteamvR", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
