@@ -39,7 +39,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New ClassPictureBoxQuality()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -195,6 +195,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
         Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
         Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
         Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
         Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom

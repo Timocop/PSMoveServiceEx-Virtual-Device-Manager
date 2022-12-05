@@ -52,7 +52,13 @@ Public Class ClassServiceClient
         Public Property m_OutputSeqNum As Integer Implements IControllerData.m_OutputSeqNum
     End Class
 
+    Class STRUC_TRACKER_DATA
+        Public Property m_Position As Vector3
+        Public Property m_Orientation As Quaternion
+    End Class
+
     Private Shared g_ControllerPool As New Dictionary(Of Integer, IControllerData)
+    Private Shared g_TrackerPool As New Dictionary(Of Integer, STRUC_TRACKER_DATA)
 
     Public Sub New()
     End Sub
@@ -115,7 +121,9 @@ Public Class ClassServiceClient
 
     Private Sub ProcessingThread()
         Dim mControllers As New List(Of Controllers)
+        Dim mTrackers As New List(Of Trackers)
         Dim bRefreshControllerList As Boolean = True
+        Dim bRefreshTrackerList As Boolean = True
 
         Dim mControllerRecenterTime As New Dictionary(Of Integer, Stopwatch)
 
@@ -139,8 +147,17 @@ Public Class ClassServiceClient
                             bRefreshControllerList = True
                         End If
 
+                        If (g_PSMoveServiceServer.HasTrackerListChanged) Then
+                            bRefreshTrackerList = True
+                        End If
+
+                        If (g_PSMoveServiceServer.HasPlayspaceOffsetChanged) Then
+                            bRefreshTrackerList = True
+                        End If
+
                         If (g_PSMoveServiceServer.HasConnectionStatusChanged) Then
                             bRefreshControllerList = True
+                            bRefreshTrackerList = True
                         End If
 
                         If (bRefreshControllerList) Then
@@ -152,6 +169,38 @@ Public Class ClassServiceClient
                             mControllers.Clear()
 
                             mControllers.AddRange(Controllers.GetControllerList())
+                        End If
+
+                        If (bRefreshTrackerList) Then
+                            bRefreshTrackerList = False
+
+                            For i = 0 To mTrackers.Count - 1
+                                mTrackers(i).Dispose()
+                            Next
+                            mTrackers.Clear()
+
+                            mTrackers.AddRange(Trackers.GetTrackerList())
+
+                            For Each mTracker As Trackers In mTrackers
+                                Dim mData As New STRUC_TRACKER_DATA
+
+                                If (mTracker.m_Info.IsPoseValid) Then
+                                    mData.m_Position = New Vector3(
+                                        mTracker.m_Info.m_Pose.m_Position.x,
+                                        mTracker.m_Info.m_Pose.m_Position.y,
+                                        mTracker.m_Info.m_Pose.m_Position.z)
+
+                                    mData.m_Orientation = New Quaternion(
+                                        mTracker.m_Info.m_Pose.m_Orientation.x,
+                                        mTracker.m_Info.m_Pose.m_Orientation.y,
+                                        mTracker.m_Info.m_Pose.m_Orientation.z,
+                                        mTracker.m_Info.m_Pose.m_Orientation.w)
+                                End If
+
+                                SyncLock __DataLock
+                                    g_TrackerPool(mTracker.m_Info.m_TrackerId) = mData
+                                End SyncLock
+                            Next
                         End If
                     End SyncLock
 
@@ -257,6 +306,7 @@ Public Class ClassServiceClient
                         If (g_PSMoveServiceServer IsNot Nothing) Then
                             If (Not g_PSMoveServiceServer.IsConnected OrElse Not g_PSMoveServiceServer.IsInitialized) Then
                                 bRefreshControllerList = True
+                                bRefreshTrackerList = True
                             End If
                         End If
                     End SyncLock
@@ -279,6 +329,18 @@ Public Class ClassServiceClient
                 End If
 
                 Return g_ControllerPool(i)
+            End SyncLock
+        End Get
+    End Property
+
+    Shared ReadOnly Property m_TrackerData(i As Integer) As STRUC_TRACKER_DATA
+        Get
+            SyncLock __DataLock
+                If (Not g_TrackerPool.ContainsKey(i)) Then
+                    Return Nothing
+                End If
+
+                Return g_TrackerPool(i)
             End SyncLock
         End Get
     End Property

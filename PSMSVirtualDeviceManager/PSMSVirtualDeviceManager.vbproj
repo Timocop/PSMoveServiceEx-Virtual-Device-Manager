@@ -125,6 +125,7 @@
     <Compile Include="Classes\ClassServiceClient.vb" />
     <Compile Include="Classes\ClassSteamVRConfig.vb" />
     <Compile Include="Classes\ClassUtils.vb" />
+    <Compile Include="Classes\ClassVmtConst.vb" />
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>

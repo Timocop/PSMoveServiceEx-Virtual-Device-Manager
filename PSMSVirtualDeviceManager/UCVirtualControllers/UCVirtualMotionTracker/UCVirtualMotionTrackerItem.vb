@@ -4,10 +4,8 @@ Imports Rug.Osc
 Imports PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants
 
 Public Class UCVirtualMotionTrackerItem
-    Const MAX_VMT_TRACKER As Integer = 20
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
-    Const VMT_DRIVER_VERSION_EXPECT As String = "VMT_013_EX"
 
     Shared _ThreadLock As New Object
 
@@ -64,7 +62,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = True
 
             ComboBox_VMTTrackerID.Items.Clear()
-            For i = -1 To MAX_VMT_TRACKER
+            For i = -1 To ClassVmtConst.VMT_TRACKER_MAX
                 ComboBox_VMTTrackerID.Items.Add(CStr(i))
             Next
             ComboBox_VMTTrackerID.SelectedIndex = 0
@@ -186,7 +184,7 @@ Public Class UCVirtualMotionTrackerItem
                         Case 1 'Room matrix not setup
                             If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
                                 g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
-                                    "/VMT/SetRoomMatrix/Temporary", New Object() {
+                                    "/VMT/SetRoomMatrix", New Object() {
                                         1.0F, 0F, 0F, 0F,
                                         0F, 1.0F, 0F, 0F,
                                         0F, 0F, 1.0F, 0F
@@ -241,7 +239,7 @@ Public Class UCVirtualMotionTrackerItem
 
             Dim mConfig As New ClassSteamVRConfig
             If (mConfig.LoadConfig()) Then
-                Dim sTrackerName As String = String.Format("/devices/vmt/VMT_{0}", g_mClassIO.m_VmtTracker)
+                Dim sTrackerName As String = (ClassVmtConst.VMT_DEVICE_SERIAL & g_mClassIO.m_VmtTracker)
                 Dim sTrackerRole As String = mConfig.m_ClassTrackerRoles.GetTrackerRole(sTrackerName)
                 If (sTrackerRole Is Nothing) Then
                     ComboBox_SteamTrackerRole.SelectedIndex = 0
@@ -331,7 +329,7 @@ Public Class UCVirtualMotionTrackerItem
 
             Dim mConfig As New ClassSteamVRConfig
             If (mConfig.LoadConfig()) Then
-                Dim sTrackerName As String = String.Format("/devices/vmt/VMT_{0}", g_mClassIO.m_VmtTracker)
+                Dim sTrackerName As String = (ClassVmtConst.VMT_DEVICE_SERIAL & g_mClassIO.m_VmtTracker)
 
                 If (ComboBox_SteamTrackerRole.SelectedIndex - 1 <= ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE.INVALID) Then
                     mConfig.m_ClassTrackerRoles.RemoveTrackerRole(sTrackerName)
@@ -369,10 +367,10 @@ Public Class UCVirtualMotionTrackerItem
             TimerPose.Stop()
 
             SyncLock _ThreadLock
-                If (g_mClassIO.m_Data IsNot Nothing) Then
-                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_Data.m_Position.X), Math.Floor(g_mClassIO.m_Data.m_Position.Y), Math.Floor(g_mClassIO.m_Data.m_Position.Z), Environment.NewLine)
+                If (g_mClassIO.m_ControllerData IsNot Nothing) Then
+                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_ControllerData.m_Position.X), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Y), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Z), Environment.NewLine)
 
-                    Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_Data.m_Orientation)
+                    Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_ControllerData.m_Orientation)
                     TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
                 Else
                     TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
@@ -437,12 +435,12 @@ Public Class UCVirtualMotionTrackerItem
                     End If
 
                     ' Show user wrong driver version
-                    If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> VMT_DRIVER_VERSION_EXPECT) Then
+                    If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> ClassVmtConst.VMT_DRIVER_VERSION_EXPECT) Then
                         sTitle = "Driver running but might be incompatible"
 
 
                         Dim sText As New Text.StringBuilder
-                        sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, VMT_DRIVER_VERSION_EXPECT).AppendLine()
+                        sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, ClassVmtConst.VMT_DRIVER_VERSION_EXPECT).AppendLine()
 
                         If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
                             sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
@@ -541,7 +539,8 @@ Public Class UCVirtualMotionTrackerItem
         Private g_bOnlyJointOffset As Boolean = False
 
         Private g_iFpsOscCounter As Integer = 0
-        Private g_mData As ClassServiceClient.IControllerData
+        Private g_mControllerData As ClassServiceClient.IControllerData
+        Private g_mTrackerData As New Dictionary(Of Integer, ClassServiceClient.STRUC_TRACKER_DATA)
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
 
@@ -626,15 +625,28 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Property m_Data As ClassServiceClient.IControllerData
+        Property m_ControllerData As ClassServiceClient.IControllerData
             Get
                 SyncLock _ThreadLock
-                    Return g_mData
+                    Return g_mControllerData
                 End SyncLock
             End Get
             Set(value As ClassServiceClient.IControllerData)
                 SyncLock _ThreadLock
-                    g_mData = value
+                    g_mControllerData = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_TrackerData(iIndex As Integer) As ClassServiceClient.STRUC_TRACKER_DATA
+            Get
+                SyncLock _ThreadLock
+                    Return g_mTrackerData(iIndex)
+                End SyncLock
+            End Get
+            Set(value As ClassServiceClient.STRUC_TRACKER_DATA)
+                SyncLock _ThreadLock
+                    g_mTrackerData(iIndex) = value
                 End SyncLock
             End Set
         End Property
@@ -661,6 +673,34 @@ Public Class UCVirtualMotionTrackerItem
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
 
+            Dim mTrackerDataUpdate As New Stopwatch
+            mTrackerDataUpdate.Restart()
+
+            Const ENABLE_TRACKER As Integer = 1
+            Const ENABLE_CONTROLLER_L As Integer = 2
+            Const ENABLE_CONTROLLER_R As Integer = 3
+            'Const ENABLE_TRACKINGREFECNCE As Integer = 4
+            Const ENABLE_HTC_VIVE_TRACKER As Integer = 5
+            Const ENABLE_HTC_VIVE_CONTROLLER_L As Integer = 6
+            Const ENABLE_HTC_VIVE_CONTROLLER_R As Integer = 7
+            Const ENABLE_HTC_TRACKINGREFERENCE As Integer = 8
+
+            Const GEN_BUTTON_MOVE = 0
+            Const GEN_BUTTON_MENU = 1
+            Const GEN_BUTTON_START = 2
+            Const GEN_BUTTON_SEELCT = 3
+            Const GEN_BUTTON_SQUARE = 4
+            Const GEN_BUTTON_CROSS = 5
+            Const GEN_BUTTON_CIRCLE = 6
+            Const GEN_BUTTON_TRIANGLE = 7
+
+            Const HTC_VIVE_BUTTON_SYSTEM_CLICK = 0
+            Const HTC_VIVE_BUTTON_TRIGGER_CLICK = 1
+            Const HTC_VIVE_BUTTON_TRACKPAD_TOUCH = 2
+            Const HTC_VIVE_BUTTON_TRACKPAD_CLICK = 3
+            Const HTC_VIVE_BUTTON_GRIP_CLICK = 4
+            Const HTC_VIVE_BUTTON_MENU_CLICK = 5
+
             While True
                 Try
                     If (g_iIndex < 0) Then
@@ -676,12 +716,12 @@ Public Class UCVirtualMotionTrackerItem
                     End If
 
                     ' Get controller data
-                    m_Data = ClassServiceClient.m_ControllerData(g_iIndex)
+                    m_ControllerData = ClassServiceClient.m_ControllerData(g_iIndex)
 
-                    If (m_Data IsNot Nothing) Then
+                    If (m_ControllerData IsNot Nothing) Then
                         ' We got any new data?
-                        If (iLastOutputSeqNum <> m_Data.m_OutputSeqNum) Then
-                            iLastOutputSeqNum = m_Data.m_OutputSeqNum
+                        If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
+                            iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
 
                             ' Get controller settings
                             Dim mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
@@ -690,34 +730,9 @@ Public Class UCVirtualMotionTrackerItem
                             Dim g_iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                             Dim g_iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
 
-                            Const ENABLE_TRACKER As Integer = 1
-                            Const ENABLE_CONTROLLER_L As Integer = 2
-                            Const ENABLE_CONTROLLER_R As Integer = 3
-                            'Const ENABLE_TRACKINGREFECNCE As Integer = 4
-                            Const ENABLE_HTC_VIVE_TRACKER As Integer = 5
-                            Const ENABLE_HTC_VIVE_CONTROLLER_L As Integer = 6
-                            Const ENABLE_HTC_VIVE_CONTROLLER_R As Integer = 7
-                            'Const ENABLE_HTC_TRACKINGREFERENCE As Integer = 8
-
-                            Const GEN_BUTTON_MOVE = 0
-                            Const GEN_BUTTON_MENU = 1
-                            Const GEN_BUTTON_START = 2
-                            Const GEN_BUTTON_SEELCT = 3
-                            Const GEN_BUTTON_SQUARE = 4
-                            Const GEN_BUTTON_CROSS = 5
-                            Const GEN_BUTTON_CIRCLE = 6
-                            Const GEN_BUTTON_TRIANGLE = 7
-
-                            Const HTC_VIVE_BUTTON_SYSTEM_CLICK = 0
-                            Const HTC_VIVE_BUTTON_TRIGGER_CLICK = 1
-                            Const HTC_VIVE_BUTTON_TRACKPAD_TOUCH = 2
-                            Const HTC_VIVE_BUTTON_TRACKPAD_CLICK = 3
-                            Const HTC_VIVE_BUTTON_GRIP_CLICK = 4
-                            Const HTC_VIVE_BUTTON_MENU_CLICK = 5
-
                             SyncLock _ThreadLock
-                                g_mOscDataPack.mOrientation = m_Data.m_Orientation
-                                g_mOscDataPack.mPosition = m_Data.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+                                g_mOscDataPack.mOrientation = m_ControllerData.m_Orientation
+                                g_mOscDataPack.mPosition = m_ControllerData.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
 
                                 Select Case (m_VmtTrackerRole)
                                     Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
@@ -726,8 +741,8 @@ Public Class UCVirtualMotionTrackerItem
                                             ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
 
                                         Select Case (True)
-                                            Case (TypeOf m_Data Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                                Dim m_PSMoveData = DirectCast(m_Data, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                            Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                                Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
 
                                                 Dim mButtons As Boolean() = New Boolean() {
                                                     m_PSMoveData.m_MoveButton,
@@ -1130,6 +1145,31 @@ Public Class UCVirtualMotionTrackerItem
                             m_FpsOscCounter += 1
                         End If
                     End If
+
+                    ' Update tracker references
+                    ' $TODO Add them into their own thread?
+                    If (mTrackerDataUpdate.Elapsed > New TimeSpan(0, 0, 10)) Then
+                        mTrackerDataUpdate.Restart()
+
+                        For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
+                            m_TrackerData(i) = ClassServiceClient.m_TrackerData(i)
+
+                            'Use Right-Handed space for SteamVR 
+                            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Room/Driver",
+                                            ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
+                                            m_TrackerData(i).m_Position.X,
+                                            m_TrackerData(i).m_Position.Y,
+                                            m_TrackerData(i).m_Position.Z,
+                                            m_TrackerData(i).m_Orientation.X,
+                                            m_TrackerData(i).m_Orientation.Y,
+                                            m_TrackerData(i).m_Orientation.Z,
+                                            m_TrackerData(i).m_Orientation.W
+                                        ))
+                        Next
+                    End If
+
 
                     ClassPrecisionSleep.Sleep(1)
                 Catch ex As Threading.ThreadAbortException

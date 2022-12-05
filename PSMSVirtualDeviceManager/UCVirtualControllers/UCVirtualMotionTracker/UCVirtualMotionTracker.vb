@@ -265,7 +265,7 @@ Public Class UCVirtualMotionTracker
                     If (mResult.bCustomTracker) Then
                         sTracker = mResult.sCustomTrackerName
                     Else
-                        sTracker = String.Format("/devices/vmt/VMT_{0}", mResult.iVMTTracker)
+                        sTracker = (ClassVmtConst.VMT_DEVICE_SERIAL & mResult.iVMTTracker)
                     End If
 
                     Select Case (mResult.iOverrideType)
@@ -456,7 +456,7 @@ Public Class UCVirtualMotionTracker
                 Return
             End If
 
-            g_VmtOsc = New ClassOSC("127.0.0.1", 39571, 39570, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
+            g_VmtOsc = New ClassOSC(ClassVmtConst.VMT_IP, ClassVmtConst.VMT_PORT_RECEIVE, ClassVmtConst.VMT_PORT_SEND, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
 
             RaiseEvent OnSuspendChanged()
         End Sub
@@ -713,7 +713,7 @@ Public Class UCVirtualMotionTracker
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
-            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "psmove")
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_ROOT_NAME)
             If (Not IO.Directory.Exists(sDriverRoot)) Then
                 Throw New ArgumentException("Could not find driver root folder!")
             End If
@@ -743,7 +743,7 @@ Public Class UCVirtualMotionTracker
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
-            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "psmove")
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_ROOT_NAME)
 
             Dim mConfig As New ClassOpenVRConfig()
             If (Not mConfig.LoadConfig()) Then
