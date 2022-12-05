@@ -64,16 +64,21 @@ Public Class FormMain
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
-        g_mUCVirtualControllers.Visible = False
-        g_mUCVirtualHMDs.Visible = False
-        g_mUCVirtualTrackers.Visible = False
 
         Select Case (iPage)
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
                 g_mUCVirtualControllers.Visible = True
+                g_mUCVirtualHMDs.Visible = False
+                g_mUCVirtualTrackers.Visible = False
+
             Case ENUM_PAGE.VIRTUAL_HMDS
+                g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = True
+                g_mUCVirtualTrackers.Visible = False
+
             Case ENUM_PAGE.VIRTUAL_TRACKERS
+                g_mUCVirtualControllers.Visible = False
+                g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = True
         End Select
     End Sub
@@ -170,11 +175,31 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
     End Sub
 
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HMDs.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
     End Sub
 
-    Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
+    Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Trackers.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
+    End Sub
+
+    Private Sub LinkLabel_ControllersGeneral_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersGeneral.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_General
+    End Sub
+
+    Private Sub LinkLabel_ControllersRemote_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersRemote.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
+    End Sub
+
+    Private Sub LinkLabel_ControllersAttachments_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersAttachments.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_ControllerAttachments
+    End Sub
+
+    Private Sub LinkLabel_ControllersVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersVMT.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
     End Sub
 End Class
