@@ -32,8 +32,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Panel_VMTTrackers = New System.Windows.Forms.Panel()
-        Me.Button_VMTControllers = New System.Windows.Forms.Button()
-        Me.Button_AddVMTController = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
@@ -46,26 +44,28 @@ Partial Class UCVirtualMotionTracker
         Me.Label5 = New System.Windows.Forms.Label()
         Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
         Me.ListView_Overrides = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.Button_StartOscServer = New System.Windows.Forms.Button()
-        Me.Button_PauseOscServer = New System.Windows.Forms.Button()
-        Me.Button_InstallVmtDriver = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_SteamVRDriver = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Button_InstallVmtDriver = New System.Windows.Forms.Button()
+        Me.Button_PauseOscServer = New System.Windows.Forms.Button()
+        Me.Button_StartOscServer = New System.Windows.Forms.Button()
+        Me.Button_VMTControllers = New System.Windows.Forms.Button()
+        Me.Button_AddVMTController = New System.Windows.Forms.Button()
+        Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
+        Me.PictureBox3 = New ClassPictureBoxQuality()
+        Me.Button_Refresh = New System.Windows.Forms.Button()
+        Me.PictureBox2 = New ClassPictureBoxQuality()
+        Me.PictureBox1 = New ClassPictureBoxQuality()
         Me.ToolStripMenuItem_DriverRegister = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_DriverUnregister = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabControl1.SuspendLayout()
@@ -145,29 +145,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
         Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 374)
         Me.Panel_VMTTrackers.TabIndex = 15
-        '
-        'Button_VMTControllers
-        '
-        Me.Button_VMTControllers.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_VMTControllers.Location = New System.Drawing.Point(16, 16)
-        Me.Button_VMTControllers.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.Button_VMTControllers.Name = "Button_VMTControllers"
-        Me.Button_VMTControllers.Size = New System.Drawing.Size(162, 23)
-        Me.Button_VMTControllers.TabIndex = 14
-        Me.Button_VMTControllers.Text = "Autostart trackers..."
-        Me.Button_VMTControllers.UseVisualStyleBackColor = True
-        '
-        'Button_AddVMTController
-        '
-        Me.Button_AddVMTController.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_AddVMTController.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_AddVMTController.Location = New System.Drawing.Point(621, 16)
-        Me.Button_AddVMTController.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
-        Me.Button_AddVMTController.Name = "Button_AddVMTController"
-        Me.Button_AddVMTController.Size = New System.Drawing.Size(120, 23)
-        Me.Button_AddVMTController.TabIndex = 13
-        Me.Button_AddVMTController.Text = "Add tracker"
-        Me.Button_AddVMTController.UseVisualStyleBackColor = True
         '
         'TabPage2
         '
@@ -308,18 +285,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "Touchpad click method:"
         '
-        'Button_SaveControllerSettings
-        '
-        Me.Button_SaveControllerSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_SaveControllerSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(645, 412)
-        Me.Button_SaveControllerSettings.Margin = New System.Windows.Forms.Padding(16)
-        Me.Button_SaveControllerSettings.Name = "Button_SaveControllerSettings"
-        Me.Button_SaveControllerSettings.Size = New System.Drawing.Size(96, 23)
-        Me.Button_SaveControllerSettings.TabIndex = 45
-        Me.Button_SaveControllerSettings.Text = "Save settings"
-        Me.Button_SaveControllerSettings.UseVisualStyleBackColor = True
-        '
         'TabPage3
         '
         Me.TabPage3.Controls.Add(Me.Panel_SteamVRRestart)
@@ -388,36 +353,30 @@ Partial Class UCVirtualMotionTracker
     "u, for example, use PhoneVR and want to enable 6-DoF using PSMoveSerivceEx contr" &
     "ollers."
         '
-        'Button_Refresh
-        '
-        Me.Button_Refresh.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_Refresh.Location = New System.Drawing.Point(64, 272)
-        Me.Button_Refresh.Name = "Button_Refresh"
-        Me.Button_Refresh.Size = New System.Drawing.Size(109, 23)
-        Me.Button_Refresh.TabIndex = 3
-        Me.Button_Refresh.Text = "Refresh"
-        Me.Button_Refresh.UseVisualStyleBackColor = True
-        '
         'Button_Remove
         '
         Me.Button_Remove.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Remove.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_Remove.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
         Me.Button_Remove.Location = New System.Drawing.Point(472, 272)
         Me.Button_Remove.Name = "Button_Remove"
         Me.Button_Remove.Size = New System.Drawing.Size(109, 23)
         Me.Button_Remove.TabIndex = 2
         Me.Button_Remove.Text = "Remove"
+        Me.Button_Remove.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Remove.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Remove.UseVisualStyleBackColor = True
         '
         'Button_Add
         '
         Me.Button_Add.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Add.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_Add.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.wmploc_474_16x16_32
         Me.Button_Add.Location = New System.Drawing.Point(587, 272)
         Me.Button_Add.Name = "Button_Add"
         Me.Button_Add.Size = New System.Drawing.Size(109, 23)
         Me.Button_Add.TabIndex = 1
         Me.Button_Add.Text = "Add"
+        Me.Button_Add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Add.UseVisualStyleBackColor = True
         '
         'ListView_Overrides
@@ -450,47 +409,94 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
         '
-        'Button_StartOscServer
+        'ContextMenuStrip_SteamVRDriver
         '
-        Me.Button_StartOscServer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_StartOscServer.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_StartOscServer.Location = New System.Drawing.Point(645, 78)
-        Me.Button_StartOscServer.Margin = New System.Windows.Forms.Padding(3, 16, 16, 3)
-        Me.Button_StartOscServer.Name = "Button_StartOscServer"
-        Me.Button_StartOscServer.Size = New System.Drawing.Size(139, 23)
-        Me.Button_StartOscServer.TabIndex = 23
-        Me.Button_StartOscServer.Text = "Start OSC Server"
-        Me.Button_StartOscServer.UseVisualStyleBackColor = True
-        '
-        'Button_PauseOscServer
-        '
-        Me.Button_PauseOscServer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_PauseOscServer.Enabled = False
-        Me.Button_PauseOscServer.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_PauseOscServer.Location = New System.Drawing.Point(500, 78)
-        Me.Button_PauseOscServer.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
-        Me.Button_PauseOscServer.Name = "Button_PauseOscServer"
-        Me.Button_PauseOscServer.Size = New System.Drawing.Size(139, 23)
-        Me.Button_PauseOscServer.TabIndex = 25
-        Me.Button_PauseOscServer.Text = "Pause OSC Server"
-        Me.Button_PauseOscServer.UseVisualStyleBackColor = True
+        Me.ContextMenuStrip_SteamVRDriver.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_DriverRegister, Me.ToolStripMenuItem_DriverUnregister})
+        Me.ContextMenuStrip_SteamVRDriver.Name = "ContextMenuStrip_SteamVRDriver"
+        Me.ContextMenuStrip_SteamVRDriver.Size = New System.Drawing.Size(162, 48)
         '
         'Button_InstallVmtDriver
         '
-        Me.Button_InstallVmtDriver.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_InstallVmtDriver.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_InstallVmtDriver.Location = New System.Drawing.Point(16, 78)
         Me.Button_InstallVmtDriver.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Button_InstallVmtDriver.Name = "Button_InstallVmtDriver"
         Me.Button_InstallVmtDriver.Size = New System.Drawing.Size(139, 23)
         Me.Button_InstallVmtDriver.TabIndex = 26
         Me.Button_InstallVmtDriver.Text = "SteamVR driver..."
+        Me.Button_InstallVmtDriver.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_InstallVmtDriver.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_InstallVmtDriver.UseVisualStyleBackColor = True
         '
-        'ContextMenuStrip_SteamVRDriver
+        'Button_PauseOscServer
         '
-        Me.ContextMenuStrip_SteamVRDriver.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_DriverRegister, Me.ToolStripMenuItem_DriverUnregister})
-        Me.ContextMenuStrip_SteamVRDriver.Name = "ContextMenuStrip_SteamVRDriver"
-        Me.ContextMenuStrip_SteamVRDriver.Size = New System.Drawing.Size(181, 70)
+        Me.Button_PauseOscServer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_PauseOscServer.Enabled = False
+        Me.Button_PauseOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
+        Me.Button_PauseOscServer.Location = New System.Drawing.Point(500, 78)
+        Me.Button_PauseOscServer.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
+        Me.Button_PauseOscServer.Name = "Button_PauseOscServer"
+        Me.Button_PauseOscServer.Size = New System.Drawing.Size(139, 23)
+        Me.Button_PauseOscServer.TabIndex = 25
+        Me.Button_PauseOscServer.Text = "Pause OSC Server"
+        Me.Button_PauseOscServer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_PauseOscServer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_PauseOscServer.UseVisualStyleBackColor = True
+        '
+        'Button_StartOscServer
+        '
+        Me.Button_StartOscServer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_StartOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.Button_StartOscServer.Location = New System.Drawing.Point(645, 78)
+        Me.Button_StartOscServer.Margin = New System.Windows.Forms.Padding(3, 16, 16, 3)
+        Me.Button_StartOscServer.Name = "Button_StartOscServer"
+        Me.Button_StartOscServer.Size = New System.Drawing.Size(139, 23)
+        Me.Button_StartOscServer.TabIndex = 23
+        Me.Button_StartOscServer.Text = "Start OSC Server"
+        Me.Button_StartOscServer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_StartOscServer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_StartOscServer.UseVisualStyleBackColor = True
+        '
+        'Button_VMTControllers
+        '
+        Me.Button_VMTControllers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5353_16x16_32
+        Me.Button_VMTControllers.Location = New System.Drawing.Point(16, 16)
+        Me.Button_VMTControllers.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_VMTControllers.Name = "Button_VMTControllers"
+        Me.Button_VMTControllers.Size = New System.Drawing.Size(162, 23)
+        Me.Button_VMTControllers.TabIndex = 14
+        Me.Button_VMTControllers.Text = "Autostart trackers..."
+        Me.Button_VMTControllers.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_VMTControllers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_VMTControllers.UseVisualStyleBackColor = True
+        '
+        'Button_AddVMTController
+        '
+        Me.Button_AddVMTController.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_AddVMTController.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_16x16_32
+        Me.Button_AddVMTController.Location = New System.Drawing.Point(621, 16)
+        Me.Button_AddVMTController.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
+        Me.Button_AddVMTController.Name = "Button_AddVMTController"
+        Me.Button_AddVMTController.Size = New System.Drawing.Size(120, 23)
+        Me.Button_AddVMTController.TabIndex = 13
+        Me.Button_AddVMTController.Text = "Add tracker"
+        Me.Button_AddVMTController.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_AddVMTController.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_AddVMTController.UseVisualStyleBackColor = True
+        '
+        'Button_SaveControllerSettings
+        '
+        Me.Button_SaveControllerSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveControllerSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
+        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(624, 412)
+        Me.Button_SaveControllerSettings.Margin = New System.Windows.Forms.Padding(16)
+        Me.Button_SaveControllerSettings.Name = "Button_SaveControllerSettings"
+        Me.Button_SaveControllerSettings.Size = New System.Drawing.Size(120, 23)
+        Me.Button_SaveControllerSettings.TabIndex = 45
+        Me.Button_SaveControllerSettings.Text = "Save settings"
+        Me.Button_SaveControllerSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_SaveControllerSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_SaveControllerSettings.UseVisualStyleBackColor = True
         '
         'PictureBox3
         '
@@ -502,6 +508,18 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox3.TabIndex = 26
         Me.PictureBox3.TabStop = False
+        '
+        'Button_Refresh
+        '
+        Me.Button_Refresh.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
+        Me.Button_Refresh.Location = New System.Drawing.Point(64, 272)
+        Me.Button_Refresh.Name = "Button_Refresh"
+        Me.Button_Refresh.Size = New System.Drawing.Size(109, 23)
+        Me.Button_Refresh.TabIndex = 3
+        Me.Button_Refresh.Text = "Refresh"
+        Me.Button_Refresh.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Refresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_Refresh.UseVisualStyleBackColor = True
         '
         'PictureBox2
         '
@@ -529,14 +547,14 @@ Partial Class UCVirtualMotionTracker
         '
         Me.ToolStripMenuItem_DriverRegister.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5303_16x16_32
         Me.ToolStripMenuItem_DriverRegister.Name = "ToolStripMenuItem_DriverRegister"
-        Me.ToolStripMenuItem_DriverRegister.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem_DriverRegister.Size = New System.Drawing.Size(161, 22)
         Me.ToolStripMenuItem_DriverRegister.Text = "Register driver"
         '
         'ToolStripMenuItem_DriverUnregister
         '
         Me.ToolStripMenuItem_DriverUnregister.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
         Me.ToolStripMenuItem_DriverUnregister.Name = "ToolStripMenuItem_DriverUnregister"
-        Me.ToolStripMenuItem_DriverUnregister.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem_DriverUnregister.Size = New System.Drawing.Size(161, 22)
         Me.ToolStripMenuItem_DriverUnregister.Text = "Unregister driver"
         '
         'UCVirtualMotionTracker
@@ -577,7 +595,7 @@ Partial Class UCVirtualMotionTracker
 
     Friend WithEvents LinkLabel_ReadMore As LinkLabel
     Friend WithEvents Label1 As Label
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents TabPage3 As TabPage
@@ -593,9 +611,9 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Button_Remove As Button
     Friend WithEvents Button_Add As Button
     Friend WithEvents Label2 As Label
-    Friend WithEvents PictureBox2 As PictureBox
+    Friend WithEvents PictureBox2 As ClassPictureBoxQuality
     Friend WithEvents Label3 As Label
-    Friend WithEvents PictureBox3 As PictureBox
+    Friend WithEvents PictureBox3 As ClassPictureBoxQuality
     Friend WithEvents Panel_SteamVRRestart As Panel
     Friend WithEvents LinkLabel_SteamVRRestartOff As LinkLabel
     Friend WithEvents Button_PauseOscServer As Button

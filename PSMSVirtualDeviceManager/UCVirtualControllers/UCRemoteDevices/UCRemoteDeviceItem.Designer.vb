@@ -27,11 +27,9 @@ Partial Class UCRemoteDeviceItem
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.Button_Recenter = New System.Windows.Forms.Button()
         Me.ComboBox_ControllerID = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TimerFPS = New System.Windows.Forms.Timer(Me.components)
-        Me.Button_SaveSettings = New System.Windows.Forms.Button()
         Me.LinkLabel_EditName = New System.Windows.Forms.LinkLabel()
         Me.TextBox_TrackerName = New System.Windows.Forms.TextBox()
         Me.TextBox_Axis = New System.Windows.Forms.TextBox()
@@ -43,25 +41,15 @@ Partial Class UCRemoteDeviceItem
         Me.NumericUpDown_YawOffset = New System.Windows.Forms.NumericUpDown()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New ClassPictureBoxQuality()
+        Me.Button_SaveSettings = New System.Windows.Forms.Button()
+        Me.Button_Recenter = New System.Windows.Forms.Button()
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'Button_Recenter
-        '
-        Me.Button_Recenter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Recenter.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_Recenter.Location = New System.Drawing.Point(493, 150)
-        Me.Button_Recenter.Margin = New System.Windows.Forms.Padding(3, 3, 16, 16)
-        Me.Button_Recenter.Name = "Button_Recenter"
-        Me.Button_Recenter.Size = New System.Drawing.Size(108, 23)
-        Me.Button_Recenter.TabIndex = 1
-        Me.Button_Recenter.Text = "Recenter"
-        Me.Button_Recenter.UseVisualStyleBackColor = True
         '
         'ComboBox_ControllerID
         '
@@ -88,18 +76,6 @@ Partial Class UCRemoteDeviceItem
         '
         Me.TimerFPS.Enabled = True
         Me.TimerFPS.Interval = 1000
-        '
-        'Button_SaveSettings
-        '
-        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 121)
-        Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
-        Me.Button_SaveSettings.Name = "Button_SaveSettings"
-        Me.Button_SaveSettings.Size = New System.Drawing.Size(108, 23)
-        Me.Button_SaveSettings.TabIndex = 7
-        Me.Button_SaveSettings.Text = "Save Settings"
-        Me.Button_SaveSettings.UseVisualStyleBackColor = True
         '
         'LinkLabel_EditName
         '
@@ -246,16 +222,6 @@ Partial Class UCRemoteDeviceItem
         Me.Panel_Status.Size = New System.Drawing.Size(585, 42)
         Me.Panel_Status.TabIndex = 18
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 2
-        Me.PictureBox1.TabStop = False
-        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -276,6 +242,44 @@ Partial Class UCRemoteDeviceItem
         Me.Label3.Size = New System.Drawing.Size(140, 13)
         Me.Label3.TabIndex = 0
         Me.Label3.Text = "Device is not responding!"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 2
+        Me.PictureBox1.TabStop = False
+        '
+        'Button_SaveSettings
+        '
+        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 121)
+        Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
+        Me.Button_SaveSettings.Name = "Button_SaveSettings"
+        Me.Button_SaveSettings.Size = New System.Drawing.Size(120, 23)
+        Me.Button_SaveSettings.TabIndex = 7
+        Me.Button_SaveSettings.Text = "Save Settings"
+        Me.Button_SaveSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_SaveSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_SaveSettings.UseVisualStyleBackColor = True
+        '
+        'Button_Recenter
+        '
+        Me.Button_Recenter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Recenter.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5345_16x16_32
+        Me.Button_Recenter.Location = New System.Drawing.Point(481, 150)
+        Me.Button_Recenter.Margin = New System.Windows.Forms.Padding(3, 3, 16, 16)
+        Me.Button_Recenter.Name = "Button_Recenter"
+        Me.Button_Recenter.Size = New System.Drawing.Size(120, 23)
+        Me.Button_Recenter.TabIndex = 1
+        Me.Button_Recenter.Text = "Recenter"
+        Me.Button_Recenter.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Recenter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_Recenter.UseVisualStyleBackColor = True
         '
         'UCRemoteDeviceItem
         '
@@ -326,7 +330,7 @@ Partial Class UCRemoteDeviceItem
     Friend WithEvents NumericUpDown_YawOffset As NumericUpDown
     Friend WithEvents TextBox_Gyro As TextBox
     Friend WithEvents Panel_Status As Panel
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
 End Class

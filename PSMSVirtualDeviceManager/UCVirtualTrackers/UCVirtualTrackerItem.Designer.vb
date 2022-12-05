@@ -210,13 +210,15 @@ Partial Class UCVirtualTrackerItem
         'Button_RestartDevice
         '
         Me.Button_RestartDevice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_RestartDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_RestartDevice.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
         Me.Button_RestartDevice.Location = New System.Drawing.Point(3, 258)
         Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
         Me.Button_RestartDevice.Name = "Button_RestartDevice"
         Me.Button_RestartDevice.Size = New System.Drawing.Size(116, 23)
         Me.Button_RestartDevice.TabIndex = 16
         Me.Button_RestartDevice.Text = "Restart device"
+        Me.Button_RestartDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_RestartDevice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_RestartDevice.UseVisualStyleBackColor = True
         '
         'TrackBar_DeviceConstrast
@@ -243,13 +245,15 @@ Partial Class UCVirtualTrackerItem
         'Button_ConfigSave
         '
         Me.Button_ConfigSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_ConfigSave.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ConfigSave.Location = New System.Drawing.Point(369, 258)
+        Me.Button_ConfigSave.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
+        Me.Button_ConfigSave.Location = New System.Drawing.Point(365, 258)
         Me.Button_ConfigSave.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
         Me.Button_ConfigSave.Name = "Button_ConfigSave"
-        Me.Button_ConfigSave.Size = New System.Drawing.Size(116, 23)
+        Me.Button_ConfigSave.Size = New System.Drawing.Size(120, 23)
         Me.Button_ConfigSave.TabIndex = 19
         Me.Button_ConfigSave.Text = "Save Settings"
+        Me.Button_ConfigSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_ConfigSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_ConfigSave.UseVisualStyleBackColor = True
         '
         'CheckBox_Autostart
@@ -357,13 +361,15 @@ Partial Class UCVirtualTrackerItem
         'Button1
         '
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(246, 258)
+        Me.Button1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Button1.Location = New System.Drawing.Point(242, 258)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(117, 23)
         Me.Button1.TabIndex = 22
         Me.Button1.Text = "Help"
+        Me.Button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button1.UseVisualStyleBackColor = True
         '
         'TextBox_Fps

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormMain
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If (disposing) Then
@@ -24,7 +24,7 @@ Partial Class FormMain
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
         Me.Panel_Pages = New System.Windows.Forms.Panel()
@@ -33,6 +33,8 @@ Partial Class FormMain
         Me.Button_RestartPSMS = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_ControllersVMT = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_ControllersAttachments = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ControllersRemote = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ControllersGeneral = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Trackers = New System.Windows.Forms.LinkLabel()
@@ -40,8 +42,6 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.LinkLabel_ControllersAttachments = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_ControllersVMT = New System.Windows.Forms.LinkLabel()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -117,6 +117,40 @@ Partial Class FormMain
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(197, 697)
         Me.Panel1.TabIndex = 2
+        '
+        'LinkLabel_ControllersVMT
+        '
+        Me.LinkLabel_ControllersVMT.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ControllersVMT.AutoSize = True
+        Me.LinkLabel_ControllersVMT.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_ControllersVMT.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_ControllersVMT.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ControllersVMT.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_ControllersVMT.Location = New System.Drawing.Point(32, 179)
+        Me.LinkLabel_ControllersVMT.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
+        Me.LinkLabel_ControllersVMT.Name = "LinkLabel_ControllersVMT"
+        Me.LinkLabel_ControllersVMT.Size = New System.Drawing.Size(121, 13)
+        Me.LinkLabel_ControllersVMT.TabIndex = 6
+        Me.LinkLabel_ControllersVMT.TabStop = True
+        Me.LinkLabel_ControllersVMT.Text = "Virtual Motion Tracker"
+        Me.LinkLabel_ControllersVMT.VisitedLinkColor = System.Drawing.Color.Navy
+        '
+        'LinkLabel_ControllersAttachments
+        '
+        Me.LinkLabel_ControllersAttachments.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ControllersAttachments.AutoSize = True
+        Me.LinkLabel_ControllersAttachments.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_ControllersAttachments.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_ControllersAttachments.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ControllersAttachments.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 155)
+        Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
+        Me.LinkLabel_ControllersAttachments.Name = "LinkLabel_ControllersAttachments"
+        Me.LinkLabel_ControllersAttachments.Size = New System.Drawing.Size(126, 13)
+        Me.LinkLabel_ControllersAttachments.TabIndex = 5
+        Me.LinkLabel_ControllersAttachments.TabStop = True
+        Me.LinkLabel_ControllersAttachments.Text = "Controller Attachments"
+        Me.LinkLabel_ControllersAttachments.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_ControllersRemote
         '
@@ -223,40 +257,6 @@ Partial Class FormMain
         Me.Label2.Size = New System.Drawing.Size(144, 13)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Virtual Devices Navigation"
-        '
-        'LinkLabel_ControllersAttachments
-        '
-        Me.LinkLabel_ControllersAttachments.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ControllersAttachments.AutoSize = True
-        Me.LinkLabel_ControllersAttachments.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_ControllersAttachments.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ControllersAttachments.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 155)
-        Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
-        Me.LinkLabel_ControllersAttachments.Name = "LinkLabel_ControllersAttachments"
-        Me.LinkLabel_ControllersAttachments.Size = New System.Drawing.Size(126, 13)
-        Me.LinkLabel_ControllersAttachments.TabIndex = 5
-        Me.LinkLabel_ControllersAttachments.TabStop = True
-        Me.LinkLabel_ControllersAttachments.Text = "Controller Attachments"
-        Me.LinkLabel_ControllersAttachments.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel_ControllersVMT
-        '
-        Me.LinkLabel_ControllersVMT.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ControllersVMT.AutoSize = True
-        Me.LinkLabel_ControllersVMT.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_ControllersVMT.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersVMT.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ControllersVMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersVMT.Location = New System.Drawing.Point(32, 179)
-        Me.LinkLabel_ControllersVMT.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
-        Me.LinkLabel_ControllersVMT.Name = "LinkLabel_ControllersVMT"
-        Me.LinkLabel_ControllersVMT.Size = New System.Drawing.Size(121, 13)
-        Me.LinkLabel_ControllersVMT.TabIndex = 6
-        Me.LinkLabel_ControllersVMT.TabStop = True
-        Me.LinkLabel_ControllersVMT.Text = "Virtual Motion Tracker"
-        Me.LinkLabel_ControllersVMT.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'FormMain
         '

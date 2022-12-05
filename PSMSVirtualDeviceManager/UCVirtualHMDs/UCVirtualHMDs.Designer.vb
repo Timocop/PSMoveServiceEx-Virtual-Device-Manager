@@ -23,6 +23,7 @@ Partial Class UCVirtualHMDs
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -30,10 +31,12 @@ Partial Class UCVirtualHMDs
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.PictureBox1)
         Me.Panel1.Controls.Add(Me.Label4)
         Me.Panel1.Controls.Add(Me.Label2)
         Me.Panel1.Controls.Add(Me.Label1)
@@ -43,15 +46,26 @@ Partial Class UCVirtualHMDs
         Me.Panel1.Size = New System.Drawing.Size(800, 64)
         Me.Panel1.TabIndex = 1
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._356
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.m_HighQuality = True
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 16
+        Me.PictureBox1.TabStop = False
+        '
         'Label4
         '
         Me.Label4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label4.Location = New System.Drawing.Point(3, 30)
+        Me.Label4.Location = New System.Drawing.Point(66, 30)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(794, 30)
+        Me.Label4.Size = New System.Drawing.Size(731, 30)
         Me.Label4.TabIndex = 2
         Me.Label4.Text = "Create virtual head mount devices in PSMoveService and control their orientation " &
     "data and more."
@@ -60,7 +74,7 @@ Partial Class UCVirtualHMDs
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(3, 3)
+        Me.Label2.Location = New System.Drawing.Point(66, 3)
         Me.Label2.Margin = New System.Windows.Forms.Padding(3)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(224, 21)
@@ -125,6 +139,7 @@ Partial Class UCVirtualHMDs
         Me.Size = New System.Drawing.Size(800, 260)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -137,4 +152,5 @@ Partial Class UCVirtualHMDs
     Friend WithEvents ComboBox_VirtualHMDCount As ComboBox
     Friend WithEvents Label5 As Label
     Friend WithEvents Label3 As Label
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
 End Class

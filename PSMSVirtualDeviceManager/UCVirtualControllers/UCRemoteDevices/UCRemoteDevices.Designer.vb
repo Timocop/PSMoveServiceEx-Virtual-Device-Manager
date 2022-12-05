@@ -32,7 +32,7 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New ClassPictureBoxQuality()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -175,6 +175,6 @@ Partial Class UCRemoteDevices
     Friend WithEvents LinkLabel_EditPort As LinkLabel
     Friend WithEvents LinkLabel_ReadMore As LinkLabel
     Friend WithEvents Label1 As Label
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label_ConnectedDevices As Label
 End Class

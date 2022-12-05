@@ -27,27 +27,15 @@ Partial Class UCControllerAttachments
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.Button_AddAttachment = New System.Windows.Forms.Button()
         Me.Panel_Attachments = New System.Windows.Forms.Panel()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.Button_Autostart = New System.Windows.Forms.Button()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
+        Me.PictureBox1 = New ClassPictureBoxQuality()
+        Me.Button_Autostart = New System.Windows.Forms.Button()
+        Me.Button_AddAttachment = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'Button_AddAttachment
-        '
-        Me.Button_AddAttachment.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_AddAttachment.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_AddAttachment.Location = New System.Drawing.Point(664, 78)
-        Me.Button_AddAttachment.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
-        Me.Button_AddAttachment.Name = "Button_AddAttachment"
-        Me.Button_AddAttachment.Size = New System.Drawing.Size(120, 23)
-        Me.Button_AddAttachment.TabIndex = 8
-        Me.Button_AddAttachment.Text = "Add attachment"
-        Me.Button_AddAttachment.UseVisualStyleBackColor = True
         '
         'Panel_Attachments
         '
@@ -65,28 +53,6 @@ Partial Class UCControllerAttachments
         '
         Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
-        '
-        'Button_Autostart
-        '
-        Me.Button_Autostart.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_Autostart.Location = New System.Drawing.Point(16, 78)
-        Me.Button_Autostart.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.Button_Autostart.Name = "Button_Autostart"
-        Me.Button_Autostart.Size = New System.Drawing.Size(162, 23)
-        Me.Button_Autostart.TabIndex = 12
-        Me.Button_Autostart.Text = "Autostart attachments..."
-        Me.Button_Autostart.UseVisualStyleBackColor = True
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 13
-        Me.PictureBox1.TabStop = False
         '
         'Label1
         '
@@ -111,6 +77,44 @@ Partial Class UCControllerAttachments
         Me.LinkLabel_ReadMore.TabStop = True
         Me.LinkLabel_ReadMore.Text = "Read more"
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 13
+        Me.PictureBox1.TabStop = False
+        '
+        'Button_Autostart
+        '
+        Me.Button_Autostart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5353_16x16_32
+        Me.Button_Autostart.Location = New System.Drawing.Point(16, 78)
+        Me.Button_Autostart.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_Autostart.Name = "Button_Autostart"
+        Me.Button_Autostart.Size = New System.Drawing.Size(180, 23)
+        Me.Button_Autostart.TabIndex = 12
+        Me.Button_Autostart.Text = "Autostart attachments..."
+        Me.Button_Autostart.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Autostart.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_Autostart.UseVisualStyleBackColor = True
+        '
+        'Button_AddAttachment
+        '
+        Me.Button_AddAttachment.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_AddAttachment.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_16x16_32
+        Me.Button_AddAttachment.Location = New System.Drawing.Point(634, 78)
+        Me.Button_AddAttachment.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
+        Me.Button_AddAttachment.Name = "Button_AddAttachment"
+        Me.Button_AddAttachment.Size = New System.Drawing.Size(150, 23)
+        Me.Button_AddAttachment.TabIndex = 8
+        Me.Button_AddAttachment.Text = "Add attachment"
+        Me.Button_AddAttachment.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_AddAttachment.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_AddAttachment.UseVisualStyleBackColor = True
+        '
         'UCControllerAttachments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -134,7 +138,7 @@ Partial Class UCControllerAttachments
     Friend WithEvents Panel_Attachments As Panel
     Friend WithEvents ContextMenuStrip_Autostart As ContextMenuStrip
     Friend WithEvents Button_Autostart As Button
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label1 As Label
     Friend WithEvents LinkLabel_ReadMore As LinkLabel
 End Class

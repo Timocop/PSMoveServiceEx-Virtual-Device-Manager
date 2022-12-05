@@ -24,7 +24,7 @@ Partial Class FormRemoteDevicesHelp
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormRemoteDevicesHelp))
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -46,6 +46,7 @@ Partial Class FormRemoteDevicesHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.CustomIMU
         Me.PictureBox1.Location = New System.Drawing.Point(12, 106)
+        Me.PictureBox1.m_HighQuality = True
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(760, 443)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -72,5 +73,5 @@ Partial Class FormRemoteDevicesHelp
     End Sub
 
     Friend WithEvents Label1 As Label
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
 End Class

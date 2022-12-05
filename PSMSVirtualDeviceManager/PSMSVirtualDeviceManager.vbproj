@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
@@ -110,17 +110,20 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassDevices.vb" />
-    <Compile Include="ClassIni.vb" />
-    <Compile Include="ClassOpenVRConfig.vb" />
-    <Compile Include="ClassOSC.vb" />
-    <Compile Include="ClassPrecisionSleep.vb" />
-    <Compile Include="ClassSerivceConst.vb" />
-    <Compile Include="ClassQuaternionTools.vb" />
-    <Compile Include="ClassServiceConfig.vb" />
-    <Compile Include="ClassServiceClient.vb" />
-    <Compile Include="ClassSteamVRConfig.vb" />
-    <Compile Include="ClassUtils.vb" />
+    <Compile Include="Classes\ClassDevices.vb" />
+    <Compile Include="Classes\ClassIni.vb" />
+    <Compile Include="Classes\ClassOpenVRConfig.vb" />
+    <Compile Include="Classes\ClassOSC.vb" />
+    <Compile Include="Classes\ClassPictureBoxQuality.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\ClassPrecisionSleep.vb" />
+    <Compile Include="Classes\ClassSerivceConst.vb" />
+    <Compile Include="Classes\ClassQuaternionTools.vb" />
+    <Compile Include="Classes\ClassServiceConfig.vb" />
+    <Compile Include="Classes\ClassServiceClient.vb" />
+    <Compile Include="Classes\ClassSteamVRConfig.vb" />
+    <Compile Include="Classes\ClassUtils.vb" />
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +299,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\shell32_16739_16x16-32.png" />
+    <None Include="Resources\shell32_16762_32x32-32.png" />
+    <None Include="Resources\imageres_5315_16x16-32.png" />
+    <None Include="Resources\imageres_5341_16x16-32.png" />
+    <None Include="Resources\odbcint_1439_16x16-32.png" />
+    <None Include="Resources\wmploc_474_16x16-32.png" />
+    <None Include="Resources\imageres_5345_16x16-32.png" />
+    <None Include="Resources\shell32_16761_16x16-32.png" />
+    <None Include="Resources\imageres_5353_16x16-32.png" />
+    <None Include="Resources\Pin_16x16-32.png" />
+    <None Include="Resources\DevicePairing_6101_16x16-32.png" />
+    <None Include="Resources\466.png" />
+    <None Include="Resources\356.png" />
+    <None Include="Resources\318.png" />
     <None Include="Resources\imageres_5305_16x16-32.png" />
     <None Include="Resources\imageres_5303_16x16-32.png" />
     <None Include="Resources\netshell_1608_16x16-32.png" />

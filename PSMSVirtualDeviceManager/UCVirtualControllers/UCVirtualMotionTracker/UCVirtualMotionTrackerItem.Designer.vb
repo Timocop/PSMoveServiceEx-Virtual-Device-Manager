@@ -39,7 +39,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New System.Windows.Forms.PictureBox()
+        Me.PictureBox_StatusImage = New ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -81,13 +81,15 @@ Partial Class UCVirtualMotionTrackerItem
         'Button_SaveSettings
         '
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_SaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(493, 142)
+        Me.Button_SaveSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 142)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
-        Me.Button_SaveSettings.Size = New System.Drawing.Size(108, 23)
+        Me.Button_SaveSettings.Size = New System.Drawing.Size(120, 23)
         Me.Button_SaveSettings.TabIndex = 7
         Me.Button_SaveSettings.Text = "Save Settings"
+        Me.Button_SaveSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_SaveSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_SaveSettings.UseVisualStyleBackColor = True
         '
         'Label3
@@ -317,7 +319,7 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents TextBox_Pos As TextBox
     Friend WithEvents TimerPose As Timer
     Friend WithEvents Panel_Status As Panel
-    Friend WithEvents PictureBox_StatusImage As PictureBox
+    Friend WithEvents PictureBox_StatusImage As ClassPictureBoxQuality
     Friend WithEvents Label_StatusMessage As Label
     Friend WithEvents Label_StatusTitle As Label
     Friend WithEvents Timer_Status As Timer

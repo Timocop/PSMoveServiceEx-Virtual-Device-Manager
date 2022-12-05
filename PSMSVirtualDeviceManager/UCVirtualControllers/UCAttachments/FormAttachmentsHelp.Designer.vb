@@ -23,7 +23,7 @@ Partial Class FormAttachmentsHelp
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormAttachmentsHelp))
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -35,6 +35,7 @@ Partial Class FormAttachmentsHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.ControllerAttachments
         Me.PictureBox1.Location = New System.Drawing.Point(12, 128)
+        Me.PictureBox1.m_HighQuality = True
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(678, 374)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -71,6 +72,6 @@ Partial Class FormAttachmentsHelp
 
     End Sub
 
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label1 As Label
 End Class

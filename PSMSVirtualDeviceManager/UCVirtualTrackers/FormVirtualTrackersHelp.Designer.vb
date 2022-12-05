@@ -25,10 +25,10 @@ Partial Class FormVirtualTrackersHelp
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormVirtualTrackersHelp))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -40,8 +40,8 @@ Partial Class FormVirtualTrackersHelp
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox6 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -81,6 +81,7 @@ Partial Class FormVirtualTrackersHelp
         Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Exposure_Ref
         Me.PictureBox1.Location = New System.Drawing.Point(6, 82)
+        Me.PictureBox1.m_HighQuality = True
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(128, 128)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -93,6 +94,7 @@ Partial Class FormVirtualTrackersHelp
         Me.PictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Exposure_Good
         Me.PictureBox2.Location = New System.Drawing.Point(6, 216)
+        Me.PictureBox2.m_HighQuality = True
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(128, 128)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -105,6 +107,7 @@ Partial Class FormVirtualTrackersHelp
         Me.PictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Exposure_BadDark
         Me.PictureBox3.Location = New System.Drawing.Point(6, 350)
+        Me.PictureBox3.m_HighQuality = True
         Me.PictureBox3.Name = "PictureBox3"
         Me.PictureBox3.Size = New System.Drawing.Size(128, 128)
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -117,6 +120,7 @@ Partial Class FormVirtualTrackersHelp
         Me.PictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Exposure_BadBright
         Me.PictureBox4.Location = New System.Drawing.Point(6, 484)
+        Me.PictureBox4.m_HighQuality = True
         Me.PictureBox4.Name = "PictureBox4"
         Me.PictureBox4.Size = New System.Drawing.Size(128, 128)
         Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -266,6 +270,7 @@ Partial Class FormVirtualTrackersHelp
         Me.PictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox6.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.YFlip_Bad
         Me.PictureBox6.Location = New System.Drawing.Point(198, 82)
+        Me.PictureBox6.m_HighQuality = True
         Me.PictureBox6.Name = "PictureBox6"
         Me.PictureBox6.Size = New System.Drawing.Size(186, 128)
         Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -278,6 +283,7 @@ Partial Class FormVirtualTrackersHelp
         Me.PictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.YFlip_Good
         Me.PictureBox5.Location = New System.Drawing.Point(6, 82)
+        Me.PictureBox5.m_HighQuality = True
         Me.PictureBox5.Name = "PictureBox5"
         Me.PictureBox5.Size = New System.Drawing.Size(186, 128)
         Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -334,10 +340,10 @@ Partial Class FormVirtualTrackersHelp
 
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
-    Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents PictureBox2 As PictureBox
-    Friend WithEvents PictureBox3 As PictureBox
-    Friend WithEvents PictureBox4 As PictureBox
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
+    Friend WithEvents PictureBox2 As ClassPictureBoxQuality
+    Friend WithEvents PictureBox3 As ClassPictureBoxQuality
+    Friend WithEvents PictureBox4 As ClassPictureBoxQuality
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents Label11 As Label
@@ -351,6 +357,6 @@ Partial Class FormVirtualTrackersHelp
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents Label12 As Label
     Friend WithEvents Label13 As Label
-    Friend WithEvents PictureBox6 As PictureBox
-    Friend WithEvents PictureBox5 As PictureBox
+    Friend WithEvents PictureBox6 As ClassPictureBoxQuality
+    Friend WithEvents PictureBox5 As ClassPictureBoxQuality
 End Class
