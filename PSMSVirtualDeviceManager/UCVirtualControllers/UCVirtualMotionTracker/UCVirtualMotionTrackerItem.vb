@@ -673,8 +673,8 @@ Public Class UCVirtualMotionTrackerItem
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
 
+            Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
-            mTrackerDataUpdate.Restart()
 
             Const ENABLE_TRACKER As Integer = 1
             Const ENABLE_CONTROLLER_L As Integer = 2
@@ -715,6 +715,15 @@ Public Class UCVirtualMotionTrackerItem
                         Throw New ArgumentException("OSC server is suspended")
                     End If
 
+                    If (Not bFirstEnabled) Then
+                        bFirstEnabled = True
+
+                        mTrackerDataUpdate.Restart()
+                    End If
+
+                    Dim mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
+                    Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
+
                     ' Get controller data
                     m_ControllerData = ClassServiceClient.m_ControllerData(g_iIndex)
 
@@ -724,11 +733,10 @@ Public Class UCVirtualMotionTrackerItem
                             iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
 
                             ' Get controller settings
-                            Dim mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
-                            Dim g_bJoystickShortcutBinding As Boolean = mClassControllerSettings.m_JoystickShortcutBinding
-                            Dim g_bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
-                            Dim g_iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
-                            Dim g_iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
+                            Dim bJoystickShortcutBinding As Boolean = mClassControllerSettings.m_JoystickShortcutBinding
+                            Dim bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
+                            Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
+                            Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_ControllerData.m_Orientation
@@ -776,7 +784,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
 
                                                         ' Do grip button
-                                                        Select Case (g_iHtcGripButtonMethod)
+                                                        Select Case (iHtcGripButtonMethod)
                                                             Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
                                                                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                                                     bGripButtonPressed = m_PSMoveData.m_CircleButton
@@ -856,7 +864,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         End Select
 
                                                         ' Do touchpad click
-                                                        Select Case (g_iHtcTouchpadEmulationClickMethod)
+                                                        Select Case (iHtcTouchpadEmulationClickMethod)
                                                             Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
                                                                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                                                     If (m_PSMoveData.m_TriangleButton) Then
@@ -913,7 +921,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                         ' Only start pressing when we moved a distance
                                                         If (Math.Abs(mNewPos.X) > 0.25F OrElse Math.Abs(mNewPos.Y) > 0.25F) Then
-                                                            Select Case (g_iHtcTouchpadEmulationClickMethod)
+                                                            Select Case (iHtcTouchpadEmulationClickMethod)
                                                                 Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
 
@@ -941,7 +949,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    If (g_bJoystickShortcutBinding AndAlso m_PSMoveData.m_MoveButton) Then
+                                                    If (bJoystickShortcutBinding AndAlso m_PSMoveData.m_MoveButton) Then
                                                         ' Record joystick shortcut while MOVE button is pressed 
                                                         ' Also skip MOVE button
                                                         For i = 1 To mButtons.Length - 1
@@ -965,7 +973,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                     g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
 
-                                                    If (g_bJoystickShortcutBinding) Then
+                                                    If (bJoystickShortcutBinding) Then
                                                         ' Record joystick shortcut while MOVE button is pressed
                                                         For i = 1 To mButtons.Length - 1
                                                             If (mButtons(i)) Then
@@ -977,7 +985,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
 
-                                                                        If (g_bJoystickShortcutTouchpadClick) Then
+                                                                        If (bJoystickShortcutTouchpadClick) Then
                                                                             g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                                                         End If
                                                                     End If
@@ -1127,33 +1135,35 @@ Public Class UCVirtualMotionTrackerItem
                         End If
                     End If
 
-                    ' Update tracker references
-                    ' $TODO Add them into their own thread?
-                    If (mTrackerDataUpdate.Elapsed > New TimeSpan(0, 0, 10)) Then
-                        mTrackerDataUpdate.Restart()
+                    If (Not bDisableBaseStationSpawning) Then
+                        ' Update tracker references
+                        ' $TODO Add them into their own thread?
+                        If (mTrackerDataUpdate.Elapsed > New TimeSpan(0, 0, 10)) Then
+                            mTrackerDataUpdate.Restart()
 
-                        For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
-                            m_TrackerData(i) = ClassServiceClient.m_TrackerData(i)
+                            For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
+                                m_TrackerData(i) = ClassServiceClient.m_TrackerData(i)
 
-                            Dim mPosition As Vector3 = m_TrackerData(i).m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+                                Dim mPosition As Vector3 = m_TrackerData(i).m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
 
-                            ' Cameras are flipped, flip them correctly
-                            Dim mFlippedQ As Quaternion = m_TrackerData(i).m_Orientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
+                                ' Cameras are flipped, flip them correctly
+                                Dim mFlippedQ As Quaternion = m_TrackerData(i).m_Orientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
 
-                            'Use Right-Handed space for SteamVR 
-                            g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                New OscMessage(
-                                    "/VMT/Room/Driver",
-                                    ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
-                                    mPosition.X,
-                                    mPosition.Y,
-                                    mPosition.Z,
-                                    mFlippedQ.X,
-                                    mFlippedQ.Y,
-                                    mFlippedQ.Z,
-                                    mFlippedQ.W
-                                ))
-                        Next
+                                'Use Right-Handed space for SteamVR 
+                                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    New OscMessage(
+                                        "/VMT/Room/Driver",
+                                        ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
+                                        mPosition.X,
+                                        mPosition.Y,
+                                        mPosition.Z,
+                                        mFlippedQ.X,
+                                        mFlippedQ.Y,
+                                        mFlippedQ.Z,
+                                        mFlippedQ.W
+                                    ))
+                            Next
+                        End If
                     End If
 
 
