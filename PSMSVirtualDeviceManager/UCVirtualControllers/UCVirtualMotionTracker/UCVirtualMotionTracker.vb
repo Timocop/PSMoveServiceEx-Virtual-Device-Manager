@@ -85,6 +85,7 @@ Public Class UCVirtualMotionTracker
 
                 CheckBox_JoystickShortcuts.Checked = g_ClassControllerSettings.m_JoystickShortcutBinding
                 CheckBox_JoystickShortcutClick.Checked = g_ClassControllerSettings.m_JoystickShortcutTouchpadClick
+                CheckBox_DisableBasestations.Checked = g_ClassControllerSettings.m_DisableBaseStationSpawning
                 ComboBox_TouchpadClickMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                 ComboBox_GrabButtonMethod.SelectedIndex = g_ClassControllerSettings.m_HtcGripButtonMethod
 
