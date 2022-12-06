@@ -6,6 +6,6 @@
     Public Const VMT_PORT_RECEIVE As Integer = 34571
     Public Const VMT_PORT_SEND As Integer = 34570
 
-    Public Const VMT_DEVICE_SERIAL As String = "/devices/PSMoveServiceEx/PSMS_EX_"
-    Public Const VMT_ROOT_NAME As String = "PSMoveServiceEx"
+    Public Const VMT_DEVICE_SERIAL As String = "/devices/psmsex/PSMS_EX_"
+    Public Const VMT_ROOT_NAME As String = "psmsex"
 End Class
