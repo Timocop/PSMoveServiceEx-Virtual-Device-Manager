@@ -8,4 +8,5 @@
 
     Public Const VMT_DEVICE_SERIAL As String = "/devices/psmsex/PSMS_EX_"
     Public Const VMT_ROOT_NAME As String = "psmsex"
+    Public Const VMT_DRIVER_FILE As String = "driver_psmsex.dll"
 End Class

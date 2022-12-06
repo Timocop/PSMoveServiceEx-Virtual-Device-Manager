@@ -723,9 +723,9 @@ Public Class UCVirtualMotionTracker
                 Throw New ArgumentException("Could not find driver root folder!")
             End If
 
-            Dim sDriverDLL As String = IO.Path.Combine(sDriverRoot, "bin\win64\driver_psmove.dll")
+            Dim sDriverDLL As String = IO.Path.Combine(IO.Path.Combine(sDriverRoot, "bin\win64"), ClassVmtConst.VMT_DRIVER_FILE)
             If (Not IO.File.Exists(sDriverDLL)) Then
-                Throw New ArgumentException("Could not find driver 'driver_psmove.dll'!")
+                Throw New ArgumentException(String.Format("Could not find driver '{0}'!", ClassVmtConst.VMT_DRIVER_FILE))
             End If
 
             Dim mConfig As New ClassOpenVRConfig()
