@@ -1161,17 +1161,17 @@ Public Class UCVirtualMotionTrackerItem
 
                             'Use Right-Handed space for SteamVR 
                             g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                        New OscMessage(
-                                            "/VMT/Room/Driver",
-                                            ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
-                                            mPosition.X,
-                                            mPosition.Y,
-                                            mPosition.Z,
-                                            mFlippedQ.X,
-                                            mFlippedQ.Y,
-                                            mFlippedQ.Z,
-                                            mFlippedQ.W
-                                        ))
+                                New OscMessage(
+                                    "/VMT/Room/Driver",
+                                    ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
+                                    mPosition.X,
+                                    mPosition.Y,
+                                    mPosition.Z,
+                                    mFlippedQ.X,
+                                    mFlippedQ.Y,
+                                    mFlippedQ.Z,
+                                    mFlippedQ.W
+                                ))
                         Next
                     End If
 

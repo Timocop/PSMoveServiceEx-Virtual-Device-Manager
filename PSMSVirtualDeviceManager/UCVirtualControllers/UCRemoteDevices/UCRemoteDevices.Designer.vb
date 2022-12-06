@@ -32,7 +32,7 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New ClassPictureBoxQuality()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -62,13 +62,15 @@ Partial Class UCRemoteDevices
         'Button_StartSocket
         '
         Me.Button_StartSocket.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_StartSocket.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_StartSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
         Me.Button_StartSocket.Location = New System.Drawing.Point(664, 73)
         Me.Button_StartSocket.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
         Me.Button_StartSocket.Name = "Button_StartSocket"
         Me.Button_StartSocket.Size = New System.Drawing.Size(120, 23)
         Me.Button_StartSocket.TabIndex = 2
         Me.Button_StartSocket.Text = "Start Socket"
+        Me.Button_StartSocket.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_StartSocket.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_StartSocket.UseVisualStyleBackColor = True
         '
         'Timer_SocketCheck
@@ -137,6 +139,7 @@ Partial Class UCRemoteDevices
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
+        Me.PictureBox1.m_HighQuality = False
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
