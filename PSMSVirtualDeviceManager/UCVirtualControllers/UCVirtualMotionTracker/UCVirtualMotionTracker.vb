@@ -31,7 +31,6 @@ Public Class UCVirtualMotionTracker
             ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: SQUARE [■])")
             ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: TRIANGLE [▲])")
             ComboBox_TouchpadClickMethod.Items.Add("While holding MOVE [~] button")
-            ComboBox_TouchpadClickMethod.Items.Add("On MOVE [~] button release")
 
             ComboBox_TouchpadClickMethod.SelectedIndex = 0
 
@@ -550,7 +549,6 @@ Public Class UCVirtualMotionTracker
             BUTTON_STRICT_SQUARE
             BUTTON_STRICT_TRIANGLE
             MOVE_ALWAYS
-            MOVE_RELEASE
 
             __MAX
         End Enum

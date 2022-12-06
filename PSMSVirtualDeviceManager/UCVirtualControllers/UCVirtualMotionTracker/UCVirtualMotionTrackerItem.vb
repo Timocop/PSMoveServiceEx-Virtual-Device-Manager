@@ -961,25 +961,6 @@ Public Class UCVirtualMotionTrackerItem
                                                 Else
                                                     If (bJoystickButtonPressed) Then
                                                         bJoystickButtonPressed = False
-
-                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
-                                                            m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
-
-                                                            If (g_iHtcTouchpadEmulationClickMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_RELEASE) Then
-                                                                Dim mNewPos As Vector3 = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
-
-                                                                mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
-                                                                mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
-                                                                mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
-
-                                                                ' Only start pressing when we moved a distance
-                                                                If (Math.Abs(mNewPos.X) > 0.25F OrElse Math.Abs(mNewPos.Y) > 0.25F) Then
-                                                                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
-                                                                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
-                                                                    g_mOscDataPack.mJoyStick = New Vector2(mNewPos.X, -mNewPos.Z)
-                                                                End If
-                                                            End If
-                                                        End If
                                                     End If
 
                                                     g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
