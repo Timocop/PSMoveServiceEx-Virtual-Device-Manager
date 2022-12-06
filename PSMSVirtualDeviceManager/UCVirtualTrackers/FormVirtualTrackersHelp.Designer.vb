@@ -71,7 +71,7 @@ Partial Class FormVirtualTrackersHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.Location = New System.Drawing.Point(6, 24)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(764, 55)
+        Me.Label2.Size = New System.Drawing.Size(848, 55)
         Me.Label2.TabIndex = 1
         Me.Label2.Text = resources.GetString("Label2.Text")
         '
@@ -136,7 +136,7 @@ Partial Class FormVirtualTrackersHelp
         Me.TabControl1.MinimumSize = New System.Drawing.Size(640, 480)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(784, 946)
+        Me.TabControl1.Size = New System.Drawing.Size(868, 688)
         Me.TabControl1.TabIndex = 6
         '
         'TabPage1
@@ -159,7 +159,7 @@ Partial Class FormVirtualTrackersHelp
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(776, 920)
+        Me.TabPage1.Size = New System.Drawing.Size(860, 662)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Exposure and gain"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -170,7 +170,7 @@ Partial Class FormVirtualTrackersHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label11.Location = New System.Drawing.Point(140, 501)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(630, 111)
+        Me.Label11.Size = New System.Drawing.Size(714, 111)
         Me.Label11.TabIndex = 14
         Me.Label11.Text = resources.GetString("Label11.Text")
         '
@@ -180,7 +180,7 @@ Partial Class FormVirtualTrackersHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label10.Location = New System.Drawing.Point(140, 367)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(630, 111)
+        Me.Label10.Size = New System.Drawing.Size(714, 111)
         Me.Label10.TabIndex = 13
         Me.Label10.Text = resources.GetString("Label10.Text")
         '
@@ -190,7 +190,7 @@ Partial Class FormVirtualTrackersHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label9.Location = New System.Drawing.Point(140, 233)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(630, 111)
+        Me.Label9.Size = New System.Drawing.Size(714, 111)
         Me.Label9.TabIndex = 12
         Me.Label9.Text = "Perfect exposure/gain settings. Tracking light should be visible, everything else" &
     " should be darkened."
@@ -201,7 +201,7 @@ Partial Class FormVirtualTrackersHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label8.Location = New System.Drawing.Point(140, 99)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(630, 111)
+        Me.Label8.Size = New System.Drawing.Size(714, 111)
         Me.Label8.TabIndex = 11
         Me.Label8.Text = "This is what you physically see. Holding your device that you want to be tracked " &
     "(e.g. PSmove controllers)."
@@ -259,7 +259,7 @@ Partial Class FormVirtualTrackersHelp
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(776, 920)
+        Me.TabPage2.Size = New System.Drawing.Size(860, 662)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Horizontal flip"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -306,7 +306,7 @@ Partial Class FormVirtualTrackersHelp
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label13.Location = New System.Drawing.Point(6, 24)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(764, 55)
+        Me.Label13.Size = New System.Drawing.Size(848, 55)
         Me.Label13.TabIndex = 3
         Me.Label13.Text = resources.GetString("Label13.Text")
         '
@@ -315,7 +315,7 @@ Partial Class FormVirtualTrackersHelp
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(784, 946)
+        Me.ClientSize = New System.Drawing.Size(868, 688)
         Me.Controls.Add(Me.TabControl1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
