@@ -912,7 +912,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
 
                                                         ' Only start pressing when we moved a distance
-                                                        If (Math.Abs(mNewPos.X) > 0.5F OrElse Math.Abs(mNewPos.Y) > 0.5F) Then
+                                                        If (Math.Abs(mNewPos.X) > 0.25F OrElse Math.Abs(mNewPos.Y) > 0.25F) Then
                                                             Select Case (g_iHtcTouchpadEmulationClickMethod)
                                                                 Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
@@ -946,7 +946,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         ' Also skip MOVE button
                                                         For i = 1 To mButtons.Length - 1
                                                             If (mButtons(i)) Then
-                                                                If (Math.Abs(mNewPos.X) < 0.5F AndAlso Math.Abs(mNewPos.Z) < 0.5F) Then
+                                                                If (Math.Abs(mNewPos.X) < 0.25F AndAlso Math.Abs(mNewPos.Z) < 0.25F) Then
                                                                     ' Remove shortcut
                                                                     If (mJoystickShortcuts.ContainsKey(i)) Then
                                                                         mJoystickShortcuts.Remove(i)
@@ -973,7 +973,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                 mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
 
                                                                 ' Only start pressing when we moved a distance
-                                                                If (Math.Abs(mNewPos.X) > 0.5F OrElse Math.Abs(mNewPos.Y) > 0.5F) Then
+                                                                If (Math.Abs(mNewPos.X) > 0.25F OrElse Math.Abs(mNewPos.Y) > 0.25F) Then
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                                                     g_mOscDataPack.mJoyStick = New Vector2(mNewPos.X, -mNewPos.Z)
