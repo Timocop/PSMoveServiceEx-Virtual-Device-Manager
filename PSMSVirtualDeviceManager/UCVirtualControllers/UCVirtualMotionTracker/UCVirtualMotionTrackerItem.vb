@@ -768,12 +768,12 @@ Public Class UCVirtualMotionTrackerItem
                                                     Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
                                                           ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
 
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_PSButton
+                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
                                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
                                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = bJoystickTrigger
                                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = False
                                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_StartButton
+                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
 
                                                         ' Do grip button
                                                         Select Case (g_iHtcGripButtonMethod)
