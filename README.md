@@ -1,13 +1,15 @@
 # PSMoveServiceEx - Virtual Device Manager
 A virtual device manager for PSMoveServiceEx.
-With this program you can control any virtual device in PSMoveServiceEx.
+With this program you can control any virtual device in PSMoveServiceEx and even use them in SteamVR or other services!
 
 ## Preview
 
-### Virtual Controllers
+![PSMSVirtualDeviceManager_WzHj9rj55R](https://user-images.githubusercontent.com/22834512/205811037-7f91c54c-5d37-4229-9fa5-8e9ab908ed75.png)
 
-![Virtual Controllers](https://user-images.githubusercontent.com/22834512/159298538-e3beff6e-0cd7-4975-8b7e-910b2c1dad55.png)
+ ## Demo Video
 
-### Virtual Trackers
-
-![Virtual Trackers](https://i.imgur.com/vPeYnny.png)
+<a href="https://youtu.be/8pwCMh_Z4ko" title="">
+  <p align="center">
+    <img width="100%" src="https://img.youtube.com/vi/8pwCMh_Z4ko/0.jpg" alt=""/>
+  </p>
+</a>
