@@ -438,6 +438,7 @@ Public Class UCVirtualMotionTracker
     Class ClassOscServer
         Implements IDisposable
 
+        Shared _ThreadLock As New Object
         Private g_VmtOsc As ClassOSC = Nothing
 
         Public Event OnOscProcessBundle(mBundle As OscBundle)
@@ -462,17 +463,21 @@ Public Class UCVirtualMotionTracker
 
         Property m_SuspendRequests As Boolean
             Get
-                Return g_bSuspendRequest
+                SyncLock _ThreadLock
+                    Return g_bSuspendRequest
+                End SyncLock
             End Get
             Set(value As Boolean)
-                g_bSuspendRequest = value
+                SyncLock _ThreadLock
+                    g_bSuspendRequest = value
+                End SyncLock
 
                 RaiseEvent OnSuspendChanged()
             End Set
         End Property
 
         Public Sub Send(mPacket As OscPacket)
-            If (g_bSuspendRequest) Then
+            If (m_SuspendRequests) Then
                 Return
             End If
 
@@ -480,11 +485,13 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Public Function IsRunning() As Boolean
-            Return (g_VmtOsc IsNot Nothing)
+            SyncLock _ThreadLock
+                Return (g_VmtOsc IsNot Nothing)
+            End SyncLock
         End Function
 
         Private Sub __OnOscProcessBundle(mBundle As OscBundle)
-            If (g_bSuspendRequest) Then
+            If (m_SuspendRequests) Then
                 Return
             End If
 
@@ -492,7 +499,7 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Private Sub __OnOscProcessMessage(mMessage As OscMessage)
-            If (g_bSuspendRequest) Then
+            If (m_SuspendRequests) Then
                 Return
             End If
 

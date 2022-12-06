@@ -393,7 +393,7 @@ Public Class UCVirtualMotionTrackerItem
             Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
 
             While True
-                If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                     ' Show driver timeouts
                     If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
                         sTitle = "Driver not is responding!"
