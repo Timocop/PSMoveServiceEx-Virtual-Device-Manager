@@ -946,7 +946,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         ' Also skip MOVE button
                                                         For i = 1 To mButtons.Length - 1
                                                             If (mButtons(i)) Then
-                                                                If (Math.Abs(mNewPos.X) < 0.25F AndAlso Math.Abs(mNewPos.Z) < 0.25F) Then
+                                                                If (Math.Abs(mNewPos.X) < 0.5F AndAlso Math.Abs(mNewPos.Z) < 0.5F) Then
                                                                     ' Remove shortcut
                                                                     If (mJoystickShortcuts.ContainsKey(i)) Then
                                                                         mJoystickShortcuts.Remove(i)
