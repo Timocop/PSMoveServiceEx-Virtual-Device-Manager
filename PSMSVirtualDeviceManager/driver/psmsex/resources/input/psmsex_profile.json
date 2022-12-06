@@ -1,0 +1,109 @@
+{
+  "jsonid" : "input_profile",
+  "controller_type": "psmsex",
+  "device_class" : "TrackedDeviceClass_Controller",
+  "resource_root" : "psmsex",
+  "driver_name" : "psmsex",
+  "legacy_binding" :  "{psmsex}/input/legacy_bindings_psmsex.json",
+  "legacy_profile" :  "none",
+  "input_bindingui_mode" : "single_device",
+  "should_show_binding_errors": true,
+  "input_bindingui_left" :
+  {
+    "image": "{psmsex}/input/binding_image_light.png"
+  },
+  "input_bindingui_right" :
+  {
+    "image": "{psmsex}/input/binding_image_light.png"
+  },
+  "priority" : 6,
+  "tracker_types" : {
+    "TrackerRole_Handed":"{psmsex}/input/psmsex_profile_handed.json",
+    "TrackerRole_LeftFoot":"{psmsex}/input/psmsex_profile_leftfoot.json",
+    "TrackerRole_RightFoot":"{psmsex}/input/psmsex_profile_rightfoot.json",
+    "TrackerRole_LeftShoulder":"{psmsex}/input/psmsex_profile_leftshoulder.json",
+    "TrackerRole_RightShoulder":"{psmsex}/input/psmsex_profile_rightshoulder.json",
+    "TrackerRole_LeftElbow":"{psmsex}/input/psmsex_profile_leftelbow.json",
+    "TrackerRole_RightElbow":"{psmsex}/input/psmsex_profile_rightelbow.json",
+    "TrackerRole_LeftKnee":"{psmsex}/input/psmsex_profile_leftknee.json",
+    "TrackerRole_RightKnee":"{psmsex}/input/psmsex_profile_rightknee.json",
+    "TrackerRole_Waist":"{psmsex}/input/psmsex_profile_waist.json",
+    "TrackerRole_Chest":"{psmsex}/input/psmsex_profile_chest.json",
+    "TrackerRole_Camera":"{psmsex}/input/psmsex_profile_camera.json",
+    "TrackerRole_Keyboard":"{psmsex}/input/psmsex_profile_keyboard.json"
+  },
+  "input_source" :
+  {
+    "/input/Button0" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 1
+    },
+    "/input/Button1" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 2
+    },
+    "/input/Button2" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 3
+    },
+    "/input/Button3" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 4
+    },
+    "/input/Button4" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 5
+    },
+    "/input/Button5" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 6
+    },
+    "/input/Button6" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 7
+    },
+    "/input/Button7" : { 
+        "type" : "button",
+        "click" : true,
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 8
+    },
+    "/input/Joystick0" : { 
+        "type" : "joystick",
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 1
+    },
+    "/input/Trigger0" : { 
+        "type" : "trigger",
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 1
+    },
+    "/input/Trigger1" : { 
+        "type" : "trigger",
+        "binding_image_point" : [ 0, 0 ],
+        "order" : 1
+    },
+    "/pose/raw" : {
+        "type" : "pose",
+        "binding_image_point" : [ 0, 0 ]
+    },
+    "/output/haptic" : {
+        "type" : "vibration",
+        "binding_image_point" : [ 0, 0 ]
+    }
+  }
+}

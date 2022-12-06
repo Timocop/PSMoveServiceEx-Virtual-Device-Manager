@@ -1,0 +1,11 @@
+{
+	"alwaysActivate": true,
+	"name" : "psmsex",
+	"directory" : "",
+	"resourceOnly" : false,
+
+	"hmd_presence" :
+	[
+		"*.*"
+	]
+}
