@@ -80,6 +80,7 @@ Public Class ClassServiceClient
 
             SyncLock __DataLock
                 g_ControllerPool.Clear()
+                g_TrackerPool.Clear()
             End SyncLock
         End SyncLock
     End Sub
