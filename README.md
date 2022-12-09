@@ -2,12 +2,16 @@
 A virtual device manager for PSMoveServiceEx.
 With this program you can control any virtual device in PSMoveServiceEx and even use them in SteamVR or other services!
 
-## Preview
+## Known Issues
+ - When running OSC Server in ``Virtual Motion Tracker`` before launching SteamVR, some trackers might not load correctly when SteamVR loads. Please start OSC Server only when SteamVR is fully loaded. Will be fixed in the future.
+ - Webcams in ``Virtual Trackers`` are still in prototyping phase. There might be tracking issues when using Webcams. PSMoveServiceEx distortion calibration does not seem to work correctly and worsens the tracking quality, use default PSEye lens correction instead.
+ - Left and Right Controller roles seem to behave inconsistently. More testing is required.
 
-![PSMSVirtualDeviceManager_WzHj9rj55R](https://user-images.githubusercontent.com/22834512/205811037-7f91c54c-5d37-4229-9fa5-8e9ab908ed75.png)
+## Images
 
-![explorer_ZQcFmmH2jZ](https://user-images.githubusercontent.com/22834512/206194150-d2a91e31-abe8-47cb-9783-3f32ee74fa6e.png)
+![](https://user-images.githubusercontent.com/22834512/205811037-7f91c54c-5d37-4229-9fa5-8e9ab908ed75.png)
 
+![](https://user-images.githubusercontent.com/22834512/206194150-d2a91e31-abe8-47cb-9783-3f32ee74fa6e.png)
 
  ## Demo Video
 
