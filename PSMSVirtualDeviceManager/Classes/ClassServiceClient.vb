@@ -268,8 +268,7 @@ Public Class ClassServiceClient
                                                     Case PSMButtonState.PSMButtonState_PRESSED
                                                         mSelectRecenterTime.Restart()
 
-                                                    Case PSMButtonState.PSMButtonState_RELEASED,
-                                                         PSMButtonState.PSMButtonState_UP
+                                                    Case PSMButtonState.PSMButtonState_DOWN
 
                                                         If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
                                                             Dim mIdentity = New PSMQuatf With {
@@ -279,11 +278,10 @@ Public Class ClassServiceClient
                                                                 .w = 1
                                                             }
                                                             mController.ResetControlerOrientation(mIdentity)
+
+                                                            mSelectRecenterTime.Reset()
                                                         End If
-
-                                                        mSelectRecenterTime.Reset()
                                                 End Select
-
                                             End If
 
                                             If (mController.m_Info.IsPoseValid) Then
