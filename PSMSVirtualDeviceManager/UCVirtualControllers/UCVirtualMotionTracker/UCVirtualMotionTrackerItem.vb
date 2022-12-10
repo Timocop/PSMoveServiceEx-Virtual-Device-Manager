@@ -1144,24 +1144,26 @@ Public Class UCVirtualMotionTrackerItem
                             For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
                                 m_TrackerData(i) = ClassServiceClient.m_TrackerData(i)
 
-                                Dim mPosition As Vector3 = m_TrackerData(i).m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+                                If (m_TrackerData(i) IsNot Nothing) Then
+                                    Dim mPosition As Vector3 = m_TrackerData(i).m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
 
-                                ' Cameras are flipped, flip them correctly
-                                Dim mFlippedQ As Quaternion = m_TrackerData(i).m_Orientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
+                                    ' Cameras are flipped, flip them correctly
+                                    Dim mFlippedQ As Quaternion = m_TrackerData(i).m_Orientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
 
-                                'Use Right-Handed space for SteamVR 
-                                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                    New OscMessage(
-                                        "/VMT/Room/Driver",
-                                        ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
-                                        mPosition.X,
-                                        mPosition.Y,
-                                        mPosition.Z,
-                                        mFlippedQ.X,
-                                        mFlippedQ.Y,
-                                        mFlippedQ.Z,
-                                        mFlippedQ.W
-                                    ))
+                                    'Use Right-Handed space for SteamVR 
+                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Room/Driver",
+                                            ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
+                                            mPosition.X,
+                                            mPosition.Y,
+                                            mPosition.Z,
+                                            mFlippedQ.X,
+                                            mFlippedQ.Y,
+                                            mFlippedQ.Z,
+                                            mFlippedQ.W
+                                        ))
+                                End If
                             Next
                         End If
                     End If

@@ -171,6 +171,10 @@ Public Class ClassServiceClient
                                 mControllers.Clear()
 
                                 mControllers.AddRange(Controllers.GetControllerList())
+
+                                SyncLock __DataLock
+                                    g_ControllerPool.Clear()
+                                End SyncLock
                             End If
 
                             If (bRefreshTrackerList) Then
@@ -182,6 +186,10 @@ Public Class ClassServiceClient
                                 mTrackers.Clear()
 
                                 mTrackers.AddRange(Trackers.GetTrackerList())
+
+                                SyncLock __DataLock
+                                    g_TrackerPool.Clear()
+                                End SyncLock
 
                                 For Each mTracker As Trackers In mTrackers
                                     Dim mData As New STRUC_TRACKER_DATA
