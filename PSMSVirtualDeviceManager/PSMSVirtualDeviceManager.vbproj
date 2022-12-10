@@ -82,23 +82,23 @@
   <ItemGroup>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\OpenCvSharp.dll</HintPath>
+      <HintPath>lib\OpenCvSharp\OpenCvSharp.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\OpenCvSharp.Extensions.dll</HintPath>
+      <HintPath>lib\OpenCvSharp\OpenCvSharp.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp.WpfExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\OpenCvSharp.WpfExtensions.dll</HintPath>
+      <HintPath>lib\OpenCvSharp\OpenCvSharp.WpfExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="PSMoveServiceExCAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="PSMoveServiceExCAPI, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\PSMoveServiceExCAPI.dll</HintPath>
+      <HintPath>lib\PSMoveServiceExCAPI\PSMoveServiceExCAPI.dll</HintPath>
     </Reference>
     <Reference Include="Rug.Osc, Version=1.2.5.17694, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Rug.Osc.dll</HintPath>
+      <HintPath>lib\Rug.Osc\Rug.Osc.dll</HintPath>
     </Reference>
     <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -362,7 +362,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /S /I /Y "$(ProjectDir)\lib" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent>xcopy /S /I /Y "$(ProjectDir)\lib\OpenCvSharp" "$(TargetDir)"
+xcopy /S /I /Y "$(ProjectDir)\lib\PSMoveServiceExCAPI" "$(TargetDir)"
+xcopy /S /I /Y "$(ProjectDir)\lib\Rug.Osc" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
