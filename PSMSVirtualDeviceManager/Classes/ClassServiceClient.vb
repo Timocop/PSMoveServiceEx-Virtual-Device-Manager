@@ -246,9 +246,10 @@ Public Class ClassServiceClient
                                             Dim mData As New STRUC_PSMOVE_CONTROLLER_DATA
                                             mData.m_IsConnected = mController.m_Info.m_IsConnected
                                             mData.m_OutputSeqNum = mController.m_Info.m_OutputSequenceNum
-                                            mData.m_IsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
 
                                             If (mController.m_Info.IsStateValid) Then
+                                                mData.m_IsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
+
                                                 mData.m_TriggerValue = mController.m_Info.m_PSMoveState.m_TriggerValue
                                                 mData.m_TriggerButton = (mController.m_Info.m_PSMoveState.m_TriggerButton > 0)
                                                 mData.m_MoveButton = (mController.m_Info.m_PSMoveState.m_MoveButton > 0)
@@ -259,30 +260,31 @@ Public Class ClassServiceClient
                                                 mData.m_CrossButton = (mController.m_Info.m_PSMoveState.m_CrossButton > 0)
                                                 mData.m_CircleButton = (mController.m_Info.m_PSMoveState.m_CircleButton > 0)
                                                 mData.m_TriangleButton = (mController.m_Info.m_PSMoveState.m_TriangleButton > 0)
+
+                                                ' Do recenter
+                                                ' #TODO Probably want to use HMD orientation instead
+                                                Dim mSelectRecenterTime = mControllerRecenterTime(mController.m_Info.m_ControllerId)
+                                                Select Case (mController.m_Info.m_PSMoveState.m_SelectButton)
+                                                    Case PSMButtonState.PSMButtonState_PRESSED
+                                                        mSelectRecenterTime.Restart()
+
+                                                    Case PSMButtonState.PSMButtonState_RELEASED,
+                                                         PSMButtonState.PSMButtonState_UP
+
+                                                        If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
+                                                            Dim mIdentity = New PSMQuatf With {
+                                                                .x = 0,
+                                                                .y = 0,
+                                                                .z = 0,
+                                                                .w = 1
+                                                            }
+                                                            mController.ResetControlerOrientation(mIdentity)
+                                                        End If
+
+                                                        mSelectRecenterTime.Reset()
+                                                End Select
+
                                             End If
-
-                                            ' Do recenter
-                                            ' #TODO Probably want to use HMD orientation instead
-                                            Dim mSelectRecenterTime = mControllerRecenterTime(mController.m_Info.m_ControllerId)
-                                            Select Case (mController.m_Info.m_PSMoveState.m_SelectButton)
-                                                Case PSMButtonState.PSMButtonState_PRESSED
-                                                    mSelectRecenterTime.Restart()
-
-                                                Case PSMButtonState.PSMButtonState_RELEASED,
-                                                     PSMButtonState.PSMButtonState_UP
-
-                                                    If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
-                                                        Dim mIdentity = New PSMQuatf With {
-                                                            .x = 0,
-                                                            .y = 0,
-                                                            .z = 0,
-                                                            .w = 1
-                                                        }
-                                                        mController.ResetControlerOrientation(mIdentity)
-                                                    End If
-
-                                                    mSelectRecenterTime.Reset()
-                                            End Select
 
                                             If (mController.m_Info.IsPoseValid) Then
                                                 mData.m_Position = New Vector3(
