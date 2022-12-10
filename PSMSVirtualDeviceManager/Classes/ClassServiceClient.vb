@@ -314,7 +314,7 @@ Public Class ClassServiceClient
                     Catch ex As Exception
                         SyncLock __ClientLock
                             If (g_PSMoveServiceServer IsNot Nothing) Then
-                                If (Not g_PSMoveServiceServer.IsConnected OrElse Not g_PSMoveServiceServer.IsInitialized) Then
+                                If (Not g_PSMoveServiceServer.IsInitialized OrElse Not g_PSMoveServiceServer.IsConnected) Then
                                     bRefreshControllerList = True
                                     bRefreshTrackerList = True
                                 End If
