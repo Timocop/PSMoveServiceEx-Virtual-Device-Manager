@@ -202,4 +202,47 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
     End Sub
+
+    Private Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
+        Try
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
+            sMessage.AppendLine("Already existing drivers will be replaced!")
+            sMessage.AppendLine()
+            sMessage.AppendLine("Do you want to continue?")
+            If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                Return
+            End If
+
+            Dim mDriverInstaller As New ClassLibusbDriver
+            mDriverInstaller.InstallDriver64()
+
+            MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_UninstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallCameraDrivers.LinkClicked
+        Try
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("You are about to uninstall LibUSB drivers for Playstation Eye Cameras.")
+            sMessage.AppendLine()
+            sMessage.AppendLine("WARNING:")
+            sMessage.AppendLine("All USB Controllers and USB Hubs will be restarted while the uninstalling process!")
+            sMessage.AppendLine("USB input devices (such as keyboard and mouse) might not respond during the uninstalling process!")
+            sMessage.AppendLine()
+            sMessage.AppendLine("Do you want to continue?")
+            If (MessageBox.Show(sMessage.ToString, "Driver Uninstallation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                Return
+            End If
+
+            Dim mDriverInstaller As New ClassLibusbDriver
+            mDriverInstaller.UninstallDriver64()
+
+            MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 End Class

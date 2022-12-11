@@ -322,6 +322,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\mmcshext_128_16x16-32.png" />
+    <None Include="Resources\imageres_5337_16x16-32.png" />
+    <None Include="Resources\Unpin_16x16-32.png" />
+    <None Include="Resources\Close_16x16-32.png" />
     <None Include="Resources\shell32_16739_16x16-32.png" />
     <None Include="Resources\shell32_16762_32x32-32.png" />
     <None Include="Resources\imageres_5315_16x16-32.png" />
