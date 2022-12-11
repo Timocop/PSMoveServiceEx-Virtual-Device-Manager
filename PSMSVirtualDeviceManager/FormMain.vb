@@ -365,6 +365,7 @@ Public Class FormMain
             Using mProcess As New Process
                 mProcess.StartInfo.FileName = sFilePath
                 mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sFilePath)
+                mProcess.StartInfo.Arguments = "\autoConnect"
                 mProcess.StartInfo.UseShellExecute = False
 
                 mProcess.Start()
