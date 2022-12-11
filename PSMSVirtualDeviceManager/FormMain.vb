@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.ComponentModel
+Imports System.Runtime.InteropServices
 
 Public Class FormMain
     Public g_mUCVirtualControllers As UCVirtualControllers
@@ -373,6 +374,38 @@ Public Class FormMain
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
+
+    Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        If (e.CloseReason <> CloseReason.UserClosing) Then
+            Return
+        End If
+
+        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+            Dim sMsg As New Text.StringBuilder
+            sMsg.AppendLine("PSMoveServiceEx is currently running.")
+            sMsg.AppendLine()
+            sMsg.AppendLine("Do you want to close PSMoveServiceEx?")
+            Select Case (MessageBox.Show(sMsg.ToString, "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                Case DialogResult.Cancel
+                    e.Cancel = True
+
+                Case DialogResult.Yes
+                    Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
+                    If (mProcesses IsNot Nothing AndAlso mProcesses.Length > 0) Then
+                        For Each mProcess In mProcesses
+                            If (mProcess.CloseMainWindow()) Then
+                                mProcess.WaitForExit(10000)
+                            Else
+                                mProcess.Kill()
+                            End If
+                        Next
+                    End If
+
+                Case DialogResult.No
+                    ' Do nothing
+            End Select
+        End If
     End Sub
 
     Class ClassServiceInfo
