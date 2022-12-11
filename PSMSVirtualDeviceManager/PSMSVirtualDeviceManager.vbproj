@@ -365,7 +365,9 @@
   <PropertyGroup>
     <PreBuildEvent>xcopy /S /I /Y "$(ProjectDir)\lib\OpenCvSharp" "$(TargetDir)"
 xcopy /S /I /Y "$(ProjectDir)\lib\PSMoveServiceExCAPI" "$(TargetDir)"
-xcopy /S /I /Y "$(ProjectDir)\lib\Rug.Osc" "$(TargetDir)"</PreBuildEvent>
+xcopy /S /I /Y "$(ProjectDir)\lib\Rug.Osc" "$(TargetDir)"
+xcopy /S /I /Y "$(ProjectDir)\driver" "$(TargetDir)\driver"
+xcopy /S /I /Y "$(ProjectDir)\libusb_driver" "$(TargetDir)\libusb_driver"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
