@@ -133,6 +133,7 @@
   <ItemGroup>
     <Compile Include="Classes\ClassDevices.vb" />
     <Compile Include="Classes\ClassIni.vb" />
+    <Compile Include="Classes\ClassLibusbDriver.vb" />
     <Compile Include="Classes\ClassOpenVRConfig.vb" />
     <Compile Include="Classes\ClassOSC.vb" />
     <Compile Include="Classes\ClassPictureBoxQuality.vb">
