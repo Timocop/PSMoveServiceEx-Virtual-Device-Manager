@@ -9,7 +9,7 @@ With this program you can control any virtual device in PSMoveServiceEx and even
 
 ## Images
 
-![](https://user-images.githubusercontent.com/22834512/205811037-7f91c54c-5d37-4229-9fa5-8e9ab908ed75.png)
+![](https://user-images.githubusercontent.com/22834512/206929896-6f55bfa6-e185-43d4-8826-9a5e2d81fffe.png)
 
 ![](https://user-images.githubusercontent.com/22834512/206194150-d2a91e31-abe8-47cb-9783-3f32ee74fa6e.png)
 
