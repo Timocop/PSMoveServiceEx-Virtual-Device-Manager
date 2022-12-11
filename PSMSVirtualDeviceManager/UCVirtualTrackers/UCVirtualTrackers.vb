@@ -78,7 +78,7 @@
 
             Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
             If (Not IO.Directory.Exists(sPsmsPath)) Then
-                Throw New ArgumentException("PSMoveService configs not found. Please setup PSMoveService first.")
+                Return
             End If
 
             Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, "TrackerManagerConfig.json")
