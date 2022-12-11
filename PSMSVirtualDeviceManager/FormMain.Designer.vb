@@ -33,24 +33,24 @@ Partial Class FormMain
         Me.Button_RestartPSMS = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_UninstallCameraDrivers = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel5 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_FactoryResetService = New System.Windows.Forms.LinkLabel()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.LinkLabel_InstallCameraDrivers = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.LinkLabel_ControllersVMT = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ControllersAttachments = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ControllersRemote = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ControllersGeneral = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Trackers = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_HMDs = New System.Windows.Forms.LinkLabel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -115,7 +115,7 @@ Partial Class FormMain
         Me.Panel1.Controls.Add(Me.LinkLabel4)
         Me.Panel1.Controls.Add(Me.LinkLabel2)
         Me.Panel1.Controls.Add(Me.LinkLabel_UninstallCameraDrivers)
-        Me.Panel1.Controls.Add(Me.LinkLabel5)
+        Me.Panel1.Controls.Add(Me.LinkLabel_FactoryResetService)
         Me.Panel1.Controls.Add(Me.Label4)
         Me.Panel1.Controls.Add(Me.LinkLabel_InstallCameraDrivers)
         Me.Panel1.Controls.Add(Me.LinkLabel3)
@@ -135,51 +135,6 @@ Partial Class FormMain
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(229, 697)
         Me.Panel1.TabIndex = 2
-        '
-        'Panel3
-        '
-        Me.Panel3.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel3.Location = New System.Drawing.Point(228, 0)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(1, 697)
-        Me.Panel3.TabIndex = 0
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(17, 218)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(144, 13)
-        Me.Label2.TabIndex = 0
-        Me.Label2.Text = "Virtual Devices Navigation"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(17, 41)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(43, 13)
-        Me.Label3.TabIndex = 7
-        Me.Label3.Text = "Service"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(17, 504)
-        Me.Label4.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(93, 13)
-        Me.Label4.TabIndex = 12
-        Me.Label4.Text = "Troubleshooting"
         '
         'LinkLabel4
         '
@@ -241,25 +196,37 @@ Partial Class FormMain
         Me.LinkLabel_UninstallCameraDrivers.Text = "      Uninstall Playstation Eye Drivers"
         Me.LinkLabel_UninstallCameraDrivers.VisitedLinkColor = System.Drawing.Color.Navy
         '
-        'LinkLabel5
+        'LinkLabel_FactoryResetService
         '
-        Me.LinkLabel5.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel5.AutoSize = True
-        Me.LinkLabel5.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel5.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.LinkLabel5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel5.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel5.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel5.Location = New System.Drawing.Point(17, 603)
-        Me.LinkLabel5.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel5.Name = "LinkLabel5"
-        Me.LinkLabel5.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel5.Size = New System.Drawing.Size(182, 19)
-        Me.LinkLabel5.TabIndex = 13
-        Me.LinkLabel5.TabStop = True
-        Me.LinkLabel5.Text = "      Factory Reset PSMoveServiceEx"
-        Me.LinkLabel5.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_FactoryResetService.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_FactoryResetService.AutoSize = True
+        Me.LinkLabel_FactoryResetService.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_FactoryResetService.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_FactoryResetService.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.LinkLabel_FactoryResetService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_FactoryResetService.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_FactoryResetService.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_FactoryResetService.Location = New System.Drawing.Point(17, 603)
+        Me.LinkLabel_FactoryResetService.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_FactoryResetService.Name = "LinkLabel_FactoryResetService"
+        Me.LinkLabel_FactoryResetService.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_FactoryResetService.Size = New System.Drawing.Size(182, 19)
+        Me.LinkLabel_FactoryResetService.TabIndex = 13
+        Me.LinkLabel_FactoryResetService.TabStop = True
+        Me.LinkLabel_FactoryResetService.Text = "      Factory Reset PSMoveServiceEx"
+        Me.LinkLabel_FactoryResetService.VisitedLinkColor = System.Drawing.Color.Navy
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.ForeColor = System.Drawing.Color.Black
+        Me.Label4.Location = New System.Drawing.Point(17, 504)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(93, 13)
+        Me.Label4.TabIndex = 12
+        Me.Label4.Text = "Troubleshooting"
         '
         'LinkLabel_InstallCameraDrivers
         '
@@ -320,6 +287,18 @@ Partial Class FormMain
         Me.LinkLabel1.TabStop = True
         Me.LinkLabel1.Text = "      Run PSMoveServiceEx"
         Me.LinkLabel1.VisitedLinkColor = System.Drawing.Color.Navy
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.ForeColor = System.Drawing.Color.Black
+        Me.Label3.Location = New System.Drawing.Point(17, 41)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(43, 13)
+        Me.Label3.TabIndex = 7
+        Me.Label3.Text = "Service"
         '
         'LinkLabel_ControllersVMT
         '
@@ -441,6 +420,15 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.Text = "      Manage Virtual" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "      Head Mount Devices"
         Me.LinkLabel_HMDs.VisitedLinkColor = System.Drawing.Color.Navy
         '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Panel3.Location = New System.Drawing.Point(228, 0)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(1, 697)
+        Me.Panel3.TabIndex = 0
+        '
         'LinkLabel_Controllers
         '
         Me.LinkLabel_Controllers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -460,6 +448,18 @@ Partial Class FormMain
         Me.LinkLabel_Controllers.TabStop = True
         Me.LinkLabel_Controllers.Text = "      Manage Virtual Controllers"
         Me.LinkLabel_Controllers.VisitedLinkColor = System.Drawing.Color.Navy
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.Black
+        Me.Label2.Location = New System.Drawing.Point(17, 218)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(144, 13)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "Virtual Devices Navigation"
         '
         'FormMain
         '
@@ -503,7 +503,7 @@ Partial Class FormMain
     Friend WithEvents LinkLabel3 As LinkLabel
     Friend WithEvents LinkLabel_InstallCameraDrivers As LinkLabel
     Friend WithEvents Label4 As Label
-    Friend WithEvents LinkLabel5 As LinkLabel
+    Friend WithEvents LinkLabel_FactoryResetService As LinkLabel
     Friend WithEvents LinkLabel_UninstallCameraDrivers As LinkLabel
     Friend WithEvents LinkLabel4 As LinkLabel
     Friend WithEvents LinkLabel2 As LinkLabel

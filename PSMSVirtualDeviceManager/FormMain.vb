@@ -205,6 +205,10 @@ Public Class FormMain
 
     Private Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
         Try
+            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+            End If
+
             Dim sMessage As New Text.StringBuilder
             sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
             sMessage.AppendLine("Already existing drivers will be replaced!")
@@ -225,12 +229,16 @@ Public Class FormMain
 
     Private Sub LinkLabel_UninstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallCameraDrivers.LinkClicked
         Try
+            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+            End If
+
             Dim sMessage As New Text.StringBuilder
             sMessage.AppendLine("You are about to uninstall LibUSB drivers for Playstation Eye Cameras.")
             sMessage.AppendLine()
             sMessage.AppendLine("WARNING:")
-            sMessage.AppendLine("All USB Controllers and USB Hubs will be restarted while the uninstalling process!")
-            sMessage.AppendLine("USB input devices (such as keyboard and mouse) might not respond during the uninstalling process!")
+            sMessage.AppendLine("All USB Controllers and USB Hubs will be restarted while the uninstallation process!")
+            sMessage.AppendLine("USB input devices (such as keyboard and mouse) might not respond during the uninstallation process!")
             sMessage.AppendLine()
             sMessage.AppendLine("Do you want to continue?")
             If (MessageBox.Show(sMessage.ToString, "Driver Uninstallation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
@@ -241,6 +249,32 @@ Public Class FormMain
             mDriverInstaller.UninstallDriver64()
 
             MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_FactoryResetService_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_FactoryResetService.LinkClicked
+        Try
+            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+            End If
+
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("You are about to remove all PSMoveServiceEx configurations.")
+            sMessage.AppendLine()
+            sMessage.AppendLine("Do you want to continue?")
+            If (MessageBox.Show(sMessage.ToString, "Factory Reset", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                Return
+            End If
+
+            Dim sConfigFolder As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PSMoveService")
+
+            If (IO.Directory.Exists(sConfigFolder)) Then
+                IO.Directory.Delete(sConfigFolder, True)
+            End If
+
+            MessageBox.Show("All config have been removed!", "Factory Reset", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
