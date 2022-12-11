@@ -64,6 +64,7 @@ Public Class FormMain
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
+        TableLayoutPanel_Title.Visible = False
 
         Select Case (iPage)
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
