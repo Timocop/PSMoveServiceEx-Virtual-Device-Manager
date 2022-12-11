@@ -44,7 +44,7 @@ Public Class ClassOpenVRConfig
         Next
     End Sub
 
-    Public Function GetOverrides() As String()
+    Public Function GetDrivers() As String()
         If (Not g_mConfig.ContainsKey("external_drivers")) Then
             Return Nothing
         End If
