@@ -136,41 +136,6 @@ Public Class FormMain
         Return Nothing
     End Function
 
-    Private Sub Button_RestartPSMS_Click(sender As Object, e As EventArgs) Handles Button_RestartPSMS.Click
-        Try
-            Dim sPSMSPath As String = Nothing
-
-            Dim pProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-            If (pProcesses Is Nothing OrElse pProcesses.Length < 1) Then
-                Throw New ArgumentException("PSMoveService not running.")
-            End If
-
-            For Each mProcess In pProcesses
-                If (sPSMSPath Is Nothing) Then
-                    sPSMSPath = mProcess.MainModule.FileName
-                End If
-
-                If (mProcess.CloseMainWindow()) Then
-                    mProcess.WaitForExit(10000)
-                Else
-                    mProcess.Kill()
-                End If
-            Next
-
-            If (sPSMSPath Is Nothing OrElse Not IO.File.Exists(sPSMSPath)) Then
-                Throw New ArgumentException("PSMoveService executable not found. Please start manualy.")
-            End If
-
-            Dim mNewProcess As New Process()
-            mNewProcess.StartInfo.FileName = sPSMSPath
-            mNewProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sPSMSPath)
-            mNewProcess.StartInfo.UseShellExecute = False
-            mNewProcess.Start()
-        Catch ex As Exception
-            MsgBox(ex.Message, MsgBoxStyle.Critical, "Error")
-        End Try
-    End Sub
-
     Private Sub LinkLabel_Controllers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Controllers.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
     End Sub
@@ -262,6 +227,7 @@ Public Class FormMain
 
             Dim sMessage As New Text.StringBuilder
             sMessage.AppendLine("You are about to remove all PSMoveServiceEx configurations.")
+            sMessage.AppendLine("THIS CAN NOT BE UNDONE!")
             sMessage.AppendLine()
             sMessage.AppendLine("Do you want to continue?")
             If (MessageBox.Show(sMessage.ToString, "Factory Reset", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
@@ -279,4 +245,215 @@ Public Class FormMain
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Sub LinkLabel_RunPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMS.LinkClicked
+        Try
+            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                Throw New ArgumentException("PSMoveServiceEx is already running!")
+            End If
+
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (Not mConfig.FileExist()) Then
+                If (mConfig.FindByProcess()) Then
+                    mConfig.SaveConfig()
+                Else
+                    If (mConfig.SearchForService) Then
+                        mConfig.SaveConfig()
+                    Else
+                        Return
+                    End If
+                End If
+            End If
+
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = mConfig.m_FileName
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(mConfig.m_FileName)
+                mProcess.StartInfo.UseShellExecute = False
+
+                mProcess.Start()
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_StopPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StopPSMS.LinkClicked
+        Try
+            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
+            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
+                Throw New ArgumentException("PSMoveServiceEx is not running!")
+            End If
+
+            For Each mProcess In mProcesses
+                If (mProcess.CloseMainWindow()) Then
+                    mProcess.WaitForExit(10000)
+                Else
+                    mProcess.Kill()
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_RestartPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RestartPSMS.LinkClicked
+        Try
+            Dim sPSMSPath As String = Nothing
+
+            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
+            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
+                Throw New ArgumentException("PSMoveServiceEx not running!")
+            End If
+
+            For Each mProcess In mProcesses
+                If (sPSMSPath Is Nothing) Then
+                    sPSMSPath = mProcess.MainModule.FileName
+                End If
+
+                If (mProcess.CloseMainWindow()) Then
+                    mProcess.WaitForExit(10000)
+                Else
+                    mProcess.Kill()
+                End If
+            Next
+
+            If (sPSMSPath Is Nothing OrElse Not IO.File.Exists(sPSMSPath)) Then
+                Throw New ArgumentException("PSMoveServiceEx executable not found. Please start manualy.")
+            End If
+
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = sPSMSPath
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sPSMSPath)
+                mProcess.StartInfo.UseShellExecute = False
+
+                mProcess.Start()
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_RunPSMSTool_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMSTool.LinkClicked
+        Try
+            If (Process.GetProcessesByName("PSMoveConfigTool").Count > 0) Then
+                Throw New ArgumentException("PSMoveConfigTool is already running!")
+            End If
+
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (Not mConfig.FileExist()) Then
+                If (mConfig.FindByProcess()) Then
+                    mConfig.SaveConfig()
+                Else
+                    If (mConfig.SearchForService) Then
+                        mConfig.SaveConfig()
+                    Else
+                        Return
+                    End If
+                End If
+            End If
+
+            Dim sFilePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(mConfig.m_FileName), "PSMoveConfigTool.exe")
+            If (Not IO.File.Exists(sFilePath)) Then
+                Throw New ArgumentException("PSMoveConfigTool.exe does not exist!")
+            End If
+
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = sFilePath
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sFilePath)
+                mProcess.StartInfo.UseShellExecute = False
+
+                mProcess.Start()
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Class ClassServiceInfo
+        Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "settings.ini")
+        Private g_sFileName As String = ""
+
+        Private g_bConfigsLoaded As Boolean = False
+
+        Public Sub New()
+        End Sub
+
+        Property m_FileName As String
+            Get
+                Return g_sFileName
+            End Get
+            Set(value As String)
+                g_sFileName = value
+            End Set
+        End Property
+
+        Public Function FileExist() As Boolean
+            If (String.IsNullOrEmpty(m_FileName) OrElse Not IO.File.Exists(m_FileName)) Then
+                Return False
+            End If
+
+            Return True
+        End Function
+
+        Public Function FindByProcess() As Boolean
+            Dim pProcesses As Process() = Process.GetProcessesByName("PSMoveService")
+            If (pProcesses Is Nothing OrElse pProcesses.Length < 1) Then
+                Return False
+            End If
+
+            For Each mProcess In pProcesses
+                m_FileName = mProcess.MainModule.FileName
+                Return True
+            Next
+
+            Return False
+        End Function
+
+        Public Function SearchForService() As Boolean
+            Using mFileSearch As New OpenFileDialog()
+                mFileSearch.Title = "Find PSMoveServiceEx..."
+                mFileSearch.Filter = "PSMoveService|PSMoveService.exe"
+                mFileSearch.Multiselect = False
+                mFileSearch.CheckFileExists = True
+
+                If (mFileSearch.ShowDialog() = DialogResult.OK) Then
+                    m_FileName = mFileSearch.FileName
+
+                    Return True
+                End If
+
+                Return False
+            End Using
+        End Function
+
+        Public Sub SaveConfig()
+            If (Not g_bConfigsLoaded) Then
+                Return
+            End If
+
+            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "PSMoveServiceLocation", m_FileName))
+
+                    mIni.WriteKeyValue(mIniContent.ToArray)
+                End Using
+            End Using
+        End Sub
+
+        Public Sub LoadConfig()
+            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    m_FileName = mIni.ReadKeyValue("Settings", "PSMoveServiceLocation", "")
+                End Using
+            End Using
+
+            g_bConfigsLoaded = True
+        End Sub
+    End Class
 End Class

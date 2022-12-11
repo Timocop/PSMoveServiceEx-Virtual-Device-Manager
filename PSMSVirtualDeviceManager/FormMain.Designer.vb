@@ -28,19 +28,16 @@ Partial Class FormMain
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
         Me.Panel_Pages = New System.Windows.Forms.Panel()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label_Version = New System.Windows.Forms.Label()
-        Me.Button_RestartPSMS = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_RestartPSMS = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_StopPSMS = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_UninstallCameraDrivers = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_FactoryResetService = New System.Windows.Forms.LinkLabel()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.LinkLabel_InstallCameraDrivers = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.LinkLabel_ControllersVMT = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ControllersAttachments = New System.Windows.Forms.LinkLabel()
@@ -51,7 +48,6 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -61,65 +57,35 @@ Partial Class FormMain
         Me.Panel_Pages.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel_Pages.Location = New System.Drawing.Point(229, 0)
         Me.Panel_Pages.Name = "Panel_Pages"
-        Me.Panel_Pages.Size = New System.Drawing.Size(826, 697)
+        Me.Panel_Pages.Size = New System.Drawing.Size(826, 761)
         Me.Panel_Pages.TabIndex = 1
-        '
-        'Panel2
-        '
-        Me.Panel2.BackColor = System.Drawing.SystemColors.Control
-        Me.Panel2.Controls.Add(Me.Label_Version)
-        Me.Panel2.Controls.Add(Me.Button_RestartPSMS)
-        Me.Panel2.Controls.Add(Me.Label1)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 697)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1055, 64)
-        Me.Panel2.TabIndex = 2
         '
         'Label_Version
         '
+        Me.Label_Version.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label_Version.AutoSize = True
         Me.Label_Version.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.Label_Version.Location = New System.Drawing.Point(12, 26)
+        Me.Label_Version.Location = New System.Drawing.Point(17, 723)
+        Me.Label_Version.Margin = New System.Windows.Forms.Padding(8, 3, 3, 16)
         Me.Label_Version.Name = "Label_Version"
         Me.Label_Version.Size = New System.Drawing.Size(66, 13)
         Me.Label_Version.TabIndex = 2
         Me.Label_Version.Text = "Version: 1.0"
-        '
-        'Button_RestartPSMS
-        '
-        Me.Button_RestartPSMS.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_RestartPSMS.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_RestartPSMS.Location = New System.Drawing.Point(893, 16)
-        Me.Button_RestartPSMS.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
-        Me.Button_RestartPSMS.Name = "Button_RestartPSMS"
-        Me.Button_RestartPSMS.Size = New System.Drawing.Size(150, 32)
-        Me.Button_RestartPSMS.TabIndex = 1
-        Me.Button_RestartPSMS.Text = "Restart PSMoveService"
-        Me.Button_RestartPSMS.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Label1.Location = New System.Drawing.Point(0, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(1055, 1)
-        Me.Label1.TabIndex = 0
         '
         'Panel1
         '
         Me.Panel1.AutoScroll = True
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.Panel1.Controls.Add(Me.LinkLabel4)
-        Me.Panel1.Controls.Add(Me.LinkLabel2)
+        Me.Panel1.Controls.Add(Me.Label_Version)
+        Me.Panel1.Controls.Add(Me.LinkLabel_RestartPSMS)
+        Me.Panel1.Controls.Add(Me.LinkLabel_StopPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_UninstallCameraDrivers)
         Me.Panel1.Controls.Add(Me.LinkLabel_FactoryResetService)
         Me.Panel1.Controls.Add(Me.Label4)
         Me.Panel1.Controls.Add(Me.LinkLabel_InstallCameraDrivers)
-        Me.Panel1.Controls.Add(Me.LinkLabel3)
-        Me.Panel1.Controls.Add(Me.LinkLabel1)
+        Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMSTool)
+        Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMS)
         Me.Panel1.Controls.Add(Me.Label3)
         Me.Panel1.Controls.Add(Me.LinkLabel_ControllersVMT)
         Me.Panel1.Controls.Add(Me.LinkLabel_ControllersAttachments)
@@ -133,48 +99,48 @@ Partial Class FormMain
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(229, 697)
+        Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
         '
-        'LinkLabel4
+        'LinkLabel_RestartPSMS
         '
-        Me.LinkLabel4.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel4.AutoSize = True
-        Me.LinkLabel4.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel4.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
-        Me.LinkLabel4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel4.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel4.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel4.Location = New System.Drawing.Point(17, 140)
-        Me.LinkLabel4.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel4.Name = "LinkLabel4"
-        Me.LinkLabel4.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel4.Size = New System.Drawing.Size(150, 19)
-        Me.LinkLabel4.TabIndex = 16
-        Me.LinkLabel4.TabStop = True
-        Me.LinkLabel4.Text = "      Restart PSMoveServiceEx"
-        Me.LinkLabel4.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RestartPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_RestartPSMS.AutoSize = True
+        Me.LinkLabel_RestartPSMS.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_RestartPSMS.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RestartPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
+        Me.LinkLabel_RestartPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_RestartPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_RestartPSMS.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(17, 114)
+        Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
+        Me.LinkLabel_RestartPSMS.Name = "LinkLabel_RestartPSMS"
+        Me.LinkLabel_RestartPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_RestartPSMS.Size = New System.Drawing.Size(150, 19)
+        Me.LinkLabel_RestartPSMS.TabIndex = 16
+        Me.LinkLabel_RestartPSMS.TabStop = True
+        Me.LinkLabel_RestartPSMS.Text = "      Restart PSMoveServiceEx"
+        Me.LinkLabel_RestartPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
-        'LinkLabel2
+        'LinkLabel_StopPSMS
         '
-        Me.LinkLabel2.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel2.AutoSize = True
-        Me.LinkLabel2.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel2.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5337_16x16_32
-        Me.LinkLabel2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel2.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel2.Location = New System.Drawing.Point(17, 113)
-        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel2.Name = "LinkLabel2"
-        Me.LinkLabel2.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel2.Size = New System.Drawing.Size(138, 19)
-        Me.LinkLabel2.TabIndex = 15
-        Me.LinkLabel2.TabStop = True
-        Me.LinkLabel2.Text = "      Stop PSMoveServiceEx"
-        Me.LinkLabel2.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_StopPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_StopPSMS.AutoSize = True
+        Me.LinkLabel_StopPSMS.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_StopPSMS.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_StopPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5337_16x16_32
+        Me.LinkLabel_StopPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_StopPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_StopPSMS.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_StopPSMS.Location = New System.Drawing.Point(17, 92)
+        Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
+        Me.LinkLabel_StopPSMS.Name = "LinkLabel_StopPSMS"
+        Me.LinkLabel_StopPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_StopPSMS.Size = New System.Drawing.Size(138, 19)
+        Me.LinkLabel_StopPSMS.TabIndex = 15
+        Me.LinkLabel_StopPSMS.TabStop = True
+        Me.LinkLabel_StopPSMS.Text = "      Stop PSMoveServiceEx"
+        Me.LinkLabel_StopPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_UninstallCameraDrivers
         '
@@ -186,8 +152,8 @@ Partial Class FormMain
         Me.LinkLabel_UninstallCameraDrivers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_UninstallCameraDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_UninstallCameraDrivers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_UninstallCameraDrivers.Location = New System.Drawing.Point(17, 576)
-        Me.LinkLabel_UninstallCameraDrivers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_UninstallCameraDrivers.Location = New System.Drawing.Point(17, 478)
+        Me.LinkLabel_UninstallCameraDrivers.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_UninstallCameraDrivers.Name = "LinkLabel_UninstallCameraDrivers"
         Me.LinkLabel_UninstallCameraDrivers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_UninstallCameraDrivers.Size = New System.Drawing.Size(188, 19)
@@ -206,8 +172,8 @@ Partial Class FormMain
         Me.LinkLabel_FactoryResetService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_FactoryResetService.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_FactoryResetService.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_FactoryResetService.Location = New System.Drawing.Point(17, 603)
-        Me.LinkLabel_FactoryResetService.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_FactoryResetService.Location = New System.Drawing.Point(17, 500)
+        Me.LinkLabel_FactoryResetService.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_FactoryResetService.Name = "LinkLabel_FactoryResetService"
         Me.LinkLabel_FactoryResetService.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_FactoryResetService.Size = New System.Drawing.Size(182, 19)
@@ -221,7 +187,7 @@ Partial Class FormMain
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(17, 504)
+        Me.Label4.Location = New System.Drawing.Point(17, 427)
         Me.Label4.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(93, 13)
@@ -238,8 +204,8 @@ Partial Class FormMain
         Me.LinkLabel_InstallCameraDrivers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_InstallCameraDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_InstallCameraDrivers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_InstallCameraDrivers.Location = New System.Drawing.Point(17, 549)
-        Me.LinkLabel_InstallCameraDrivers.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
+        Me.LinkLabel_InstallCameraDrivers.Location = New System.Drawing.Point(17, 456)
+        Me.LinkLabel_InstallCameraDrivers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_InstallCameraDrivers.Name = "LinkLabel_InstallCameraDrivers"
         Me.LinkLabel_InstallCameraDrivers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_InstallCameraDrivers.Size = New System.Drawing.Size(173, 19)
@@ -248,45 +214,45 @@ Partial Class FormMain
         Me.LinkLabel_InstallCameraDrivers.Text = "      Install Playstation Eye Drivers"
         Me.LinkLabel_InstallCameraDrivers.VisitedLinkColor = System.Drawing.Color.Navy
         '
-        'LinkLabel3
+        'LinkLabel_RunPSMSTool
         '
-        Me.LinkLabel3.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel3.AutoSize = True
-        Me.LinkLabel3.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel3.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_16x16_32
-        Me.LinkLabel3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel3.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel3.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel3.Location = New System.Drawing.Point(17, 167)
-        Me.LinkLabel3.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel3.Name = "LinkLabel3"
-        Me.LinkLabel3.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel3.Size = New System.Drawing.Size(160, 19)
-        Me.LinkLabel3.TabIndex = 10
-        Me.LinkLabel3.TabStop = True
-        Me.LinkLabel3.Text = "      Run PSMoveServiceEx Tool"
-        Me.LinkLabel3.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RunPSMSTool.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_RunPSMSTool.AutoSize = True
+        Me.LinkLabel_RunPSMSTool.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_RunPSMSTool.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RunPSMSTool.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_16x16_32
+        Me.LinkLabel_RunPSMSTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_RunPSMSTool.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_RunPSMSTool.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(17, 136)
+        Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
+        Me.LinkLabel_RunPSMSTool.Name = "LinkLabel_RunPSMSTool"
+        Me.LinkLabel_RunPSMSTool.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_RunPSMSTool.Size = New System.Drawing.Size(160, 19)
+        Me.LinkLabel_RunPSMSTool.TabIndex = 10
+        Me.LinkLabel_RunPSMSTool.TabStop = True
+        Me.LinkLabel_RunPSMSTool.Text = "      Run PSMoveServiceEx Tool"
+        Me.LinkLabel_RunPSMSTool.VisitedLinkColor = System.Drawing.Color.Navy
         '
-        'LinkLabel1
+        'LinkLabel_RunPSMS
         '
-        Me.LinkLabel1.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel1.AutoSize = True
-        Me.LinkLabel1.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel1.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.LinkLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel1.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel1.Location = New System.Drawing.Point(17, 86)
-        Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
-        Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel1.Size = New System.Drawing.Size(135, 19)
-        Me.LinkLabel1.TabIndex = 8
-        Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "      Run PSMoveServiceEx"
-        Me.LinkLabel1.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RunPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_RunPSMS.AutoSize = True
+        Me.LinkLabel_RunPSMS.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_RunPSMS.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RunPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.LinkLabel_RunPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_RunPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_RunPSMS.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RunPSMS.Location = New System.Drawing.Point(17, 70)
+        Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
+        Me.LinkLabel_RunPSMS.Name = "LinkLabel_RunPSMS"
+        Me.LinkLabel_RunPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_RunPSMS.Size = New System.Drawing.Size(135, 19)
+        Me.LinkLabel_RunPSMS.TabIndex = 8
+        Me.LinkLabel_RunPSMS.TabStop = True
+        Me.LinkLabel_RunPSMS.Text = "      Run PSMoveServiceEx"
+        Me.LinkLabel_RunPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'Label3
         '
@@ -310,8 +276,8 @@ Partial Class FormMain
         Me.LinkLabel_ControllersVMT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersVMT.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ControllersVMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersVMT.Location = New System.Drawing.Point(32, 380)
-        Me.LinkLabel_ControllersVMT.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
+        Me.LinkLabel_ControllersVMT.Location = New System.Drawing.Point(32, 313)
+        Me.LinkLabel_ControllersVMT.Margin = New System.Windows.Forms.Padding(32, 3, 3, 3)
         Me.LinkLabel_ControllersVMT.Name = "LinkLabel_ControllersVMT"
         Me.LinkLabel_ControllersVMT.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_ControllersVMT.Size = New System.Drawing.Size(139, 19)
@@ -330,8 +296,8 @@ Partial Class FormMain
         Me.LinkLabel_ControllersAttachments.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersAttachments.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ControllersAttachments.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 350)
-        Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
+        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 288)
+        Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 3, 3, 3)
         Me.LinkLabel_ControllersAttachments.Name = "LinkLabel_ControllersAttachments"
         Me.LinkLabel_ControllersAttachments.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_ControllersAttachments.Size = New System.Drawing.Size(144, 19)
@@ -350,8 +316,8 @@ Partial Class FormMain
         Me.LinkLabel_ControllersRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersRemote.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ControllersRemote.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersRemote.Location = New System.Drawing.Point(32, 320)
-        Me.LinkLabel_ControllersRemote.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
+        Me.LinkLabel_ControllersRemote.Location = New System.Drawing.Point(32, 263)
+        Me.LinkLabel_ControllersRemote.Margin = New System.Windows.Forms.Padding(32, 3, 3, 3)
         Me.LinkLabel_ControllersRemote.Name = "LinkLabel_ControllersRemote"
         Me.LinkLabel_ControllersRemote.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_ControllersRemote.Size = New System.Drawing.Size(105, 19)
@@ -370,8 +336,8 @@ Partial Class FormMain
         Me.LinkLabel_ControllersGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersGeneral.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ControllersGeneral.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersGeneral.Location = New System.Drawing.Point(32, 290)
-        Me.LinkLabel_ControllersGeneral.Margin = New System.Windows.Forms.Padding(32, 8, 3, 3)
+        Me.LinkLabel_ControllersGeneral.Location = New System.Drawing.Point(32, 238)
+        Me.LinkLabel_ControllersGeneral.Margin = New System.Windows.Forms.Padding(32, 3, 3, 3)
         Me.LinkLabel_ControllersGeneral.Name = "LinkLabel_ControllersGeneral"
         Me.LinkLabel_ControllersGeneral.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_ControllersGeneral.Size = New System.Drawing.Size(65, 19)
@@ -390,8 +356,8 @@ Partial Class FormMain
         Me.LinkLabel_Trackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Trackers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_Trackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 453)
-        Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 376)
+        Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_Trackers.Name = "LinkLabel_Trackers"
         Me.LinkLabel_Trackers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_Trackers.Size = New System.Drawing.Size(148, 19)
@@ -410,8 +376,8 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_HMDs.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_HMDs.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 410)
-        Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 8, 3, 3)
+        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 338)
+        Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
         Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
         Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_HMDs.Size = New System.Drawing.Size(131, 32)
@@ -426,7 +392,7 @@ Partial Class FormMain
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Right
         Me.Panel3.Location = New System.Drawing.Point(228, 0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(1, 697)
+        Me.Panel3.Size = New System.Drawing.Size(1, 761)
         Me.Panel3.TabIndex = 0
         '
         'LinkLabel_Controllers
@@ -439,8 +405,8 @@ Partial Class FormMain
         Me.LinkLabel_Controllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 263)
-        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
+        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 216)
+        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
         Me.LinkLabel_Controllers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_Controllers.Size = New System.Drawing.Size(164, 19)
@@ -454,7 +420,7 @@ Partial Class FormMain
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(17, 218)
+        Me.Label2.Location = New System.Drawing.Point(17, 187)
         Me.Label2.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(144, 13)
@@ -469,24 +435,18 @@ Partial Class FormMain
         Me.ClientSize = New System.Drawing.Size(1055, 761)
         Me.Controls.Add(Me.Panel_Pages)
         Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.Panel2)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(800, 600)
         Me.Name = "FormMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "PSMoveServiceEx - Virtual Device Manager"
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
     Friend WithEvents Panel_Pages As Panel
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents Label1 As Label
-    Friend WithEvents Button_RestartPSMS As Button
     Friend WithEvents Label_Version As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents LinkLabel_Controllers As LinkLabel
@@ -498,13 +458,13 @@ Partial Class FormMain
     Friend WithEvents LinkLabel_ControllersGeneral As LinkLabel
     Friend WithEvents LinkLabel_ControllersVMT As LinkLabel
     Friend WithEvents LinkLabel_ControllersAttachments As LinkLabel
-    Friend WithEvents LinkLabel1 As LinkLabel
+    Friend WithEvents LinkLabel_RunPSMS As LinkLabel
     Friend WithEvents Label3 As Label
-    Friend WithEvents LinkLabel3 As LinkLabel
+    Friend WithEvents LinkLabel_RunPSMSTool As LinkLabel
     Friend WithEvents LinkLabel_InstallCameraDrivers As LinkLabel
     Friend WithEvents Label4 As Label
     Friend WithEvents LinkLabel_FactoryResetService As LinkLabel
     Friend WithEvents LinkLabel_UninstallCameraDrivers As LinkLabel
-    Friend WithEvents LinkLabel4 As LinkLabel
-    Friend WithEvents LinkLabel2 As LinkLabel
+    Friend WithEvents LinkLabel_RestartPSMS As LinkLabel
+    Friend WithEvents LinkLabel_StopPSMS As LinkLabel
 End Class
