@@ -740,7 +740,7 @@ Public Class UCVirtualMotionTracker
 
     Private Sub ToolStripMenuItem_DriverRegister_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_DriverRegister.Click
         Try
-            If (Process.GetProcessesByName("SteamVR").Count > 0) Then
+            If (Process.GetProcessesByName("vrserver").Count > 0) Then
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
@@ -770,7 +770,7 @@ Public Class UCVirtualMotionTracker
 
     Private Sub ToolStripMenuItem_DriverUnregister_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_DriverUnregister.Click
         Try
-            If (Process.GetProcessesByName("SteamVR").Count > 0) Then
+            If (Process.GetProcessesByName("vrserver").Count > 0) Then
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
