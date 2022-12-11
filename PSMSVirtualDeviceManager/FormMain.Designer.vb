@@ -28,6 +28,9 @@ Partial Class FormMain
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
         Me.Panel_Pages = New System.Windows.Forms.Panel()
+        Me.TableLayoutPanel_Title = New System.Windows.Forms.TableLayoutPanel()
+        Me.Label_MainTitle = New System.Windows.Forms.Label()
+        Me.Label_MainText = New System.Windows.Forms.Label()
         Me.Label_Version = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.LinkLabel_RestartPSMS = New System.Windows.Forms.LinkLabel()
@@ -48,12 +51,9 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label_MainTitle = New System.Windows.Forms.Label()
-        Me.Label_MainText = New System.Windows.Forms.Label()
-        Me.TableLayoutPanel_Title = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel_Pages.SuspendLayout()
-        Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel_Title.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel_Pages
@@ -65,6 +65,47 @@ Partial Class FormMain
         Me.Panel_Pages.Name = "Panel_Pages"
         Me.Panel_Pages.Size = New System.Drawing.Size(826, 761)
         Me.Panel_Pages.TabIndex = 1
+        '
+        'TableLayoutPanel_Title
+        '
+        Me.TableLayoutPanel_Title.ColumnCount = 3
+        Me.TableLayoutPanel_Title.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel_Title.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 500.0!))
+        Me.TableLayoutPanel_Title.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel_Title.Controls.Add(Me.Label_MainTitle, 1, 1)
+        Me.TableLayoutPanel_Title.Controls.Add(Me.Label_MainText, 1, 2)
+        Me.TableLayoutPanel_Title.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel_Title.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel_Title.Name = "TableLayoutPanel_Title"
+        Me.TableLayoutPanel_Title.RowCount = 4
+        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100.0!))
+        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100.0!))
+        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel_Title.Size = New System.Drawing.Size(826, 761)
+        Me.TableLayoutPanel_Title.TabIndex = 2
+        '
+        'Label_MainTitle
+        '
+        Me.Label_MainTitle.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_MainTitle.ForeColor = System.Drawing.SystemColors.ControlDark
+        Me.Label_MainTitle.Location = New System.Drawing.Point(166, 280)
+        Me.Label_MainTitle.Name = "Label_MainTitle"
+        Me.Label_MainTitle.Size = New System.Drawing.Size(494, 100)
+        Me.Label_MainTitle.TabIndex = 0
+        Me.Label_MainTitle.Text = "Welcome to the Virtual Device Manager"
+        Me.Label_MainTitle.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        '
+        'Label_MainText
+        '
+        Me.Label_MainText.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_MainText.ForeColor = System.Drawing.SystemColors.ControlDark
+        Me.Label_MainText.Location = New System.Drawing.Point(166, 380)
+        Me.Label_MainText.Name = "Label_MainText"
+        Me.Label_MainText.Size = New System.Drawing.Size(494, 100)
+        Me.Label_MainText.TabIndex = 1
+        Me.Label_MainText.Text = "Use the sidebar on the left for navigation."
+        Me.Label_MainText.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Label_Version
         '
@@ -122,10 +163,10 @@ Partial Class FormMain
         Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_RestartPSMS.Name = "LinkLabel_RestartPSMS"
         Me.LinkLabel_RestartPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel_RestartPSMS.Size = New System.Drawing.Size(150, 19)
+        Me.LinkLabel_RestartPSMS.Size = New System.Drawing.Size(99, 19)
         Me.LinkLabel_RestartPSMS.TabIndex = 16
         Me.LinkLabel_RestartPSMS.TabStop = True
-        Me.LinkLabel_RestartPSMS.Text = "      Restart PSMoveServiceEx"
+        Me.LinkLabel_RestartPSMS.Text = "      Restart Service"
         Me.LinkLabel_RestartPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_StopPSMS
@@ -142,10 +183,10 @@ Partial Class FormMain
         Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_StopPSMS.Name = "LinkLabel_StopPSMS"
         Me.LinkLabel_StopPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel_StopPSMS.Size = New System.Drawing.Size(138, 19)
+        Me.LinkLabel_StopPSMS.Size = New System.Drawing.Size(87, 19)
         Me.LinkLabel_StopPSMS.TabIndex = 15
         Me.LinkLabel_StopPSMS.TabStop = True
-        Me.LinkLabel_StopPSMS.Text = "      Stop PSMoveServiceEx"
+        Me.LinkLabel_StopPSMS.Text = "      Stop Service"
         Me.LinkLabel_StopPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_UninstallCameraDrivers
@@ -234,10 +275,10 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_RunPSMSTool.Name = "LinkLabel_RunPSMSTool"
         Me.LinkLabel_RunPSMSTool.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel_RunPSMSTool.Size = New System.Drawing.Size(160, 19)
+        Me.LinkLabel_RunPSMSTool.Size = New System.Drawing.Size(147, 19)
         Me.LinkLabel_RunPSMSTool.TabIndex = 10
         Me.LinkLabel_RunPSMSTool.TabStop = True
-        Me.LinkLabel_RunPSMSTool.Text = "      Run PSMoveServiceEx Tool"
+        Me.LinkLabel_RunPSMSTool.Text = "      Run Service Config Tool"
         Me.LinkLabel_RunPSMSTool.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_RunPSMS
@@ -254,10 +295,10 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_RunPSMS.Name = "LinkLabel_RunPSMS"
         Me.LinkLabel_RunPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel_RunPSMS.Size = New System.Drawing.Size(135, 19)
+        Me.LinkLabel_RunPSMS.Size = New System.Drawing.Size(84, 19)
         Me.LinkLabel_RunPSMS.TabIndex = 8
         Me.LinkLabel_RunPSMS.TabStop = True
-        Me.LinkLabel_RunPSMS.Text = "      Run PSMoveServiceEx"
+        Me.LinkLabel_RunPSMS.Text = "      Run Service"
         Me.LinkLabel_RunPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'Label3
@@ -268,9 +309,9 @@ Partial Class FormMain
         Me.Label3.Location = New System.Drawing.Point(17, 32)
         Me.Label3.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(43, 13)
+        Me.Label3.Size = New System.Drawing.Size(98, 13)
         Me.Label3.TabIndex = 7
-        Me.Label3.Text = "Service"
+        Me.Label3.Text = "PSMoveServiceEx"
         '
         'LinkLabel_ControllersVMT
         '
@@ -433,47 +474,6 @@ Partial Class FormMain
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Virtual Devices Navigation"
         '
-        'Label_MainTitle
-        '
-        Me.Label_MainTitle.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_MainTitle.ForeColor = System.Drawing.SystemColors.ControlDark
-        Me.Label_MainTitle.Location = New System.Drawing.Point(166, 280)
-        Me.Label_MainTitle.Name = "Label_MainTitle"
-        Me.Label_MainTitle.Size = New System.Drawing.Size(494, 100)
-        Me.Label_MainTitle.TabIndex = 0
-        Me.Label_MainTitle.Text = "Welcome to the Virtual Device Manager"
-        Me.Label_MainTitle.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        '
-        'Label_MainText
-        '
-        Me.Label_MainText.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_MainText.ForeColor = System.Drawing.SystemColors.ControlDark
-        Me.Label_MainText.Location = New System.Drawing.Point(166, 380)
-        Me.Label_MainText.Name = "Label_MainText"
-        Me.Label_MainText.Size = New System.Drawing.Size(494, 100)
-        Me.Label_MainText.TabIndex = 1
-        Me.Label_MainText.Text = "Use the sidebar on the left for navigation."
-        Me.Label_MainText.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'TableLayoutPanel_Title
-        '
-        Me.TableLayoutPanel_Title.ColumnCount = 3
-        Me.TableLayoutPanel_Title.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel_Title.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 500.0!))
-        Me.TableLayoutPanel_Title.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel_Title.Controls.Add(Me.Label_MainTitle, 1, 1)
-        Me.TableLayoutPanel_Title.Controls.Add(Me.Label_MainText, 1, 2)
-        Me.TableLayoutPanel_Title.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel_Title.Location = New System.Drawing.Point(0, 0)
-        Me.TableLayoutPanel_Title.Name = "TableLayoutPanel_Title"
-        Me.TableLayoutPanel_Title.RowCount = 4
-        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100.0!))
-        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100.0!))
-        Me.TableLayoutPanel_Title.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel_Title.Size = New System.Drawing.Size(826, 761)
-        Me.TableLayoutPanel_Title.TabIndex = 2
-        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -489,9 +489,9 @@ Partial Class FormMain
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "PSMoveServiceEx - Virtual Device Manager"
         Me.Panel_Pages.ResumeLayout(False)
+        Me.TableLayoutPanel_Title.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.TableLayoutPanel_Title.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
