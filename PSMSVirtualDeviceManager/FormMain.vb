@@ -533,4 +533,18 @@ Public Class FormMain
             g_bConfigsLoaded = True
         End Sub
     End Class
+
+    Private Sub LinkLabel_Github_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Github.LinkClicked
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_Updates_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Updates.LinkClicked
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
+        Catch ex As Exception
+        End Try
+    End Sub
 End Class
