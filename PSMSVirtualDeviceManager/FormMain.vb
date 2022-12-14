@@ -376,6 +376,19 @@ Public Class FormMain
         End Try
     End Sub
 
+    Private Sub LinkLabel_SetServicePath_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SetServicePath.LinkClicked
+        Try
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (mConfig.SearchForService) Then
+                mConfig.SaveConfig()
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         If (e.CloseReason <> CloseReason.UserClosing) Then
             Return
