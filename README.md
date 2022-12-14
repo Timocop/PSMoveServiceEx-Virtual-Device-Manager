@@ -4,7 +4,7 @@ With this program you can control any virtual device in PSMoveServiceEx and even
 
 ## Known Issues
  - When running OSC Server in ``Virtual Motion Tracker`` before launching SteamVR, some trackers might not load correctly when SteamVR loads. Please start OSC Server only when SteamVR is fully loaded. Will be fixed in the future.
- - Webcams in ``Virtual Trackers`` are still in prototyping phase. There might be tracking issues when using Webcams. PSMoveServiceEx distortion calibration does not seem to work correctly and worsens the tracking quality, use default PSEye lens correction instead.
+ - Webcams in ``Virtual Trackers`` are still in prototyping phase. There might be tracking issues when using Webcams because every Webcam is different.
  - Left and Right Controller roles seem to behave inconsistently. More testing is required.
 
 ## Images
