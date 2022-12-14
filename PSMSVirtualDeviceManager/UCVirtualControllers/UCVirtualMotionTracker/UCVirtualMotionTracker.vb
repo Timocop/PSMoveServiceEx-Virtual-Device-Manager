@@ -744,7 +744,7 @@ Public Class UCVirtualMotionTracker
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
-            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_ROOT_NAME)
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_DRIVER_ROOT_PATH)
             If (Not IO.Directory.Exists(sDriverRoot)) Then
                 Throw New ArgumentException("Could not find driver root folder!")
             End If
@@ -766,7 +766,7 @@ Public Class UCVirtualMotionTracker
                     Continue For
                 End If
 
-                If (sDriverPath.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_ROOT_NAME.ToLowerInvariant)) Then
+                If (sDriverPath.ToLowerInvariant.EndsWith(String.Format("\{0}", ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant))) Then
                     Dim sMsg As New Text.StringBuilder
                     sMsg.AppendLine("Another version of the SteamVR driver is already installed!")
                     sMsg.AppendLine("Do you want to remove the following outdated driver?")
@@ -804,7 +804,7 @@ Public Class UCVirtualMotionTracker
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
-            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_ROOT_NAME)
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_DRIVER_ROOT_PATH)
 
             Dim mConfig As New ClassOpenVRConfig()
             If (Not mConfig.LoadConfig()) Then
