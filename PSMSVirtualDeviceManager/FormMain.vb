@@ -7,6 +7,8 @@ Public Class FormMain
     Public g_mUCVirtualTrackers As UCVirtualTrackers
     Public g_mPSMoveServiceCAPI As ClassServiceClient
 
+    Private g_bIgnoreEvents As Boolean = False
+
     Enum ENUM_PAGE
         VIRTUAL_CONTROLLERS
         VIRTUAL_HMDS
@@ -373,6 +375,33 @@ Public Class FormMain
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup
+        Try
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            Try
+                g_bIgnoreEvents = True
+
+                If (mConfig.FileExist) Then
+                    ToolTip_Service.ToolTipTitle = "Service path:"
+                    ToolTip_Service.SetToolTip(e.AssociatedControl, mConfig.m_FileName)
+                Else
+                    e.Cancel = True
+                End If
+            Finally
+                g_bIgnoreEvents = False
+
+            End Try
+        Catch ex As Exception
+
         End Try
     End Sub
 
