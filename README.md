@@ -11,6 +11,9 @@ With this program you can control any virtual device in PSMoveServiceEx and even
  
  - Currently only PSmove controllers are supported for ``Virtual Motion Tracker`` trackers.
  *(DualShock4, Navi controllers, gamepads and other third party devices will be added in the future)*
+ 
+ - Installing Playstation Eye Drivers via Virtual Device Manager does not work on Windows 10 and higher please use Zadig instead.
+**Zadig is incompatible with Windows 11!**
 
 ## Images
 
