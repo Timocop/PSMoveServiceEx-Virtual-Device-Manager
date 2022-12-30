@@ -2,7 +2,7 @@
 A virtual device manager for PSMoveServiceEx.
 With this program you can control any virtual device in PSMoveServiceEx and even use them in SteamVR or other services!
 
-## Known Issues and Limitatations
+## Known Issues and Limitations
  - When running OSC Server in ``Virtual Motion Tracker`` before launching SteamVR, some trackers might not load correctly when SteamVR loads. Please start OSC Server only when SteamVR is fully loaded. Will be fixed in the future.
 
  - Webcams in ``Virtual Trackers`` are still in prototyping phase. There might be tracking issues when using Webcams because every Webcam is different.
@@ -12,7 +12,7 @@ With this program you can control any virtual device in PSMoveServiceEx and even
  - Currently only PSmove controllers are supported for ``Virtual Motion Tracker`` trackers.
  *(DualShock4, Navi controllers, gamepads and other third party devices will be added in the future)*
  
- - Installing Playstation Eye Drivers via Virtual Device Manager does not work on Windows 10 and higher please use Zadig instead.
+ - Installing Playstation Eye Drivers via Virtual Device Manager does not work on Windows 10 please use Zadig instead.
 **Zadig is incompatible with Windows 11!**
 
 ## Images
