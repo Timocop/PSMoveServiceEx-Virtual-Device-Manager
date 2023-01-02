@@ -34,6 +34,8 @@ Partial Class FormMain
         Me.Label_MainText = New System.Windows.Forms.Label()
         Me.Label_Version = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_RemoteStartSocket = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_VMTStartOscServer = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_SetServicePath = New System.Windows.Forms.LinkLabel()
@@ -55,6 +57,7 @@ Partial Class FormMain
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer = New System.Windows.Forms.LinkLabel()
         Me.Panel_Pages.SuspendLayout()
         Me.TableLayoutPanel_Title.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -128,6 +131,9 @@ Partial Class FormMain
         Me.Panel1.AutoScroll = True
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel1.Controls.Add(Me.LinkLabel1LinkLabel_VMTPauseOscServer)
+        Me.Panel1.Controls.Add(Me.LinkLabel_RemoteStartSocket)
+        Me.Panel1.Controls.Add(Me.LinkLabel_VMTStartOscServer)
         Me.Panel1.Controls.Add(Me.LinkLabel_Updates)
         Me.Panel1.Controls.Add(Me.LinkLabel_Github)
         Me.Panel1.Controls.Add(Me.LinkLabel_SetServicePath)
@@ -154,6 +160,46 @@ Partial Class FormMain
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
+        '
+        'LinkLabel_RemoteStartSocket
+        '
+        Me.LinkLabel_RemoteStartSocket.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_RemoteStartSocket.AutoSize = True
+        Me.LinkLabel_RemoteStartSocket.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_RemoteStartSocket.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RemoteStartSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.LinkLabel_RemoteStartSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_RemoteStartSocket.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_RemoteStartSocket.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(57, 301)
+        Me.LinkLabel_RemoteStartSocket.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.LinkLabel_RemoteStartSocket.Name = "LinkLabel_RemoteStartSocket"
+        Me.LinkLabel_RemoteStartSocket.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_RemoteStartSocket.Size = New System.Drawing.Size(86, 19)
+        Me.LinkLabel_RemoteStartSocket.TabIndex = 21
+        Me.LinkLabel_RemoteStartSocket.TabStop = True
+        Me.LinkLabel_RemoteStartSocket.Text = "      Start Socket"
+        Me.LinkLabel_RemoteStartSocket.VisitedLinkColor = System.Drawing.Color.Navy
+        '
+        'LinkLabel_VMTStartOscServer
+        '
+        Me.LinkLabel_VMTStartOscServer.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_VMTStartOscServer.AutoSize = True
+        Me.LinkLabel_VMTStartOscServer.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_VMTStartOscServer.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_VMTStartOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.LinkLabel_VMTStartOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_VMTStartOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_VMTStartOscServer.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(57, 376)
+        Me.LinkLabel_VMTStartOscServer.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.LinkLabel_VMTStartOscServer.Name = "LinkLabel_VMTStartOscServer"
+        Me.LinkLabel_VMTStartOscServer.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel_VMTStartOscServer.Size = New System.Drawing.Size(108, 19)
+        Me.LinkLabel_VMTStartOscServer.TabIndex = 20
+        Me.LinkLabel_VMTStartOscServer.TabStop = True
+        Me.LinkLabel_VMTStartOscServer.Text = "      Start OSC Server"
+        Me.LinkLabel_VMTStartOscServer.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_Updates
         '
@@ -269,7 +315,7 @@ Partial Class FormMain
         Me.LinkLabel_FactoryResetService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_FactoryResetService.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_FactoryResetService.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_FactoryResetService.Location = New System.Drawing.Point(17, 491)
+        Me.LinkLabel_FactoryResetService.Location = New System.Drawing.Point(17, 566)
         Me.LinkLabel_FactoryResetService.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_FactoryResetService.Name = "LinkLabel_FactoryResetService"
         Me.LinkLabel_FactoryResetService.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
@@ -284,7 +330,7 @@ Partial Class FormMain
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(17, 440)
+        Me.Label4.Location = New System.Drawing.Point(17, 515)
         Me.Label4.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(93, 13)
@@ -301,7 +347,7 @@ Partial Class FormMain
         Me.LinkLabel_InstallCameraDrivers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_InstallCameraDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_InstallCameraDrivers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_InstallCameraDrivers.Location = New System.Drawing.Point(17, 469)
+        Me.LinkLabel_InstallCameraDrivers.Location = New System.Drawing.Point(17, 544)
         Me.LinkLabel_InstallCameraDrivers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_InstallCameraDrivers.Name = "LinkLabel_InstallCameraDrivers"
         Me.LinkLabel_InstallCameraDrivers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
@@ -375,7 +421,7 @@ Partial Class FormMain
         Me.LinkLabel_ControllersVMT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersVMT.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ControllersVMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersVMT.Location = New System.Drawing.Point(32, 326)
+        Me.LinkLabel_ControllersVMT.Location = New System.Drawing.Point(32, 351)
         Me.LinkLabel_ControllersVMT.Margin = New System.Windows.Forms.Padding(32, 3, 3, 3)
         Me.LinkLabel_ControllersVMT.Name = "LinkLabel_ControllersVMT"
         Me.LinkLabel_ControllersVMT.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
@@ -395,7 +441,7 @@ Partial Class FormMain
         Me.LinkLabel_ControllersAttachments.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersAttachments.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_ControllersAttachments.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 301)
+        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 326)
         Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 3, 3, 3)
         Me.LinkLabel_ControllersAttachments.Name = "LinkLabel_ControllersAttachments"
         Me.LinkLabel_ControllersAttachments.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
@@ -455,7 +501,7 @@ Partial Class FormMain
         Me.LinkLabel_Trackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Trackers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_Trackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 389)
+        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 464)
         Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_Trackers.Name = "LinkLabel_Trackers"
         Me.LinkLabel_Trackers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
@@ -475,7 +521,7 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_HMDs.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_HMDs.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 351)
+        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 426)
         Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
         Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
         Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
@@ -529,6 +575,26 @@ Partial Class FormMain
         'ToolTip_Service
         '
         '
+        'LinkLabel1LinkLabel_VMTPauseOscServer
+        '
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.AutoSize = True
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Location = New System.Drawing.Point(57, 401)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Name = "LinkLabel1LinkLabel_VMTPauseOscServer"
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Size = New System.Drawing.Size(114, 19)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.TabIndex = 22
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.TabStop = True
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Text = "      Pause OSC Server"
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.VisitedLinkColor = System.Drawing.Color.Navy
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -577,4 +643,7 @@ Partial Class FormMain
     Friend WithEvents ToolTip_Service As ToolTip
     Friend WithEvents LinkLabel_Github As LinkLabel
     Friend WithEvents LinkLabel_Updates As LinkLabel
+    Friend WithEvents LinkLabel_VMTStartOscServer As LinkLabel
+    Friend WithEvents LinkLabel_RemoteStartSocket As LinkLabel
+    Friend WithEvents LinkLabel1LinkLabel_VMTPauseOscServer As LinkLabel
 End Class

@@ -175,6 +175,40 @@ Public Class FormMain
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
     End Sub
 
+    Private Sub LinkLabel_RemoteStartSocket_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RemoteStartSocket.LinkClicked
+        If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
+
+        g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket.PerformClick()
+        g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
+    End Sub
+
+    Private Sub LinkLabel_VMTStartOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMTStartOscServer.LinkClicked
+        If (g_mUCVirtualControllers.g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualControllers.g_mUCVirtualMotionTracker.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
+
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Button_StartOscServer.PerformClick()
+    End Sub
+
+    Private Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
+        If (g_mUCVirtualControllers.g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualControllers.g_mUCVirtualMotionTracker.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
+
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Button_PauseOscServer.PerformClick()
+    End Sub
+
     Private Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
         If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
             Return
