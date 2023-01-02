@@ -48,6 +48,8 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage5 = New System.Windows.Forms.TabPage()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.CheckBox_EnableHeptics = New System.Windows.Forms.CheckBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.CheckBox_DisableBasestations = New System.Windows.Forms.CheckBox()
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
@@ -72,7 +74,6 @@ Partial Class UCVirtualMotionTracker
         Me.Button_PauseOscServer = New System.Windows.Forms.Button()
         Me.Button_StartOscServer = New System.Windows.Forms.Button()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.CheckBox_EnableHeptics = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -188,7 +189,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage2.Size = New System.Drawing.Size(760, 451)
         Me.TabPage2.TabIndex = 3
-        Me.TabPage2.Text = "Controller Settings"
+        Me.TabPage2.Text = "Settings"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
         'TabControl2
@@ -220,13 +221,12 @@ Partial Class UCVirtualMotionTracker
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox1.Controls.Add(Me.CheckBox_EnableHeptics)
         Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcutClick)
         Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcuts)
         Me.GroupBox1.Controls.Add(Me.LinkLabel_JoystickShortcutsInfo)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(728, 98)
+        Me.GroupBox1.Size = New System.Drawing.Size(728, 76)
         Me.GroupBox1.TabIndex = 44
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "General"
@@ -273,7 +273,7 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2.Controls.Add(Me.Label5)
         Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadClickMethod)
         Me.GroupBox2.Controls.Add(Me.Label4)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 110)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 88)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(728, 81)
         Me.GroupBox2.TabIndex = 46
@@ -322,6 +322,8 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage5
         '
+        Me.TabPage5.Controls.Add(Me.Label7)
+        Me.TabPage5.Controls.Add(Me.CheckBox_EnableHeptics)
         Me.TabPage5.Controls.Add(Me.Label6)
         Me.TabPage5.Controls.Add(Me.CheckBox_DisableBasestations)
         Me.TabPage5.Location = New System.Drawing.Point(4, 22)
@@ -330,6 +332,31 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage5.TabIndex = 1
         Me.TabPage5.Text = "Other"
         Me.TabPage5.UseVisualStyleBackColor = True
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Label7.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label7.Location = New System.Drawing.Point(16, 119)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label7.Size = New System.Drawing.Size(497, 45)
+        Me.Label7.TabIndex = 47
+        Me.Label7.Text = resources.GetString("Label7.Text")
+        '
+        'CheckBox_EnableHeptics
+        '
+        Me.CheckBox_EnableHeptics.AutoSize = True
+        Me.CheckBox_EnableHeptics.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_EnableHeptics.Location = New System.Drawing.Point(16, 98)
+        Me.CheckBox_EnableHeptics.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.CheckBox_EnableHeptics.Name = "CheckBox_EnableHeptics"
+        Me.CheckBox_EnableHeptics.Size = New System.Drawing.Size(338, 18)
+        Me.CheckBox_EnableHeptics.TabIndex = 46
+        Me.CheckBox_EnableHeptics.Text = "Enable haptic feedback (PSMove && DualShock 4 controllers)"
+        Me.CheckBox_EnableHeptics.UseVisualStyleBackColor = True
         '
         'Label6
         '
@@ -604,18 +631,6 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
         '
-        'CheckBox_EnableHeptics
-        '
-        Me.CheckBox_EnableHeptics.AutoSize = True
-        Me.CheckBox_EnableHeptics.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_EnableHeptics.Location = New System.Drawing.Point(19, 68)
-        Me.CheckBox_EnableHeptics.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_EnableHeptics.Name = "CheckBox_EnableHeptics"
-        Me.CheckBox_EnableHeptics.Size = New System.Drawing.Size(152, 18)
-        Me.CheckBox_EnableHeptics.TabIndex = 45
-        Me.CheckBox_EnableHeptics.Text = "Enable heptic feedback"
-        Me.CheckBox_EnableHeptics.UseVisualStyleBackColor = True
-        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -699,4 +714,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents CheckBox_DisableBasestations As CheckBox
     Friend WithEvents Label6 As Label
     Friend WithEvents CheckBox_EnableHeptics As CheckBox
+    Friend WithEvents Label7 As Label
 End Class
