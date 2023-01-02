@@ -9,6 +9,9 @@ Public Class FormMain
 
     Private g_bIgnoreEvents As Boolean = False
 
+    Private g_mDriverInstallThread As Threading.Thread = Nothing
+    Private g_mDriverInstallFormLoad As FormLoading = Nothing
+
     Enum ENUM_PAGE
         VIRTUAL_CONTROLLERS
         VIRTUAL_HMDS
@@ -173,54 +176,55 @@ Public Class FormMain
     End Sub
 
     Private Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
-        Try
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
-            End If
+        If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
+            Return
+        End If
 
-            Dim sMessage As New Text.StringBuilder
-            sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
-            sMessage.AppendLine("Already existing drivers will be replaced!")
-            sMessage.AppendLine()
-            sMessage.AppendLine("Do you want to continue?")
-            If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                Return
-            End If
+        g_mDriverInstallThread = New Threading.Thread(Sub()
+                                                          Try
+                                                              If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                                                                  Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+                                                              End If
 
-            Dim mDriverInstaller As New ClassLibusbDriver
-            mDriverInstaller.InstallDriver64()
+                                                              Dim sMessage As New Text.StringBuilder
+                                                              sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
+                                                              sMessage.AppendLine("Already existing drivers will be replaced!")
+                                                              sMessage.AppendLine()
+                                                              sMessage.AppendLine("Do you want to continue?")
+                                                              If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                                                                  Return
+                                                              End If
 
-            MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
+                                                              Me.BeginInvoke(Sub()
+                                                                                 If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                                                     g_mDriverInstallFormLoad.Dispose()
+                                                                                     g_mDriverInstallFormLoad = Nothing
+                                                                                 End If
 
-    Private Sub LinkLabel_UninstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallCameraDrivers.LinkClicked
-        Try
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
-            End If
+                                                                                 g_mDriverInstallFormLoad = New FormLoading
+                                                                                 g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                                                                 g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                                             End Sub)
 
-            Dim sMessage As New Text.StringBuilder
-            sMessage.AppendLine("You are about to uninstall LibUSB drivers for Playstation Eye Cameras.")
-            sMessage.AppendLine()
-            sMessage.AppendLine("WARNING:")
-            sMessage.AppendLine("All USB Controllers and USB Hubs will be restarted while the uninstallation process!")
-            sMessage.AppendLine("USB input devices (such as keyboard and mouse) might not respond during the uninstallation process!")
-            sMessage.AppendLine()
-            sMessage.AppendLine("Do you want to continue?")
-            If (MessageBox.Show(sMessage.ToString, "Driver Uninstallation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                Return
-            End If
+                                                              Dim mDriverInstaller As New ClassLibusbDriver
+                                                              mDriverInstaller.InstallDriver64()
 
-            Dim mDriverInstaller As New ClassLibusbDriver
-            mDriverInstaller.UninstallDriver64()
-
-            MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+                                                              MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                                          Catch ex As Threading.ThreadAbortException
+                                                              Throw
+                                                          Catch ex As Exception
+                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                          Finally
+                                                              Me.BeginInvoke(Sub()
+                                                                                 If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                                                     g_mDriverInstallFormLoad.Dispose()
+                                                                                     g_mDriverInstallFormLoad = Nothing
+                                                                                 End If
+                                                                             End Sub)
+                                                          End Try
+                                                      End Sub)
+        g_mDriverInstallThread.IsBackground = True
+        g_mDriverInstallThread.Start()
     End Sub
 
     Private Sub LinkLabel_FactoryResetService_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_FactoryResetService.LinkClicked

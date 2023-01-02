@@ -147,6 +147,12 @@
     <Compile Include="Classes\ClassSteamVRConfig.vb" />
     <Compile Include="Classes\ClassUtils.vb" />
     <Compile Include="Classes\ClassVmtConst.vb" />
+    <Compile Include="Classes\FormLoading.Designer.vb">
+      <DependentUpon>FormLoading.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\FormLoading.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -255,6 +261,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Classes\FormLoading.resx">
+      <DependentUpon>FormLoading.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.vb</DependentUpon>
     </EmbeddedResource>
