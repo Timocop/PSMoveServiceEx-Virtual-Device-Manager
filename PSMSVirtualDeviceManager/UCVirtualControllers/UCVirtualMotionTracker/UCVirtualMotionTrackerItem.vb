@@ -171,7 +171,25 @@ Public Class UCVirtualMotionTrackerItem
                                        g_sDriverPath = sDriverPath
                                    End Sub)
                 Case "/VMT/Out/Haptic"
-                    ' No Le Hep
+                    If (mMessage.Count < 4) Then
+                        Return
+                    End If
+
+                    Dim iIndex As Integer = CInt(mMessage(0))
+                    Dim fFreqency As Single = CSng(mMessage(1))
+                    Dim fAmplitude As Single = CSng(mMessage(2))
+                    Dim fDuration As Single = CSng(mMessage(3))
+
+                    If (g_mClassIO Is Nothing) Then
+                        Return
+                    End If
+
+                    If (g_mClassIO.m_VmtTracker <> iIndex) Then
+                        Return
+                    End If
+
+                    g_mClassIO.SetHepticFeedback(fFreqency, fAmplitude, fDuration)
+
                 Case "/VMT/Out/Unavailable"
                     If (mMessage.Count < 2) Then
                         Return
@@ -543,6 +561,23 @@ Public Class UCVirtualMotionTrackerItem
         Private g_mTrackerData As New Dictionary(Of Integer, ClassServiceClient.STRUC_TRACKER_DATA)
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
+        Private g_mHeptic As New STRUC_HEPTIC_ITEM
+
+        Class STRUC_HEPTIC_ITEM
+            Const DEFAULT_HAPTIC_FREQUENCY As Single = 200.0F
+            Const DEFAULT_HAPTIC_AMPLITUDE As Single = 1.0F
+            Const DEFAULT_HAPTIC_DURATION As Single = 0.0F
+
+            Public fFrequency As Single = DEFAULT_HAPTIC_FREQUENCY
+            Public fAmplitude As Single = DEFAULT_HAPTIC_AMPLITUDE
+            Public fDuration As Single = DEFAULT_HAPTIC_DURATION
+
+            Public Sub Clear()
+                fFrequency = DEFAULT_HAPTIC_FREQUENCY
+                fAmplitude = DEFAULT_HAPTIC_AMPLITUDE
+                fDuration = DEFAULT_HAPTIC_DURATION
+            End Sub
+        End Class
 
         Class STRUC_OSC_DATA_PACK
             Public mPosition As New Vector3(0, 0, 0)
@@ -651,6 +686,19 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
+        Public Sub SetHepticFeedback(fFrequency As Single, fAmplitude As Single, fDuration As Single)
+            Dim mClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
+            If (Not mClassControllerSettings.m_EnableHepticFeedback) Then
+                Return
+            End If
+
+            SyncLock _ThreadLock
+                g_mHeptic.fFrequency = fFrequency
+                g_mHeptic.fAmplitude = fAmplitude
+                g_mHeptic.fDuration = fDuration
+            End SyncLock
+        End Sub
+
         Public Sub Disable()
             If (g_mOscThread Is Nothing OrElse Not g_mOscThread.IsAlive) Then
                 Return
@@ -676,6 +724,9 @@ Public Class UCVirtualMotionTrackerItem
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
 
+            Dim mRumbleLastTimeSend As Date = Now
+            Dim mRumbleLastTimeSendValid As Boolean = False
+
             Const ENABLE_TRACKER As Integer = 1
             Const ENABLE_CONTROLLER_L As Integer = 2
             Const ENABLE_CONTROLLER_R As Integer = 3
@@ -683,7 +734,7 @@ Public Class UCVirtualMotionTrackerItem
             Const ENABLE_HTC_VIVE_TRACKER As Integer = 5
             Const ENABLE_HTC_VIVE_CONTROLLER_L As Integer = 6
             Const ENABLE_HTC_VIVE_CONTROLLER_R As Integer = 7
-            Const ENABLE_HTC_TRACKINGREFERENCE As Integer = 8
+            Const ENABLE_HTC_VIVE_LIGHTHOUSE As Integer = 8
 
             Const GEN_BUTTON_MOVE = 0
             Const GEN_BUTTON_MENU = 1
@@ -721,13 +772,60 @@ Public Class UCVirtualMotionTrackerItem
                         mTrackerDataUpdate.Restart()
                     End If
 
-                    Dim mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
+                    Dim mClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
                     Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
+                    Dim bEnableHepticFeedback As Boolean = mClassControllerSettings.m_EnableHepticFeedback
 
                     ' Get controller data
                     m_ControllerData = ClassServiceClient.m_ControllerData(g_iIndex)
 
                     If (m_ControllerData IsNot Nothing) Then
+                        ' Set controller rumble
+                        Select Case (True)
+                            Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                If (bEnableHepticFeedback) Then
+                                    Const MAX_RUMBLE_UPODATE_RATE As Single = 33.0F
+                                    Const MAX_PULSE_MICROSECONDS As Single = 5000.0F
+
+                                    Dim fHapticPulseDurationMicroSec As Single = (g_mHeptic.fDuration * 1000000.0F)
+
+                                    Dim bTimoutElapsed As Boolean = True
+
+                                    If (mRumbleLastTimeSendValid) Then
+                                        Dim mLastSend As TimeSpan = (Now - mRumbleLastTimeSend)
+
+                                        bTimoutElapsed = (mLastSend.TotalMilliseconds > MAX_RUMBLE_UPODATE_RATE)
+                                    End If
+
+                                    If (bTimoutElapsed) Then
+                                        Dim fRumble As Single = (fHapticPulseDurationMicroSec / MAX_PULSE_MICROSECONDS) * g_mHeptic.fAmplitude
+
+                                        If (g_mHeptic.fDuration > 0.0F) Then
+                                            If (fRumble < 0.35F) Then
+                                                fRumble = 0.35F
+                                            End If
+                                        End If
+
+                                        If (fRumble < 0.0F) Then
+                                            fRumble = 0.0F
+                                        End If
+
+                                        If (fRumble > 1.0F) Then
+                                            fRumble = 1.0F
+                                        End If
+
+                                        ClassServiceClient.SetControllerRumble(g_iIndex, fRumble)
+
+                                        mRumbleLastTimeSend = Now
+                                        mRumbleLastTimeSendValid = True
+
+                                        g_mHeptic.Clear()
+                                    End If
+                                Else
+                                    g_mHeptic.Clear()
+                                End If
+                        End Select
+
                         ' We got any new data?
                         If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
                             iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
@@ -1154,7 +1252,7 @@ Public Class UCVirtualMotionTrackerItem
                                     g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
-                                            ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_TRACKINGREFERENCE, 0.0F,
+                                            ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
                                             mPosition.X,
                                             mPosition.Y,
                                             mPosition.Z,

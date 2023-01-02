@@ -72,6 +72,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_PauseOscServer = New System.Windows.Forms.Button()
         Me.Button_StartOscServer = New System.Windows.Forms.Button()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.CheckBox_EnableHeptics = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -219,12 +220,13 @@ Partial Class UCVirtualMotionTracker
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox1.Controls.Add(Me.CheckBox_EnableHeptics)
         Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcutClick)
         Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcuts)
         Me.GroupBox1.Controls.Add(Me.LinkLabel_JoystickShortcutsInfo)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(728, 77)
+        Me.GroupBox1.Size = New System.Drawing.Size(728, 98)
         Me.GroupBox1.TabIndex = 44
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "General"
@@ -271,9 +273,9 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2.Controls.Add(Me.Label5)
         Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadClickMethod)
         Me.GroupBox2.Controls.Add(Me.Label4)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 89)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 110)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(728, 84)
+        Me.GroupBox2.Size = New System.Drawing.Size(728, 81)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "HTC Vive Emulation Settings"
@@ -602,6 +604,18 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
         '
+        'CheckBox_EnableHeptics
+        '
+        Me.CheckBox_EnableHeptics.AutoSize = True
+        Me.CheckBox_EnableHeptics.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_EnableHeptics.Location = New System.Drawing.Point(19, 68)
+        Me.CheckBox_EnableHeptics.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_EnableHeptics.Name = "CheckBox_EnableHeptics"
+        Me.CheckBox_EnableHeptics.Size = New System.Drawing.Size(152, 18)
+        Me.CheckBox_EnableHeptics.TabIndex = 45
+        Me.CheckBox_EnableHeptics.Text = "Enable heptic feedback"
+        Me.CheckBox_EnableHeptics.UseVisualStyleBackColor = True
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -684,4 +698,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents TabPage5 As TabPage
     Friend WithEvents CheckBox_DisableBasestations As CheckBox
     Friend WithEvents Label6 As Label
+    Friend WithEvents CheckBox_EnableHeptics As CheckBox
 End Class

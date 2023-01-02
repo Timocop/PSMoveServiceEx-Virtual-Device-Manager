@@ -269,7 +269,6 @@ Public Class ClassServiceClient
                                                         mSelectRecenterTime.Restart()
 
                                                     Case PSMButtonState.PSMButtonState_DOWN
-
                                                         If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
                                                             Dim mIdentity = New PSMQuatf With {
                                                                 .x = 0,
@@ -339,6 +338,13 @@ Public Class ClassServiceClient
             Throw
         Catch ex As Exception
         End Try
+    End Sub
+
+    Public Shared Sub SetControllerRumble(iIndex As Integer, fRumble As Single)
+        SyncLock __ClientLock
+            Dim mController As New Controllers(iIndex)
+            mController.SetControllerRumble(PSMControllerRumbleChannel.PSMControllerRumbleChannel_All, fRumble)
+        End SyncLock
     End Sub
 
     Shared ReadOnly Property m_ControllerData(i As Integer) As IControllerData
