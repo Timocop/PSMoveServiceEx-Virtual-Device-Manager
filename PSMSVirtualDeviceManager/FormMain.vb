@@ -365,6 +365,8 @@ Public Class FormMain
                 Throw New ArgumentException("PSMoveServiceEx executable not found. Please start manualy.")
             End If
 
+            Threading.Thread.Sleep(1000)
+
             Using mProcess As New Process
                 mProcess.StartInfo.FileName = sPSMSPath
                 mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sPSMSPath)
