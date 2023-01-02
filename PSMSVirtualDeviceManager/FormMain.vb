@@ -585,4 +585,11 @@ Public Class FormMain
         Catch ex As Exception
         End Try
     End Sub
+
+    Private Sub LinkLabel_RunSteamVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunSteamVR.LinkClicked
+        Try
+            Process.Start("steam://rungameid/250820")
+        Catch ex As Exception
+        End Try
+    End Sub
 End Class

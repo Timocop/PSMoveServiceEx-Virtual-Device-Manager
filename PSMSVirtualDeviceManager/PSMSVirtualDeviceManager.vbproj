@@ -331,6 +331,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\imageres_5323_16x16-32.png" />
     <None Include="Resources\netcenter_7_16x16-32.png" />
     <None Include="Resources\netshell_1607_16x16-32.png" />
     <None Include="Resources\imageres_5332_16x16-32.png" />
