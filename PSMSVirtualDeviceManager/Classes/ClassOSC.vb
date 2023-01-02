@@ -65,7 +65,7 @@ Public Class ClassOSC
 
                     ProcessPacket(packet)
                 Else
-                    Thread.Sleep(5)
+                    ClassPrecisionSleep.Sleep(5)
                 End If
             End While
         Catch ex As ThreadAbortException

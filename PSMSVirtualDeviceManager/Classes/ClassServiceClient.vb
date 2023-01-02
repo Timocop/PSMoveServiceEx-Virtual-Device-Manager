@@ -131,6 +131,8 @@ Public Class ClassServiceClient
 
             Try
                 While True
+                    Dim bExceptionSleep As Boolean = False
+
                     Try
                         If (Not g_bProcessingEnabled) Then
                             Threading.Thread.Sleep(1000)
@@ -319,8 +321,15 @@ Public Class ClassServiceClient
                                 End If
                             End If
                         End SyncLock
-                        Threading.Thread.Sleep(5000)
+
+                        bExceptionSleep = True
                     End Try
+
+                    ' Thread.Abort will not trigger inside a Try/Catch
+                    If (bExceptionSleep) Then
+                        bExceptionSleep = False
+                        Threading.Thread.Sleep(5000)
+                    End If
                 End While
             Finally
                 For i = 0 To mControllers.Count - 1

@@ -912,6 +912,8 @@ Public Class UCVirtualTrackerItem
             Dim iFpsCount As Integer = 0
 
             While True
+                Dim bExceptionSleep As Boolean = False
+
                 Try
                     Using mFrame As New OpenCvSharp.Mat(480, 640, OpenCvSharp.MatType.CV_8UC3)
                         If (Not m_Capture.IsOpened) Then
@@ -1000,6 +1002,8 @@ Public Class UCVirtualTrackerItem
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
+                    bExceptionSleep = True
+
                     If (mFramePrint.ElapsedMilliseconds > 1000) Then
                         g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
 
@@ -1007,9 +1011,13 @@ Public Class UCVirtualTrackerItem
                         iFPS = 0
                         iFpsCount = 0
                     End If
-
-                    Threading.Thread.Sleep(1000)
                 End Try
+
+                ' Thread.Abort will not trigger inside a Try/Catch
+                If (bExceptionSleep) Then
+                    bExceptionSleep = False
+                    Threading.Thread.Sleep(1000)
+                End If
             End While
         End Sub
 
@@ -1028,6 +1036,8 @@ Public Class UCVirtualTrackerItem
             Dim iFpsCount As Integer = 0
 
             While True
+                Dim bExceptionSleep As Boolean = False
+
                 Try
                     If (m_PipeIndex < 0) Then
                         Throw New ArgumentException("Invalid pipe index.")
@@ -1068,6 +1078,8 @@ Public Class UCVirtualTrackerItem
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
+                    bExceptionSleep = True
+
                     If (mFramePrint.ElapsedMilliseconds > 1000) Then
                         g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
 
@@ -1075,14 +1087,20 @@ Public Class UCVirtualTrackerItem
                         iFPS = 0
                         iFpsCount = 0
                     End If
-
-                    Threading.Thread.Sleep(1000)
                 End Try
+
+                ' Thread.Abort will not trigger inside a Try/Catch
+                If (bExceptionSleep) Then
+                    bExceptionSleep = False
+                    Threading.Thread.Sleep(1000)
+                End If
             End While
         End Sub
 
         Private Sub DeviceWatchdogThread()
             While True
+                Dim bExceptionSleep As Boolean = False
+
                 Try
                     Threading.Thread.Sleep(5000)
 
@@ -1097,8 +1115,14 @@ Public Class UCVirtualTrackerItem
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    Threading.Thread.Sleep(1000)
+                    bExceptionSleep = True
                 End Try
+
+                ' Thread.Abort will not trigger inside a Try/Catch
+                If (bExceptionSleep) Then
+                    bExceptionSleep = False
+                    Threading.Thread.Sleep(1000)
+                End If
             End While
         End Sub
 

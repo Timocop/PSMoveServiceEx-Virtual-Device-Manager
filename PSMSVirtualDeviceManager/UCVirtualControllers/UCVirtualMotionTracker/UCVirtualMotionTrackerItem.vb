@@ -753,6 +753,8 @@ Public Class UCVirtualMotionTrackerItem
             Const HTC_VIVE_BUTTON_MENU_CLICK = 5
 
             While True
+                Dim bExceptionSleep As Boolean = False
+
                 Try
                     If (g_iIndex < 0) Then
                         Return
@@ -1271,8 +1273,14 @@ Public Class UCVirtualMotionTrackerItem
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    Threading.Thread.Sleep(1000)
+                    bExceptionSleep = True
                 End Try
+
+                ' Thread.Abort will not trigger inside a Try/Catch
+                If (bExceptionSleep) Then
+                    bExceptionSleep = False
+                    Threading.Thread.Sleep(1000)
+                End If
             End While
         End Sub
 

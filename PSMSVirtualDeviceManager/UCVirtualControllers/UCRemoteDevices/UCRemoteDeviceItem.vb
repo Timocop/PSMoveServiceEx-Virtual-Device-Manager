@@ -418,6 +418,8 @@ Public Class UCRemoteDeviceItem
 
         Private Sub ThreadPipe()
             While True
+                Dim bExceptionSleep As Boolean = False
+
                 Try
                     If (g_iIndex < 0) Then
                         Return
@@ -474,8 +476,14 @@ Public Class UCRemoteDeviceItem
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    Threading.Thread.Sleep(1000)
+                    bExceptionSleep = True
                 End Try
+
+                ' Thread.Abort will not trigger inside a Try/Catch
+                If (bExceptionSleep) Then
+                    bExceptionSleep = False
+                    Threading.Thread.Sleep(1000)
+                End If
             End While
         End Sub
 
