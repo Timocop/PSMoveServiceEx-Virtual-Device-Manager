@@ -1,6 +1,4 @@
 ﻿Public Class FormTrackerOverrideSetup
-    Const MAX_VMT_TRACKER As Integer = 20
-
     Enum ENUM_OVERRIDE_TYPE
         HEAD
         LEFT_HAND
@@ -51,7 +49,7 @@
 
         ' Add VMT ids
         ComboBox_VMTTracker.Items.Clear()
-        For i = 0 To MAX_VMT_TRACKER
+        For i = 0 To ClassVmtConst.VMT_TRACKER_MAX
             ComboBox_VMTTracker.Items.Add(i)
         Next
         ComboBox_VMTTracker.SelectedIndex = 0
