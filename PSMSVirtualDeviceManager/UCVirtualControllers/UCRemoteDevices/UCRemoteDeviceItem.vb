@@ -449,7 +449,7 @@ Public Class UCRemoteDeviceItem
 
                                         ' Send Reset Orientation 
                                         Dim mNewResetOrientation = Quaternion.CreateFromAxisAngle(New Vector3(0, 0, 1), CSng(g_iYawOrientationOffset * (Math.PI / 180)))
-                                        mNewResetOrientation = m_ResetOrientation * mNewResetOrientation
+                                        mNewResetOrientation = mNewResetOrientation * m_ResetOrientation
 
                                         Bw.Write(Encoding.ASCII.GetBytes(mNewResetOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
