@@ -133,28 +133,35 @@ Public Class UCRemoteDevices
 
         Enum ENUM_PACKET_RECEIVE_TYPE
             HEARTBEAT = 0
-            ROTATION
-            GYRO
-            HANDSHAKE
-            ACCEL
-            MAG
-            RAW_CALIBRATION_DATA
-            CALIBRATION_FINISHED
-            CONFIG
-            RAW_MAGENTOMETER
-            PING_PONG
-            SERIAL
-            BATTERY_LEVEL
-            TAP
-            RESET_REASON
-            SENSOR_INFO
-            ROTATION_2
-            ROTATION_DATA
-            MAGENTOMETER_ACCURACY
+            ROTATION = 1
+            GYRO = 2
+            HANDSHAKE = 3
+            ACCEL = 4
+            MAG = 5
+            RAW_CALIBRATION_DATA = 6
+            CALIBRATION_FINISHED = 7
+            CONFIG = 8
+            RAW_MAGENTOMETER = 9
+            PING_PONG = 10
+            SERIAL = 11
+            BATTERY_LEVEL = 12
+            TAP = 13
+            RESET_REASON = 14
+            SENSOR_INFO = 15
+            ROTATION_2 = 16
+            ROTATION_DATA = 16
+            MAGENTOMETER_ACCURACY = 18
+
+            UNCALIBRATED_GYRO = 30
+            UNCALIBRATED_ACCEL = 31
+            UNCALIBRATED_MAG = 32
+            CALIBRATED_GYRO = 33
+            CALIBRATED_ACCEL = 34
+            CALIBRATED_MAG = 35
 
             BUTTON_PUSHED = 60
-            SEND_MAG_STATUS
-            CHANGE_MAG_STATUS
+            SEND_MAG_STATUS = 61
+            CHANGE_MAG_STATUS = 62
         End Enum
 
         Enum ENUM_PACKET_SEND_TYPE
@@ -341,24 +348,38 @@ Public Class UCRemoteDevices
 
                                         Dim iBattery As Single = BR_ReadSingle(mBinReader)
 
-                                        If (mTracker.m_ProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR) Then
-                                            Dim iMinVolt As Single = 3.6F
-                                            Dim iMaxVolt As Single = 4.2F
+                                        Select Case (mTracker.m_ProtocolType)
+                                            Case ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR
+                                                Dim iMinVolt As Single = 3.6F
+                                                Dim iMaxVolt As Single = 4.2F
 
-                                            Dim iVal As Single = (iBattery - iMinVolt)
-                                            Dim iMaxVal As Single = (iMaxVolt - iMinVolt)
-                                            Dim iPercent As Integer = CInt(Math.Ceiling((iVal / iMaxVal) * 100))
+                                                Dim iVal As Single = (iBattery - iMinVolt)
+                                                Dim iMaxVal As Single = (iMaxVolt - iMinVolt)
+                                                Dim iPercent As Integer = CInt(Math.Ceiling((iVal / iMaxVal) * 100))
 
-                                            If (iPercent < 0) Then
-                                                iPercent = 0
-                                            End If
+                                                If (iPercent < 0) Then
+                                                    iPercent = 0
+                                                End If
 
-                                            If (iPercent > 100) Then
-                                                iPercent = 100
-                                            End If
-                                        End If
+                                                If (iPercent > 100) Then
+                                                    iPercent = 100
+                                                End If
 
-                                        RaiseEvent OnTrackerBattery(mTracker, CInt(iBattery))
+                                                RaiseEvent OnTrackerBattery(mTracker, iPercent)
+
+                                            Case ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
+                                                Dim iPercent As Integer = CInt(iBattery * 100)
+
+                                                If (iPercent < 0) Then
+                                                    iPercent = 0
+                                                End If
+
+                                                If (iPercent > 100) Then
+                                                    iPercent = 100
+                                                End If
+
+                                                RaiseEvent OnTrackerBattery(mTracker, iPercent)
+                                        End Select
 
                                     Case ENUM_PACKET_RECEIVE_TYPE.ROTATION_DATA
                                         If (mTracker Is Nothing) Then
