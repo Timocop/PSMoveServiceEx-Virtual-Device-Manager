@@ -471,6 +471,11 @@ Public Class UCRemoteDevices
                         iFirmwareBuild = BR_ReadInt32(mBinReader) ' Firmware Build 
                     End If
 
+                    ' No firmware build number?
+                    If (iFirmwareBuild < 1) Then
+                        Return
+                    End If
+
                     If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 0) Then
                         Dim sFirmware As New Text.StringBuilder
                         Dim iLen As Integer = (mBinReader.ReadByte And &HFF)
@@ -488,8 +493,12 @@ Public Class UCRemoteDevices
                         sFirmwareName = sFirmware.ToString
                     End If
 
-                    ' We assume OwOtrack
-                    If (String.IsNullOrEmpty(sFirmwareName) OrElse sFirmwareName.StartsWith("owoTrack")) Then
+                    ' No firmware name?
+                    If (String.IsNullOrEmpty(sFirmwareName)) Then
+                        Return
+                    End If
+
+                    If (sFirmwareName.StartsWith("owoTrack")) Then
                         iProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
                     End If
 
