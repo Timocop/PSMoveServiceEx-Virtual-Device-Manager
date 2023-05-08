@@ -489,7 +489,7 @@ Public Class UCRemoteDevices
                     End If
 
                     ' We assume OwOtrack
-                    If (String.IsNullOrEmpty(sFirmwareName)) Then
+                    If (String.IsNullOrEmpty(sFirmwareName) OrElse sFirmwareName.StartsWith("owoTrack")) Then
                         iProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
                     End If
 
