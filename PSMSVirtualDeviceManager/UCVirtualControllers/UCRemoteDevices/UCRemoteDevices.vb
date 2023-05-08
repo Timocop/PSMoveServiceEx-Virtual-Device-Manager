@@ -346,14 +346,15 @@ Public Class UCRemoteDevices
 
                                         mBinReader.ReadInt64()
 
-                                        Dim iBattery As Single = BR_ReadSingle(mBinReader)
+                                        Dim iVoltage As Single = BR_ReadSingle(mBinReader)
+                                        ' Dim iPercentage As Single = BR_ReadSingle(mBinReader) 'SlimeVR only
 
                                         Select Case (mTracker.m_ProtocolType)
                                             Case ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR
-                                                Dim iMinVolt As Single = 3.6F
+                                                Dim iMinVolt As Single = 3.2F
                                                 Dim iMaxVolt As Single = 4.2F
 
-                                                Dim iVal As Single = (iBattery - iMinVolt)
+                                                Dim iVal As Single = (iVoltage - iMinVolt)
                                                 Dim iMaxVal As Single = (iMaxVolt - iMinVolt)
                                                 Dim iPercent As Integer = CInt(Math.Ceiling((iVal / iMaxVal) * 100))
 
@@ -368,7 +369,8 @@ Public Class UCRemoteDevices
                                                 RaiseEvent OnTrackerBattery(mTracker, iPercent)
 
                                             Case ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
-                                                Dim iPercent As Integer = CInt(iBattery * 100)
+                                                ' owoTrack uses voltage as percentage
+                                                Dim iPercent As Integer = CInt(iVoltage * 100)
 
                                                 If (iPercent < 0) Then
                                                     iPercent = 0
