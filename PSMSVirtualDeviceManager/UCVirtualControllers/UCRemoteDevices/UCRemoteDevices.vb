@@ -546,9 +546,9 @@ Public Class UCRemoteDevices
                         g_mTrackers(mEndPoint.Address.ToString) = mTracker
                     End SyncLock
                 End If
-            End If
 
-            RaiseEvent OnTrackerConnected(mTracker)
+                RaiseEvent OnTrackerConnected(mTracker)
+            End If
 
             g_mSocket.SendTo(HANDSHAKE_BUFFER, SocketFlags.None, mEndPoint)
         End Sub
