@@ -399,7 +399,13 @@ Public Class UCRemoteDevices
                                             Exit Select
                                         End If
 
+                                        Const DATA_TYPE_NORMAL = 1
+                                        Const DATA_TYPE_CORRECTION = 2
+
                                         Dim iDataType As Integer = (mBinReader.ReadByte And &HFF)
+                                        If (iDataType <> DATA_TYPE_NORMAL) Then
+                                            Exit Select
+                                        End If
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
