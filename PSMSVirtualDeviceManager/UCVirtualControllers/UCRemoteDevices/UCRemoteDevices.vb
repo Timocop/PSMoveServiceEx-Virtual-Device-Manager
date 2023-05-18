@@ -477,83 +477,69 @@ Public Class UCRemoteDevices
 
                 mBinReader.ReadInt64() ' Skip packet number
 
-                If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 0) Then
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 3) Then
-                        mBinReader.ReadInt32() ' (SlimeVR) Board Type 
-                    End If
+                mBinReader.ReadInt32() ' (SlimeVR) Board Type  
 
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 3) Then
-                        mBinReader.ReadInt32() ' (SlimeVR) IMU Type 
-                    End If
+                mBinReader.ReadInt32() ' (SlimeVR) IMU Type  
 
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 3) Then
-                        mBinReader.ReadInt32() ' (SlimeVR) MCU TYPE
-                    End If
+                mBinReader.ReadInt32() ' (SlimeVR) MCU TYPE 
 
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 11) Then
-                        mBinReader.ReadInt32() ' (SlimeVR) IMU info
-                        mBinReader.ReadInt32()
-                        mBinReader.ReadInt32()
-                    End If
+                mBinReader.ReadInt32() ' (SlimeVR) IMU info
+                mBinReader.ReadInt32()
+                mBinReader.ReadInt32()
 
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 3) Then
-                        iFirmwareBuild = BR_ReadInt32(mBinReader) ' Firmware Build 
-                    End If
+                iFirmwareBuild = BR_ReadInt32(mBinReader) ' Firmware Build  
 
-                    ' No firmware build number?
-                    If (iFirmwareBuild < 1) Then
-                        Return
-                    End If
-
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > 0) Then
-                        Dim sFirmware As New Text.StringBuilder
-                        Dim iLen As Integer = (mBinReader.ReadByte And &HFF)
-
-                        While (iLen > 0 AndAlso (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position) > 0)
-                            Dim iChar As Char = Chr(mBinReader.ReadByte())
-                            If (Asc(iChar) = 0) Then
-                                Exit While
-                            End If
-
-                            sFirmware.Append(iChar)
-                            iLen -= 1
-                        End While
-
-                        sFirmwareName = sFirmware.ToString
-                    End If
-
-                    ' No firmware name?
-                    If (String.IsNullOrEmpty(sFirmwareName)) Then
-                        Return
-                    End If
-
-                    If (sFirmwareName.StartsWith("owoTrack")) Then
-                        iProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
-                    End If
-
-                    Dim iMacAddress As Byte() = New Byte(6) {}
-                    If (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position > iMacAddress.Length) Then
-                        iMacAddress = mBinReader.ReadBytes(iMacAddress.Length)
-
-                        sMacAddress = String.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}", iMacAddress(0), iMacAddress(1), iMacAddress(2), iMacAddress(3), iMacAddress(4), iMacAddress(5))
-
-                        If ((iMacAddress(0) Or iMacAddress(1) Or iMacAddress(2) Or iMacAddress(3) Or iMacAddress(4) Or iMacAddress(5)) = 0) Then
-                            sMacAddress = ""
-                        End If
-                    End If
-
-                    Dim sTrackerName As String
-                    If (Not String.IsNullOrEmpty(sMacAddress)) Then
-                        sTrackerName = String.Format("MAC: {0}", sMacAddress)
-                    Else
-                        sTrackerName = String.Format("UDP: {0}", mEndPoint.Address.ToString)
-                    End If
-
-                    SyncLock _ThreadLock
-                        mTracker = New ClassTracker(sTrackerName, iProtocolType, mEndPoint)
-                        g_mTrackers(mEndPoint.Address.ToString) = mTracker
-                    End SyncLock
+                ' No firmware build number?
+                If (iFirmwareBuild < 1) Then
+                    Return
                 End If
+
+                Dim sFirmware As New Text.StringBuilder
+                Dim iLen As Integer = (mBinReader.ReadByte And &HFF)
+
+                While (iLen > 0 AndAlso (mBinReader.BaseStream.Length - mBinReader.BaseStream.Position) >= 1)
+                    Dim iChar As Char = Chr(mBinReader.ReadByte())
+                    If (Asc(iChar) = 0) Then
+                        Exit While
+                    End If
+
+                    sFirmware.Append(iChar)
+                    iLen -= 1
+                End While
+
+                sFirmwareName = sFirmware.ToString
+
+                ' No firmware name?
+                If (String.IsNullOrEmpty(sFirmwareName)) Then
+                    Return
+                End If
+
+                If (sFirmwareName.StartsWith("owoTrack")) Then
+                    iProtocolType = ClassTracker.ENUM_PROTOCOL_TYPE.OWOTRACK
+                End If
+
+                Dim iMacAddress As Byte() = New Byte(6) {}
+                If ((mBinReader.BaseStream.Length - mBinReader.BaseStream.Position) >= iMacAddress.Length) Then
+                    iMacAddress = mBinReader.ReadBytes(iMacAddress.Length)
+
+                    sMacAddress = String.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}", iMacAddress(0), iMacAddress(1), iMacAddress(2), iMacAddress(3), iMacAddress(4), iMacAddress(5))
+
+                    If ((iMacAddress(0) Or iMacAddress(1) Or iMacAddress(2) Or iMacAddress(3) Or iMacAddress(4) Or iMacAddress(5)) = 0) Then
+                        sMacAddress = ""
+                    End If
+                End If
+
+                Dim sTrackerName As String
+                If (Not String.IsNullOrEmpty(sMacAddress)) Then
+                    sTrackerName = String.Format("MAC: {0}", sMacAddress)
+                Else
+                    sTrackerName = String.Format("UDP: {0}", mEndPoint.Address.ToString)
+                End If
+
+                SyncLock _ThreadLock
+                    mTracker = New ClassTracker(sTrackerName, iProtocolType, mEndPoint)
+                    g_mTrackers(mEndPoint.Address.ToString) = mTracker
+                End SyncLock
 
                 RaiseEvent OnTrackerConnected(mTracker)
             End If
