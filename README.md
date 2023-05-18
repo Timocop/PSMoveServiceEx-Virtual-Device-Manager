@@ -7,14 +7,13 @@ With this program you can control any virtual device in PSMoveServiceEx and even
 
  - Webcams in ``Virtual Trackers`` are still in prototyping phase. There might be tracking issues when using Webcams because every Webcam is different.
  
- - Left and Right Controller roles seem to behave inconsistently. More testing is required.
+ - Left and Right Controller roles for HTC Vive controllers seem to behave inconsistently. More testing is required.
  
  - Currently only PSmove controllers are supported for ``Virtual Motion Tracker`` trackers.
  *(DualShock4, Navi controllers, gamepads and other third party devices will be added in the future)*
  
- - Installing Playstation Eye Drivers via Virtual Device Manager does not work on Windows 10 please use Zadig instead.
-**Zadig is incompatible with Windows 11!**
-
+ - The Playstation Eye driver installation might trigger sensitive Anti-Virus programs. Please whitelist the ``Virtual Device Manager`` folder.
+ 
 ## Images
 
 ![](https://user-images.githubusercontent.com/22834512/206929896-6f55bfa6-e185-43d4-8826-9a5e2d81fffe.png)
