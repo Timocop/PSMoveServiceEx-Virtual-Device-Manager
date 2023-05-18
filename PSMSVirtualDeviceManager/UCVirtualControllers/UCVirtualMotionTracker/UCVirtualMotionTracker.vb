@@ -786,34 +786,43 @@ Public Class UCVirtualMotionTracker
             End If
 
             ' Find outdated drivers
-            For Each sDriver As String In mConfig.GetDrivers()
-                Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
-                If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
-                    Continue For
-                End If
+            If (True) Then
+                Dim mDrivers As String() = mConfig.GetDrivers()
+                If (mDrivers IsNot Nothing) Then
+                    For Each sDriver As String In mDrivers
+                        Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
+                        If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
+                            Continue For
+                        End If
 
-                If (sDriverPath.ToLowerInvariant.EndsWith(String.Format("\{0}", ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant))) Then
-                    Dim sMsg As New Text.StringBuilder
-                    sMsg.AppendLine("Another version of the SteamVR driver is already installed!")
-                    sMsg.AppendLine("Do you want to remove the following outdated driver?")
-                    sMsg.AppendLine()
-                    sMsg.AppendLine(sDriverPath)
-                    If (MessageBox.Show(sMsg.ToString, "Outdated driver found", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
-                        mConfig.RemovePath(sDriver)
-                        mConfig.SaveConfig()
-                    End If
+                        If (sDriverPath.ToLowerInvariant.EndsWith(String.Format("\{0}", ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant))) Then
+                            Dim sMsg As New Text.StringBuilder
+                            sMsg.AppendLine("Another version of the SteamVR driver is already installed!")
+                            sMsg.AppendLine("Do you want to remove the following outdated driver?")
+                            sMsg.AppendLine()
+                            sMsg.AppendLine(sDriverPath)
+                            If (MessageBox.Show(sMsg.ToString, "Outdated driver found", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
+                                mConfig.RemovePath(sDriver)
+                                mConfig.SaveConfig()
+                            End If
+                        End If
+                    Next
                 End If
-            Next
+            End If
+
             ' Find same driver
-            For Each sDriver As String In mConfig.GetDrivers()
-                Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
-                If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
-                    MessageBox.Show("SteamVR driver is already installed!", "Unable to install driver", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    Return
+            If (True) Then
+                Dim mDrivers As String() = mConfig.GetDrivers()
+                If (mDrivers IsNot Nothing) Then
+                    For Each sDriver As String In mDrivers
+                        Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
+                        If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
+                            MessageBox.Show("SteamVR driver is already installed!", "Unable to install driver", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            Return
+                        End If
+                    Next
                 End If
-            Next
-
-
+            End If
 
             mConfig.AddPath(sDriverRoot)
             mConfig.SaveConfig()

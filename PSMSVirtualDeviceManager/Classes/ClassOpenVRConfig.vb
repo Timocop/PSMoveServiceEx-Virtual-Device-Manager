@@ -17,11 +17,15 @@ Public Class ClassOpenVRConfig
 
     Public Sub AddPath(sPath As String)
         If (Not g_mConfig.ContainsKey("external_drivers")) Then
-            g_mConfig("external_drivers") = New Dictionary(Of String, Object)
+            g_mConfig("external_drivers") = New ArrayList()
         End If
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
         For Each sDriverPath As String In mExternalDrivers.ToArray
+            If (sDriverPath Is Nothing) Then
+                Continue For
+            End If
+
             If (sDriverPath.ToLowerInvariant = sPath.ToLowerInvariant) Then
                 Return
             End If
@@ -32,12 +36,19 @@ Public Class ClassOpenVRConfig
 
     Public Sub RemovePath(sPath As String)
         If (Not g_mConfig.ContainsKey("external_drivers")) Then
-            g_mConfig("external_drivers") = New Dictionary(Of String, Object)
+            g_mConfig("external_drivers") = New ArrayList()
         End If
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
+        If (mExternalDrivers Is Nothing) Then
+            Throw New ArgumentException("Invalid cast")
+        End If
 
         For i = mExternalDrivers.Count - 1 To 0 Step -1
+            If (mExternalDrivers(i) Is Nothing) Then
+                Continue For
+            End If
+
             If (CStr(mExternalDrivers(i)).ToLowerInvariant = sPath.ToLowerInvariant) Then
                 mExternalDrivers.RemoveAt(i)
             End If
@@ -51,11 +62,15 @@ Public Class ClassOpenVRConfig
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
         If (mExternalDrivers Is Nothing) Then
-            Return Nothing
+            Throw New ArgumentException("Invalid cast")
         End If
 
         Dim mDrivers As New List(Of String)
         For i = 0 To mExternalDrivers.Count - 1
+            If (mExternalDrivers(i) Is Nothing) Then
+                Continue For
+            End If
+
             mDrivers.Add(CStr(mExternalDrivers(i)))
         Next
 
@@ -75,7 +90,6 @@ Public Class ClassOpenVRConfig
 
         Dim sContent As String = IO.File.ReadAllText(sConfigPath)
 
-        Dim mTmp As Object = Nothing
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
         g_bConfigLoaded = True
@@ -97,9 +111,35 @@ Public Class ClassOpenVRConfig
             Return
         End If
 
+        ' Remove any invalid entries from the drivers list.
+        RemoveInvalid()
+
         Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
 
         IO.File.WriteAllText(sConfigPath, sContent)
+    End Sub
+
+    Private Sub RemoveInvalid()
+        If (Not g_mConfig.ContainsKey("external_drivers")) Then
+            g_mConfig("external_drivers") = New ArrayList()
+        End If
+
+        Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
+        If (mExternalDrivers Is Nothing) Then
+            Throw New ArgumentException("Invalid cast")
+        End If
+
+        ' Remove NULL drivers.
+        For i = mExternalDrivers.Count - 1 To 0 Step -1
+            If (mExternalDrivers(i) Is Nothing) Then
+                mExternalDrivers.RemoveAt(i)
+            End If
+        Next
+
+        ' Just remove the whole section if its empty.
+        If (mExternalDrivers.Count = 0) Then
+            g_mConfig.Remove("external_drivers")
+        End If
     End Sub
 
 End Class
