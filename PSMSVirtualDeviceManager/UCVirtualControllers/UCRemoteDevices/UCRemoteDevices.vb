@@ -133,35 +133,35 @@ Public Class UCRemoteDevices
 
         Enum ENUM_PACKET_RECEIVE_TYPE
             HEARTBEAT = 0
-            ROTATION = 1
-            GYRO = 2
-            HANDSHAKE = 3
-            ACCEL = 4
-            MAG = 5
-            RAW_CALIBRATION_DATA = 6
-            CALIBRATION_FINISHED = 7
-            CONFIG = 8
-            RAW_MAGENTOMETER = 9
-            PING_PONG = 10
-            SERIAL = 11
-            BATTERY_LEVEL = 12
-            TAP = 13
-            RESET_REASON = 14
-            SENSOR_INFO = 15
-            ROTATION_2 = 16
-            ROTATION_DATA = 16
-            MAGENTOMETER_ACCURACY = 18
+            ROTATION
+            GYRO
+            HANDSHAKE
+            ACCEL
+            MAG
+            RAW_CALIBRATION_DATA
+            CALIBRATION_FINISHED
+            CONFIG
+            RAW_MAGENTOMETER
+            PING_PONG
+            SERIAL
+            BATTERY_LEVEL
+            TAP
+            RESET_REASON
+            SENSOR_INFO
+            ROTATION_2
+            ROTATION_DATA
+            MAGENTOMETER_ACCURACY
 
             UNCALIBRATED_GYRO = 30
-            UNCALIBRATED_ACCEL = 31
-            UNCALIBRATED_MAG = 32
-            CALIBRATED_GYRO = 33
-            CALIBRATED_ACCEL = 34
-            CALIBRATED_MAG = 35
+            UNCALIBRATED_ACCEL
+            UNCALIBRATED_MAG
+            CALIBRATED_GYRO
+            CALIBRATED_ACCEL
+            CALIBRATED_MAG
 
             BUTTON_PUSHED = 60
-            SEND_MAG_STATUS = 61
-            CHANGE_MAG_STATUS = 62
+            SEND_MAG_STATUS
+            CHANGE_MAG_STATUS
         End Enum
 
         Enum ENUM_PACKET_SEND_TYPE
