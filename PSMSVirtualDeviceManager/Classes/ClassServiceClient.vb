@@ -12,8 +12,8 @@ Public Class ClassServiceClient
     Private g_PSMoveServiceServer As Service
     Private g_ProcessingThread As Threading.Thread
 
-    Private g_bPoseStreamEnabled As Boolean = False
     Private g_bProcessingEnabled As Boolean = False
+    Private g_mPostStreamRequest As New List(Of String)
 
     Private g_bEnableSelectRecenter As Boolean = True
 
@@ -95,10 +95,20 @@ Public Class ClassServiceClient
         g_ProcessingThread.Start()
     End Sub
 
-    Public Sub StartPoseStream()
-        SyncLock __ClientLock
-            g_bPoseStreamEnabled = True
-        End SyncLock
+    Public Sub RegisterPoseStream(sId As String)
+        If (g_mPostStreamRequest.Contains(sId)) Then
+            Return
+        End If
+
+        g_mPostStreamRequest.Add(sId)
+    End Sub
+
+    Public Sub UnregisterPoseStream(sId As String)
+        If (Not g_mPostStreamRequest.Contains(sId)) Then
+            Return
+        End If
+
+        g_mPostStreamRequest.Remove(sId)
     End Sub
 
     Public Sub StartProcessing()
@@ -223,7 +233,7 @@ Public Class ClassServiceClient
                                         mControllerRecenterTime(mController.m_Info.m_ControllerId) = New Stopwatch
                                     End If
 
-                                    If (g_bPoseStreamEnabled) Then
+                                    If (g_mPostStreamRequest.Count > 0) Then
                                         If ((mController.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
                                             mController.m_DataStreamFlags = (mController.m_DataStreamFlags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
                                         End If

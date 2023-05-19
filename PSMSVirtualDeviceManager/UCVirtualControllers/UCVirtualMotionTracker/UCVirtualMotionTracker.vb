@@ -114,20 +114,13 @@ Public Class UCVirtualMotionTracker
 
     Private Sub Button_StartOscServer_Click(sender As Object, e As EventArgs) Handles Button_StartOscServer.Click
         Try
-            If (g_ClassOscServer.IsRunning) Then
-                g_ClassOscServer.m_SuspendRequests = False
-
-                Button_StartOscServer.Enabled = False
-                Button_PauseOscServer.Enabled = True
-                Return
-            End If
-
             g_ClassOscServer.StartServer()
+            g_ClassOscServer.m_SuspendRequests = False
 
             Button_StartOscServer.Enabled = False
             Button_PauseOscServer.Enabled = True
 
-            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartPoseStream()
+            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
             g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartProcessing()
         Catch ex As Exception
             With New Text.StringBuilder
@@ -141,13 +134,13 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub Button_PauseOscServer_Click(sender As Object, e As EventArgs) Handles Button_PauseOscServer.Click
-        If (g_ClassOscServer.IsRunning) Then
-            g_ClassOscServer.m_SuspendRequests = True
+        g_ClassOscServer.m_SuspendRequests = True
 
-            Button_StartOscServer.Enabled = True
-            Button_PauseOscServer.Enabled = False
-            Return
-        End If
+        Button_StartOscServer.Enabled = True
+        Button_PauseOscServer.Enabled = False
+
+        g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
+        g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartProcessing()
     End Sub
 
     Private Sub AutostartLoad()
