@@ -214,49 +214,64 @@ Public Class FormMain
             Return
         End If
 
-        g_mDriverInstallThread = New Threading.Thread(Sub()
-                                                          Try
-                                                              If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                                                                  Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
-                                                              End If
+        g_mDriverInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                        Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+                    End If
 
-                                                              Dim sMessage As New Text.StringBuilder
-                                                              sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
-                                                              sMessage.AppendLine("Already existing drivers will be replaced!")
-                                                              sMessage.AppendLine()
-                                                              sMessage.AppendLine("Do you want to continue?")
-                                                              If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                                                                  Return
-                                                              End If
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
+                        sMessage.AppendLine("Already existing Playstation Eye drivers will be replaced!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
 
-                                                              Me.BeginInvoke(Sub()
-                                                                                 If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                                                     g_mDriverInstallFormLoad.Dispose()
-                                                                                     g_mDriverInstallFormLoad = Nothing
-                                                                                 End If
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("WARNING!")
+                        sMessage.AppendLine("The Playstation Eye driver installation might trigger sensitive Anti-Virus programs!")
+                        sMessage.AppendLine("It's recommended to whitelist the Virtual Device Manager folder before starting the installation to avoid any issues.")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
 
-                                                                                 g_mDriverInstallFormLoad = New FormLoading
-                                                                                 g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                                                 g_mDriverInstallFormLoad.ShowDialog(Me)
-                                                                             End Sub)
+                    Me.BeginInvoke(Sub()
+                                       If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                           g_mDriverInstallFormLoad.Dispose()
+                                           g_mDriverInstallFormLoad = Nothing
+                                       End If
 
-                                                              Dim mDriverInstaller As New ClassLibusbDriver
-                                                              mDriverInstaller.InstallDriver64()
+                                       g_mDriverInstallFormLoad = New FormLoading
+                                       g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                       g_mDriverInstallFormLoad.ShowDialog(Me)
+                                   End Sub)
 
-                                                              MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                                                          Catch ex As Threading.ThreadAbortException
-                                                              Throw
-                                                          Catch ex As Exception
-                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                                                          Finally
-                                                              Me.BeginInvoke(Sub()
-                                                                                 If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                                                     g_mDriverInstallFormLoad.Dispose()
-                                                                                     g_mDriverInstallFormLoad = Nothing
-                                                                                 End If
-                                                                             End Sub)
-                                                          End Try
-                                                      End Sub)
+                    Dim mDriverInstaller As New ClassLibusbDriver
+                    mDriverInstaller.InstallDriver64()
+
+                    MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    Me.BeginInvoke(Sub()
+                                       If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                           g_mDriverInstallFormLoad.Dispose()
+                                           g_mDriverInstallFormLoad = Nothing
+                                       End If
+                                   End Sub)
+                End Try
+            End Sub)
         g_mDriverInstallThread.IsBackground = True
         g_mDriverInstallThread.Start()
     End Sub
