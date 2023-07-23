@@ -423,9 +423,9 @@ Partial Class FormMain
         Me.Label3.Location = New System.Drawing.Point(17, 32)
         Me.Label3.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(116, 13)
+        Me.Label3.Size = New System.Drawing.Size(85, 13)
         Me.Label3.TabIndex = 7
-        Me.Label3.Text = "Service Management"
+        Me.Label3.Text = "Service Control"
         '
         'LinkLabel_ControllersVMT
         '

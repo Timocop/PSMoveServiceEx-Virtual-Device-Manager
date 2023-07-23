@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Numerics
 Imports Rug.Osc
 
 Public Class UCVirtualMotionTracker
@@ -10,9 +11,11 @@ Public Class UCVirtualMotionTracker
 
     Public g_ClassOscServer As ClassOscServer
     Public g_ClassControllerSettings As ClassControllerSettings
+    Public g_ClassOscDevices As ClassOscDevices
 
     Private g_bIgnoreEvents As Boolean = False
     Private g_mOscStatusThread As Threading.Thread = Nothing
+    Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
 
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
@@ -23,6 +26,7 @@ Public Class UCVirtualMotionTracker
         ' Add any initialization after the InitializeComponent() call. 
         g_ClassOscServer = New ClassOscServer
         g_ClassControllerSettings = New ClassControllerSettings(Me)
+        g_ClassOscDevices = New ClassOscDevices(Me)
 
         Try
             g_bIgnoreEvents = True
@@ -79,6 +83,10 @@ Public Class UCVirtualMotionTracker
         g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
         g_mOscStatusThread.IsBackground = True
         g_mOscStatusThread.Start()
+
+        g_mOscDeviceStatusThread = New Threading.Thread(AddressOf OscDeviceStatusThread)
+        g_mOscDeviceStatusThread.IsBackground = True
+        g_mOscDeviceStatusThread.Start()
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -419,6 +427,8 @@ Public Class UCVirtualMotionTracker
             g_ClassOscServer.StartServer()
             g_ClassOscServer.m_SuspendRequests = False
 
+            g_ClassOscDevices.StartThread()
+
             g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
         Catch ex As Exception
             With New Text.StringBuilder
@@ -548,6 +558,12 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub CleanUp()
+        If (g_mOscDeviceStatusThread IsNot Nothing AndAlso g_mOscDeviceStatusThread.IsAlive) Then
+            g_mOscDeviceStatusThread.Abort()
+            g_mOscDeviceStatusThread.Join()
+            g_mOscDeviceStatusThread = Nothing
+        End If
+
         If (g_mOscStatusThread IsNot Nothing AndAlso g_mOscStatusThread.IsAlive) Then
             g_mOscStatusThread.Abort()
             g_mOscStatusThread.Join()
@@ -567,6 +583,11 @@ Public Class UCVirtualMotionTracker
             End If
         Next
         g_mAutostartMenuStrips.Clear()
+
+        If (g_ClassOscDevices IsNot Nothing) Then
+            g_ClassOscDevices.Dispose()
+            g_ClassOscDevices = Nothing
+        End If
 
         If (g_ClassOscServer IsNot Nothing) Then
             g_ClassOscServer.Dispose()
@@ -605,8 +626,6 @@ Public Class UCVirtualMotionTracker
     Private Sub OscStatusThread()
         While True
             Try
-                Threading.Thread.Sleep(1000)
-
                 If (g_ClassOscServer Is Nothing OrElse Not g_ClassOscServer.IsRunning()) Then
                     Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
                 Else
@@ -627,8 +646,57 @@ Public Class UCVirtualMotionTracker
             Catch ex As Exception
 
             End Try
-        End While
 
+            Threading.Thread.Sleep(1000)
+        End While
+    End Sub
+
+    Private Sub OscDeviceStatusThread()
+        While True
+            Try
+                Dim mDevices = g_ClassOscDevices.GetDevices
+                For i = 0 To mDevices.Length - 1
+                    Dim mDevice As ClassOscDevices.STRUC_DEVICE = mDevices(i)
+
+                    Dim mPos As Vector3 = mDevice.GetPosCm()
+                    Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+
+                    Me.BeginInvoke(Sub()
+                                       Dim bFound As Boolean = False
+
+                                       For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                           Const LISTVIEW_SUBITEM_TYPE As Integer = 0
+                                           Const LISTVIEW_SUBITEM_SERIAL As Integer = 1
+                                           Const LISTVIEW_SUBITEM_POSITION As Integer = 2
+                                           Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
+
+                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
+                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+
+                                               bFound = True
+                                           End If
+                                       Next
+
+                                       If (Not bFound) Then
+                                           ListView_OscDevices.Items.Add(New ListViewItem(New String() {
+                                                mDevice.iType.ToString,
+                                                mDevice.sSerial,
+                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                            }))
+                                       End If
+                                   End Sub)
+                Next
+
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+
+            End Try
+
+            Threading.Thread.Sleep(1000)
+        End While
     End Sub
 
     Class ClassOscServer
@@ -945,6 +1013,273 @@ Public Class UCVirtualMotionTracker
                 g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font, FontStyle.Regular)
             End If
         End Sub
+    End Class
+
+    Class ClassOscDevices
+        Implements IDisposable
+
+        Shared _ThreadLock As New Object
+        Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
+        Private g_mDevicesThread As Threading.Thread = Nothing
+
+        Event OnDeviceArrived(mDevice As STRUC_DEVICE)
+        Event OnDeviceRemoved(mDevice As STRUC_DEVICE)
+        Event OnDevicePose(mDevice As STRUC_DEVICE)
+
+        Structure STRUC_DEVICE
+            Enum ENUM_DEVICE_TYPE
+                INVALID
+                HMD
+                CONTROLLER
+                TRACKER
+                REFERENCE
+                REDIRECT
+            End Enum
+
+            Public Sub New(_Index As Integer, _Type As ENUM_DEVICE_TYPE, _Serial As String)
+                iIndex = _Index
+                iType = _Type
+                sSerial = _Serial
+                mPos = New Vector3()
+                mOrientation = Quaternion.Identity
+            End Sub
+
+            Public Sub New(_Index As Integer, _Type As ENUM_DEVICE_TYPE, _Serial As String, _Pos As Vector3, _Orientation As Quaternion)
+                iIndex = _Index
+                iType = _Type
+                sSerial = _Serial
+                mPos = _Pos
+                mOrientation = _Orientation
+            End Sub
+
+            Dim iIndex As Integer
+            Dim iType As ENUM_DEVICE_TYPE
+            Dim sSerial As String
+            Dim mPos As Vector3
+            Dim mOrientation As Quaternion
+
+            Public Function GetPosCm() As Vector3
+                Return New Vector3(
+                    mPos.X * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_METERS_TO_CENTIMETERS),
+                    mPos.Y * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_METERS_TO_CENTIMETERS),
+                    mPos.Z * CSng(PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSM_METERS_TO_CENTIMETERS))
+            End Function
+
+            Public Function GetOrientationEuler() As Vector3
+                Return ClassQuaternionTools.FromQ2(mOrientation)
+            End Function
+
+            Dim mLastPoseTimestamp As Date
+        End Structure
+
+        Private g_mDevicesDic As New Dictionary(Of String, STRUC_DEVICE)
+
+        Public Sub New(mUCVirtualMotionTracker As UCVirtualMotionTracker)
+            g_UCVirtualMotionTracker = mUCVirtualMotionTracker
+
+            AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscMessage
+        End Sub
+
+        Public Sub StartThread()
+            If (g_mDevicesThread IsNot Nothing AndAlso g_mDevicesThread.IsAlive) Then
+                Return
+            End If
+
+            g_mDevicesThread = New Threading.Thread(AddressOf DevicesThread)
+            g_mDevicesThread.IsBackground = True
+            g_mDevicesThread.Start()
+        End Sub
+
+        Private Sub DevicesThread()
+            Dim mLastDeviceList As Date = Now
+
+            While True
+                Try
+                    If (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                        Threading.Thread.Sleep(1000)
+                        Continue While
+                    End If
+
+                    ' Request Device List
+                    Dim mLastDeviceListTimespan = Now - mLastDeviceList
+
+                    If (mLastDeviceListTimespan.TotalMilliseconds > 1000) Then
+                        mLastDeviceList = Now
+
+                        g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicesList"))
+                    End If
+
+                    ' Request Device Pose 
+                    SyncLock _ThreadLock
+                        For Each mDevice In g_mDevicesDic
+                            g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicePose", New Object() {mDevice.Value.sSerial}))
+                        Next
+                    End SyncLock
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+
+                End Try
+
+                ClassPrecisionSleep.Sleep(1)
+            End While
+        End Sub
+
+        Private Sub OnOscMessage(mMessage As OscMessage)
+            Try
+                Select Case (mMessage.Address)
+                    Case "/VMT/Out/DevicesList"
+                        If (mMessage.Count < 1) Then
+                            Return
+                        End If
+
+                        Dim sDevices As String = CStr(mMessage(0))
+
+                        Dim mDeviceList As New List(Of STRUC_DEVICE)
+
+                        For Each sDevice As String In sDevices.Split(New String() {vbCrLf, vbLf}, 0)
+                            Dim sInfos As String() = sDevice.Split(":"c)
+                            If (sInfos.Length < 3) Then
+                                Continue For
+                            End If
+
+                            Dim iIndex As Integer = -1
+                            Dim iType As Integer = -1
+                            Dim sSerial As String = ""
+
+                            For i = 0 To sInfos.Length - 1
+                                Select Case (i)
+                                    Case 0
+                                        iIndex = CInt(sInfos(i))
+                                    Case 1
+                                        iType = CInt(sInfos(i))
+                                    Case Else
+                                        sSerial &= sInfos(i)
+                                End Select
+                            Next
+
+                            mDeviceList.Add(New STRUC_DEVICE(iIndex, CType(iType, STRUC_DEVICE.ENUM_DEVICE_TYPE), sSerial))
+                        Next
+
+
+                        SyncLock _ThreadLock
+                            ' Add missing devices
+                            For Each mDevice As STRUC_DEVICE In mDeviceList
+                                If (Not g_mDevicesDic.ContainsKey(mDevice.sSerial)) Then
+                                    g_mDevicesDic(mDevice.sSerial) = mDevice
+
+                                    RaiseEvent OnDeviceArrived(mDevice)
+                                End If
+                            Next
+
+                            ' Remove devices that do not exist anymore
+                            For Each mDevice In g_mDevicesDic
+                                If (mDeviceList.Exists(Function(x As STRUC_DEVICE) x.sSerial = mDevice.Value.sSerial)) Then
+                                    Continue For
+                                End If
+
+                                RaiseEvent OnDeviceRemoved(mDevice.Value)
+
+                                g_mDevicesDic.Remove(mDevice.Value.sSerial)
+                            Next
+                        End SyncLock
+
+                    Case "/VMT/Out/DevicePose"
+                        If (mMessage.Count < 8) Then
+                            Return
+                        End If
+
+                        Dim sSerial As String = CStr(mMessage(0))
+                        Dim iPosX As Single = CSng(mMessage(1))
+                        Dim iPosY As Single = CSng(mMessage(2))
+                        Dim iPosZ As Single = CSng(mMessage(3))
+                        Dim iQuatX As Single = CSng(mMessage(4))
+                        Dim iQuatY As Single = CSng(mMessage(5))
+                        Dim iQuatZ As Single = CSng(mMessage(6))
+                        Dim iQuatW As Single = CSng(mMessage(7))
+
+                        SyncLock _ThreadLock
+                            Dim mDevice As STRUC_DEVICE = Nothing
+
+                            If (g_mDevicesDic.TryGetValue(sSerial, mDevice)) Then
+                                mDevice.mPos = New Vector3(iPosX, iPosY, iPosZ)
+                                mDevice.mOrientation = New Quaternion(iQuatX, iQuatY, iQuatZ, iQuatW)
+
+                                mDevice.mLastPoseTimestamp = Now
+
+                                g_mDevicesDic(sSerial) = mDevice
+
+                                RaiseEvent OnDevicePose(mDevice)
+                            End If
+                        End SyncLock
+                End Select
+            Catch ex As Exception
+                ' Something sussy is going on...
+            End Try
+        End Sub
+
+        Public Function GetDevices() As STRUC_DEVICE()
+            SyncLock _ThreadLock
+                Dim mDeviceList As New List(Of STRUC_DEVICE)
+
+                For Each mDevice In g_mDevicesDic
+                    mDeviceList.Add(mDevice.Value)
+                Next
+
+                Return mDeviceList.ToArray
+            End SyncLock
+        End Function
+
+        Public Function GetDeviceBySerial(sSerial As String, ByRef mDevice As STRUC_DEVICE) As Boolean
+            SyncLock _ThreadLock
+                If (g_mDevicesDic.TryGetValue(sSerial, mDevice)) Then
+                    Return True
+                End If
+
+                Return False
+            End SyncLock
+        End Function
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_UCVirtualMotionTracker IsNot Nothing AndAlso g_UCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
+                        RemoveHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscMessage
+                    End If
+
+                    If (g_mDevicesThread IsNot Nothing AndAlso g_mDevicesThread.IsAlive) Then
+                        g_mDevicesThread.Abort()
+                        g_mDevicesThread.Join()
+                        g_mDevicesThread = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
     End Class
 
 End Class
