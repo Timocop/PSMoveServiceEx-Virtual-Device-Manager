@@ -557,44 +557,6 @@ Public Class UCVirtualMotionTracker
         End Try
     End Sub
 
-    Private Sub CleanUp()
-        If (g_mOscDeviceStatusThread IsNot Nothing AndAlso g_mOscDeviceStatusThread.IsAlive) Then
-            g_mOscDeviceStatusThread.Abort()
-            g_mOscDeviceStatusThread.Join()
-            g_mOscDeviceStatusThread = Nothing
-        End If
-
-        If (g_mOscStatusThread IsNot Nothing AndAlso g_mOscStatusThread.IsAlive) Then
-            g_mOscStatusThread.Abort()
-            g_mOscStatusThread.Join()
-            g_mOscStatusThread = Nothing
-        End If
-
-        For Each mItem In g_mVMTControllers
-            If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
-                mItem.Dispose()
-            End If
-        Next
-        g_mVMTControllers.Clear()
-
-        For Each mItem In g_mAutostartMenuStrips
-            If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
-                mItem.Value.Dispose()
-            End If
-        Next
-        g_mAutostartMenuStrips.Clear()
-
-        If (g_ClassOscDevices IsNot Nothing) Then
-            g_ClassOscDevices.Dispose()
-            g_ClassOscDevices = Nothing
-        End If
-
-        If (g_ClassOscServer IsNot Nothing) Then
-            g_ClassOscServer.Dispose()
-            g_ClassOscServer = Nothing
-        End If
-    End Sub
-
     Enum ENUM_OSC_CONNECTION_STATUS
         NOT_STARTED
         DISCONNETED
@@ -654,7 +616,14 @@ Public Class UCVirtualMotionTracker
     Private Sub OscDeviceStatusThread()
         While True
             Try
+                Const LISTVIEW_SUBITEM_TYPE As Integer = 0
+                Const LISTVIEW_SUBITEM_SERIAL As Integer = 1
+                Const LISTVIEW_SUBITEM_POSITION As Integer = 2
+                Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
+                Const LISTVIEW_SUBITEM_FPS As Integer = 4
+
                 Dim mDevices = g_ClassOscDevices.GetDevices
+
                 For i = 0 To mDevices.Length - 1
                     Dim mDevice As ClassOscDevices.STRUC_DEVICE = mDevices(i)
 
@@ -664,27 +633,43 @@ Public Class UCVirtualMotionTracker
                     Me.BeginInvoke(Sub()
                                        Dim bFound As Boolean = False
 
-                                       For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                           Const LISTVIEW_SUBITEM_TYPE As Integer = 0
-                                           Const LISTVIEW_SUBITEM_SERIAL As Integer = 1
-                                           Const LISTVIEW_SUBITEM_POSITION As Integer = 2
-                                           Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
+                                       Dim mDelta As TimeSpan = (Now - mDevice.mLastPoseTimestamp)
 
+                                       ' Change info about device
+                                       For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
                                            If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
+
                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
 
+                                               If (mDelta.TotalMilliseconds > Double.Epsilon) Then
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(CInt(1000.0 / mDelta.TotalMilliseconds))
+                                               Else
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = "0"
+                                               End If
+
+                                               If (mDevice.mLastPoseTimestamp + New TimeSpan(0, 0, 5) > Now) Then
+                                                   mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                               Else
+                                                   mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                               End If
+
                                                bFound = True
-                                           End If
+                                               End If
                                        Next
 
+                                       ' Added device when not found
                                        If (Not bFound) Then
-                                           ListView_OscDevices.Items.Add(New ListViewItem(New String() {
+                                           Dim mListViewItem = New ListViewItem(New String() {
                                                 mDevice.iType.ToString,
                                                 mDevice.sSerial,
                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
-                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                            }))
+                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                "0"
+                                            })
+                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+
+                                           ListView_OscDevices.Items.Add(mListViewItem)
                                        End If
                                    End Sub)
                 Next
@@ -697,6 +682,44 @@ Public Class UCVirtualMotionTracker
 
             Threading.Thread.Sleep(1000)
         End While
+    End Sub
+
+    Private Sub CleanUp()
+        If (g_mOscDeviceStatusThread IsNot Nothing AndAlso g_mOscDeviceStatusThread.IsAlive) Then
+            g_mOscDeviceStatusThread.Abort()
+            g_mOscDeviceStatusThread.Join()
+            g_mOscDeviceStatusThread = Nothing
+        End If
+
+        If (g_mOscStatusThread IsNot Nothing AndAlso g_mOscStatusThread.IsAlive) Then
+            g_mOscStatusThread.Abort()
+            g_mOscStatusThread.Join()
+            g_mOscStatusThread = Nothing
+        End If
+
+        For Each mItem In g_mVMTControllers
+            If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
+                mItem.Dispose()
+            End If
+        Next
+        g_mVMTControllers.Clear()
+
+        For Each mItem In g_mAutostartMenuStrips
+            If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
+                mItem.Value.Dispose()
+            End If
+        Next
+        g_mAutostartMenuStrips.Clear()
+
+        If (g_ClassOscDevices IsNot Nothing) Then
+            g_ClassOscDevices.Dispose()
+            g_ClassOscDevices = Nothing
+        End If
+
+        If (g_ClassOscServer IsNot Nothing) Then
+            g_ClassOscServer.Dispose()
+            g_ClassOscServer = Nothing
+        End If
     End Sub
 
     Class ClassOscServer
