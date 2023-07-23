@@ -85,11 +85,21 @@ Public Class FormMain
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
 
+                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
                 g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = True
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
+
+                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
 
             Case ENUM_PAGE.VIRTUAL_HMDS
                 g_mUCStartPage.Visible = False
@@ -97,11 +107,21 @@ Public Class FormMain
                 g_mUCVirtualHMDs.Visible = True
                 g_mUCVirtualTrackers.Visible = False
 
+                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+
             Case ENUM_PAGE.VIRTUAL_TRACKERS
                 g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = True
+
+                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
         End Select
     End Sub
 
