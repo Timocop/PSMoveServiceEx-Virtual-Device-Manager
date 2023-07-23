@@ -132,33 +132,44 @@ Public Class UCRemoteDeviceItem
     End Sub
 
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
-        TimerFPS.Stop()
+        Try
+            TimerFPS.Stop()
 
-        SyncLock _ThreadLock
-            If (g_iFpsOrientationCounter > 0) Then
-                g_mLastDeviceResponse.Restart()
-            End If
-
-            If (g_mLastDeviceResponse.ElapsedMilliseconds > MAX_DEVICE_TIMEOUT) Then
-                If (Not Panel_Status.Visible) Then
-                    Panel_Status.Visible = True
-                    Me.Height = g_iStatusShowHeight
+            SyncLock _ThreadLock
+                If (g_iFpsOrientationCounter > 0) Then
+                    g_mLastDeviceResponse.Restart()
                 End If
-            Else
-                If (Panel_Status.Visible) Then
-                    Panel_Status.Visible = False
-                    Me.Height = g_iStatusHideHeight
+
+                If (g_mLastDeviceResponse.ElapsedMilliseconds > MAX_DEVICE_TIMEOUT) Then
+                    If (Not Panel_Status.Visible) Then
+                        Panel_Status.Visible = True
+
+                        If (Me.Height <> g_iStatusShowHeight) Then
+                            Me.Height = g_iStatusShowHeight
+                        End If
+                    End If
+                Else
+                    If (Panel_Status.Visible) Then
+                        Panel_Status.Visible = False
+
+                        If (Me.Height <> g_iStatusHideHeight) Then
+                            Me.Height = g_iStatusHideHeight
+                        End If
+
+                    End If
                 End If
-            End If
 
-            TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
+                If (Me.Visible) Then
+                    TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
+                End If
 
-            g_iFpsPacketCounter = 0
-            g_iFpsOrientationCounter = 0
-            g_mClassIO.m_FpsPipeCounter = 0
-        End SyncLock
-
-        TimerFPS.Start()
+                g_iFpsPacketCounter = 0
+                g_iFpsOrientationCounter = 0
+                g_mClassIO.m_FpsPipeCounter = 0
+            End SyncLock
+        Finally
+            TimerFPS.Start()
+        End Try
     End Sub
 
     Private Sub OnTrackerRotation(mTracker As ClassTracker, iX As Single, iY As Single, iZ As Single, iW As Single)

@@ -386,13 +386,17 @@ Public Class UCVirtualMotionTrackerItem
 
             SyncLock _ThreadLock
                 If (g_mClassIO.m_ControllerData IsNot Nothing) Then
-                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_ControllerData.m_Position.X), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Y), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Z), Environment.NewLine)
+                    If (Me.Visible) Then
+                        TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_ControllerData.m_Position.X), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Y), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Z), Environment.NewLine)
 
-                    Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_ControllerData.m_Orientation)
-                    TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
+                        Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_ControllerData.m_Orientation)
+                        TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
+                    End If
                 Else
-                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
-                    TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                    If (Me.Visible) Then
+                        TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                        TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                    End If
                 End If
 
             End SyncLock
@@ -499,13 +503,17 @@ Public Class UCVirtualMotionTrackerItem
                 If (Panel_Status.Visible) Then
                     Panel_Status.Visible = False
 
-                    Me.Height = g_iStatusHideHeight
+                    If (Me.Height <> g_iStatusHideHeight) Then
+                        Me.Height = g_iStatusHideHeight
+                    End If
                 End If
             Else
                 If (Not Panel_Status.Visible) Then
                     Panel_Status.Visible = True
 
-                    Me.Height = g_iStatusShowHeight
+                    If (Me.Height <> g_iStatusShowHeight) Then
+                        Me.Height = g_iStatusShowHeight
+                    End If
                 End If
             End If
         Finally

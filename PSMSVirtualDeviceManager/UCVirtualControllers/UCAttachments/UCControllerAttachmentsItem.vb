@@ -256,15 +256,18 @@ Public Class UCControllerAttachmentsItem
     End Sub
 
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
-        TimerFPS.Stop()
+        Try
+            TimerFPS.Stop()
 
-        SyncLock _ThreadLock
-            TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsPipeCounter)
+            SyncLock _ThreadLock
+                TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsPipeCounter)
 
-            g_mClassIO.m_FpsPipeCounter = 0
-        End SyncLock
+                g_mClassIO.m_FpsPipeCounter = 0
+            End SyncLock
 
-        TimerFPS.Start()
+        Finally
+            TimerFPS.Start()
+        End Try
     End Sub
 
 
