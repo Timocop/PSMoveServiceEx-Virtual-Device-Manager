@@ -220,7 +220,7 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
 
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Button_StartOscServer.PerformClick()
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
     End Sub
 
     Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
@@ -231,7 +231,7 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
 
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Button_PauseOscServer.PerformClick()
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.LinkLabel_OscPause_Click()
     End Sub
 
     Public Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked

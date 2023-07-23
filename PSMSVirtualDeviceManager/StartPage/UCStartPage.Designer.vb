@@ -55,6 +55,7 @@ Partial Class UCStartPage
         Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.LinkLabel_ConfigToolClose = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -194,6 +195,7 @@ Partial Class UCStartPage
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolClose)
         Me.Panel2.Controls.Add(Me.Label2)
         Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality2)
         Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolRun)
@@ -426,6 +428,23 @@ Partial Class UCStartPage
         Me.ClassPictureBoxQuality3.TabIndex = 24
         Me.ClassPictureBoxQuality3.TabStop = False
         '
+        'LinkLabel_ConfigToolClose
+        '
+        Me.LinkLabel_ConfigToolClose.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ConfigToolClose.AutoSize = True
+        Me.LinkLabel_ConfigToolClose.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigToolClose.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ConfigToolClose.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 59)
+        Me.LinkLabel_ConfigToolClose.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ConfigToolClose.Name = "LinkLabel_ConfigToolClose"
+        Me.LinkLabel_ConfigToolClose.Size = New System.Drawing.Size(98, 13)
+        Me.LinkLabel_ConfigToolClose.TabIndex = 24
+        Me.LinkLabel_ConfigToolClose.TabStop = True
+        Me.LinkLabel_ConfigToolClose.Text = "Close Config Tool"
+        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ConfigToolClose, "Tooltip")
+        Me.LinkLabel_ConfigToolClose.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'UCStartPage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -483,4 +502,5 @@ Partial Class UCStartPage
     Friend WithEvents LinkLabel_ServiceFactory As LinkLabel
     Friend WithEvents LinkLabel_ServicePath As LinkLabel
     Friend WithEvents Panel_PsmsxStatus As Panel
+    Friend WithEvents LinkLabel_ConfigToolClose As LinkLabel
 End Class

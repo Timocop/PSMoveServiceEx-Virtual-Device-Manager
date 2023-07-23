@@ -12,6 +12,7 @@ Public Class UCVirtualMotionTracker
     Public g_ClassControllerSettings As ClassControllerSettings
 
     Private g_bIgnoreEvents As Boolean = False
+    Private g_mOscStatusThread As Threading.Thread = Nothing
 
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
@@ -74,6 +75,10 @@ Public Class UCVirtualMotionTracker
         CreateControl()
 
         Panel_SteamVRRestart.Visible = False
+
+        g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
+        g_mOscStatusThread.IsBackground = True
+        g_mOscStatusThread.Start()
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -110,35 +115,6 @@ Public Class UCVirtualMotionTracker
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
-    End Sub
-
-    Private Sub Button_StartOscServer_Click(sender As Object, e As EventArgs) Handles Button_StartOscServer.Click
-        Try
-            g_ClassOscServer.StartServer()
-            g_ClassOscServer.m_SuspendRequests = False
-
-            Button_StartOscServer.Enabled = False
-            Button_PauseOscServer.Enabled = True
-
-            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
-        Catch ex As Exception
-            With New Text.StringBuilder
-                .AppendLine("Unable to create OSC Server!")
-                .AppendLine()
-                .AppendLine(ex.Message)
-
-                MessageBox.Show(.ToString)
-            End With
-        End Try
-    End Sub
-
-    Private Sub Button_PauseOscServer_Click(sender As Object, e As EventArgs) Handles Button_PauseOscServer.Click
-        g_ClassOscServer.m_SuspendRequests = True
-
-        Button_StartOscServer.Enabled = True
-        Button_PauseOscServer.Enabled = False
-
-        g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
     End Sub
 
     Private Sub AutostartLoad()
@@ -234,7 +210,7 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
-
+        ' TODO: Add help
     End Sub
 
     Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
@@ -425,7 +401,159 @@ Public Class UCVirtualMotionTracker
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
+        Try
+            g_ClassControllerSettings.SaveSettings()
+            g_ClassControllerSettings.SetUnsavedState(False)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Public Sub LinkLabel_OscRun_Click()
+        LinkLabel_OscRun_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub LinkLabel_OscRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscRun.LinkClicked
+        Try
+            g_ClassOscServer.StartServer()
+            g_ClassOscServer.m_SuspendRequests = False
+
+            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
+        Catch ex As Exception
+            With New Text.StringBuilder
+                .AppendLine("Unable to create OSC Server!")
+                .AppendLine()
+                .AppendLine(ex.Message)
+
+                MessageBox.Show(.ToString)
+            End With
+        End Try
+    End Sub
+
+    Public Sub LinkLabel_OscPause_Click()
+        LinkLabel_OscPause_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub LinkLabel_OscPause_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscPause.LinkClicked
+        g_ClassOscServer.m_SuspendRequests = True
+
+        g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
+    End Sub
+
+    Public Sub LinkLabel_DriverInstall_Click()
+        LinkLabel_DriverInstall_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub LinkLabel_SteamRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamRun.LinkClicked
+        Try
+            Process.Start("steam://rungameid/250820")
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_DriverInstall_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DriverInstall.LinkClicked
+        Try
+            If (Process.GetProcessesByName("vrserver").Count > 0) Then
+                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
+            End If
+
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_DRIVER_ROOT_PATH)
+            If (Not IO.Directory.Exists(sDriverRoot)) Then
+                Throw New ArgumentException("Could not find driver root folder!")
+            End If
+
+            Dim sDriverDLL As String = IO.Path.Combine(IO.Path.Combine(sDriverRoot, "bin\win64"), ClassVmtConst.VMT_DRIVER_FILE)
+            If (Not IO.File.Exists(sDriverDLL)) Then
+                Throw New ArgumentException(String.Format("Could not find driver '{0}'!", ClassVmtConst.VMT_DRIVER_FILE))
+            End If
+
+            Dim mConfig As New ClassOpenVRConfig()
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to find and load OpenVR config!")
+            End If
+
+            ' Find outdated drivers
+            If (True) Then
+                Dim mDrivers As String() = mConfig.GetDrivers()
+                If (mDrivers IsNot Nothing) Then
+                    For Each sDriver As String In mDrivers
+                        Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
+                        If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
+                            Continue For
+                        End If
+
+                        If (sDriverPath.ToLowerInvariant.EndsWith(String.Format("\{0}", ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant))) Then
+                            Dim sMsg As New Text.StringBuilder
+                            sMsg.AppendLine("Another version of the SteamVR driver is already installed!")
+                            sMsg.AppendLine("Do you want to remove the following outdated driver?")
+                            sMsg.AppendLine()
+                            sMsg.AppendLine(sDriverPath)
+                            If (MessageBox.Show(sMsg.ToString, "Outdated driver found", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
+                                mConfig.RemovePath(sDriver)
+                                mConfig.SaveConfig()
+                            End If
+                        End If
+                    Next
+                End If
+            End If
+
+            ' Find same driver
+            If (True) Then
+                Dim mDrivers As String() = mConfig.GetDrivers()
+                If (mDrivers IsNot Nothing) Then
+                    For Each sDriver As String In mDrivers
+                        Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
+                        If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
+                            MessageBox.Show("SteamVR driver is already installed!", "Unable to install driver", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            Return
+                        End If
+                    Next
+                End If
+            End If
+
+            mConfig.AddPath(sDriverRoot)
+            mConfig.SaveConfig()
+
+            MessageBox.Show("Driver has ben successfully registered!", "Driver added to SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Public Sub LinkLabel_DriverUninstall_Click()
+        LinkLabel_DriverUninstall_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub LinkLabel_DriverUninstall_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DriverUninstall.LinkClicked
+        Try
+            If (Process.GetProcessesByName("vrserver").Count > 0) Then
+                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
+            End If
+
+            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_DRIVER_ROOT_PATH)
+
+            Dim mConfig As New ClassOpenVRConfig()
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to find and load OpenVR config!")
+            End If
+
+            mConfig.RemovePath(sDriverRoot)
+            mConfig.SaveConfig()
+
+            MessageBox.Show("Driver has ben successfully unregistered!", "Driver removed from SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Private Sub CleanUp()
+        If (g_mOscStatusThread IsNot Nothing AndAlso g_mOscStatusThread.IsAlive) Then
+            g_mOscStatusThread.Abort()
+            g_mOscStatusThread.Join()
+            g_mOscStatusThread = Nothing
+        End If
+
         For Each mItem In g_mVMTControllers
             If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
                 mItem.Dispose()
@@ -446,6 +574,63 @@ Public Class UCVirtualMotionTracker
         End If
     End Sub
 
+    Enum ENUM_OSC_CONNECTION_STATUS
+        NOT_STARTED
+        DISCONNETED
+        CONNECTED
+        TIMEOUT
+    End Enum
+
+    Private Sub SetOscServerStatus(i As ENUM_OSC_CONNECTION_STATUS)
+        Select Case (i)
+            Case ENUM_OSC_CONNECTION_STATUS.NOT_STARTED
+                Label_OscStatus.Text = "OSC Uninitialized"
+                Panel_OscStatus.BackColor = Color.FromArgb(224, 224, 224)
+
+            Case ENUM_OSC_CONNECTION_STATUS.CONNECTED
+                Label_OscStatus.Text = "OSC Connected"
+                Panel_OscStatus.BackColor = Color.FromArgb(0, 192, 0)
+
+            Case ENUM_OSC_CONNECTION_STATUS.DISCONNETED
+                Label_OscStatus.Text = "OSC Disconnected"
+                Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
+
+            Case ENUM_OSC_CONNECTION_STATUS.TIMEOUT
+                Label_OscStatus.Text = "OSC Timeout"
+                Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
+
+        End Select
+    End Sub
+
+    Private Sub OscStatusThread()
+        While True
+            Try
+                Threading.Thread.Sleep(1000)
+
+                If (g_ClassOscServer Is Nothing OrElse Not g_ClassOscServer.IsRunning()) Then
+                    Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
+                Else
+                    If (g_ClassOscServer.m_SuspendRequests) Then
+                        Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED))
+                    Else
+                        Dim mLastResponse As TimeSpan = (Now - g_ClassOscServer.m_LastResponse)
+
+                        If (mLastResponse.TotalMilliseconds > 5000) Then
+                            Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.TIMEOUT))
+                        Else
+                            Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.CONNECTED))
+                        End If
+                    End If
+                End If
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+
+            End Try
+        End While
+
+    End Sub
+
     Class ClassOscServer
         Implements IDisposable
 
@@ -458,16 +643,20 @@ Public Class UCVirtualMotionTracker
         Public Event OnSuspendChanged()
 
         Private g_bSuspendRequest As Boolean = False
+        Private g_mLastResponse As Date
+
 
         Public Sub New()
         End Sub
 
         Public Sub StartServer()
-            If (g_VmtOsc IsNot Nothing) Then
-                Return
-            End If
+            SyncLock _ThreadLock
+                If (g_VmtOsc IsNot Nothing) Then
+                    Return
+                End If
 
-            g_VmtOsc = New ClassOSC(ClassVmtConst.VMT_IP, ClassVmtConst.VMT_PORT_RECEIVE, ClassVmtConst.VMT_PORT_SEND, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
+                g_VmtOsc = New ClassOSC(ClassVmtConst.VMT_IP, ClassVmtConst.VMT_PORT_RECEIVE, ClassVmtConst.VMT_PORT_SEND, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
+            End SyncLock
 
             RaiseEvent OnSuspendChanged()
         End Sub
@@ -485,6 +674,14 @@ Public Class UCVirtualMotionTracker
 
                 RaiseEvent OnSuspendChanged()
             End Set
+        End Property
+
+        ReadOnly Property m_LastResponse As Date
+            Get
+                SyncLock _ThreadLock
+                    Return g_mLastResponse
+                End SyncLock
+            End Get
         End Property
 
         Public Sub Send(mPacket As OscPacket)
@@ -506,6 +703,10 @@ Public Class UCVirtualMotionTracker
                 Return
             End If
 
+            SyncLock _ThreadLock
+                g_mLastResponse = Now
+            End SyncLock
+
             RaiseEvent OnOscProcessBundle(mBundle)
         End Sub
 
@@ -513,6 +714,10 @@ Public Class UCVirtualMotionTracker
             If (m_SuspendRequests) Then
                 Return
             End If
+
+            SyncLock _ThreadLock
+                g_mLastResponse = Now
+            End SyncLock
 
             RaiseEvent OnOscProcessMessage(mMessage)
         End Sub
@@ -742,107 +947,4 @@ Public Class UCVirtualMotionTracker
         End Sub
     End Class
 
-    Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
-        Try
-            g_ClassControllerSettings.SaveSettings()
-            g_ClassControllerSettings.SetUnsavedState(False)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-    Private Sub Button_InstallVmtDriver_Click(sender As Object, e As EventArgs) Handles Button_InstallVmtDriver.Click
-        ContextMenuStrip_SteamVRDriver.Show(Button_InstallVmtDriver, New Point(0, Button_InstallVmtDriver.Height))
-    End Sub
-
-    Private Sub ToolStripMenuItem_DriverRegister_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_DriverRegister.Click
-        Try
-            If (Process.GetProcessesByName("vrserver").Count > 0) Then
-                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
-            End If
-
-            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_DRIVER_ROOT_PATH)
-            If (Not IO.Directory.Exists(sDriverRoot)) Then
-                Throw New ArgumentException("Could not find driver root folder!")
-            End If
-
-            Dim sDriverDLL As String = IO.Path.Combine(IO.Path.Combine(sDriverRoot, "bin\win64"), ClassVmtConst.VMT_DRIVER_FILE)
-            If (Not IO.File.Exists(sDriverDLL)) Then
-                Throw New ArgumentException(String.Format("Could not find driver '{0}'!", ClassVmtConst.VMT_DRIVER_FILE))
-            End If
-
-            Dim mConfig As New ClassOpenVRConfig()
-            If (Not mConfig.LoadConfig()) Then
-                Throw New ArgumentException("Unable to find and load OpenVR config!")
-            End If
-
-            ' Find outdated drivers
-            If (True) Then
-                Dim mDrivers As String() = mConfig.GetDrivers()
-                If (mDrivers IsNot Nothing) Then
-                    For Each sDriver As String In mDrivers
-                        Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
-                        If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
-                            Continue For
-                        End If
-
-                        If (sDriverPath.ToLowerInvariant.EndsWith(String.Format("\{0}", ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant))) Then
-                            Dim sMsg As New Text.StringBuilder
-                            sMsg.AppendLine("Another version of the SteamVR driver is already installed!")
-                            sMsg.AppendLine("Do you want to remove the following outdated driver?")
-                            sMsg.AppendLine()
-                            sMsg.AppendLine(sDriverPath)
-                            If (MessageBox.Show(sMsg.ToString, "Outdated driver found", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
-                                mConfig.RemovePath(sDriver)
-                                mConfig.SaveConfig()
-                            End If
-                        End If
-                    Next
-                End If
-            End If
-
-            ' Find same driver
-            If (True) Then
-                Dim mDrivers As String() = mConfig.GetDrivers()
-                If (mDrivers IsNot Nothing) Then
-                    For Each sDriver As String In mDrivers
-                        Dim sDriverPath As String = IO.Path.GetFullPath(sDriver)
-                        If (sDriverPath.ToLowerInvariant = sDriverRoot.ToLowerInvariant) Then
-                            MessageBox.Show("SteamVR driver is already installed!", "Unable to install driver", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            Return
-                        End If
-                    Next
-                End If
-            End If
-
-            mConfig.AddPath(sDriverRoot)
-            mConfig.SaveConfig()
-
-            MessageBox.Show("Driver has ben successfully registered!", "Driver added to SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-    Private Sub ToolStripMenuItem_DriverUnregister_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_DriverUnregister.Click
-        Try
-            If (Process.GetProcessesByName("vrserver").Count > 0) Then
-                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
-            End If
-
-            Dim sDriverRoot As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassVmtConst.VMT_DRIVER_ROOT_PATH)
-
-            Dim mConfig As New ClassOpenVRConfig()
-            If (Not mConfig.LoadConfig()) Then
-                Throw New ArgumentException("Unable to find and load OpenVR config!")
-            End If
-
-            mConfig.RemovePath(sDriverRoot)
-            mConfig.SaveConfig()
-
-            MessageBox.Show("Driver has ben successfully unregistered!", "Driver removed from SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
 End Class

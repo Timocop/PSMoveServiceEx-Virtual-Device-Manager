@@ -242,6 +242,25 @@
         End Try
     End Sub
 
+    Private Sub LinkLabel_ConfigToolClose_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolClose.LinkClicked
+        Try
+            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveConfigTool")
+            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
+                Throw New ArgumentException("PSMoveConfigTool is not running!")
+            End If
+
+            For Each mProcess In mProcesses
+                If (mProcess.CloseMainWindow()) Then
+                    mProcess.WaitForExit(10000)
+                Else
+                    mProcess.Kill()
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Public Sub LinkLabel_InstallDrivers_Click()
         LinkLabel_InstallDrivers_LinkClicked(Nothing, Nothing)
     End Sub
