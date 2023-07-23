@@ -219,6 +219,7 @@ Public Class FormMain
 
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabControl1.SelectedTab = g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabPage_Management
 
         g_mUCVirtualControllers.g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
     End Sub
@@ -230,6 +231,7 @@ Public Class FormMain
 
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
+        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabControl1.SelectedTab = g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabPage_Management
 
         g_mUCVirtualControllers.g_mUCVirtualMotionTracker.LinkLabel_OscPause_Click()
     End Sub
