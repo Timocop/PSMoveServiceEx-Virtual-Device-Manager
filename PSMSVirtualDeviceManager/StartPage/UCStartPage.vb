@@ -53,12 +53,10 @@
     Private Sub SetStatusServiceConnected(bConnected As Boolean)
         If (bConnected) Then
             Label_PsmsxStatus.Text = "Service Connected"
-            Panel_PsmsxStatus.BackColor = Color.FromArgb(128, 255, 128)
-            ClassPictureBoxQuality_PsmsxStatus.Image = My.Resources.netshell_1610_32x32_32
+            Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
         Else
             Label_PsmsxStatus.Text = "Service Disconnected"
-            Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 128)
-            ClassPictureBoxQuality_PsmsxStatus.Image = My.Resources.netshell_1608_32x32_32
+            Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
         End If
 
     End Sub
@@ -123,7 +121,6 @@
                 mProcess.StartInfo.UseShellExecute = False
 
                 mProcess.Start()
-
 
             End Using
         Catch ex As Exception

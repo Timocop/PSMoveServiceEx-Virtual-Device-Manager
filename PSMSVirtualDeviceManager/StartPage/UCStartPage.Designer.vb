@@ -28,45 +28,44 @@ Partial Class UCStartPage
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.LinkLabel_ServiceRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceRestart = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceStop = New System.Windows.Forms.LinkLabel()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_ServiceRun = New System.Windows.Forms.LinkLabel()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LinkLabel_ConfigToolRun = New System.Windows.Forms.LinkLabel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.LinkLabel_InstallDrivers = New System.Windows.Forms.LinkLabel()
+        Me.Panel12 = New System.Windows.Forms.Panel()
+        Me.Label_PsmsxStatus = New System.Windows.Forms.Label()
+        Me.Panel_PsmsxStatus = New System.Windows.Forms.Panel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Panel_PsmsxStatus = New System.Windows.Forms.Panel()
-        Me.Label_PsmsxStatus = New System.Windows.Forms.Label()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_InstallDrivers = New System.Windows.Forms.LinkLabel()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality_PsmsxStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
         Me.Panel4.SuspendLayout()
-        Me.Panel6.SuspendLayout()
-        Me.Panel_PsmsxStatus.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.Panel5.SuspendLayout()
+        Me.Panel12.SuspendLayout()
+        Me.Panel6.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality_PsmsxStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -75,15 +74,89 @@ Partial Class UCStartPage
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel1.Controls.Add(Me.TableLayoutPanel1)
-        Me.Panel1.Controls.Add(Me.Panel_PsmsxStatus)
+        Me.Panel1.Controls.Add(Me.Panel12)
         Me.Panel1.Location = New System.Drawing.Point(16, 83)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(768, 268)
         Me.Panel1.TabIndex = 0
         '
-        'ToolTip_Service
+        'TableLayoutPanel1
         '
+        Me.TableLayoutPanel1.ColumnCount = 2
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334!))
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel5, 0, 1)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(766, 224)
+        Me.TableLayoutPanel1.TabIndex = 1
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.LinkLabel_ServicePath)
+        Me.Panel4.Controls.Add(Me.Label1)
+        Me.Panel4.Controls.Add(Me.ClassPictureBoxQuality1)
+        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceRun)
+        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceRestart)
+        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceStop)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel4.Location = New System.Drawing.Point(0, 0)
+        Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(382, 112)
+        Me.Panel4.TabIndex = 1
+        '
+        'LinkLabel_ServicePath
+        '
+        Me.LinkLabel_ServicePath.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ServicePath.AutoSize = True
+        Me.LinkLabel_ServicePath.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ServicePath.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ServicePath.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 91)
+        Me.LinkLabel_ServicePath.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ServicePath.Name = "LinkLabel_ServicePath"
+        Me.LinkLabel_ServicePath.Size = New System.Drawing.Size(96, 13)
+        Me.LinkLabel_ServicePath.TabIndex = 19
+        Me.LinkLabel_ServicePath.TabStop = True
+        Me.LinkLabel_ServicePath.Text = "Set Service Path..."
+        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServicePath, "Tooltip")
+        Me.LinkLabel_ServicePath.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.ForeColor = System.Drawing.Color.Navy
+        Me.Label1.Location = New System.Drawing.Point(102, 19)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(116, 21)
+        Me.Label1.TabIndex = 18
+        Me.Label1.Text = "Service Control"
+        '
+        'LinkLabel_ServiceRun
+        '
+        Me.LinkLabel_ServiceRun.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ServiceRun.AutoSize = True
+        Me.LinkLabel_ServiceRun.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ServiceRun.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ServiceRun.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ServiceRun.Location = New System.Drawing.Point(103, 43)
+        Me.LinkLabel_ServiceRun.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ServiceRun.Name = "LinkLabel_ServiceRun"
+        Me.LinkLabel_ServiceRun.Size = New System.Drawing.Size(66, 13)
+        Me.LinkLabel_ServiceRun.TabIndex = 17
+        Me.LinkLabel_ServiceRun.TabStop = True
+        Me.LinkLabel_ServiceRun.Text = "Run Service"
+        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServiceRun, "Tooltip")
+        Me.LinkLabel_ServiceRun.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_ServiceRestart
         '
@@ -119,23 +192,6 @@ Partial Class UCStartPage
         Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServiceStop, "Tooltip")
         Me.LinkLabel_ServiceStop.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'TableLayoutPanel1
-        '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334!))
-        Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Panel5, 0, 1)
-        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(766, 224)
-        Me.TableLayoutPanel1.TabIndex = 1
-        '
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.Label2)
@@ -148,54 +204,11 @@ Partial Class UCStartPage
         Me.Panel2.Size = New System.Drawing.Size(384, 112)
         Me.Panel2.TabIndex = 0
         '
-        'Panel4
-        '
-        Me.Panel4.Controls.Add(Me.LinkLabel_ServicePath)
-        Me.Panel4.Controls.Add(Me.Label1)
-        Me.Panel4.Controls.Add(Me.ClassPictureBoxQuality1)
-        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceRun)
-        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceRestart)
-        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceStop)
-        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel4.Location = New System.Drawing.Point(0, 0)
-        Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(382, 112)
-        Me.Panel4.TabIndex = 1
-        '
-        'LinkLabel_ServiceRun
-        '
-        Me.LinkLabel_ServiceRun.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ServiceRun.AutoSize = True
-        Me.LinkLabel_ServiceRun.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceRun.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ServiceRun.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceRun.Location = New System.Drawing.Point(103, 43)
-        Me.LinkLabel_ServiceRun.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_ServiceRun.Name = "LinkLabel_ServiceRun"
-        Me.LinkLabel_ServiceRun.Size = New System.Drawing.Size(66, 13)
-        Me.LinkLabel_ServiceRun.TabIndex = 17
-        Me.LinkLabel_ServiceRun.TabStop = True
-        Me.LinkLabel_ServiceRun.Text = "Run Service"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServiceRun, "Tooltip")
-        Me.LinkLabel_ServiceRun.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.ForeColor = System.Drawing.Color.SlateGray
-        Me.Label1.Location = New System.Drawing.Point(102, 19)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(116, 21)
-        Me.Label1.TabIndex = 18
-        Me.Label1.Text = "Service Control"
-        '
         'Label2
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.SlateGray
+        Me.Label2.ForeColor = System.Drawing.Color.Navy
         Me.Label2.Location = New System.Drawing.Point(102, 19)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(106, 21)
@@ -218,112 +231,6 @@ Partial Class UCStartPage
         Me.LinkLabel_ConfigToolRun.Text = "Run Config Tool"
         Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ConfigToolRun, "Tooltip")
         Me.LinkLabel_ConfigToolRun.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'Panel6
-        '
-        Me.Panel6.Controls.Add(Me.PictureBox1)
-        Me.Panel6.Controls.Add(Me.Label4)
-        Me.Panel6.Controls.Add(Me.Label3)
-        Me.Panel6.Controls.Add(Me.Label5)
-        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel6.Location = New System.Drawing.Point(0, 0)
-        Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(800, 64)
-        Me.Panel6.TabIndex = 1
-        '
-        'Label4
-        '
-        Me.Label4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label4.Location = New System.Drawing.Point(66, 30)
-        Me.Label4.Margin = New System.Windows.Forms.Padding(3)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(731, 30)
-        Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Manage PSMoveServiceEx, configurations and other here."
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(66, 3)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(3)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(84, 21)
-        Me.Label3.TabIndex = 1
-        Me.Label3.Text = "StartPage"
-        '
-        'Label5
-        '
-        Me.Label5.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.Label5.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Label5.Location = New System.Drawing.Point(0, 63)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(800, 1)
-        Me.Label5.TabIndex = 0
-        '
-        'Panel_PsmsxStatus
-        '
-        Me.Panel_PsmsxStatus.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.Panel_PsmsxStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.Panel_PsmsxStatus.Controls.Add(Me.Label_PsmsxStatus)
-        Me.Panel_PsmsxStatus.Controls.Add(Me.ClassPictureBoxQuality_PsmsxStatus)
-        Me.Panel_PsmsxStatus.Controls.Add(Me.Panel3)
-        Me.Panel_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel_PsmsxStatus.Location = New System.Drawing.Point(0, 0)
-        Me.Panel_PsmsxStatus.Name = "Panel_PsmsxStatus"
-        Me.Panel_PsmsxStatus.Size = New System.Drawing.Size(766, 42)
-        Me.Panel_PsmsxStatus.TabIndex = 0
-        '
-        'Label_PsmsxStatus
-        '
-        Me.Label_PsmsxStatus.BackColor = System.Drawing.Color.Transparent
-        Me.Label_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label_PsmsxStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_PsmsxStatus.ForeColor = System.Drawing.Color.Black
-        Me.Label_PsmsxStatus.Location = New System.Drawing.Point(42, 0)
-        Me.Label_PsmsxStatus.Name = "Label_PsmsxStatus"
-        Me.Label_PsmsxStatus.Size = New System.Drawing.Size(724, 41)
-        Me.Label_PsmsxStatus.TabIndex = 1
-        Me.Label_PsmsxStatus.Text = "PSMoveServiceEx Disconnected."
-        Me.Label_PsmsxStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'Panel3
-        '
-        Me.Panel3.BackColor = System.Drawing.Color.Gray
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel3.Location = New System.Drawing.Point(0, 41)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(766, 1)
-        Me.Panel3.TabIndex = 0
-        '
-        'LinkLabel_InstallDrivers
-        '
-        Me.LinkLabel_InstallDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_InstallDrivers.AutoSize = True
-        Me.LinkLabel_InstallDrivers.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_InstallDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_InstallDrivers.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_InstallDrivers.Location = New System.Drawing.Point(103, 40)
-        Me.LinkLabel_InstallDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_InstallDrivers.Name = "LinkLabel_InstallDrivers"
-        Me.LinkLabel_InstallDrivers.Size = New System.Drawing.Size(152, 13)
-        Me.LinkLabel_InstallDrivers.TabIndex = 25
-        Me.LinkLabel_InstallDrivers.TabStop = True
-        Me.LinkLabel_InstallDrivers.Text = "Install PlaystationEye Drivers"
-        Me.LinkLabel_InstallDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.ForeColor = System.Drawing.Color.SlateGray
-        Me.Label6.Location = New System.Drawing.Point(102, 16)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(123, 21)
-        Me.Label6.TabIndex = 26
-        Me.Label6.Text = "Troubleshooting"
         '
         'Panel5
         '
@@ -354,22 +261,123 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory.Text = "Factory Reset PSMoveServiceEx"
         Me.LinkLabel_ServiceFactory.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'LinkLabel_ServicePath
+        'Label6
         '
-        Me.LinkLabel_ServicePath.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ServicePath.AutoSize = True
-        Me.LinkLabel_ServicePath.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServicePath.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ServicePath.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 91)
-        Me.LinkLabel_ServicePath.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_ServicePath.Name = "LinkLabel_ServicePath"
-        Me.LinkLabel_ServicePath.Size = New System.Drawing.Size(96, 13)
-        Me.LinkLabel_ServicePath.TabIndex = 19
-        Me.LinkLabel_ServicePath.TabStop = True
-        Me.LinkLabel_ServicePath.Text = "Set Service Path..."
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServicePath, "Tooltip")
-        Me.LinkLabel_ServicePath.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.ForeColor = System.Drawing.Color.Navy
+        Me.Label6.Location = New System.Drawing.Point(102, 16)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(123, 21)
+        Me.Label6.TabIndex = 26
+        Me.Label6.Text = "Troubleshooting"
+        '
+        'LinkLabel_InstallDrivers
+        '
+        Me.LinkLabel_InstallDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_InstallDrivers.AutoSize = True
+        Me.LinkLabel_InstallDrivers.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_InstallDrivers.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallDrivers.Location = New System.Drawing.Point(103, 40)
+        Me.LinkLabel_InstallDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_InstallDrivers.Name = "LinkLabel_InstallDrivers"
+        Me.LinkLabel_InstallDrivers.Size = New System.Drawing.Size(152, 13)
+        Me.LinkLabel_InstallDrivers.TabIndex = 25
+        Me.LinkLabel_InstallDrivers.TabStop = True
+        Me.LinkLabel_InstallDrivers.Text = "Install PlaystationEye Drivers"
+        Me.LinkLabel_InstallDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'Panel12
+        '
+        Me.Panel12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel12.Controls.Add(Me.Label_PsmsxStatus)
+        Me.Panel12.Controls.Add(Me.Panel_PsmsxStatus)
+        Me.Panel12.Controls.Add(Me.Panel3)
+        Me.Panel12.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel12.Location = New System.Drawing.Point(0, 0)
+        Me.Panel12.Name = "Panel12"
+        Me.Panel12.Size = New System.Drawing.Size(766, 42)
+        Me.Panel12.TabIndex = 0
+        '
+        'Label_PsmsxStatus
+        '
+        Me.Label_PsmsxStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label_PsmsxStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_PsmsxStatus.ForeColor = System.Drawing.Color.Navy
+        Me.Label_PsmsxStatus.Location = New System.Drawing.Point(19, 0)
+        Me.Label_PsmsxStatus.Name = "Label_PsmsxStatus"
+        Me.Label_PsmsxStatus.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label_PsmsxStatus.Size = New System.Drawing.Size(747, 41)
+        Me.Label_PsmsxStatus.TabIndex = 1
+        Me.Label_PsmsxStatus.Text = "PSMoveServiceEx Disconnected."
+        Me.Label_PsmsxStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel_PsmsxStatus
+        '
+        Me.Panel_PsmsxStatus.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Panel_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Left
+        Me.Panel_PsmsxStatus.Location = New System.Drawing.Point(0, 0)
+        Me.Panel_PsmsxStatus.Name = "Panel_PsmsxStatus"
+        Me.Panel_PsmsxStatus.Size = New System.Drawing.Size(19, 41)
+        Me.Panel_PsmsxStatus.TabIndex = 2
+        '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.Color.Gray
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel3.Location = New System.Drawing.Point(0, 41)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(766, 1)
+        Me.Panel3.TabIndex = 0
+        '
+        'ToolTip_Service
+        '
+        '
+        'Panel6
+        '
+        Me.Panel6.Controls.Add(Me.PictureBox1)
+        Me.Panel6.Controls.Add(Me.Label4)
+        Me.Panel6.Controls.Add(Me.Label3)
+        Me.Panel6.Controls.Add(Me.Label5)
+        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel6.Location = New System.Drawing.Point(0, 0)
+        Me.Panel6.Name = "Panel6"
+        Me.Panel6.Size = New System.Drawing.Size(800, 64)
+        Me.Panel6.TabIndex = 1
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label4.Location = New System.Drawing.Point(66, 30)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(731, 30)
+        Me.Label4.TabIndex = 2
+        Me.Label4.Text = "Manage service and configurations here."
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(66, 3)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(172, 21)
+        Me.Label3.TabIndex = 1
+        Me.Label3.Text = "Service Management"
+        '
+        'Label5
+        '
+        Me.Label5.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.Label5.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Label5.Location = New System.Drawing.Point(0, 63)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(800, 1)
+        Me.Label5.TabIndex = 0
         '
         'PictureBox1
         '
@@ -418,19 +426,6 @@ Partial Class UCStartPage
         Me.ClassPictureBoxQuality3.TabIndex = 24
         Me.ClassPictureBoxQuality3.TabStop = False
         '
-        'ClassPictureBoxQuality_PsmsxStatus
-        '
-        Me.ClassPictureBoxQuality_PsmsxStatus.BackColor = System.Drawing.Color.Transparent
-        Me.ClassPictureBoxQuality_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_PsmsxStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_32x32_32
-        Me.ClassPictureBoxQuality_PsmsxStatus.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_PsmsxStatus.m_HighQuality = True
-        Me.ClassPictureBoxQuality_PsmsxStatus.Name = "ClassPictureBoxQuality_PsmsxStatus"
-        Me.ClassPictureBoxQuality_PsmsxStatus.Size = New System.Drawing.Size(42, 41)
-        Me.ClassPictureBoxQuality_PsmsxStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_PsmsxStatus.TabIndex = 8
-        Me.ClassPictureBoxQuality_PsmsxStatus.TabStop = False
-        '
         'UCStartPage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -443,29 +438,27 @@ Partial Class UCStartPage
         Me.Size = New System.Drawing.Size(800, 600)
         Me.Panel1.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
-        Me.Panel6.ResumeLayout(False)
-        Me.Panel6.PerformLayout()
-        Me.Panel_PsmsxStatus.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
+        Me.Panel12.ResumeLayout(False)
+        Me.Panel6.ResumeLayout(False)
+        Me.Panel6.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality_PsmsxStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
 
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents Panel_PsmsxStatus As Panel
+    Friend WithEvents Panel12 As Panel
     Friend WithEvents Panel3 As Panel
     Friend WithEvents Label_PsmsxStatus As Label
-    Friend WithEvents ClassPictureBoxQuality_PsmsxStatus As ClassPictureBoxQuality
     Friend WithEvents ToolTip_Service As ToolTip
     Friend WithEvents ClassPictureBoxQuality1 As ClassPictureBoxQuality
     Friend WithEvents LinkLabel_ServiceRestart As LinkLabel
@@ -489,4 +482,5 @@ Partial Class UCStartPage
     Friend WithEvents LinkLabel_InstallDrivers As LinkLabel
     Friend WithEvents LinkLabel_ServiceFactory As LinkLabel
     Friend WithEvents LinkLabel_ServicePath As LinkLabel
+    Friend WithEvents Panel_PsmsxStatus As Panel
 End Class

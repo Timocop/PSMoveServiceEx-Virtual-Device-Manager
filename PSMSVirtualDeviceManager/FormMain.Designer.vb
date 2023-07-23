@@ -82,8 +82,8 @@ Partial Class FormMain
         Me.LinkLabel_RestartPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RestartPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_RestartPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(32, 127)
-        Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(32, 3, 3, 0)
+        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(17, 105)
+        Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_RestartPSMS.Name = "LinkLabel_RestartPSMS"
         Me.LinkLabel_RestartPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_RestartPSMS.Size = New System.Drawing.Size(99, 19)
@@ -104,8 +104,8 @@ Partial Class FormMain
         Me.LinkLabel_StopPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_StopPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_StopPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StopPSMS.Location = New System.Drawing.Point(32, 105)
-        Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(32, 3, 3, 0)
+        Me.LinkLabel_StopPSMS.Location = New System.Drawing.Point(17, 83)
+        Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_StopPSMS.Name = "LinkLabel_StopPSMS"
         Me.LinkLabel_StopPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_StopPSMS.Size = New System.Drawing.Size(87, 19)
@@ -126,8 +126,8 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RunPSMSTool.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_RunPSMSTool.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(32, 149)
-        Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(32, 3, 3, 0)
+        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(17, 127)
+        Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
         Me.LinkLabel_RunPSMSTool.Name = "LinkLabel_RunPSMSTool"
         Me.LinkLabel_RunPSMSTool.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_RunPSMSTool.Size = New System.Drawing.Size(147, 19)
@@ -148,8 +148,8 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RunPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_RunPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMS.Location = New System.Drawing.Point(32, 83)
-        Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(32, 3, 3, 0)
+        Me.LinkLabel_RunPSMS.Location = New System.Drawing.Point(17, 61)
+        Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_RunPSMS.Name = "LinkLabel_RunPSMS"
         Me.LinkLabel_RunPSMS.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_RunPSMS.Size = New System.Drawing.Size(84, 19)
@@ -207,14 +207,14 @@ Partial Class FormMain
         Me.LinkLabel_StartPage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_StartPage.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_StartPage.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StartPage.Location = New System.Drawing.Point(17, 61)
+        Me.LinkLabel_StartPage.Location = New System.Drawing.Point(17, 207)
         Me.LinkLabel_StartPage.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_StartPage.Name = "LinkLabel_StartPage"
         Me.LinkLabel_StartPage.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.LinkLabel_StartPage.Size = New System.Drawing.Size(74, 19)
+        Me.LinkLabel_StartPage.Size = New System.Drawing.Size(105, 19)
         Me.LinkLabel_StartPage.TabIndex = 24
         Me.LinkLabel_StartPage.TabStop = True
-        Me.LinkLabel_StartPage.Text = "      StartPage"
+        Me.LinkLabel_StartPage.Text = "      Manage Service"
         Me.LinkLabel_StartPage.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_RunSteamVR
@@ -574,7 +574,7 @@ Partial Class FormMain
         Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
         Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 229)
-        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 3)
+        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
         Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
         Me.LinkLabel_Controllers.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
         Me.LinkLabel_Controllers.Size = New System.Drawing.Size(164, 19)
@@ -589,7 +589,7 @@ Partial Class FormMain
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(17, 200)
+        Me.Label2.Location = New System.Drawing.Point(17, 178)
         Me.Label2.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(144, 13)
