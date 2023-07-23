@@ -32,15 +32,19 @@ Partial Class UCStartPage
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ServiceRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceRestart = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceStop = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_ConfigToolClose = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ConfigToolRun = New System.Windows.Forms.LinkLabel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
         Me.Label6 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_InstallDrivers = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.Label_PsmsxStatus = New System.Windows.Forms.Label()
@@ -48,25 +52,21 @@ Partial Class UCStartPage
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.LinkLabel_ConfigToolClose = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.Panel6.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -142,6 +142,18 @@ Partial Class UCStartPage
         Me.Label1.TabIndex = 18
         Me.Label1.Text = "Service Control"
         '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 10
+        Me.ClassPictureBoxQuality1.TabStop = False
+        '
         'LinkLabel_ServiceRun
         '
         Me.LinkLabel_ServiceRun.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -206,6 +218,23 @@ Partial Class UCStartPage
         Me.Panel2.Size = New System.Drawing.Size(384, 112)
         Me.Panel2.TabIndex = 0
         '
+        'LinkLabel_ConfigToolClose
+        '
+        Me.LinkLabel_ConfigToolClose.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ConfigToolClose.AutoSize = True
+        Me.LinkLabel_ConfigToolClose.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigToolClose.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ConfigToolClose.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 59)
+        Me.LinkLabel_ConfigToolClose.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ConfigToolClose.Name = "LinkLabel_ConfigToolClose"
+        Me.LinkLabel_ConfigToolClose.Size = New System.Drawing.Size(98, 13)
+        Me.LinkLabel_ConfigToolClose.TabIndex = 24
+        Me.LinkLabel_ConfigToolClose.TabStop = True
+        Me.LinkLabel_ConfigToolClose.Text = "Close Config Tool"
+        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ConfigToolClose, "Tooltip")
+        Me.LinkLabel_ConfigToolClose.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'Label2
         '
         Me.Label2.AutoSize = True
@@ -216,6 +245,18 @@ Partial Class UCStartPage
         Me.Label2.Size = New System.Drawing.Size(106, 21)
         Me.Label2.TabIndex = 23
         Me.Label2.Text = "Configuration"
+        '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5364_64x64_32
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 19
+        Me.ClassPictureBoxQuality2.TabStop = False
         '
         'LinkLabel_ConfigToolRun
         '
@@ -273,6 +314,18 @@ Partial Class UCStartPage
         Me.Label6.Size = New System.Drawing.Size(123, 21)
         Me.Label6.TabIndex = 26
         Me.Label6.Text = "Troubleshooting"
+        '
+        'ClassPictureBoxQuality3
+        '
+        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Faultrep_5201_256x256_32
+        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(32, 16)
+        Me.ClassPictureBoxQuality3.m_HighQuality = True
+        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
+        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality3.TabIndex = 24
+        Me.ClassPictureBoxQuality3.TabStop = False
         '
         'LinkLabel_InstallDrivers
         '
@@ -349,6 +402,17 @@ Partial Class UCStartPage
         Me.Panel6.Size = New System.Drawing.Size(800, 64)
         Me.Panel6.TabIndex = 1
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_256x256_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.m_HighQuality = True
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 16
+        Me.PictureBox1.TabStop = False
+        '
         'Label4
         '
         Me.Label4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -381,70 +445,6 @@ Partial Class UCStartPage
         Me.Label5.Size = New System.Drawing.Size(800, 1)
         Me.Label5.TabIndex = 0
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_256x256_32
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.m_HighQuality = True
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 16
-        Me.PictureBox1.TabStop = False
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 10
-        Me.ClassPictureBoxQuality1.TabStop = False
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5364_64x64_32
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 19
-        Me.ClassPictureBoxQuality2.TabStop = False
-        '
-        'ClassPictureBoxQuality3
-        '
-        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5353_256x256_32
-        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(32, 16)
-        Me.ClassPictureBoxQuality3.m_HighQuality = True
-        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
-        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality3.TabIndex = 24
-        Me.ClassPictureBoxQuality3.TabStop = False
-        '
-        'LinkLabel_ConfigToolClose
-        '
-        Me.LinkLabel_ConfigToolClose.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ConfigToolClose.AutoSize = True
-        Me.LinkLabel_ConfigToolClose.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigToolClose.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ConfigToolClose.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 59)
-        Me.LinkLabel_ConfigToolClose.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_ConfigToolClose.Name = "LinkLabel_ConfigToolClose"
-        Me.LinkLabel_ConfigToolClose.Size = New System.Drawing.Size(98, 13)
-        Me.LinkLabel_ConfigToolClose.TabIndex = 24
-        Me.LinkLabel_ConfigToolClose.TabStop = True
-        Me.LinkLabel_ConfigToolClose.Text = "Close Config Tool"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ConfigToolClose, "Tooltip")
-        Me.LinkLabel_ConfigToolClose.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
         'UCStartPage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -459,17 +459,17 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.Panel6.ResumeLayout(False)
         Me.Panel6.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

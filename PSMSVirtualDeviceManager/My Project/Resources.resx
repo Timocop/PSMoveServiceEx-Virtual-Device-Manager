@@ -124,6 +124,9 @@
   <data name="Exposure_Good" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Exposure_Good.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="imageres_5345_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\imageres_5345_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="356" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\356.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -132,6 +135,9 @@
   </data>
   <data name="YFlip_Good" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\YFlip_Good.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="devmgr_201_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\devmgr_201_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="YFlip_Bad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\YFlip_Bad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,20 +148,26 @@
   <data name="Close_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Close_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DevicePairing_6101_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DevicePairing_6101_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="466" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\466.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="odbcint_1439_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\odbcint_1439_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Unpin_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Unpin_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="devmgr_201_48x48-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\devmgr_201_48x48-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Exposure_Ref" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Exposure_Ref.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="connect_10504_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\connect_10504_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="imageres_5341_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5341_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Exposure_Ref" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Exposure_Ref.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="netshell_1608_32x32-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\netshell_1608_32x32-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -187,9 +199,6 @@
   <data name="user32_104_16x16_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user32_104_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="devmgr_201_48x48-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\devmgr_201_48x48-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="shell32_16761_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\shell32_16761_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -208,6 +217,9 @@
   <data name="imageres_5364_64x64-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5364_64x64-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Unpin_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Unpin_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Exposure_BadBright" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Exposure_BadBright.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -216,9 +228,6 @@
   </data>
   <data name="imageres_5305_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5305_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DevicePairing_6101_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DevicePairing_6101_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="imageres_5337_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5337_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -235,8 +244,8 @@
   <data name="CustomIMU" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CustomIMU.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="imageres_5345_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\imageres_5345_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="DevicePairing_6101_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DevicePairing_6101_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="mmcshext_128_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mmcshext_128_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -244,7 +253,7 @@
   <data name="odbcint_1439_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\odbcint_1439_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="connect_10504_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\connect_10504_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Faultrep_5201_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Faultrep_5201_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
