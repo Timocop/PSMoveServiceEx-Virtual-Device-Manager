@@ -144,6 +144,7 @@
     <Compile Include="Classes\ClassQuaternionTools.vb" />
     <Compile Include="Classes\ClassServiceConfig.vb" />
     <Compile Include="Classes\ClassServiceClient.vb" />
+    <Compile Include="Classes\ClassServiceInfo.vb" />
     <Compile Include="Classes\ClassSteamVRConfig.vb" />
     <Compile Include="Classes\ClassUtils.vb" />
     <Compile Include="Classes\ClassVmtConst.vb" />
@@ -174,6 +175,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="StartPage\UCStartPage.Designer.vb">
+      <DependentUpon>UCStartPage.vb</DependentUpon>
+    </Compile>
+    <Compile Include="StartPage\UCStartPage.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UCVirtualControllers\UCAttachments\FormAttachmentsHelp.Designer.vb">
       <DependentUpon>FormAttachmentsHelp.vb</DependentUpon>
@@ -273,6 +280,9 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="StartPage\UCStartPage.resx">
+      <DependentUpon>UCStartPage.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCAttachments\FormAttachmentsHelp.resx">
       <DependentUpon>FormAttachmentsHelp.vb</DependentUpon>
     </EmbeddedResource>
@@ -331,6 +341,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\devmgr_201_48x48-32.png" />
+    <None Include="Resources\imageres_5353_256x256-32.png" />
+    <None Include="Resources\imageres_5364_64x64-32.png" />
+    <None Include="Resources\mmcshext_128_256x256-32.png" />
+    <None Include="Resources\odbcint_1439_256x256-32.png" />
+    <None Include="Resources\netshell_1610_32x32-32.png" />
+    <None Include="Resources\netshell_1608_32x32-32.png" />
     <None Include="Resources\imageres_5323_16x16-32.png" />
     <None Include="Resources\netcenter_7_16x16-32.png" />
     <None Include="Resources\netshell_1607_16x16-32.png" />

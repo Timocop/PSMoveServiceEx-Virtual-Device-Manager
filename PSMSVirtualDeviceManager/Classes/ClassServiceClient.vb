@@ -12,10 +12,11 @@ Public Class ClassServiceClient
     Private g_PSMoveServiceServer As Service
     Private g_ProcessingThread As Threading.Thread
 
-    Private g_bProcessingEnabled As Boolean = False
     Private g_mPostStreamRequest As New List(Of String)
 
     Private g_bEnableSelectRecenter As Boolean = True
+
+    Private g_bIsConnected As Boolean = False
 
     Public Interface IControllerData
         Property m_IsValid As Boolean
@@ -85,7 +86,7 @@ Public Class ClassServiceClient
         End SyncLock
     End Sub
 
-    Public Sub TheadStart()
+    Public Sub StartProcessing()
         If (g_ProcessingThread IsNot Nothing AndAlso g_ProcessingThread.IsAlive) Then
             Return
         End If
@@ -111,12 +112,6 @@ Public Class ClassServiceClient
         g_mPostStreamRequest.Remove(sId)
     End Sub
 
-    Public Sub StartProcessing()
-        SyncLock __ClientLock
-            g_bProcessingEnabled = True
-        End SyncLock
-    End Sub
-
     Property m_EnableSelectRecenter As Boolean
         Get
             SyncLock __ClientLock
@@ -128,6 +123,14 @@ Public Class ClassServiceClient
                 g_bEnableSelectRecenter = value
             End SyncLock
         End Set
+    End Property
+
+    ReadOnly Property m_IsServiceConnected As Boolean
+        Get
+            SyncLock __ClientLock
+                Return g_bIsConnected
+            End SyncLock
+        End Get
     End Property
 
     Private Sub ProcessingThread()
@@ -144,13 +147,10 @@ Public Class ClassServiceClient
                     Dim bExceptionSleep As Boolean = False
 
                     Try
-                        If (Not g_bProcessingEnabled) Then
-                            Threading.Thread.Sleep(1000)
-                            Continue While
-                        End If
-
                         SyncLock __ClientLock
-                            If (Not g_PSMoveServiceServer.IsConnected) Then
+                            g_bIsConnected = g_PSMoveServiceServer.IsConnected
+
+                            If (Not g_bIsConnected) Then
                                 g_PSMoveServiceServer.Disconnect()
                                 g_PSMoveServiceServer.Connect()
                             End If

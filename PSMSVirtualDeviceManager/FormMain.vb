@@ -2,6 +2,7 @@
 Imports System.Runtime.InteropServices
 
 Public Class FormMain
+    Public g_mUCStartPage As UCStartPage
     Public g_mUCVirtualControllers As UCVirtualControllers
     Public g_mUCVirtualHMDs As UCVirtualHMDs
     Public g_mUCVirtualTrackers As UCVirtualTrackers
@@ -9,10 +10,8 @@ Public Class FormMain
 
     Private g_bIgnoreEvents As Boolean = False
 
-    Private g_mDriverInstallThread As Threading.Thread = Nothing
-    Private g_mDriverInstallFormLoad As FormLoading = Nothing
-
     Enum ENUM_PAGE
+        STARTPAGE
         VIRTUAL_CONTROLLERS
         VIRTUAL_HMDS
         VIRTUAL_TRACKERS
@@ -24,6 +23,13 @@ Public Class FormMain
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        g_mUCStartPage = New UCStartPage(Me)
+        g_mUCStartPage.SuspendLayout()
+        g_mUCStartPage.Parent = Panel_Pages
+        g_mUCStartPage.Dock = DockStyle.Fill
+        g_mUCStartPage.Visible = False
+        g_mUCStartPage.ResumeLayout()
+
         g_mUCVirtualControllers = New UCVirtualControllers(Me)
         g_mUCVirtualControllers.SuspendLayout()
         g_mUCVirtualControllers.Parent = Panel_Pages
@@ -54,11 +60,11 @@ Public Class FormMain
 
                 g_mPSMoveServiceCAPI = New ClassServiceClient()
                 g_mPSMoveServiceCAPI.ServiceStart()
-                g_mPSMoveServiceCAPI.TheadStart()
+                g_mPSMoveServiceCAPI.StartProcessing()
                 Exit While
             Catch ex As Exception
                 Dim sMsg As New Text.StringBuilder
-                sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error")
+                sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error:")
                 sMsg.AppendLine(ex.Message)
                 If (MessageBox.Show(sMsg.ToString, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Cancel) Then
                     Exit While
@@ -67,23 +73,32 @@ Public Class FormMain
         End While
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
+
+        SelectPage(ENUM_PAGE.STARTPAGE)
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
-        TableLayoutPanel_Title.Visible = False
-
         Select Case (iPage)
+            Case ENUM_PAGE.STARTPAGE
+                g_mUCStartPage.Visible = True
+                g_mUCVirtualControllers.Visible = False
+                g_mUCVirtualHMDs.Visible = False
+                g_mUCVirtualTrackers.Visible = False
+
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
+                g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = True
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
 
             Case ENUM_PAGE.VIRTUAL_HMDS
+                g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = True
                 g_mUCVirtualTrackers.Visible = False
 
             Case ENUM_PAGE.VIRTUAL_TRACKERS
+                g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = True
@@ -99,6 +114,11 @@ Public Class FormMain
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+
+        If (g_mUCStartPage IsNot Nothing AndAlso Not g_mUCStartPage.IsDisposed) Then
+            g_mUCStartPage.Dispose()
+            g_mUCStartPage = Nothing
+        End If
 
         If (g_mUCVirtualControllers IsNot Nothing AndAlso Not g_mUCVirtualControllers.IsDisposed) Then
             g_mUCVirtualControllers.Dispose()
@@ -143,39 +163,44 @@ Public Class FormMain
         Return Nothing
     End Function
 
-    Private Sub LinkLabel_Controllers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Controllers.LinkClicked
+
+    Public Sub LinkLabel_StartPage_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StartPage.LinkClicked
+        SelectPage(ENUM_PAGE.STARTPAGE)
+    End Sub
+
+    Public Sub LinkLabel_Controllers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Controllers.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
     End Sub
 
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HMDs.LinkClicked
+    Public Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HMDs.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
     End Sub
 
-    Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Trackers.LinkClicked
+    Public Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Trackers.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
     End Sub
 
-    Private Sub LinkLabel_ControllersGeneral_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersGeneral.LinkClicked
+    Public Sub LinkLabel_ControllersGeneral_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersGeneral.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_General
     End Sub
 
-    Private Sub LinkLabel_ControllersRemote_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersRemote.LinkClicked
+    Public Sub LinkLabel_ControllersRemote_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersRemote.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
     End Sub
 
-    Private Sub LinkLabel_ControllersAttachments_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersAttachments.LinkClicked
+    Public Sub LinkLabel_ControllersAttachments_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersAttachments.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_ControllerAttachments
     End Sub
 
-    Private Sub LinkLabel_ControllersVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersVMT.LinkClicked
+    Public Sub LinkLabel_ControllersVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersVMT.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
     End Sub
 
-    Private Sub LinkLabel_RemoteStartSocket_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RemoteStartSocket.LinkClicked
+    Public Sub LinkLabel_RemoteStartSocket_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RemoteStartSocket.LinkClicked
         If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
             Return
         End If
@@ -187,7 +212,7 @@ Public Class FormMain
         g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
     End Sub
 
-    Private Sub LinkLabel_VMTStartOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMTStartOscServer.LinkClicked
+    Public Sub LinkLabel_VMTStartOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMTStartOscServer.LinkClicked
         If (g_mUCVirtualControllers.g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualControllers.g_mUCVirtualMotionTracker.IsDisposed) Then
             Return
         End If
@@ -198,7 +223,7 @@ Public Class FormMain
         g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Button_StartOscServer.PerformClick()
     End Sub
 
-    Private Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
+    Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
         If (g_mUCVirtualControllers.g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualControllers.g_mUCVirtualMotionTracker.IsDisposed) Then
             Return
         End If
@@ -209,228 +234,58 @@ Public Class FormMain
         g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Button_PauseOscServer.PerformClick()
     End Sub
 
-    Private Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
-        If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
+    Public Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
             Return
         End If
 
-        g_mDriverInstallThread = New Threading.Thread(
-            Sub()
-                Try
-                    If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                        Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
-                    End If
-
-                    If (True) Then
-                        Dim sMessage As New Text.StringBuilder
-                        sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
-                        sMessage.AppendLine("Already existing Playstation Eye drivers will be replaced!")
-                        sMessage.AppendLine()
-                        sMessage.AppendLine("Do you want to continue?")
-                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                            Return
-                        End If
-                    End If
-
-                    If (True) Then
-                        Dim sMessage As New Text.StringBuilder
-                        sMessage.AppendLine("WARNING!")
-                        sMessage.AppendLine("The Playstation Eye driver installation might trigger sensitive Anti-Virus programs!")
-                        sMessage.AppendLine("It's recommended to whitelist the Virtual Device Manager folder before starting the installation to avoid any issues.")
-                        sMessage.AppendLine()
-                        sMessage.AppendLine("Do you want to continue?")
-                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                            Return
-                        End If
-                    End If
-
-                    Me.BeginInvoke(Sub()
-                                       If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                           g_mDriverInstallFormLoad.Dispose()
-                                           g_mDriverInstallFormLoad = Nothing
-                                       End If
-
-                                       g_mDriverInstallFormLoad = New FormLoading
-                                       g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                       g_mDriverInstallFormLoad.ShowDialog(Me)
-                                   End Sub)
-
-                    Dim mDriverInstaller As New ClassLibusbDriver
-                    mDriverInstaller.InstallDriver64()
-
-                    MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Catch ex As Threading.ThreadAbortException
-                    Throw
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Finally
-                    Me.BeginInvoke(Sub()
-                                       If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                           g_mDriverInstallFormLoad.Dispose()
-                                           g_mDriverInstallFormLoad = Nothing
-                                       End If
-                                   End Sub)
-                End Try
-            End Sub)
-        g_mDriverInstallThread.IsBackground = True
-        g_mDriverInstallThread.Start()
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_InstallDrivers_Click()
     End Sub
 
-    Private Sub LinkLabel_FactoryResetService_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_FactoryResetService.LinkClicked
-        Try
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
-            End If
+    Public Sub LinkLabel_FactoryResetService_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_FactoryResetService.LinkClicked
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
 
-            Dim sMessage As New Text.StringBuilder
-            sMessage.AppendLine("You are about to remove all PSMoveServiceEx configurations.")
-            sMessage.AppendLine("THIS CAN NOT BE UNDONE!")
-            sMessage.AppendLine()
-            sMessage.AppendLine("Do you want to continue?")
-            If (MessageBox.Show(sMessage.ToString, "Factory Reset", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                Return
-            End If
-
-            Dim sConfigFolder As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PSMoveService")
-
-            If (IO.Directory.Exists(sConfigFolder)) Then
-                IO.Directory.Delete(sConfigFolder, True)
-            End If
-
-            MessageBox.Show("All config have been removed!", "Factory Reset", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ServiceFactory_Click()
     End Sub
 
-    Private Sub LinkLabel_RunPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMS.LinkClicked
-        Try
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                Throw New ArgumentException("PSMoveServiceEx is already running!")
-            End If
+    Public Sub LinkLabel_RunPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMS.LinkClicked
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
 
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
-
-            If (Not mConfig.FileExist()) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
-                Else
-                    If (mConfig.SearchForService) Then
-                        mConfig.SaveConfig()
-                    Else
-                        Return
-                    End If
-                End If
-            End If
-
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = mConfig.m_FileName
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(mConfig.m_FileName)
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-            End Using
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ServiceRun_Click()
     End Sub
 
-    Private Sub LinkLabel_StopPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StopPSMS.LinkClicked
-        Try
-            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
-                Throw New ArgumentException("PSMoveServiceEx is not running!")
-            End If
+    Public Sub LinkLabel_StopPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StopPSMS.LinkClicked
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
 
-            For Each mProcess In mProcesses
-                If (mProcess.CloseMainWindow()) Then
-                    mProcess.WaitForExit(10000)
-                Else
-                    mProcess.Kill()
-                End If
-            Next
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ServiceStop_Click()
     End Sub
 
-    Private Sub LinkLabel_RestartPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RestartPSMS.LinkClicked
-        Try
-            Dim sPSMSPath As String = Nothing
+    Public Sub LinkLabel_RestartPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RestartPSMS.LinkClicked
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
 
-            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
-                Throw New ArgumentException("PSMoveServiceEx not running!")
-            End If
-
-            For Each mProcess In mProcesses
-                If (sPSMSPath Is Nothing) Then
-                    sPSMSPath = mProcess.MainModule.FileName
-                End If
-
-                If (mProcess.CloseMainWindow()) Then
-                    mProcess.WaitForExit(10000)
-                Else
-                    mProcess.Kill()
-                End If
-            Next
-
-            If (sPSMSPath Is Nothing OrElse Not IO.File.Exists(sPSMSPath)) Then
-                Throw New ArgumentException("PSMoveServiceEx executable not found. Please start manualy.")
-            End If
-
-            Threading.Thread.Sleep(1000)
-
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = sPSMSPath
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sPSMSPath)
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-            End Using
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ServiceRestart_Click()
     End Sub
 
-    Private Sub LinkLabel_RunPSMSTool_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMSTool.LinkClicked
-        Try
-            If (Process.GetProcessesByName("PSMoveConfigTool").Count > 0) Then
-                Throw New ArgumentException("PSMoveConfigTool is already running!")
-            End If
+    Public Sub LinkLabel_RunPSMSTool_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMSTool.LinkClicked
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
 
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
-
-            If (Not mConfig.FileExist()) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
-                Else
-                    If (mConfig.SearchForService) Then
-                        mConfig.SaveConfig()
-                    Else
-                        Return
-                    End If
-                End If
-            End If
-
-            Dim sFilePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(mConfig.m_FileName), "PSMoveConfigTool.exe")
-            If (Not IO.File.Exists(sFilePath)) Then
-                Throw New ArgumentException("PSMoveConfigTool.exe does not exist!")
-            End If
-
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = sFilePath
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sFilePath)
-                mProcess.StartInfo.Arguments = "\autoConnect"
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-            End Using
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ConfigToolRun_Click()
     End Sub
 
     Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup
@@ -460,36 +315,27 @@ Public Class FormMain
         End Try
     End Sub
 
-    Private Sub LinkLabel_SetServicePath_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SetServicePath.LinkClicked
-        Try
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
-
-            If (mConfig.SearchForService) Then
-                mConfig.SaveConfig()
-            End If
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         If (e.CloseReason <> CloseReason.UserClosing) Then
             Return
         End If
 
-        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+        Dim mProcesses As New List(Of Process)
+        mProcesses.AddRange(Process.GetProcessesByName("PSMoveService"))
+        mProcesses.AddRange(Process.GetProcessesByName("PSMoveConfigTool"))
+
+
+        If (mProcesses.Count > 0) Then
             Dim sMsg As New Text.StringBuilder
             sMsg.AppendLine("PSMoveServiceEx is currently running.")
             sMsg.AppendLine()
             sMsg.AppendLine("Do you want to close PSMoveServiceEx?")
-            Select Case (MessageBox.Show(sMsg.ToString, "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+            Select Case (MessageBox.Show(sMsg.ToString, "PSMoveServiceEx is still running", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 Case DialogResult.Cancel
                     e.Cancel = True
 
                 Case DialogResult.Yes
-                    Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-                    If (mProcesses IsNot Nothing AndAlso mProcesses.Length > 0) Then
+                    If (mProcesses.Count > 0) Then
                         For Each mProcess In mProcesses
                             If (mProcess.CloseMainWindow()) Then
                                 mProcess.WaitForExit(10000)
@@ -504,90 +350,6 @@ Public Class FormMain
             End Select
         End If
     End Sub
-
-    Class ClassServiceInfo
-        Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "settings.ini")
-        Private g_sFileName As String = ""
-
-        Private g_bConfigsLoaded As Boolean = False
-
-        Public Sub New()
-        End Sub
-
-        Property m_FileName As String
-            Get
-                Return g_sFileName
-            End Get
-            Set(value As String)
-                g_sFileName = value
-            End Set
-        End Property
-
-        Public Function FileExist() As Boolean
-            If (String.IsNullOrEmpty(m_FileName) OrElse Not IO.File.Exists(m_FileName)) Then
-                Return False
-            End If
-
-            Return True
-        End Function
-
-        Public Function FindByProcess() As Boolean
-            Dim pProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-            If (pProcesses Is Nothing OrElse pProcesses.Length < 1) Then
-                Return False
-            End If
-
-            For Each mProcess In pProcesses
-                m_FileName = mProcess.MainModule.FileName
-                Return True
-            Next
-
-            Return False
-        End Function
-
-        Public Function SearchForService() As Boolean
-            Using mFileSearch As New OpenFileDialog()
-                mFileSearch.Title = "Find PSMoveServiceEx..."
-                mFileSearch.Filter = "PSMoveService|PSMoveService.exe"
-                mFileSearch.Multiselect = False
-                mFileSearch.CheckFileExists = True
-
-                If (mFileSearch.ShowDialog() = DialogResult.OK) Then
-                    m_FileName = mFileSearch.FileName
-
-                    Return True
-                End If
-
-                Return False
-            End Using
-        End Function
-
-        Public Sub SaveConfig()
-            If (Not g_bConfigsLoaded) Then
-                Return
-            End If
-
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "PSMoveServiceLocation", m_FileName))
-
-                    mIni.WriteKeyValue(mIniContent.ToArray)
-                End Using
-            End Using
-        End Sub
-
-        Public Sub LoadConfig()
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    m_FileName = mIni.ReadKeyValue("Settings", "PSMoveServiceLocation", "")
-                End Using
-            End Using
-
-            g_bConfigsLoaded = True
-        End Sub
-    End Class
 
     Private Sub LinkLabel_Github_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Github.LinkClicked
         Try

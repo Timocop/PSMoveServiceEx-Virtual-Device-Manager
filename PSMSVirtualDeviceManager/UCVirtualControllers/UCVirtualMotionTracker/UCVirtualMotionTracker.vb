@@ -121,7 +121,6 @@ Public Class UCVirtualMotionTracker
             Button_PauseOscServer.Enabled = True
 
             g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
-            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartProcessing()
         Catch ex As Exception
             With New Text.StringBuilder
                 .AppendLine("Unable to create OSC Server!")
@@ -140,7 +139,6 @@ Public Class UCVirtualMotionTracker
         Button_PauseOscServer.Enabled = False
 
         g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
-        g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.StartProcessing()
     End Sub
 
     Private Sub AutostartLoad()
