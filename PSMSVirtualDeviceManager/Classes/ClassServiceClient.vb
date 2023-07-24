@@ -22,14 +22,30 @@ Public Class ClassServiceClient
         Property m_IsValid As Boolean
         Property m_IsConnected As Boolean
         Property m_IsTracking As Boolean
+        Property m_Id As Integer
+        Property m_Serial As String
 
         Property m_Position As Vector3
         Property m_Orientation As Quaternion
 
         Property m_OutputSeqNum As Integer
+        Property m_BatteryLevel As Single
+
+        Property m_LastTimeStamp As Date
+
+        Function GetOrientationEuler() As Vector3
     End Interface
 
-    Class STRUC_PSMOVE_CONTROLLER_DATA
+    Public Interface ITrackerData
+        Property m_Path As String
+
+        Property m_Position As Vector3
+        Property m_Orientation As Quaternion
+
+        Function GetOrientationEuler() As Vector3
+    End Interface
+
+    Structure STRUC_PSMOVE_CONTROLLER_DATA
         Implements IControllerData
 
         Public m_TriggerValue As Byte
@@ -46,20 +62,37 @@ Public Class ClassServiceClient
         Public Property m_IsValid As Boolean Implements IControllerData.m_IsValid
         Public Property m_IsConnected As Boolean Implements IControllerData.m_IsConnected
         Public Property m_IsTracking As Boolean Implements IControllerData.m_IsTracking
+        Public Property m_Id As Integer Implements IControllerData.m_Id
+        Public Property m_Serial As String Implements IControllerData.m_Serial
 
         Public Property m_Position As Vector3 Implements IControllerData.m_Position
         Public Property m_Orientation As Quaternion Implements IControllerData.m_Orientation
 
         Public Property m_OutputSeqNum As Integer Implements IControllerData.m_OutputSeqNum
-    End Class
+        Public Property m_BatteryLevel As Single Implements IControllerData.m_BatteryLevel
 
-    Class STRUC_TRACKER_DATA
-        Public Property m_Position As Vector3
-        Public Property m_Orientation As Quaternion
-    End Class
+        Public Property m_LastTimeStamp As Date Implements IControllerData.m_LastTimeStamp
 
-    Private Shared g_ControllerPool As New Dictionary(Of Integer, IControllerData)
-    Private Shared g_TrackerPool As New Dictionary(Of Integer, STRUC_TRACKER_DATA)
+        Private Function IControllerData_GetOrientationEuler() As Vector3 Implements IControllerData.GetOrientationEuler
+            Return ClassQuaternionTools.FromQ2(m_Orientation)
+        End Function
+    End Structure
+
+    Structure STRUC_TRACKER_DATA
+        Implements ITrackerData
+
+        Public Property m_Path As String Implements ITrackerData.m_Path
+
+        Public Property m_Position As Vector3 Implements ITrackerData.m_Position
+        Public Property m_Orientation As Quaternion Implements ITrackerData.m_Orientation
+
+        Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
+            Return ClassQuaternionTools.FromQ2(m_Orientation)
+        End Function
+    End Structure
+
+    Private g_ControllerPool As New Dictionary(Of Integer, IControllerData)
+    Private g_TrackerPool As New Dictionary(Of Integer, STRUC_TRACKER_DATA)
 
     Public Sub New()
     End Sub
@@ -205,6 +238,7 @@ Public Class ClassServiceClient
 
                                 For Each mTracker As Trackers In mTrackers
                                     Dim mData As New STRUC_TRACKER_DATA
+                                    mData.m_Path = mTracker.m_Info.m_DevicePath
 
                                     If (mTracker.m_Info.IsPoseValid) Then
                                         mData.m_Position = New Vector3(
@@ -253,65 +287,95 @@ Public Class ClassServiceClient
 
                                     mController.Refresh(Controllers.Info.RefreshFlags.RefreshType_All)
 
-                                    Select Case (mController.m_Info.m_ControllerType)
-                                        Case PSMControllerType.PSMController_Move
-                                            Dim mData As New STRUC_PSMOVE_CONTROLLER_DATA
-                                            mData.m_IsConnected = mController.m_Info.m_IsConnected
-                                            mData.m_OutputSeqNum = mController.m_Info.m_OutputSequenceNum
+                                    Dim bNewData As Boolean = False
 
-                                            If (mController.m_Info.IsStateValid) Then
-                                                mData.m_IsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
-
-                                                mData.m_TriggerValue = mController.m_Info.m_PSMoveState.m_TriggerValue
-                                                mData.m_TriggerButton = (mController.m_Info.m_PSMoveState.m_TriggerButton > 0)
-                                                mData.m_MoveButton = (mController.m_Info.m_PSMoveState.m_MoveButton > 0)
-                                                mData.m_PSButton = (mController.m_Info.m_PSMoveState.m_PSButton > 0)
-                                                mData.m_StartButton = (mController.m_Info.m_PSMoveState.m_StartButton > 0)
-                                                mData.m_SelectButton = (mController.m_Info.m_PSMoveState.m_SelectButton > 0)
-                                                mData.m_SquareButton = (mController.m_Info.m_PSMoveState.m_SquareButton > 0)
-                                                mData.m_CrossButton = (mController.m_Info.m_PSMoveState.m_CrossButton > 0)
-                                                mData.m_CircleButton = (mController.m_Info.m_PSMoveState.m_CircleButton > 0)
-                                                mData.m_TriangleButton = (mController.m_Info.m_PSMoveState.m_TriangleButton > 0)
-
-                                                ' Do recenter
-                                                ' #TODO Probably want to use HMD orientation instead
-                                                Dim mSelectRecenterTime = mControllerRecenterTime(mController.m_Info.m_ControllerId)
-                                                Select Case (mController.m_Info.m_PSMoveState.m_SelectButton)
-                                                    Case PSMButtonState.PSMButtonState_PRESSED
-                                                        mSelectRecenterTime.Restart()
-
-                                                    Case PSMButtonState.PSMButtonState_DOWN
-                                                        If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
-                                                            Dim mIdentity = New PSMQuatf With {
-                                                                .x = 0,
-                                                                .y = 0,
-                                                                .z = 0,
-                                                                .w = 1
-                                                            }
-                                                            mController.ResetControlerOrientation(mIdentity)
-
-                                                            mSelectRecenterTime.Reset()
-                                                        End If
-                                                End Select
+                                    SyncLock __DataLock
+                                        If (g_ControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                            If (mController.m_Info.m_OutputSequenceNum <> g_ControllerPool(mController.m_Info.m_ControllerId).m_OutputSeqNum) Then
+                                                bNewData = True
                                             End If
+                                        Else
+                                            bNewData = True
+                                        End If
+                                    End SyncLock
 
-                                            If (mController.m_Info.IsPoseValid) Then
-                                                mData.m_Position = New Vector3(
-                                                    mController.m_Info.m_Pose.m_Position.x,
-                                                    mController.m_Info.m_Pose.m_Position.y,
-                                                    mController.m_Info.m_Pose.m_Position.z)
+                                    If (bNewData) Then
+                                        Select Case (mController.m_Info.m_ControllerType)
+                                            Case PSMControllerType.PSMController_Move
+                                                Dim mData As New STRUC_PSMOVE_CONTROLLER_DATA
+                                                mData.m_IsConnected = mController.m_Info.m_IsConnected
+                                                mData.m_OutputSeqNum = mController.m_Info.m_OutputSequenceNum
+                                                mData.m_Id = mController.m_Info.m_ControllerId
+                                                mData.m_Serial = mController.m_Info.m_ControllerSerial
+                                                mData.m_LastTimeStamp = Now
 
-                                                mData.m_Orientation = New Quaternion(
-                                                    mController.m_Info.m_Pose.m_Orientation.x,
-                                                    mController.m_Info.m_Pose.m_Orientation.y,
-                                                    mController.m_Info.m_Pose.m_Orientation.z,
-                                                    mController.m_Info.m_Pose.m_Orientation.w)
-                                            End If
+                                                If (mController.m_Info.IsStateValid) Then
+                                                    Select Case (mController.m_Info.m_PSMoveState.m_BatteryValue)
+                                                        Case PSMBatteryState.PSMBattery_0,
+                                                             PSMBatteryState.PSMBattery_20,
+                                                             PSMBatteryState.PSMBattery_40,
+                                                             PSMBatteryState.PSMBattery_60,
+                                                             PSMBatteryState.PSMBattery_80,
+                                                             PSMBatteryState.PSMBattery_100
+                                                            mData.m_BatteryLevel = (0.2F * mController.m_Info.m_PSMoveState.m_BatteryValue)
+                                                        Case PSMBatteryState.PSMBattery_Charged,
+                                                             PSMBatteryState.PSMBattery_Charging
+                                                            mData.m_BatteryLevel = 1.0F
+                                                    End Select
 
-                                            SyncLock __DataLock
-                                                g_ControllerPool(mController.m_Info.m_ControllerId) = mData
-                                            End SyncLock
-                                    End Select
+                                                    mData.m_IsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
+
+                                                    mData.m_TriggerValue = mController.m_Info.m_PSMoveState.m_TriggerValue
+                                                    mData.m_TriggerButton = (mController.m_Info.m_PSMoveState.m_TriggerButton > 0)
+                                                    mData.m_MoveButton = (mController.m_Info.m_PSMoveState.m_MoveButton > 0)
+                                                    mData.m_PSButton = (mController.m_Info.m_PSMoveState.m_PSButton > 0)
+                                                    mData.m_StartButton = (mController.m_Info.m_PSMoveState.m_StartButton > 0)
+                                                    mData.m_SelectButton = (mController.m_Info.m_PSMoveState.m_SelectButton > 0)
+                                                    mData.m_SquareButton = (mController.m_Info.m_PSMoveState.m_SquareButton > 0)
+                                                    mData.m_CrossButton = (mController.m_Info.m_PSMoveState.m_CrossButton > 0)
+                                                    mData.m_CircleButton = (mController.m_Info.m_PSMoveState.m_CircleButton > 0)
+                                                    mData.m_TriangleButton = (mController.m_Info.m_PSMoveState.m_TriangleButton > 0)
+
+                                                    ' Do recenter
+                                                    ' #TODO Probably want to use HMD orientation instead
+                                                    Dim mSelectRecenterTime = mControllerRecenterTime(mController.m_Info.m_ControllerId)
+                                                    Select Case (mController.m_Info.m_PSMoveState.m_SelectButton)
+                                                        Case PSMButtonState.PSMButtonState_PRESSED
+                                                            mSelectRecenterTime.Restart()
+
+                                                        Case PSMButtonState.PSMButtonState_DOWN
+                                                            If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
+                                                                Dim mIdentity = New PSMQuatf With {
+                                                                    .x = 0,
+                                                                    .y = 0,
+                                                                    .z = 0,
+                                                                    .w = 1
+                                                                }
+                                                                mController.ResetControlerOrientation(mIdentity)
+
+                                                                mSelectRecenterTime.Reset()
+                                                            End If
+                                                    End Select
+                                                End If
+
+                                                If (mController.m_Info.IsPoseValid) Then
+                                                    mData.m_Position = New Vector3(
+                                                        mController.m_Info.m_Pose.m_Position.x,
+                                                        mController.m_Info.m_Pose.m_Position.y,
+                                                        mController.m_Info.m_Pose.m_Position.z)
+
+                                                    mData.m_Orientation = New Quaternion(
+                                                        mController.m_Info.m_Pose.m_Orientation.x,
+                                                        mController.m_Info.m_Pose.m_Orientation.y,
+                                                        mController.m_Info.m_Pose.m_Orientation.z,
+                                                        mController.m_Info.m_Pose.m_Orientation.w)
+                                                End If
+
+                                                SyncLock __DataLock
+                                                    g_ControllerPool(mController.m_Info.m_ControllerId) = mData
+                                                End SyncLock
+                                        End Select
+                                    End If
 
                                 End SyncLock
                             Catch ex As Exception
@@ -359,14 +423,38 @@ Public Class ClassServiceClient
         End Try
     End Sub
 
-    Public Shared Sub SetControllerRumble(iIndex As Integer, fRumble As Single)
+    Public Sub SetControllerRumble(iIndex As Integer, fRumble As Single)
         SyncLock __ClientLock
             Dim mController As New Controllers(iIndex)
             mController.SetControllerRumble(PSMControllerRumbleChannel.PSMControllerRumbleChannel_All, fRumble)
         End SyncLock
     End Sub
 
-    Shared ReadOnly Property m_ControllerData(i As Integer) As IControllerData
+    Public Function GetControllersData() As IControllerData()
+        SyncLock __DataLock
+            Dim mControllerList As New List(Of IControllerData)
+
+            For Each mItem In g_ControllerPool
+                mControllerList.Add(mItem.Value)
+            Next
+
+            Return mControllerList.ToArray
+        End SyncLock
+    End Function
+
+    Public Function GetTrackersData() As ITrackerData()
+        SyncLock __DataLock
+            Dim mTrackersList As New List(Of ITrackerData)
+
+            For Each mItem In g_TrackerPool
+                mTrackersList.Add(mItem.Value)
+            Next
+
+            Return mTrackersList.ToArray
+        End SyncLock
+    End Function
+
+    ReadOnly Property m_ControllerData(i As Integer) As IControllerData
         Get
             SyncLock __DataLock
                 If (Not g_ControllerPool.ContainsKey(i)) Then
@@ -378,7 +466,7 @@ Public Class ClassServiceClient
         End Get
     End Property
 
-    Shared ReadOnly Property m_TrackerData(i As Integer) As STRUC_TRACKER_DATA
+    ReadOnly Property m_TrackerData(i As Integer) As ITrackerData
         Get
             SyncLock __DataLock
                 If (Not g_TrackerPool.ContainsKey(i)) Then

@@ -1,8 +1,11 @@
-﻿Public Class UCStartPage
+﻿Imports System.Numerics
+
+Public Class UCStartPage
     Private g_FormMain As FormMain
     Private g_bIgnoreEvents As Boolean = False
 
     Private g_mStatusThread As Threading.Thread = Nothing
+    Private g_mServiceDeviceStatusThread As Threading.Thread = Nothing
 
     Private g_mDriverInstallThread As Threading.Thread = Nothing
     Private g_mDriverInstallFormLoad As FormLoading = Nothing
@@ -21,6 +24,10 @@
         g_mStatusThread = New Threading.Thread(AddressOf CheckConnection_Thread)
         g_mStatusThread.IsBackground = True
         g_mStatusThread.Start()
+
+        g_mServiceDeviceStatusThread = New Threading.Thread(AddressOf ServiceDeviceStatusThread)
+        g_mServiceDeviceStatusThread.IsBackground = True
+        g_mServiceDeviceStatusThread.Start()
     End Sub
 
     Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup
@@ -76,7 +83,168 @@
         End While
     End Sub
 
+    Private Sub ServiceDeviceStatusThread()
+        While True
+            Try
+                Const LISTVIEW_SUBITEM_TYPE As Integer = 0
+                Const LISTVIEW_SUBITEM_SERIAL As Integer = 1
+                Const LISTVIEW_SUBITEM_POSITION As Integer = 2
+                Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
+                Const LISTVIEW_SUBITEM_BATTERY As Integer = 4
+
+                ' List Controllers
+                If (True) Then
+                    Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetControllersData
+
+                    For i = 0 To mDevices.Length - 1
+                        Dim mDevice As ClassServiceClient.IControllerData = mDevices(i)
+
+                        If (String.IsNullOrEmpty(mDevice.m_Serial) OrElse mDevice.m_Serial.TrimEnd.Length = 0) Then
+                            Continue For
+                        End If
+
+                        Dim mPos As Vector3 = mDevice.m_Position
+                        Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+
+                        Me.BeginInvoke(Sub()
+                                           Dim bFound As Boolean = False
+
+                                           ' Change info about device 
+                                           ListView_ServiceDevices.BeginUpdate()
+                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F))
+                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                   bFound = True
+                                                   End If
+                                           Next
+                                           ListView_ServiceDevices.EndUpdate()
+
+                                           ' Added device when not found
+                                           If (Not bFound) Then
+                                               Dim sDeviceType As String = "UNKNOWN"
+
+                                               Select Case (True)
+                                                   Case TypeOf mDevice Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
+                                                       sDeviceType = "PSMOVE"
+                                               End Select
+
+                                               Dim mListViewItem = New ListViewItem(New String() {
+                                                    sDeviceType,
+                                                    mDevice.m_Serial,
+                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                    "0",
+                                                    "0"
+                                                })
+                                               mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                               mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                               ListView_ServiceDevices.Items.Add(mListViewItem)
+                                           End If
+                                       End Sub)
+                    Next
+                End If
+
+                ' List HMDs
+                If (True) Then
+                    ' TODO: List HMDs
+                End If
+
+                ' List Trackers
+                If (True) Then
+                    Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetTrackersData
+
+                    For i = 0 To mDevices.Length - 1
+                        Dim mDevice As ClassServiceClient.ITrackerData = mDevices(i)
+
+                        If (String.IsNullOrEmpty(mDevice.m_Path) OrElse mDevice.m_Path.TrimEnd.Length = 0) Then
+                            Continue For
+                        End If
+
+                        Dim mPos As Vector3 = mDevice.m_Position
+                        Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+
+                        Me.BeginInvoke(Sub()
+                                           If (Not Me.Visible) Then
+                                               Return
+                                           End If
+
+                                           Dim bFound As Boolean = False
+
+                                           ' Change info about device 
+                                           ListView_ServiceDevices.BeginUpdate()
+                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
+
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "-1"
+                                                   mListVIewItem.Tag = New Object() {Now}
+
+                                                   bFound = True
+                                               End If
+                                           Next
+                                           ListView_ServiceDevices.EndUpdate()
+
+                                           ' Added device when not found
+                                           If (Not bFound) Then
+                                               Dim mListViewItem = New ListViewItem(New String() {
+                                                    "TRACKER",
+                                                    mDevice.m_Path,
+                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                    "0",
+                                                    "0"
+                                                })
+                                               mListViewItem.Tag = New Object() {Now}
+
+                                               ListView_ServiceDevices.Items.Add(mListViewItem)
+                                           End If
+                                       End Sub)
+                    Next
+                End If
+
+                ' Show disconnected devices
+                Me.BeginInvoke(Sub()
+                                   If (Not Me.Visible) Then
+                                       Return
+                                   End If
+
+                                   ListView_ServiceDevices.BeginUpdate()
+                                   For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+
+                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                       Else
+                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                       End If
+                                   Next
+                                   ListView_ServiceDevices.EndUpdate()
+                               End Sub)
+
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+
+            End Try
+
+            Threading.Thread.Sleep(1000)
+        End While
+    End Sub
+
     Private Sub CleanUp()
+        If (g_mServiceDeviceStatusThread IsNot Nothing AndAlso g_mServiceDeviceStatusThread.IsAlive) Then
+            g_mServiceDeviceStatusThread.Abort()
+            g_mServiceDeviceStatusThread.Join()
+            g_mServiceDeviceStatusThread = Nothing
+        End If
+
         If (g_mStatusThread IsNot Nothing AndAlso g_mStatusThread.IsAlive) Then
             g_mStatusThread.Abort()
             g_mStatusThread.Join()

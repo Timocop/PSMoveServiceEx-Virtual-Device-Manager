@@ -566,7 +566,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private g_iFpsOscCounter As Integer = 0
         Private g_mControllerData As ClassServiceClient.IControllerData
-        Private g_mTrackerData As New Dictionary(Of Integer, ClassServiceClient.STRUC_TRACKER_DATA)
+        Private g_mTrackerData As New Dictionary(Of Integer, ClassServiceClient.ITrackerData)
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
         Private g_mHeptic As New STRUC_HEPTIC_ITEM
@@ -681,13 +681,13 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Property m_TrackerData(iIndex As Integer) As ClassServiceClient.STRUC_TRACKER_DATA
+        Property m_TrackerData(iIndex As Integer) As ClassServiceClient.ITrackerData
             Get
                 SyncLock _ThreadLock
                     Return g_mTrackerData(iIndex)
                 End SyncLock
             End Get
-            Set(value As ClassServiceClient.STRUC_TRACKER_DATA)
+            Set(value As ClassServiceClient.ITrackerData)
                 SyncLock _ThreadLock
                     g_mTrackerData(iIndex) = value
                 End SyncLock
@@ -786,8 +786,10 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
                     Dim bEnableHepticFeedback As Boolean = mClassControllerSettings.m_EnableHepticFeedback
 
+                    Dim mServiceClient = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI
+
                     ' Get controller data
-                    m_ControllerData = ClassServiceClient.m_ControllerData(g_iIndex)
+                    m_ControllerData = mServiceClient.m_ControllerData(g_iIndex)
 
                     If (m_ControllerData IsNot Nothing) Then
                         ' Set controller rumble
@@ -824,7 +826,7 @@ Public Class UCVirtualMotionTrackerItem
                                             fRumble = 1.0F
                                         End If
 
-                                        ClassServiceClient.SetControllerRumble(g_iIndex, fRumble)
+                                        mServiceClient.SetControllerRumble(g_iIndex, fRumble)
 
                                         mRumbleLastTimeSend = Now
                                         mRumbleLastTimeSendValid = True
@@ -1250,7 +1252,7 @@ Public Class UCVirtualMotionTrackerItem
                             mTrackerDataUpdate.Restart()
 
                             For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
-                                m_TrackerData(i) = ClassServiceClient.m_TrackerData(i)
+                                m_TrackerData(i) = mServiceClient.m_TrackerData(i)
 
                                 If (m_TrackerData(i) IsNot Nothing) Then
                                     Dim mPosition As Vector3 = m_TrackerData(i).m_Position * CSng(PSM_CENTIMETERS_TO_METERS)

@@ -29,6 +29,10 @@ Partial Class UCStartPage
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -52,10 +56,16 @@ Partial Class UCStartPage
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
+        Me.Panel8 = New System.Windows.Forms.Panel()
+        Me.Panel14 = New System.Windows.Forms.Panel()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Panel16 = New System.Windows.Forms.Panel()
+        Me.ListView_ServiceDevices = New ClassListViewEx()
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Pos = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Battery = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -63,12 +73,14 @@ Partial Class UCStartPage
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.Panel7.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel5.SuspendLayout()
         Me.Panel12.SuspendLayout()
         Me.Panel6.SuspendLayout()
-        Me.Panel7.SuspendLayout()
+        Me.Panel8.SuspendLayout()
+        Me.Panel14.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -106,6 +118,62 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(766, 224)
         Me.TableLayoutPanel1.TabIndex = 1
+        '
+        'Panel7
+        '
+        Me.Panel7.Controls.Add(Me.LinkLabel_Updates)
+        Me.Panel7.Controls.Add(Me.Label7)
+        Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
+        Me.Panel7.Controls.Add(Me.LinkLabel_Github)
+        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel7.Location = New System.Drawing.Point(382, 112)
+        Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel7.Name = "Panel7"
+        Me.Panel7.Size = New System.Drawing.Size(384, 112)
+        Me.Panel7.TabIndex = 7
+        '
+        'LinkLabel_Updates
+        '
+        Me.LinkLabel_Updates.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_Updates.AutoSize = True
+        Me.LinkLabel_Updates.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Updates.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_Updates.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Updates.Location = New System.Drawing.Point(103, 56)
+        Me.LinkLabel_Updates.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_Updates.Name = "LinkLabel_Updates"
+        Me.LinkLabel_Updates.Size = New System.Drawing.Size(102, 13)
+        Me.LinkLabel_Updates.TabIndex = 27
+        Me.LinkLabel_Updates.TabStop = True
+        Me.LinkLabel_Updates.Text = "Check for Updates"
+        Me.LinkLabel_Updates.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.ForeColor = System.Drawing.Color.Navy
+        Me.Label7.Location = New System.Drawing.Point(102, 16)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(157, 21)
+        Me.Label7.TabIndex = 26
+        Me.Label7.Text = "Support and Updates"
+        '
+        'LinkLabel_Github
+        '
+        Me.LinkLabel_Github.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_Github.AutoSize = True
+        Me.LinkLabel_Github.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Github.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_Github.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Github.Location = New System.Drawing.Point(103, 40)
+        Me.LinkLabel_Github.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_Github.Name = "LinkLabel_Github"
+        Me.LinkLabel_Github.Size = New System.Drawing.Size(69, 13)
+        Me.LinkLabel_Github.TabIndex = 25
+        Me.LinkLabel_Github.TabStop = True
+        Me.LinkLabel_Github.Text = "Visit GitHub"
+        Me.LinkLabel_Github.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Panel4
         '
@@ -406,61 +474,92 @@ Partial Class UCStartPage
         Me.Label5.Size = New System.Drawing.Size(800, 1)
         Me.Label5.TabIndex = 0
         '
-        'Panel7
+        'Panel8
         '
-        Me.Panel7.Controls.Add(Me.LinkLabel_Updates)
-        Me.Panel7.Controls.Add(Me.Label7)
-        Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
-        Me.Panel7.Controls.Add(Me.LinkLabel_Github)
-        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(382, 112)
-        Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(384, 112)
-        Me.Panel7.TabIndex = 7
+        Me.Panel8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel8.Controls.Add(Me.ListView_ServiceDevices)
+        Me.Panel8.Controls.Add(Me.Panel14)
+        Me.Panel8.Location = New System.Drawing.Point(16, 369)
+        Me.Panel8.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel8.Name = "Panel8"
+        Me.Panel8.Size = New System.Drawing.Size(768, 268)
+        Me.Panel8.TabIndex = 2
         '
-        'LinkLabel_Updates
+        'Panel14
         '
-        Me.LinkLabel_Updates.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_Updates.AutoSize = True
-        Me.LinkLabel_Updates.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_Updates.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_Updates.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_Updates.Location = New System.Drawing.Point(103, 56)
-        Me.LinkLabel_Updates.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_Updates.Name = "LinkLabel_Updates"
-        Me.LinkLabel_Updates.Size = New System.Drawing.Size(102, 13)
-        Me.LinkLabel_Updates.TabIndex = 27
-        Me.LinkLabel_Updates.TabStop = True
-        Me.LinkLabel_Updates.Text = "Check for Updates"
-        Me.LinkLabel_Updates.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.Panel14.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel14.Controls.Add(Me.Label12)
+        Me.Panel14.Controls.Add(Me.Panel16)
+        Me.Panel14.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel14.Location = New System.Drawing.Point(0, 0)
+        Me.Panel14.Name = "Panel14"
+        Me.Panel14.Size = New System.Drawing.Size(766, 42)
+        Me.Panel14.TabIndex = 0
         '
-        'Label7
+        'Label12
         '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.ForeColor = System.Drawing.Color.Navy
-        Me.Label7.Location = New System.Drawing.Point(102, 16)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(157, 21)
-        Me.Label7.TabIndex = 26
-        Me.Label7.Text = "Support and Updates"
+        Me.Label12.BackColor = System.Drawing.Color.Transparent
+        Me.Label12.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.Navy
+        Me.Label12.Location = New System.Drawing.Point(0, 0)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label12.Size = New System.Drawing.Size(766, 41)
+        Me.Label12.TabIndex = 1
+        Me.Label12.Text = "Available Service Devices"
+        Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'LinkLabel_Github
+        'Panel16
         '
-        Me.LinkLabel_Github.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_Github.AutoSize = True
-        Me.LinkLabel_Github.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_Github.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_Github.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_Github.Location = New System.Drawing.Point(103, 40)
-        Me.LinkLabel_Github.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_Github.Name = "LinkLabel_Github"
-        Me.LinkLabel_Github.Size = New System.Drawing.Size(69, 13)
-        Me.LinkLabel_Github.TabIndex = 25
-        Me.LinkLabel_Github.TabStop = True
-        Me.LinkLabel_Github.Text = "Visit GitHub"
-        Me.LinkLabel_Github.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.Panel16.BackColor = System.Drawing.Color.Gray
+        Me.Panel16.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel16.Location = New System.Drawing.Point(0, 41)
+        Me.Panel16.Name = "Panel16"
+        Me.Panel16.Size = New System.Drawing.Size(766, 1)
+        Me.Panel16.TabIndex = 0
+        '
+        'ListView_ServiceDevices
+        '
+        Me.ListView_ServiceDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_ServiceDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_ServiceDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Pos, Me.ColumnHeader_Orientation, Me.ColumnHeader_Battery})
+        Me.ListView_ServiceDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_ServiceDevices.FullRowSelect = True
+        Me.ListView_ServiceDevices.HideSelection = False
+        Me.ListView_ServiceDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_ServiceDevices.Name = "ListView_ServiceDevices"
+        Me.ListView_ServiceDevices.Size = New System.Drawing.Size(766, 224)
+        Me.ListView_ServiceDevices.TabIndex = 1
+        Me.ListView_ServiceDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_ServiceDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 125
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Pos
+        '
+        Me.ColumnHeader_Pos.Text = "Position"
+        Me.ColumnHeader_Pos.Width = 125
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 125
+        '
+        'ColumnHeader_Battery
+        '
+        Me.ColumnHeader_Battery.Text = "Battery"
+        Me.ColumnHeader_Battery.Width = 50
         '
         'PictureBox1
         '
@@ -525,14 +624,18 @@ Partial Class UCStartPage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.Panel8)
         Me.Controls.Add(Me.Panel6)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCStartPage"
-        Me.Size = New System.Drawing.Size(800, 600)
+        Me.Size = New System.Drawing.Size(800, 748)
         Me.Panel1.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.Panel7.ResumeLayout(False)
+        Me.Panel7.PerformLayout()
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
         Me.Panel2.ResumeLayout(False)
@@ -542,8 +645,8 @@ Partial Class UCStartPage
         Me.Panel12.ResumeLayout(False)
         Me.Panel6.ResumeLayout(False)
         Me.Panel6.PerformLayout()
-        Me.Panel7.ResumeLayout(False)
-        Me.Panel7.PerformLayout()
+        Me.Panel8.ResumeLayout(False)
+        Me.Panel14.ResumeLayout(False)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -587,4 +690,14 @@ Partial Class UCStartPage
     Friend WithEvents Label7 As Label
     Friend WithEvents ClassPictureBoxQuality4 As ClassPictureBoxQuality
     Friend WithEvents LinkLabel_Github As LinkLabel
+    Friend WithEvents Panel8 As Panel
+    Friend WithEvents ListView_ServiceDevices As ClassListViewEx
+    Friend WithEvents ColumnHeader_Type As ColumnHeader
+    Friend WithEvents ColumnHeader_Serial As ColumnHeader
+    Friend WithEvents ColumnHeader_Pos As ColumnHeader
+    Friend WithEvents ColumnHeader_Orientation As ColumnHeader
+    Friend WithEvents ColumnHeader_Battery As ColumnHeader
+    Friend WithEvents Panel14 As Panel
+    Friend WithEvents Label12 As Label
+    Friend WithEvents Panel16 As Panel
 End Class
