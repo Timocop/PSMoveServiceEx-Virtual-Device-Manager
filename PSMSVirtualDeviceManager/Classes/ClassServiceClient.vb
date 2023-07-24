@@ -309,6 +309,10 @@ Public Class ClassServiceClient
                                                 mData.m_Serial = mController.m_Info.m_ControllerSerial
                                                 mData.m_LastTimeStamp = Now
 
+                                                If (mData.m_Serial.StartsWith("VirtualController")) Then
+                                                    mData.m_Serial &= String.Format("_{0}", mController.m_Info.m_ControllerId)
+                                                End If
+
                                                 If (mController.m_Info.IsStateValid) Then
                                                     Select Case (mController.m_Info.m_PSMoveState.m_BatteryValue)
                                                         Case PSMBatteryState.PSMBattery_0,
