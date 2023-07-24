@@ -52,7 +52,12 @@ Partial Class UCStartPage
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -63,7 +68,9 @@ Partial Class UCStartPage
         Me.Panel5.SuspendLayout()
         Me.Panel12.SuspendLayout()
         Me.Panel6.SuspendLayout()
+        Me.Panel7.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -87,6 +94,7 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.ColumnCount = 2
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334!))
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel7, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel5, 0, 1)
@@ -398,6 +406,62 @@ Partial Class UCStartPage
         Me.Label5.Size = New System.Drawing.Size(800, 1)
         Me.Label5.TabIndex = 0
         '
+        'Panel7
+        '
+        Me.Panel7.Controls.Add(Me.LinkLabel_Updates)
+        Me.Panel7.Controls.Add(Me.Label7)
+        Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
+        Me.Panel7.Controls.Add(Me.LinkLabel_Github)
+        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel7.Location = New System.Drawing.Point(382, 112)
+        Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel7.Name = "Panel7"
+        Me.Panel7.Size = New System.Drawing.Size(384, 112)
+        Me.Panel7.TabIndex = 7
+        '
+        'LinkLabel_Updates
+        '
+        Me.LinkLabel_Updates.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_Updates.AutoSize = True
+        Me.LinkLabel_Updates.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Updates.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_Updates.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Updates.Location = New System.Drawing.Point(103, 56)
+        Me.LinkLabel_Updates.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_Updates.Name = "LinkLabel_Updates"
+        Me.LinkLabel_Updates.Size = New System.Drawing.Size(102, 13)
+        Me.LinkLabel_Updates.TabIndex = 27
+        Me.LinkLabel_Updates.TabStop = True
+        Me.LinkLabel_Updates.Text = "Check for Updates"
+        Me.LinkLabel_Updates.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.ForeColor = System.Drawing.Color.Navy
+        Me.Label7.Location = New System.Drawing.Point(102, 16)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(157, 21)
+        Me.Label7.TabIndex = 26
+        Me.Label7.Text = "Support and Updates"
+        '
+        'LinkLabel_Github
+        '
+        Me.LinkLabel_Github.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_Github.AutoSize = True
+        Me.LinkLabel_Github.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Github.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_Github.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_Github.Location = New System.Drawing.Point(103, 40)
+        Me.LinkLabel_Github.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_Github.Name = "LinkLabel_Github"
+        Me.LinkLabel_Github.Size = New System.Drawing.Size(69, 13)
+        Me.LinkLabel_Github.TabIndex = 25
+        Me.LinkLabel_Github.TabStop = True
+        Me.LinkLabel_Github.Text = "Visit GitHub"
+        Me.LinkLabel_Github.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_256x256_32
@@ -408,6 +472,18 @@ Partial Class UCStartPage
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox1.TabIndex = 16
         Me.PictureBox1.TabStop = False
+        '
+        'ClassPictureBoxQuality4
+        '
+        Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.connect_10101_256x256_32
+        Me.ClassPictureBoxQuality4.Location = New System.Drawing.Point(32, 16)
+        Me.ClassPictureBoxQuality4.m_HighQuality = True
+        Me.ClassPictureBoxQuality4.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality4.Name = "ClassPictureBoxQuality4"
+        Me.ClassPictureBoxQuality4.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality4.TabIndex = 24
+        Me.ClassPictureBoxQuality4.TabStop = False
         '
         'ClassPictureBoxQuality1
         '
@@ -466,7 +542,10 @@ Partial Class UCStartPage
         Me.Panel12.ResumeLayout(False)
         Me.Panel6.ResumeLayout(False)
         Me.Panel6.PerformLayout()
+        Me.Panel7.ResumeLayout(False)
+        Me.Panel7.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
@@ -503,4 +582,9 @@ Partial Class UCStartPage
     Friend WithEvents LinkLabel_ServicePath As LinkLabel
     Friend WithEvents Panel_PsmsxStatus As Panel
     Friend WithEvents LinkLabel_ConfigToolClose As LinkLabel
+    Friend WithEvents Panel7 As Panel
+    Friend WithEvents LinkLabel_Updates As LinkLabel
+    Friend WithEvents Label7 As Label
+    Friend WithEvents ClassPictureBoxQuality4 As ClassPictureBoxQuality
+    Friend WithEvents LinkLabel_Github As LinkLabel
 End Class
