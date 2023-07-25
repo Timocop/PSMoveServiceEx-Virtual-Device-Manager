@@ -486,7 +486,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Trackers.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Trackers.Name = "TabPage_Trackers"
         Me.TabPage_Trackers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 691)
         Me.TabPage_Trackers.TabIndex = 0
         Me.TabPage_Trackers.Text = "Trackers"
         Me.TabPage_Trackers.UseVisualStyleBackColor = True
@@ -500,7 +500,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers.Location = New System.Drawing.Point(19, 58)
         Me.Panel_VMTTrackers.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
-        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 374)
+        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 614)
         Me.Panel_VMTTrackers.TabIndex = 15
         '
         'Button_VMTControllers
@@ -537,7 +537,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Settings.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Settings.Name = "TabPage_Settings"
         Me.TabPage_Settings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_Settings.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage_Settings.Size = New System.Drawing.Size(760, 691)
         Me.TabPage_Settings.TabIndex = 3
         Me.TabPage_Settings.Text = "Settings"
         Me.TabPage_Settings.UseVisualStyleBackColor = True
@@ -552,7 +552,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl2.Location = New System.Drawing.Point(6, 6)
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(748, 387)
+        Me.TabControl2.Size = New System.Drawing.Size(748, 624)
         Me.TabControl2.TabIndex = 47
         '
         'TabPage4
@@ -562,7 +562,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(740, 361)
+        Me.TabPage4.Size = New System.Drawing.Size(740, 598)
         Me.TabPage4.TabIndex = 0
         Me.TabPage4.Text = "PSMove Controller"
         Me.TabPage4.UseVisualStyleBackColor = True
@@ -678,7 +678,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage5.Controls.Add(Me.Label6)
         Me.TabPage5.Location = New System.Drawing.Point(4, 22)
         Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Size = New System.Drawing.Size(740, 361)
+        Me.TabPage5.Size = New System.Drawing.Size(740, 598)
         Me.TabPage5.TabIndex = 1
         Me.TabPage5.Text = "Other"
         Me.TabPage5.UseVisualStyleBackColor = True
@@ -737,7 +737,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.Button_SaveControllerSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveControllerSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(624, 412)
+        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(624, 649)
         Me.Button_SaveControllerSettings.Margin = New System.Windows.Forms.Padding(16)
         Me.Button_SaveControllerSettings.Name = "Button_SaveControllerSettings"
         Me.Button_SaveControllerSettings.Size = New System.Drawing.Size(120, 23)
@@ -758,7 +758,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.Controls.Add(Me.ListView_Overrides)
         Me.TabPage_Overrides.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Overrides.Name = "TabPage_Overrides"
-        Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 691)
         Me.TabPage_Overrides.TabIndex = 2
         Me.TabPage_Overrides.Text = "SteamVR Tracker Overrides"
         Me.TabPage_Overrides.UseVisualStyleBackColor = True
