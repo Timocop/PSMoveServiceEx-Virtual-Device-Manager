@@ -33,7 +33,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
         Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.ListView_OscDevices = New ClassListViewEx()
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -90,7 +90,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
         Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ListView_Overrides = New ClassListViewEx()
+        Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -156,7 +156,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(16)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(768, 506)
+        Me.TabControl1.Size = New System.Drawing.Size(768, 717)
         Me.TabControl1.TabIndex = 22
         '
         'TabPage_Management
@@ -167,7 +167,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Management.Controls.Add(Me.Panel1)
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
-        Me.TabPage_Management.Size = New System.Drawing.Size(760, 480)
+        Me.TabPage_Management.Size = New System.Drawing.Size(760, 691)
         Me.TabPage_Management.TabIndex = 4
         Me.TabPage_Management.Text = "Management"
         '
@@ -181,7 +181,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel5.Location = New System.Drawing.Point(16, 188)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(728, 157)
+        Me.Panel5.Size = New System.Drawing.Size(728, 250)
         Me.Panel5.TabIndex = 2
         '
         'ListView_OscDevices
@@ -194,7 +194,7 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_OscDevices.HideSelection = False
         Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
         Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 113)
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
         Me.ListView_OscDevices.TabIndex = 1
         Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
@@ -930,7 +930,7 @@ Partial Class UCVirtualMotionTracker
         Me.Controls.Add(Me.PictureBox1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTracker"
-        Me.Size = New System.Drawing.Size(800, 600)
+        Me.Size = New System.Drawing.Size(800, 811)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage_Management.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)

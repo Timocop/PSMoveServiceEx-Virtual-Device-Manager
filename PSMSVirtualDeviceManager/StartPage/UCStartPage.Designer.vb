@@ -32,20 +32,24 @@ Partial Class UCStartPage
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
         Me.Label7 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ServiceRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceRestart = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceStop = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ConfigToolClose = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ConfigToolRun = New System.Windows.Forms.LinkLabel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
         Me.Label6 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_InstallDrivers = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.Label_PsmsxStatus = New System.Windows.Forms.Label()
@@ -53,39 +57,35 @@ Partial Class UCStartPage
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Panel8 = New System.Windows.Forms.Panel()
-        Me.Panel14 = New System.Windows.Forms.Panel()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.Panel16 = New System.Windows.Forms.Panel()
-        Me.ListView_ServiceDevices = New ClassListViewEx()
+        Me.ListView_ServiceDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Pos = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Battery = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Panel14 = New System.Windows.Forms.Panel()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Panel16 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.Panel6.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel8.SuspendLayout()
         Me.Panel14.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -159,6 +159,18 @@ Partial Class UCStartPage
         Me.Label7.TabIndex = 26
         Me.Label7.Text = "Support and Updates"
         '
+        'ClassPictureBoxQuality4
+        '
+        Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.connect_10101_256x256_32
+        Me.ClassPictureBoxQuality4.Location = New System.Drawing.Point(32, 16)
+        Me.ClassPictureBoxQuality4.m_HighQuality = True
+        Me.ClassPictureBoxQuality4.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality4.Name = "ClassPictureBoxQuality4"
+        Me.ClassPictureBoxQuality4.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality4.TabIndex = 24
+        Me.ClassPictureBoxQuality4.TabStop = False
+        '
         'LinkLabel_Github
         '
         Me.LinkLabel_Github.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -217,6 +229,18 @@ Partial Class UCStartPage
         Me.Label1.Size = New System.Drawing.Size(116, 21)
         Me.Label1.TabIndex = 18
         Me.Label1.Text = "Service Control"
+        '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 10
+        Me.ClassPictureBoxQuality1.TabStop = False
         '
         'LinkLabel_ServiceRun
         '
@@ -310,6 +334,18 @@ Partial Class UCStartPage
         Me.Label2.TabIndex = 23
         Me.Label2.Text = "Configuration"
         '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5364_64x64_32
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 19
+        Me.ClassPictureBoxQuality2.TabStop = False
+        '
         'LinkLabel_ConfigToolRun
         '
         Me.LinkLabel_ConfigToolRun.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -366,6 +402,18 @@ Partial Class UCStartPage
         Me.Label6.Size = New System.Drawing.Size(123, 21)
         Me.Label6.TabIndex = 26
         Me.Label6.Text = "Troubleshooting"
+        '
+        'ClassPictureBoxQuality3
+        '
+        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Faultrep_5201_256x256_32
+        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(32, 16)
+        Me.ClassPictureBoxQuality3.m_HighQuality = True
+        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
+        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality3.TabIndex = 24
+        Me.ClassPictureBoxQuality3.TabStop = False
         '
         'LinkLabel_InstallDrivers
         '
@@ -442,6 +490,17 @@ Partial Class UCStartPage
         Me.Panel6.Size = New System.Drawing.Size(800, 64)
         Me.Panel6.TabIndex = 1
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_256x256_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.m_HighQuality = True
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 16
+        Me.PictureBox1.TabStop = False
+        '
         'Label4
         '
         Me.Label4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -484,8 +543,48 @@ Partial Class UCStartPage
         Me.Panel8.Location = New System.Drawing.Point(16, 369)
         Me.Panel8.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(768, 268)
+        Me.Panel8.Size = New System.Drawing.Size(768, 250)
         Me.Panel8.TabIndex = 2
+        '
+        'ListView_ServiceDevices
+        '
+        Me.ListView_ServiceDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_ServiceDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_ServiceDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Pos, Me.ColumnHeader_Orientation, Me.ColumnHeader_Battery})
+        Me.ListView_ServiceDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_ServiceDevices.FullRowSelect = True
+        Me.ListView_ServiceDevices.HideSelection = False
+        Me.ListView_ServiceDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_ServiceDevices.Name = "ListView_ServiceDevices"
+        Me.ListView_ServiceDevices.Size = New System.Drawing.Size(766, 206)
+        Me.ListView_ServiceDevices.TabIndex = 1
+        Me.ListView_ServiceDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_ServiceDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 125
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Pos
+        '
+        Me.ColumnHeader_Pos.Text = "Position"
+        Me.ColumnHeader_Pos.Width = 125
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 125
+        '
+        'ColumnHeader_Battery
+        '
+        Me.ColumnHeader_Battery.Text = "Battery"
+        Me.ColumnHeader_Battery.Width = 50
         '
         'Panel14
         '
@@ -521,105 +620,6 @@ Partial Class UCStartPage
         Me.Panel16.Size = New System.Drawing.Size(766, 1)
         Me.Panel16.TabIndex = 0
         '
-        'ListView_ServiceDevices
-        '
-        Me.ListView_ServiceDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_ServiceDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_ServiceDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Pos, Me.ColumnHeader_Orientation, Me.ColumnHeader_Battery})
-        Me.ListView_ServiceDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_ServiceDevices.FullRowSelect = True
-        Me.ListView_ServiceDevices.HideSelection = False
-        Me.ListView_ServiceDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_ServiceDevices.Name = "ListView_ServiceDevices"
-        Me.ListView_ServiceDevices.Size = New System.Drawing.Size(766, 224)
-        Me.ListView_ServiceDevices.TabIndex = 1
-        Me.ListView_ServiceDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_ServiceDevices.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Type
-        '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 125
-        '
-        'ColumnHeader_Serial
-        '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
-        '
-        'ColumnHeader_Pos
-        '
-        Me.ColumnHeader_Pos.Text = "Position"
-        Me.ColumnHeader_Pos.Width = 125
-        '
-        'ColumnHeader_Orientation
-        '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 125
-        '
-        'ColumnHeader_Battery
-        '
-        Me.ColumnHeader_Battery.Text = "Battery"
-        Me.ColumnHeader_Battery.Width = 50
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_256x256_32
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.m_HighQuality = True
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 16
-        Me.PictureBox1.TabStop = False
-        '
-        'ClassPictureBoxQuality4
-        '
-        Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.connect_10101_256x256_32
-        Me.ClassPictureBoxQuality4.Location = New System.Drawing.Point(32, 16)
-        Me.ClassPictureBoxQuality4.m_HighQuality = True
-        Me.ClassPictureBoxQuality4.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality4.Name = "ClassPictureBoxQuality4"
-        Me.ClassPictureBoxQuality4.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality4.TabIndex = 24
-        Me.ClassPictureBoxQuality4.TabStop = False
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 10
-        Me.ClassPictureBoxQuality1.TabStop = False
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5364_64x64_32
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 19
-        Me.ClassPictureBoxQuality2.TabStop = False
-        '
-        'ClassPictureBoxQuality3
-        '
-        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Faultrep_5201_256x256_32
-        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(32, 16)
-        Me.ClassPictureBoxQuality3.m_HighQuality = True
-        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
-        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality3.TabIndex = 24
-        Me.ClassPictureBoxQuality3.TabStop = False
-        '
         'UCStartPage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -636,22 +636,22 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel7.ResumeLayout(False)
         Me.Panel7.PerformLayout()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.Panel6.ResumeLayout(False)
         Me.Panel6.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel8.ResumeLayout(False)
         Me.Panel14.ResumeLayout(False)
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
