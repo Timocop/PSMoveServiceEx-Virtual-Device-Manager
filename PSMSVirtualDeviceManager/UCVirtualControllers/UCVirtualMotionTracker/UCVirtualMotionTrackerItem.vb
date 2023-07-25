@@ -728,6 +728,7 @@ Public Class UCVirtualMotionTrackerItem
             Dim mJoystickPressedLastPosition As New Vector3
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
+            Dim mLastBatteryReport As New Stopwatch
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -780,6 +781,7 @@ Public Class UCVirtualMotionTrackerItem
                         bFirstEnabled = True
 
                         mTrackerDataUpdate.Restart()
+                        mLastBatteryReport.Restart()
                     End If
 
                     Dim mClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
@@ -799,7 +801,15 @@ Public Class UCVirtualMotionTrackerItem
                                     Const MAX_RUMBLE_UPODATE_RATE As Single = 33.0F
                                     Const MAX_PULSE_MICROSECONDS As Single = 5000.0F
 
-                                    Dim fHapticPulseDurationMicroSec As Single = (g_mHeptic.fDuration * 1000000.0F)
+                                    Dim fHepticDuraction As Single
+                                    Dim fHelpticAmplitude As Single
+
+                                    SyncLock _ThreadLock
+                                        fHepticDuraction = g_mHeptic.fDuration
+                                        fHelpticAmplitude = g_mHeptic.fAmplitude
+                                    End SyncLock
+
+                                    Dim fHapticPulseDurationMicroSec As Single = (fHepticDuraction * 1000000.0F)
 
                                     Dim bTimoutElapsed As Boolean = True
 
@@ -810,9 +820,9 @@ Public Class UCVirtualMotionTrackerItem
                                     End If
 
                                     If (bTimoutElapsed) Then
-                                        Dim fRumble As Single = (fHapticPulseDurationMicroSec / MAX_PULSE_MICROSECONDS) * g_mHeptic.fAmplitude
+                                        Dim fRumble As Single = (fHapticPulseDurationMicroSec / MAX_PULSE_MICROSECONDS) * fHelpticAmplitude
 
-                                        If (g_mHeptic.fDuration > 0.0F) Then
+                                        If (fHepticDuraction > 0.0F) Then
                                             If (fRumble < 0.35F) Then
                                                 fRumble = 0.35F
                                             End If
@@ -831,10 +841,14 @@ Public Class UCVirtualMotionTrackerItem
                                         mRumbleLastTimeSend = Now
                                         mRumbleLastTimeSendValid = True
 
-                                        g_mHeptic.Clear()
+                                        SyncLock _ThreadLock
+                                            g_mHeptic.Clear()
+                                        End SyncLock
                                     End If
                                 Else
-                                    g_mHeptic.Clear()
+                                    SyncLock _ThreadLock
+                                        g_mHeptic.Clear()
+                                    End SyncLock
                                 End If
                         End Select
 
@@ -1111,6 +1125,18 @@ Public Class UCVirtualMotionTrackerItem
                                 End Select
 
                             End SyncLock
+
+                            'Send battery level to
+                            If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
+                                mLastBatteryReport.Restart()
+
+                                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        New OscMessage(
+                                            "/VMT/Property/Battery",
+                                            m_VmtTracker,
+                                            1.0F
+                                        ))
+                            End If
 
                             Select Case (m_VmtTrackerRole)
                                 Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
