@@ -857,6 +857,7 @@ Public Class UCVirtualMotionTrackerItem
                             iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
 
                             Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
+                            Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
 
                             ' Get controller settings
                             Dim bJoystickShortcutBinding As Boolean = mClassControllerSettings.m_JoystickShortcutBinding
