@@ -263,9 +263,9 @@
     End Sub
 
     Private Sub CleanUp()
-        If (g_mUCRemoteDevices IsNot Nothing AndAlso Not g_mUCRemoteDevices.IsDisposed) Then
-            g_mUCRemoteDevices.Dispose()
-            g_mUCRemoteDevices = Nothing
+        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso Not g_mUCVirtualMotionTracker.IsDisposed) Then
+            g_mUCVirtualMotionTracker.Dispose()
+            g_mUCVirtualMotionTracker = Nothing
         End If
 
         If (g_mUCControllerAttachments IsNot Nothing AndAlso Not g_mUCControllerAttachments.IsDisposed) Then
@@ -273,9 +273,9 @@
             g_mUCControllerAttachments = Nothing
         End If
 
-        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso Not g_mUCVirtualMotionTracker.IsDisposed) Then
-            g_mUCVirtualMotionTracker.Dispose()
-            g_mUCVirtualMotionTracker = Nothing
+        If (g_mUCRemoteDevices IsNot Nothing AndAlso Not g_mUCRemoteDevices.IsDisposed) Then
+            g_mUCRemoteDevices.Dispose()
+            g_mUCRemoteDevices = Nothing
         End If
     End Sub
 End Class
