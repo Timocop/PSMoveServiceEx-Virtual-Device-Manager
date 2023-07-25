@@ -856,6 +856,8 @@ Public Class UCVirtualMotionTrackerItem
                         If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
                             iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
 
+                            Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
+
                             ' Get controller settings
                             Dim bJoystickShortcutBinding As Boolean = mClassControllerSettings.m_JoystickShortcutBinding
                             Dim bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
@@ -1134,7 +1136,7 @@ Public Class UCVirtualMotionTrackerItem
                                         New OscMessage(
                                             "/VMT/Property/Battery",
                                             m_VmtTracker,
-                                            1.0F
+                                            iBatteryValue
                                         ))
                             End If
 
