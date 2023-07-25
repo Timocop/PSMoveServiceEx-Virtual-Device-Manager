@@ -865,8 +865,8 @@ Public Class UCVirtualMotionTrackerItem
                             Dim bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
                             Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                             Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
-                            Dim bClampTouchpadToBounds = mClassControllerSettings.m_ClampTouchpadToBounds
-                            Dim bUseGyroTouchpad = True
+                            Dim bClampTouchpadToBounds = mClassControllerSettings.m_HtcClampTouchpadToBounds
+                            Dim iHtcTouchpadMethod = mClassControllerSettings.m_HtcTouchpadMethod
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_ControllerData.m_Orientation
@@ -1031,7 +1031,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     ' Just pressed
                                                     Dim mNewPos As Vector3
 
-                                                    If (bUseGyroTouchpad) Then
+                                                    If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
                                                         If (Not bJoystickButtonPressed) Then
                                                             bJoystickButtonPressed = True
 
@@ -1080,7 +1080,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    If (bUseGyroTouchpad) Then
+                                                    If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
                                                         mNewPos = (mNewPos - mJoystickPressedLastPosition) * 2.5F
                                                         mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
                                                         mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)

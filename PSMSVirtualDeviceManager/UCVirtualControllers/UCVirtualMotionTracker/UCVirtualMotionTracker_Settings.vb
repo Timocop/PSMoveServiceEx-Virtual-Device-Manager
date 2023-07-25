@@ -76,7 +76,16 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_ClampTouchpadToBounds = CheckBox_TouchpadClampBounds.Checked
+        g_ClassControllerSettings.m_HtcClampTouchpadToBounds = CheckBox_TouchpadClampBounds.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_TouchpadMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_TouchpadMethod.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_HtcTouchpadMethod = CType(ComboBox_TouchpadMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD)
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 

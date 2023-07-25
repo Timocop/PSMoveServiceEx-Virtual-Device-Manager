@@ -95,6 +95,8 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.ComboBox_TouchpadMethod = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -508,6 +510,8 @@ Partial Class UCVirtualMotionTracker
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadMethod)
+        Me.GroupBox2.Controls.Add(Me.Label10)
         Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadShortcutClick)
         Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadClampBounds)
         Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadShortcuts)
@@ -518,7 +522,7 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2.Controls.Add(Me.Label4)
         Me.GroupBox2.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(728, 154)
+        Me.GroupBox2.Size = New System.Drawing.Size(728, 210)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "HTC Vive Emulation Settings"
@@ -919,6 +923,26 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
         '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(19, 149)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(154, 13)
+        Me.Label10.TabIndex = 46
+        Me.Label10.Text = "Emulated touchpad method:"
+        '
+        'ComboBox_TouchpadMethod
+        '
+        Me.ComboBox_TouchpadMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_TouchpadMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_TouchpadMethod.FormattingEnabled = True
+        Me.ComboBox_TouchpadMethod.Location = New System.Drawing.Point(179, 146)
+        Me.ComboBox_TouchpadMethod.Name = "ComboBox_TouchpadMethod"
+        Me.ComboBox_TouchpadMethod.Size = New System.Drawing.Size(424, 21)
+        Me.ComboBox_TouchpadMethod.TabIndex = 47
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -1030,4 +1054,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel10 As Panel
     Friend WithEvents CheckBox_TouchpadClampBounds As CheckBox
+    Friend WithEvents ComboBox_TouchpadMethod As ComboBox
+    Friend WithEvents Label10 As Label
 End Class

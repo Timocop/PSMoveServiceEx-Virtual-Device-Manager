@@ -66,6 +66,22 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = False
         End Try
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_TouchpadMethod.Items.Clear()
+            ComboBox_TouchpadMethod.Items.Add("Use Controller Position")
+            ComboBox_TouchpadMethod.Items.Add("Use Controller Orientation")
+
+            ComboBox_TouchpadMethod.SelectedIndex = 0
+
+            If (ComboBox_TouchpadMethod.Items.Count <> ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.__MAX) Then
+                Throw New ArgumentException("Invalid size")
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
         For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
@@ -102,7 +118,8 @@ Public Class UCVirtualMotionTracker
                 CheckBox_EnableHeptics.Checked = g_ClassControllerSettings.m_EnableHepticFeedback
                 ComboBox_TouchpadClickMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                 ComboBox_GrabButtonMethod.SelectedIndex = g_ClassControllerSettings.m_HtcGripButtonMethod
-                CheckBox_TouchpadClampBounds.Checked = g_ClassControllerSettings.m_ClampTouchpadToBounds
+                CheckBox_TouchpadClampBounds.Checked = g_ClassControllerSettings.m_HtcClampTouchpadToBounds
+                ComboBox_TouchpadMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadMethod
 
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
@@ -324,13 +341,21 @@ Public Class UCVirtualMotionTracker
             __MAX
         End Enum
 
-        Private g_bJoystickShortcutBinding As Boolean = False
-        Private g_bJoystickShortcutTouchpadClick As Boolean = False
+        Enum ENUM_HTC_TOUCHPAD_METHOD
+            USE_POSITION
+            USE_ORIENTATION
+
+            __MAX
+        End Enum
+
+        Private g_bTouchpadShortcutBinding As Boolean = False
+        Private g_bTouchpadShortcutTouchpadClick As Boolean = False
         Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
         Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
         Private g_bDisableBaseStationSpawning As Boolean = False
         Private g_bEnableHepticFeedback As Boolean = True
-        Private g_bClampTouchpadToBounds As Boolean = True
+        Private g_bHtcClampTouchpadToBounds As Boolean = True
+        Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -339,12 +364,12 @@ Public Class UCVirtualMotionTracker
         Property m_JoystickShortcutBinding As Boolean
             Get
                 SyncLock _ThreadLock
-                    Return g_bJoystickShortcutBinding
+                    Return g_bTouchpadShortcutBinding
                 End SyncLock
             End Get
             Set(value As Boolean)
                 SyncLock _ThreadLock
-                    g_bJoystickShortcutBinding = value
+                    g_bTouchpadShortcutBinding = value
                 End SyncLock
             End Set
         End Property
@@ -352,12 +377,12 @@ Public Class UCVirtualMotionTracker
         Property m_JoystickShortcutTouchpadClick As Boolean
             Get
                 SyncLock _ThreadLock
-                    Return g_bJoystickShortcutTouchpadClick
+                    Return g_bTouchpadShortcutTouchpadClick
                 End SyncLock
             End Get
             Set(value As Boolean)
                 SyncLock _ThreadLock
-                    g_bJoystickShortcutTouchpadClick = value
+                    g_bTouchpadShortcutTouchpadClick = value
                 End SyncLock
             End Set
         End Property
@@ -430,15 +455,28 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
-        Property m_ClampTouchpadToBounds As Boolean
+        Property m_HtcClampTouchpadToBounds As Boolean
             Get
                 SyncLock _ThreadLock
-                    Return g_bClampTouchpadToBounds
+                    Return g_bHtcClampTouchpadToBounds
                 End SyncLock
             End Get
             Set(value As Boolean)
                 SyncLock _ThreadLock
-                    g_bClampTouchpadToBounds = value
+                    g_bHtcClampTouchpadToBounds = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD
+            Get
+                SyncLock _ThreadLock
+                    Return g_iHtcTouchpadMethod
+                End SyncLock
+            End Get
+            Set(value As ENUM_HTC_TOUCHPAD_METHOD)
+                SyncLock _ThreadLock
+                    g_iHtcTouchpadMethod = value
                 End SyncLock
             End Set
         End Property
@@ -454,7 +492,6 @@ Public Class UCVirtualMotionTracker
                     m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
                     m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
                     m_EnableHepticFeedback = (mIni.ReadKeyValue("ControllerSettings", "EnableHepticFeedback", "true") = "true")
-                    m_ClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "ClampTouchpadToBounds", "true") = "true")
 
                     If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmp)) Then
                         m_HtcTouchpadEmulationClickMethod = CType(tmp, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
@@ -462,6 +499,12 @@ Public Class UCVirtualMotionTracker
 
                     If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmp)) Then
                         m_HtcGripButtonMethod = CType(tmp, ENUM_HTC_GRIP_BUTTON_METHOD)
+                    End If
+
+                    m_HtcClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "HtcClampTouchpadToBounds", "true") = "true")
+
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION))), tmp)) Then
+                        m_HtcTouchpadMethod = CType(tmp, ENUM_HTC_TOUCHPAD_METHOD)
                     End If
                 End Using
             End Using
@@ -482,7 +525,8 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_EnableHepticFeedback, "true", "false")))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_HtcTouchpadEmulationClickMethod))))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_HtcGripButtonMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ClampTouchpadToBounds", If(m_ClampTouchpadToBounds, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_HtcClampTouchpadToBounds, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_HtcTouchpadMethod))))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using
@@ -766,4 +810,5 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
+
 End Class
