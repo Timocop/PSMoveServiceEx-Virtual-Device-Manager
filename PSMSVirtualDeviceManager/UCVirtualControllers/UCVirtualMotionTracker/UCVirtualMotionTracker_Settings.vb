@@ -1,4 +1,5 @@
 ﻿Partial Public Class UCVirtualMotionTracker
+
     Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
         Dim sHelp As New Text.StringBuilder
         sHelp.AppendLine("Joystick values can be bound to buttons on the controller so you dont have to move your controller for joystick emulation.")
@@ -16,21 +17,21 @@
         MessageBox.Show(sHelp.ToString, "Joystick Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
-    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickShortcuts.CheckedChanged
+    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcuts.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_ClassControllerSettings.m_JoystickShortcutBinding = CheckBox_JoystickShortcuts.Checked
+        g_ClassControllerSettings.m_JoystickShortcutBinding = CheckBox_TouchpadShortcuts.Checked
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub CheckBox_JoystickShortcutClick_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickShortcutClick.CheckedChanged
+    Private Sub CheckBox_JoystickShortcutClick_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcutClick.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_ClassControllerSettings.m_JoystickShortcutTouchpadClick = CheckBox_JoystickShortcutClick.Checked
+        g_ClassControllerSettings.m_JoystickShortcutTouchpadClick = CheckBox_TouchpadShortcutClick.Checked
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
@@ -67,6 +68,15 @@
         End If
 
         g_ClassControllerSettings.m_EnableHepticFeedback = CheckBox_EnableHeptics.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_TouchpadClampBounds_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadClampBounds.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_ClampTouchpadToBounds = CheckBox_TouchpadClampBounds.Checked
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 

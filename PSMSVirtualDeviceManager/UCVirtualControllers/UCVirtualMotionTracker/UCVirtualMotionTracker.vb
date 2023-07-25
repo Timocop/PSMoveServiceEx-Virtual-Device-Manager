@@ -96,12 +96,13 @@ Public Class UCVirtualMotionTracker
             Try
                 g_bIgnoreEvents = True
 
-                CheckBox_JoystickShortcuts.Checked = g_ClassControllerSettings.m_JoystickShortcutBinding
-                CheckBox_JoystickShortcutClick.Checked = g_ClassControllerSettings.m_JoystickShortcutTouchpadClick
+                CheckBox_TouchpadShortcuts.Checked = g_ClassControllerSettings.m_JoystickShortcutBinding
+                CheckBox_TouchpadShortcutClick.Checked = g_ClassControllerSettings.m_JoystickShortcutTouchpadClick
                 CheckBox_DisableBasestations.Checked = g_ClassControllerSettings.m_DisableBaseStationSpawning
                 CheckBox_EnableHeptics.Checked = g_ClassControllerSettings.m_EnableHepticFeedback
                 ComboBox_TouchpadClickMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                 ComboBox_GrabButtonMethod.SelectedIndex = g_ClassControllerSettings.m_HtcGripButtonMethod
+                CheckBox_TouchpadClampBounds.Checked = g_ClassControllerSettings.m_ClampTouchpadToBounds
 
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
@@ -329,6 +330,7 @@ Public Class UCVirtualMotionTracker
         Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
         Private g_bDisableBaseStationSpawning As Boolean = False
         Private g_bEnableHepticFeedback As Boolean = True
+        Private g_bClampTouchpadToBounds As Boolean = True
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -428,6 +430,19 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
+        Property m_ClampTouchpadToBounds As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bClampTouchpadToBounds
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bClampTouchpadToBounds = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub LoadSettings()
             g_bSettingsLoaded = True
 
@@ -439,6 +454,7 @@ Public Class UCVirtualMotionTracker
                     m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
                     m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
                     m_EnableHepticFeedback = (mIni.ReadKeyValue("ControllerSettings", "EnableHepticFeedback", "true") = "true")
+                    m_ClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "ClampTouchpadToBounds", "true") = "true")
 
                     If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmp)) Then
                         m_HtcTouchpadEmulationClickMethod = CType(tmp, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
@@ -466,6 +482,7 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_EnableHepticFeedback, "true", "false")))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_HtcTouchpadEmulationClickMethod))))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_HtcGripButtonMethod))))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ClampTouchpadToBounds", If(m_ClampTouchpadToBounds, "true", "false")))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using
@@ -749,5 +766,4 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
-
 End Class

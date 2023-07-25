@@ -719,6 +719,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private Sub ThreadOsc()
             Const TOUCHPAD_AXIS_UNITS As Single = 7.5F
+            Const TOUCHPAD_CLAMP_BUFFER = 2.5F
 
             Dim iLastOutputSeqNum As Integer = 0
             Dim bJoystickButtonPressed As Boolean = False
@@ -864,6 +865,7 @@ Public Class UCVirtualMotionTrackerItem
                             Dim bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
                             Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                             Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
+                            Dim bClampTouchpadToBounds = mClassControllerSettings.m_ClampTouchpadToBounds
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_ControllerData.m_Orientation
@@ -1036,18 +1038,43 @@ Public Class UCVirtualMotionTrackerItem
                                                     End If
 
                                                     Dim mNewPos As Vector3 = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                                                    Dim mNewPosDiff As New Vector3(
+                                                        mNewPos.X - mJoystickPressedLastPosition.X,
+                                                        mNewPos.Y - mJoystickPressedLastPosition.Y,
+                                                        mNewPos.Z - mJoystickPressedLastPosition.Z
+                                                    )
+
+                                                    If (bClampTouchpadToBounds) Then
+                                                        ' Clamp new position to TOUCHPAD_AXIS_UNITS
+                                                        If (Math.Abs(mNewPosDiff.X) > (TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER)) Then
+                                                            mJoystickPressedLastPosition.X -= Math.Sign(mNewPosDiff.X) *
+                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.X))
+                                                        End If
+
+                                                        If (Math.Abs(mNewPosDiff.Y) > TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) Then
+                                                            mJoystickPressedLastPosition.Y -= Math.Sign(mNewPosDiff.Y) *
+                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Y))
+                                                        End If
+
+                                                        If (Math.Abs(mNewPosDiff.Z) > TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) Then
+                                                            mJoystickPressedLastPosition.Z -= Math.Sign(mNewPosDiff.Z) *
+                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Z))
+                                                        End If
+                                                    End If
 
                                                     mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
                                                     mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
                                                     mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
 
-                                                    g_mOscDataPack.mJoyStick = New Vector2(mNewPos.X, -mNewPos.Z)
+                                                    Dim mJoystickVec = New Vector2(mNewPos.X, -mNewPos.Z)
+
+                                                    g_mOscDataPack.mJoyStick = mJoystickVec
 
                                                     If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
                                                         m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
 
                                                         ' Only start pressing when we moved a distance
-                                                        If (Math.Abs(mNewPos.X) > 0.25F OrElse Math.Abs(mNewPos.Y) > 0.25F) Then
+                                                        If (Math.Abs(mJoystickVec.X) > 0.25F OrElse Math.Abs(mJoystickVec.Y) > 0.25F) Then
                                                             Select Case (iHtcTouchpadEmulationClickMethod)
                                                                 Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
@@ -1081,7 +1108,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         ' Also skip MOVE button
                                                         For i = 1 To mButtons.Length - 1
                                                             If (mButtons(i)) Then
-                                                                If (Math.Abs(mNewPos.X) < 0.5F AndAlso Math.Abs(mNewPos.Z) < 0.5F) Then
+                                                                If (Math.Abs(mJoystickVec.X) < 0.5F AndAlso Math.Abs(mJoystickVec.Y) < 0.5F) Then
                                                                     ' Remove shortcut
                                                                     If (mJoystickShortcuts.ContainsKey(i)) Then
                                                                         mJoystickShortcuts.Remove(i)

@@ -33,11 +33,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
         Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
@@ -45,13 +40,11 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_OscRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_OscPause = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamRun = New System.Windows.Forms.LinkLabel()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_DriverInstall = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_DriverUninstall = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
@@ -65,11 +58,11 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Settings = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.CheckBox_JoystickShortcutClick = New System.Windows.Forms.CheckBox()
-        Me.CheckBox_JoystickShortcuts = New System.Windows.Forms.CheckBox()
-        Me.LinkLabel_JoystickShortcutsInfo = New System.Windows.Forms.LinkLabel()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox_TouchpadShortcutClick = New System.Windows.Forms.CheckBox()
+        Me.CheckBox_TouchpadClampBounds = New System.Windows.Forms.CheckBox()
+        Me.CheckBox_TouchpadShortcuts = New System.Windows.Forms.CheckBox()
+        Me.LinkLabel_JoystickShortcutsInfo = New System.Windows.Forms.LinkLabel()
         Me.ComboBox_GrabButtonMethod = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
@@ -83,17 +76,24 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
-        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
+        Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
@@ -102,19 +102,18 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.TabPage_Trackers.SuspendLayout()
         Me.TabPage_Settings.SuspendLayout()
         Me.TabControl2.SuspendLayout()
         Me.TabPage4.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.TabPage5.SuspendLayout()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -183,41 +182,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(728, 250)
         Me.Panel5.TabIndex = 2
-        '
-        'ListView_OscDevices
-        '
-        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
-        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_OscDevices.FullRowSelect = True
-        Me.ListView_OscDevices.HideSelection = False
-        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
-        Me.ListView_OscDevices.TabIndex = 1
-        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Type
-        '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 100
-        '
-        'ColumnHeader_Serial
-        '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
-        '
-        'ColumnHeader_Position
-        '
-        Me.ColumnHeader_Position.Text = "Position"
-        Me.ColumnHeader_Position.Width = 150
-        '
-        'ColumnHeader_Orientation
-        '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 150
         '
         'Panel8
         '
@@ -305,18 +269,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label8.TabIndex = 18
         Me.Label8.Text = "Server Control"
         '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 10
-        Me.ClassPictureBoxQuality1.TabStop = False
-        '
         'LinkLabel_OscRun
         '
         Me.LinkLabel_OscRun.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -389,18 +341,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label9.Size = New System.Drawing.Size(133, 21)
         Me.Label9.TabIndex = 18
         Me.Label9.Text = "SteamVR Support"
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 10
-        Me.ClassPictureBoxQuality2.TabStop = False
         '
         'LinkLabel_DriverInstall
         '
@@ -557,7 +497,6 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage4
         '
-        Me.TabPage4.Controls.Add(Me.GroupBox1)
         Me.TabPage4.Controls.Add(Me.GroupBox2)
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
@@ -567,75 +506,77 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage4.Text = "PSMove Controller"
         Me.TabPage4.UseVisualStyleBackColor = True
         '
-        'GroupBox1
+        'GroupBox2
         '
-        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcutClick)
-        Me.GroupBox1.Controls.Add(Me.CheckBox_JoystickShortcuts)
-        Me.GroupBox1.Controls.Add(Me.LinkLabel_JoystickShortcutsInfo)
-        Me.GroupBox1.Location = New System.Drawing.Point(6, 6)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(728, 76)
-        Me.GroupBox1.TabIndex = 44
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "General"
+        Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadShortcutClick)
+        Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadClampBounds)
+        Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadShortcuts)
+        Me.GroupBox2.Controls.Add(Me.LinkLabel_JoystickShortcutsInfo)
+        Me.GroupBox2.Controls.Add(Me.ComboBox_GrabButtonMethod)
+        Me.GroupBox2.Controls.Add(Me.Label5)
+        Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadClickMethod)
+        Me.GroupBox2.Controls.Add(Me.Label4)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 6)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(728, 154)
+        Me.GroupBox2.TabIndex = 46
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "HTC Vive Emulation Settings"
         '
-        'CheckBox_JoystickShortcutClick
+        'CheckBox_TouchpadShortcutClick
         '
-        Me.CheckBox_JoystickShortcutClick.AutoSize = True
-        Me.CheckBox_JoystickShortcutClick.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_JoystickShortcutClick.Location = New System.Drawing.Point(51, 44)
-        Me.CheckBox_JoystickShortcutClick.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.CheckBox_JoystickShortcutClick.Name = "CheckBox_JoystickShortcutClick"
-        Me.CheckBox_JoystickShortcutClick.Size = New System.Drawing.Size(332, 18)
-        Me.CheckBox_JoystickShortcutClick.TabIndex = 44
-        Me.CheckBox_JoystickShortcutClick.Text = "Click touchpad when using shortcuts (HTC Vive Emulation)"
-        Me.CheckBox_JoystickShortcutClick.UseVisualStyleBackColor = True
+        Me.CheckBox_TouchpadShortcutClick.AutoSize = True
+        Me.CheckBox_TouchpadShortcutClick.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_TouchpadShortcutClick.Location = New System.Drawing.Point(51, 44)
+        Me.CheckBox_TouchpadShortcutClick.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_TouchpadShortcutClick.Name = "CheckBox_TouchpadShortcutClick"
+        Me.CheckBox_TouchpadShortcutClick.Size = New System.Drawing.Size(332, 18)
+        Me.CheckBox_TouchpadShortcutClick.TabIndex = 44
+        Me.CheckBox_TouchpadShortcutClick.Text = "Click touchpad when using shortcuts (HTC Vive Emulation)"
+        Me.CheckBox_TouchpadShortcutClick.UseVisualStyleBackColor = True
         '
-        'CheckBox_JoystickShortcuts
+        'CheckBox_TouchpadClampBounds
         '
-        Me.CheckBox_JoystickShortcuts.AutoSize = True
-        Me.CheckBox_JoystickShortcuts.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_JoystickShortcuts.Location = New System.Drawing.Point(19, 21)
-        Me.CheckBox_JoystickShortcuts.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_JoystickShortcuts.Name = "CheckBox_JoystickShortcuts"
-        Me.CheckBox_JoystickShortcuts.Size = New System.Drawing.Size(214, 18)
-        Me.CheckBox_JoystickShortcuts.TabIndex = 42
-        Me.CheckBox_JoystickShortcuts.Text = "Enable joystick emulation shortcuts"
-        Me.CheckBox_JoystickShortcuts.UseVisualStyleBackColor = True
+        Me.CheckBox_TouchpadClampBounds.AutoSize = True
+        Me.CheckBox_TouchpadClampBounds.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_TouchpadClampBounds.Location = New System.Drawing.Point(19, 122)
+        Me.CheckBox_TouchpadClampBounds.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_TouchpadClampBounds.Name = "CheckBox_TouchpadClampBounds"
+        Me.CheckBox_TouchpadClampBounds.Size = New System.Drawing.Size(196, 18)
+        Me.CheckBox_TouchpadClampBounds.TabIndex = 45
+        Me.CheckBox_TouchpadClampBounds.Text = "Clamp touchpad axis to bounds"
+        Me.CheckBox_TouchpadClampBounds.UseVisualStyleBackColor = True
+        '
+        'CheckBox_TouchpadShortcuts
+        '
+        Me.CheckBox_TouchpadShortcuts.AutoSize = True
+        Me.CheckBox_TouchpadShortcuts.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_TouchpadShortcuts.Location = New System.Drawing.Point(19, 21)
+        Me.CheckBox_TouchpadShortcuts.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_TouchpadShortcuts.Name = "CheckBox_TouchpadShortcuts"
+        Me.CheckBox_TouchpadShortcuts.Size = New System.Drawing.Size(226, 18)
+        Me.CheckBox_TouchpadShortcuts.TabIndex = 42
+        Me.CheckBox_TouchpadShortcuts.Text = "Enable touchpad emulation shortcuts"
+        Me.CheckBox_TouchpadShortcuts.UseVisualStyleBackColor = True
         '
         'LinkLabel_JoystickShortcutsInfo
         '
         Me.LinkLabel_JoystickShortcutsInfo.AutoSize = True
         Me.LinkLabel_JoystickShortcutsInfo.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LinkLabel_JoystickShortcutsInfo.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_JoystickShortcutsInfo.Location = New System.Drawing.Point(233, 22)
+        Me.LinkLabel_JoystickShortcutsInfo.Location = New System.Drawing.Point(251, 23)
         Me.LinkLabel_JoystickShortcutsInfo.Name = "LinkLabel_JoystickShortcutsInfo"
         Me.LinkLabel_JoystickShortcutsInfo.Size = New System.Drawing.Size(26, 13)
         Me.LinkLabel_JoystickShortcutsInfo.TabIndex = 43
         Me.LinkLabel_JoystickShortcutsInfo.TabStop = True
         Me.LinkLabel_JoystickShortcutsInfo.Text = "( ? )"
         '
-        'GroupBox2
-        '
-        Me.GroupBox2.Controls.Add(Me.ComboBox_GrabButtonMethod)
-        Me.GroupBox2.Controls.Add(Me.Label5)
-        Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadClickMethod)
-        Me.GroupBox2.Controls.Add(Me.Label4)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 88)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(728, 81)
-        Me.GroupBox2.TabIndex = 46
-        Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "HTC Vive Emulation Settings"
-        '
         'ComboBox_GrabButtonMethod
         '
         Me.ComboBox_GrabButtonMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_GrabButtonMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_GrabButtonMethod.FormattingEnabled = True
-        Me.ComboBox_GrabButtonMethod.Location = New System.Drawing.Point(154, 45)
+        Me.ComboBox_GrabButtonMethod.Location = New System.Drawing.Point(154, 95)
         Me.ComboBox_GrabButtonMethod.Name = "ComboBox_GrabButtonMethod"
         Me.ComboBox_GrabButtonMethod.Size = New System.Drawing.Size(449, 21)
         Me.ComboBox_GrabButtonMethod.TabIndex = 3
@@ -643,7 +584,7 @@ Partial Class UCVirtualMotionTracker
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(19, 48)
+        Me.Label5.Location = New System.Drawing.Point(19, 98)
         Me.Label5.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(117, 13)
@@ -655,7 +596,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_TouchpadClickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_TouchpadClickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_TouchpadClickMethod.FormattingEnabled = True
-        Me.ComboBox_TouchpadClickMethod.Location = New System.Drawing.Point(154, 18)
+        Me.ComboBox_TouchpadClickMethod.Location = New System.Drawing.Point(154, 68)
         Me.ComboBox_TouchpadClickMethod.Name = "ComboBox_TouchpadClickMethod"
         Me.ComboBox_TouchpadClickMethod.Size = New System.Drawing.Size(449, 21)
         Me.ComboBox_TouchpadClickMethod.TabIndex = 1
@@ -663,7 +604,7 @@ Partial Class UCVirtualMotionTracker
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(19, 21)
+        Me.Label4.Location = New System.Drawing.Point(19, 71)
         Me.Label4.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(129, 13)
@@ -790,18 +731,6 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_SteamVRRestartOff.TabStop = True
         Me.LinkLabel_SteamVRRestartOff.Text = "Dismiss"
         '
-        'PictureBox3
-        '
-        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox3.Location = New System.Drawing.Point(16, 13)
-        Me.PictureBox3.m_HighQuality = False
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox3.TabIndex = 26
-        Me.PictureBox3.TabStop = False
-        '
         'Label3
         '
         Me.Label3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -865,6 +794,82 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Add.UseVisualStyleBackColor = True
         '
+        'ContextMenuStrip_Autostart
+        '
+        Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
+        '
+        'ListView_OscDevices
+        '
+        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
+        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_OscDevices.FullRowSelect = True
+        Me.ListView_OscDevices.HideSelection = False
+        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_OscDevices.Name = "ListView_OscDevices"
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
+        Me.ListView_OscDevices.TabIndex = 1
+        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 100
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Position
+        '
+        Me.ColumnHeader_Position.Text = "Position"
+        Me.ColumnHeader_Position.Width = 150
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 150
+        '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 10
+        Me.ClassPictureBoxQuality1.TabStop = False
+        '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 10
+        Me.ClassPictureBoxQuality2.TabStop = False
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.PictureBox3.Location = New System.Drawing.Point(16, 13)
+        Me.PictureBox3.m_HighQuality = False
+        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox3.TabIndex = 26
+        Me.PictureBox3.TabStop = False
+        '
         'PictureBox2
         '
         Me.PictureBox2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -902,11 +907,6 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader2.Text = "Override"
         Me.ColumnHeader2.Width = 158
         '
-        'ContextMenuStrip_Autostart
-        '
-        Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
-        '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -939,17 +939,13 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.TabPage_Trackers.ResumeLayout(False)
         Me.TabPage_Settings.ResumeLayout(False)
         Me.TabControl2.ResumeLayout(False)
         Me.TabPage4.ResumeLayout(False)
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.TabPage5.ResumeLayout(False)
@@ -957,6 +953,8 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -988,10 +986,9 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel_SteamVRRestart As Panel
     Friend WithEvents LinkLabel_SteamVRRestartOff As LinkLabel
     Friend WithEvents TabPage_Settings As TabPage
-    Friend WithEvents CheckBox_JoystickShortcuts As CheckBox
+    Friend WithEvents CheckBox_TouchpadShortcuts As CheckBox
     Friend WithEvents LinkLabel_JoystickShortcutsInfo As LinkLabel
-    Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents CheckBox_JoystickShortcutClick As CheckBox
+    Friend WithEvents CheckBox_TouchpadShortcutClick As CheckBox
     Friend WithEvents Button_SaveControllerSettings As Button
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents ComboBox_TouchpadClickMethod As ComboBox
@@ -1032,4 +1029,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel8 As Panel
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel10 As Panel
+    Friend WithEvents CheckBox_TouchpadClampBounds As CheckBox
 End Class
