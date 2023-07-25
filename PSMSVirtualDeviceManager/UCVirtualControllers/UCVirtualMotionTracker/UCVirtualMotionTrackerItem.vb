@@ -866,6 +866,7 @@ Public Class UCVirtualMotionTrackerItem
                             Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                             Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
                             Dim bClampTouchpadToBounds = mClassControllerSettings.m_ClampTouchpadToBounds
+                            Dim bUseGyroTouchpad = True
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = m_ControllerData.m_Orientation
@@ -1028,16 +1029,33 @@ Public Class UCVirtualMotionTrackerItem
                                                     End If
 
                                                     ' Just pressed
-                                                    If (Not bJoystickButtonPressed) Then
-                                                        bJoystickButtonPressed = True
+                                                    Dim mNewPos As Vector3
 
-                                                        mJoystickButtonPressedTime.Restart()
+                                                    If (bUseGyroTouchpad) Then
+                                                        If (Not bJoystickButtonPressed) Then
+                                                            bJoystickButtonPressed = True
 
-                                                        mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
-                                                        mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                                                            mJoystickButtonPressedTime.Restart()
+
+                                                            mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                        End If
+
+                                                        mJoystickPressedLastPosition = New Vector3(0, 0, 0)
+
+                                                        mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * m_PSMoveData.m_Orientation, New Vector3(0, -1, 0))
+                                                    Else
+                                                        If (Not bJoystickButtonPressed) Then
+                                                            bJoystickButtonPressed = True
+
+                                                            mJoystickButtonPressedTime.Restart()
+
+                                                            mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                            mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                                                        End If
+
+                                                        mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
                                                     End If
 
-                                                    Dim mNewPos As Vector3 = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
                                                     Dim mNewPosDiff As New Vector3(
                                                         mNewPos.X - mJoystickPressedLastPosition.X,
                                                         mNewPos.Y - mJoystickPressedLastPosition.Y,
@@ -1062,9 +1080,15 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
-                                                    mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
-                                                    mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
+                                                    If (bUseGyroTouchpad) Then
+                                                        mNewPos = (mNewPos - mJoystickPressedLastPosition) * 2.5F
+                                                        mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
+                                                        mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
+                                                    Else
+                                                        mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
+                                                        mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
+                                                        mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
+                                                    End If
 
                                                     Dim mJoystickVec = New Vector2(mNewPos.X, -mNewPos.Z)
 
