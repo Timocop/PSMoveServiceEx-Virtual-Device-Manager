@@ -239,6 +239,18 @@
     <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_Management.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_Overrides.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_Settings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_Trackers.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UCVirtualHMDs\UCVirtualHMDs.Designer.vb">
       <DependentUpon>UCVirtualHMDs.vb</DependentUpon>
     </Compile>
