@@ -18,7 +18,6 @@ Public Class ClassServiceClient
 
     Private g_bIsConnected As Boolean = False
 
-    Event OnControllerRecenter(iControllerId As Integer, ByRef mRecenterOrientation As Quaternion)
     Event OnControllerUpdate(iControllerId As Integer)
     Event OnControllerListChanged()
     Event OnTrackerListChanged()
@@ -180,8 +179,6 @@ Public Class ClassServiceClient
             Dim bRefreshControllerList As Boolean = True
             Dim bRefreshTrackerList As Boolean = True
 
-            Dim mControllerRecenterTime As New Dictionary(Of Integer, Stopwatch)
-
             Try
                 While True
                     Dim bExceptionSleep As Boolean = False
@@ -278,10 +275,6 @@ Public Class ClassServiceClient
                         For Each mController As Controllers In mControllers
                             Try
                                 SyncLock __ClientLock
-                                    If (Not mControllerRecenterTime.ContainsKey(mController.m_Info.m_ControllerId)) Then
-                                        mControllerRecenterTime(mController.m_Info.m_ControllerId) = New Stopwatch
-                                    End If
-
                                     If (g_mPostStreamRequest.Count > 0) Then
                                         If ((mController.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
                                             mController.m_DataStreamFlags = (mController.m_DataStreamFlags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
@@ -361,30 +354,6 @@ Public Class ClassServiceClient
                                                     mData.m_CrossButton = (mController.m_Info.m_PSMoveState.m_CrossButton > 0)
                                                     mData.m_CircleButton = (mController.m_Info.m_PSMoveState.m_CircleButton > 0)
                                                     mData.m_TriangleButton = (mController.m_Info.m_PSMoveState.m_TriangleButton > 0)
-
-                                                    ' Do recenter
-                                                    ' #TODO Probably want to use HMD orientation instead
-                                                    Dim mSelectRecenterTime = mControllerRecenterTime(mController.m_Info.m_ControllerId)
-                                                    Select Case (mController.m_Info.m_PSMoveState.m_SelectButton)
-                                                        Case PSMButtonState.PSMButtonState_PRESSED
-                                                            mSelectRecenterTime.Restart()
-
-                                                        Case PSMButtonState.PSMButtonState_DOWN
-                                                            If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
-                                                                Dim mRecenterQuat = Quaternion.Identity
-
-                                                                RaiseEvent OnControllerRecenter(mController.m_Info.m_ControllerId, mRecenterQuat)
-
-                                                                mController.ResetControlerOrientation(New PSMQuatf With {
-                                                                    .x = mRecenterQuat.X,
-                                                                    .y = mRecenterQuat.Y,
-                                                                    .z = mRecenterQuat.Z,
-                                                                    .w = mRecenterQuat.W
-                                                                })
-
-                                                                mSelectRecenterTime.Reset()
-                                                            End If
-                                                    End Select
                                                 End If
 
                                                 If (mController.m_Info.IsPoseValid) Then
@@ -452,6 +421,18 @@ Public Class ClassServiceClient
             Throw
         Catch ex As Exception
         End Try
+    End Sub
+
+    Public Sub SetControllerRecenter(iIndex As Integer, mOrientation As Quaternion)
+        SyncLock __ClientLock
+            Dim mController As New Controllers(iIndex)
+            mController.ResetControlerOrientation(New PSMQuatf With {
+                .x = mOrientation.X,
+                .y = mOrientation.Y,
+                .z = mOrientation.Z,
+                .w = mOrientation.W
+            })
+        End SyncLock
     End Sub
 
     Public Sub SetControllerRumble(iIndex As Integer, fRumble As Single)

@@ -730,6 +730,8 @@ Public Class UCVirtualMotionTrackerItem
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
             Dim mLastBatteryReport As New Stopwatch
+            Dim mLastRecenterTime As New Stopwatch
+            Dim mRecenterButtonPressed As Boolean = False
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -895,8 +897,29 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
-                                                ' Send buttons
-                                                Select Case (m_VmtTrackerRole)
+                                                ' Do controller recenter
+                                                ' TODO: Use HMD orientation rather than indentity
+                                                If (m_PSMoveData.m_SelectButton) Then
+                                                    If (Not mRecenterButtonPressed) Then
+                                                        mRecenterButtonPressed = True
+
+                                                        mLastRecenterTime.Restart()
+                                                    End If
+
+                                                    If (mLastRecenterTime.ElapsedMilliseconds > 250) Then
+                                                        mLastRecenterTime.Stop()
+                                                        mLastRecenterTime.Reset()
+
+                                                        mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+                                                    End If
+                                                Else
+                                                    If (mRecenterButtonPressed) Then
+                                                        mRecenterButtonPressed = False
+                                                    End If
+                                                End If
+
+                                                    ' Send buttons
+                                                    Select Case (m_VmtTrackerRole)
                                                     Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
                                                            ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
                                                         For i = 0 To mButtons.Length - 1
