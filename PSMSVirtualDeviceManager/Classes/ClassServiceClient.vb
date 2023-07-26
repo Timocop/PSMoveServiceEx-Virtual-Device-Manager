@@ -302,6 +302,8 @@ Public Class ClassServiceClient
                                     If (bNewData) Then
                                         Select Case (mController.m_Info.m_ControllerType)
                                             Case PSMControllerType.PSMController_Move
+                                                Dim bIsVirtual As Boolean = False
+
                                                 Dim mData As New STRUC_PSMOVE_CONTROLLER_DATA
                                                 mData.m_IsConnected = mController.m_Info.m_IsConnected
                                                 mData.m_OutputSeqNum = mController.m_Info.m_OutputSequenceNum
@@ -311,21 +313,26 @@ Public Class ClassServiceClient
 
                                                 If (mData.m_Serial.StartsWith("VirtualController")) Then
                                                     mData.m_Serial &= String.Format("_{0}", mController.m_Info.m_ControllerId)
+
+                                                    bIsVirtual = True
                                                 End If
 
                                                 If (mController.m_Info.IsStateValid) Then
-                                                    Select Case (mController.m_Info.m_PSMoveState.m_BatteryValue)
-                                                        Case PSMBatteryState.PSMBattery_0,
-                                                             PSMBatteryState.PSMBattery_20,
-                                                             PSMBatteryState.PSMBattery_40,
-                                                             PSMBatteryState.PSMBattery_60,
-                                                             PSMBatteryState.PSMBattery_80,
-                                                             PSMBatteryState.PSMBattery_100
-                                                            mData.m_BatteryLevel = (0.2F * mController.m_Info.m_PSMoveState.m_BatteryValue)
-                                                        Case PSMBatteryState.PSMBattery_Charged,
-                                                             PSMBatteryState.PSMBattery_Charging
-                                                            mData.m_BatteryLevel = 1.0F
-                                                    End Select
+                                                    If (bIsVirtual) Then
+                                                        mData.m_BatteryLevel = 1.0F
+                                                    Else
+                                                        Select Case (mController.m_Info.m_PSMoveState.m_BatteryValue)
+                                                            Case PSMBatteryState.PSMBattery_0,
+                                                                 PSMBatteryState.PSMBattery_20,
+                                                                 PSMBatteryState.PSMBattery_40,
+                                                                 PSMBatteryState.PSMBattery_60,
+                                                                 PSMBatteryState.PSMBattery_80,
+                                                                 PSMBatteryState.PSMBattery_100
+                                                                mData.m_BatteryLevel = (0.2F * mController.m_Info.m_PSMoveState.m_BatteryValue)
+                                                            Case Else
+                                                                mData.m_BatteryLevel = 1.0F
+                                                        End Select
+                                                    End If
 
                                                     mData.m_IsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
 
