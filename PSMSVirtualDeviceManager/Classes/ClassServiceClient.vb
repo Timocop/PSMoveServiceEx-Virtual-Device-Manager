@@ -18,6 +18,13 @@ Public Class ClassServiceClient
 
     Private g_bIsConnected As Boolean = False
 
+    Event OnControllerRecenter(iControllerId As Integer, ByRef mRecenterOrientation As Quaternion)
+    Event OnControllerUpdate(iControllerId As Integer)
+    Event OnControllerListChanged()
+    Event OnTrackerListChanged()
+    Event OnPlayspaceOffsetChanged()
+    Event OnConnectionStatusChanged()
+
     Public Interface IControllerData
         Property m_IsValid As Boolean
         Property m_IsConnected As Boolean
@@ -192,19 +199,27 @@ Public Class ClassServiceClient
 
                             If (g_PSMoveServiceServer.HasControllerListChanged) Then
                                 bRefreshControllerList = True
+
+                                RaiseEvent OnControllerListChanged()
                             End If
 
                             If (g_PSMoveServiceServer.HasTrackerListChanged) Then
                                 bRefreshTrackerList = True
+
+                                RaiseEvent OnTrackerListChanged()
                             End If
 
                             If (g_PSMoveServiceServer.HasPlayspaceOffsetChanged) Then
                                 bRefreshTrackerList = True
+
+                                RaiseEvent OnPlayspaceOffsetChanged()
                             End If
 
                             If (g_PSMoveServiceServer.HasConnectionStatusChanged) Then
                                 bRefreshControllerList = True
                                 bRefreshTrackerList = True
+
+                                RaiseEvent OnConnectionStatusChanged()
                             End If
 
                             If (bRefreshControllerList) Then
@@ -356,13 +371,16 @@ Public Class ClassServiceClient
 
                                                         Case PSMButtonState.PSMButtonState_DOWN
                                                             If (mSelectRecenterTime.ElapsedMilliseconds > 250) Then
-                                                                Dim mIdentity = New PSMQuatf With {
-                                                                    .x = 0,
-                                                                    .y = 0,
-                                                                    .z = 0,
-                                                                    .w = 1
-                                                                }
-                                                                mController.ResetControlerOrientation(mIdentity)
+                                                                Dim mRecenterQuat = Quaternion.Identity
+
+                                                                RaiseEvent OnControllerRecenter(mController.m_Info.m_ControllerId, mRecenterQuat)
+
+                                                                mController.ResetControlerOrientation(New PSMQuatf With {
+                                                                    .x = mRecenterQuat.X,
+                                                                    .y = mRecenterQuat.Y,
+                                                                    .z = mRecenterQuat.Z,
+                                                                    .w = mRecenterQuat.W
+                                                                })
 
                                                                 mSelectRecenterTime.Reset()
                                                             End If
@@ -386,6 +404,8 @@ Public Class ClassServiceClient
                                                     g_ControllerPool(mController.m_Info.m_ControllerId) = mData
                                                 End SyncLock
                                         End Select
+
+                                        RaiseEvent OnControllerUpdate(mController.m_Info.m_ControllerId)
                                     End If
 
                                 End SyncLock
