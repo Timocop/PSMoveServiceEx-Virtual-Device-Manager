@@ -116,7 +116,7 @@ Public Class UCStartPage
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F))
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
                                                    mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
                                                    bFound = True
@@ -139,7 +139,7 @@ Public Class UCStartPage
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
                                                     "0",
-                                                    "0"
+                                                    "0 %"
                                                 })
                                                mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
                                                mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
@@ -183,7 +183,7 @@ Public Class UCStartPage
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "-1"
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = ""
                                                    mListVIewItem.Tag = New Object() {Now}
 
                                                    bFound = True
@@ -199,7 +199,7 @@ Public Class UCStartPage
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
                                                     "0",
-                                                    "0"
+                                                    ""
                                                 })
                                                mListViewItem.Tag = New Object() {Now}
 
