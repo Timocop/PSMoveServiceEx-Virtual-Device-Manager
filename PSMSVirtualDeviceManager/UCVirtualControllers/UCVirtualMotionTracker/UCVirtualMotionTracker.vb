@@ -443,8 +443,8 @@ Public Class UCVirtualMotionTracker
         Private g_bEnableHmdRecenter As Boolean = True
         Private g_iHmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
         Private g_sHmdRecenterFromDeviceName As String = ""
-        Private g_iRecenterButtonTimeMs As Long
-        Private g_iOscThreadSleepMs As Long
+        Private g_iRecenterButtonTimeMs As Long = 500
+        Private g_iOscThreadSleepMs As Long = 1
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
