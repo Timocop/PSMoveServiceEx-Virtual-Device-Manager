@@ -66,6 +66,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Button_RecenterButtonTimeReset = New System.Windows.Forms.Button()
         Me.NumericUpDown_RecenterButtonTime = New System.Windows.Forms.NumericUpDown()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Button_ResetRecenter = New System.Windows.Forms.Button()
@@ -119,7 +120,6 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.Button_RecenterButtonTimeReset = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -622,6 +622,15 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
+        '
+        'Button_RecenterButtonTimeReset
+        '
+        Me.Button_RecenterButtonTimeReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
+        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(300, 404)
+        Me.Button_RecenterButtonTimeReset.Name = "Button_RecenterButtonTimeReset"
+        Me.Button_RecenterButtonTimeReset.Size = New System.Drawing.Size(23, 23)
+        Me.Button_RecenterButtonTimeReset.TabIndex = 62
+        Me.Button_RecenterButtonTimeReset.UseVisualStyleBackColor = True
         '
         'NumericUpDown_RecenterButtonTime
         '
@@ -1215,12 +1224,12 @@ Partial Class UCVirtualMotionTracker
         'ColumnHeader1
         '
         Me.ColumnHeader1.Text = "Tracker"
-        Me.ColumnHeader1.Width = 139
+        Me.ColumnHeader1.Width = 300
         '
         'ColumnHeader2
         '
         Me.ColumnHeader2.Text = "Override"
-        Me.ColumnHeader2.Width = 158
+        Me.ColumnHeader2.Width = 300
         '
         'ContextMenuStrip_Autostart
         '
@@ -1238,15 +1247,6 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
-        '
-        'Button_RecenterButtonTimeReset
-        '
-        Me.Button_RecenterButtonTimeReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(300, 404)
-        Me.Button_RecenterButtonTimeReset.Name = "Button_RecenterButtonTimeReset"
-        Me.Button_RecenterButtonTimeReset.Size = New System.Drawing.Size(23, 23)
-        Me.Button_RecenterButtonTimeReset.TabIndex = 62
-        Me.Button_RecenterButtonTimeReset.UseVisualStyleBackColor = True
         '
         'UCVirtualMotionTracker
         '
