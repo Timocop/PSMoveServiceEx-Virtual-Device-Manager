@@ -151,9 +151,9 @@
         Try
             g_bIgnoreEvents = True
 
-            Dim mSelectedItem As String = ""
+            Dim sSelectedName As String = ""
             If (ComboBox_RecenterFromDevice.SelectedItem IsNot Nothing) Then
-                mSelectedItem = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+                sSelectedName = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
             End If
 
             Dim mDevices As New List(Of ClassRecenterDeviceItem)
@@ -171,7 +171,7 @@
 
             Dim bLastFound As Boolean = True
             For Each mItem In ComboBox_RecenterFromDevice.Items
-                If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = mSelectedItem) Then
+                If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = sSelectedName) Then
                     ComboBox_RecenterFromDevice.SelectedItem = mItem
 
                     bLastFound = False
@@ -180,8 +180,11 @@
             Next
 
             If (bLastFound) Then
-                ' Assume we have at least one in the list
-                ComboBox_RecenterFromDevice.SelectedIndex = 0
+                ' Create new one if its not in the list
+                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName, "Any HMD")
+
+                ComboBox_RecenterFromDevice.Items.Add(mSelectedItem)
+                ComboBox_RecenterFromDevice.SelectedItem = mSelectedItem
             End If
 
         Catch ex As Exception
@@ -226,9 +229,9 @@
         Try
             g_bIgnoreEvents = True
 
-            Dim mSelectedItem As String = ""
+            Dim sSelectedName As String = ""
             If (ComboBox_HmdRecenterFromDevice.SelectedItem IsNot Nothing) Then
-                mSelectedItem = DirectCast(ComboBox_HmdRecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+                sSelectedName = DirectCast(ComboBox_HmdRecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
             End If
 
             Dim mDevices As New List(Of ClassRecenterDeviceItem)
@@ -246,7 +249,7 @@
 
             Dim bLastFound As Boolean = True
             For Each mItem In ComboBox_HmdRecenterFromDevice.Items
-                If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = mSelectedItem) Then
+                If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = sSelectedName) Then
                     ComboBox_HmdRecenterFromDevice.SelectedItem = mItem
 
                     bLastFound = False
@@ -255,8 +258,11 @@
             Next
 
             If (bLastFound) Then
-                ' Assume we have at least one in the list
-                ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
+                ' Create new one if its not in the list
+                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName, "No Device Selected")
+
+                ComboBox_HmdRecenterFromDevice.Items.Add(mSelectedItem)
+                ComboBox_HmdRecenterFromDevice.SelectedItem = mSelectedItem
             End If
 
         Catch ex As Exception
