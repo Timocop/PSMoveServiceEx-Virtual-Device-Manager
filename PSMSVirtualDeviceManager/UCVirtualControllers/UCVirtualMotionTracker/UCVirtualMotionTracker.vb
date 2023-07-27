@@ -91,7 +91,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_RecenterMethod.SelectedIndex = 0
 
-            If (ComboBox_RecenterMethod.Items.Count <> ClassControllerSettings.ENUM_CONTROLLER_RECENTER_METHOD.__MAX) Then
+            If (ComboBox_RecenterMethod.Items.Count <> ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -102,9 +102,36 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
+            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any HMD"))
 
             ComboBox_RecenterFromDevice.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_HmdRecenterMethod.Items.Clear()
+            ComboBox_HmdRecenterMethod.Items.Add("Use Active Controller")
+            ComboBox_HmdRecenterMethod.Items.Add("Use PSMoveServiceEx Playspace Orientation")
+
+            ComboBox_HmdRecenterMethod.SelectedIndex = 0
+
+            If (ComboBox_HmdRecenterMethod.Items.Count <> ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
+                Throw New ArgumentException("Invalid size")
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_HmdRecenterFromDevice.Items.Clear()
+            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "No Device Selected"))
+
+            ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -149,8 +176,18 @@ Public Class UCVirtualMotionTracker
                 ComboBox_TouchpadMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadMethod
 
                 CheckBox_ControllerRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableControllerRecenter
-                ComboBox_RecenterMethod.SelectedIndex = g_ClassControllerSettings.m_RecenterMethod
-                ComboBox_RecenterFromDevice.SelectedItem = New ClassRecenterDeviceItem(g_ClassControllerSettings.m_RecenterFromDeviceName)
+                ComboBox_RecenterMethod.SelectedIndex = g_ClassControllerSettings.m_ControllerRecenterMethod
+
+                ComboBox_RecenterFromDevice.Items.Clear()
+                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_ControllerRecenterFromDeviceName, "Any HMD"))
+                ComboBox_RecenterFromDevice.SelectedIndex = 0
+
+                CheckBox_HmdRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableHmdRecenter
+                ComboBox_HmdRecenterMethod.SelectedIndex = g_ClassControllerSettings.m_HmdRecenterMethod
+
+                ComboBox_HmdRecenterFromDevice.Items.Clear()
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_HmdRecenterFromDeviceName, "No Device Selected"))
+                ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
 
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
@@ -379,7 +416,7 @@ Public Class UCVirtualMotionTracker
             __MAX
         End Enum
 
-        Enum ENUM_CONTROLLER_RECENTER_METHOD
+        Enum ENUM_DEVICE_RECENTER_METHOD
             USE_DEVICE
             USE_PLAYSPACE
 
@@ -396,8 +433,11 @@ Public Class UCVirtualMotionTracker
         Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION
 
         Private g_bEnableControllerRecenter As Boolean = True
-        Private g_iRecenterMethod As ENUM_CONTROLLER_RECENTER_METHOD = ENUM_CONTROLLER_RECENTER_METHOD.USE_DEVICE
-        Private g_sRecenterFromDeviceName As String = ""
+        Private g_iControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+        Private g_sControllerRecenterFromDeviceName As String = ""
+        Private g_bEnableHmdRecenter As Boolean = True
+        Private g_iHmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+        Private g_sHmdRecenterFromDeviceName As String = ""
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -536,28 +576,67 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
-        Property m_RecenterMethod As ENUM_CONTROLLER_RECENTER_METHOD
+        Property m_ControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD
             Get
                 SyncLock _ThreadLock
-                    Return g_iRecenterMethod
+                    Return g_iControllerRecenterMethod
                 End SyncLock
             End Get
-            Set(value As ENUM_CONTROLLER_RECENTER_METHOD)
+            Set(value As ENUM_DEVICE_RECENTER_METHOD)
                 SyncLock _ThreadLock
-                    g_iRecenterMethod = value
+                    g_iControllerRecenterMethod = value
                 End SyncLock
             End Set
         End Property
 
-        Property m_RecenterFromDeviceName As String
+        Property m_ControllerRecenterFromDeviceName As String
             Get
                 SyncLock _ThreadLock
-                    Return g_sRecenterFromDeviceName
+                    Return g_sControllerRecenterFromDeviceName
                 End SyncLock
             End Get
             Set(value As String)
                 SyncLock _ThreadLock
-                    g_sRecenterFromDeviceName = value
+                    g_sControllerRecenterFromDeviceName = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_EnableHmdRecenter As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bEnableHmdRecenter
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bEnableHmdRecenter = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD
+            Get
+                SyncLock _ThreadLock
+                    Return g_iHmdRecenterMethod
+                End SyncLock
+            End Get
+            Set(value As ENUM_DEVICE_RECENTER_METHOD)
+                SyncLock _ThreadLock
+                    g_iHmdRecenterMethod = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HmdRecenterFromDeviceName As String
+            Get
+                SyncLock _ThreadLock
+                    Return g_sHmdRecenterFromDeviceName
+                End SyncLock
+            End Get
+            Set(value As String)
+                SyncLock _ThreadLock
+                    g_sHmdRecenterFromDeviceName = value
                 End SyncLock
             End Set
         End Property
@@ -590,11 +669,19 @@ Public Class UCVirtualMotionTracker
 
                     m_EnableControllerRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "RecenterMethod", CStr(CInt(ENUM_CONTROLLER_RECENTER_METHOD.USE_DEVICE))), tmp)) Then
-                        m_RecenterMethod = CType(tmp, ENUM_CONTROLLER_RECENTER_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmp)) Then
+                        m_ControllerRecenterMethod = CType(tmp, ENUM_DEVICE_RECENTER_METHOD)
                     End If
 
-                    m_RecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "RecenterFromDeviceName", "")
+                    m_ControllerRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterFromDeviceName", "")
+
+                    m_EnableHmdRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableHmdRecenter", "true") = "true")
+
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmp)) Then
+                        m_HmdRecenterMethod = CType(tmp, ENUM_DEVICE_RECENTER_METHOD)
+                    End If
+
+                    m_HmdRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "HmdRecenterFromDeviceName", "")
                 End Using
             End Using
         End Sub
@@ -617,8 +704,11 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_HtcClampTouchpadToBounds, "true", "false")))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_HtcTouchpadMethod))))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_EnableControllerRecenter, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterMethod", CStr(CInt(m_RecenterMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterFromDeviceName", m_RecenterFromDeviceName))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerRecenterMethod))))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterFromDeviceName", m_ControllerRecenterFromDeviceName))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHmdRecenter", If(m_EnableHmdRecenter, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterMethod", CStr(CInt(m_HmdRecenterMethod))))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_HmdRecenterFromDeviceName))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using

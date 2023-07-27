@@ -33,6 +33,11 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
         Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
@@ -40,11 +45,13 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_OscRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_OscPause = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamRun = New System.Windows.Forms.LinkLabel()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_DriverInstall = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_DriverUninstall = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
@@ -59,11 +66,19 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Button_ResetRecenter = New System.Windows.Forms.Button()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.ComboBox_HmdRecenterFromDevice = New System.Windows.Forms.ComboBox()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.ComboBox_HmdRecenterMethod = New System.Windows.Forms.ComboBox()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.CheckBox_HmdRecenterEnabled = New System.Windows.Forms.CheckBox()
         Me.ComboBox_RecenterFromDevice = New System.Windows.Forms.ComboBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.ComboBox_RecenterMethod = New System.Windows.Forms.ComboBox()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.CheckBox_ControllerRecenterEnabled = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
@@ -86,25 +101,18 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
+        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
-        Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
@@ -113,7 +121,9 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.TabPage_Trackers.SuspendLayout()
         Me.TabPage_Settings.SuspendLayout()
@@ -124,8 +134,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage5.SuspendLayout()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -167,7 +175,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(16)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(768, 717)
+        Me.TabControl1.Size = New System.Drawing.Size(768, 812)
         Me.TabControl1.TabIndex = 22
         '
         'TabPage_Management
@@ -178,7 +186,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Management.Controls.Add(Me.Panel1)
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
-        Me.TabPage_Management.Size = New System.Drawing.Size(760, 691)
+        Me.TabPage_Management.Size = New System.Drawing.Size(760, 786)
         Me.TabPage_Management.TabIndex = 4
         Me.TabPage_Management.Text = "Management"
         '
@@ -194,6 +202,41 @@ Partial Class UCVirtualMotionTracker
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(728, 250)
         Me.Panel5.TabIndex = 2
+        '
+        'ListView_OscDevices
+        '
+        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
+        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_OscDevices.FullRowSelect = True
+        Me.ListView_OscDevices.HideSelection = False
+        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_OscDevices.Name = "ListView_OscDevices"
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
+        Me.ListView_OscDevices.TabIndex = 1
+        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 100
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Position
+        '
+        Me.ColumnHeader_Position.Text = "Position"
+        Me.ColumnHeader_Position.Width = 150
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 150
         '
         'Panel8
         '
@@ -281,6 +324,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label8.TabIndex = 18
         Me.Label8.Text = "Server Control"
         '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 10
+        Me.ClassPictureBoxQuality1.TabStop = False
+        '
         'LinkLabel_OscRun
         '
         Me.LinkLabel_OscRun.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -353,6 +408,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label9.Size = New System.Drawing.Size(133, 21)
         Me.Label9.TabIndex = 18
         Me.Label9.Text = "SteamVR Support"
+        '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 10
+        Me.ClassPictureBoxQuality2.TabStop = False
         '
         'LinkLabel_DriverInstall
         '
@@ -438,7 +505,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Trackers.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Trackers.Name = "TabPage_Trackers"
         Me.TabPage_Trackers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 691)
+        Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 786)
         Me.TabPage_Trackers.TabIndex = 0
         Me.TabPage_Trackers.Text = "Trackers"
         Me.TabPage_Trackers.UseVisualStyleBackColor = True
@@ -489,7 +556,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Settings.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Settings.Name = "TabPage_Settings"
         Me.TabPage_Settings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_Settings.Size = New System.Drawing.Size(760, 691)
+        Me.TabPage_Settings.Size = New System.Drawing.Size(760, 786)
         Me.TabPage_Settings.TabIndex = 3
         Me.TabPage_Settings.Text = "Settings"
         Me.TabPage_Settings.UseVisualStyleBackColor = True
@@ -504,7 +571,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl2.Location = New System.Drawing.Point(6, 6)
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(748, 624)
+        Me.TabControl2.Size = New System.Drawing.Size(748, 719)
         Me.TabControl2.TabIndex = 47
         '
         'TabPage4
@@ -515,27 +582,145 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(740, 598)
+        Me.TabPage4.Size = New System.Drawing.Size(740, 693)
         Me.TabPage4.TabIndex = 0
         Me.TabPage4.Text = "PSMove Controller"
         Me.TabPage4.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.Button_ResetRecenter)
+        Me.GroupBox1.Controls.Add(Me.Label20)
+        Me.GroupBox1.Controls.Add(Me.ComboBox_HmdRecenterFromDevice)
+        Me.GroupBox1.Controls.Add(Me.Label18)
+        Me.GroupBox1.Controls.Add(Me.ComboBox_HmdRecenterMethod)
+        Me.GroupBox1.Controls.Add(Me.Label19)
+        Me.GroupBox1.Controls.Add(Me.Label17)
+        Me.GroupBox1.Controls.Add(Me.Label16)
+        Me.GroupBox1.Controls.Add(Me.CheckBox_HmdRecenterEnabled)
         Me.GroupBox1.Controls.Add(Me.ComboBox_RecenterFromDevice)
         Me.GroupBox1.Controls.Add(Me.Label15)
         Me.GroupBox1.Controls.Add(Me.ComboBox_RecenterMethod)
         Me.GroupBox1.Controls.Add(Me.Label14)
-        Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.CheckBox_ControllerRecenterEnabled)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox1.Location = New System.Drawing.Point(3, 186)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(734, 222)
+        Me.GroupBox1.Size = New System.Drawing.Size(734, 483)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
+        '
+        'Button_ResetRecenter
+        '
+        Me.Button_ResetRecenter.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.Button_ResetRecenter.Location = New System.Drawing.Point(19, 405)
+        Me.Button_ResetRecenter.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_ResetRecenter.Name = "Button_ResetRecenter"
+        Me.Button_ResetRecenter.Size = New System.Drawing.Size(214, 23)
+        Me.Button_ResetRecenter.TabIndex = 59
+        Me.Button_ResetRecenter.Text = "Reset recenter on all trackers"
+        Me.Button_ResetRecenter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_ResetRecenter.UseVisualStyleBackColor = True
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Label20.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
+        Me.Label20.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label20.Location = New System.Drawing.Point(51, 367)
+        Me.Label20.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label20.Size = New System.Drawing.Size(348, 19)
+        Me.Label20.TabIndex = 58
+        Me.Label20.Text = "        Only PSMoveServiceEx supported trackers can be recentered!"
+        '
+        'ComboBox_HmdRecenterFromDevice
+        '
+        Me.ComboBox_HmdRecenterFromDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_HmdRecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdRecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdRecenterFromDevice.FormattingEnabled = True
+        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(179, 340)
+        Me.ComboBox_HmdRecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
+        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(51, 343)
+        Me.Label18.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(81, 13)
+        Me.Label18.TabIndex = 56
+        Me.Label18.Text = "Target Tracker:"
+        '
+        'ComboBox_HmdRecenterMethod
+        '
+        Me.ComboBox_HmdRecenterMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_HmdRecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdRecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdRecenterMethod.FormattingEnabled = True
+        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(179, 313)
+        Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
+        Me.ComboBox_HmdRecenterMethod.Name = "ComboBox_HmdRecenterMethod"
+        Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_HmdRecenterMethod.TabIndex = 55
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(51, 316)
+        Me.Label19.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(98, 13)
+        Me.Label19.TabIndex = 54
+        Me.Label19.Text = "Recenter method:"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Label17.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
+        Me.Label17.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label17.Location = New System.Drawing.Point(15, 21)
+        Me.Label17.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label17.Size = New System.Drawing.Size(494, 58)
+        Me.Label17.TabIndex = 53
+        Me.Label17.Text = resources.GetString("Label17.Text")
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Label16.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label16.Location = New System.Drawing.Point(51, 262)
+        Me.Label16.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label16.Size = New System.Drawing.Size(534, 32)
+        Me.Label16.TabIndex = 52
+        Me.Label16.Text = resources.GetString("Label16.Text")
+        '
+        'CheckBox_HmdRecenterEnabled
+        '
+        Me.CheckBox_HmdRecenterEnabled.AutoSize = True
+        Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(19, 239)
+        Me.CheckBox_HmdRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.CheckBox_HmdRecenterEnabled.Name = "CheckBox_HmdRecenterEnabled"
+        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(223, 17)
+        Me.CheckBox_HmdRecenterEnabled.TabIndex = 51
+        Me.CheckBox_HmdRecenterEnabled.Text = "Enable remote orientation recentering"
+        Me.CheckBox_HmdRecenterEnabled.UseVisualStyleBackColor = True
         '
         'ComboBox_RecenterFromDevice
         '
@@ -544,7 +729,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(179, 186)
+        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(179, 199)
         Me.ComboBox_RecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
         Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(504, 21)
@@ -553,12 +738,12 @@ Partial Class UCVirtualMotionTracker
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(51, 189)
+        Me.Label15.Location = New System.Drawing.Point(51, 202)
         Me.Label15.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(72, 13)
+        Me.Label15.Size = New System.Drawing.Size(75, 13)
         Me.Label15.TabIndex = 49
-        Me.Label15.Text = "From Device:"
+        Me.Label15.Text = "From Tracker:"
         '
         'ComboBox_RecenterMethod
         '
@@ -567,7 +752,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterMethod.FormattingEnabled = True
-        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(179, 159)
+        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(179, 172)
         Me.ComboBox_RecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_RecenterMethod.Name = "ComboBox_RecenterMethod"
         Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(504, 21)
@@ -576,33 +761,19 @@ Partial Class UCVirtualMotionTracker
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(51, 162)
+        Me.Label14.Location = New System.Drawing.Point(51, 175)
         Me.Label14.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(98, 13)
         Me.Label14.TabIndex = 47
         Me.Label14.Text = "Recenter method:"
         '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Label13.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
-        Me.Label13.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label13.Location = New System.Drawing.Point(51, 82)
-        Me.Label13.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label13.Size = New System.Drawing.Size(509, 58)
-        Me.Label13.TabIndex = 46
-        Me.Label13.Text = resources.GetString("Label13.Text")
-        '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label11.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label11.Location = New System.Drawing.Point(51, 44)
+        Me.Label11.Location = New System.Drawing.Point(51, 121)
         Me.Label11.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label11.Name = "Label11"
         Me.Label11.Padding = New System.Windows.Forms.Padding(3)
@@ -613,12 +784,12 @@ Partial Class UCVirtualMotionTracker
         'CheckBox_ControllerRecenterEnabled
         '
         Me.CheckBox_ControllerRecenterEnabled.AutoSize = True
-        Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 21)
-        Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 98)
+        Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_ControllerRecenterEnabled.Name = "CheckBox_ControllerRecenterEnabled"
-        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(176, 17)
+        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(184, 17)
         Me.CheckBox_ControllerRecenterEnabled.TabIndex = 0
-        Me.CheckBox_ControllerRecenterEnabled.Text = "Enable controller recentering"
+        Me.CheckBox_ControllerRecenterEnabled.Text = "Enable orientation recentering"
         Me.CheckBox_ControllerRecenterEnabled.UseVisualStyleBackColor = True
         '
         'GroupBox2
@@ -766,7 +937,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage5.Controls.Add(Me.Label6)
         Me.TabPage5.Location = New System.Drawing.Point(4, 22)
         Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Size = New System.Drawing.Size(740, 598)
+        Me.TabPage5.Size = New System.Drawing.Size(740, 693)
         Me.TabPage5.TabIndex = 1
         Me.TabPage5.Text = "Other"
         Me.TabPage5.UseVisualStyleBackColor = True
@@ -825,7 +996,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.Button_SaveControllerSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveControllerSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(624, 649)
+        Me.Button_SaveControllerSettings.Location = New System.Drawing.Point(624, 744)
         Me.Button_SaveControllerSettings.Margin = New System.Windows.Forms.Padding(16)
         Me.Button_SaveControllerSettings.Name = "Button_SaveControllerSettings"
         Me.Button_SaveControllerSettings.Size = New System.Drawing.Size(120, 23)
@@ -846,7 +1017,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.Controls.Add(Me.ListView_Overrides)
         Me.TabPage_Overrides.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Overrides.Name = "TabPage_Overrides"
-        Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 691)
+        Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 786)
         Me.TabPage_Overrides.TabIndex = 2
         Me.TabPage_Overrides.Text = "SteamVR Tracker Overrides"
         Me.TabPage_Overrides.UseVisualStyleBackColor = True
@@ -877,6 +1048,18 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_SteamVRRestartOff.TabIndex = 28
         Me.LinkLabel_SteamVRRestartOff.TabStop = True
         Me.LinkLabel_SteamVRRestartOff.Text = "Dismiss"
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.PictureBox3.Location = New System.Drawing.Point(16, 13)
+        Me.PictureBox3.m_HighQuality = False
+        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox3.TabIndex = 26
+        Me.PictureBox3.TabStop = False
         '
         'Label3
         '
@@ -941,82 +1124,6 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Add.UseVisualStyleBackColor = True
         '
-        'ContextMenuStrip_Autostart
-        '
-        Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
-        '
-        'ListView_OscDevices
-        '
-        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
-        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_OscDevices.FullRowSelect = True
-        Me.ListView_OscDevices.HideSelection = False
-        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
-        Me.ListView_OscDevices.TabIndex = 1
-        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Type
-        '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 100
-        '
-        'ColumnHeader_Serial
-        '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
-        '
-        'ColumnHeader_Position
-        '
-        Me.ColumnHeader_Position.Text = "Position"
-        Me.ColumnHeader_Position.Width = 150
-        '
-        'ColumnHeader_Orientation
-        '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 150
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 10
-        Me.ClassPictureBoxQuality1.TabStop = False
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 10
-        Me.ClassPictureBoxQuality2.TabStop = False
-        '
-        'PictureBox3
-        '
-        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox3.Location = New System.Drawing.Point(16, 13)
-        Me.PictureBox3.m_HighQuality = False
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox3.TabIndex = 26
-        Me.PictureBox3.TabStop = False
-        '
         'PictureBox2
         '
         Me.PictureBox2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -1054,6 +1161,11 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader2.Text = "Override"
         Me.ColumnHeader2.Width = 158
         '
+        'ContextMenuStrip_Autostart
+        '
+        Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
+        '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -1077,7 +1189,7 @@ Partial Class UCVirtualMotionTracker
         Me.Controls.Add(Me.PictureBox1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTracker"
-        Me.Size = New System.Drawing.Size(800, 811)
+        Me.Size = New System.Drawing.Size(800, 906)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage_Management.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
@@ -1086,8 +1198,10 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.TabPage_Trackers.ResumeLayout(False)
         Me.TabPage_Settings.ResumeLayout(False)
@@ -1102,8 +1216,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1184,10 +1296,18 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents CheckBox_ControllerRecenterEnabled As CheckBox
     Friend WithEvents Label11 As Label
-    Friend WithEvents Label13 As Label
     Friend WithEvents ComboBox_RecenterMethod As ComboBox
     Friend WithEvents Label14 As Label
     Friend WithEvents ComboBox_RecenterFromDevice As ComboBox
     Friend WithEvents Label15 As Label
     Friend WithEvents ComboBox_TouchpadMethod As ComboBox
+    Friend WithEvents ComboBox_HmdRecenterFromDevice As ComboBox
+    Friend WithEvents Label18 As Label
+    Friend WithEvents ComboBox_HmdRecenterMethod As ComboBox
+    Friend WithEvents Label19 As Label
+    Friend WithEvents Label17 As Label
+    Friend WithEvents Label16 As Label
+    Friend WithEvents CheckBox_HmdRecenterEnabled As CheckBox
+    Friend WithEvents Label20 As Label
+    Friend WithEvents Button_ResetRecenter As Button
 End Class

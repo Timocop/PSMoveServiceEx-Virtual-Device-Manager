@@ -8,13 +8,12 @@
             Me.New(_Name, _Name)
         End Sub
 
-        Public Sub New(_Name As String, _DisplayName As String)
+        Public Sub New(_Name As String, _DisplayNameIfEEmpty As String)
             g_sName = _Name
+            g_sDisplayName = _Name
 
-            If (String.IsNullOrEmpty(_DisplayName) OrElse _DisplayName.TrimEnd.Length = 0) Then
-                g_sDisplayName = "Any HMD"
-            Else
-                g_sDisplayName = _DisplayName
+            If (String.IsNullOrEmpty(g_sName) OrElse g_sName.TrimEnd.Length = 0) Then
+                g_sDisplayName = _DisplayNameIfEEmpty
             End If
         End Sub
 
@@ -131,7 +130,7 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_RecenterMethod = CType(ComboBox_RecenterMethod.SelectedIndex, ClassControllerSettings.ENUM_CONTROLLER_RECENTER_METHOD)
+        g_ClassControllerSettings.m_ControllerRecenterMethod = CType(ComboBox_RecenterMethod.SelectedIndex, ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD)
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
@@ -141,7 +140,7 @@
                 Return
             End If
 
-            g_ClassControllerSettings.m_RecenterFromDeviceName = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            g_ClassControllerSettings.m_ControllerRecenterFromDeviceName = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
             g_ClassControllerSettings.SetUnsavedState(True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -166,16 +165,16 @@
 
             ComboBox_RecenterFromDevice.BeginUpdate()
             ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
+            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any HMD"))
             ComboBox_RecenterFromDevice.Items.AddRange(mDevices.ToArray)
             ComboBox_RecenterFromDevice.EndUpdate()
 
-            Dim bLastFound As Boolean = False
+            Dim bLastFound As Boolean = True
             For Each mItem In ComboBox_RecenterFromDevice.Items
                 If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = mSelectedItem) Then
                     ComboBox_RecenterFromDevice.SelectedItem = mItem
 
-                    bLastFound = True
+                    bLastFound = False
                     Exit For
                 End If
             Next
@@ -189,6 +188,91 @@
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             g_bIgnoreEvents = False
+        End Try
+    End Sub
+
+    Private Sub CheckBox_HmdRecenterEnabled_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_HmdRecenterEnabled.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_EnableHmdRecenter = CheckBox_HmdRecenterEnabled.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_HmdRecenterMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdRecenterMethod.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_HmdRecenterMethod = CType(ComboBox_HmdRecenterMethod.SelectedIndex, ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_HmdRecenterFromDevice_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdRecenterFromDevice.SelectedIndexChanged
+        Try
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            g_ClassControllerSettings.m_HmdRecenterFromDeviceName = DirectCast(ComboBox_HmdRecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            g_ClassControllerSettings.SetUnsavedState(True)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ComboBox_HmdRecenterFromDevice_DropDown(sender As Object, e As EventArgs) Handles ComboBox_HmdRecenterFromDevice.DropDown
+        Try
+            g_bIgnoreEvents = True
+
+            Dim mSelectedItem As String = ""
+            If (ComboBox_HmdRecenterFromDevice.SelectedItem IsNot Nothing) Then
+                mSelectedItem = DirectCast(ComboBox_HmdRecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            End If
+
+            Dim mDevices As New List(Of ClassRecenterDeviceItem)
+            For Each mItem In g_ClassOscDevices.GetDevices
+                Dim sDisplayName As String = String.Format("{0}, {1}", mItem.iType.ToString, mItem.sSerial)
+
+                mDevices.Add(New ClassRecenterDeviceItem(mItem.sSerial, sDisplayName))
+            Next
+
+            ComboBox_HmdRecenterFromDevice.BeginUpdate()
+            ComboBox_HmdRecenterFromDevice.Items.Clear()
+            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "No Device Selected"))
+            ComboBox_HmdRecenterFromDevice.Items.AddRange(mDevices.ToArray)
+            ComboBox_HmdRecenterFromDevice.EndUpdate()
+
+            Dim bLastFound As Boolean = True
+            For Each mItem In ComboBox_HmdRecenterFromDevice.Items
+                If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = mSelectedItem) Then
+                    ComboBox_HmdRecenterFromDevice.SelectedItem = mItem
+
+                    bLastFound = False
+                    Exit For
+                End If
+            Next
+
+            If (bLastFound) Then
+                ' Assume we have at least one in the list
+                ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+    End Sub
+
+    Private Sub Button_ResetRecenter_Click(sender As Object, e As EventArgs) Handles Button_ResetRecenter.Click
+        Try
+            For Each mTracker In GetVmtTrackers()
+                mTracker.g_mClassIO.ResetRecenter()
+            Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

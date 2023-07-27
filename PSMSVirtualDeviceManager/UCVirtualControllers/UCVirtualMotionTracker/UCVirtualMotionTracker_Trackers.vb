@@ -36,7 +36,7 @@ Partial Public Class UCVirtualMotionTracker
         Next
 
         If (g_mVMTControllers.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
-            Throw New ArgumentException("Maximum of trackers reached")
+            Throw New ArgumentException("Maximum number of trackers reached")
         End If
 
         Dim mItem As New UCVirtualMotionTrackerItem(id, Me)
@@ -45,6 +45,20 @@ Partial Public Class UCVirtualMotionTracker
         mItem.Parent = Panel_VMTTrackers
         mItem.Dock = DockStyle.Top
     End Sub
+
+    Private Function GetVmtTrackers() As UCVirtualMotionTrackerItem()
+        Dim mTrackerList As New List(Of UCVirtualMotionTrackerItem)
+
+        For i = 0 To g_mVMTControllers.Count - 1
+            If (g_mVMTControllers(i) Is Nothing OrElse g_mVMTControllers(i).IsDisposed) Then
+                Continue For
+            End If
+
+            mTrackerList.Add(g_mVMTControllers(i))
+        Next
+
+        Return mTrackerList.ToArray
+    End Function
 
     Private Sub Button_VMTControllers_Click(sender As Object, e As EventArgs) Handles Button_VMTControllers.Click
         ContextMenuStrip_Autostart.Show(Button_VMTControllers, New Point(0, Button_VMTControllers.Size.Height))

@@ -570,6 +570,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
         Private g_mHeptic As New STRUC_HEPTIC_ITEM
+        Private g_mResetRecenter As Boolean = False
 
         Class STRUC_HEPTIC_ITEM
             Const DEFAULT_HAPTIC_FREQUENCY As Single = 200.0F
@@ -707,6 +708,12 @@ Public Class UCVirtualMotionTrackerItem
             End SyncLock
         End Sub
 
+        Public Sub ResetRecenter()
+            SyncLock _ThreadLock
+                g_mResetRecenter = True
+            End SyncLock
+        End Sub
+
         Public Sub Disable()
             If (g_mOscThread Is Nothing OrElse Not g_mOscThread.IsAlive) Then
                 Return
@@ -731,7 +738,9 @@ Public Class UCVirtualMotionTrackerItem
             Dim bGripToggled As Boolean = False
             Dim mLastBatteryReport As New Stopwatch
             Dim mLastRecenterTime As New Stopwatch
+            Dim mLastHmdRecenterTime As New Stopwatch
             Dim mRecenterButtonPressed As Boolean = False
+            Dim mHmdRecenterButtonPressed As Boolean = False
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -790,6 +799,14 @@ Public Class UCVirtualMotionTrackerItem
                         mTrackerDataUpdate.Restart()
                         mLastBatteryReport.Restart()
                     End If
+
+                    SyncLock _ThreadLock
+                        If (g_mResetRecenter) Then
+                            g_mResetRecenter = False
+
+                            mRecenterQuat = Quaternion.Identity
+                        End If
+                    End SyncLock
 
                     Dim mClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
                     Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
@@ -874,8 +891,11 @@ Public Class UCVirtualMotionTrackerItem
                             Dim bClampTouchpadToBounds = mClassControllerSettings.m_HtcClampTouchpadToBounds
                             Dim iHtcTouchpadMethod = mClassControllerSettings.m_HtcTouchpadMethod
                             Dim bEnableControllerRecenter = mClassControllerSettings.m_EnableControllerRecenter
-                            Dim iRecenterMethod = mClassControllerSettings.m_RecenterMethod
-                            Dim sRecenterFromDeviceName = mClassControllerSettings.m_RecenterFromDeviceName
+                            Dim iRecenterMethod = mClassControllerSettings.m_ControllerRecenterMethod
+                            Dim sRecenterFromDeviceName = mClassControllerSettings.m_ControllerRecenterFromDeviceName
+                            Dim bEnableHmdRecenter = mClassControllerSettings.m_EnableHmdRecenter
+                            Dim iHmdRecenterMethod = mClassControllerSettings.m_HmdRecenterMethod
+                            Dim sHmdRecenterFromDeviceName = mClassControllerSettings.m_HmdRecenterFromDeviceName
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = mRecenterQuat * m_ControllerData.m_Orientation
@@ -906,40 +926,21 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 ' Do controller recenter
                                                 If (bEnableControllerRecenter) Then
-                                                    ' Only recenter when only select is pressed
-                                                    Dim bOnlySelectPressed As Boolean = True
-                                                    For i = 0 To mButtons.Length - 1
-                                                        If (i = GEN_BUTTON_SEELCT) Then
-                                                            If (Not mButtons(i)) Then
-                                                                bOnlySelectPressed = False
-                                                                Exit For
-                                                            End If
-
-                                                            Continue For
-                                                        End If
-
-                                                        If (mButtons(i)) Then
-                                                            bOnlySelectPressed = False
-                                                            Exit For
-                                                        End If
-
-                                                    Next
-
-                                                    If (m_PSMoveData.m_SelectButton AndAlso Not bOnlySelectPressed) Then
+                                                    If (m_PSMoveData.m_SelectButton) Then
                                                         If (Not mRecenterButtonPressed) Then
                                                             mRecenterButtonPressed = True
 
                                                             mLastRecenterTime.Restart()
                                                         End If
 
-                                                        If (mLastRecenterTime.ElapsedMilliseconds > 250) Then
+                                                        If (mLastRecenterTime.ElapsedMilliseconds > 500) Then
                                                             mLastRecenterTime.Stop()
                                                             mLastRecenterTime.Reset()
 
                                                             Dim bDoFactoryRecenter As Boolean = True
 
                                                             Select Case (iRecenterMethod)
-                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_CONTROLLER_RECENTER_METHOD.USE_DEVICE
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
                                                                     Dim sCurrentRecenterDeviceName As String = sRecenterFromDeviceName
 
                                                                     ' If empty, do a autoamtic search and get any available HMD
@@ -982,6 +983,100 @@ Public Class UCVirtualMotionTrackerItem
                                                             mRecenterButtonPressed = False
                                                         End If
                                                     End If
+                                                End If
+
+                                                If (bEnableHmdRecenter) Then
+                                                    ' Only recenter when only select is pressed
+                                                    Dim bOtherControllerRecenterButtonPressed As Boolean = False
+                                                    Dim bOtherControllerPos As New Vector3
+
+                                                    For Each mControllerDataSearch In mServiceClient.GetControllersData()
+                                                        If (mControllerDataSearch.m_Id = m_ControllerData.m_Id) Then
+                                                            Continue For
+                                                        End If
+
+                                                        Select Case (True)
+                                                            Case (TypeOf mControllerDataSearch Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                                                Dim m_PSMoveDataSearch = DirectCast(mControllerDataSearch, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+
+                                                                If (Not m_PSMoveDataSearch.m_IsTracking) Then
+                                                                    Continue For
+                                                                End If
+
+                                                                If (m_PSMoveDataSearch.m_StartButton) Then
+                                                                    bOtherControllerPos = m_PSMoveDataSearch.m_Position
+                                                                    bOtherControllerRecenterButtonPressed = True
+                                                                    Exit For
+                                                                End If
+
+                                                        End Select
+                                                    Next
+
+                                                    If (bOtherControllerRecenterButtonPressed) Then
+                                                        If (Not mHmdRecenterButtonPressed) Then
+                                                            mHmdRecenterButtonPressed = True
+
+                                                            mLastHmdRecenterTime.Restart()
+                                                        End If
+
+                                                        If (mLastHmdRecenterTime.ElapsedMilliseconds > 500) Then
+                                                            mLastHmdRecenterTime.Stop()
+                                                            mLastHmdRecenterTime.Reset()
+
+                                                            Dim bDoFactoryRecenter As Boolean = True
+
+                                                            Select Case (iHmdRecenterMethod)
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+                                                                    Dim sCurrentRecenterDeviceName As String = sHmdRecenterFromDeviceName
+
+                                                                    ' If empty, do a autoamtic search and get any available HMD
+                                                                    If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                                                        For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                                                            If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                                                                sCurrentRecenterDeviceName = mDevice.sSerial
+                                                                                Exit For
+                                                                            End If
+                                                                        Next
+                                                                    End If
+
+
+
+                                                                    ' Check if we are the target device.
+                                                                    If ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName) Then
+                                                                        Dim mControllerPos As Vector3 = bOtherControllerPos
+                                                                        Dim mFromDevicePos As Vector3 = m_ControllerData.m_Position
+
+                                                                        mControllerPos.Y = 0.0F
+                                                                        mFromDevicePos.Y = 0.0F
+
+                                                                        mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                        mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                        ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                        'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+
+                                                                        bDoFactoryRecenter = False
+                                                                    Else
+                                                                        bDoFactoryRecenter = False
+                                                                    End If
+                                                            End Select
+
+                                                            If (bDoFactoryRecenter) Then
+                                                                mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+                                                            End If
+                                                        End If
+                                                    Else
+                                                        If (mHmdRecenterButtonPressed) Then
+                                                            mHmdRecenterButtonPressed = False
+                                                        End If
+                                                    End If
+
+
+
                                                 End If
 
                                                 ' Send buttons
