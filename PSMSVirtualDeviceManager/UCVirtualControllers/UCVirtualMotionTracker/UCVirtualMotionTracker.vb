@@ -876,7 +876,15 @@ Public Class UCVirtualMotionTracker
 
                 End Try
 
-                ClassPrecisionSleep.Sleep(1)
+                Dim sOscSleep As Integer = CInt(g_UCVirtualMotionTracker.g_ClassControllerSettings.m_OscThreadSleepMs)
+                If (sOscSleep < 1) Then
+                    sOscSleep = 1
+                End If
+                If (sOscSleep > 100) Then
+                    sOscSleep = 100
+                End If
+
+                ClassPrecisionSleep.Sleep(sOscSleep)
             End While
         End Sub
 
