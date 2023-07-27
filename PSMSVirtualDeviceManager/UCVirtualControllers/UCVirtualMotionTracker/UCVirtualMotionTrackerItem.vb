@@ -896,22 +896,30 @@ Public Class UCVirtualMotionTrackerItem
                             Dim bEnableHmdRecenter = mClassControllerSettings.m_EnableHmdRecenter
                             Dim iHmdRecenterMethod = mClassControllerSettings.m_HmdRecenterMethod
                             Dim sHmdRecenterFromDeviceName = mClassControllerSettings.m_HmdRecenterFromDeviceName
+                            Dim iRecenterButtonTimeMs = mClassControllerSettings.m_RecenterButtonTimeMs
+
+                            If (iRecenterButtonTimeMs < 1) Then
+                                iRecenterButtonTimeMs = 1
+                            End If
+                            If (iRecenterButtonTimeMs > 10000) Then
+                                iRecenterButtonTimeMs = 10000
+                            End If
 
                             SyncLock _ThreadLock
-                                g_mOscDataPack.mOrientation = mRecenterQuat * m_ControllerData.m_Orientation
-                                g_mOscDataPack.mPosition = m_ControllerData.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+                                    g_mOscDataPack.mOrientation = mRecenterQuat * m_ControllerData.m_Orientation
+                                    g_mOscDataPack.mPosition = m_ControllerData.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
 
-                                Select Case (m_VmtTrackerRole)
-                                    Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
+                                    Select Case (m_VmtTrackerRole)
+                                        Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
                                             ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER,
                                             ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
                                             ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
 
-                                        Select Case (True)
-                                            Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                                Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                            Select Case (True)
+                                                Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                                    Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
 
-                                                Dim mButtons As Boolean() = New Boolean() {
+                                                    Dim mButtons As Boolean() = New Boolean() {
                                                     m_PSMoveData.m_MoveButton,
                                                     m_PSMoveData.m_PSButton,
                                                     m_PSMoveData.m_StartButton,
@@ -922,202 +930,230 @@ Public Class UCVirtualMotionTrackerItem
                                                     m_PSMoveData.m_TriangleButton
                                                 }
 
-                                                Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
+                                                    Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
-                                                ' Do controller recenter
-                                                If (bEnableControllerRecenter) Then
-                                                    If (m_PSMoveData.m_SelectButton) Then
-                                                        If (Not mRecenterButtonPressed) Then
-                                                            mRecenterButtonPressed = True
+                                                    ' Do controller recenter
+                                                    If (bEnableControllerRecenter) Then
+                                                        If (m_PSMoveData.m_SelectButton) Then
+                                                            If (Not mRecenterButtonPressed) Then
+                                                                mRecenterButtonPressed = True
 
-                                                            mLastRecenterTime.Restart()
-                                                        End If
-
-                                                        If (mLastRecenterTime.ElapsedMilliseconds > 500) Then
-                                                            mLastRecenterTime.Stop()
-                                                            mLastRecenterTime.Reset()
-
-                                                            Dim bDoFactoryRecenter As Boolean = True
-
-                                                            Select Case (iRecenterMethod)
-                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
-                                                                    Dim sCurrentRecenterDeviceName As String = sRecenterFromDeviceName
-
-                                                                    ' If empty, do a autoamtic search and get any available HMD
-                                                                    If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
-                                                                        For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
-                                                                            If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
-                                                                                sCurrentRecenterDeviceName = mDevice.sSerial
-                                                                            End If
-                                                                        Next
-                                                                    End If
-
-                                                                    Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
-                                                                    If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
-                                                                        Dim mControllerPos As Vector3 = m_ControllerData.m_Position
-                                                                        Dim mFromDevicePos As Vector3 = mFoundDevice.GetPosCm()
-
-                                                                        mControllerPos.Y = 0.0F
-                                                                        mFromDevicePos.Y = 0.0F
-
-                                                                        mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                                        mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
-
-                                                                        bDoFactoryRecenter = False
-
-                                                                        ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                                        'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity) 
-                                                                    End If
-                                                            End Select
-
-                                                            If (bDoFactoryRecenter) Then
-                                                                mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                                mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
-
-                                                                ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                                'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+                                                                mLastRecenterTime.Restart()
                                                             End If
-                                                        End If
-                                                    Else
-                                                        If (mRecenterButtonPressed) Then
-                                                            mRecenterButtonPressed = False
-                                                        End If
-                                                    End If
-                                                End If
 
-                                                If (bEnableHmdRecenter) Then
-                                                    ' Only recenter when only select is pressed
-                                                    Dim bOtherControllerRecenterButtonPressed As Boolean = False
-                                                    Dim bOtherControllerPos As New Vector3
+                                                            If (mLastRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                                                                mLastRecenterTime.Stop()
+                                                                mLastRecenterTime.Reset()
 
-                                                    For Each mControllerDataSearch In mServiceClient.GetControllersData()
-                                                        If (mControllerDataSearch.m_Id = m_ControllerData.m_Id) Then
-                                                            Continue For
-                                                        End If
+                                                                Dim bDoFactoryRecenter As Boolean = True
 
-                                                        Select Case (True)
-                                                            Case (TypeOf mControllerDataSearch Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                                                Dim m_PSMoveDataSearch = DirectCast(mControllerDataSearch, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                                                Select Case (iRecenterMethod)
+                                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+                                                                        Dim sCurrentRecenterDeviceName As String = sRecenterFromDeviceName
 
-                                                                If (Not m_PSMoveDataSearch.m_IsTracking) Then
-                                                                    Continue For
+                                                                        ' If empty, do a autoamtic search and get any available HMD
+                                                                        If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                                                            For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                                                                If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                                                                    sCurrentRecenterDeviceName = mDevice.sSerial
+                                                                                End If
+                                                                            Next
+                                                                        End If
+
+                                                                        Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
+                                                                        If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
+                                                                            Dim mControllerPos As Vector3 = m_ControllerData.m_Position
+                                                                            Dim mFromDevicePos As Vector3 = mFoundDevice.GetPosCm()
+
+                                                                            mControllerPos.Y = 0.0F
+                                                                            mFromDevicePos.Y = 0.0F
+
+                                                                            mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                            mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                            bDoFactoryRecenter = False
+
+                                                                            ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                            'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity) 
+                                                                        End If
+                                                                End Select
+
+                                                                If (bDoFactoryRecenter) Then
+                                                                    mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                    mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                    ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                    'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
                                                                 End If
-
-                                                                If (m_PSMoveDataSearch.m_StartButton) Then
-                                                                    bOtherControllerPos = m_PSMoveDataSearch.m_Position
-                                                                    bOtherControllerRecenterButtonPressed = True
-                                                                    Exit For
-                                                                End If
-
-                                                        End Select
-                                                    Next
-
-                                                    If (bOtherControllerRecenterButtonPressed) Then
-                                                        If (Not mHmdRecenterButtonPressed) Then
-                                                            mHmdRecenterButtonPressed = True
-
-                                                            mLastHmdRecenterTime.Restart()
-                                                        End If
-
-                                                        If (mLastHmdRecenterTime.ElapsedMilliseconds > 500) Then
-                                                            mLastHmdRecenterTime.Stop()
-                                                            mLastHmdRecenterTime.Reset()
-
-                                                            Dim bDoFactoryRecenter As Boolean = True
-
-                                                            Select Case (iHmdRecenterMethod)
-                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
-                                                                    Dim sCurrentRecenterDeviceName As String = sHmdRecenterFromDeviceName
-
-                                                                    ' If empty, do a autoamtic search and get any available HMD
-                                                                    If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
-                                                                        For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
-                                                                            If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
-                                                                                sCurrentRecenterDeviceName = mDevice.sSerial
-                                                                                Exit For
-                                                                            End If
-                                                                        Next
-                                                                    End If
-
-
-
-                                                                    ' Check if we are the target device.
-                                                                    If ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName) Then
-                                                                        Dim mControllerPos As Vector3 = bOtherControllerPos
-                                                                        Dim mFromDevicePos As Vector3 = m_ControllerData.m_Position
-
-                                                                        mControllerPos.Y = 0.0F
-                                                                        mFromDevicePos.Y = 0.0F
-
-                                                                        mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                                        mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
-
-                                                                        ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                                        'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
-
-                                                                        bDoFactoryRecenter = False
-                                                                    Else
-                                                                        bDoFactoryRecenter = False
-                                                                    End If
-                                                            End Select
-
-                                                            If (bDoFactoryRecenter) Then
-                                                                mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                                mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
-
-                                                                ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                                'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
                                                             End If
-                                                        End If
-                                                    Else
-                                                        If (mHmdRecenterButtonPressed) Then
-                                                            mHmdRecenterButtonPressed = False
+                                                        Else
+                                                            If (mRecenterButtonPressed) Then
+                                                                mRecenterButtonPressed = False
+                                                            End If
                                                         End If
                                                     End If
 
+                                                    If (bEnableHmdRecenter) Then
+                                                        ' Only recenter when only select is pressed
+                                                        Dim bOtherControllerRecenterButtonPressed As Boolean = False
+                                                        Dim bOtherControllerPos As New Vector3
 
+                                                        For Each mControllerDataSearch In mServiceClient.GetControllersData()
+                                                            If (mControllerDataSearch.m_Id = m_ControllerData.m_Id) Then
+                                                                Continue For
+                                                            End If
 
-                                                End If
+                                                            Select Case (True)
+                                                                Case (TypeOf mControllerDataSearch Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                                                    Dim m_PSMoveDataSearch = DirectCast(mControllerDataSearch, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
 
-                                                ' Send buttons
-                                                Select Case (m_VmtTrackerRole)
-                                                    Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
-                                                           ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
-                                                        For i = 0 To mButtons.Length - 1
-                                                            g_mOscDataPack.mButtons(i) = mButtons(i)
+                                                                    If (Not m_PSMoveDataSearch.m_IsTracking) Then
+                                                                        Continue For
+                                                                    End If
+
+                                                                    If (m_PSMoveDataSearch.m_StartButton) Then
+                                                                        bOtherControllerPos = m_PSMoveDataSearch.m_Position
+                                                                        bOtherControllerRecenterButtonPressed = True
+                                                                        Exit For
+                                                                    End If
+
+                                                            End Select
                                                         Next
 
-                                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
+                                                        If (bOtherControllerRecenterButtonPressed) Then
+                                                            If (Not mHmdRecenterButtonPressed) Then
+                                                                mHmdRecenterButtonPressed = True
+
+                                                                mLastHmdRecenterTime.Restart()
+                                                            End If
+
+                                                            If (mLastHmdRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                                                                mLastHmdRecenterTime.Stop()
+                                                                mLastHmdRecenterTime.Reset()
+
+                                                                Dim bDoFactoryRecenter As Boolean = True
+
+                                                                Select Case (iHmdRecenterMethod)
+                                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+                                                                        Dim sCurrentRecenterDeviceName As String = sHmdRecenterFromDeviceName
+
+                                                                        ' If empty, do a autoamtic search and get any available HMD
+                                                                        If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                                                            For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                                                                If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                                                                    sCurrentRecenterDeviceName = mDevice.sSerial
+                                                                                    Exit For
+                                                                                End If
+                                                                            Next
+                                                                        End If
+
+
+
+                                                                        ' Check if we are the target device.
+                                                                        If ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName) Then
+                                                                            Dim mControllerPos As Vector3 = bOtherControllerPos
+                                                                            Dim mFromDevicePos As Vector3 = m_ControllerData.m_Position
+
+                                                                            mControllerPos.Y = 0.0F
+                                                                            mFromDevicePos.Y = 0.0F
+
+                                                                            mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                            mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                            ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                            'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+
+                                                                            bDoFactoryRecenter = False
+                                                                        Else
+                                                                            bDoFactoryRecenter = False
+                                                                        End If
+                                                                End Select
+
+                                                                If (bDoFactoryRecenter) Then
+                                                                    mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                    mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                    ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                    'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+                                                                End If
+                                                            End If
+                                                        Else
+                                                            If (mHmdRecenterButtonPressed) Then
+                                                                mHmdRecenterButtonPressed = False
+                                                            End If
+                                                        End If
+
+
+
+                                                    End If
+
+                                                    ' Send buttons
+                                                    Select Case (m_VmtTrackerRole)
+                                                        Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
+                                                           ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                                                            For i = 0 To mButtons.Length - 1
+                                                                g_mOscDataPack.mButtons(i) = mButtons(i)
+                                                            Next
+
+                                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
                                                           ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
 
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = bJoystickTrigger
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = False
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = bJoystickTrigger
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = False
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
 
-                                                        ' Do grip button
-                                                        Select Case (iHtcGripButtonMethod)
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
-                                                                If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                                            ' Do grip button
+                                                            Select Case (iHtcGripButtonMethod)
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
+                                                                    If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                                                        bGripButtonPressed = m_PSMoveData.m_CircleButton
+                                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
+                                                                    Else
+                                                                        bGripButtonPressed = m_PSMoveData.m_CrossButton
+                                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
+                                                                    End If
+
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
                                                                     bGripButtonPressed = m_PSMoveData.m_CircleButton
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
-                                                                Else
+
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
                                                                     bGripButtonPressed = m_PSMoveData.m_CrossButton
                                                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
-                                                                End If
 
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
-                                                                bGripButtonPressed = m_PSMoveData.m_CircleButton
-                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
+                                                                    If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                                                        If (m_PSMoveData.m_CircleButton) Then
+                                                                            If (Not bGripButtonPressed) Then
+                                                                                bGripButtonPressed = True
 
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
-                                                                bGripButtonPressed = m_PSMoveData.m_CrossButton
-                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
+                                                                                bGripToggled = Not bGripToggled
+                                                                            End If
+                                                                        Else
+                                                                            If (bGripButtonPressed) Then
+                                                                                bGripButtonPressed = False
+                                                                            End If
+                                                                        End If
+                                                                    Else
+                                                                        If (m_PSMoveData.m_CrossButton) Then
+                                                                            If (Not bGripButtonPressed) Then
+                                                                                bGripButtonPressed = True
 
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
-                                                                If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                                                                bGripToggled = Not bGripToggled
+                                                                            End If
+                                                                        Else
+                                                                            If (bGripButtonPressed) Then
+                                                                                bGripButtonPressed = False
+                                                                            End If
+                                                                        End If
+                                                                    End If
+
+                                                                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
                                                                     If (m_PSMoveData.m_CircleButton) Then
                                                                         If (Not bGripButtonPressed) Then
                                                                             bGripButtonPressed = True
@@ -1129,7 +1165,10 @@ Public Class UCVirtualMotionTrackerItem
                                                                             bGripButtonPressed = False
                                                                         End If
                                                                     End If
-                                                                Else
+
+                                                                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
                                                                     If (m_PSMoveData.m_CrossButton) Then
                                                                         If (Not bGripButtonPressed) Then
                                                                             bGripButtonPressed = True
@@ -1141,245 +1180,214 @@ Public Class UCVirtualMotionTrackerItem
                                                                             bGripButtonPressed = False
                                                                         End If
                                                                     End If
-                                                                End If
 
-                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+                                                                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
 
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
-                                                                If (m_PSMoveData.m_CircleButton) Then
-                                                                    If (Not bGripButtonPressed) Then
-                                                                        bGripButtonPressed = True
+                                                            End Select
 
-                                                                        bGripToggled = Not bGripToggled
-                                                                    End If
-                                                                Else
-                                                                    If (bGripButtonPressed) Then
-                                                                        bGripButtonPressed = False
-                                                                    End If
-                                                                End If
-
-                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
-
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
-                                                                If (m_PSMoveData.m_CrossButton) Then
-                                                                    If (Not bGripButtonPressed) Then
-                                                                        bGripButtonPressed = True
-
-                                                                        bGripToggled = Not bGripToggled
-                                                                    End If
-                                                                Else
-                                                                    If (bGripButtonPressed) Then
-                                                                        bGripButtonPressed = False
-                                                                    End If
-                                                                End If
-
-                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
-
-                                                        End Select
-
-                                                        ' Do touchpad click
-                                                        Select Case (iHtcTouchpadEmulationClickMethod)
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
-                                                                If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                                                    If (m_PSMoveData.m_TriangleButton) Then
-                                                                        bJoystickTrigger = True
-                                                                    End If
-                                                                Else
-                                                                    If (m_PSMoveData.m_SquareButton) Then
-                                                                        bJoystickTrigger = True
-                                                                    End If
-                                                                End If
-
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
-                                                                If (m_PSMoveData.m_SquareButton) Then
-                                                                    bJoystickTrigger = True
-                                                                End If
-
-                                                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
-                                                                If (m_PSMoveData.m_TriangleButton) Then
-                                                                    bJoystickTrigger = True
-                                                                End If
-                                                        End Select
-                                                End Select
-
-                                                g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
-
-                                                ' Joystick emulation
-                                                If (bJoystickTrigger) Then
-                                                    If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
-                                                        m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
-
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
-                                                    End If
-
-                                                    ' Just pressed
-                                                    Dim mNewPos As Vector3
-
-                                                    If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
-                                                        If (Not bJoystickButtonPressed) Then
-                                                            bJoystickButtonPressed = True
-
-                                                            mJoystickButtonPressedTime.Restart()
-
-                                                            mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
-                                                        End If
-
-                                                        mJoystickPressedLastPosition = New Vector3(0, 0, 0)
-
-                                                        mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * m_PSMoveData.m_Orientation, New Vector3(0, -1, 0))
-                                                    Else
-                                                        If (Not bJoystickButtonPressed) Then
-                                                            bJoystickButtonPressed = True
-
-                                                            mJoystickButtonPressedTime.Restart()
-
-                                                            mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
-                                                            mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
-                                                        End If
-
-                                                        mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
-                                                    End If
-
-                                                    Dim mNewPosDiff As New Vector3(
-                                                        mNewPos.X - mJoystickPressedLastPosition.X,
-                                                        mNewPos.Y - mJoystickPressedLastPosition.Y,
-                                                        mNewPos.Z - mJoystickPressedLastPosition.Z
-                                                    )
-
-                                                    If (bClampTouchpadToBounds) Then
-                                                        ' Clamp new position to TOUCHPAD_AXIS_UNITS
-                                                        If (Math.Abs(mNewPosDiff.X) > (TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER)) Then
-                                                            mJoystickPressedLastPosition.X -= Math.Sign(mNewPosDiff.X) *
-                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.X))
-                                                        End If
-
-                                                        If (Math.Abs(mNewPosDiff.Y) > TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) Then
-                                                            mJoystickPressedLastPosition.Y -= Math.Sign(mNewPosDiff.Y) *
-                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Y))
-                                                        End If
-
-                                                        If (Math.Abs(mNewPosDiff.Z) > TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) Then
-                                                            mJoystickPressedLastPosition.Z -= Math.Sign(mNewPosDiff.Z) *
-                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Z))
-                                                        End If
-                                                    End If
-
-                                                    If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
-                                                        mNewPos = (mNewPos - mJoystickPressedLastPosition) * 2.5F
-                                                        mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
-                                                        mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
-                                                    Else
-                                                        mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
-                                                        mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
-                                                        mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
-                                                    End If
-
-                                                    Dim mJoystickVec = New Vector2(mNewPos.X, -mNewPos.Z)
-
-                                                    g_mOscDataPack.mJoyStick = mJoystickVec
-
-                                                    If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
-                                                        m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
-
-                                                        ' Only start pressing when we moved a distance
-                                                        If (Math.Abs(mJoystickVec.X) > 0.25F OrElse Math.Abs(mJoystickVec.Y) > 0.25F) Then
+                                                            ' Do touchpad click
                                                             Select Case (iHtcTouchpadEmulationClickMethod)
-                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
-                                                                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
-
                                                                 Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
                                                                     If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                                                         If (m_PSMoveData.m_TriangleButton) Then
-                                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                            bJoystickTrigger = True
                                                                         End If
                                                                     Else
                                                                         If (m_PSMoveData.m_SquareButton) Then
-                                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                            bJoystickTrigger = True
                                                                         End If
                                                                     End If
 
                                                                 Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
                                                                     If (m_PSMoveData.m_SquareButton) Then
-                                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                        bJoystickTrigger = True
                                                                     End If
 
                                                                 Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
                                                                     If (m_PSMoveData.m_TriangleButton) Then
-                                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                        bJoystickTrigger = True
                                                                     End If
                                                             End Select
+                                                    End Select
+
+                                                    g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
+
+                                                    ' Joystick emulation
+                                                    If (bJoystickTrigger) Then
+                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
+                                                        m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
+
+                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
                                                         End If
-                                                    End If
 
-                                                    If (bJoystickShortcutBinding AndAlso m_PSMoveData.m_MoveButton) Then
-                                                        ' Record joystick shortcut while MOVE button is pressed 
-                                                        ' Also skip MOVE button
-                                                        For i = 1 To mButtons.Length - 1
-                                                            If (mButtons(i)) Then
-                                                                If (Math.Abs(mJoystickVec.X) < 0.5F AndAlso Math.Abs(mJoystickVec.Y) < 0.5F) Then
-                                                                    ' Remove shortcut
-                                                                    If (mJoystickShortcuts.ContainsKey(i)) Then
-                                                                        mJoystickShortcuts.Remove(i)
-                                                                    End If
-                                                                Else
-                                                                    ' Create shortcut
-                                                                    mJoystickShortcuts(i) = g_mOscDataPack.mJoyStick
-                                                                End If
+                                                        ' Just pressed
+                                                        Dim mNewPos As Vector3
+
+                                                        If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
+                                                            If (Not bJoystickButtonPressed) Then
+                                                                bJoystickButtonPressed = True
+
+                                                                mJoystickButtonPressedTime.Restart()
+
+                                                                mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
                                                             End If
-                                                        Next
-                                                    End If
-                                                Else
-                                                    If (bJoystickButtonPressed) Then
-                                                        bJoystickButtonPressed = False
-                                                    End If
 
-                                                    g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+                                                            mJoystickPressedLastPosition = New Vector3(0, 0, 0)
 
-                                                    If (bJoystickShortcutBinding) Then
-                                                        ' Record joystick shortcut while MOVE button is pressed
-                                                        For i = 1 To mButtons.Length - 1
-                                                            If (mButtons(i)) Then
-                                                                If (mJoystickShortcuts.ContainsKey(i)) Then
-                                                                    g_mOscDataPack.mJoyStick = mJoystickShortcuts(i)
+                                                            mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * m_PSMoveData.m_Orientation, New Vector3(0, -1, 0))
+                                                        Else
+                                                            If (Not bJoystickButtonPressed) Then
+                                                                bJoystickButtonPressed = True
 
-                                                                    If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
-                                                                            m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
+                                                                mJoystickButtonPressedTime.Restart()
 
-                                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
+                                                                mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                                mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                                                            End If
 
-                                                                        If (bJoystickShortcutTouchpadClick) Then
+                                                            mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                                                        End If
+
+                                                        Dim mNewPosDiff As New Vector3(
+                                                        mNewPos.X - mJoystickPressedLastPosition.X,
+                                                        mNewPos.Y - mJoystickPressedLastPosition.Y,
+                                                        mNewPos.Z - mJoystickPressedLastPosition.Z
+                                                    )
+
+                                                        If (bClampTouchpadToBounds) Then
+                                                            ' Clamp new position to TOUCHPAD_AXIS_UNITS
+                                                            If (Math.Abs(mNewPosDiff.X) > (TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER)) Then
+                                                                mJoystickPressedLastPosition.X -= Math.Sign(mNewPosDiff.X) *
+                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.X))
+                                                            End If
+
+                                                            If (Math.Abs(mNewPosDiff.Y) > TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) Then
+                                                                mJoystickPressedLastPosition.Y -= Math.Sign(mNewPosDiff.Y) *
+                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Y))
+                                                            End If
+
+                                                            If (Math.Abs(mNewPosDiff.Z) > TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) Then
+                                                                mJoystickPressedLastPosition.Z -= Math.Sign(mNewPosDiff.Z) *
+                                                                ((TOUCHPAD_AXIS_UNITS + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Z))
+                                                            End If
+                                                        End If
+
+                                                        If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
+                                                            mNewPos = (mNewPos - mJoystickPressedLastPosition) * 2.5F
+                                                            mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
+                                                            mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
+                                                        Else
+                                                            mNewPos = ((mNewPos - mJoystickPressedLastPosition) / TOUCHPAD_AXIS_UNITS)
+                                                            mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
+                                                            mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
+                                                        End If
+
+                                                        Dim mJoystickVec = New Vector2(mNewPos.X, -mNewPos.Z)
+
+                                                        g_mOscDataPack.mJoyStick = mJoystickVec
+
+                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
+                                                        m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
+
+                                                            ' Only start pressing when we moved a distance
+                                                            If (Math.Abs(mJoystickVec.X) > 0.25F OrElse Math.Abs(mJoystickVec.Y) > 0.25F) Then
+                                                                Select Case (iHtcTouchpadEmulationClickMethod)
+                                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
+                                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+
+                                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
+                                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                                                            If (m_PSMoveData.m_TriangleButton) Then
+                                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                            End If
+                                                                        Else
+                                                                            If (m_PSMoveData.m_SquareButton) Then
+                                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                            End If
+                                                                        End If
+
+                                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
+                                                                        If (m_PSMoveData.m_SquareButton) Then
                                                                             g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                                                         End If
-                                                                    End If
 
-                                                                    ' Never press the shortcut button, just in case its mapped
-                                                                    ' g_mOscDataPack.mButtons(i) = False
-                                                                End If
+                                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
+                                                                        If (m_PSMoveData.m_TriangleButton) Then
+                                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                        End If
+                                                                End Select
                                                             End If
-                                                        Next
+                                                        End If
+
+                                                        If (bJoystickShortcutBinding AndAlso m_PSMoveData.m_MoveButton) Then
+                                                            ' Record joystick shortcut while MOVE button is pressed 
+                                                            ' Also skip MOVE button
+                                                            For i = 1 To mButtons.Length - 1
+                                                                If (mButtons(i)) Then
+                                                                    If (Math.Abs(mJoystickVec.X) < 0.5F AndAlso Math.Abs(mJoystickVec.Y) < 0.5F) Then
+                                                                        ' Remove shortcut
+                                                                        If (mJoystickShortcuts.ContainsKey(i)) Then
+                                                                            mJoystickShortcuts.Remove(i)
+                                                                        End If
+                                                                    Else
+                                                                        ' Create shortcut
+                                                                        mJoystickShortcuts(i) = g_mOscDataPack.mJoyStick
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
+                                                    Else
+                                                        If (bJoystickButtonPressed) Then
+                                                            bJoystickButtonPressed = False
+                                                        End If
+
+                                                        g_mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+
+                                                        If (bJoystickShortcutBinding) Then
+                                                            ' Record joystick shortcut while MOVE button is pressed
+                                                            For i = 1 To mButtons.Length - 1
+                                                                If (mButtons(i)) Then
+                                                                    If (mJoystickShortcuts.ContainsKey(i)) Then
+                                                                        g_mOscDataPack.mJoyStick = mJoystickShortcuts(i)
+
+                                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
+                                                                            m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
+
+                                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
+
+                                                                            If (bJoystickShortcutTouchpadClick) Then
+                                                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
+                                                                            End If
+                                                                        End If
+
+                                                                        ' Never press the shortcut button, just in case its mapped
+                                                                        ' g_mOscDataPack.mButtons(i) = False
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
                                                     End If
-                                                End If
-                                        End Select
-                                End Select
+                                            End Select
+                                    End Select
 
-                            End SyncLock
+                                End SyncLock
 
-                            'Send battery level to
-                            If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
-                                mLastBatteryReport.Restart()
+                                'Send battery level to
+                                If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
+                                    mLastBatteryReport.Restart()
 
-                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Property/Battery",
                                             m_VmtTracker,
                                             iBatteryValue
                                         ))
-                            End If
+                                End If
 
-                            Select Case (m_VmtTrackerRole)
-                                Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                Select Case (m_VmtTrackerRole)
+                                    Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, ENABLE_TRACKER, 0.0F,
@@ -1392,42 +1400,42 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
+                                    Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
                                      ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
 
-                                    Dim iController As Integer = ENABLE_TRACKER
-                                    Select Case (m_VmtTrackerRole)
-                                        Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
-                                            iController = ENABLE_CONTROLLER_L
+                                        Dim iController As Integer = ENABLE_TRACKER
+                                        Select Case (m_VmtTrackerRole)
+                                            Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
+                                                iController = ENABLE_CONTROLLER_L
 
-                                        Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
-                                            iController = ENABLE_CONTROLLER_R
-                                    End Select
+                                            Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                                                iController = ENABLE_CONTROLLER_R
+                                        End Select
 
-                                    For Each mButton In g_mOscDataPack.mButtons
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mButton In g_mOscDataPack.mButtons
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Input/Button",
                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                             ))
-                                    Next
+                                        Next
 
-                                    For Each mTrigger In g_mOscDataPack.mTrigger
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mTrigger In g_mOscDataPack.mTrigger
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                            New OscMessage(
                                                "/VMT/Input/Trigger",
                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                            ))
-                                    Next
+                                        Next
 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Input/Joystick",
                                             m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
                                         ))
 
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, iController, 0.0F,
@@ -1440,9 +1448,9 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
@@ -1455,42 +1463,42 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
+                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
                                      ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
 
-                                    Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
-                                    Select Case (m_VmtTrackerRole)
-                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
-                                            iController = ENABLE_HTC_VIVE_CONTROLLER_L
+                                        Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
+                                        Select Case (m_VmtTrackerRole)
+                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
+                                                iController = ENABLE_HTC_VIVE_CONTROLLER_L
 
-                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
-                                            iController = ENABLE_HTC_VIVE_CONTROLLER_R
-                                    End Select
+                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                                iController = ENABLE_HTC_VIVE_CONTROLLER_R
+                                        End Select
 
-                                    For Each mButton In g_mOscDataPack.mButtons
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mButton In g_mOscDataPack.mButtons
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Input/Button",
                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                             ))
-                                    Next
+                                        Next
 
-                                    For Each mTrigger In g_mOscDataPack.mTrigger
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mTrigger In g_mOscDataPack.mTrigger
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                            New OscMessage(
                                                "/VMT/Input/Trigger",
                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                            ))
-                                    Next
+                                        Next
 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Input/Joystick",
                                             m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
                                         ))
 
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, iController, 0.0F,
@@ -1503,11 +1511,11 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                            End Select
+                                End Select
 
-                            m_FpsOscCounter += 1
+                                m_FpsOscCounter += 1
+                            End If
                         End If
-                    End If
 
                     If (Not bDisableBaseStationSpawning) Then
                         ' Update tracker references

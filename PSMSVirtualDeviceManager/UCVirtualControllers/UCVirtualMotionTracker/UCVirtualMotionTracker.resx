@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label17.Text" xml:space="preserve">
-    <value>        Device recentering is temporary and will reset when Virtual Device Manager closes!
+    <value>        Device recentering is temporary and will reset when Virtual Device Manager closes.
         For permanent recenter use the "World Orientation Yaw" offset 
         in "Controller Settings" when using Service Config Tool.
         However, this permanent method is only recommended for trackers with magnetometers!</value>

@@ -13,7 +13,7 @@ Public Class UCVirtualMotionTracker
     Public g_ClassControllerSettings As ClassControllerSettings
     Public g_ClassOscDevices As ClassOscDevices
 
-    Private g_bIgnoreEvents As Boolean = False
+    Private g_bIgnoreEvents As Boolean = True
     Private g_mOscStatusThread As Threading.Thread = Nothing
     Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
 
@@ -24,6 +24,8 @@ Public Class UCVirtualMotionTracker
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        g_bIgnoreEvents = False
+
         g_ClassOscServer = New ClassOscServer
         g_ClassControllerSettings = New ClassControllerSettings(Me)
         g_ClassOscDevices = New ClassOscDevices(Me)
@@ -188,6 +190,9 @@ Public Class UCVirtualMotionTracker
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
                 ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_HmdRecenterFromDeviceName, "No Device Selected"))
                 ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
+
+                NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassControllerSettings.m_RecenterButtonTimeMs))
+                NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, g_ClassControllerSettings.m_OscThreadSleepMs))
 
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
@@ -438,6 +443,8 @@ Public Class UCVirtualMotionTracker
         Private g_bEnableHmdRecenter As Boolean = True
         Private g_iHmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
         Private g_sHmdRecenterFromDeviceName As String = ""
+        Private g_iRecenterButtonTimeMs As Long
+        Private g_iOscThreadSleepMs As Long
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -641,10 +648,37 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
+        Property m_RecenterButtonTimeMs As Long
+            Get
+                SyncLock _ThreadLock
+                    Return g_iRecenterButtonTimeMs
+                End SyncLock
+            End Get
+            Set(value As Long)
+                SyncLock _ThreadLock
+                    g_iRecenterButtonTimeMs = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_OscThreadSleepMs As Long
+            Get
+                SyncLock _ThreadLock
+                    Return g_iOscThreadSleepMs
+                End SyncLock
+            End Get
+            Set(value As Long)
+                SyncLock _ThreadLock
+                    g_iOscThreadSleepMs = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub LoadSettings()
             g_bSettingsLoaded = True
 
-            Dim tmp As Integer
+            Dim tmpInt As Integer
+            Dim tmpLng As Long
 
             Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
@@ -653,35 +687,43 @@ Public Class UCVirtualMotionTracker
                     m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
                     m_EnableHepticFeedback = (mIni.ReadKeyValue("ControllerSettings", "EnableHepticFeedback", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmp)) Then
-                        m_HtcTouchpadEmulationClickMethod = CType(tmp, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmpInt)) Then
+                        m_HtcTouchpadEmulationClickMethod = CType(tmpInt, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
                     End If
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmp)) Then
-                        m_HtcGripButtonMethod = CType(tmp, ENUM_HTC_GRIP_BUTTON_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmpInt)) Then
+                        m_HtcGripButtonMethod = CType(tmpInt, ENUM_HTC_GRIP_BUTTON_METHOD)
                     End If
 
                     m_HtcClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "HtcClampTouchpadToBounds", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION))), tmp)) Then
-                        m_HtcTouchpadMethod = CType(tmp, ENUM_HTC_TOUCHPAD_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION))), tmpInt)) Then
+                        m_HtcTouchpadMethod = CType(tmpInt, ENUM_HTC_TOUCHPAD_METHOD)
                     End If
 
                     m_EnableControllerRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmp)) Then
-                        m_ControllerRecenterMethod = CType(tmp, ENUM_DEVICE_RECENTER_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
+                        m_ControllerRecenterMethod = CType(tmpInt, ENUM_DEVICE_RECENTER_METHOD)
                     End If
 
                     m_ControllerRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterFromDeviceName", "")
 
                     m_EnableHmdRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableHmdRecenter", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmp)) Then
-                        m_HmdRecenterMethod = CType(tmp, ENUM_DEVICE_RECENTER_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
+                        m_HmdRecenterMethod = CType(tmpInt, ENUM_DEVICE_RECENTER_METHOD)
                     End If
 
                     m_HmdRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "HmdRecenterFromDeviceName", "")
+
+                    If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "RecenterButtonTimeMs", "500"), tmpLng)) Then
+                        m_RecenterButtonTimeMs = tmpLng
+                    End If
+
+                    If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"), tmpLng)) Then
+                        m_OscThreadSleepMs = tmpLng
+                    End If
                 End Using
             End Using
         End Sub
@@ -709,6 +751,8 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHmdRecenter", If(m_EnableHmdRecenter, "true", "false")))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterMethod", CStr(CInt(m_HmdRecenterMethod))))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_HmdRecenterFromDeviceName))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_RecenterButtonTimeMs)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_OscThreadSleepMs)))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using

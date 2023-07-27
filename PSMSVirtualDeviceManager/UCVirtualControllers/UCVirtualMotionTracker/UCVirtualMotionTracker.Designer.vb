@@ -66,6 +66,8 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.NumericUpDown_RecenterButtonTime = New System.Windows.Forms.NumericUpDown()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.Button_ResetRecenter = New System.Windows.Forms.Button()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.ComboBox_HmdRecenterFromDevice = New System.Windows.Forms.ComboBox()
@@ -93,6 +95,9 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage5 = New System.Windows.Forms.TabPage()
+        Me.Button_OscThreadSleepReset = New System.Windows.Forms.Button()
+        Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
+        Me.Label21 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CheckBox_EnableHeptics = New System.Windows.Forms.CheckBox()
         Me.CheckBox_DisableBasestations = New System.Windows.Forms.CheckBox()
@@ -101,8 +106,8 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
-        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.Button_Remove = New System.Windows.Forms.Button()
@@ -114,8 +119,7 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
+        Me.Button_RecenterButtonTimeReset = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -132,14 +136,15 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl2.SuspendLayout()
         Me.TabPage4.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         Me.TabPage5.SuspendLayout()
+        CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LinkLabel_ReadMore
@@ -189,7 +194,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Management.Controls.Add(Me.Panel1)
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
-        Me.TabPage_Management.Size = New System.Drawing.Size(760, 786)
+        Me.TabPage_Management.Size = New System.Drawing.Size(760, 920)
         Me.TabPage_Management.TabIndex = 4
         Me.TabPage_Management.Text = "Management"
         '
@@ -592,7 +597,8 @@ Partial Class UCVirtualMotionTracker
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.NumericUpDown1)
+        Me.GroupBox1.Controls.Add(Me.Button_RecenterButtonTimeReset)
+        Me.GroupBox1.Controls.Add(Me.NumericUpDown_RecenterButtonTime)
         Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.Button_ResetRecenter)
         Me.GroupBox1.Controls.Add(Me.Label20)
@@ -616,6 +622,26 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
+        '
+        'NumericUpDown_RecenterButtonTime
+        '
+        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(199, 405)
+        Me.NumericUpDown_RecenterButtonTime.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
+        Me.NumericUpDown_RecenterButtonTime.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        Me.NumericUpDown_RecenterButtonTime.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.NumericUpDown_RecenterButtonTime.Name = "NumericUpDown_RecenterButtonTime"
+        Me.NumericUpDown_RecenterButtonTime.Size = New System.Drawing.Size(95, 22)
+        Me.NumericUpDown_RecenterButtonTime.TabIndex = 61
+        Me.NumericUpDown_RecenterButtonTime.Value = New Decimal(New Integer() {500, 0, 0, 0})
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(21, 407)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(172, 13)
+        Me.Label13.TabIndex = 60
+        Me.Label13.Text = "Recenter button press time (ms):"
         '
         'Button_ResetRecenter
         '
@@ -692,8 +718,7 @@ Partial Class UCVirtualMotionTracker
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Label17.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
+        Me.Label17.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label17.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.Label17.Location = New System.Drawing.Point(15, 21)
         Me.Label17.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
@@ -936,6 +961,9 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage5
         '
+        Me.TabPage5.Controls.Add(Me.Button_OscThreadSleepReset)
+        Me.TabPage5.Controls.Add(Me.NumericUpDown_OscThreadSleep)
+        Me.TabPage5.Controls.Add(Me.Label21)
         Me.TabPage5.Controls.Add(Me.Label7)
         Me.TabPage5.Controls.Add(Me.CheckBox_EnableHeptics)
         Me.TabPage5.Controls.Add(Me.CheckBox_DisableBasestations)
@@ -946,6 +974,34 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage5.TabIndex = 1
         Me.TabPage5.Text = "Other"
         Me.TabPage5.UseVisualStyleBackColor = True
+        '
+        'Button_OscThreadSleepReset
+        '
+        Me.Button_OscThreadSleepReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
+        Me.Button_OscThreadSleepReset.Location = New System.Drawing.Point(300, 177)
+        Me.Button_OscThreadSleepReset.Name = "Button_OscThreadSleepReset"
+        Me.Button_OscThreadSleepReset.Size = New System.Drawing.Size(23, 23)
+        Me.Button_OscThreadSleepReset.TabIndex = 50
+        Me.Button_OscThreadSleepReset.UseVisualStyleBackColor = True
+        '
+        'NumericUpDown_OscThreadSleep
+        '
+        Me.NumericUpDown_OscThreadSleep.Location = New System.Drawing.Point(203, 178)
+        Me.NumericUpDown_OscThreadSleep.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.NumericUpDown_OscThreadSleep.Name = "NumericUpDown_OscThreadSleep"
+        Me.NumericUpDown_OscThreadSleep.Size = New System.Drawing.Size(91, 22)
+        Me.NumericUpDown_OscThreadSleep.TabIndex = 49
+        Me.NumericUpDown_OscThreadSleep.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(16, 180)
+        Me.Label21.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(181, 13)
+        Me.Label21.TabIndex = 48
+        Me.Label21.Text = "OSC processing thread sleep (ms):"
         '
         'Label7
         '
@@ -1054,6 +1110,17 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_SteamVRRestartOff.TabStop = True
         Me.LinkLabel_SteamVRRestartOff.Text = "Dismiss"
         '
+        'Label3
+        '
+        Me.Label3.Dock = System.Windows.Forms.DockStyle.Left
+        Me.Label3.Location = New System.Drawing.Point(42, 0)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(601, 40)
+        Me.Label3.TabIndex = 27
+        Me.Label3.Text = "SteamVR needs to be restarted for changes to take effect."
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'PictureBox3
         '
         Me.PictureBox3.Dock = System.Windows.Forms.DockStyle.Left
@@ -1066,17 +1133,6 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.PictureBox3.TabIndex = 26
         Me.PictureBox3.TabStop = False
-        '
-        'Label3
-        '
-        Me.Label3.Dock = System.Windows.Forms.DockStyle.Left
-        Me.Label3.Location = New System.Drawing.Point(42, 0)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(601, 40)
-        Me.Label3.TabIndex = 27
-        Me.Label3.Text = "SteamVR needs to be restarted for changes to take effect."
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label2
         '
@@ -1183,22 +1239,14 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
         '
-        'Label13
+        'Button_RecenterButtonTimeReset
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(21, 407)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(149, 13)
-        Me.Label13.TabIndex = 60
-        Me.Label13.Text = "Recenter button press time:"
-        '
-        'NumericUpDown1
-        '
-        Me.NumericUpDown1.Location = New System.Drawing.Point(179, 405)
-        Me.NumericUpDown1.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
-        Me.NumericUpDown1.Name = "NumericUpDown1"
-        Me.NumericUpDown1.Size = New System.Drawing.Size(120, 22)
-        Me.NumericUpDown1.TabIndex = 61
+        Me.Button_RecenterButtonTimeReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
+        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(300, 404)
+        Me.Button_RecenterButtonTimeReset.Name = "Button_RecenterButtonTimeReset"
+        Me.Button_RecenterButtonTimeReset.Size = New System.Drawing.Size(23, 23)
+        Me.Button_RecenterButtonTimeReset.TabIndex = 62
+        Me.Button_RecenterButtonTimeReset.UseVisualStyleBackColor = True
         '
         'UCVirtualMotionTracker
         '
@@ -1231,17 +1279,18 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage4.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.TabPage5.ResumeLayout(False)
         Me.TabPage5.PerformLayout()
+        CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1333,6 +1382,10 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents CheckBox_HmdRecenterEnabled As CheckBox
     Friend WithEvents Label20 As Label
     Friend WithEvents Button_ResetRecenter As Button
-    Friend WithEvents NumericUpDown1 As NumericUpDown
+    Friend WithEvents NumericUpDown_RecenterButtonTime As NumericUpDown
     Friend WithEvents Label13 As Label
+    Friend WithEvents NumericUpDown_OscThreadSleep As NumericUpDown
+    Friend WithEvents Label21 As Label
+    Friend WithEvents Button_OscThreadSleepReset As Button
+    Friend WithEvents Button_RecenterButtonTimeReset As Button
 End Class

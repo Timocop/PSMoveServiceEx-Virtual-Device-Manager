@@ -276,6 +276,32 @@
         End Try
     End Sub
 
+    Private Sub NumericUpDown_RecenterButtonTime_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_RecenterButtonTime.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_RecenterButtonTimeMs = CLng(NumericUpDown_RecenterButtonTime.Value)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_OscThreadSleep_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_OscThreadSleep.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_OscThreadSleepMs = CLng(NumericUpDown_OscThreadSleep.Value)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub Button_OscThreadSleepReset_Click(sender As Object, e As EventArgs) Handles Button_OscThreadSleepReset.Click
+        NumericUpDown_OscThreadSleep.Value = 1
+    End Sub
+
+    Private Sub Button_RecenterButtonTimeReset_Click(sender As Object, e As EventArgs) Handles Button_RecenterButtonTimeReset.Click
+        NumericUpDown_RecenterButtonTime.Value = 500
+    End Sub
+
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
             g_ClassControllerSettings.SaveSettings()
