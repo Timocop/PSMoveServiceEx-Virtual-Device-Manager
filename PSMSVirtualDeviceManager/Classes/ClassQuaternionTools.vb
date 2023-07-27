@@ -84,4 +84,62 @@ Public Class ClassQuaternionTools
     Public Shared Function GetPositionInRotationSpace(mRotation As Quaternion, mPosition As Vector3) As Vector3
         Return RotateVector(Quaternion.Conjugate(mRotation), mPosition)
     End Function
+
+    Public Shared Function FromVectorToVector(mFrom As Vector3, mTo As Vector3) As Quaternion
+        Return LookRotation(mTo - mFrom, Vector3.UnitY)
+    End Function
+
+    Public Shared Function LookRotation(ByRef forward As Vector3, ByRef up As Vector3) As Quaternion
+        forward = Vector3.Normalize(forward)
+        Dim right As Vector3 = Vector3.Normalize(Vector3.Cross(up, forward))
+        up = Vector3.Cross(forward, right)
+        Dim m00 = right.X
+        Dim m01 = right.Y
+        Dim m02 = right.Z
+        Dim m10 = up.X
+        Dim m11 = up.Y
+        Dim m12 = up.Z
+        Dim m20 = forward.X
+        Dim m21 = forward.Y
+        Dim m22 = forward.Z
+
+
+        Dim num8 As Single = m00 + m11 + m22
+        Dim quaternion = New Quaternion()
+        If num8 > 0F Then
+            Dim num = CSng(Math.Sqrt(num8 + 1.0F))
+            quaternion.W = num * 0.5F
+            num = 0.5F / num
+            quaternion.X = (m12 - m21) * num
+            quaternion.Y = (m20 - m02) * num
+            quaternion.Z = (m01 - m10) * num
+            Return quaternion
+        End If
+        If m00 >= m11 AndAlso m00 >= m22 Then
+            Dim num7 = CSng(Math.Sqrt(1.0F + m00 - m11 - m22))
+            Dim num4 = 0.5F / num7
+            quaternion.X = 0.5F * num7
+            quaternion.Y = (m01 + m10) * num4
+            quaternion.Z = (m02 + m20) * num4
+            quaternion.W = (m12 - m21) * num4
+            Return quaternion
+        End If
+        If m11 > m22 Then
+            Dim num6 = CSng(Math.Sqrt(1.0F + m11 - m00 - m22))
+            Dim num3 = 0.5F / num6
+            quaternion.X = (m10 + m01) * num3
+            quaternion.Y = 0.5F * num6
+            quaternion.Z = (m21 + m12) * num3
+            quaternion.W = (m20 - m02) * num3
+            Return quaternion
+        End If
+        Dim num5 = CSng(Math.Sqrt(1.0F + m22 - m00 - m11))
+        Dim num2 = 0.5F / num5
+        quaternion.X = (m20 + m02) * num2
+        quaternion.Y = (m21 + m12) * num2
+        quaternion.Z = 0.5F * num5
+        quaternion.W = (m01 - m10) * num2
+        Return quaternion
+    End Function
+
 End Class

@@ -356,6 +356,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\user32_101_16x16-32.png" />
     <None Include="Resources\connect_10101_256x256-32.png" />
     <None Include="Resources\Faultrep_5201_256x256-32.png" />
     <None Include="Resources\DevicePairing_6101_256x256-32.png" />

@@ -739,6 +739,8 @@ Public Class UCVirtualMotionTrackerItem
             Dim mRumbleLastTimeSend As Date = Now
             Dim mRumbleLastTimeSendValid As Boolean = False
 
+            Dim mRecenterQuat = Quaternion.Identity
+
             Const ENABLE_TRACKER As Integer = 1
             Const ENABLE_CONTROLLER_L As Integer = 2
             Const ENABLE_CONTROLLER_R As Integer = 3
@@ -772,11 +774,13 @@ Public Class UCVirtualMotionTrackerItem
                         Return
                     End If
 
-                    If (Not g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                    Dim mUCVirtualMotionTracker = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker
+
+                    If (Not mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
                         Throw New ArgumentException("OSC server is not running")
                     End If
 
-                    If (g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                    If (mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                         Throw New ArgumentException("OSC server is suspended")
                     End If
 
@@ -791,7 +795,7 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
                     Dim bEnableHepticFeedback As Boolean = mClassControllerSettings.m_EnableHepticFeedback
 
-                    Dim mServiceClient = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI
+                    Dim mServiceClient = mUCVirtualMotionTracker.g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI
 
                     ' Get controller data
                     m_ControllerData = mServiceClient.m_ControllerData(g_iIndex)
@@ -863,15 +867,18 @@ Public Class UCVirtualMotionTrackerItem
                             Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
 
                             ' Get controller settings
-                            Dim bJoystickShortcutBinding As Boolean = mClassControllerSettings.m_JoystickShortcutBinding
-                            Dim bJoystickShortcutTouchpadClick As Boolean = mClassControllerSettings.m_JoystickShortcutTouchpadClick
+                            Dim bJoystickShortcutBinding = mClassControllerSettings.m_JoystickShortcutBinding
+                            Dim bJoystickShortcutTouchpadClick = mClassControllerSettings.m_JoystickShortcutTouchpadClick
                             Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
                             Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
                             Dim bClampTouchpadToBounds = mClassControllerSettings.m_HtcClampTouchpadToBounds
                             Dim iHtcTouchpadMethod = mClassControllerSettings.m_HtcTouchpadMethod
+                            Dim bEnableControllerRecenter = mClassControllerSettings.m_EnableControllerRecenter
+                            Dim iRecenterMethod = mClassControllerSettings.m_RecenterMethod
+                            Dim sRecenterFromDeviceName = mClassControllerSettings.m_RecenterFromDeviceName
 
                             SyncLock _ThreadLock
-                                g_mOscDataPack.mOrientation = m_ControllerData.m_Orientation
+                                g_mOscDataPack.mOrientation = mRecenterQuat * m_ControllerData.m_Orientation
                                 g_mOscDataPack.mPosition = m_ControllerData.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
 
                                 Select Case (m_VmtTrackerRole)
@@ -898,28 +905,87 @@ Public Class UCVirtualMotionTrackerItem
                                                 Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
                                                 ' Do controller recenter
-                                                ' TODO: Use HMD orientation rather than indentity
-                                                If (m_PSMoveData.m_SelectButton) Then
-                                                    If (Not mRecenterButtonPressed) Then
-                                                        mRecenterButtonPressed = True
+                                                If (bEnableControllerRecenter) Then
+                                                    ' Only recenter when only select is pressed
+                                                    Dim bOnlySelectPressed As Boolean = True
+                                                    For i = 0 To mButtons.Length - 1
+                                                        If (i = GEN_BUTTON_SEELCT) Then
+                                                            If (Not mButtons(i)) Then
+                                                                bOnlySelectPressed = False
+                                                                Exit For
+                                                            End If
 
-                                                        mLastRecenterTime.Restart()
-                                                    End If
+                                                            Continue For
+                                                        End If
 
-                                                    If (mLastRecenterTime.ElapsedMilliseconds > 250) Then
-                                                        mLastRecenterTime.Stop()
-                                                        mLastRecenterTime.Reset()
+                                                        If (mButtons(i)) Then
+                                                            bOnlySelectPressed = False
+                                                            Exit For
+                                                        End If
 
-                                                        mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
-                                                    End If
-                                                Else
-                                                    If (mRecenterButtonPressed) Then
-                                                        mRecenterButtonPressed = False
+                                                    Next
+
+                                                    If (m_PSMoveData.m_SelectButton AndAlso Not bOnlySelectPressed) Then
+                                                        If (Not mRecenterButtonPressed) Then
+                                                            mRecenterButtonPressed = True
+
+                                                            mLastRecenterTime.Restart()
+                                                        End If
+
+                                                        If (mLastRecenterTime.ElapsedMilliseconds > 250) Then
+                                                            mLastRecenterTime.Stop()
+                                                            mLastRecenterTime.Reset()
+
+                                                            Dim bDoFactoryRecenter As Boolean = True
+
+                                                            Select Case (iRecenterMethod)
+                                                                Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_CONTROLLER_RECENTER_METHOD.USE_DEVICE
+                                                                    Dim sCurrentRecenterDeviceName As String = sRecenterFromDeviceName
+
+                                                                    ' If empty, do a autoamtic search and get any available HMD
+                                                                    If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                                                        For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                                                            If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                                                                sCurrentRecenterDeviceName = mDevice.sSerial
+                                                                            End If
+                                                                        Next
+                                                                    End If
+
+                                                                    Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
+                                                                    If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
+                                                                        Dim mControllerPos As Vector3 = m_ControllerData.m_Position
+                                                                        Dim mFromDevicePos As Vector3 = mFoundDevice.GetPosCm()
+
+                                                                        mControllerPos.Y = 0.0F
+                                                                        mFromDevicePos.Y = 0.0F
+
+                                                                        mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                        mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                        bDoFactoryRecenter = False
+
+                                                                        ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                        'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity) 
+                                                                    End If
+                                                            End Select
+
+                                                            If (bDoFactoryRecenter) Then
+                                                                mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
+                                                                mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+
+                                                                ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
+                                                                'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
+                                                            End If
+                                                        End If
+                                                    Else
+                                                        If (mRecenterButtonPressed) Then
+                                                            mRecenterButtonPressed = False
+                                                        End If
                                                     End If
                                                 End If
 
-                                                    ' Send buttons
-                                                    Select Case (m_VmtTrackerRole)
+                                                ' Send buttons
+                                                Select Case (m_VmtTrackerRole)
                                                     Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
                                                            ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
                                                         For i = 0 To mButtons.Length - 1
@@ -1207,7 +1273,7 @@ Public Class UCVirtualMotionTrackerItem
                             If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
                                 mLastBatteryReport.Restart()
 
-                                g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Property/Battery",
                                             m_VmtTracker,
@@ -1218,7 +1284,7 @@ Public Class UCVirtualMotionTrackerItem
                             Select Case (m_VmtTrackerRole)
                                 Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
                                     'Use Right-Handed space for SteamVR 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, ENABLE_TRACKER, 0.0F,
@@ -1244,7 +1310,7 @@ Public Class UCVirtualMotionTrackerItem
                                     End Select
 
                                     For Each mButton In g_mOscDataPack.mButtons
-                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Input/Button",
                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
@@ -1252,21 +1318,21 @@ Public Class UCVirtualMotionTrackerItem
                                     Next
 
                                     For Each mTrigger In g_mOscDataPack.mTrigger
-                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                            New OscMessage(
                                                "/VMT/Input/Trigger",
                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                            ))
                                     Next
 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Input/Joystick",
                                             m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
                                         ))
 
                                     'Use Right-Handed space for SteamVR 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, iController, 0.0F,
@@ -1281,7 +1347,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                 Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
                                     'Use Right-Handed space for SteamVR 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
@@ -1307,7 +1373,7 @@ Public Class UCVirtualMotionTrackerItem
                                     End Select
 
                                     For Each mButton In g_mOscDataPack.mButtons
-                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Input/Button",
                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
@@ -1315,21 +1381,21 @@ Public Class UCVirtualMotionTrackerItem
                                     Next
 
                                     For Each mTrigger In g_mOscDataPack.mTrigger
-                                        g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                            New OscMessage(
                                                "/VMT/Input/Trigger",
                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                            ))
                                     Next
 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Input/Joystick",
                                             m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
                                         ))
 
                                     'Use Right-Handed space for SteamVR 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, iController, 0.0F,
@@ -1364,7 +1430,7 @@ Public Class UCVirtualMotionTrackerItem
                                     Dim mFlippedQ As Quaternion = m_TrackerData(i).m_Orientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
 
                                     'Use Right-Handed space for SteamVR 
-                                    g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,

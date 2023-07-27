@@ -1,20 +1,47 @@
 ﻿Partial Public Class UCVirtualMotionTracker
 
+    Public Class ClassRecenterDeviceItem
+        Private g_sName As String = ""
+        Private g_sDisplayName As String = ""
+
+        Public Sub New(_Name As String)
+            Me.New(_Name, _Name)
+        End Sub
+
+        Public Sub New(_Name As String, _DisplayName As String)
+            g_sName = _Name
+
+            If (String.IsNullOrEmpty(_DisplayName) OrElse _DisplayName.TrimEnd.Length = 0) Then
+                g_sDisplayName = "Any HMD"
+            Else
+                g_sDisplayName = _DisplayName
+            End If
+        End Sub
+
+        Public Function GetRealName() As String
+            Return g_sName
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return g_sDisplayName
+        End Function
+    End Class
+
     Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
         Dim sHelp As New Text.StringBuilder
-        sHelp.AppendLine("Joystick values can be bound to buttons on the controller so you dont have to move your controller for joystick emulation.")
-        sHelp.AppendLine("For example if you want to bind SQUARE with joystick forward and CROSS with joystick backwards to move forward and backwards with 2 buttons instead of the MOVE button and moving the controller.")
+        sHelp.AppendLine("Touchpad axis can be bound to buttons on the controller so you dont have to move your controller for touchpad emulation.")
+        sHelp.AppendLine("For example if you want to bind SQUARE with touchpad forward and CROSS with touchpad backwards to move forward and backwards with 2 buttons instead of the MOVE button and moving the controller.")
         sHelp.AppendLine("This makes it easier to navigate in games.")
         sHelp.AppendLine()
         sHelp.AppendLine("HOW TO BIND:")
-        sHelp.AppendLine("On your PSMove controller, hold both the MOVE button and the button you want to bind the joystick value to and move the controller in any direction.")
+        sHelp.AppendLine("On your PSMove controller, hold both the MOVE button and the button you want to bind the touchpad axis to and move the controller in any direction.")
         sHelp.AppendLine("Release both buttons to accept.")
-        sHelp.AppendLine("The saved joystick value will be applied when pressing the button now.")
+        sHelp.AppendLine("The saved touchpad axis will be applied when pressing the button now.")
         sHelp.AppendLine()
         sHelp.AppendLine("HOW TO UNBIND:")
-        sHelp.AppendLine("Quickly press both the MOVE button and the button you want to unbind. Done.")
+        sHelp.AppendLine("Quickly press both the MOVE button and the button you want to unbind.")
 
-        MessageBox.Show(sHelp.ToString, "Joystick Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        MessageBox.Show(sHelp.ToString, "Touchpad Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
     Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcuts.CheckedChanged
@@ -87,6 +114,82 @@
 
         g_ClassControllerSettings.m_HtcTouchpadMethod = CType(ComboBox_TouchpadMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD)
         g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+
+    Private Sub CheckBox_ControllerRecenterEnabled_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ControllerRecenterEnabled.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_EnableControllerRecenter = CheckBox_ControllerRecenterEnabled.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_RecenterMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_RecenterMethod.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_RecenterMethod = CType(ComboBox_RecenterMethod.SelectedIndex, ClassControllerSettings.ENUM_CONTROLLER_RECENTER_METHOD)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_RecenterFromDevice_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_RecenterFromDevice.SelectedIndexChanged
+        Try
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            g_ClassControllerSettings.m_RecenterFromDeviceName = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            g_ClassControllerSettings.SetUnsavedState(True)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ComboBox_RecenterFromDevice_DropDown(sender As Object, e As EventArgs) Handles ComboBox_RecenterFromDevice.DropDown
+        Try
+            g_bIgnoreEvents = True
+
+            Dim mSelectedItem As String = ""
+            If (ComboBox_RecenterFromDevice.SelectedItem IsNot Nothing) Then
+                mSelectedItem = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            End If
+
+            Dim mDevices As New List(Of ClassRecenterDeviceItem)
+            For Each mItem In g_ClassOscDevices.GetDevices
+                Dim sDisplayName As String = String.Format("{0}, {1}", mItem.iType.ToString, mItem.sSerial)
+
+                mDevices.Add(New ClassRecenterDeviceItem(mItem.sSerial, sDisplayName))
+            Next
+
+            ComboBox_RecenterFromDevice.BeginUpdate()
+            ComboBox_RecenterFromDevice.Items.Clear()
+            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
+            ComboBox_RecenterFromDevice.Items.AddRange(mDevices.ToArray)
+            ComboBox_RecenterFromDevice.EndUpdate()
+
+            Dim bLastFound As Boolean = False
+            For Each mItem In ComboBox_RecenterFromDevice.Items
+                If (DirectCast(mItem, ClassRecenterDeviceItem).GetRealName() = mSelectedItem) Then
+                    ComboBox_RecenterFromDevice.SelectedItem = mItem
+
+                    bLastFound = True
+                    Exit For
+                End If
+            Next
+
+            If (bLastFound) Then
+                ' Assume we have at least one in the list
+                ComboBox_RecenterFromDevice.SelectedIndex = 0
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            g_bIgnoreEvents = False
+        End Try
     End Sub
 
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
