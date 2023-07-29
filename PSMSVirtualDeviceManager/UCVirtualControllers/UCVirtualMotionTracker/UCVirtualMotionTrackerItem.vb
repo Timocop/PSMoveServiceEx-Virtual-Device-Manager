@@ -1227,19 +1227,19 @@ Public Class UCVirtualMotionTrackerItem
 
                                                     mJoystickButtonPressedTime.Restart()
 
-                                                    mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                    mJoystickPressedLastOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
                                                 End If
 
                                                 mJoystickPressedLastPosition = New Vector3(0, 0, 0)
 
-                                                mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * m_PSMoveData.m_Orientation, New Vector3(0, -1, 0))
+                                                mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mRecenterQuat * m_PSMoveData.m_Orientation, New Vector3(0, -1, 0))
                                             Else
                                                 If (Not bJoystickButtonPressed) Then
                                                     bJoystickButtonPressed = True
 
                                                     mJoystickButtonPressedTime.Restart()
 
-                                                    mJoystickPressedLastOrientation = m_PSMoveData.m_Orientation
+                                                    mJoystickPressedLastOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
                                                     mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
                                                 End If
 
