@@ -962,8 +962,11 @@ Public Class UCVirtualMotionTrackerItem
                                                                 mControllerPos.Y = 0.0F
                                                                 mFromDevicePos.Y = 0.0F
 
-                                                                mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                                mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+                                                                Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+
+                                                                mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
+                                                                'mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
 
                                                                 bDoFactoryRecenter = False
 
@@ -973,8 +976,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     End Select
 
                                                     If (bDoFactoryRecenter) Then
-                                                        mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                        mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+                                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+
+                                                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
                                                         ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
                                                         'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
@@ -1051,8 +1055,10 @@ Public Class UCVirtualMotionTrackerItem
                                                                 mControllerPos.Y = 0.0F
                                                                 mFromDevicePos.Y = 0.0F
 
-                                                                mRecenterQuat = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                                mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+                                                                Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+
+                                                                mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
 
                                                                 ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
                                                                 'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
@@ -1064,8 +1070,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     End Select
 
                                                     If (bDoFactoryRecenter) Then
-                                                        mRecenterQuat = ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY) * Quaternion.Conjugate(m_ControllerData.m_Orientation)
-                                                        mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
+                                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+
+                                                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
                                                         ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
                                                         'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)

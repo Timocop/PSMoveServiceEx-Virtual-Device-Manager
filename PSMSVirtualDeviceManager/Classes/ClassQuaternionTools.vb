@@ -142,4 +142,17 @@ Public Class ClassQuaternionTools
         Return quaternion
     End Function
 
+    Public Shared Function ExtractYawQuaternion(q As Quaternion, global_forward As Vector3) As Quaternion
+        ' Extract the forward (z-axis) vector from the quaternion
+        Dim forward As Vector3 = RotateVector(q, Vector3.UnitZ)
+
+        ' Project the forward vector onto the xz-plane (horizontal plane) 
+        Dim forward2d = Vector3.Normalize(New Vector3(forward.X, 0F, forward.Z))
+
+        ' Compute the angle between the forward vector and the global forward vector
+        Dim angle As Single = CSng(Math.Atan2(forward2d.X * global_forward.Z - forward2d.Z * global_forward.X,
+                                              forward2d.X * global_forward.X + forward2d.Z * global_forward.Z))
+
+        Return New Quaternion(0F, CSng(Math.Sin(angle / 2)), 0F, CSng(Math.Cos(angle / 2)))
+    End Function
 End Class
