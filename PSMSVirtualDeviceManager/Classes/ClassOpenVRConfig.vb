@@ -16,11 +16,13 @@ Public Class ClassOpenVRConfig
     End Property
 
     Public Sub AddPath(sPath As String)
-        If (Not g_mConfig.ContainsKey("external_drivers")) Then
-            g_mConfig("external_drivers") = New ArrayList()
-        End If
+        ValidateExternalDrivers()
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
+        If (mExternalDrivers Is Nothing) Then
+            Throw New ArgumentException("Could not cast external_drivers as ArrayList")
+        End If
+
         For Each sDriverPath As String In mExternalDrivers.ToArray
             If (sDriverPath Is Nothing) Then
                 Continue For
@@ -35,13 +37,11 @@ Public Class ClassOpenVRConfig
     End Sub
 
     Public Sub RemovePath(sPath As String)
-        If (Not g_mConfig.ContainsKey("external_drivers")) Then
-            g_mConfig("external_drivers") = New ArrayList()
-        End If
+        ValidateExternalDrivers()
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
         If (mExternalDrivers Is Nothing) Then
-            Throw New ArgumentException("Invalid cast")
+            Throw New ArgumentException("Could not cast external_drivers as ArrayList")
         End If
 
         For i = mExternalDrivers.Count - 1 To 0 Step -1
@@ -56,13 +56,11 @@ Public Class ClassOpenVRConfig
     End Sub
 
     Public Function GetDrivers() As String()
-        If (Not g_mConfig.ContainsKey("external_drivers")) Then
-            Return Nothing
-        End If
+        ValidateExternalDrivers()
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
         If (mExternalDrivers Is Nothing) Then
-            Throw New ArgumentException("Invalid cast")
+            Throw New ArgumentException("Could not cast external_drivers as ArrayList")
         End If
 
         Dim mDrivers As New List(Of String)
@@ -120,13 +118,11 @@ Public Class ClassOpenVRConfig
     End Sub
 
     Private Sub RemoveInvalid()
-        If (Not g_mConfig.ContainsKey("external_drivers")) Then
-            g_mConfig("external_drivers") = New ArrayList()
-        End If
+        ValidateExternalDrivers()
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
         If (mExternalDrivers Is Nothing) Then
-            Throw New ArgumentException("Invalid cast")
+            Throw New ArgumentException("Could not cast external_drivers as ArrayList")
         End If
 
         ' Remove NULL drivers.
@@ -142,4 +138,13 @@ Public Class ClassOpenVRConfig
         End If
     End Sub
 
+    Private Sub ValidateExternalDrivers()
+        If (Not g_mConfig.ContainsKey("external_drivers")) Then
+            g_mConfig("external_drivers") = New ArrayList()
+        End If
+
+        If (TypeOf g_mConfig("external_drivers") IsNot ArrayList) Then
+            g_mConfig("external_drivers") = New ArrayList()
+        End If
+    End Sub
 End Class
