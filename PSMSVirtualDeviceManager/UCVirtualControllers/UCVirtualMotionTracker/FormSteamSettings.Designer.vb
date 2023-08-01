@@ -49,7 +49,7 @@ Partial Class FormSteamSettings
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(364, 13)
         Me.Label1.TabIndex = 22
-        Me.Label1.Text = "Change advanced SteamVR settings to enhance your user experiance."
+        Me.Label1.Text = "Change advanced SteamVR settings to enhance your user experience."
         '
         'Panel1
         '
