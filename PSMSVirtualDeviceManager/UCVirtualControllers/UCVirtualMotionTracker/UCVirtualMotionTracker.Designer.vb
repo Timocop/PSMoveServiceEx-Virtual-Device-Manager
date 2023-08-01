@@ -527,7 +527,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_VMTTrackers.Location = New System.Drawing.Point(19, 58)
         Me.Panel_VMTTrackers.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
-        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 748)
+        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 843)
         Me.Panel_VMTTrackers.TabIndex = 15
         '
         'Button_VMTControllers
