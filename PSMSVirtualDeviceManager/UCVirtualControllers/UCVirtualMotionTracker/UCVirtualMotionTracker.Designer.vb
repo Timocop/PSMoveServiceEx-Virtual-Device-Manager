@@ -32,7 +32,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
-        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -41,7 +41,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel_Status = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -120,11 +120,13 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.LinkLabel_SteamEnableNullHmd = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_SteamDisableNullHmd = New System.Windows.Forms.LinkLabel()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
-        Me.Panel5.SuspendLayout()
+        Me.Panel_AvailableDevices.SuspendLayout()
         Me.Panel8.SuspendLayout()
-        Me.Panel1.SuspendLayout()
+        Me.Panel_Status.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -190,26 +192,26 @@ Partial Class UCVirtualMotionTracker
         '
         Me.TabPage_Management.AutoScroll = True
         Me.TabPage_Management.BackColor = System.Drawing.Color.White
-        Me.TabPage_Management.Controls.Add(Me.Panel5)
-        Me.TabPage_Management.Controls.Add(Me.Panel1)
+        Me.TabPage_Management.Controls.Add(Me.Panel_AvailableDevices)
+        Me.TabPage_Management.Controls.Add(Me.Panel_Status)
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
         Me.TabPage_Management.Size = New System.Drawing.Size(760, 920)
         Me.TabPage_Management.TabIndex = 4
         Me.TabPage_Management.Text = "Management"
         '
-        'Panel5
+        'Panel_AvailableDevices
         '
-        Me.Panel5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_AvailableDevices.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel5.Controls.Add(Me.ListView_OscDevices)
-        Me.Panel5.Controls.Add(Me.Panel8)
-        Me.Panel5.Location = New System.Drawing.Point(16, 188)
-        Me.Panel5.Margin = New System.Windows.Forms.Padding(16)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(728, 250)
-        Me.Panel5.TabIndex = 2
+        Me.Panel_AvailableDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_AvailableDevices.Controls.Add(Me.ListView_OscDevices)
+        Me.Panel_AvailableDevices.Controls.Add(Me.Panel8)
+        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(16, 238)
+        Me.Panel_AvailableDevices.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
+        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(728, 250)
+        Me.Panel_AvailableDevices.TabIndex = 2
         '
         'ListView_OscDevices
         '
@@ -280,18 +282,18 @@ Partial Class UCVirtualMotionTracker
         Me.Panel10.Size = New System.Drawing.Size(726, 1)
         Me.Panel10.TabIndex = 0
         '
-        'Panel1
+        'Panel_Status
         '
-        Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel1.Controls.Add(Me.TableLayoutPanel1)
-        Me.Panel1.Controls.Add(Me.Panel12)
-        Me.Panel1.Location = New System.Drawing.Point(16, 16)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(728, 157)
-        Me.Panel1.TabIndex = 1
+        Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_Status.Controls.Add(Me.TableLayoutPanel1)
+        Me.Panel_Status.Controls.Add(Me.Panel12)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 16)
+        Me.Panel_Status.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_Status.Name = "Panel_Status"
+        Me.Panel_Status.Size = New System.Drawing.Size(728, 190)
+        Me.Panel_Status.TabIndex = 1
         '
         'TableLayoutPanel1
         '
@@ -305,7 +307,7 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(726, 113)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(726, 146)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'Panel4
@@ -318,7 +320,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(362, 113)
+        Me.Panel4.Size = New System.Drawing.Size(362, 146)
         Me.Panel4.TabIndex = 1
         '
         'Label8
@@ -378,6 +380,8 @@ Partial Class UCVirtualMotionTracker
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.LinkLabel_SteamDisableNullHmd)
+        Me.Panel2.Controls.Add(Me.LinkLabel_SteamEnableNullHmd)
         Me.Panel2.Controls.Add(Me.LinkLabel_SteamRun)
         Me.Panel2.Controls.Add(Me.Label9)
         Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality2)
@@ -387,7 +391,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel2.Location = New System.Drawing.Point(362, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(364, 113)
+        Me.Panel2.Size = New System.Drawing.Size(364, 146)
         Me.Panel2.TabIndex = 2
         '
         'LinkLabel_SteamRun
@@ -1248,6 +1252,38 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
         '
+        'LinkLabel_SteamEnableNullHmd
+        '
+        Me.LinkLabel_SteamEnableNullHmd.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_SteamEnableNullHmd.AutoSize = True
+        Me.LinkLabel_SteamEnableNullHmd.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_SteamEnableNullHmd.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_SteamEnableNullHmd.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_SteamEnableNullHmd.Location = New System.Drawing.Point(103, 91)
+        Me.LinkLabel_SteamEnableNullHmd.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_SteamEnableNullHmd.Name = "LinkLabel_SteamEnableNullHmd"
+        Me.LinkLabel_SteamEnableNullHmd.Size = New System.Drawing.Size(126, 13)
+        Me.LinkLabel_SteamEnableNullHmd.TabIndex = 20
+        Me.LinkLabel_SteamEnableNullHmd.TabStop = True
+        Me.LinkLabel_SteamEnableNullHmd.Text = "Enable HMD Emulation"
+        Me.LinkLabel_SteamEnableNullHmd.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'LinkLabel_SteamDisableNullHmd
+        '
+        Me.LinkLabel_SteamDisableNullHmd.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_SteamDisableNullHmd.AutoSize = True
+        Me.LinkLabel_SteamDisableNullHmd.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_SteamDisableNullHmd.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_SteamDisableNullHmd.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_SteamDisableNullHmd.Location = New System.Drawing.Point(103, 107)
+        Me.LinkLabel_SteamDisableNullHmd.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_SteamDisableNullHmd.Name = "LinkLabel_SteamDisableNullHmd"
+        Me.LinkLabel_SteamDisableNullHmd.Size = New System.Drawing.Size(129, 13)
+        Me.LinkLabel_SteamDisableNullHmd.TabIndex = 21
+        Me.LinkLabel_SteamDisableNullHmd.TabStop = True
+        Me.LinkLabel_SteamDisableNullHmd.Text = "Disable HMD Emulation"
+        Me.LinkLabel_SteamDisableNullHmd.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -1262,9 +1298,9 @@ Partial Class UCVirtualMotionTracker
         Me.Size = New System.Drawing.Size(800, 1040)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage_Management.ResumeLayout(False)
-        Me.Panel5.ResumeLayout(False)
+        Me.Panel_AvailableDevices.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
-        Me.Panel1.ResumeLayout(False)
+        Me.Panel_Status.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
@@ -1336,7 +1372,7 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents CheckBox_EnableHeptics As CheckBox
     Friend WithEvents Label7 As Label
     Friend WithEvents TabPage_Management As TabPage
-    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel_Status As Panel
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Label8 As Label
@@ -1353,7 +1389,7 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel_OscStatus As Panel
     Friend WithEvents Panel3 As Panel
     Friend WithEvents LinkLabel_SteamRun As LinkLabel
-    Friend WithEvents Panel5 As Panel
+    Friend WithEvents Panel_AvailableDevices As Panel
     Friend WithEvents ListView_OscDevices As ClassListViewEx
     Friend WithEvents ColumnHeader_Type As ColumnHeader
     Friend WithEvents ColumnHeader_Serial As ColumnHeader
@@ -1388,4 +1424,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label21 As Label
     Friend WithEvents Button_OscThreadSleepReset As Button
     Friend WithEvents Button_RecenterButtonTimeReset As Button
+    Friend WithEvents LinkLabel_SteamEnableNullHmd As LinkLabel
+    Friend WithEvents LinkLabel_SteamDisableNullHmd As LinkLabel
 End Class

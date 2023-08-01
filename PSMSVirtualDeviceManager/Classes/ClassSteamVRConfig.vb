@@ -5,6 +5,7 @@ Public Class ClassSteamVRConfig
 
     Private g_ClassOverrides As ClassOverrides
     Private g_ClassTrackerRoles As ClassTrackerRoles
+    Private g_ClassSettings As ClassSettings
 
     Private g_bConfigLoaded As Boolean = False
     Private g_mConfig As New Dictionary(Of String, Object)
@@ -12,6 +13,7 @@ Public Class ClassSteamVRConfig
     Public Sub New()
         g_ClassOverrides = New ClassOverrides(Me)
         g_ClassTrackerRoles = New ClassTrackerRoles(Me)
+        g_ClassSettings = New ClassSettings(Me)
     End Sub
 
     ReadOnly Property m_SteamPath As String
@@ -34,6 +36,12 @@ Public Class ClassSteamVRConfig
     ReadOnly Property m_ClassTrackerRoles As ClassTrackerRoles
         Get
             Return g_ClassTrackerRoles
+        End Get
+    End Property
+
+    ReadOnly Property m_ClassSettings As ClassSettings
+        Get
+            Return g_ClassSettings
         End Get
     End Property
 
@@ -313,6 +321,42 @@ Public Class ClassSteamVRConfig
 
             Return mOverides.ToArray
         End Function
+    End Class
+
+    Class ClassSettings
+        Private g_ClassSteamVRConfig As ClassSteamVRConfig
+
+
+        Public Sub New(_ClassSteamVRConfig As ClassSteamVRConfig)
+            g_ClassSteamVRConfig = _ClassSteamVRConfig
+        End Sub
+
+        Property m_NullHmdEnabled As Boolean
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("driver_null")) Then
+                    Return False
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("driver_null"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("enabled")) Then
+                    Return False
+                End If
+
+                Return CBool(mScansDic("enabled"))
+            End Get
+            Set(value As Boolean)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("driver_null")) Then
+                    g_ClassSteamVRConfig.g_mConfig("driver_null") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("driver_null"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("enabled")) Then
+                    mScansDic("enabled") = False
+                End If
+
+                mScansDic("enabled") = value
+            End Set
+        End Property
     End Class
 
     Public Function LoadConfig() As Boolean
