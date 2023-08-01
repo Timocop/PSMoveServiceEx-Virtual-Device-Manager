@@ -118,11 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label1.Text" xml:space="preserve">
-    <value>You can attach controllers to each other, creating joint-based trackers which do not require LEDs to track but still can provide enough tracking information.
-This method can be used to make lightweight trackers which are only IMU-based using the parent controller as an absolute root.
-Both controllers act like a "bone" and in the middle of both is a joint so the controller that is parented to another can orbit around the joint using its IMU, simulating 6DoF tracking.
-This is very useful if you use this method for body tracking such as feet, chest, or arms.
-To enable controller attachments switch the positional filter of the giving controller to "PositionExternalAttachment".</value>
+    <value>You can connect controllers without using LEDs for tracking. Simply attach them together to create joint-based trackers that rely solely on IMU sensors for accurate tracking. 
+This enables you to make lightweight trackers with the parent controller acting as a fixed reference point. 
+The connected controllers function like a "bone" with a joint in the middle, allowing the attached controller to simulate 6-DoF tracking by orbiting around the joint using its IMU. 
+This method is particularly useful for body tracking, such as for feet, chest, or arms. To enable controller attachments, switch the positional filter of the giving controller to "PositionExternalAttachment."</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

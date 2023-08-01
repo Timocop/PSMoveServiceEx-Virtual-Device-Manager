@@ -118,9 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label1.Text" xml:space="preserve">
-    <value>Using custom remote devices with IMUs, you can override the default orientation data of PSmove controllers and Virtual controllers within PSMoveServiceEx.
-To pass the orientation data to a particular controller, set the Controller ID in the dropdown menu to the ID of your desired controller. Then Switch its orientation filter to "OrientationExternal".
-If you are using Virtual controllers enable "PSmove Emulation" for this to work. Currently supported protocols are: OwOtrack, SlimeVR.</value>
+    <value>With the help of custom remote devices equipped with IMUs, you have the ability to modify the orientation data of PSmove controllers and Virtual controllers within PSMoveServiceEx.
+
+To apply the desired orientation data to a specific controller, follow these steps:
+ 1. From the dropdown menu, select the Controller ID corresponding to your target controller.
+ 2. Switch the orientation filter to "OrientationExternal".
+
+If you are using Virtual controllers, remember to enable "PSmove Emulation" for the changes to take effect. Currently, the supported protocols include owoTrackVR, moveTrackVR and SlimeVR.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

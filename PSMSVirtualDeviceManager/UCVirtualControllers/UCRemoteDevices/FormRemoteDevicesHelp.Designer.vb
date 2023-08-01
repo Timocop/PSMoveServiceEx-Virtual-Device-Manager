@@ -35,7 +35,7 @@ Partial Class FormRemoteDevicesHelp
         Me.Label1.Location = New System.Drawing.Point(12, 12)
         Me.Label1.Margin = New System.Windows.Forms.Padding(3)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(760, 88)
+        Me.Label1.Size = New System.Drawing.Size(760, 133)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = resources.GetString("Label1.Text")
         '
@@ -45,10 +45,10 @@ Partial Class FormRemoteDevicesHelp
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.CustomIMU
-        Me.PictureBox1.Location = New System.Drawing.Point(12, 106)
+        Me.PictureBox1.Location = New System.Drawing.Point(12, 151)
         Me.PictureBox1.m_HighQuality = True
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(760, 443)
+        Me.PictureBox1.Size = New System.Drawing.Size(760, 398)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox1.TabIndex = 1
         Me.PictureBox1.TabStop = False
