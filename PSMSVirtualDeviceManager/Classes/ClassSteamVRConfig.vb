@@ -343,11 +343,11 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("driver_null"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("enabled")) Then
+                If (Not mScansDic.ContainsKey("enable")) Then
                     Return False
                 End If
 
-                Return CBool(mScansDic("enabled"))
+                Return CBool(mScansDic("enable"))
             End Get
             Set(value As Boolean)
                 If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("driver_null")) Then
@@ -355,11 +355,11 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("driver_null"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("enabled")) Then
-                    mScansDic("enabled") = False
+                If (Not mScansDic.ContainsKey("enable")) Then
+                    mScansDic("enable") = False
                 End If
 
-                mScansDic("enabled") = value
+                mScansDic("enable") = value
             End Set
         End Property
 
