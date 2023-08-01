@@ -203,12 +203,6 @@
     <Compile Include="StartPage\UCStartPage.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCVirtualControllers\UCAttachments\FormAttachmentsHelp.Designer.vb">
-      <DependentUpon>FormAttachmentsHelp.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UCVirtualControllers\UCAttachments\FormAttachmentsHelp.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="UCVirtualControllers\UCAttachments\UCControllerAttachments.Designer.vb">
       <DependentUpon>UCControllerAttachments.vb</DependentUpon>
     </Compile>
@@ -221,12 +215,6 @@
     <Compile Include="UCVirtualControllers\UCAttachments\UCControllerAttachmentsItem.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCVirtualControllers\UCRemoteDevices\FormRemoteDevicesHelp.Designer.vb">
-      <DependentUpon>FormRemoteDevicesHelp.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UCVirtualControllers\UCRemoteDevices\FormRemoteDevicesHelp.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDeviceItem.Designer.vb">
       <DependentUpon>UCRemoteDeviceItem.vb</DependentUpon>
     </Compile>
@@ -238,6 +226,12 @@
     </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualControllers.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Classes\FormRtfHelp.Designer.vb">
+      <DependentUpon>FormRtfHelp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\FormRtfHelp.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\FormSteamSettings.Designer.vb">
       <DependentUpon>FormSteamSettings.vb</DependentUpon>
@@ -322,23 +316,20 @@
     <EmbeddedResource Include="StartPage\UCStartPage.resx">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCVirtualControllers\UCAttachments\FormAttachmentsHelp.resx">
-      <DependentUpon>FormAttachmentsHelp.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCAttachments\UCControllerAttachments.resx">
       <DependentUpon>UCControllerAttachments.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCAttachments\UCControllerAttachmentsItem.resx">
       <DependentUpon>UCControllerAttachmentsItem.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices\FormRemoteDevicesHelp.resx">
-      <DependentUpon>FormRemoteDevicesHelp.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDeviceItem.resx">
       <DependentUpon>UCRemoteDeviceItem.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualControllers.resx">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\FormRtfHelp.resx">
+      <DependentUpon>FormRtfHelp.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\FormSteamSettings.resx">
       <DependentUpon>FormSteamSettings.vb</DependentUpon>
@@ -383,6 +374,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\HelpTouchpadShortcuts.rtf" />
+    <None Include="Resources\user32_102_16x16-32.png" />
+    <None Include="Resources\HelpControllerAttachments.rtf" />
+    <None Include="Resources\HelpRemoteDevices.rtf" />
+    <None Include="Resources\HelpVirtualMotionTracker.rtf" />
     <None Include="Resources\user32_101_16x16-32.png" />
     <None Include="Resources\connect_10101_256x256-32.png" />
     <None Include="Resources\Faultrep_5201_256x256-32.png" />

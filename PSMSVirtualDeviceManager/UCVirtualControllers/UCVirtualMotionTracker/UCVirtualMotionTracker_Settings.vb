@@ -26,21 +26,11 @@
         End Function
     End Class
 
-    Private Sub LinkLabel_JoystickShortcutsInfo_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_JoystickShortcutsInfo.LinkClicked
-        Dim sHelp As New Text.StringBuilder
-        sHelp.AppendLine("Touchpad axis can be bound to buttons on the controller so you dont have to move your controller for touchpad emulation.")
-        sHelp.AppendLine("For example if you want to bind SQUARE with touchpad forward and CROSS with touchpad backwards to move forward and backwards with 2 buttons instead of the MOVE button and moving the controller.")
-        sHelp.AppendLine("This makes it easier to navigate in games.")
-        sHelp.AppendLine()
-        sHelp.AppendLine("HOW TO BIND:")
-        sHelp.AppendLine("On your PSMove controller, hold both the MOVE button and the button you want to bind the touchpad axis to and move the controller in any direction.")
-        sHelp.AppendLine("Release both buttons to accept.")
-        sHelp.AppendLine("The saved touchpad axis will be applied when pressing the button now.")
-        sHelp.AppendLine()
-        sHelp.AppendLine("HOW TO UNBIND:")
-        sHelp.AppendLine("Quickly press both the MOVE button and the button you want to unbind.")
 
-        MessageBox.Show(sHelp.ToString, "Touchpad Shortcut Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    Private Sub LinkLabel_TouchpadShortcutHelp_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_TouchpadShortcutHelp.LinkClicked
+        Dim mMsg As New FormRtfHelp
+        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpTouchpadShortcuts
+        mMsg.ShowDialog(Me)
     End Sub
 
     Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcuts.CheckedChanged

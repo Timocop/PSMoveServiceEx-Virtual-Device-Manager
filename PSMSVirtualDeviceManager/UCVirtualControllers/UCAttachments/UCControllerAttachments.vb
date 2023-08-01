@@ -120,7 +120,8 @@ Public Class UCControllerAttachments
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
-        Dim mMsg As New FormAttachmentsHelp
+        Dim mMsg As New FormRtfHelp
+        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpControllerAttachments
         mMsg.ShowDialog(Me)
     End Sub
 

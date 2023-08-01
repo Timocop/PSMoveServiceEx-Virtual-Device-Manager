@@ -217,7 +217,9 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
-        ' TODO: Add help
+        Dim mMsg As New FormRtfHelp
+        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpVirtualMotionTracker
+        mMsg.ShowDialog(Me)
     End Sub
 
     Private Sub CleanUp()

@@ -31,7 +31,7 @@ Partial Class UCControllerAttachments
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Label1 = New System.Windows.Forms.Label()
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
-        Me.PictureBox1 = New ClassPictureBoxQuality()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Button_Autostart = New System.Windows.Forms.Button()
         Me.Button_AddAttachment = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -68,19 +68,24 @@ Partial Class UCControllerAttachments
         '
         'LinkLabel_ReadMore
         '
+        Me.LinkLabel_ReadMore.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_ReadMore.AutoSize = True
-        Me.LinkLabel_ReadMore.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_ReadMore.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ReadMore.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ReadMore.LinkColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ReadMore.Location = New System.Drawing.Point(38, 49)
         Me.LinkLabel_ReadMore.Name = "LinkLabel_ReadMore"
         Me.LinkLabel_ReadMore.Size = New System.Drawing.Size(62, 13)
         Me.LinkLabel_ReadMore.TabIndex = 15
         Me.LinkLabel_ReadMore.TabStop = True
         Me.LinkLabel_ReadMore.Text = "Read more"
+        Me.LinkLabel_ReadMore.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
+        Me.PictureBox1.m_HighQuality = False
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(16, 16)

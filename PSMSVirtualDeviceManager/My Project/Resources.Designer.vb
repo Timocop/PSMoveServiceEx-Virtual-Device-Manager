@@ -231,6 +231,65 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset1 Segoe UI Symbol;}}
+        '''{\colortbl ;\red79\green129\blue189;\red204\green204\blue204;}
+        '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+        '''\pard\sl240\slmult1\b\f0\fs28\lang1031{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
+        '''0100090000034a06000000002106000000000400000003010800050000000b0200000000050000
+        '''000c0220002000030000001e000400000007010400040000000701040021060000410b2000cc00
+        '''20002000 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property HelpControllerAttachments() As String
+            Get
+                Return ResourceManager.GetString("HelpControllerAttachments", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset0 Calibri;}{\f2\fnil\fcharset1 Segoe UI Symbol;}{\f3\fnil\fcharset2 Symbol;}}
+        '''{\colortbl ;\red79\green129\blue189;\red204\green204\blue204;}
+        '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+        '''\pard\b\f0\fs28\lang1031{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
+        '''0100090000034a06000000002106000000000400000003010800050000000b0200000000050000
+        '''000c0220002000030000001e000400000007010400040 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property HelpRemoteDevices() As String
+            Get
+                Return ResourceManager.GetString("HelpRemoteDevices", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset1 Segoe UI Symbol;}{\f2\fnil\fcharset2 Symbol;}}
+        '''{\colortbl ;\red79\green129\blue189;\red192\green80\blue77;\red204\green204\blue204;}
+        '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+        '''\pard\sl240\slmult1\b\f0\fs28\lang1031{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
+        '''0100090000034a06000000002106000000000400000003010800050000000b0200000000050000
+        '''000c0220002000030000001e0004000000070 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property HelpTouchpadShortcuts() As String
+            Get
+                Return ResourceManager.GetString("HelpTouchpadShortcuts", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to {\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
+        '''{\colortbl ;\red79\green129\blue189;}
+        '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+        '''\pard\sl276\slmult1\b\f0\fs28\lang1031{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
+        '''0100090000034a06000000002106000000000400000003010800050000000b0200000000050000
+        '''000c0220002000030000001e000400000007010400040000000701040021060000410b2000cc00
+        '''200020000000000020002000000000002800000020000000200000000100180000000000000c00
+        '''00 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property HelpVirtualMotionTracker() As String
+            Get
+                Return ResourceManager.GetString("HelpVirtualMotionTracker", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property imageres_5302_16x16_32() As System.Drawing.Bitmap
@@ -496,6 +555,16 @@ Namespace My.Resources
         Friend ReadOnly Property user32_101_16x16_32() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("user32_101_16x16-32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property user32_102_16x16_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("user32_102_16x16-32", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

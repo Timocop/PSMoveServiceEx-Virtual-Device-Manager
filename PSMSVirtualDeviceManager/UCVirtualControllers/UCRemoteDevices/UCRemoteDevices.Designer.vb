@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UCRemoteDevices
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class UCRemoteDevices
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Label_Port = New System.Windows.Forms.Label()
@@ -92,25 +92,33 @@ Partial Class UCRemoteDevices
         '
         'LinkLabel_EditPort
         '
+        Me.LinkLabel_EditPort.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_EditPort.AutoSize = True
+        Me.LinkLabel_EditPort.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_EditPort.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_EditPort.LinkColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_EditPort.Location = New System.Drawing.Point(169, 78)
         Me.LinkLabel_EditPort.Name = "LinkLabel_EditPort"
         Me.LinkLabel_EditPort.Size = New System.Drawing.Size(52, 13)
         Me.LinkLabel_EditPort.TabIndex = 4
         Me.LinkLabel_EditPort.TabStop = True
         Me.LinkLabel_EditPort.Text = "Edit port"
+        Me.LinkLabel_EditPort.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_ReadMore
         '
+        Me.LinkLabel_ReadMore.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_ReadMore.AutoSize = True
+        Me.LinkLabel_ReadMore.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ReadMore.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_ReadMore.LinkColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ReadMore.Location = New System.Drawing.Point(38, 49)
         Me.LinkLabel_ReadMore.Name = "LinkLabel_ReadMore"
         Me.LinkLabel_ReadMore.Size = New System.Drawing.Size(62, 13)
         Me.LinkLabel_ReadMore.TabIndex = 18
         Me.LinkLabel_ReadMore.TabStop = True
         Me.LinkLabel_ReadMore.Text = "Read more"
+        Me.LinkLabel_ReadMore.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Label1
         '
@@ -121,8 +129,9 @@ Partial Class UCRemoteDevices
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(746, 33)
         Me.Label1.TabIndex = 17
-        Me.Label1.Text = "Using custom remote devices with IMUs, you can override the default orientation d" &
-    "ata of PSmove controllers and Virtual controllers within PSMoveServiceEx." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.Label1.Text = "With the help of custom remote devices equipped with IMUs, you have the ability t" &
+    "o modify the orientation data of PSmove controllers and Virtual controllers with" &
+    "in PSMoveServiceEx."
         '
         'Label_ConnectedDevices
         '

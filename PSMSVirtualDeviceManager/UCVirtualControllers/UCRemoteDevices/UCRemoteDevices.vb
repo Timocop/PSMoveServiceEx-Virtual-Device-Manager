@@ -691,7 +691,8 @@ Public Class UCRemoteDevices
     End Class
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
-        Dim mMsg As New FormRemoteDevicesHelp
+        Dim mMsg As New FormRtfHelp
+        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpRemoteDevices
         mMsg.ShowDialog(Me)
     End Sub
 End Class
