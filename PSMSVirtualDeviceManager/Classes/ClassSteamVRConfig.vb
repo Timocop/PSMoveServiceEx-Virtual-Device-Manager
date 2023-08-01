@@ -324,6 +324,11 @@ Public Class ClassSteamVRConfig
     End Class
 
     Class ClassSettings
+        ''' <summary>
+        ''' Default Settings
+        ''' C:\Program Files (x86)\Steam\steamapps\common\SteamVR\resources\settings\default.vrsettings
+        ''' </summary>
+
         Private g_ClassSteamVRConfig As ClassSteamVRConfig
 
 
@@ -357,6 +362,169 @@ Public Class ClassSteamVRConfig
                 mScansDic("enabled") = value
             End Set
         End Property
+
+        Property m_ActivateMultipleDrivers As Boolean
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    Return False
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("activateMultipleDrivers")) Then
+                    Return False
+                End If
+
+                Return CBool(mScansDic("activateMultipleDrivers"))
+            End Get
+            Set(value As Boolean)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    g_ClassSteamVRConfig.g_mConfig("steamvr") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("activateMultipleDrivers")) Then
+                    mScansDic("activateMultipleDrivers") = False
+                End If
+
+                mScansDic("activateMultipleDrivers") = value
+            End Set
+        End Property
+
+        Property m_ForcedDriver As String
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    Return ""
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("forcedDriver")) Then
+                    Return ""
+                End If
+
+                Return CStr(mScansDic("forcedDriver"))
+            End Get
+            Set(value As String)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    g_ClassSteamVRConfig.g_mConfig("steamvr") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("forcedDriver")) Then
+                    mScansDic("forcedDriver") = ""
+                End If
+
+                mScansDic("forcedDriver") = value
+            End Set
+        End Property
+
+        Property m_EnableHomeApp As Boolean
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    Return True
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("enableHomeApp")) Then
+                    Return True
+                End If
+
+                Return CBool(mScansDic("enableHomeApp"))
+            End Get
+            Set(value As Boolean)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    g_ClassSteamVRConfig.g_mConfig("steamvr") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("enableHomeApp")) Then
+                    mScansDic("enableHomeApp") = True
+                End If
+
+                mScansDic("enableHomeApp") = value
+            End Set
+        End Property
+
+        Property m_EnableMirrorView As Boolean
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    Return False
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("showMirrorView")) Then
+                    Return False
+                End If
+
+                Return CBool(mScansDic("showMirrorView"))
+            End Get
+            Set(value As Boolean)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    g_ClassSteamVRConfig.g_mConfig("steamvr") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("showMirrorView")) Then
+                    mScansDic("showMirrorView") = False
+                End If
+
+                mScansDic("showMirrorView") = value
+            End Set
+        End Property
+
+        Property m_EnablePerformanceGraph As Boolean
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    Return False
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("showPerfGraph")) Then
+                    Return False
+                End If
+
+                Return CBool(mScansDic("showPerfGraph"))
+            End Get
+            Set(value As Boolean)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    g_ClassSteamVRConfig.g_mConfig("steamvr") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("showPerfGraph")) Then
+                    mScansDic("showPerfGraph") = False
+                End If
+
+                mScansDic("showPerfGraph") = value
+            End Set
+        End Property
+
+        Property m_RequireHmd As Boolean
+            Get
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    Return True
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("requireHmd")) Then
+                    Return True
+                End If
+
+                Return CBool(mScansDic("requireHmd"))
+            End Get
+            Set(value As Boolean)
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey("steamvr")) Then
+                    g_ClassSteamVRConfig.g_mConfig("steamvr") = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("requireHmd")) Then
+                    mScansDic("requireHmd") = True
+                End If
+
+                mScansDic("requireHmd") = value
+            End Set
+        End Property
+
     End Class
 
     Public Function LoadConfig() As Boolean

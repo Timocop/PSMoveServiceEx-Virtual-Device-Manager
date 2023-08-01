@@ -140,50 +140,15 @@ Partial Public Class UCVirtualMotionTracker
         End Try
     End Sub
 
-
-    Private Sub LinkLabel_SteamEnableNullHmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamEnableNullHmd.LinkClicked
+    Private Sub LinkLabel_SteamSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamSettings.LinkClicked
         Try
             If (Process.GetProcessesByName("vrserver").Count > 0) Then
                 Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
             End If
 
-            Dim mSteamConfig As New ClassSteamVRConfig
-
-            mSteamConfig.LoadConfig()
-
-            If (mSteamConfig.m_ClassSettings.m_NullHmdEnabled) Then
-                MessageBox.Show("HMD emulation is already enabled!", "HMD Emulation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Return
-            End If
-
-            mSteamConfig.m_ClassSettings.m_NullHmdEnabled = True
-            mSteamConfig.SaveConfig()
-
-            MessageBox.Show("HMD emulation has been enabled!", "HMD Emulation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-    Private Sub LinkLabel_SteamDisableNullHmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamDisableNullHmd.LinkClicked
-        Try
-            If (Process.GetProcessesByName("vrserver").Count > 0) Then
-                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
-            End If
-
-            Dim mSteamConfig As New ClassSteamVRConfig
-
-            mSteamConfig.LoadConfig()
-
-            If (Not mSteamConfig.m_ClassSettings.m_NullHmdEnabled) Then
-                MessageBox.Show("HMD emulation is already disabled!", "HMD Emulation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Return
-            End If
-
-            mSteamConfig.m_ClassSettings.m_NullHmdEnabled = False
-            mSteamConfig.SaveConfig()
-
-            MessageBox.Show("HMD emulation has been disabled!", "HMD Emulation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Using mSettings As New FormSteamSettings
+                mSettings.ShowDialog(Me)
+            End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try

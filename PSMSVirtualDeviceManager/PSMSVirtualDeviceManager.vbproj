@@ -239,6 +239,12 @@
     <Compile Include="UCVirtualControllers\UCVirtualControllers.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\FormSteamSettings.Designer.vb">
+      <DependentUpon>FormSteamSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\FormSteamSettings.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\FormTrackerOverrideSetup.Designer.vb">
       <DependentUpon>FormTrackerOverrideSetup.vb</DependentUpon>
     </Compile>
@@ -333,6 +339,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualControllers.resx">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\FormSteamSettings.resx">
+      <DependentUpon>FormSteamSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualMotionTracker\FormTrackerOverrideSetup.resx">
       <DependentUpon>FormTrackerOverrideSetup.vb</DependentUpon>
