@@ -669,6 +669,13 @@ Public Class UCVirtualMotionTracker
             End Get
             Set(value As Long)
                 SyncLock _ThreadLock
+                    If (value < 1) Then
+                        value = 1
+                    End If
+                    If (value > 100) Then
+                        value = 100
+                    End If
+
                     g_iOscThreadSleepMs = value
                 End SyncLock
             End Set
@@ -876,15 +883,7 @@ Public Class UCVirtualMotionTracker
 
                 End Try
 
-                Dim sOscSleep As Integer = CInt(g_UCVirtualMotionTracker.g_ClassControllerSettings.m_OscThreadSleepMs)
-                If (sOscSleep < 1) Then
-                    sOscSleep = 1
-                End If
-                If (sOscSleep > 100) Then
-                    sOscSleep = 100
-                End If
-
-                ClassPrecisionSleep.Sleep(sOscSleep)
+                ClassPrecisionSleep.Sleep(CInt(g_UCVirtualMotionTracker.g_ClassControllerSettings.m_OscThreadSleepMs))
             End While
         End Sub
 

@@ -987,7 +987,7 @@ Partial Class UCVirtualMotionTracker
         'Button_OscThreadSleepReset
         '
         Me.Button_OscThreadSleepReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.Button_OscThreadSleepReset.Location = New System.Drawing.Point(300, 177)
+        Me.Button_OscThreadSleepReset.Location = New System.Drawing.Point(274, 177)
         Me.Button_OscThreadSleepReset.Name = "Button_OscThreadSleepReset"
         Me.Button_OscThreadSleepReset.Size = New System.Drawing.Size(23, 23)
         Me.Button_OscThreadSleepReset.TabIndex = 50
@@ -995,7 +995,7 @@ Partial Class UCVirtualMotionTracker
         '
         'NumericUpDown_OscThreadSleep
         '
-        Me.NumericUpDown_OscThreadSleep.Location = New System.Drawing.Point(203, 178)
+        Me.NumericUpDown_OscThreadSleep.Location = New System.Drawing.Point(177, 178)
         Me.NumericUpDown_OscThreadSleep.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.NumericUpDown_OscThreadSleep.Name = "NumericUpDown_OscThreadSleep"
         Me.NumericUpDown_OscThreadSleep.Size = New System.Drawing.Size(91, 22)
@@ -1008,9 +1008,9 @@ Partial Class UCVirtualMotionTracker
         Me.Label21.Location = New System.Drawing.Point(16, 180)
         Me.Label21.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(181, 13)
+        Me.Label21.Size = New System.Drawing.Size(155, 13)
         Me.Label21.TabIndex = 48
-        Me.Label21.Text = "OSC processing thread sleep (ms):"
+        Me.Label21.Text = "Processing thread sleep (ms):"
         '
         'Label7
         '

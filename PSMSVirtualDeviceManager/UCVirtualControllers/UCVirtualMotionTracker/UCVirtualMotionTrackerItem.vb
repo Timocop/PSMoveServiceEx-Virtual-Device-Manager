@@ -1547,7 +1547,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
 
 
-                    ClassPrecisionSleep.Sleep(1)
+                    ClassPrecisionSleep.Sleep(CInt(mUCVirtualMotionTracker.g_ClassControllerSettings.m_OscThreadSleepMs))
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception

@@ -117,6 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Label7.Text" xml:space="preserve">
+    <value>        Enabling haptic feedback can reduce the battery life greatly.
+        On PSMove controllers the rumble motor could interfere with the IMU magnetometer and
+        cause orientation drift when enabled.</value>
+  </data>
+  <data name="Label6.Text" xml:space="preserve">
+    <value>        Spawning Base Stations take up device slots and currently, SteamVR only supports a maximum of 16 devices.
+        If you use a lot of devices, disable Base Station spawning to free up slots for trackers.
+        Exceeding 16 devices may cause devices not to be detected in games!</value>
+  </data>
   <data name="Label17.Text" xml:space="preserve">
     <value>        Device recentering is temporary and will reset when Virtual Device Manager closes.
         For permanent recenter use the "World Orientation Yaw" offset 
@@ -130,16 +140,6 @@
   <data name="Label11.Text" xml:space="preserve">
     <value>        Holding the SELECT button on the PSmove controller will recenter the controllers orientation. 
         This is useful for controllers without magnetometers which experience yaw drift over time.</value>
-  </data>
-  <data name="Label7.Text" xml:space="preserve">
-    <value>        Enabling haptic feedback can reduce the battery life greatly.
-        On PSMove controllers the rumble motor could interfere with the IMU magnetometer and
-        cause orientation drift when enabled.</value>
-  </data>
-  <data name="Label6.Text" xml:space="preserve">
-    <value>        Spawning Base Stations take up device slots and currently, SteamVR only supports a maximum of 16 devices.
-        If you use a lot of devices, disable Base Station spawning to free up slots for trackers.
-        Exceeding 16 devices may cause devices not to be detected in games!</value>
   </data>
   <metadata name="ContextMenuStrip_Autostart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
