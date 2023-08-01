@@ -771,10 +771,11 @@ Partial Class UCVirtualMotionTracker
         'CheckBox_HmdRecenterEnabled
         '
         Me.CheckBox_HmdRecenterEnabled.AutoSize = True
+        Me.CheckBox_HmdRecenterEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(19, 239)
         Me.CheckBox_HmdRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_HmdRecenterEnabled.Name = "CheckBox_HmdRecenterEnabled"
-        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(223, 17)
+        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(229, 18)
         Me.CheckBox_HmdRecenterEnabled.TabIndex = 51
         Me.CheckBox_HmdRecenterEnabled.Text = "Enable remote orientation recentering"
         Me.CheckBox_HmdRecenterEnabled.UseVisualStyleBackColor = True
@@ -841,10 +842,11 @@ Partial Class UCVirtualMotionTracker
         'CheckBox_ControllerRecenterEnabled
         '
         Me.CheckBox_ControllerRecenterEnabled.AutoSize = True
+        Me.CheckBox_ControllerRecenterEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 98)
         Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_ControllerRecenterEnabled.Name = "CheckBox_ControllerRecenterEnabled"
-        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(184, 17)
+        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(190, 18)
         Me.CheckBox_ControllerRecenterEnabled.TabIndex = 0
         Me.CheckBox_ControllerRecenterEnabled.Text = "Enable orientation recentering"
         Me.CheckBox_ControllerRecenterEnabled.UseVisualStyleBackColor = True
