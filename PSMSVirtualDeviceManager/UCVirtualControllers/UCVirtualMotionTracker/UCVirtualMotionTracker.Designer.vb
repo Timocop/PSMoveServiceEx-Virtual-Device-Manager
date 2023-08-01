@@ -119,7 +119,6 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
@@ -1385,7 +1384,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents CheckBox_TouchpadClampBounds As CheckBox
     Friend WithEvents Label10 As Label
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents CheckBox_ControllerRecenterEnabled As CheckBox
     Friend WithEvents Label11 As Label
     Friend WithEvents ComboBox_RecenterMethod As ComboBox
