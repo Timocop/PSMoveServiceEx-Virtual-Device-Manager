@@ -142,10 +142,6 @@ Partial Public Class UCVirtualMotionTracker
 
     Private Sub LinkLabel_SteamSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamSettings.LinkClicked
         Try
-            If (Process.GetProcessesByName("vrserver").Count > 0) Then
-                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
-            End If
-
             Using mSettings As New FormSteamSettings
                 mSettings.ShowDialog(Me)
             End Using

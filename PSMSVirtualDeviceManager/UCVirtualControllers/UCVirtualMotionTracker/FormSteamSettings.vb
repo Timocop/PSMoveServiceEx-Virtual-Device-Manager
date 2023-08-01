@@ -30,6 +30,10 @@
         End If
 
         Try
+            If (Process.GetProcessesByName("vrserver").Count > 0) Then
+                Throw New ArgumentException("SteamVR is running! Close SteamVR and try again.")
+            End If
+
             SaveSettings()
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
