@@ -274,18 +274,31 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to {\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
+        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
         '''{\colortbl ;\red79\green129\blue189;}
         '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
         '''\pard\sl276\slmult1\b\f0\fs28\lang1031{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
         '''0100090000034a06000000002106000000000400000003010800050000000b0200000000050000
         '''000c0220002000030000001e000400000007010400040000000701040021060000410b2000cc00
-        '''200020000000000020002000000000002800000020000000200000000100180000000000000c00
-        '''00 [rest of string was truncated]&quot;;.
+        '''2000200000000000200020000000000028000000200000002000000001001800000000 [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property HelpVirtualMotionTracker() As String
             Get
                 Return ResourceManager.GetString("HelpVirtualMotionTracker", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset1 Segoe UI Symbol;}{\f2\fnil\fcharset2 Symbol;}}
+        '''{\colortbl ;\red79\green129\blue189;\red204\green204\blue204;\red155\green187\blue89;\red192\green80\blue77;}
+        '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+        '''\pard\sl240\slmult1\cf1\b\f0\fs18\lang7{\pict{\*\picprop}\wmetafile8\picw6773\pich6773\picwgoal576\pichgoal576 
+        '''0100090000034a80010000002180010000000400000003010800050000000b0200000000050000
+        '''000c020001 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property HelpVirtualTracker() As String
+            Get
+                Return ResourceManager.GetString("HelpVirtualTracker", resourceCulture)
             End Get
         End Property
         

@@ -275,12 +275,6 @@
     <Compile Include="UCVirtualHMDs\UCVirtualHMDs.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCVirtualTrackers\FormVirtualTrackersHelp.Designer.vb">
-      <DependentUpon>FormVirtualTrackersHelp.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UCVirtualTrackers\FormVirtualTrackersHelp.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.Designer.vb">
       <DependentUpon>UCRemoteDevices.vb</DependentUpon>
     </Compile>
@@ -346,9 +340,6 @@
     <EmbeddedResource Include="UCVirtualHMDs\UCVirtualHMDs.resx">
       <DependentUpon>UCVirtualHMDs.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCVirtualTrackers\FormVirtualTrackersHelp.resx">
-      <DependentUpon>FormVirtualTrackersHelp.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.resx">
       <DependentUpon>UCRemoteDevices.vb</DependentUpon>
     </EmbeddedResource>
@@ -375,6 +366,7 @@
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
     <None Include="Resources\HelpTouchpadShortcuts.rtf" />
+    <None Include="Resources\HelpVirtualTracker.rtf" />
     <None Include="Resources\user32_102_16x16-32.png" />
     <None Include="Resources\HelpControllerAttachments.rtf" />
     <None Include="Resources\HelpRemoteDevices.rtf" />
