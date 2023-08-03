@@ -1,6 +1,4 @@
 ﻿Public Class UCVirtualTrackers
-    Private g_mTrackerSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
-
     Private g_bIgnoreEvents As Boolean = False
 
     Public Sub New()
@@ -61,8 +59,10 @@
         End If
 
         Try
-            SettingsChanged(sender)
-            SaveSettings()
+            Dim mConfig As New ClassServiceConfig(GetConfig())
+            mConfig.LoadConfig()
+            mConfig.SetValue("", "virtual_tracker_count", ComboBox_VirtualTrackerCount.SelectedIndex)
+            mConfig.SaveConfig()
 
             If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
                 MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -72,80 +72,26 @@
         End Try
     End Sub
 
+    Private Function GetConfig() As String
+        Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+        If (sConfigPath Is Nothing) Then
+            Return Nothing
+        End If
+
+        Return IO.Path.Combine(sConfigPath, "TrackerManagerConfig.json")
+    End Function
+
     Private Sub LoadSettings()
         Try
             g_bIgnoreEvents = True
 
-            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
-            If (Not IO.Directory.Exists(sPsmsPath)) Then
-                Return
-            End If
+            Dim mConfig As New ClassServiceConfig(GetConfig())
+            mConfig.LoadConfig()
 
-            Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, "TrackerManagerConfig.json")
-
-            g_mTrackerSettings.Clear()
-            g_mTrackerSettings(ComboBox_VirtualTrackerCount.Name) = New ClassServiceConfig.ClassSettingsKey(sTrackerSettings, "virtual_tracker_count", ClassServiceConfig.ClassSettingsKey.ENUM_TYPE.NUM)
-
-            For Each sKey As String In g_mTrackerSettings.Keys
-                Try
-                    g_mTrackerSettings(sKey).Load()
-                Catch ex As Exception
-                    Throw New ArgumentException(String.Format("Unable to load key '{0}'", g_mTrackerSettings(sKey).m_SettingsKey))
-                End Try
-            Next
-
-            SetComboBoxValueClamp(ComboBox_VirtualTrackerCount, CInt(g_mTrackerSettings(ComboBox_VirtualTrackerCount.Name).m_ValueF))
+            SetComboBoxValueClamp(ComboBox_VirtualTrackerCount, mConfig.GetValue(Of Integer)("", "virtual_tracker_count", 0))
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
-
-    Private Sub SaveSettings()
-        For Each sKey As String In g_mTrackerSettings.Keys
-            Try
-                Dim mSettingsKey = g_mTrackerSettings(sKey)
-                If (Not mSettingsKey.m_Loaded) Then
-                    Continue For
-                End If
-
-                mSettingsKey.Save()
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Unable to save some settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        Next
-    End Sub
-
-    Private Sub SettingsChanged(sender As Object)
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
-        Dim mNumericUpDown = TryCast(sender, NumericUpDown)
-        If (mNumericUpDown IsNot Nothing) Then
-            If (g_mTrackerSettings.ContainsKey(mNumericUpDown.Name)) Then
-                g_mTrackerSettings(mNumericUpDown.Name).m_ValueF = mNumericUpDown.Value
-            End If
-
-            Return
-        End If
-
-        Dim mCheckBox = TryCast(sender, CheckBox)
-        If (mCheckBox IsNot Nothing) Then
-            If (g_mTrackerSettings.ContainsKey(mCheckBox.Name)) Then
-                g_mTrackerSettings(mCheckBox.Name).m_ValueB = mCheckBox.Checked
-            End If
-
-            Return
-        End If
-
-        Dim mComboBox = TryCast(sender, ComboBox)
-        If (mComboBox IsNot Nothing) Then
-            If (g_mTrackerSettings.ContainsKey(mComboBox.Name)) Then
-                g_mTrackerSettings(mComboBox.Name).m_ValueF = mComboBox.SelectedIndex
-            End If
-
-            Return
-        End If
     End Sub
 
     Private Sub SetNumericUpDownValueClamp(mControl As NumericUpDown, iValue As Decimal)

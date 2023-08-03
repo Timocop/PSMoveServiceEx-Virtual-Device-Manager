@@ -5,8 +5,6 @@
     Public g_mUCControllerAttachments As UCControllerAttachments
     Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
 
-    Private g_mControllerSettings As New Dictionary(Of String, ClassServiceConfig.ClassSettingsKey)
-
     Private g_bIgnoreEvents As Boolean = False
 
     Public Sub New(_mFormMain As FormMain)
@@ -58,8 +56,10 @@
         End If
 
         Try
-            SettingsChanged(sender)
-            SaveSettings()
+            Dim mConfig As New ClassServiceConfig(GetConfig())
+            mConfig.LoadConfig()
+            mConfig.SetValue("", "virtual_controller_count", CInt(ComboBox_VirtualControllerCount.SelectedItem))
+            mConfig.SaveConfig()
 
             If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
                 MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -81,24 +81,12 @@
                 Return
             End If
 
-            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
-            If (Not IO.Directory.Exists(sPsmsPath)) Then
-                Return
-            End If
-
-            Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, String.Format("{0}.json", CStr(ComboBox_PSmoveEmu.SelectedItem)))
-            If (Not IO.File.Exists(sTrackerSettings)) Then
-                Return
-            End If
-
-            Dim mKey = New ClassServiceConfig.ClassSettingsKey(sTrackerSettings, "psmove_emulation", ClassServiceConfig.ClassSettingsKey.ENUM_TYPE.BOOL)
-
             Try
-                mKey.Load()
-
-                CheckBox_PSmoveEmu.Checked = mKey.m_ValueB
+                Dim mConfig As New ClassServiceConfig(GetCustomConfig(CStr(ComboBox_PSmoveEmu.SelectedItem)))
+                mConfig.LoadConfig()
+                CheckBox_PSmoveEmu.Checked = mConfig.GetValue(Of Boolean)("", "psmove_emulation", False)
             Catch ex As Exception
-                MessageBox.Show(String.Format("Unable to load key '{0}'", mKey.m_SettingsKey), "Error", MessageBoxButtons.OK)
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Finally
             g_bIgnoreEvents = False
@@ -107,8 +95,8 @@
 
     Private Sub ComboBox_PSmoveEmu_DropDown(sender As Object, e As EventArgs) Handles ComboBox_PSmoveEmu.DropDown
         Try
-            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
-            If (Not IO.Directory.Exists(sPsmsPath)) Then
+            Dim sConfigPath As String = ClassServiceConfig.GetConfigPath
+            If (sConfigPath Is Nothing) Then
                 Return
             End If
 
@@ -118,7 +106,7 @@
                 g_bIgnoreEvents = True
 
                 ComboBox_PSmoveEmu.Items.Clear()
-                For Each sFile As String In IO.Directory.GetFiles(sPsmsPath, "VirtualController_*.json")
+                For Each sFile As String In IO.Directory.GetFiles(sConfigPath, "VirtualController_*.json")
                     ComboBox_PSmoveEmu.Items.Add(IO.Path.GetFileNameWithoutExtension(sFile))
                 Next
             Finally
@@ -147,107 +135,52 @@
                 Return
             End If
 
-            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
-            If (Not IO.Directory.Exists(sPsmsPath)) Then
-                Return
-            End If
-
-            Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, String.Format("{0}.json", CStr(ComboBox_PSmoveEmu.SelectedItem)))
-            If (Not IO.File.Exists(sTrackerSettings)) Then
-                Return
-            End If
-
-            Dim mKey = New ClassServiceConfig.ClassSettingsKey(sTrackerSettings, "psmove_emulation", ClassServiceConfig.ClassSettingsKey.ENUM_TYPE.BOOL)
-
             Try
-                mKey.m_ValueB = CheckBox_PSmoveEmu.Checked
-                mKey.Save()
+                Dim mConfig As New ClassServiceConfig(GetCustomConfig(CStr(ComboBox_PSmoveEmu.SelectedItem)))
+                mConfig.LoadConfig()
+                mConfig.SetValue(Of Boolean)("", "psmove_emulation", CheckBox_PSmoveEmu.Checked)
+                mConfig.SaveConfig()
 
                 If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
                     MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
             Catch ex As Exception
-                MessageBox.Show(String.Format("Unable to load key '{0}'", mKey.m_SettingsKey), "Error", MessageBoxButtons.OK)
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Finally
             g_bIgnoreEvents = False
         End Try
     End Sub
+
+    Private Function GetCustomConfig(sName As String) As String
+        Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+        If (sConfigPath Is Nothing) Then
+            Return Nothing
+        End If
+
+        Return IO.Path.Combine(sConfigPath, String.Format("{0}.json", sName))
+    End Function
+
+    Private Function GetConfig() As String
+        Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+        If (sConfigPath Is Nothing) Then
+            Return Nothing
+        End If
+
+        Return IO.Path.Combine(sConfigPath, "ControllerManagerConfig.json")
+    End Function
 
     Private Sub LoadSettings()
         Try
             g_bIgnoreEvents = True
 
-            Dim sPsmsPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
-            If (Not IO.Directory.Exists(sPsmsPath)) Then
-                Return
-            End If
+            Dim mConfig As New ClassServiceConfig(GetConfig())
+            mConfig.LoadConfig()
 
-            Dim sTrackerSettings As String = IO.Path.Combine(sPsmsPath, "ControllerManagerConfig.json")
-
-            g_mControllerSettings.Clear()
-            g_mControllerSettings(ComboBox_VirtualControllerCount.Name) = New ClassServiceConfig.ClassSettingsKey(sTrackerSettings, "virtual_controller_count", ClassServiceConfig.ClassSettingsKey.ENUM_TYPE.NUM)
-
-            For Each sKey As String In g_mControllerSettings.Keys
-                Try
-                    g_mControllerSettings(sKey).Load()
-                Catch ex As Exception
-                    Throw New ArgumentException(String.Format("Unable to load key '{0}'", sKey))
-                End Try
-            Next
-
-            SetComboBoxValueClamp(ComboBox_VirtualControllerCount, CInt(g_mControllerSettings(ComboBox_VirtualControllerCount.Name).m_ValueF))
+            SetComboBoxValueClamp(ComboBox_VirtualControllerCount, mConfig.GetValue(Of Integer)("", "virtual_controller_count", 0))
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
-
-    Private Sub SaveSettings()
-        For Each sKey As String In g_mControllerSettings.Keys
-            Try
-                Dim mSettingsKey = g_mControllerSettings(sKey)
-                If (Not mSettingsKey.m_Loaded) Then
-                    Continue For
-                End If
-
-                mSettingsKey.Save()
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Unable to save some settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        Next
-    End Sub
-
-    Private Sub SettingsChanged(sender As Object)
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
-        Dim mNumericUpDown = TryCast(sender, NumericUpDown)
-        If (mNumericUpDown IsNot Nothing) Then
-            If (g_mControllerSettings.ContainsKey(mNumericUpDown.Name)) Then
-                g_mControllerSettings(mNumericUpDown.Name).m_ValueF = mNumericUpDown.Value
-            End If
-
-            Return
-        End If
-
-        Dim mCheckBox = TryCast(sender, CheckBox)
-        If (mCheckBox IsNot Nothing) Then
-            If (g_mControllerSettings.ContainsKey(mCheckBox.Name)) Then
-                g_mControllerSettings(mCheckBox.Name).m_ValueB = mCheckBox.Checked
-            End If
-
-            Return
-        End If
-
-        Dim mComboBox = TryCast(sender, ComboBox)
-        If (mComboBox IsNot Nothing) Then
-            If (g_mControllerSettings.ContainsKey(mComboBox.Name)) Then
-                g_mControllerSettings(mComboBox.Name).m_ValueF = mComboBox.SelectedIndex
-            End If
-
-            Return
-        End If
     End Sub
 
     Private Sub SetNumericUpDownValueClamp(mControl As NumericUpDown, iValue As Decimal)

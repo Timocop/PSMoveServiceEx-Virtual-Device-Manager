@@ -1,132 +1,104 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.Web.Script.Serialization
 
 Public Class ClassServiceConfig
-    Class ClassSettingsKey
-        Enum ENUM_TYPE
-            BOOL
-            NUM
-        End Enum
 
-        Private g_iType As ENUM_TYPE = ENUM_TYPE.BOOL
-        Private g_mValue As Object = 0
+    Private g_mConfig As New Dictionary(Of String, Object)
 
-        Private g_sPath As String = ""
-        Private g_sSettingKey As String = ""
+    Private g_sPath As String = Nothing
+    Private g_bConfigLoaded As Boolean = False
 
-        Private g_bLoaded As Boolean = False
+    Public Sub New(_Path As String)
+        g_sPath = _Path
+    End Sub
 
-        Public Sub New(sPath As String, sSettingKey As String, iType As ENUM_TYPE)
-            g_sPath = sPath
-            g_sSettingKey = sSettingKey
-            g_iType = iType
-        End Sub
+    Public Sub SetValue(Of T)(sPath As String, sKey As String, mValue As T)
+        Dim sKeys As String() = sPath.Split("\"c, "/"c)
 
-        ReadOnly Property m_Type As ENUM_TYPE
-            Get
-                Return g_iType
-            End Get
-        End Property
+        Dim mScansDic As Dictionary(Of String, Object) = g_mConfig
 
-        ReadOnly Property m_SettingsKey As String
-            Get
-                Return g_sSettingKey
-            End Get
-        End Property
+        For Each sPathKey In sKeys
+            If (String.IsNullOrEmpty(sPathKey)) Then
+                Exit For
+            End If
 
-        Property m_Value As Object
-            Get
-                If (Not g_bLoaded) Then
-                    Return Nothing
-                End If
+            If (Not mScansDic.ContainsKey(sPathKey)) Then
+                mScansDic(sPathKey) = New Dictionary(Of String, Object)
+            End If
 
-                Return g_mValue
-            End Get
-            Set(value As Object)
-                g_mValue = value
-                g_bLoaded = True
-            End Set
-        End Property
+            mScansDic = TryCast(mScansDic(sPathKey), Dictionary(Of String, Object))
+        Next
 
-        Property m_ValueB As Boolean
-            Get
-                If (Not g_bLoaded) Then
-                    Return False
-                End If
+        mScansDic(sKey) = mValue
+    End Sub
 
-                Return CBool(g_mValue)
-            End Get
-            Set(value As Boolean)
-                g_mValue = value
-                g_bLoaded = True
-            End Set
-        End Property
+    Public Function GetValue(Of T)(sPath As String, sKey As String, Optional mDefaultValue As T = Nothing) As T
+        Dim sKeys As String() = sPath.Split("\"c, "/"c)
 
-        Property m_ValueF As Double
-            Get
-                If (Not g_bLoaded) Then
-                    Return 0.0
-                End If
+        Dim mScansDic As Dictionary(Of String, Object) = g_mConfig
 
-                Return CDbl(g_mValue)
-            End Get
-            Set(value As Double)
-                g_mValue = value
-                g_bLoaded = True
-            End Set
-        End Property
+        For Each sPathKey In sKeys
+            If (String.IsNullOrEmpty(sPathKey)) Then
+                Exit For
+            End If
 
-        ReadOnly Property m_Loaded As Boolean
-            Get
-                Return g_bLoaded
-            End Get
-        End Property
+            If (Not mScansDic.ContainsKey(sPathKey)) Then
+                Return Nothing
+            End If
 
-        Public Sub Load()
-            Dim sText As String = IO.File.ReadAllText(g_sPath)
+            mScansDic = TryCast(mScansDic(sPathKey), Dictionary(Of String, Object))
+        Next
 
-            Dim mMatchBool = Regex.Match(sText, "^\s*""" & g_sSettingKey & """:\s*""(?<Value>true|false)"",{0,1}\s*$", RegexOptions.Multiline)
-            If (mMatchBool.Success) Then
-                g_iType = ENUM_TYPE.BOOL
-                g_mValue = (mMatchBool.Groups("Value").Value = "true")
-
-                g_bLoaded = True
+        If (Not mScansDic.ContainsKey(sKey)) Then
+            If (mDefaultValue IsNot Nothing) Then
+                Return mDefaultValue
             Else
-                Dim mMatchNum = Regex.Match(sText, "^\s*""" & g_sSettingKey & """:\s*""(?<Value>[-0-9.]+)"",{0,1}\s*$", RegexOptions.Multiline)
-                If (mMatchNum.Success) Then
-                    Dim sNum As String = sText.Substring(mMatchNum.Groups("Value").Index, mMatchNum.Groups("Value").Length)
-                    Dim iNum As Double = Double.Parse(sNum, Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-
-                    g_iType = ENUM_TYPE.NUM
-                    g_mValue = iNum
-
-                    g_bLoaded = True
-                Else
-                    Throw New ArgumentException("Unknown value type")
-                End If
+                Throw New ArgumentException(String.Format("Key '{0}' does not exist!", sKey))
             End If
-        End Sub
+        End If
 
-        Public Sub Save()
-            If (Not g_bLoaded) Then
-                Throw New ArgumentException("Value has not been loaded yet")
-            End If
+        Return CType(mScansDic(sKey), T)
+    End Function
 
-            Dim sText As String = IO.File.ReadAllText(g_sPath)
-            Dim mMatchNum = Regex.Match(sText, "^\s*""" & g_sSettingKey & """:\s*""(?<Value>[-a-zA-Z0-9.]+)"",{0,1}\s*$", RegexOptions.Multiline)
-            If (Not mMatchNum.Success) Then
-                Throw New ArgumentException(String.Format("Could not find key '{0}'", g_sSettingKey))
-            End If
+    Public Function LoadConfig() As Boolean
+        If (g_sPath Is Nothing) Then
+            g_bConfigLoaded = True
+            Return False
+        End If
 
-            sText = sText.Remove(mMatchNum.Groups("Value").Index, mMatchNum.Groups("Value").Length)
+        If (Not IO.File.Exists(g_sPath)) Then
+            g_bConfigLoaded = True
+            Return False
+        End If
 
-            Select Case (g_iType)
-                Case ENUM_TYPE.BOOL
-                    sText = sText.Insert(mMatchNum.Groups("Value").Index, If(CBool(g_mValue), "true", "false"))
-                Case Else
-                    sText = sText.Insert(mMatchNum.Groups("Value").Index, CDbl(g_mValue).ToString(Globalization.CultureInfo.InvariantCulture))
-            End Select
+        Dim sContent As String = IO.File.ReadAllText(g_sPath)
 
-            IO.File.WriteAllText(g_sPath, sText)
-        End Sub
-    End Class
+        Dim mTmp As Object = Nothing
+        g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+
+        g_bConfigLoaded = True
+        Return True
+    End Function
+
+    Public Sub SaveConfig()
+        If (g_sPath Is Nothing) Then
+            Return
+        End If
+
+        If (Not g_bConfigLoaded) Then
+            Return
+        End If
+
+        Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+
+        IO.File.WriteAllText(g_sPath, sContent)
+    End Sub
+
+    Public Shared Function GetConfigPath() As String
+        Dim sConfigPath As String = Environment.ExpandEnvironmentVariables("%AppData%\PSMoveService")
+        If (Not IO.Directory.Exists(sConfigPath)) Then
+            Return Nothing
+        End If
+
+        Return sConfigPath
+    End Function
 End Class
