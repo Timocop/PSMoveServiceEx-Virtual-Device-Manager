@@ -386,10 +386,10 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 56)
         Me.LinkLabel_ServiceFactory.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceFactory.Name = "LinkLabel_ServiceFactory"
-        Me.LinkLabel_ServiceFactory.Size = New System.Drawing.Size(164, 13)
+        Me.LinkLabel_ServiceFactory.Size = New System.Drawing.Size(153, 13)
         Me.LinkLabel_ServiceFactory.TabIndex = 27
         Me.LinkLabel_ServiceFactory.TabStop = True
-        Me.LinkLabel_ServiceFactory.Text = "Factory Reset PSMoveServiceEx"
+        Me.LinkLabel_ServiceFactory.Text = "Factory Reset PSMoveService"
         Me.LinkLabel_ServiceFactory.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Label6
