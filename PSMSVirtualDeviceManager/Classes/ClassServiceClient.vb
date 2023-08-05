@@ -179,6 +179,9 @@ Public Class ClassServiceClient
             Dim bRefreshControllerList As Boolean = True
             Dim bRefreshTrackerList As Boolean = True
 
+            Dim bConnected As Boolean = False
+            Dim bDisconnected As Boolean = False
+
             Try
                 While True
                     Dim bExceptionSleep As Boolean = False
@@ -186,13 +189,34 @@ Public Class ClassServiceClient
                     Try
                         SyncLock __ClientLock
                             g_bIsConnected = g_PSMoveServiceServer.IsConnected
+                            If (bConnected <> g_bIsConnected OrElse bDisconnected) Then
+                                bConnected = g_bIsConnected
+                                bDisconnected = False
+
+                                bRefreshControllerList = True
+                                bRefreshTrackerList = True
+
+                                RaiseEvent OnConnectionStatusChanged()
+                            End If
 
                             If (Not g_bIsConnected) Then
                                 g_PSMoveServiceServer.Disconnect()
                                 g_PSMoveServiceServer.Connect()
+
+                                g_bIsConnected = g_PSMoveServiceServer.IsConnected
                             End If
 
                             g_PSMoveServiceServer.Update()
+
+                            If (bConnected <> g_bIsConnected OrElse bDisconnected) Then
+                                bConnected = g_bIsConnected
+                                bDisconnected = False
+
+                                bRefreshControllerList = True
+                                bRefreshTrackerList = True
+
+                                RaiseEvent OnConnectionStatusChanged()
+                            End If
 
                             If (g_PSMoveServiceServer.HasControllerListChanged) Then
                                 bRefreshControllerList = True
@@ -210,13 +234,6 @@ Public Class ClassServiceClient
                                 bRefreshTrackerList = True
 
                                 RaiseEvent OnPlayspaceOffsetChanged()
-                            End If
-
-                            If (g_PSMoveServiceServer.HasConnectionStatusChanged) Then
-                                bRefreshControllerList = True
-                                bRefreshTrackerList = True
-
-                                RaiseEvent OnConnectionStatusChanged()
                             End If
 
                             If (bRefreshControllerList) Then
@@ -388,10 +405,11 @@ Public Class ClassServiceClient
                         Throw
                     Catch ex As Exception
                         SyncLock __ClientLock
+                            ' Check if its disconnected
                             If (g_PSMoveServiceServer IsNot Nothing) Then
-                                If (Not g_PSMoveServiceServer.IsInitialized OrElse Not g_PSMoveServiceServer.IsConnected) Then
-                                    bRefreshControllerList = True
-                                    bRefreshTrackerList = True
+                                g_bIsConnected = g_PSMoveServiceServer.IsConnected
+                                If (bConnected <> g_bIsConnected) Then
+                                    bDisconnected = True
                                 End If
                             End If
                         End SyncLock

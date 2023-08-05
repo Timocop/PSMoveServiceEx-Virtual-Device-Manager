@@ -80,6 +80,8 @@ Public Class FormMain
         g_mClassUpdateChecker.StartUpdateCheck()
 
         SelectPage(ENUM_PAGE.STARTPAGE)
+
+        AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
@@ -130,40 +132,22 @@ Public Class FormMain
         End Select
     End Sub
 
-    Private Sub CleanUp()
-        If (g_mClassUpdateChecker IsNot Nothing) Then
-            g_mClassUpdateChecker.Dispose()
-            g_mClassUpdateChecker = Nothing
-        End If
-
+    Private Sub OnServiceConnectionStatusChanged()
         Try
-            If (g_mPSMoveServiceCAPI IsNot Nothing) Then
-                g_mPSMoveServiceCAPI.Dispose()
-                g_mPSMoveServiceCAPI = Nothing
+            ' Lets find PSMS-EX when connection as been established and then save it to config.
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (Not mConfig.FileExist) Then
+                If (mConfig.FindByProcess()) Then
+                    mConfig.SaveConfig()
+                End If
             End If
+        Catch ex As Threading.ThreadAbortException
+            Throw
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
         End Try
-
-        If (g_mUCStartPage IsNot Nothing AndAlso Not g_mUCStartPage.IsDisposed) Then
-            g_mUCStartPage.Dispose()
-            g_mUCStartPage = Nothing
-        End If
-
-        If (g_mUCVirtualControllers IsNot Nothing AndAlso Not g_mUCVirtualControllers.IsDisposed) Then
-            g_mUCVirtualControllers.Dispose()
-            g_mUCVirtualControllers = Nothing
-        End If
-
-        If (g_mUCVirtualHMDs IsNot Nothing AndAlso Not g_mUCVirtualHMDs.IsDisposed) Then
-            g_mUCVirtualHMDs.Dispose()
-            g_mUCVirtualHMDs = Nothing
-        End If
-
-        If (g_mUCVirtualTrackers IsNot Nothing AndAlso Not g_mUCVirtualTrackers.IsDisposed) Then
-            g_mUCVirtualTrackers.Dispose()
-            g_mUCVirtualTrackers = Nothing
-        End If
     End Sub
 
     Private Function GetCameraNameById(iIndex As Integer) As String
@@ -383,6 +367,10 @@ Public Class FormMain
         End If
     End Sub
 
+    Private Sub FormMain_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        CleanUp()
+    End Sub
+
     Private Sub LinkLabel_Github_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Github.LinkClicked
         Try
             Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
@@ -402,6 +390,46 @@ Public Class FormMain
             Process.Start("steam://rungameid/250820")
         Catch ex As Exception
         End Try
+    End Sub
+
+    Private Sub CleanUp()
+        If (g_mPSMoveServiceCAPI IsNot Nothing) Then
+            RemoveHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
+        End If
+
+        If (g_mClassUpdateChecker IsNot Nothing) Then
+            g_mClassUpdateChecker.Dispose()
+            g_mClassUpdateChecker = Nothing
+        End If
+
+        Try
+            If (g_mPSMoveServiceCAPI IsNot Nothing) Then
+                g_mPSMoveServiceCAPI.Dispose()
+                g_mPSMoveServiceCAPI = Nothing
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        If (g_mUCStartPage IsNot Nothing AndAlso Not g_mUCStartPage.IsDisposed) Then
+            g_mUCStartPage.Dispose()
+            g_mUCStartPage = Nothing
+        End If
+
+        If (g_mUCVirtualControllers IsNot Nothing AndAlso Not g_mUCVirtualControllers.IsDisposed) Then
+            g_mUCVirtualControllers.Dispose()
+            g_mUCVirtualControllers = Nothing
+        End If
+
+        If (g_mUCVirtualHMDs IsNot Nothing AndAlso Not g_mUCVirtualHMDs.IsDisposed) Then
+            g_mUCVirtualHMDs.Dispose()
+            g_mUCVirtualHMDs = Nothing
+        End If
+
+        If (g_mUCVirtualTrackers IsNot Nothing AndAlso Not g_mUCVirtualTrackers.IsDisposed) Then
+            g_mUCVirtualTrackers.Dispose()
+            g_mUCVirtualTrackers = Nothing
+        End If
     End Sub
 
     Class ClassUpdateChecker
