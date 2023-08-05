@@ -194,6 +194,9 @@ Public Class UCVirtualMotionTracker
                 NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassControllerSettings.m_RecenterButtonTimeMs))
                 NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, g_ClassControllerSettings.m_OscThreadSleepMs))
 
+                NumericUpDown_TouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_TouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_TouchpadClickDeadzone.Maximum, g_ClassControllerSettings.m_HtcTouchpadClickDeadzone)))
+                NumericUpDown_TouchpadTouchArea.Value = CDec(Math.Max(NumericUpDown_TouchpadTouchArea.Minimum, Math.Min(NumericUpDown_TouchpadTouchArea.Maximum, g_ClassControllerSettings.m_HtcTouchpadTouchAreaCm)))
+
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
                 g_bIgnoreEvents = False
@@ -447,6 +450,8 @@ Public Class UCVirtualMotionTracker
         Private g_sHmdRecenterFromDeviceName As String = ""
         Private g_iRecenterButtonTimeMs As Long = 500
         Private g_iOscThreadSleepMs As Long = 1
+        Private g_iTouchpadTouchAreaCm As Single = 7.5F
+        Private g_iTouchpadClickDeadzone As Single = 0.25F
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -683,9 +688,50 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
+        Property m_HtcTouchpadTouchAreaCm As Single
+            Get
+                SyncLock _ThreadLock
+                    Return g_iTouchpadTouchAreaCm
+                End SyncLock
+            End Get
+            Set(value As Single)
+                SyncLock _ThreadLock
+                    If (value < 1.0F) Then
+                        value = 1.0F
+                    End If
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iTouchpadTouchAreaCm = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HtcTouchpadClickDeadzone As Single
+            Get
+                SyncLock _ThreadLock
+                    Return g_iTouchpadClickDeadzone
+                End SyncLock
+            End Get
+            Set(value As Single)
+                SyncLock _ThreadLock
+                    If (value < 0.0F) Then
+                        value = 0.0F
+                    End If
+                    If (value > 1.0F) Then
+                        value = 1.0F
+                    End If
+
+                    g_iTouchpadClickDeadzone = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub LoadSettings()
             g_bSettingsLoaded = True
 
+            Dim tmpSng As Single
             Dim tmpInt As Integer
             Dim tmpLng As Long
 
@@ -733,6 +779,14 @@ Public Class UCVirtualMotionTracker
                     If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"), tmpLng)) Then
                         m_OscThreadSleepMs = tmpLng
                     End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadTouchAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HtcTouchpadTouchAreaCm = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadClickDeadzone", "0.25"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HtcTouchpadClickDeadzone = tmpSng
+                    End If
                 End Using
             End Using
         End Sub
@@ -762,6 +816,8 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_HmdRecenterFromDeviceName))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_RecenterButtonTimeMs)))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_OscThreadSleepMs)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using

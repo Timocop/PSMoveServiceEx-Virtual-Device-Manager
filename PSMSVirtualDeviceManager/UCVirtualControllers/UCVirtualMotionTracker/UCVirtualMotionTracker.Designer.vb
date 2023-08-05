@@ -79,6 +79,10 @@ Partial Class UCVirtualMotionTracker
         Me.Label11 = New System.Windows.Forms.Label()
         Me.CheckBox_ControllerRecenterEnabled = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.NumericUpDown_TouchpadTouchArea = New System.Windows.Forms.NumericUpDown()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_TouchpadClickDeadzone = New System.Windows.Forms.NumericUpDown()
+        Me.Label22 = New System.Windows.Forms.Label()
         Me.LinkLabel_TouchpadShortcutHelp = New System.Windows.Forms.LinkLabel()
         Me.ComboBox_TouchpadMethod = New System.Windows.Forms.ComboBox()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -107,6 +111,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.Label_TouchpadTouchAreaDeg = New System.Windows.Forms.Label()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -136,6 +141,8 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
+        CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage5.SuspendLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_Overrides.SuspendLayout()
@@ -578,7 +585,7 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.CheckBox_ControllerRecenterEnabled)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox1.Location = New System.Drawing.Point(3, 186)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 241)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(734, 485)
         Me.GroupBox1.TabIndex = 47
@@ -647,10 +654,10 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(179, 340)
+        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(191, 340)
         Me.ComboBox_HmdRecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
-        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
         '
         'Label18
@@ -670,10 +677,10 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterMethod.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(179, 313)
+        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(191, 313)
         Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_HmdRecenterMethod.Name = "ComboBox_HmdRecenterMethod"
-        Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_HmdRecenterMethod.TabIndex = 55
         '
         'Label19
@@ -731,10 +738,10 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(179, 199)
+        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(191, 199)
         Me.ComboBox_RecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
-        Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_RecenterFromDevice.TabIndex = 50
         '
         'Label15
@@ -754,10 +761,10 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterMethod.FormattingEnabled = True
-        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(179, 172)
+        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(191, 172)
         Me.ComboBox_RecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_RecenterMethod.Name = "ComboBox_RecenterMethod"
-        Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_RecenterMethod.TabIndex = 48
         '
         'Label14
@@ -797,6 +804,11 @@ Partial Class UCVirtualMotionTracker
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.Label_TouchpadTouchAreaDeg)
+        Me.GroupBox2.Controls.Add(Me.NumericUpDown_TouchpadTouchArea)
+        Me.GroupBox2.Controls.Add(Me.Label23)
+        Me.GroupBox2.Controls.Add(Me.NumericUpDown_TouchpadClickDeadzone)
+        Me.GroupBox2.Controls.Add(Me.Label22)
         Me.GroupBox2.Controls.Add(Me.LinkLabel_TouchpadShortcutHelp)
         Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadMethod)
         Me.GroupBox2.Controls.Add(Me.Label10)
@@ -810,10 +822,49 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox2.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(734, 183)
+        Me.GroupBox2.Size = New System.Drawing.Size(734, 238)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "HTC Vive Emulation Settings"
+        '
+        'NumericUpDown_TouchpadTouchArea
+        '
+        Me.NumericUpDown_TouchpadTouchArea.DecimalPlaces = 2
+        Me.NumericUpDown_TouchpadTouchArea.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
+        Me.NumericUpDown_TouchpadTouchArea.Location = New System.Drawing.Point(191, 96)
+        Me.NumericUpDown_TouchpadTouchArea.Name = "NumericUpDown_TouchpadTouchArea"
+        Me.NumericUpDown_TouchpadTouchArea.Size = New System.Drawing.Size(120, 22)
+        Me.NumericUpDown_TouchpadTouchArea.TabIndex = 52
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(19, 98)
+        Me.Label23.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(166, 13)
+        Me.Label23.TabIndex = 51
+        Me.Label23.Text = "Touchpad touch area (cm/deg):"
+        '
+        'NumericUpDown_TouchpadClickDeadzone
+        '
+        Me.NumericUpDown_TouchpadClickDeadzone.DecimalPlaces = 2
+        Me.NumericUpDown_TouchpadClickDeadzone.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.NumericUpDown_TouchpadClickDeadzone.Location = New System.Drawing.Point(191, 151)
+        Me.NumericUpDown_TouchpadClickDeadzone.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.NumericUpDown_TouchpadClickDeadzone.Name = "NumericUpDown_TouchpadClickDeadzone"
+        Me.NumericUpDown_TouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
+        Me.NumericUpDown_TouchpadClickDeadzone.TabIndex = 50
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(19, 153)
+        Me.Label22.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(144, 13)
+        Me.Label22.TabIndex = 49
+        Me.Label22.Text = "Touchpad click dead-zone:"
         '
         'LinkLabel_TouchpadShortcutHelp
         '
@@ -840,10 +891,10 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_TouchpadMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_TouchpadMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_TouchpadMethod.FormattingEnabled = True
-        Me.ComboBox_TouchpadMethod.Location = New System.Drawing.Point(179, 69)
+        Me.ComboBox_TouchpadMethod.Location = New System.Drawing.Point(191, 69)
         Me.ComboBox_TouchpadMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_TouchpadMethod.Name = "ComboBox_TouchpadMethod"
-        Me.ComboBox_TouchpadMethod.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_TouchpadMethod.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_TouchpadMethod.TabIndex = 47
         '
         'Label10
@@ -872,7 +923,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.CheckBox_TouchpadClampBounds.AutoSize = True
         Me.CheckBox_TouchpadClampBounds.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_TouchpadClampBounds.Location = New System.Drawing.Point(19, 150)
+        Me.CheckBox_TouchpadClampBounds.Location = New System.Drawing.Point(19, 206)
         Me.CheckBox_TouchpadClampBounds.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_TouchpadClampBounds.Name = "CheckBox_TouchpadClampBounds"
         Me.CheckBox_TouchpadClampBounds.Size = New System.Drawing.Size(196, 18)
@@ -899,16 +950,16 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_GrabButtonMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_GrabButtonMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_GrabButtonMethod.FormattingEnabled = True
-        Me.ComboBox_GrabButtonMethod.Location = New System.Drawing.Point(179, 123)
+        Me.ComboBox_GrabButtonMethod.Location = New System.Drawing.Point(191, 179)
         Me.ComboBox_GrabButtonMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_GrabButtonMethod.Name = "ComboBox_GrabButtonMethod"
-        Me.ComboBox_GrabButtonMethod.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_GrabButtonMethod.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_GrabButtonMethod.TabIndex = 3
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(19, 126)
+        Me.Label5.Location = New System.Drawing.Point(19, 182)
         Me.Label5.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(117, 13)
@@ -922,16 +973,16 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_TouchpadClickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_TouchpadClickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_TouchpadClickMethod.FormattingEnabled = True
-        Me.ComboBox_TouchpadClickMethod.Location = New System.Drawing.Point(179, 96)
+        Me.ComboBox_TouchpadClickMethod.Location = New System.Drawing.Point(191, 124)
         Me.ComboBox_TouchpadClickMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_TouchpadClickMethod.Name = "ComboBox_TouchpadClickMethod"
-        Me.ComboBox_TouchpadClickMethod.Size = New System.Drawing.Size(504, 21)
+        Me.ComboBox_TouchpadClickMethod.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_TouchpadClickMethod.TabIndex = 1
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(19, 99)
+        Me.Label4.Location = New System.Drawing.Point(19, 127)
         Me.Label4.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(129, 13)
@@ -1156,6 +1207,15 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
         '
+        'Label_TouchpadTouchAreaDeg
+        '
+        Me.Label_TouchpadTouchAreaDeg.AutoSize = True
+        Me.Label_TouchpadTouchAreaDeg.Location = New System.Drawing.Point(317, 98)
+        Me.Label_TouchpadTouchAreaDeg.Name = "Label_TouchpadTouchAreaDeg"
+        Me.Label_TouchpadTouchAreaDeg.Size = New System.Drawing.Size(41, 13)
+        Me.Label_TouchpadTouchAreaDeg.TabIndex = 53
+        Me.Label_TouchpadTouchAreaDeg.Text = "cm / 0°"
+        '
         'ListView_OscDevices
         '
         Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
@@ -1309,6 +1369,8 @@ Partial Class UCVirtualMotionTracker
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
+        CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage5.ResumeLayout(False)
         Me.TabPage5.PerformLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1417,4 +1479,9 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Button_RecenterButtonTimeReset As Button
     Friend WithEvents LinkLabel_SteamSettings As LinkLabel
     Friend WithEvents LinkLabel_TouchpadShortcutHelp As LinkLabel
+    Friend WithEvents NumericUpDown_TouchpadClickDeadzone As NumericUpDown
+    Friend WithEvents Label22 As Label
+    Friend WithEvents NumericUpDown_TouchpadTouchArea As NumericUpDown
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Label_TouchpadTouchAreaDeg As Label
 End Class

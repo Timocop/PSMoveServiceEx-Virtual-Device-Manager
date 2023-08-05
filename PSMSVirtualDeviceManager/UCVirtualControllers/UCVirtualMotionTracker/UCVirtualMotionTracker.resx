@@ -123,7 +123,7 @@ It offers various tracker roles, such as body trackers, controllers, and Head Mo
 </value>
   </data>
   <data name="Label17.Text" xml:space="preserve">
-    <value>        Device recentering is temporary and will reset when Virtual Device Manager closes.
+    <value>        Tracker recentering is temporary and will reset when Virtual Device Manager closes.
         For permanent recenter use the "World Orientation Yaw" offset 
         in "Controller Settings" when using Service Config Tool.
         However, this permanent method is only recommended for trackers with magnetometers!</value>

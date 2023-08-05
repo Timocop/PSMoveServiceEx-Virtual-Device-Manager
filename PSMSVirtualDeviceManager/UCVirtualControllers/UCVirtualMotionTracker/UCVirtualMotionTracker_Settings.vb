@@ -124,6 +124,27 @@
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub NumericUpDown_TouchpadClickDeadzone_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_TouchpadClickDeadzone.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_HtcTouchpadClickDeadzone = NumericUpDown_TouchpadClickDeadzone.Value
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_TouchpadTouchArea_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_TouchpadTouchArea.ValueChanged
+        ' See TOUCHPAD_GYRO_MULTI in UCVirutalMotionTrackerItem.vb
+        Label_TouchpadTouchAreaDeg.Text = String.Format("cm / {0}°", NumericUpDown_TouchpadTouchArea.Value * 2.5F)
+
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_HtcTouchpadTouchAreaCm = NumericUpDown_TouchpadTouchArea.Value
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub ComboBox_RecenterFromDevice_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_RecenterFromDevice.SelectedIndexChanged
         Try
             If (g_bIgnoreEvents) Then
