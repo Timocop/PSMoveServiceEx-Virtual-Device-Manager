@@ -561,4 +561,26 @@ Public Class UCStartPage
         Catch ex As Exception
         End Try
     End Sub
+
+    Private Sub Button_PsmsxUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxUpdateDownload.Click
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx/releases")
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub Button_VdmUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateDownload.Click
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub Button_VdmUpdateIgnore_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateIgnore.Click
+        Panel_VdmUpdate.Visible = False
+    End Sub
+
+    Private Sub Button_PsmsUpdateIgnore_Click(sender As Object, e As EventArgs) Handles Button_PsmsUpdateIgnore.Click
+        Panel_PsmsxUpdate.Visible = False
+    End Sub
 End Class

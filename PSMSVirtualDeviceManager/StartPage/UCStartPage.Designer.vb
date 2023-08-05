@@ -27,6 +27,7 @@ Partial Class UCStartPage
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCStartPage))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
@@ -71,6 +72,26 @@ Partial Class UCStartPage
         Me.Panel14 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel16 = New System.Windows.Forms.Panel()
+        Me.Panel9 = New System.Windows.Forms.Panel()
+        Me.Button_PsmsxUpdateDownload = New System.Windows.Forms.Button()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Panel11 = New System.Windows.Forms.Panel()
+        Me.Panel_PsmsxUpdate = New System.Windows.Forms.Panel()
+        Me.Panel_VdmUpdate = New System.Windows.Forms.Panel()
+        Me.Panel17 = New System.Windows.Forms.Panel()
+        Me.Button_VdmUpdateDownload = New System.Windows.Forms.Button()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality6 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Panel18 = New System.Windows.Forms.Panel()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Panel19 = New System.Windows.Forms.Panel()
+        Me.Panel20 = New System.Windows.Forms.Panel()
+        Me.Panel21 = New System.Windows.Forms.Panel()
+        Me.Button_PsmsUpdateIgnore = New System.Windows.Forms.Button()
+        Me.Button_VdmUpdateIgnore = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
@@ -86,26 +107,37 @@ Partial Class UCStartPage
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel8.SuspendLayout()
         Me.Panel14.SuspendLayout()
+        Me.Panel9.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality5, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel10.SuspendLayout()
+        Me.Panel_PsmsxUpdate.SuspendLayout()
+        Me.Panel_VdmUpdate.SuspendLayout()
+        Me.Panel17.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality6, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel18.SuspendLayout()
+        Me.Panel20.SuspendLayout()
+        Me.Panel21.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
-        Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel1.Controls.Add(Me.TableLayoutPanel1)
         Me.Panel1.Controls.Add(Me.Panel12)
-        Me.Panel1.Location = New System.Drawing.Point(16, 83)
+        Me.Panel1.Location = New System.Drawing.Point(16, 19)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(768, 268)
+        Me.Panel1.Size = New System.Drawing.Size(861, 274)
         Me.Panel1.TabIndex = 0
         '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.99999!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Panel7, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
@@ -116,7 +148,7 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(766, 224)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 230)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'Panel7
@@ -126,10 +158,10 @@ Partial Class UCStartPage
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
         Me.Panel7.Controls.Add(Me.LinkLabel_Github)
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(382, 112)
+        Me.Panel7.Location = New System.Drawing.Point(429, 115)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(384, 112)
+        Me.Panel7.Size = New System.Drawing.Size(430, 115)
         Me.Panel7.TabIndex = 7
         '
         'LinkLabel_Updates
@@ -199,7 +231,7 @@ Partial Class UCStartPage
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(382, 112)
+        Me.Panel4.Size = New System.Drawing.Size(429, 115)
         Me.Panel4.TabIndex = 1
         '
         'LinkLabel_ServicePath
@@ -300,10 +332,10 @@ Partial Class UCStartPage
         Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality2)
         Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolRun)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(382, 0)
+        Me.Panel2.Location = New System.Drawing.Point(429, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(384, 112)
+        Me.Panel2.Size = New System.Drawing.Size(430, 115)
         Me.Panel2.TabIndex = 0
         '
         'LinkLabel_ConfigToolClose
@@ -370,10 +402,10 @@ Partial Class UCStartPage
         Me.Panel5.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Panel5.Controls.Add(Me.LinkLabel_InstallDrivers)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(0, 112)
+        Me.Panel5.Location = New System.Drawing.Point(0, 115)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(382, 112)
+        Me.Panel5.Size = New System.Drawing.Size(429, 115)
         Me.Panel5.TabIndex = 6
         '
         'LinkLabel_ServiceFactory
@@ -440,7 +472,7 @@ Partial Class UCStartPage
         Me.Panel12.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel12.Location = New System.Drawing.Point(0, 0)
         Me.Panel12.Name = "Panel12"
-        Me.Panel12.Size = New System.Drawing.Size(766, 42)
+        Me.Panel12.Size = New System.Drawing.Size(859, 42)
         Me.Panel12.TabIndex = 0
         '
         'Label_PsmsxStatus
@@ -452,7 +484,7 @@ Partial Class UCStartPage
         Me.Label_PsmsxStatus.Location = New System.Drawing.Point(19, 0)
         Me.Label_PsmsxStatus.Name = "Label_PsmsxStatus"
         Me.Label_PsmsxStatus.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label_PsmsxStatus.Size = New System.Drawing.Size(747, 41)
+        Me.Label_PsmsxStatus.Size = New System.Drawing.Size(840, 41)
         Me.Label_PsmsxStatus.TabIndex = 1
         Me.Label_PsmsxStatus.Text = "PSMoveServiceEx Disconnected."
         Me.Label_PsmsxStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -472,7 +504,7 @@ Partial Class UCStartPage
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel3.Location = New System.Drawing.Point(0, 41)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(766, 1)
+        Me.Panel3.Size = New System.Drawing.Size(859, 1)
         Me.Panel3.TabIndex = 0
         '
         'ToolTip_Service
@@ -487,7 +519,7 @@ Partial Class UCStartPage
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel6.Location = New System.Drawing.Point(0, 0)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(800, 64)
+        Me.Panel6.Size = New System.Drawing.Size(893, 64)
         Me.Panel6.TabIndex = 1
         '
         'PictureBox1
@@ -509,7 +541,7 @@ Partial Class UCStartPage
         Me.Label4.Location = New System.Drawing.Point(66, 30)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(731, 30)
+        Me.Label4.Size = New System.Drawing.Size(824, 30)
         Me.Label4.TabIndex = 2
         Me.Label4.Text = "Manage service and configurations here."
         '
@@ -530,20 +562,21 @@ Partial Class UCStartPage
         Me.Label5.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Label5.Location = New System.Drawing.Point(0, 63)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(800, 1)
+        Me.Label5.Size = New System.Drawing.Size(893, 1)
         Me.Label5.TabIndex = 0
         '
         'Panel8
         '
-        Me.Panel8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel8.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel8.Controls.Add(Me.ListView_ServiceDevices)
         Me.Panel8.Controls.Add(Me.Panel14)
-        Me.Panel8.Location = New System.Drawing.Point(16, 369)
+        Me.Panel8.Location = New System.Drawing.Point(16, 16)
         Me.Panel8.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(768, 250)
+        Me.Panel8.Size = New System.Drawing.Size(861, 268)
         Me.Panel8.TabIndex = 2
         '
         'ListView_ServiceDevices
@@ -556,7 +589,7 @@ Partial Class UCStartPage
         Me.ListView_ServiceDevices.HideSelection = False
         Me.ListView_ServiceDevices.Location = New System.Drawing.Point(0, 42)
         Me.ListView_ServiceDevices.Name = "ListView_ServiceDevices"
-        Me.ListView_ServiceDevices.Size = New System.Drawing.Size(766, 206)
+        Me.ListView_ServiceDevices.Size = New System.Drawing.Size(859, 224)
         Me.ListView_ServiceDevices.TabIndex = 1
         Me.ListView_ServiceDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_ServiceDevices.View = System.Windows.Forms.View.Details
@@ -594,7 +627,7 @@ Partial Class UCStartPage
         Me.Panel14.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel14.Location = New System.Drawing.Point(0, 0)
         Me.Panel14.Name = "Panel14"
-        Me.Panel14.Size = New System.Drawing.Size(766, 42)
+        Me.Panel14.Size = New System.Drawing.Size(859, 42)
         Me.Panel14.TabIndex = 0
         '
         'Label12
@@ -606,7 +639,7 @@ Partial Class UCStartPage
         Me.Label12.Location = New System.Drawing.Point(0, 0)
         Me.Label12.Name = "Label12"
         Me.Label12.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label12.Size = New System.Drawing.Size(766, 41)
+        Me.Label12.Size = New System.Drawing.Size(859, 41)
         Me.Label12.TabIndex = 1
         Me.Label12.Text = "Available Service Devices"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -617,8 +650,240 @@ Partial Class UCStartPage
         Me.Panel16.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel16.Location = New System.Drawing.Point(0, 41)
         Me.Panel16.Name = "Panel16"
-        Me.Panel16.Size = New System.Drawing.Size(766, 1)
+        Me.Panel16.Size = New System.Drawing.Size(859, 1)
         Me.Panel16.TabIndex = 0
+        '
+        'Panel9
+        '
+        Me.Panel9.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel9.Controls.Add(Me.Button_PsmsUpdateIgnore)
+        Me.Panel9.Controls.Add(Me.Button_PsmsxUpdateDownload)
+        Me.Panel9.Controls.Add(Me.Label10)
+        Me.Panel9.Controls.Add(Me.ClassPictureBoxQuality5)
+        Me.Panel9.Controls.Add(Me.Panel10)
+        Me.Panel9.Location = New System.Drawing.Point(16, 19)
+        Me.Panel9.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel9.Name = "Panel9"
+        Me.Panel9.Size = New System.Drawing.Size(861, 140)
+        Me.Panel9.TabIndex = 3
+        '
+        'Button_PsmsxUpdateDownload
+        '
+        Me.Button_PsmsxUpdateDownload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_PsmsxUpdateDownload.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_PsmsxUpdateDownload.Location = New System.Drawing.Point(70, 99)
+        Me.Button_PsmsxUpdateDownload.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_PsmsxUpdateDownload.Name = "Button_PsmsxUpdateDownload"
+        Me.Button_PsmsxUpdateDownload.Size = New System.Drawing.Size(139, 23)
+        Me.Button_PsmsxUpdateDownload.TabIndex = 3
+        Me.Button_PsmsxUpdateDownload.Text = "Download Now"
+        Me.Button_PsmsxUpdateDownload.UseVisualStyleBackColor = True
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(67, 49)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(511, 39)
+        Me.Label10.TabIndex = 2
+        Me.Label10.Text = resources.GetString("Label10.Text")
+        '
+        'ClassPictureBoxQuality5
+        '
+        Me.ClassPictureBoxQuality5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.connect_10101_256x256_32
+        Me.ClassPictureBoxQuality5.Location = New System.Drawing.Point(8, 49)
+        Me.ClassPictureBoxQuality5.m_HighQuality = True
+        Me.ClassPictureBoxQuality5.Margin = New System.Windows.Forms.Padding(8)
+        Me.ClassPictureBoxQuality5.Name = "ClassPictureBoxQuality5"
+        Me.ClassPictureBoxQuality5.Size = New System.Drawing.Size(48, 48)
+        Me.ClassPictureBoxQuality5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality5.TabIndex = 1
+        Me.ClassPictureBoxQuality5.TabStop = False
+        '
+        'Panel10
+        '
+        Me.Panel10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel10.Controls.Add(Me.Label8)
+        Me.Panel10.Controls.Add(Me.Panel11)
+        Me.Panel10.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel10.Location = New System.Drawing.Point(0, 0)
+        Me.Panel10.Name = "Panel10"
+        Me.Panel10.Size = New System.Drawing.Size(859, 42)
+        Me.Panel10.TabIndex = 0
+        '
+        'Label8
+        '
+        Me.Label8.BackColor = System.Drawing.Color.Lavender
+        Me.Label8.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label8.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.ForeColor = System.Drawing.Color.Navy
+        Me.Label8.Location = New System.Drawing.Point(0, 0)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label8.Size = New System.Drawing.Size(859, 41)
+        Me.Label8.TabIndex = 1
+        Me.Label8.Text = "PSMoveServiceEx Software Update Available"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel11
+        '
+        Me.Panel11.BackColor = System.Drawing.Color.Gray
+        Me.Panel11.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel11.Location = New System.Drawing.Point(0, 41)
+        Me.Panel11.Name = "Panel11"
+        Me.Panel11.Size = New System.Drawing.Size(859, 1)
+        Me.Panel11.TabIndex = 0
+        '
+        'Panel_PsmsxUpdate
+        '
+        Me.Panel_PsmsxUpdate.Controls.Add(Me.Panel9)
+        Me.Panel_PsmsxUpdate.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel_PsmsxUpdate.Location = New System.Drawing.Point(0, 64)
+        Me.Panel_PsmsxUpdate.Name = "Panel_PsmsxUpdate"
+        Me.Panel_PsmsxUpdate.Size = New System.Drawing.Size(893, 175)
+        Me.Panel_PsmsxUpdate.TabIndex = 4
+        Me.Panel_PsmsxUpdate.Visible = False
+        '
+        'Panel_VdmUpdate
+        '
+        Me.Panel_VdmUpdate.Controls.Add(Me.Panel17)
+        Me.Panel_VdmUpdate.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel_VdmUpdate.Location = New System.Drawing.Point(0, 239)
+        Me.Panel_VdmUpdate.Name = "Panel_VdmUpdate"
+        Me.Panel_VdmUpdate.Size = New System.Drawing.Size(893, 175)
+        Me.Panel_VdmUpdate.TabIndex = 5
+        Me.Panel_VdmUpdate.Visible = False
+        '
+        'Panel17
+        '
+        Me.Panel17.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel17.Controls.Add(Me.Button_VdmUpdateIgnore)
+        Me.Panel17.Controls.Add(Me.Button_VdmUpdateDownload)
+        Me.Panel17.Controls.Add(Me.Label11)
+        Me.Panel17.Controls.Add(Me.ClassPictureBoxQuality6)
+        Me.Panel17.Controls.Add(Me.Panel18)
+        Me.Panel17.Location = New System.Drawing.Point(16, 19)
+        Me.Panel17.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel17.Name = "Panel17"
+        Me.Panel17.Size = New System.Drawing.Size(861, 140)
+        Me.Panel17.TabIndex = 3
+        '
+        'Button_VdmUpdateDownload
+        '
+        Me.Button_VdmUpdateDownload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_VdmUpdateDownload.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_VdmUpdateDownload.Location = New System.Drawing.Point(70, 99)
+        Me.Button_VdmUpdateDownload.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_VdmUpdateDownload.Name = "Button_VdmUpdateDownload"
+        Me.Button_VdmUpdateDownload.Size = New System.Drawing.Size(139, 23)
+        Me.Button_VdmUpdateDownload.TabIndex = 6
+        Me.Button_VdmUpdateDownload.Text = "Download Now"
+        Me.Button_VdmUpdateDownload.UseVisualStyleBackColor = True
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(67, 49)
+        Me.Label11.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(511, 39)
+        Me.Label11.TabIndex = 5
+        Me.Label11.Text = resources.GetString("Label11.Text")
+        '
+        'ClassPictureBoxQuality6
+        '
+        Me.ClassPictureBoxQuality6.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.connect_10101_256x256_32
+        Me.ClassPictureBoxQuality6.Location = New System.Drawing.Point(8, 49)
+        Me.ClassPictureBoxQuality6.m_HighQuality = True
+        Me.ClassPictureBoxQuality6.Margin = New System.Windows.Forms.Padding(8)
+        Me.ClassPictureBoxQuality6.Name = "ClassPictureBoxQuality6"
+        Me.ClassPictureBoxQuality6.Size = New System.Drawing.Size(48, 48)
+        Me.ClassPictureBoxQuality6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality6.TabIndex = 4
+        Me.ClassPictureBoxQuality6.TabStop = False
+        '
+        'Panel18
+        '
+        Me.Panel18.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel18.Controls.Add(Me.Label9)
+        Me.Panel18.Controls.Add(Me.Panel19)
+        Me.Panel18.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel18.Location = New System.Drawing.Point(0, 0)
+        Me.Panel18.Name = "Panel18"
+        Me.Panel18.Size = New System.Drawing.Size(859, 42)
+        Me.Panel18.TabIndex = 0
+        '
+        'Label9
+        '
+        Me.Label9.BackColor = System.Drawing.Color.Lavender
+        Me.Label9.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label9.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.Color.Navy
+        Me.Label9.Location = New System.Drawing.Point(0, 0)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label9.Size = New System.Drawing.Size(859, 41)
+        Me.Label9.TabIndex = 1
+        Me.Label9.Text = "Virtual Device Manager Software Update Available"
+        Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel19
+        '
+        Me.Panel19.BackColor = System.Drawing.Color.Gray
+        Me.Panel19.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel19.Location = New System.Drawing.Point(0, 41)
+        Me.Panel19.Name = "Panel19"
+        Me.Panel19.Size = New System.Drawing.Size(859, 1)
+        Me.Panel19.TabIndex = 0
+        '
+        'Panel20
+        '
+        Me.Panel20.Controls.Add(Me.Panel1)
+        Me.Panel20.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel20.Location = New System.Drawing.Point(0, 414)
+        Me.Panel20.Name = "Panel20"
+        Me.Panel20.Size = New System.Drawing.Size(893, 309)
+        Me.Panel20.TabIndex = 6
+        '
+        'Panel21
+        '
+        Me.Panel21.Controls.Add(Me.Panel8)
+        Me.Panel21.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel21.Location = New System.Drawing.Point(0, 723)
+        Me.Panel21.Name = "Panel21"
+        Me.Panel21.Size = New System.Drawing.Size(893, 300)
+        Me.Panel21.TabIndex = 7
+        '
+        'Button_PsmsUpdateIgnore
+        '
+        Me.Button_PsmsUpdateIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_PsmsUpdateIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_PsmsUpdateIgnore.Location = New System.Drawing.Point(215, 99)
+        Me.Button_PsmsUpdateIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_PsmsUpdateIgnore.Name = "Button_PsmsUpdateIgnore"
+        Me.Button_PsmsUpdateIgnore.Size = New System.Drawing.Size(95, 23)
+        Me.Button_PsmsUpdateIgnore.TabIndex = 4
+        Me.Button_PsmsUpdateIgnore.Text = "Ignore"
+        Me.Button_PsmsUpdateIgnore.UseVisualStyleBackColor = True
+        '
+        'Button_VdmUpdateIgnore
+        '
+        Me.Button_VdmUpdateIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_VdmUpdateIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_VdmUpdateIgnore.Location = New System.Drawing.Point(215, 99)
+        Me.Button_VdmUpdateIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_VdmUpdateIgnore.Name = "Button_VdmUpdateIgnore"
+        Me.Button_VdmUpdateIgnore.Size = New System.Drawing.Size(95, 23)
+        Me.Button_VdmUpdateIgnore.TabIndex = 7
+        Me.Button_VdmUpdateIgnore.Text = "Ignore"
+        Me.Button_VdmUpdateIgnore.UseVisualStyleBackColor = True
         '
         'UCStartPage
         '
@@ -626,12 +891,14 @@ Partial Class UCStartPage
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Panel8)
+        Me.Controls.Add(Me.Panel21)
+        Me.Controls.Add(Me.Panel20)
+        Me.Controls.Add(Me.Panel_VdmUpdate)
+        Me.Controls.Add(Me.Panel_PsmsxUpdate)
         Me.Controls.Add(Me.Panel6)
-        Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCStartPage"
-        Me.Size = New System.Drawing.Size(800, 748)
+        Me.Size = New System.Drawing.Size(893, 1075)
         Me.Panel1.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel7.ResumeLayout(False)
@@ -652,6 +919,18 @@ Partial Class UCStartPage
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel8.ResumeLayout(False)
         Me.Panel14.ResumeLayout(False)
+        Me.Panel9.ResumeLayout(False)
+        Me.Panel9.PerformLayout()
+        CType(Me.ClassPictureBoxQuality5, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel10.ResumeLayout(False)
+        Me.Panel_PsmsxUpdate.ResumeLayout(False)
+        Me.Panel_VdmUpdate.ResumeLayout(False)
+        Me.Panel17.ResumeLayout(False)
+        Me.Panel17.PerformLayout()
+        CType(Me.ClassPictureBoxQuality6, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel18.ResumeLayout(False)
+        Me.Panel20.ResumeLayout(False)
+        Me.Panel21.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -700,4 +979,24 @@ Partial Class UCStartPage
     Friend WithEvents Panel14 As Panel
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel16 As Panel
+    Friend WithEvents Panel9 As Panel
+    Friend WithEvents Panel10 As Panel
+    Friend WithEvents Label8 As Label
+    Friend WithEvents Panel11 As Panel
+    Friend WithEvents Panel_PsmsxUpdate As Panel
+    Friend WithEvents Panel_VdmUpdate As Panel
+    Friend WithEvents Panel17 As Panel
+    Friend WithEvents Panel18 As Panel
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Panel19 As Panel
+    Friend WithEvents Panel20 As Panel
+    Friend WithEvents Panel21 As Panel
+    Friend WithEvents Button_PsmsxUpdateDownload As Button
+    Friend WithEvents Label10 As Label
+    Friend WithEvents ClassPictureBoxQuality5 As ClassPictureBoxQuality
+    Friend WithEvents Button_VdmUpdateDownload As Button
+    Friend WithEvents Label11 As Label
+    Friend WithEvents ClassPictureBoxQuality6 As ClassPictureBoxQuality
+    Friend WithEvents Button_PsmsUpdateIgnore As Button
+    Friend WithEvents Button_VdmUpdateIgnore As Button
 End Class

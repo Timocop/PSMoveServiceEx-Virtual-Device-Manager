@@ -120,4 +120,17 @@
   <metadata name="ToolTip_Service.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="ToolTip_Service.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="Label10.Text" xml:space="preserve">
+    <value>A new update for PSMoveServiceEx is now accessible.
+This update includes various improvements, performance enhancements, and additional features. 
+To experience the latest improvements, consider updating your software.</value>
+  </data>
+  <data name="Label11.Text" xml:space="preserve">
+    <value>A new update for PSMoveServiceEx - Virtual Device Manager is now accessible.
+This update includes various improvements, performance enhancements, and additional features. 
+To experience the latest improvements, consider updating your software.</value>
+  </data>
 </root>

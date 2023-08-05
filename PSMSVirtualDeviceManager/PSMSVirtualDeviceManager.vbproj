@@ -167,6 +167,7 @@
     <Compile Include="Classes\ClassServiceClient.vb" />
     <Compile Include="Classes\ClassServiceInfo.vb" />
     <Compile Include="Classes\ClassSteamVRConfig.vb" />
+    <Compile Include="Classes\ClassUpdate.vb" />
     <Compile Include="Classes\ClassUtils.vb" />
     <Compile Include="Classes\ClassVmtConst.vb" />
     <Compile Include="Classes\FormLoading.Designer.vb">
@@ -174,6 +175,9 @@
     </Compile>
     <Compile Include="Classes\FormLoading.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\ClassWebClientEx.vb">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
@@ -365,6 +369,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\user32_101_64x64-32.png" />
     <None Include="Resources\HelpTouchpadShortcuts.rtf" />
     <None Include="Resources\HelpVirtualTracker.rtf" />
     <None Include="Resources\user32_102_16x16-32.png" />

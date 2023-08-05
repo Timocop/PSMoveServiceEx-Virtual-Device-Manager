@@ -7,6 +7,7 @@ Public Class FormMain
     Public g_mUCVirtualHMDs As UCVirtualHMDs
     Public g_mUCVirtualTrackers As UCVirtualTrackers
     Public g_mPSMoveServiceCAPI As ClassServiceClient
+    Public g_mClassUpdateChecker As ClassUpdateChecker
 
     Private g_bIgnoreEvents As Boolean = False
 
@@ -23,6 +24,7 @@ Public Class FormMain
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+
         g_mUCStartPage = New UCStartPage(Me)
         g_mUCStartPage.SuspendLayout()
         g_mUCStartPage.Parent = Panel_Pages
@@ -73,6 +75,9 @@ Public Class FormMain
         End While
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
+
+        g_mClassUpdateChecker = New ClassUpdateChecker(Me)
+        g_mClassUpdateChecker.StartUpdateCheck()
 
         SelectPage(ENUM_PAGE.STARTPAGE)
     End Sub
@@ -126,6 +131,11 @@ Public Class FormMain
     End Sub
 
     Private Sub CleanUp()
+        If (g_mClassUpdateChecker IsNot Nothing) Then
+            g_mClassUpdateChecker.Dispose()
+            g_mClassUpdateChecker = Nothing
+        End If
+
         Try
             If (g_mPSMoveServiceCAPI IsNot Nothing) Then
                 g_mPSMoveServiceCAPI.Dispose()
@@ -393,4 +403,102 @@ Public Class FormMain
         Catch ex As Exception
         End Try
     End Sub
+
+    Class ClassUpdateChecker
+        Implements IDisposable
+
+        Private g_mUpdaterThread As Threading.Thread = Nothing
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_mFormMain As FormMain)
+            g_mFormMain = _mFormMain
+        End Sub
+
+        Public Sub StartUpdateCheck()
+            If (g_mUpdaterThread IsNot Nothing AndAlso g_mUpdaterThread.IsAlive) Then
+                Return
+            End If
+
+            g_mUpdaterThread = New Threading.Thread(AddressOf UpdateCheckThread)
+            g_mUpdaterThread.IsBackground = True
+            g_mUpdaterThread.Start()
+        End Sub
+
+        Private Sub UpdateCheckThread()
+            Try
+                Threading.Thread.Sleep(2500)
+
+                Dim sLocationInfo As String = ""
+
+                If (True) Then
+                    If (ClassUpdate.ClassVdm.CheckUpdateAvailable(sLocationInfo)) Then
+                        g_mFormMain.BeginInvoke(
+                            Sub()
+                                g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
+                                g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
+
+                                g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
+                            End Sub)
+                    End If
+                End If
+
+                If (True) Then
+                    Dim mConfig As New ClassServiceInfo
+                    mConfig.LoadConfig()
+
+                    If (mConfig.FileExist) Then
+                        If (ClassUpdate.ClassPsms.CheckUpdateHash(mConfig.m_FileName, sLocationInfo)) Then
+                            g_mFormMain.BeginInvoke(
+                                Sub()
+                                    g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
+                                End Sub)
+                        End If
+                    End If
+                End If
+
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+
+            End Try
+        End Sub
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_mUpdaterThread IsNot Nothing AndAlso g_mUpdaterThread.IsAlive) Then
+                        g_mUpdaterThread.Abort()
+                        g_mUpdaterThread.Join()
+                        g_mUpdaterThread = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
 End Class

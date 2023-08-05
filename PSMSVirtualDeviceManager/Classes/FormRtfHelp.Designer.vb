@@ -35,6 +35,7 @@ Partial Class FormRtfHelp
         Me.RichTextBox_Help.Location = New System.Drawing.Point(16, 16)
         Me.RichTextBox_Help.Name = "RichTextBox_Help"
         Me.RichTextBox_Help.ReadOnly = True
+        Me.RichTextBox_Help.ShortcutsEnabled = False
         Me.RichTextBox_Help.Size = New System.Drawing.Size(768, 545)
         Me.RichTextBox_Help.TabIndex = 0
         Me.RichTextBox_Help.Text = ""
