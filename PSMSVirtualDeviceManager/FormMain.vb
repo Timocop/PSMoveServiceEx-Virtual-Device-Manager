@@ -368,7 +368,14 @@ Public Class FormMain
     End Sub
 
     Private Sub FormMain_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
-        CleanUp()
+        Using mCloseForm As New FormLoading
+            mCloseForm.Text = "Closing established connections and cleaning up..."
+            mCloseForm.ProgressBar1.Style = ProgressBarStyle.Continuous
+            mCloseForm.Show()
+            mCloseForm.Refresh()
+
+            CleanUp()
+        End Using
     End Sub
 
     Private Sub LinkLabel_Github_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Github.LinkClicked
