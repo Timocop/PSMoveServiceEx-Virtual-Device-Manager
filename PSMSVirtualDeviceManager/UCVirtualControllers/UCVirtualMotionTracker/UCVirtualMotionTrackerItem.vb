@@ -728,6 +728,9 @@ Public Class UCVirtualMotionTrackerItem
             Const TOUCHPAD_CLAMP_BUFFER = 2.5F
             Const TOUCHPAD_GYRO_MULTI = 2.5F
 
+            Dim mPlayspacePositionOffset As New Vector3(0.0F, 0.0F, 0.0F)
+            Dim mPlaysapceOrientationOffset As Quaternion = Quaternion.Identity
+
             Dim iLastOutputSeqNum As Integer = 0
             Dim bJoystickButtonPressed As Boolean = False
             Dim bGripButtonPressed As Boolean = False
@@ -739,8 +742,10 @@ Public Class UCVirtualMotionTrackerItem
             Dim mLastBatteryReport As New Stopwatch
             Dim mLastRecenterTime As New Stopwatch
             Dim mLastHmdRecenterTime As New Stopwatch
+            Dim mLastPlayspaceRecenterTime As New Stopwatch
             Dim mRecenterButtonPressed As Boolean = False
             Dim mHmdRecenterButtonPressed As Boolean = False
+            Dim mPlayspaceRecenterButtonPressed As Boolean = False
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -903,8 +908,14 @@ Public Class UCVirtualMotionTrackerItem
 
 
                             SyncLock _ThreadLock
-                                g_mOscDataPack.mOrientation = mRecenterQuat * m_ControllerData.m_Orientation
-                                g_mOscDataPack.mPosition = m_ControllerData.m_Position * CSng(PSM_CENTIMETERS_TO_METERS)
+                                Dim mRawOrientation = m_ControllerData.m_Orientation
+                                Dim mOrientation = mPlaysapceOrientationOffset * mRecenterQuat * mRawOrientation
+
+                                Dim mRawPosition = m_ControllerData.m_Position
+                                Dim mPosition = mPlayspacePositionOffset + ClassQuaternionTools.RotateVector(mPlaysapceOrientationOffset, mRawPosition)
+
+                                g_mOscDataPack.mOrientation = mOrientation
+                                g_mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
 
                                 Select Case (True)
                                     Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
@@ -923,9 +934,65 @@ Public Class UCVirtualMotionTrackerItem
 
                                         Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
+                                        ' Do playspace recenter
+                                        If (m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton) Then
+                                            If (Not mPlayspaceRecenterButtonPressed) Then
+                                                mPlayspaceRecenterButtonPressed = True
+
+                                                mLastPlayspaceRecenterTime.Restart()
+                                            End If
+
+                                            If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                                                mLastPlayspaceRecenterTime.Stop()
+                                                mLastPlayspaceRecenterTime.Reset()
+
+                                                Dim sCurrentRecenterDeviceName As String = ""
+
+                                                ' If empty, do a autoamtic search and get any available HMD
+                                                If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                                    For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                                        If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                                            sCurrentRecenterDeviceName = mDevice.sSerial
+                                                        End If
+                                                    Next
+                                                End If
+
+                                                Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
+                                                If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
+
+                                                    Dim mControllerPos As Vector3 = mRawPosition
+                                                    Dim mFromDevicePos As Vector3 = mFoundDevice.GetPosCm()
+
+                                                    Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                                    Dim mQuatDirectionYaw = ClassQuaternionTools.ExtractYawQuaternion(mQuatDirection, New Vector3(0F, 0.0F, -1.0F))
+
+                                                    '' Calculate the forward direction in the world space 
+                                                    'Dim forwardDirection = ClassQuaternionTools.GetPositionInRotationSpace(mQuatDirectionYaw, New Vector3(0F, 0.0F, -1.0F))
+
+                                                    '' Move the playspace position offset forward in the UnitX direction
+                                                    'Dim forwardOffsetAmount As Single = 25.0F ' Adjust this value as needed
+                                                    'Dim forwardOffset = forwardDirection * forwardOffsetAmount
+
+                                                    Dim mControllerWorldSpace = (mFromDevicePos - mControllerPos)
+
+                                                    mPlayspacePositionOffset = mControllerWorldSpace
+                                                    mPlaysapceOrientationOffset = Quaternion.Conjugate(mQuatDirectionYaw)
+
+                                                    Dim mNewPosition = mPlayspacePositionOffset + ClassQuaternionTools.RotateVector(mPlaysapceOrientationOffset, mRawPosition)
+                                                    Dim mDriverSpace = (mFromDevicePos - mControllerPos - mNewPosition)
+
+                                                    mPlayspacePositionOffset = mDriverSpace + mFromDevicePos
+                                                End If
+                                            End If
+                                        Else
+                                            If (mPlayspaceRecenterButtonPressed) Then
+                                                mPlayspaceRecenterButtonPressed = False
+                                            End If
+                                        End If
+
                                         ' Do controller recenter
                                         If (bEnableControllerRecenter) Then
-                                            If (m_PSMoveData.m_SelectButton) Then
+                                            If (m_PSMoveData.m_SelectButton AndAlso Not m_PSMoveData.m_StartButton) Then
                                                 If (Not mRecenterButtonPressed) Then
                                                     mRecenterButtonPressed = True
 
@@ -953,32 +1020,27 @@ Public Class UCVirtualMotionTrackerItem
 
                                                             Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
                                                             If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
-                                                                Dim mControllerPos As Vector3 = m_ControllerData.m_Position
+                                                                Dim mControllerPos As Vector3 = mRawPosition
                                                                 Dim mFromDevicePos As Vector3 = mFoundDevice.GetPosCm()
 
                                                                 mControllerPos.Y = 0.0F
                                                                 mFromDevicePos.Y = 0.0F
 
+                                                                Dim mWorldOrientation = mPlaysapceOrientationOffset * mRawOrientation
                                                                 Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+                                                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mWorldOrientation, New Vector3(0F, 0.0F, -1.0F))
 
                                                                 mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
-                                                                'mRecenterQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180 * (Math.PI / 180)) * mRecenterQuat
 
                                                                 bDoFactoryRecenter = False
-
-                                                                ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                                'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity) 
                                                             End If
                                                     End Select
 
                                                     If (bDoFactoryRecenter) Then
-                                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+                                                        Dim mWorldOrientation = mPlaysapceOrientationOffset * mRawOrientation
+                                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mWorldOrientation, New Vector3(0F, 0.0F, -1.0F))
 
                                                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
-
-                                                        ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                        'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
                                                     End If
                                                 End If
                                             Else
@@ -1006,7 +1068,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             Continue For
                                                         End If
 
-                                                        If (m_PSMoveDataSearch.m_StartButton) Then
+                                                        If (m_PSMoveDataSearch.m_StartButton AndAlso Not m_PSMoveDataSearch.m_SelectButton) Then
                                                             bOtherControllerPos = m_PSMoveDataSearch.m_Position
                                                             bOtherControllerRecenterButtonPressed = True
 
@@ -1047,18 +1109,16 @@ Public Class UCVirtualMotionTrackerItem
                                                             ' Check if we are the target device.
                                                             If ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName) Then
                                                                 Dim mControllerPos As Vector3 = bOtherControllerPos
-                                                                Dim mFromDevicePos As Vector3 = m_ControllerData.m_Position
+                                                                Dim mFromDevicePos As Vector3 = mRawPosition
 
                                                                 mControllerPos.Y = 0.0F
                                                                 mFromDevicePos.Y = 0.0F
 
+                                                                Dim mWorldOrientation = mPlaysapceOrientationOffset * mRawOrientation
                                                                 Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+                                                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mWorldOrientation, New Vector3(0F, 0.0F, -1.0F))
 
                                                                 mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
-
-                                                                ' TODO: Get playspace yaw from PSMSX and apply to SetControllerRecenter()
-                                                                'mServiceClient.SetControllerRecenter(g_iIndex, Quaternion.Identity)
 
                                                                 bDoFactoryRecenter = False
                                                             Else
@@ -1067,7 +1127,8 @@ Public Class UCVirtualMotionTrackerItem
                                                     End Select
 
                                                     If (bDoFactoryRecenter) Then
-                                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(m_ControllerData.m_Orientation, New Vector3(0F, 0.0F, -1.0F))
+                                                        Dim mWorldOrientation = mPlaysapceOrientationOffset * mRawOrientation
+                                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mWorldOrientation, New Vector3(0F, 0.0F, -1.0F))
 
                                                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
