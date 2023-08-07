@@ -663,6 +663,13 @@ Public Class UCVirtualMotionTracker
             End Get
             Set(value As Long)
                 SyncLock _ThreadLock
+                    If (value < 1) Then
+                        value = 1
+                    End If
+                    If (value > 10000) Then
+                        value = 10000
+                    End If
+
                     g_iRecenterButtonTimeMs = value
                 End SyncLock
             End Set

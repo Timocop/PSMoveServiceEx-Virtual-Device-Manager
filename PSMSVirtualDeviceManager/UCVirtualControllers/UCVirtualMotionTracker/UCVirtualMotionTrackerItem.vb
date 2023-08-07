@@ -900,12 +900,7 @@ Public Class UCVirtualMotionTrackerItem
                             Dim iTouchpadTouchAreaCm = mClassControllerSettings.m_HtcTouchpadTouchAreaCm
                             Dim iTouchpadClickDeadzone = mClassControllerSettings.m_HtcTouchpadClickDeadzone
 
-                            If (iRecenterButtonTimeMs < 1) Then
-                                iRecenterButtonTimeMs = 1
-                            End If
-                            If (iRecenterButtonTimeMs > 10000) Then
-                                iRecenterButtonTimeMs = 10000
-                            End If
+
 
                             SyncLock _ThreadLock
                                 g_mOscDataPack.mOrientation = mRecenterQuat * m_ControllerData.m_Orientation
