@@ -985,7 +985,15 @@ Public Class UCVirtualMotionTracker
                                 End Select
                             Next
 
-                            mDeviceList.Add(New STRUC_DEVICE(iIndex, CType(iType, STRUC_DEVICE.ENUM_DEVICE_TYPE), sSerial))
+                            Dim mDevice As New STRUC_DEVICE(iIndex, CType(iType, STRUC_DEVICE.ENUM_DEVICE_TYPE), sSerial)
+
+                            Select Case (mDevice.iType)
+                                Case STRUC_DEVICE.ENUM_DEVICE_TYPE.CONTROLLER,
+                                        STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD,
+                                        STRUC_DEVICE.ENUM_DEVICE_TYPE.TRACKER
+
+                                    mDeviceList.Add(mDevice)
+                            End Select
                         Next
 
 
@@ -1029,14 +1037,20 @@ Public Class UCVirtualMotionTracker
                             Dim mDevice As STRUC_DEVICE = Nothing
 
                             If (g_mDevicesDic.TryGetValue(sSerial, mDevice)) Then
-                                mDevice.mPos = New Vector3(iPosX, iPosY, iPosZ)
-                                mDevice.mOrientation = New Quaternion(iQuatX, iQuatY, iQuatZ, iQuatW)
+                                Select Case (mDevice.iType)
+                                    Case STRUC_DEVICE.ENUM_DEVICE_TYPE.CONTROLLER,
+                                            STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD,
+                                            STRUC_DEVICE.ENUM_DEVICE_TYPE.TRACKER
 
-                                mDevice.mLastPoseTimestamp = Now
+                                        mDevice.mPos = New Vector3(iPosX, iPosY, iPosZ)
+                                        mDevice.mOrientation = New Quaternion(iQuatX, iQuatY, iQuatZ, iQuatW)
 
-                                g_mDevicesDic(sSerial) = mDevice
+                                        mDevice.mLastPoseTimestamp = Now
 
-                                RaiseEvent OnDevicePose(mDevice)
+                                        g_mDevicesDic(sSerial) = mDevice
+
+                                        RaiseEvent OnDevicePose(mDevice)
+                                End Select
                             End If
                         End SyncLock
                 End Select
