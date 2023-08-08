@@ -746,6 +746,10 @@ Public Class UCVirtualMotionTrackerItem
             Dim mRecenterButtonPressed As Boolean = False
             Dim mHmdRecenterButtonPressed As Boolean = False
             Dim mPlayspaceRecenterButtonPressed As Boolean = False
+            Dim mPlayspaceRecenterButtonHolding As Boolean = False
+            Dim mPlayspaceRecenterLastControllerPos As New Vector3
+            Dim mPlayspaceRecenterLastHmdPos As New Vector3
+            Dim mPlayspaceRecenterLastHmdSerial As String = ""
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -909,10 +913,23 @@ Public Class UCVirtualMotionTrackerItem
 
                             SyncLock _ThreadLock
                                 Dim mRawOrientation = m_ControllerData.m_Orientation
-                                Dim mOrientation = mPlaysapceOrientationOffset * mRecenterQuat * mRawOrientation
+                                Dim mOrientation = Quaternion.Conjugate(mPlaysapceOrientationOffset) * mRecenterQuat * mRawOrientation
 
                                 Dim mRawPosition = m_ControllerData.m_Position
-                                Dim mPosition = mPlayspacePositionOffset + ClassQuaternionTools.RotateVector(mPlaysapceOrientationOffset, mRawPosition)
+                                Dim mPosition = mRawPosition
+
+                                ' Playsapce offsets, used for playspace calibration
+                                If (Not mPlayspaceRecenterButtonPressed) Then
+                                    Dim mPlayspaceCalibPointsRotated = ClassQuaternionTools.RotateVector(
+                                        Quaternion.Conjugate(mPlaysapceOrientationOffset), mPlayspaceRecenterLastControllerPos)
+
+                                    mPlayspaceCalibPointsRotated = mPlayspaceRecenterLastHmdPos - mPlayspaceCalibPointsRotated
+
+                                    Dim mPlayspaceRotated = ClassQuaternionTools.RotateVector(
+                                        Quaternion.Conjugate(mPlaysapceOrientationOffset), mPosition)
+
+                                    mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated
+                                End If
 
                                 g_mOscDataPack.mOrientation = mOrientation
                                 g_mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
@@ -939,54 +956,67 @@ Public Class UCVirtualMotionTrackerItem
                                             If (Not mPlayspaceRecenterButtonPressed) Then
                                                 mPlayspaceRecenterButtonPressed = True
 
+                                                mPlayspaceRecenterButtonHolding = False
+                                                mPlayspaceRecenterLastControllerPos = New Vector3
+                                                mPlayspaceRecenterLastHmdPos = New Vector3
+                                                mPlayspaceRecenterLastHmdSerial = ""
+
                                                 mLastPlayspaceRecenterTime.Restart()
                                             End If
 
                                             If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
-                                                mLastPlayspaceRecenterTime.Stop()
-                                                mLastPlayspaceRecenterTime.Reset()
+                                                If (Not mPlayspaceRecenterButtonHolding) Then
+                                                    mPlayspaceRecenterButtonHolding = True
 
-                                                Dim sCurrentRecenterDeviceName As String = ""
+                                                    Dim sCurrentRecenterDeviceName As String = ""
 
-                                                ' If empty, do a autoamtic search and get any available HMD
-                                                If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
-                                                    For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
-                                                        If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
-                                                            sCurrentRecenterDeviceName = mDevice.sSerial
-                                                        End If
-                                                    Next
+                                                    ' If empty, do a autoamtic search and get any available HMD
+                                                    If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                                        For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                                            If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                                                sCurrentRecenterDeviceName = mDevice.sSerial
+                                                            End If
+                                                        Next
+                                                    End If
+
+                                                    Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
+                                                    If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
+                                                        mPlayspaceRecenterLastControllerPos = mRawPosition
+                                                        mPlayspaceRecenterLastHmdPos = mFoundDevice.GetPosCm()
+                                                        mPlayspaceRecenterLastHmdSerial = sCurrentRecenterDeviceName
+                                                    End If
                                                 End If
 
-                                                Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
-                                                If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
+                                                If (Not String.IsNullOrEmpty(mPlayspaceRecenterLastHmdSerial)) Then
+                                                    Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
+                                                    If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(mPlayspaceRecenterLastHmdSerial, mFoundDevice)) Then
 
-                                                    Dim mControllerPos As Vector3 = mRawPosition
-                                                    Dim mFromDevicePos As Vector3 = mFoundDevice.GetPosCm()
+                                                        Dim mControllerPosBegin As Vector3 = mPlayspaceRecenterLastControllerPos
+                                                        Dim mControllerPosEnd As Vector3 = mRawPosition
+                                                        Dim mFromDevicePosBegin As Vector3 = mPlayspaceRecenterLastHmdPos
+                                                        Dim mFromDevicePosEnd As Vector3 = mFoundDevice.GetPosCm()
 
-                                                    Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                                    Dim mQuatDirectionYaw = ClassQuaternionTools.ExtractYawQuaternion(mQuatDirection, New Vector3(0F, 0.0F, -1.0F))
+                                                        mControllerPosBegin.Y = 0.0F
+                                                        mControllerPosEnd.Y = 0.0F
+                                                        mFromDevicePosBegin.Y = 0.0F
+                                                        mFromDevicePosEnd.Y = 0.0F
 
-                                                    '' Calculate the forward direction in the world space 
-                                                    'Dim forwardDirection = ClassQuaternionTools.GetPositionInRotationSpace(mQuatDirectionYaw, New Vector3(0F, 0.0F, -1.0F))
+                                                        Dim mRelControllerVec = ClassQuaternionTools.LookRotation(mControllerPosEnd - mControllerPosBegin, Vector3.UnitY)
+                                                        Dim mRelDeviceVec = ClassQuaternionTools.LookRotation(mFromDevicePosEnd - mFromDevicePosBegin, Vector3.UnitY)
+                                                        Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
 
-                                                    '' Move the playspace position offset forward in the UnitX direction
-                                                    'Dim forwardOffsetAmount As Single = 25.0F ' Adjust this value as needed
-                                                    'Dim forwardOffset = forwardDirection * forwardOffsetAmount
+                                                        mPlayspacePositionOffset = mFromDevicePosEnd - mControllerPosEnd
+                                                        mPlaysapceOrientationOffset = mVecDiff
 
-                                                    Dim mControllerWorldSpace = (mFromDevicePos - mControllerPos)
-
-                                                    mPlayspacePositionOffset = mControllerWorldSpace
-                                                    mPlaysapceOrientationOffset = Quaternion.Conjugate(mQuatDirectionYaw)
-
-                                                    Dim mNewPosition = mPlayspacePositionOffset + ClassQuaternionTools.RotateVector(mPlaysapceOrientationOffset, mRawPosition)
-                                                    Dim mDriverSpace = (mFromDevicePos - mControllerPos - mNewPosition)
-
-                                                    mPlayspacePositionOffset = mDriverSpace + mFromDevicePos
+                                                    End If
                                                 End If
                                             End If
                                         Else
                                             If (mPlayspaceRecenterButtonPressed) Then
                                                 mPlayspaceRecenterButtonPressed = False
+                                            End If
+                                            If (mPlayspaceRecenterButtonHolding) Then
+                                                mPlayspaceRecenterButtonHolding = False
                                             End If
                                         End If
 
