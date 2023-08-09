@@ -452,9 +452,25 @@ Public Class UCVirtualMotionTracker
         Private g_iOscThreadSleepMs As Long = 1
         Private g_iTouchpadTouchAreaCm As Single = 7.5F
         Private g_iTouchpadClickDeadzone As Single = 0.25F
+        Private g_mPlaySpaceSettings As STRUC_PLAYSPACE_SETTINGS
+
+        Class STRUC_PLAYSPACE_SETTINGS
+            Public mPosOffset As Vector3
+            Public mAngOffset As Quaternion
+
+            Public mPointControllerBeginPos As Vector3
+            Public mPointControllerEndPos As Vector3
+            Public mPointHmdBeginPos As Vector3
+            Public mPointHmdEndPos As Vector3
+            Public bValid As Boolean
+        End Class
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+
+            g_mPlaySpaceSettings = New STRUC_PLAYSPACE_SETTINGS()
+            g_mPlaySpaceSettings.bValid = False
+            g_mPlaySpaceSettings.mAngOffset = Quaternion.Identity
         End Sub
 
         Property m_JoystickShortcutBinding As Boolean
@@ -735,6 +751,14 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
+        ReadOnly Property m_PlayspaceSettings As STRUC_PLAYSPACE_SETTINGS
+            Get
+                SyncLock _ThreadLock
+                    Return g_mPlaySpaceSettings
+                End SyncLock
+            End Get
+        End Property
+
         Public Sub LoadSettings()
             g_bSettingsLoaded = True
 
@@ -794,11 +818,78 @@ Public Class UCVirtualMotionTracker
                     If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadClickDeadzone", "0.25"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_HtcTouchpadClickDeadzone = tmpSng
                     End If
+
+
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPosOffset.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPosOffset.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPosOffset.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.Z = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.W = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerBeginPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerBeginPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerBeginPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerEndPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerEndPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerEndPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdBeginPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdBeginPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdBeginPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdEndPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdEndPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdEndPos.Z = tmpSng
+                    End If
+
+                    m_PlayspaceSettings.bValid = (mIni.ReadKeyValue("PlayspaceSettings", "Valid", "false") = "true")
                 End Using
             End Using
         End Sub
 
-        Public Sub SaveSettings()
+        Public Sub SaveSettings(bPlayspaceOnly As Boolean)
             If (Not g_bSettingsLoaded) Then
                 Return
             End If
@@ -807,24 +898,53 @@ Public Class UCVirtualMotionTracker
                 Using mIni As New ClassIni(mStream)
                     Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_JoystickShortcutBinding, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_JoystickShortcutTouchpadClick, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "DisableBaseStationSpawning", If(m_DisableBaseStationSpawning, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_EnableHepticFeedback, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_HtcTouchpadEmulationClickMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_HtcGripButtonMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_HtcClampTouchpadToBounds, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_HtcTouchpadMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_EnableControllerRecenter, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerRecenterMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterFromDeviceName", m_ControllerRecenterFromDeviceName))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHmdRecenter", If(m_EnableHmdRecenter, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterMethod", CStr(CInt(m_HmdRecenterMethod))))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_HmdRecenterFromDeviceName))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_RecenterButtonTimeMs)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_OscThreadSleepMs)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    If (Not bPlayspaceOnly) Then
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_JoystickShortcutBinding, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_JoystickShortcutTouchpadClick, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "DisableBaseStationSpawning", If(m_DisableBaseStationSpawning, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_EnableHepticFeedback, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_HtcTouchpadEmulationClickMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_HtcGripButtonMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_HtcClampTouchpadToBounds, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_HtcTouchpadMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_EnableControllerRecenter, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerRecenterMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterFromDeviceName", m_ControllerRecenterFromDeviceName))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHmdRecenter", If(m_EnableHmdRecenter, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterMethod", CStr(CInt(m_HmdRecenterMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_HmdRecenterFromDeviceName))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_RecenterButtonTimeMs)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_OscThreadSleepMs)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    End If
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetX", m_PlayspaceSettings.mPosOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetY", m_PlayspaceSettings.mPosOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetZ", m_PlayspaceSettings.mPosOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetX", m_PlayspaceSettings.mAngOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetY", m_PlayspaceSettings.mAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetZ", m_PlayspaceSettings.mAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetW", m_PlayspaceSettings.mAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerBeginPosX", m_PlayspaceSettings.mPointControllerBeginPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerBeginPosY", m_PlayspaceSettings.mPointControllerBeginPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerBeginPosZ", m_PlayspaceSettings.mPointControllerBeginPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerEndPosX", m_PlayspaceSettings.mPointControllerEndPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerEndPosY", m_PlayspaceSettings.mPointControllerEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerEndPosZ", m_PlayspaceSettings.mPointControllerEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdBeginPosX", m_PlayspaceSettings.mPointHmdBeginPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdBeginPosY", m_PlayspaceSettings.mPointHmdBeginPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdBeginPosZ", m_PlayspaceSettings.mPointHmdBeginPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosX", m_PlayspaceSettings.mPointHmdEndPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosY", m_PlayspaceSettings.mPointHmdEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosZ", m_PlayspaceSettings.mPointHmdEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "Valid", If(m_PlayspaceSettings.bValid, "true", "false")))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using
