@@ -235,7 +235,7 @@
                                     iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
                                     iPercentage = 0
                                 Else
-                                    Throw New ArgumentException("User did not move tracker and head mount display in time! Aborted.")
+                                    Throw New ArgumentException("Controller and head mount display have not been moved in time! Aborted.")
                                 End If
                             End If
 
