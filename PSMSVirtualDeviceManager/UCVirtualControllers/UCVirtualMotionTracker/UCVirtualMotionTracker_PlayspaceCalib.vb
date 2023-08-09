@@ -11,6 +11,8 @@
 
     Private Sub Button_PlaySpaceManualCalib_Click(sender As Object, e As EventArgs) Handles Button_PlaySpaceManualCalib.Click
         StartPlayspaceCalibration()
+
+        Panel_PlayCalibSteps.Focus()
     End Sub
 
     Private Sub LinkLabel_PlayCalibShowSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibShowSettings.LinkClicked

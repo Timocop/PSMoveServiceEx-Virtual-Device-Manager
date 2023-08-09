@@ -110,7 +110,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.TabPage_PlayspaceCalib = New System.Windows.Forms.TabPage()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel_PlayCalibSteps = New System.Windows.Forms.Panel()
         Me.Panel16 = New System.Windows.Forms.Panel()
         Me.Panel15 = New System.Windows.Forms.Panel()
         Me.Label38 = New System.Windows.Forms.Label()
@@ -195,7 +195,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsOther.SuspendLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_PlayspaceCalib.SuspendLayout()
-        Me.Panel1.SuspendLayout()
+        Me.Panel_PlayCalibSteps.SuspendLayout()
         Me.Panel15.SuspendLayout()
         Me.Panel14.SuspendLayout()
         Me.Panel13.SuspendLayout()
@@ -657,7 +657,7 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox1.Location = New System.Drawing.Point(3, 241)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(734, 639)
+        Me.GroupBox1.Size = New System.Drawing.Size(734, 657)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
@@ -666,7 +666,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.Label_ScrollFocus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label_ScrollFocus.AutoSize = True
-        Me.Label_ScrollFocus.Location = New System.Drawing.Point(636, 623)
+        Me.Label_ScrollFocus.Location = New System.Drawing.Point(636, 641)
         Me.Label_ScrollFocus.Name = "Label_ScrollFocus"
         Me.Label_ScrollFocus.Size = New System.Drawing.Size(92, 13)
         Me.Label_ScrollFocus.TabIndex = 70
@@ -675,7 +675,7 @@ Partial Class UCVirtualMotionTracker
         '
         'NumericUpDown_PlayCalibForwardOffset
         '
-        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(236, 519)
+        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(236, 532)
         Me.NumericUpDown_PlayCalibForwardOffset.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_PlayCalibForwardOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_PlayCalibForwardOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
@@ -687,7 +687,7 @@ Partial Class UCVirtualMotionTracker
         'Label26
         '
         Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(19, 521)
+        Me.Label26.Location = New System.Drawing.Point(19, 534)
         Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(211, 13)
@@ -697,7 +697,7 @@ Partial Class UCVirtualMotionTracker
         'Button_PlayCalibReset
         '
         Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 560)
+        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 573)
         Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
         Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
@@ -716,10 +716,9 @@ Partial Class UCVirtualMotionTracker
         Me.Label25.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label25.Name = "Label25"
         Me.Label25.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label25.Size = New System.Drawing.Size(437, 32)
+        Me.Label25.Size = New System.Drawing.Size(504, 45)
         Me.Label25.TabIndex = 66
-        Me.Label25.Text = "        Holding the SELECT+START button on the PSmove controller will recenter th" &
-    "e " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        playspace to the head mount display. "
+        Me.Label25.Text = resources.GetString("Label25.Text")
         '
         'CheckBox_PlayCalibEnabled
         '
@@ -736,7 +735,7 @@ Partial Class UCVirtualMotionTracker
         'Button_RecenterButtonTimeReset
         '
         Me.Button_RecenterButtonTimeReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(298, 599)
+        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(298, 612)
         Me.Button_RecenterButtonTimeReset.Name = "Button_RecenterButtonTimeReset"
         Me.Button_RecenterButtonTimeReset.Size = New System.Drawing.Size(23, 23)
         Me.Button_RecenterButtonTimeReset.TabIndex = 62
@@ -744,7 +743,7 @@ Partial Class UCVirtualMotionTracker
         '
         'NumericUpDown_RecenterButtonTime
         '
-        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 600)
+        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 613)
         Me.NumericUpDown_RecenterButtonTime.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_RecenterButtonTime.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_RecenterButtonTime.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
@@ -756,7 +755,7 @@ Partial Class UCVirtualMotionTracker
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(19, 602)
+        Me.Label13.Location = New System.Drawing.Point(19, 615)
         Me.Label13.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(172, 13)
@@ -845,7 +844,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label17.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label17.Name = "Label17"
         Me.Label17.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label17.Size = New System.Drawing.Size(494, 58)
+        Me.Label17.Size = New System.Drawing.Size(509, 58)
         Me.Label17.TabIndex = 53
         Me.Label17.Text = resources.GetString("Label17.Text")
         '
@@ -1252,7 +1251,7 @@ Partial Class UCVirtualMotionTracker
         'TabPage_PlayspaceCalib
         '
         Me.TabPage_PlayspaceCalib.AutoScroll = True
-        Me.TabPage_PlayspaceCalib.Controls.Add(Me.Panel1)
+        Me.TabPage_PlayspaceCalib.Controls.Add(Me.Panel_PlayCalibSteps)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.ComboBox_PlayCalibControllerID)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.Label28)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.LinkLabel_PlayCalibShowSettings)
@@ -1267,27 +1266,27 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_PlayspaceCalib.Text = "Playspace Calibration"
         Me.TabPage_PlayspaceCalib.UseVisualStyleBackColor = True
         '
-        'Panel1
+        'Panel_PlayCalibSteps
         '
-        Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_PlayCalibSteps.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.AutoSize = True
-        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel1.Controls.Add(Me.Panel16)
-        Me.Panel1.Controls.Add(Me.Panel15)
-        Me.Panel1.Controls.Add(Me.Panel14)
-        Me.Panel1.Controls.Add(Me.Panel17)
-        Me.Panel1.Controls.Add(Me.Panel13)
-        Me.Panel1.Controls.Add(Me.Panel18)
-        Me.Panel1.Controls.Add(Me.Panel11)
-        Me.Panel1.Controls.Add(Me.Panel9)
-        Me.Panel1.Controls.Add(Me.Panel7)
-        Me.Panel1.Controls.Add(Me.Panel5)
-        Me.Panel1.Location = New System.Drawing.Point(16, 182)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(728, 367)
-        Me.Panel1.TabIndex = 69
+        Me.Panel_PlayCalibSteps.AutoSize = True
+        Me.Panel_PlayCalibSteps.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel16)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel15)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel14)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel17)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel13)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel18)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel11)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel9)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel7)
+        Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel5)
+        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 182)
+        Me.Panel_PlayCalibSteps.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_PlayCalibSteps.Name = "Panel_PlayCalibSteps"
+        Me.Panel_PlayCalibSteps.Size = New System.Drawing.Size(728, 367)
+        Me.Panel_PlayCalibSteps.TabIndex = 69
         '
         'Panel16
         '
@@ -1991,7 +1990,7 @@ Partial Class UCVirtualMotionTracker
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_PlayspaceCalib.ResumeLayout(False)
         Me.TabPage_PlayspaceCalib.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
+        Me.Panel_PlayCalibSteps.ResumeLayout(False)
         Me.Panel15.ResumeLayout(False)
         Me.Panel15.PerformLayout()
         Me.Panel14.ResumeLayout(False)
@@ -2132,7 +2131,7 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label27 As Label
     Friend WithEvents ComboBox_PlayCalibControllerID As ComboBox
     Friend WithEvents Label28 As Label
-    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel_PlayCalibSteps As Panel
     Friend WithEvents Panel7 As Panel
     Friend WithEvents ClassPictureBoxQuality_CalibStep1 As ClassPictureBoxQuality
     Friend WithEvents Panel5 As Panel

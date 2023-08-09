@@ -122,11 +122,16 @@
 It offers various tracker roles, such as body trackers, controllers, and Head Mount Display 6-DoF pose replacement.
 </value>
   </data>
+  <data name="Label25.Text" xml:space="preserve">
+    <value>        Holding the SELECT+START button on the PSmove controller will recenter the playspace to 
+        the head mount display. 
+        Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
+  </data>
   <data name="Label17.Text" xml:space="preserve">
-    <value>        Tracker recentering is temporary and will reset when Virtual Device Manager closes.
+    <value>        Controller recentering is temporary and will reset when Virtual Device Manager closes.
         For permanent recenter use the "World Orientation Yaw" offset 
         in "Controller Settings" when using Service Config Tool.
-        However, this permanent method is only recommended for trackers with magnetometers!</value>
+        However, this permanent method is only recommended for controllers with magnetometers!</value>
   </data>
   <data name="Label16.Text" xml:space="preserve">
     <value>        Holding the START button on the PSmove controller will recenter the target trackers orientation. 
