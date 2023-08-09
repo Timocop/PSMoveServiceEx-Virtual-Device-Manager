@@ -319,6 +319,33 @@
         NumericUpDown_RecenterButtonTime.Value = 500
     End Sub
 
+    Private Sub Button_PlayCalibReset_Click(sender As Object, e As EventArgs) Handles Button_PlayCalibReset.Click
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_PlayspaceSettings.bValid = False
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_PlayCalibEnabled_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_PlayCalibEnabled.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_EnablePlayspaceRecenter = CheckBox_PlayCalibEnabled.Checked
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PlayCalibForwardOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PlayCalibForwardOffset.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_PlayspaceSettings.iForwardOffset = NumericUpDown_PlayCalibForwardOffset.Value
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
             g_ClassControllerSettings.SaveSettings(False)

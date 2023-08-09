@@ -267,6 +267,9 @@
     <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_Overrides.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_PlayspaceCalib.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UCVirtualControllers\UCVirtualMotionTracker\UCVirtualMotionTracker_Settings.vb">
       <SubType>UserControl</SubType>
     </Compile>

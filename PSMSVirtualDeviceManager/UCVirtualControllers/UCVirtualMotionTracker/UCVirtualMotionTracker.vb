@@ -148,6 +148,21 @@ Public Class UCVirtualMotionTracker
             ContextMenuStrip_Autostart.Items.Add(mItem)
         Next
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_PlayCalibControllerID.Items.Clear()
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                ComboBox_PlayCalibControllerID.Items.Add(i)
+            Next
+
+            ComboBox_PlayCalibControllerID.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+
+
         CreateControl()
 
         Panel_SteamVRRestart.Visible = False
@@ -196,6 +211,9 @@ Public Class UCVirtualMotionTracker
 
                 NumericUpDown_TouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_TouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_TouchpadClickDeadzone.Maximum, g_ClassControllerSettings.m_HtcTouchpadClickDeadzone)))
                 NumericUpDown_TouchpadTouchArea.Value = CDec(Math.Max(NumericUpDown_TouchpadTouchArea.Minimum, Math.Min(NumericUpDown_TouchpadTouchArea.Maximum, g_ClassControllerSettings.m_HtcTouchpadTouchAreaCm)))
+
+                CheckBox_PlayCalibEnabled.Checked = g_ClassControllerSettings.m_EnablePlayspaceRecenter
+                NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassControllerSettings.m_PlayspaceSettings.iForwardOffset)))
 
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
@@ -453,6 +471,7 @@ Public Class UCVirtualMotionTracker
         Private g_iTouchpadTouchAreaCm As Single = 7.5F
         Private g_iTouchpadClickDeadzone As Single = 0.25F
         Private g_mPlaySpaceSettings As STRUC_PLAYSPACE_SETTINGS
+        Private g_bEnablePlayspaceRecenter As Boolean
 
         Class STRUC_PLAYSPACE_SETTINGS
             Public mPosOffset As Vector3
@@ -463,6 +482,9 @@ Public Class UCVirtualMotionTracker
             Public mPointHmdBeginPos As Vector3
             Public mPointHmdEndPos As Vector3
             Public bValid As Boolean
+
+            Public iForwardOffset As Single
+            Public iRecenterControllerID As Integer
         End Class
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
@@ -751,6 +773,19 @@ Public Class UCVirtualMotionTracker
             End Set
         End Property
 
+        Property m_EnablePlayspaceRecenter As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bEnablePlayspaceRecenter
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bEnablePlayspaceRecenter = value
+                End SyncLock
+            End Set
+        End Property
+
         ReadOnly Property m_PlayspaceSettings As STRUC_PLAYSPACE_SETTINGS
             Get
                 SyncLock _ThreadLock
@@ -819,6 +854,8 @@ Public Class UCVirtualMotionTracker
                         m_HtcTouchpadClickDeadzone = tmpSng
                     End If
 
+                    m_EnablePlayspaceRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
+
 
 
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -843,6 +880,7 @@ Public Class UCVirtualMotionTracker
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_PlayspaceSettings.mAngOffset.W = tmpSng
                     End If
+
 
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_PlayspaceSettings.mPointControllerBeginPos.X = tmpSng
@@ -885,6 +923,11 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     m_PlayspaceSettings.bValid = (mIni.ReadKeyValue("PlayspaceSettings", "Valid", "false") = "true")
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.iForwardOffset = tmpSng
+                    End If
+
                 End Using
             End Using
         End Sub
@@ -917,6 +960,7 @@ Public Class UCVirtualMotionTracker
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_OscThreadSleepMs)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_EnablePlayspaceRecenter, "true", "false")))
                     End If
 
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetX", m_PlayspaceSettings.mPosOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
@@ -945,6 +989,7 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosZ", m_PlayspaceSettings.mPointHmdEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "Valid", If(m_PlayspaceSettings.bValid, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardOffset", m_PlayspaceSettings.iForwardOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using
