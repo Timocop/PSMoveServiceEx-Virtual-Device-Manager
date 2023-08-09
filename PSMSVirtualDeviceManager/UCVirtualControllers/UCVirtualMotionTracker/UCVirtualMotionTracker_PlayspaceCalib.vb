@@ -188,6 +188,10 @@
                     Return Nothing
                 End Function), UCVirtualMotionTrackerItem)
 
+            If (mTargetTracker Is Nothing) Then
+                Throw New ArgumentException("Controller is not available!")
+            End If
+
             Try
                 While True
                     Select Case (iStep)
