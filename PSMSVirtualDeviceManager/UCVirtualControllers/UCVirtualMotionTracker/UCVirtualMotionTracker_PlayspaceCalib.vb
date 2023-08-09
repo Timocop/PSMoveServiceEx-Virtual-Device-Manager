@@ -14,7 +14,8 @@
     End Sub
 
     Private Sub LinkLabel_PlayCalibShowSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibShowSettings.LinkClicked
-        TabControl1.SelectedTab = TabPage_Settings
+        TabControl_Vmt.SelectedTab = TabPage_Settings
+        TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPSmove
 
         ' Weird focus
         Label_ScrollFocus.Visible = True
