@@ -87,10 +87,11 @@ Public Class UCStartPage
         While True
             Try
                 Const LISTVIEW_SUBITEM_TYPE As Integer = 0
-                Const LISTVIEW_SUBITEM_SERIAL As Integer = 1
-                Const LISTVIEW_SUBITEM_POSITION As Integer = 2
-                Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
-                Const LISTVIEW_SUBITEM_BATTERY As Integer = 4
+                Const LISTVIEW_SUBITEM_ID As Integer = 1
+                Const LISTVIEW_SUBITEM_SERIAL As Integer = 2
+                Const LISTVIEW_SUBITEM_POSITION As Integer = 3
+                Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 4
+                Const LISTVIEW_SUBITEM_BATTERY As Integer = 5
 
                 ' List Controllers
                 If (True) Then
@@ -113,6 +114,7 @@ Public Class UCStartPage
                                            ListView_ServiceDevices.BeginUpdate()
                                            For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
@@ -120,7 +122,7 @@ Public Class UCStartPage
                                                    mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
                                                    bFound = True
-                                                   End If
+                                               End If
                                            Next
                                            ListView_ServiceDevices.EndUpdate()
 
@@ -135,6 +137,7 @@ Public Class UCStartPage
 
                                                Dim mListViewItem = New ListViewItem(New String() {
                                                     sDeviceType,
+                                                    CStr(mDevice.m_Id),
                                                     mDevice.m_Serial,
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
@@ -180,6 +183,7 @@ Public Class UCStartPage
                                            ListView_ServiceDevices.BeginUpdate()
                                            For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = "-1"
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
@@ -195,6 +199,7 @@ Public Class UCStartPage
                                            If (Not bFound) Then
                                                Dim mListViewItem = New ListViewItem(New String() {
                                                     "TRACKER",
+                                                    "-1",
                                                     mDevice.m_Path,
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),

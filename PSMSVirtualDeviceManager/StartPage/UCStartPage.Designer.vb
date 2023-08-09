@@ -73,6 +73,7 @@ Partial Class UCStartPage
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel16 = New System.Windows.Forms.Panel()
         Me.Panel9 = New System.Windows.Forms.Panel()
+        Me.Button_PsmsUpdateIgnore = New System.Windows.Forms.Button()
         Me.Button_PsmsxUpdateDownload = New System.Windows.Forms.Button()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -82,6 +83,7 @@ Partial Class UCStartPage
         Me.Panel_PsmsxUpdate = New System.Windows.Forms.Panel()
         Me.Panel_VdmUpdate = New System.Windows.Forms.Panel()
         Me.Panel17 = New System.Windows.Forms.Panel()
+        Me.Button_VdmUpdateIgnore = New System.Windows.Forms.Button()
         Me.Button_VdmUpdateDownload = New System.Windows.Forms.Button()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality6 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -90,8 +92,7 @@ Partial Class UCStartPage
         Me.Panel19 = New System.Windows.Forms.Panel()
         Me.Panel20 = New System.Windows.Forms.Panel()
         Me.Panel21 = New System.Windows.Forms.Panel()
-        Me.Button_PsmsUpdateIgnore = New System.Windows.Forms.Button()
-        Me.Button_VdmUpdateIgnore = New System.Windows.Forms.Button()
+        Me.ColumnHeader_ID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
@@ -583,7 +584,7 @@ Partial Class UCStartPage
         '
         Me.ListView_ServiceDevices.BackColor = System.Drawing.Color.White
         Me.ListView_ServiceDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_ServiceDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Pos, Me.ColumnHeader_Orientation, Me.ColumnHeader_Battery})
+        Me.ListView_ServiceDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_ID, Me.ColumnHeader_Serial, Me.ColumnHeader_Pos, Me.ColumnHeader_Orientation, Me.ColumnHeader_Battery})
         Me.ListView_ServiceDevices.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_ServiceDevices.FullRowSelect = True
         Me.ListView_ServiceDevices.HideSelection = False
@@ -669,6 +670,18 @@ Partial Class UCStartPage
         Me.Panel9.Name = "Panel9"
         Me.Panel9.Size = New System.Drawing.Size(861, 140)
         Me.Panel9.TabIndex = 3
+        '
+        'Button_PsmsUpdateIgnore
+        '
+        Me.Button_PsmsUpdateIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_PsmsUpdateIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_PsmsUpdateIgnore.Location = New System.Drawing.Point(215, 99)
+        Me.Button_PsmsUpdateIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_PsmsUpdateIgnore.Name = "Button_PsmsUpdateIgnore"
+        Me.Button_PsmsUpdateIgnore.Size = New System.Drawing.Size(95, 23)
+        Me.Button_PsmsUpdateIgnore.TabIndex = 4
+        Me.Button_PsmsUpdateIgnore.Text = "Ignore"
+        Me.Button_PsmsUpdateIgnore.UseVisualStyleBackColor = True
         '
         'Button_PsmsxUpdateDownload
         '
@@ -775,6 +788,18 @@ Partial Class UCStartPage
         Me.Panel17.Size = New System.Drawing.Size(861, 140)
         Me.Panel17.TabIndex = 3
         '
+        'Button_VdmUpdateIgnore
+        '
+        Me.Button_VdmUpdateIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_VdmUpdateIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_VdmUpdateIgnore.Location = New System.Drawing.Point(215, 99)
+        Me.Button_VdmUpdateIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_VdmUpdateIgnore.Name = "Button_VdmUpdateIgnore"
+        Me.Button_VdmUpdateIgnore.Size = New System.Drawing.Size(95, 23)
+        Me.Button_VdmUpdateIgnore.TabIndex = 7
+        Me.Button_VdmUpdateIgnore.Text = "Ignore"
+        Me.Button_VdmUpdateIgnore.UseVisualStyleBackColor = True
+        '
         'Button_VdmUpdateDownload
         '
         Me.Button_VdmUpdateDownload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -861,29 +886,9 @@ Partial Class UCStartPage
         Me.Panel21.Size = New System.Drawing.Size(893, 300)
         Me.Panel21.TabIndex = 7
         '
-        'Button_PsmsUpdateIgnore
+        'ColumnHeader_ID
         '
-        Me.Button_PsmsUpdateIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_PsmsUpdateIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_PsmsUpdateIgnore.Location = New System.Drawing.Point(215, 99)
-        Me.Button_PsmsUpdateIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
-        Me.Button_PsmsUpdateIgnore.Name = "Button_PsmsUpdateIgnore"
-        Me.Button_PsmsUpdateIgnore.Size = New System.Drawing.Size(95, 23)
-        Me.Button_PsmsUpdateIgnore.TabIndex = 4
-        Me.Button_PsmsUpdateIgnore.Text = "Ignore"
-        Me.Button_PsmsUpdateIgnore.UseVisualStyleBackColor = True
-        '
-        'Button_VdmUpdateIgnore
-        '
-        Me.Button_VdmUpdateIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_VdmUpdateIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_VdmUpdateIgnore.Location = New System.Drawing.Point(215, 99)
-        Me.Button_VdmUpdateIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
-        Me.Button_VdmUpdateIgnore.Name = "Button_VdmUpdateIgnore"
-        Me.Button_VdmUpdateIgnore.Size = New System.Drawing.Size(95, 23)
-        Me.Button_VdmUpdateIgnore.TabIndex = 7
-        Me.Button_VdmUpdateIgnore.Text = "Ignore"
-        Me.Button_VdmUpdateIgnore.UseVisualStyleBackColor = True
+        Me.ColumnHeader_ID.Text = "ID"
         '
         'UCStartPage
         '
@@ -999,4 +1004,5 @@ Partial Class UCStartPage
     Friend WithEvents ClassPictureBoxQuality6 As ClassPictureBoxQuality
     Friend WithEvents Button_PsmsUpdateIgnore As Button
     Friend WithEvents Button_VdmUpdateIgnore As Button
+    Friend WithEvents ColumnHeader_ID As ColumnHeader
 End Class
