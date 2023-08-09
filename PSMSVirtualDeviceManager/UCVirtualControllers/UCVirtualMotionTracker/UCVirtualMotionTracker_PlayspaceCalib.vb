@@ -56,23 +56,23 @@
         End If
 
         If (bFailed) Then
-            Label_PlayCalibTitle.Text = "Playspace Calibration Failed!"
+            Label_PlayCalibTitle.Text = "Playspace Calibration Failed"
             Panel_PlayCalibStatus.BackColor = Color.FromArgb(192, 0, 0)
         Else
             Select Case (iStatus)
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE
-                    Label_PlayCalibTitle.Text = "Playspace Calibration"
+                    Label_PlayCalibTitle.Text = "Playspace Calibration Not Started"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(224, 224, 224)
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE,
                         ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START,
                         ENUM_PLAYSPACE_CALIBRATION_STATUS.MOVE_FORWARD,
                         ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
-                    Label_PlayCalibTitle.Text = "Playspace Calibration Running..."
+                    Label_PlayCalibTitle.Text = "Playspace Calibration Running"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
-                    Label_PlayCalibTitle.Text = "Playspace Calibration Completed!"
+                    Label_PlayCalibTitle.Text = "Playspace Calibration Completed"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
 
             End Select
@@ -80,8 +80,6 @@
 
         Select Case (iStatus)
             Case ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE
-                Label_PlayCalibTitle.Text = "Running Playspace Calibration..."
-
                 ProgressBar_PlayCalibStep1.Value = 0
                 ProgressBar_PlayCalibStep2.Value = 0
                 ProgressBar_PlayCalibStep3.Value = 0
