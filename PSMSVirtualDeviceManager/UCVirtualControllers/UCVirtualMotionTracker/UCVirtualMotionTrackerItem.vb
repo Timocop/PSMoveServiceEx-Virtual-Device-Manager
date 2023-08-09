@@ -572,6 +572,16 @@ Public Class UCVirtualMotionTrackerItem
         Private g_mHeptic As New STRUC_HEPTIC_ITEM
         Private g_mResetRecenter As Boolean = False
 
+        Enum ENUM_PLAYSPACE_CALIBRATION_STATUS
+            FAILED = -1
+            INACTIVE
+            PSMOVE_RUNNING
+            MANUAL_RUNNING
+            DONE
+        End Enum
+        Private g_iPlayCalibStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
+        Private g_bPlayCalibAllowSave As Boolean = False
+
         Class STRUC_HEPTIC_ITEM
             Const DEFAULT_HAPTIC_FREQUENCY As Single = 200.0F
             Const DEFAULT_HAPTIC_AMPLITUDE As Single = 1.0F
@@ -714,6 +724,43 @@ Public Class UCVirtualMotionTrackerItem
             End SyncLock
         End Sub
 
+        Public Sub StartManualPlayspaceCalibration()
+            SyncLock _ThreadLock
+                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING
+                g_bPlayCalibAllowSave = False
+            End SyncLock
+        End Sub
+
+        Public Sub StopManualPlayspaceCalibration()
+            SyncLock _ThreadLock
+                If (g_iPlayCalibStatus <> ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
+                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                End If
+                g_bPlayCalibAllowSave = False
+            End SyncLock
+        End Sub
+
+        Public ReadOnly Property m_ManualPlayspaceCalibrationStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS
+            Get
+                SyncLock _ThreadLock
+                    Return g_iPlayCalibStatus
+                End SyncLock
+            End Get
+        End Property
+
+        Property m_ManualPlaysapceCalibrationAllowSave As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bPlayCalibAllowSave
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bPlayCalibAllowSave = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub Disable()
             If (g_mOscThread Is Nothing OrElse Not g_mOscThread.IsAlive) Then
                 Return
@@ -745,6 +792,7 @@ Public Class UCVirtualMotionTrackerItem
             Dim mPlayspaceRecenterButtonPressed As Boolean = False
             Dim mPlayspaceRecenterButtonHolding As Boolean = False
             Dim mPlayspaceRecenterLastHmdSerial As String = ""
+            Dim mPlayspaceRecenterCalibrationRunning As Boolean = False
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -908,19 +956,19 @@ Public Class UCVirtualMotionTrackerItem
 
                             SyncLock _ThreadLock
                                 Dim mRawOrientation = m_ControllerData.m_Orientation
-                                Dim mCalibratedOrientation = Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset) * mRawOrientation
-                                Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                Dim mCalibratedOrientation = mRawOrientation
 
                                 Dim mRawPosition = m_ControllerData.m_Position
                                 Dim mCalibratedPosition = mRawPosition
 
                                 ' Playsapce offsets, used for playspace calibration
-                                If (mClassControllerSettings.m_PlayspaceSettings.bValid AndAlso Not mPlayspaceRecenterButtonPressed) Then
-                                    Dim mCalibrationFOrward = ClassQuaternionTools.LookRotation(
+                                If (mClassControllerSettings.m_PlayspaceSettings.bValid AndAlso Not mPlayspaceRecenterCalibrationRunning) Then
+                                    'TODO: Add HMD orientation as alternative forward for 3-DoF HMDs
+                                    Dim mCalibrationForward = ClassQuaternionTools.LookRotation(
                                         mClassControllerSettings.m_PlayspaceSettings.mPointHmdEndPos - mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos, Vector3.UnitY)
 
                                     Dim mForward = Vector3.UnitY * mClassControllerSettings.m_PlayspaceSettings.iForwardOffset
-                                    Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationFOrward, mForward)
+                                    Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationForward, mForward)
 
                                     Dim mPlayspaceCalibPointsRotated = ClassQuaternionTools.RotateVector(
                                         Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset), mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos)
@@ -931,8 +979,10 @@ Public Class UCVirtualMotionTrackerItem
                                         Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset), mCalibratedPosition)
 
                                     mCalibratedPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated
+                                    mCalibratedOrientation = Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset) * mCalibratedOrientation
                                 End If
 
+                                Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                 Dim mPosition = mCalibratedPosition
 
                                 g_mOscDataPack.mOrientation = mOrientation
@@ -956,8 +1006,10 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
                                         ' Do playspace recenter
-                                        If (mClassControllerSettings.m_EnablePlayspaceRecenter) Then
-                                            If (m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton) Then
+                                        If (mClassControllerSettings.m_EnablePlayspaceRecenter OrElse
+                                                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                            If ((m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton) OrElse
+                                                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                                                 If (Not mPlayspaceRecenterButtonPressed) Then
                                                     mPlayspaceRecenterButtonPressed = True
                                                     mPlayspaceRecenterButtonHolding = False
@@ -965,15 +1017,17 @@ Public Class UCVirtualMotionTrackerItem
                                                     mLastPlayspaceRecenterTime.Restart()
                                                 End If
 
-                                                If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                                                If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs OrElse
+                                                        g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                                                     If (Not mPlayspaceRecenterButtonHolding) Then
                                                         mPlayspaceRecenterButtonHolding = True
 
-                                                        mClassControllerSettings.m_PlayspaceSettings.bValid = False
-                                                        mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos = New Vector3
-                                                        mClassControllerSettings.m_PlayspaceSettings.mPointControllerEndPos = New Vector3
-                                                        mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos = New Vector3
-                                                        mClassControllerSettings.m_PlayspaceSettings.mPointHmdEndPos = New Vector3
+                                                        If (g_iPlayCalibStatus <> ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                                            g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING
+                                                        End If
+                                                        mPlayspaceRecenterCalibrationRunning = True
+
+                                                        mClassControllerSettings.m_PlayspaceSettings.Reset()
                                                         mPlayspaceRecenterLastHmdSerial = ""
 
                                                         Dim sCurrentRecenterDeviceName As String = ""
@@ -989,7 +1043,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                         Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
                                                         If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
-                                                            mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos = mCalibratedPosition
+                                                            mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
                                                             mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos = mFoundDevice.GetPosCm()
                                                             mPlayspaceRecenterLastHmdSerial = sCurrentRecenterDeviceName
                                                         End If
@@ -1001,11 +1055,18 @@ Public Class UCVirtualMotionTrackerItem
                                                             Dim iMinDistance As Single = 10.0F
 
                                                             Dim mControllerPosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos
-                                                            Dim mControllerPosEnd As Vector3 = mCalibratedPosition
+                                                            Dim mControllerPosEnd As Vector3 = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
                                                             Dim mFromDevicePosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos
                                                             Dim mFromDevicePosEnd As Vector3 = mFoundDevice.GetPosCm()
 
-                                                            If (Math.Abs(Vector3.Distance(mControllerPosBegin, mControllerPosEnd)) > iMinDistance AndAlso
+                                                            Dim bAllowSave As Boolean = True
+
+                                                            If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                                                bAllowSave = g_bPlayCalibAllowSave
+                                                            End If
+
+                                                            If (bAllowSave AndAlso
+                                                                    Math.Abs(Vector3.Distance(mControllerPosBegin, mControllerPosEnd)) > iMinDistance AndAlso
                                                                     Math.Abs(Vector3.Distance(mFromDevicePosBegin, mFromDevicePosEnd)) > iMinDistance) Then
                                                                 mControllerPosBegin.Y = 0.0F
                                                                 mControllerPosEnd.Y = 0.0F
@@ -1025,9 +1086,15 @@ Public Class UCVirtualMotionTrackerItem
 
                                                                 'Save settings after calibration is done
                                                                 mClassControllerSettings.SaveSettings(True)
-                                                            End If
 
+                                                                g_bPlayCalibAllowSave = False
+                                                                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                                            End If
+                                                        Else
+                                                            g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
                                                         End If
+                                                    Else
+                                                        g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
                                                     End If
                                                 End If
                                             Else
@@ -1037,6 +1104,16 @@ Public Class UCVirtualMotionTrackerItem
                                                 If (mPlayspaceRecenterButtonHolding) Then
                                                     mPlayspaceRecenterButtonHolding = False
                                                 End If
+                                                If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
+                                                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
+                                                End If
+                                                If (mPlayspaceRecenterCalibrationRunning) Then
+                                                    mPlayspaceRecenterCalibrationRunning = False
+                                                End If
+                                            End If
+                                        Else
+                                            If (mPlayspaceRecenterCalibrationRunning) Then
+                                                mPlayspaceRecenterCalibrationRunning = False
                                             End If
                                         End If
 
@@ -1625,17 +1702,19 @@ Public Class UCVirtualMotionTrackerItem
 
                                 If (m_TrackerData(i) IsNot Nothing) Then
                                     Dim mRawOrientation = m_TrackerData(i).m_Orientation
-                                    Dim mCalibratedOrientation = Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset) * mRawOrientation
+                                    Dim mCalibratedOrientation = mRawOrientation
+
                                     Dim mRawPosition = m_TrackerData(i).m_Position
                                     Dim mCalibratedPosition = mRawPosition
 
                                     ' Playsapce offsets, used for playspace calibration
                                     If (mClassControllerSettings.m_PlayspaceSettings.bValid) Then
-                                        Dim mCalibrationFOrward = ClassQuaternionTools.LookRotation(
+                                        'TODO: Add HMD orientation as alternative forward for 3-DoF HMDs
+                                        Dim mCalibrationForward = ClassQuaternionTools.LookRotation(
                                             mClassControllerSettings.m_PlayspaceSettings.mPointHmdEndPos - mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos, Vector3.UnitY)
 
                                         Dim mForward = Vector3.UnitY * mClassControllerSettings.m_PlayspaceSettings.iForwardOffset
-                                        Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationFOrward, mForward)
+                                        Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationForward, mForward)
 
                                         Dim mPlayspaceCalibPointsRotated = ClassQuaternionTools.RotateVector(
                                             Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset), mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos)
@@ -1646,12 +1725,14 @@ Public Class UCVirtualMotionTrackerItem
                                             Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset), mCalibratedPosition)
 
                                         mCalibratedPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated
+                                        mCalibratedOrientation = Quaternion.Conjugate(mClassControllerSettings.m_PlayspaceSettings.mAngOffset) * mCalibratedOrientation
                                     End If
 
+                                    Dim mOrientation As Quaternion = mCalibratedOrientation
                                     Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
 
                                     ' Cameras are flipped, flip them correctly
-                                    Dim mFlippedQ As Quaternion = mCalibratedOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
+                                    Dim mFlippedQ As Quaternion = mOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
 
                                     'Use Right-Handed space for SteamVR 
                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(

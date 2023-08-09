@@ -372,6 +372,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\netshell_1607_32x32-32.png" />
     <None Include="Resources\user32_101_64x64-32.png" />
     <None Include="Resources\HelpTouchpadShortcuts.rtf" />
     <None Include="Resources\HelpVirtualTracker.rtf" />

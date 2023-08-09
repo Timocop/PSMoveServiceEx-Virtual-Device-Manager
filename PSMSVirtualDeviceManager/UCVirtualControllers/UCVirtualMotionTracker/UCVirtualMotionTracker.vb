@@ -16,6 +16,7 @@ Public Class UCVirtualMotionTracker
     Private g_bIgnoreEvents As Boolean = True
     Private g_mOscStatusThread As Threading.Thread = Nothing
     Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
+    Private g_mPlayspaceCalibrationThread As Threading.Thread = Nothing
 
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
@@ -161,8 +162,6 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = False
         End Try
 
-
-
         CreateControl()
 
         Panel_SteamVRRestart.Visible = False
@@ -174,6 +173,8 @@ Public Class UCVirtualMotionTracker
         g_mOscDeviceStatusThread = New Threading.Thread(AddressOf OscDeviceStatusThread)
         g_mOscDeviceStatusThread.IsBackground = True
         g_mOscDeviceStatusThread.Start()
+
+        SetPlayspaceCalibrationStatus(ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE, 0)
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -244,6 +245,12 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub CleanUp()
+        If (g_mPlayspaceCalibrationThread IsNot Nothing AndAlso g_mPlayspaceCalibrationThread.IsAlive) Then
+            g_mPlayspaceCalibrationThread.Abort()
+            g_mPlayspaceCalibrationThread.Join()
+            g_mPlayspaceCalibrationThread = Nothing
+        End If
+
         If (g_mOscDeviceStatusThread IsNot Nothing AndAlso g_mOscDeviceStatusThread.IsAlive) Then
             g_mOscDeviceStatusThread.Abort()
             g_mOscDeviceStatusThread.Join()
@@ -485,6 +492,18 @@ Public Class UCVirtualMotionTracker
 
             Public iForwardOffset As Single
             Public iRecenterControllerID As Integer
+
+            Public Sub Reset()
+                mPosOffset = New Vector3
+                mAngOffset = Quaternion.Identity
+
+                mPointControllerBeginPos = New Vector3
+                mPointControllerEndPos = New Vector3
+                mPointHmdBeginPos = New Vector3
+                mPointHmdEndPos = New Vector3
+
+                bValid = False
+            End Sub
         End Class
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)

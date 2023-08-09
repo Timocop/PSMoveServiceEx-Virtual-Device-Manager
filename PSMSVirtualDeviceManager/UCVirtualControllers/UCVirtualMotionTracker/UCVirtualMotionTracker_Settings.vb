@@ -324,7 +324,7 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.bValid = False
+        g_ClassControllerSettings.m_PlayspaceSettings.Reset()
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
