@@ -79,85 +79,83 @@
             End Select
         End If
 
+        Dim mProgressBars As ProgressBar() = {
+            ProgressBar_PlayCalibStep1,
+            ProgressBar_PlayCalibStep2,
+            ProgressBar_PlayCalibStep3,
+            ProgressBar_PlayCalibStep4,
+            ProgressBar_PlayCalibStep5
+        }
+
+        Dim mPictureBoxes As PictureBox() = {
+            ClassPictureBoxQuality_CalibStep1,
+            ClassPictureBoxQuality_CalibStep2,
+            ClassPictureBoxQuality_CalibStep3,
+            ClassPictureBoxQuality_CalibStep4,
+            ClassPictureBoxQuality_CalibStep5
+        }
+
         Select Case (iStatus)
             Case ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE
-                ProgressBar_PlayCalibStep1.Value = 0
-                ProgressBar_PlayCalibStep2.Value = 0
-                ProgressBar_PlayCalibStep3.Value = 0
-                ProgressBar_PlayCalibStep4.Value = 0
-                ProgressBar_PlayCalibStep5.Value = 0
+                For i = 0 To mProgressBars.Length - 1
+                    InternalSetProgressBar(mProgressBars(i), 0)
+                Next
+                For i = 0 To mPictureBoxes.Length - 1
+                    mPictureBoxes(i).Image = mImageArrow
+                Next
 
-                ClassPictureBoxQuality_CalibStep1.Image = mImageArrow
-                ClassPictureBoxQuality_CalibStep2.Image = mImageArrow
-                ClassPictureBoxQuality_CalibStep3.Image = mImageArrow
-                ClassPictureBoxQuality_CalibStep4.Image = mImageArrow
-                ClassPictureBoxQuality_CalibStep5.Image = mImageArrow
+            Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE,
+                 ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START,
+                 ENUM_PLAYSPACE_CALIBRATION_STATUS.MOVE_FORWARD,
+                 ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
+                For i = 0 To mProgressBars.Length - 1
+                    If (i < (iStatus - 1)) Then
+                        InternalSetProgressBar(mProgressBars(i), 100)
+                        Continue For
+                    End If
 
-            Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE
-                ProgressBar_PlayCalibStep1.Value = iPercentage
-                ProgressBar_PlayCalibStep2.Value = 0
-                ProgressBar_PlayCalibStep3.Value = 0
-                ProgressBar_PlayCalibStep4.Value = 0
-                ProgressBar_PlayCalibStep5.Value = 0
+                    If (i = (iStatus - 1)) Then
+                        InternalSetProgressBar(mProgressBars(i), iPercentage)
+                        Continue For
+                    End If
 
-                ClassPictureBoxQuality_CalibStep1.Image = If(bFailed, mImageError, mImageArrow)
-                ClassPictureBoxQuality_CalibStep2.Image = Nothing
-                ClassPictureBoxQuality_CalibStep3.Image = Nothing
-                ClassPictureBoxQuality_CalibStep4.Image = Nothing
-                ClassPictureBoxQuality_CalibStep5.Image = Nothing
+                    InternalSetProgressBar(mProgressBars(i), 0)
+                Next
 
-            Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START
-                ProgressBar_PlayCalibStep1.Value = 100
-                ProgressBar_PlayCalibStep2.Value = iPercentage
-                ProgressBar_PlayCalibStep3.Value = 0
-                ProgressBar_PlayCalibStep4.Value = 0
-                ProgressBar_PlayCalibStep5.Value = 0
+                For i = 0 To mPictureBoxes.Length - 1
+                    If (i < (iStatus - 1)) Then
+                        mPictureBoxes(i).Image = mImageOk
+                        Continue For
+                    End If
 
-                ClassPictureBoxQuality_CalibStep1.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep2.Image = If(bFailed, mImageError, mImageArrow)
-                ClassPictureBoxQuality_CalibStep3.Image = Nothing
-                ClassPictureBoxQuality_CalibStep4.Image = Nothing
-                ClassPictureBoxQuality_CalibStep5.Image = Nothing
+                    If (i = (iStatus - 1)) Then
+                        mPictureBoxes(i).Image = If(bFailed, mImageError, mImageArrow)
+                        Continue For
+                    End If
 
-            Case ENUM_PLAYSPACE_CALIBRATION_STATUS.MOVE_FORWARD
-                ProgressBar_PlayCalibStep1.Value = 100
-                ProgressBar_PlayCalibStep2.Value = 100
-                ProgressBar_PlayCalibStep3.Value = iPercentage
-                ProgressBar_PlayCalibStep4.Value = 0
-                ProgressBar_PlayCalibStep5.Value = 0
-
-                ClassPictureBoxQuality_CalibStep1.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep2.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep3.Image = If(bFailed, mImageError, mImageArrow)
-                ClassPictureBoxQuality_CalibStep4.Image = Nothing
-                ClassPictureBoxQuality_CalibStep5.Image = Nothing
-
-            Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
-                ProgressBar_PlayCalibStep1.Value = 100
-                ProgressBar_PlayCalibStep2.Value = 100
-                ProgressBar_PlayCalibStep3.Value = 100
-                ProgressBar_PlayCalibStep4.Value = iPercentage
-                ProgressBar_PlayCalibStep5.Value = 0
-
-                ClassPictureBoxQuality_CalibStep1.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep2.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep3.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep4.Image = If(bFailed, mImageError, mImageArrow)
-                ClassPictureBoxQuality_CalibStep5.Image = Nothing
+                    mPictureBoxes(i).Image = Nothing
+                Next
             Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
-                ProgressBar_PlayCalibStep1.Value = 100
-                ProgressBar_PlayCalibStep2.Value = 100
-                ProgressBar_PlayCalibStep3.Value = 100
-                ProgressBar_PlayCalibStep4.Value = 100
-                ProgressBar_PlayCalibStep5.Value = 100
-
-                ClassPictureBoxQuality_CalibStep1.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep2.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep3.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep4.Image = mImageOk
-                ClassPictureBoxQuality_CalibStep5.Image = mImageOk
-
+                For i = 0 To mProgressBars.Length - 1
+                    InternalSetProgressBar(mProgressBars(i), 100)
+                Next
+                For i = 0 To mPictureBoxes.Length - 1
+                    mPictureBoxes(i).Image = mImageOk
+                Next
         End Select
+
+    End Sub
+
+    ' Disable progressbar bar animations
+    Private Sub InternalSetProgressBar(mControl As ProgressBar, iValue As Integer)
+        Dim iOrgMax = mControl.Maximum
+
+        mControl.Maximum = mControl.Maximum + 1
+
+        mControl.Value = iValue + 1
+        mControl.Value = iValue
+
+        mControl.Maximum = iOrgMax
     End Sub
 
     Private Sub PlayspaceCalibrationThread()
@@ -166,12 +164,6 @@
 
         Try
             Dim iControllerID As Integer = CInt(Me.Invoke(Function() ComboBox_PlayCalibControllerID.SelectedItem))
-
-            ' Check if controller even exists
-            Dim mControllerData = g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
-            If (mControllerData Is Nothing) Then
-                Throw New ArgumentException("Controller is not available!")
-            End If
 
             Dim mTargetTracker = DirectCast(Me.Invoke(
                 Function()
@@ -194,6 +186,12 @@
 
             Try
                 While True
+                    ' Check if controller even exists
+                    Dim mControllerData = g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
+                    If (mControllerData Is Nothing) Then
+                        Throw New ArgumentException("Controller is not available!")
+                    End If
+
                     Select Case (iStep)
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE
                             Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
@@ -201,6 +199,10 @@
                             iPercentage += 20
 
                             If (iPercentage >= 100) Then
+                                If (Not mControllerData.m_IsTracking) Then
+                                    Throw New ArgumentException("Controller is not being tracked!")
+                                End If
+
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START
                                 iPercentage = 0
 
@@ -213,6 +215,10 @@
                             iPercentage += 50
 
                             If (iPercentage >= 100) Then
+                                If (Not mControllerData.m_IsTracking) Then
+                                    Throw New ArgumentException("Controller is not being tracked!")
+                                End If
+
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.MOVE_FORWARD
                                 iPercentage = 0
                             End If
@@ -223,6 +229,10 @@
                             iPercentage += 20
 
                             If (iPercentage >= 100) Then
+                                If (Not mControllerData.m_IsTracking) Then
+                                    Throw New ArgumentException("Controller is not being tracked!")
+                                End If
+
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
                                 iPercentage = 0
 
@@ -235,12 +245,16 @@
                             iPercentage += 50
 
                             If (iPercentage >= 100) Then
-                                If (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus = UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
-                                    iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
-                                    iPercentage = 0
-                                Else
+                                If (Not mControllerData.m_IsTracking) Then
+                                    Throw New ArgumentException("Controller is not being tracked!")
+                                End If
+
+                                If (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus <> UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
                                     Throw New ArgumentException("Controller and head mount display have not been moved in time! Aborted.")
                                 End If
+
+                                iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
+                                iPercentage = 0
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
@@ -261,4 +275,5 @@
             MessageBox.Show(ex.Message, "Playspace Calibration Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
 End Class
