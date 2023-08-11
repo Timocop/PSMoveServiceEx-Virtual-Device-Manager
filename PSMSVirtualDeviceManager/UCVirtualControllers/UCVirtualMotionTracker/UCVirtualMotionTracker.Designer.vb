@@ -177,6 +177,7 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -910,6 +911,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
         Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
+        Me.ToolTip1.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if OSC Server is not running.")
         '
         'Label18
         '
@@ -994,6 +996,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
         Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_RecenterFromDevice.TabIndex = 50
+        Me.ToolTip1.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if OSC Server is not running.")
         '
         'Label15
         '
@@ -2000,6 +2003,14 @@ Partial Class UCVirtualMotionTracker
         Me.PictureBox1.TabIndex = 19
         Me.PictureBox1.TabStop = False
         '
+        'ToolTip1
+        '
+        Me.ToolTip1.AutomaticDelay = 100
+        Me.ToolTip1.AutoPopDelay = 30000
+        Me.ToolTip1.InitialDelay = 100
+        Me.ToolTip1.ReshowDelay = 20
+        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2221,4 +2232,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label29 As Label
     Friend WithEvents ComboBox_PlayCalibForwardMethod As ComboBox
     Friend WithEvents Label40 As Label
+    Friend WithEvents ToolTip1 As ToolTip
 End Class

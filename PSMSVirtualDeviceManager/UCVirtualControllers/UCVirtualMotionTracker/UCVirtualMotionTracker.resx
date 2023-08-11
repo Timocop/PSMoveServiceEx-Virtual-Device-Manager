@@ -127,6 +127,9 @@ It offers various tracker roles, such as body trackers, controllers, and Head Mo
         the head mount display. 
         Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
   </data>
+  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>224, 17</value>
+  </metadata>
   <data name="Label17.Text" xml:space="preserve">
     <value>        Controller recentering is temporary and will reset when Virtual Device Manager closes.
         For permanent recenter use the "World Orientation Yaw" offset 
