@@ -346,6 +346,24 @@
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub NumericUpDown_PlayCalibHeightOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PlayCalibHeightOffset.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_PlayspaceSettings.iHeightOffset = NumericUpDown_PlayCalibHeightOffset.Value
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_PlayCalibForwardMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PlayCalibForwardMethod.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassControllerSettings.m_PlayspaceSettings.iForwardMethod = CType(ComboBox_PlayCalibForwardMethod.SelectedIndex, ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
+        g_ClassControllerSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
             g_ClassControllerSettings.SaveSettings(False)

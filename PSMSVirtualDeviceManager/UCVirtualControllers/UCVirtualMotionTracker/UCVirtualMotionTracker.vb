@@ -25,6 +25,8 @@ Public Class UCVirtualMotionTracker
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        Label_ScrollFocus.Text = ""
+
         g_bIgnoreEvents = False
 
         g_ClassOscServer = New ClassOscServer
@@ -89,7 +91,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_RecenterMethod.Items.Clear()
-            ComboBox_RecenterMethod.Items.Add("Use Specific Device")
+            ComboBox_RecenterMethod.Items.Add("Use Selected Tracker")
             ComboBox_RecenterMethod.Items.Add("Use PSMoveServiceEx Playspace Orientation")
 
             ComboBox_RecenterMethod.SelectedIndex = 0
@@ -105,7 +107,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any HMD"))
+            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head Mount Display"))
 
             ComboBox_RecenterFromDevice.SelectedIndex = 0
         Finally
@@ -116,7 +118,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_HmdRecenterMethod.Items.Clear()
-            ComboBox_HmdRecenterMethod.Items.Add("Use Active Controller")
+            ComboBox_HmdRecenterMethod.Items.Add("Use Current Controller")
             ComboBox_HmdRecenterMethod.Items.Add("Use PSMoveServiceEx Playspace Orientation")
 
             ComboBox_HmdRecenterMethod.SelectedIndex = 0
@@ -135,6 +137,18 @@ Public Class UCVirtualMotionTracker
             ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "No Device Selected"))
 
             ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_PlayCalibForwardMethod.Items.Clear()
+            ComboBox_PlayCalibForwardMethod.Items.Add("Use Head Mount Display Forward")
+            ComboBox_PlayCalibForwardMethod.Items.Add("Use Calibrated Playspace Forward")
+
+            ComboBox_PlayCalibForwardMethod.SelectedIndex = 0
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -188,20 +202,20 @@ Public Class UCVirtualMotionTracker
                 CheckBox_TouchpadShortcutClick.Checked = g_ClassControllerSettings.m_JoystickShortcutTouchpadClick
                 CheckBox_DisableBasestations.Checked = g_ClassControllerSettings.m_DisableBaseStationSpawning
                 CheckBox_EnableHeptics.Checked = g_ClassControllerSettings.m_EnableHepticFeedback
-                ComboBox_TouchpadClickMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod
-                ComboBox_GrabButtonMethod.SelectedIndex = g_ClassControllerSettings.m_HtcGripButtonMethod
+                ComboBox_TouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadClickMethod.Items.Count - 1, g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod))
+                ComboBox_GrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_GrabButtonMethod.Items.Count - 1, g_ClassControllerSettings.m_HtcGripButtonMethod))
                 CheckBox_TouchpadClampBounds.Checked = g_ClassControllerSettings.m_HtcClampTouchpadToBounds
-                ComboBox_TouchpadMethod.SelectedIndex = g_ClassControllerSettings.m_HtcTouchpadMethod
+                ComboBox_TouchpadMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadMethod.Items.Count - 1, g_ClassControllerSettings.m_HtcTouchpadMethod))
 
                 CheckBox_ControllerRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableControllerRecenter
-                ComboBox_RecenterMethod.SelectedIndex = g_ClassControllerSettings.m_ControllerRecenterMethod
+                ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, g_ClassControllerSettings.m_ControllerRecenterMethod))
 
                 ComboBox_RecenterFromDevice.Items.Clear()
                 ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_ControllerRecenterFromDeviceName, "Any HMD"))
                 ComboBox_RecenterFromDevice.SelectedIndex = 0
 
                 CheckBox_HmdRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableHmdRecenter
-                ComboBox_HmdRecenterMethod.SelectedIndex = g_ClassControllerSettings.m_HmdRecenterMethod
+                ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, g_ClassControllerSettings.m_HmdRecenterMethod))
 
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
                 ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_HmdRecenterFromDeviceName, "No Device Selected"))
@@ -215,6 +229,8 @@ Public Class UCVirtualMotionTracker
 
                 CheckBox_PlayCalibEnabled.Checked = g_ClassControllerSettings.m_EnablePlayspaceRecenter
                 NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassControllerSettings.m_PlayspaceSettings.iForwardOffset)))
+                NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassControllerSettings.m_PlayspaceSettings.iHeightOffset)))
+                ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassControllerSettings.m_PlayspaceSettings.iForwardMethod))
 
                 g_ClassControllerSettings.SetUnsavedState(False)
             Finally
@@ -481,8 +497,14 @@ Public Class UCVirtualMotionTracker
         Private g_bEnablePlayspaceRecenter As Boolean
 
         Class STRUC_PLAYSPACE_SETTINGS
+            Enum ENUM_FORWARD_METHOD
+                USE_HMD_FORWARD
+                USE_PLAYSPACE_FORRWARD
+            End Enum
+
             Public mPosOffset As Vector3
             Public mAngOffset As Quaternion
+            Public mHmdAngOffset As Quaternion
 
             Public mPointControllerBeginPos As Vector3
             Public mPointControllerEndPos As Vector3
@@ -490,12 +512,18 @@ Public Class UCVirtualMotionTracker
             Public mPointHmdEndPos As Vector3
             Public bValid As Boolean
 
+            ' Settings
             Public iForwardOffset As Single
+            Public iHeightOffset As Single
+            Public iForwardMethod As ENUM_FORWARD_METHOD
+
+            'Unsaved
             Public iRecenterControllerID As Integer
 
             Public Sub Reset()
                 mPosOffset = New Vector3
                 mAngOffset = Quaternion.Identity
+                mHmdAngOffset = Quaternion.Identity
 
                 mPointControllerBeginPos = New Vector3
                 mPointControllerEndPos = New Vector3
@@ -510,8 +538,7 @@ Public Class UCVirtualMotionTracker
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
 
             g_mPlaySpaceSettings = New STRUC_PLAYSPACE_SETTINGS()
-            g_mPlaySpaceSettings.bValid = False
-            g_mPlaySpaceSettings.mAngOffset = Quaternion.Identity
+            g_mPlaySpaceSettings.Reset()
         End Sub
 
         Property m_JoystickShortcutBinding As Boolean
@@ -900,7 +927,6 @@ Public Class UCVirtualMotionTracker
                         m_PlayspaceSettings.mAngOffset.W = tmpSng
                     End If
 
-
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_PlayspaceSettings.mPointControllerBeginPos.X = tmpSng
                     End If
@@ -941,10 +967,31 @@ Public Class UCVirtualMotionTracker
                         m_PlayspaceSettings.mPointHmdEndPos.Z = tmpSng
                     End If
 
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.Z = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.W = tmpSng
+                    End If
+
                     m_PlayspaceSettings.bValid = (mIni.ReadKeyValue("PlayspaceSettings", "Valid", "false") = "true")
 
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_PlayspaceSettings.iForwardOffset = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HeightOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.iHeightOffset = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.iForwardMethod = CType(tmpSng, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
                     End If
 
                 End Using
@@ -1007,8 +1054,15 @@ Public Class UCVirtualMotionTracker
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosY", m_PlayspaceSettings.mPointHmdEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosZ", m_PlayspaceSettings.mPointHmdEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetX", m_PlayspaceSettings.mHmdAngOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetY", m_PlayspaceSettings.mHmdAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetZ", m_PlayspaceSettings.mHmdAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetW", m_PlayspaceSettings.mHmdAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "Valid", If(m_PlayspaceSettings.bValid, "true", "false")))
                     mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardOffset", m_PlayspaceSettings.iForwardOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HeightOffset", m_PlayspaceSettings.iHeightOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardMethod", CStr(CInt(m_PlayspaceSettings.iForwardMethod))))
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using

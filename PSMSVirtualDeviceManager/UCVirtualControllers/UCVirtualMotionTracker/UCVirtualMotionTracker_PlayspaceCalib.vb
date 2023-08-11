@@ -19,10 +19,8 @@
         TabControl_Vmt.SelectedTab = TabPage_Settings
         TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPSmove
 
-        ' Weird focus
-        Label_ScrollFocus.Visible = True
+        ' Weird focus 
         Label_ScrollFocus.Focus()
-        Label_ScrollFocus.Visible = False
         CheckBox_PlayCalibEnabled.Focus()
     End Sub
 
