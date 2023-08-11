@@ -118,9 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label1.Text" xml:space="preserve">
-    <value>Virtual Motion Trackers (VMT) enables you to create SteamVR trackers and OSC trackers (if supported). 
-It offers various tracker roles, such as body trackers, controllers, and Head Mount Display 6-DoF pose replacement.
-</value>
+    <value>Virtual Motion Trackers (VMT) enable you to create SteamVR trackers and OSC trackers (if supported).
+It offers a range of tracker roles, including body trackers, controllers, and replacement of Head Mount Display 6-DoF pose.</value>
+  </data>
+  <data name="Label7.Text" xml:space="preserve">
+    <value>        Enabling haptic feedback can significantly reduce battery life. 
+        On PSMove controllers, enabling the rumble motor may interfere with the IMU magnetometer and
+        lead to orientation drift.</value>
+  </data>
+  <data name="Label6.Text" xml:space="preserve">
+    <value>        Spawning Base Stations consumes device slots, and currently, SteamVR supports a maximum of 16 devices. 
+        If you are using numerous devices, consider disabling Base Station spawning to free up slots for trackers. 
+        It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
   </data>
   <data name="Label25.Text" xml:space="preserve">
     <value>        Holding the SELECT+START button on the PSmove controller will recenter the playspace to 
@@ -131,10 +140,11 @@ It offers various tracker roles, such as body trackers, controllers, and Head Mo
     <value>224, 17</value>
   </metadata>
   <data name="Label17.Text" xml:space="preserve">
-    <value>        Controller recentering is temporary and will reset when Virtual Device Manager closes.
-        For permanent recenter use the "World Orientation Yaw" offset 
-        in "Controller Settings" when using Service Config Tool.
-        However, this permanent method is only recommended for controllers with magnetometers!</value>
+    <value>        Controller recentering is temporary and will reset when the Virtual Device Manager is closed. 
+        For a permanent recentering solution, utilize the "World Orientation Yaw" offset in 
+        the "Controller Settings" when using the Service Config Tool. 
+        However, please note that this permanent method is only recommended for controllers 
+        equipped with magnetometers.</value>
   </data>
   <data name="Label16.Text" xml:space="preserve">
     <value>        Holding the START button on the PSmove controller will recenter the target trackers orientation. 
@@ -144,17 +154,18 @@ It offers various tracker roles, such as body trackers, controllers, and Head Mo
     <value>        Holding the SELECT button on the PSmove controller will recenter the controllers orientation. 
         This is useful for controllers without magnetometers which experience yaw drift over time.</value>
   </data>
-  <data name="Label7.Text" xml:space="preserve">
-    <value>        Enabling haptic feedback can reduce the battery life greatly.
-        On PSMove controllers the rumble motor could interfere with the IMU magnetometer and
-        cause orientation drift when enabled.</value>
+  <data name="Label24.Text" xml:space="preserve">
+    <value>The Playspace calibrator synchronizes the PSMoveServiceEx tracking universe with another one.
+If you are using third-party head-mounted displays, this step is required to utilize both tracking methods simultaneously.</value>
   </data>
-  <data name="Label6.Text" xml:space="preserve">
-    <value>        Spawning Base Stations take up device slots and currently, SteamVR only supports a maximum of 16 devices.
-        If you use a lot of devices, disable Base Station spawning to free up slots for trackers.
-        Exceeding 16 devices may cause devices not to be detected in games!</value>
+  <data name="Label2.Text" xml:space="preserve">
+    <value>Choose the trackers with which you want to override position and orientation using PSMoveServiceEx controllers. 
+This is useful if, for example, you are using PhoneVR or any other third-party tracker that you want to enable 6-DoF with PSMoveServiceEx.</value>
   </data>
   <metadata name="ContextMenuStrip_Autostart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>224, 17</value>
   </metadata>
 </root>

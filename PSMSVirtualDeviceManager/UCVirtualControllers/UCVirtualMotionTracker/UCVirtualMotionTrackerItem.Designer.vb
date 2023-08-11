@@ -27,6 +27,7 @@ Partial Class UCVirtualMotionTrackerItem
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVirtualMotionTrackerItem))
         Me.ComboBox_ControllerID = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TimerFPS = New System.Windows.Forms.Timer(Me.components)
@@ -48,6 +49,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerRole = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -62,6 +64,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_ControllerID.Name = "ComboBox_ControllerID"
         Me.ComboBox_ControllerID.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_ControllerID.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.ComboBox_ControllerID, "The PSMoveServiceEx controller id that will be used for this tracker.")
         '
         'Label1
         '
@@ -111,6 +114,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerID.Name = "ComboBox_VMTTrackerID"
         Me.ComboBox_VMTTrackerID.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_VMTTrackerID.TabIndex = 17
+        Me.ToolTip1.SetToolTip(Me.ComboBox_VMTTrackerID, "The VMT slot in the OSC server." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Usually this is the same as the controller id bu" &
+        "t you can use any free slot.")
         '
         'Label_Close
         '
@@ -255,6 +260,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerRole.Name = "ComboBox_VMTTrackerRole"
         Me.ComboBox_VMTTrackerRole.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_VMTTrackerRole.TabIndex = 37
+        Me.ToolTip1.SetToolTip(Me.ComboBox_VMTTrackerRole, resources.GetString("ComboBox_VMTTrackerRole.ToolTip"))
         '
         'Label4
         '
@@ -277,6 +283,18 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_SteamTrackerRole.Name = "ComboBox_SteamTrackerRole"
         Me.ComboBox_SteamTrackerRole.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_SteamTrackerRole.TabIndex = 40
+        Me.ToolTip1.SetToolTip(Me.ComboBox_SteamTrackerRole, "Prefered SteamVR tracker roles." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Most of the time changing this setting is not ne" &
+        "eded. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "But it can solve some controller issues or controllers not being detecte" &
+        "d properly.")
+        '
+        'ToolTip1
+        '
+        Me.ToolTip1.AutomaticDelay = 100
+        Me.ToolTip1.AutoPopDelay = 30000
+        Me.ToolTip1.InitialDelay = 100
+        Me.ToolTip1.ReshowDelay = 20
+        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip1.ToolTipTitle = "Information"
         '
         'UCVirtualMotionTrackerItem
         '
@@ -329,4 +347,5 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents ComboBox_VMTTrackerRole As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents ComboBox_SteamTrackerRole As ComboBox
+    Friend WithEvents ToolTip1 As ToolTip
 End Class

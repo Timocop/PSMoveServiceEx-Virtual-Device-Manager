@@ -679,7 +679,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_PlayCalibForwardMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_PlayCalibForwardMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_PlayCalibForwardMethod.FormattingEnabled = True
-        Me.ComboBox_PlayCalibForwardMethod.Location = New System.Drawing.Point(236, 588)
+        Me.ComboBox_PlayCalibForwardMethod.Location = New System.Drawing.Point(236, 601)
         Me.ComboBox_PlayCalibForwardMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_PlayCalibForwardMethod.Name = "ComboBox_PlayCalibForwardMethod"
         Me.ComboBox_PlayCalibForwardMethod.Size = New System.Drawing.Size(447, 21)
@@ -688,7 +688,7 @@ Partial Class UCVirtualMotionTracker
         'Label40
         '
         Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(19, 591)
+        Me.Label40.Location = New System.Drawing.Point(19, 604)
         Me.Label40.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
         Me.Label40.Name = "Label40"
         Me.Label40.Size = New System.Drawing.Size(191, 13)
@@ -697,7 +697,7 @@ Partial Class UCVirtualMotionTracker
         '
         'NumericUpDown_PlayCalibHeightOffset
         '
-        Me.NumericUpDown_PlayCalibHeightOffset.Location = New System.Drawing.Point(236, 560)
+        Me.NumericUpDown_PlayCalibHeightOffset.Location = New System.Drawing.Point(236, 573)
         Me.NumericUpDown_PlayCalibHeightOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_PlayCalibHeightOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
         Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
@@ -707,7 +707,7 @@ Partial Class UCVirtualMotionTracker
         'Label29
         '
         Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(19, 562)
+        Me.Label29.Location = New System.Drawing.Point(19, 575)
         Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(197, 13)
@@ -726,7 +726,7 @@ Partial Class UCVirtualMotionTracker
         '
         'NumericUpDown_PlayCalibForwardOffset
         '
-        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(236, 532)
+        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(236, 545)
         Me.NumericUpDown_PlayCalibForwardOffset.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_PlayCalibForwardOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_PlayCalibForwardOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
@@ -738,7 +738,7 @@ Partial Class UCVirtualMotionTracker
         'Label26
         '
         Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(19, 534)
+        Me.Label26.Location = New System.Drawing.Point(19, 547)
         Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(204, 13)
@@ -748,7 +748,7 @@ Partial Class UCVirtualMotionTracker
         'Button_PlayCalibReset
         '
         Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 628)
+        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 641)
         Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
         Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
@@ -763,7 +763,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label25.AutoSize = True
         Me.Label25.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label25.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label25.Location = New System.Drawing.Point(19, 470)
+        Me.Label25.Location = New System.Drawing.Point(19, 483)
         Me.Label25.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label25.Name = "Label25"
         Me.Label25.Padding = New System.Windows.Forms.Padding(3)
@@ -775,7 +775,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.CheckBox_PlayCalibEnabled.AutoSize = True
         Me.CheckBox_PlayCalibEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(19, 447)
+        Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(19, 460)
         Me.CheckBox_PlayCalibEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_PlayCalibEnabled.Name = "CheckBox_PlayCalibEnabled"
         Me.CheckBox_PlayCalibEnabled.Size = New System.Drawing.Size(182, 18)
@@ -786,7 +786,7 @@ Partial Class UCVirtualMotionTracker
         'Button_RecenterButtonTimeReset
         '
         Me.Button_RecenterButtonTimeReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(298, 667)
+        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(298, 680)
         Me.Button_RecenterButtonTimeReset.Name = "Button_RecenterButtonTimeReset"
         Me.Button_RecenterButtonTimeReset.Size = New System.Drawing.Size(23, 23)
         Me.Button_RecenterButtonTimeReset.TabIndex = 62
@@ -794,7 +794,7 @@ Partial Class UCVirtualMotionTracker
         '
         'NumericUpDown_RecenterButtonTime
         '
-        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 668)
+        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 681)
         Me.NumericUpDown_RecenterButtonTime.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_RecenterButtonTime.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_RecenterButtonTime.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
@@ -806,7 +806,7 @@ Partial Class UCVirtualMotionTracker
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(19, 670)
+        Me.Label13.Location = New System.Drawing.Point(19, 683)
         Me.Label13.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(172, 13)
@@ -816,7 +816,7 @@ Partial Class UCVirtualMotionTracker
         'Button_ResetRecenter
         '
         Me.Button_ResetRecenter.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_ResetRecenter.Location = New System.Drawing.Point(19, 405)
+        Me.Button_ResetRecenter.Location = New System.Drawing.Point(19, 418)
         Me.Button_ResetRecenter.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Button_ResetRecenter.Name = "Button_ResetRecenter"
         Me.Button_ResetRecenter.Size = New System.Drawing.Size(214, 23)
@@ -832,7 +832,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.Label20.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
         Me.Label20.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label20.Location = New System.Drawing.Point(51, 367)
+        Me.Label20.Location = New System.Drawing.Point(51, 380)
         Me.Label20.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label20.Name = "Label20"
         Me.Label20.Padding = New System.Windows.Forms.Padding(3)
@@ -847,7 +847,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(191, 340)
+        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(191, 353)
         Me.ComboBox_HmdRecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
         Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
@@ -857,7 +857,7 @@ Partial Class UCVirtualMotionTracker
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(51, 343)
+        Me.Label18.Location = New System.Drawing.Point(51, 356)
         Me.Label18.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(81, 13)
@@ -871,7 +871,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterMethod.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(191, 313)
+        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(191, 326)
         Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_HmdRecenterMethod.Name = "ComboBox_HmdRecenterMethod"
         Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(492, 21)
@@ -880,7 +880,7 @@ Partial Class UCVirtualMotionTracker
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(51, 316)
+        Me.Label19.Location = New System.Drawing.Point(51, 329)
         Me.Label19.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(98, 13)
@@ -896,7 +896,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label17.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label17.Name = "Label17"
         Me.Label17.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label17.Size = New System.Drawing.Size(509, 58)
+        Me.Label17.Size = New System.Drawing.Size(516, 71)
         Me.Label17.TabIndex = 53
         Me.Label17.Text = resources.GetString("Label17.Text")
         '
@@ -905,7 +905,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label16.AutoSize = True
         Me.Label16.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label16.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label16.Location = New System.Drawing.Point(51, 262)
+        Me.Label16.Location = New System.Drawing.Point(51, 275)
         Me.Label16.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label16.Name = "Label16"
         Me.Label16.Padding = New System.Windows.Forms.Padding(3)
@@ -917,7 +917,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.CheckBox_HmdRecenterEnabled.AutoSize = True
         Me.CheckBox_HmdRecenterEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(19, 239)
+        Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(19, 252)
         Me.CheckBox_HmdRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_HmdRecenterEnabled.Name = "CheckBox_HmdRecenterEnabled"
         Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(229, 18)
@@ -932,7 +932,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(191, 199)
+        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(191, 212)
         Me.ComboBox_RecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
         Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(492, 21)
@@ -942,7 +942,7 @@ Partial Class UCVirtualMotionTracker
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(51, 202)
+        Me.Label15.Location = New System.Drawing.Point(51, 215)
         Me.Label15.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(75, 13)
@@ -956,7 +956,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterMethod.FormattingEnabled = True
-        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(191, 172)
+        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(191, 185)
         Me.ComboBox_RecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_RecenterMethod.Name = "ComboBox_RecenterMethod"
         Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(492, 21)
@@ -965,7 +965,7 @@ Partial Class UCVirtualMotionTracker
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(51, 175)
+        Me.Label14.Location = New System.Drawing.Point(51, 188)
         Me.Label14.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(98, 13)
@@ -977,7 +977,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label11.AutoSize = True
         Me.Label11.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label11.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label11.Location = New System.Drawing.Point(51, 121)
+        Me.Label11.Location = New System.Drawing.Point(51, 134)
         Me.Label11.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label11.Name = "Label11"
         Me.Label11.Padding = New System.Windows.Forms.Padding(3)
@@ -989,7 +989,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.CheckBox_ControllerRecenterEnabled.AutoSize = True
         Me.CheckBox_ControllerRecenterEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 98)
+        Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 111)
         Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_ControllerRecenterEnabled.Name = "CheckBox_ControllerRecenterEnabled"
         Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(190, 18)
@@ -1246,7 +1246,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label7.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
         Me.Label7.Name = "Label7"
         Me.Label7.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label7.Size = New System.Drawing.Size(497, 45)
+        Me.Label7.Size = New System.Drawing.Size(540, 45)
         Me.Label7.TabIndex = 47
         Me.Label7.Text = resources.GetString("Label7.Text")
         '
@@ -1283,7 +1283,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label6.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label6.Name = "Label6"
         Me.Label6.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label6.Size = New System.Drawing.Size(592, 45)
+        Me.Label6.Size = New System.Drawing.Size(623, 45)
         Me.Label6.TabIndex = 44
         Me.Label6.Text = resources.GetString("Label6.Text")
         '
@@ -1554,11 +1554,11 @@ Partial Class UCVirtualMotionTracker
         Me.Label31.AutoSize = True
         Me.Label31.Location = New System.Drawing.Point(59, 22)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(562, 26)
+        Me.Label31.Size = New System.Drawing.Size(553, 26)
         Me.Label31.TabIndex = 2
-        Me.Label31.Text = "Hold the controller bulb in front of your head mount display." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Make sure you have" &
-    " the controller bulb always in front of your head mount display while doing thes" &
-    "e steps!"
+        Me.Label31.Text = "Hold the controller bulb in front of your head-mounted display. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Keep the contro" &
+    "ller bulb consistently in front of your head-mounted display while performing th" &
+    "ese steps!"
         '
         'Label30
         '
@@ -1668,11 +1668,11 @@ Partial Class UCVirtualMotionTracker
         Me.Label27.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label27.Name = "Label27"
         Me.Label27.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label27.Size = New System.Drawing.Size(643, 32)
+        Me.Label27.Size = New System.Drawing.Size(646, 32)
         Me.Label27.TabIndex = 66
-        Me.Label27.Text = "        PSMove controllers do not need manual calibration, use the buttons SELECT" &
-    "+START to recenter the playspace instead." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        See settings for more details" &
-    "."
+        Me.Label27.Text = "        PSMove controllers do not need manual calibration; use the buttons SELECT" &
+    "+START to recenter the playspace instead. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        See settings for more detail" &
+    "s."
         '
         'Button_PlaySpaceManualCalib
         '
@@ -1696,9 +1696,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(706, 33)
         Me.Label24.TabIndex = 27
-        Me.Label24.Text = "Playspace calibrator synchronizes the PSMoveService tracking universe with anothe" &
-    "r." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If you use third party head mount displays this step is required to use both" &
-    " tracking methods at the same time."
+        Me.Label24.Text = resources.GetString("Label24.Text")
         '
         'TabPage_Overrides
         '
@@ -1761,11 +1759,9 @@ Partial Class UCVirtualMotionTracker
         Me.Label2.Location = New System.Drawing.Point(38, 16)
         Me.Label2.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(706, 33)
+        Me.Label2.Size = New System.Drawing.Size(706, 43)
         Me.Label2.TabIndex = 25
-        Me.Label2.Text = "Choose trackers you want to override position and orientation with." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Useful if yo" &
-    "u, for example, use PhoneVR and want to enable 6-DoF using PSMoveSerivceEx contr" &
-    "ollers."
+        Me.Label2.Text = resources.GetString("Label2.Text")
         '
         'Button_Refresh
         '
