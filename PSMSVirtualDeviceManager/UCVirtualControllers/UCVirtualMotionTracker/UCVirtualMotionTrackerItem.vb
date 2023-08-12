@@ -982,132 +982,16 @@ Public Class UCVirtualMotionTrackerItem
                                                             mRecenterQuat,
                                                             mUCVirtualMotionTracker)
 
-                                        ' Send buttons
-                                        Select Case (m_VmtTrackerRole)
-                                            Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
-                                                    ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
-                                                For i = 0 To mButtons.Length - 1
-                                                    g_mOscDataPack.mButtons(i) = mButtons(i)
-                                                Next
+                                        'Send buttons
+                                        InternalButtonsLogic(mButtons,
+                                                            m_PSMoveData,
+                                                            bJoystickTrigger,
+                                                            iHtcGripButtonMethod,
+                                                            bGripButtonPressed,
+                                                            bGripToggled,
+                                                            iHtcTouchpadEmulationClickMethod)
 
-                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
-                                                    ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
-
-                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
-                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
-                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = bJoystickTrigger
-                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = False
-                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
-                                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
-
-                                                ' Do grip button
-                                                Select Case (iHtcGripButtonMethod)
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
-                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                                            bGripButtonPressed = m_PSMoveData.m_CircleButton
-                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
-                                                        Else
-                                                            bGripButtonPressed = m_PSMoveData.m_CrossButton
-                                                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
-                                                        End If
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
-                                                        bGripButtonPressed = m_PSMoveData.m_CircleButton
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
-                                                        bGripButtonPressed = m_PSMoveData.m_CrossButton
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
-                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                                            If (m_PSMoveData.m_CircleButton) Then
-                                                                If (Not bGripButtonPressed) Then
-                                                                    bGripButtonPressed = True
-
-                                                                    bGripToggled = Not bGripToggled
-                                                                End If
-                                                            Else
-                                                                If (bGripButtonPressed) Then
-                                                                    bGripButtonPressed = False
-                                                                End If
-                                                            End If
-                                                        Else
-                                                            If (m_PSMoveData.m_CrossButton) Then
-                                                                If (Not bGripButtonPressed) Then
-                                                                    bGripButtonPressed = True
-
-                                                                    bGripToggled = Not bGripToggled
-                                                                End If
-                                                            Else
-                                                                If (bGripButtonPressed) Then
-                                                                    bGripButtonPressed = False
-                                                                End If
-                                                            End If
-                                                        End If
-
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
-                                                        If (m_PSMoveData.m_CircleButton) Then
-                                                            If (Not bGripButtonPressed) Then
-                                                                bGripButtonPressed = True
-
-                                                                bGripToggled = Not bGripToggled
-                                                            End If
-                                                        Else
-                                                            If (bGripButtonPressed) Then
-                                                                bGripButtonPressed = False
-                                                            End If
-                                                        End If
-
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
-                                                        If (m_PSMoveData.m_CrossButton) Then
-                                                            If (Not bGripButtonPressed) Then
-                                                                bGripButtonPressed = True
-
-                                                                bGripToggled = Not bGripToggled
-                                                            End If
-                                                        Else
-                                                            If (bGripButtonPressed) Then
-                                                                bGripButtonPressed = False
-                                                            End If
-                                                        End If
-
-                                                        g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
-
-                                                End Select
-
-                                                ' Do touchpad click
-                                                Select Case (iHtcTouchpadEmulationClickMethod)
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
-                                                        If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                                            If (m_PSMoveData.m_TriangleButton) Then
-                                                                bJoystickTrigger = True
-                                                            End If
-                                                        Else
-                                                            If (m_PSMoveData.m_SquareButton) Then
-                                                                bJoystickTrigger = True
-                                                            End If
-                                                        End If
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
-                                                        If (m_PSMoveData.m_SquareButton) Then
-                                                            bJoystickTrigger = True
-                                                        End If
-
-                                                    Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
-                                                        If (m_PSMoveData.m_TriangleButton) Then
-                                                            bJoystickTrigger = True
-                                                        End If
-                                                End Select
-                                        End Select
-
-                                        g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
-
-                                        ' Joystick emulation
+                                        'Joystick emulation
                                         InternalJoystickEmulationLogic(bJoystickTrigger,
                                                                         iHtcTouchpadMethod,
                                                                         bJoystickButtonPressed,
@@ -1434,7 +1318,6 @@ Public Class UCVirtualMotionTrackerItem
                                                   ByRef mPlayspaceRecenterCalibrationSave As Boolean,
                                                   ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings,
                                                   ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
-            ' Do playspace recenter
             If (bEnabledPlayspaceRecenter OrElse g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                 If (bHoldingRecenterButtons OrElse g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                     If (Not mPlayspaceRecenterButtonPressed) Then
@@ -1563,7 +1446,6 @@ Public Class UCVirtualMotionTrackerItem
                                                     ByRef mCalibratedPosition As Vector3,
                                                     ByRef mCalibratedOrientation As Quaternion,
                                                     ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
-            ' Do controller recenter
             If (bEnableControllerRecenter) Then
                 If (bHoldingRecenterButtons) Then
                     If (Not mRecenterButtonPressed) Then
@@ -1634,7 +1516,6 @@ Public Class UCVirtualMotionTrackerItem
                                         ByRef mRecenterQuat As Quaternion,
                                         ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
             If (bEnableHmdRecenter) Then
-                ' Only recenter when only select is pressed
                 Dim bOtherControllerRecenterButtonPressed As Boolean = False
                 Dim bOtherControllerPos As New Vector3
 
@@ -1651,6 +1532,7 @@ Public Class UCVirtualMotionTrackerItem
                                 Continue For
                             End If
 
+                            ' Only recenter when only select is pressed
                             If (m_PSMoveDataSearch.m_StartButton AndAlso Not m_PSMoveDataSearch.m_SelectButton) Then
                                 bOtherControllerPos = m_PSMoveDataSearch.m_Position
                                 bOtherControllerRecenterButtonPressed = True
@@ -1738,8 +1620,6 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef mButtons As Boolean(),
                                                    ByRef mJoystickShortcuts As Dictionary(Of Integer, Vector2),
                                                    ByRef bJoystickShortcutTouchpadClick As Boolean)
-
-            ' Joystick emulation
             If (bJoystickTrigger) Then
                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
                         m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
@@ -1810,9 +1690,7 @@ Public Class UCVirtualMotionTrackerItem
 
                 g_mOscDataPack.mJoyStick = mJoystickVec
 
-                If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
-                        m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
-
+                If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
                     ' Only start pressing when we moved a distance
                     If (Math.Abs(mJoystickVec.X) >= iTouchpadClickDeadzone OrElse Math.Abs(mJoystickVec.Y) >= iTouchpadClickDeadzone) Then
                         Select Case (iHtcTouchpadEmulationClickMethod)
@@ -1891,6 +1769,136 @@ Public Class UCVirtualMotionTrackerItem
                     Next
                 End If
             End If
+        End Sub
+
+        Private Sub InternalButtonsLogic(ByRef mButtons As Boolean(),
+                                         ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
+                                         ByRef bJoystickTrigger As Boolean,
+                                         ByRef iHtcGripButtonMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD,
+                                         ByRef bGripButtonPressed As Boolean,
+                                         ByRef bGripToggled As Boolean,
+                                         ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+            Select Case (m_VmtTrackerRole)
+                Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                    For i = 0 To mButtons.Length - 1
+                        g_mOscDataPack.mButtons(i) = mButtons(i)
+                    Next
+
+                Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
+                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
+                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = bJoystickTrigger
+                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = False
+                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
+                    g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
+
+                    ' Do grip button
+                    Select Case (iHtcGripButtonMethod)
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
+                            If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                bGripButtonPressed = m_PSMoveData.m_CircleButton
+                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
+                            Else
+                                bGripButtonPressed = m_PSMoveData.m_CrossButton
+                                g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
+                            End If
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
+                            bGripButtonPressed = m_PSMoveData.m_CircleButton
+                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
+                            bGripButtonPressed = m_PSMoveData.m_CrossButton
+                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
+                            If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                If (m_PSMoveData.m_CircleButton) Then
+                                    If (Not bGripButtonPressed) Then
+                                        bGripButtonPressed = True
+
+                                        bGripToggled = Not bGripToggled
+                                    End If
+                                Else
+                                    If (bGripButtonPressed) Then
+                                        bGripButtonPressed = False
+                                    End If
+                                End If
+                            Else
+                                If (m_PSMoveData.m_CrossButton) Then
+                                    If (Not bGripButtonPressed) Then
+                                        bGripButtonPressed = True
+
+                                        bGripToggled = Not bGripToggled
+                                    End If
+                                Else
+                                    If (bGripButtonPressed) Then
+                                        bGripButtonPressed = False
+                                    End If
+                                End If
+                            End If
+
+                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
+                            If (m_PSMoveData.m_CircleButton) Then
+                                If (Not bGripButtonPressed) Then
+                                    bGripButtonPressed = True
+
+                                    bGripToggled = Not bGripToggled
+                                End If
+                            Else
+                                If (bGripButtonPressed) Then
+                                    bGripButtonPressed = False
+                                End If
+                            End If
+
+                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
+                            If (m_PSMoveData.m_CrossButton) Then
+                                If (Not bGripButtonPressed) Then
+                                    bGripButtonPressed = True
+
+                                    bGripToggled = Not bGripToggled
+                                End If
+                            Else
+                                If (bGripButtonPressed) Then
+                                    bGripButtonPressed = False
+                                End If
+                            End If
+
+                            g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+
+                    End Select
+
+                    ' Do touchpad click
+                    Select Case (iHtcTouchpadEmulationClickMethod)
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
+                            If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
+                                If (m_PSMoveData.m_TriangleButton) Then
+                                    bJoystickTrigger = True
+                                End If
+                            Else
+                                If (m_PSMoveData.m_SquareButton) Then
+                                    bJoystickTrigger = True
+                                End If
+                            End If
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
+                            If (m_PSMoveData.m_SquareButton) Then
+                                bJoystickTrigger = True
+                            End If
+
+                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
+                            If (m_PSMoveData.m_TriangleButton) Then
+                                bJoystickTrigger = True
+                            End If
+                    End Select
+            End Select
+
+            g_mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
+
         End Sub
 
 #Region "IDisposable Support"
