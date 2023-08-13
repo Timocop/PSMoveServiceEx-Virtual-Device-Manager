@@ -60,17 +60,9 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl_SettingsDevices = New System.Windows.Forms.TabControl()
         Me.TabPage_SettingsPSmove = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
-        Me.Label40 = New System.Windows.Forms.Label()
-        Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.Label_ScrollFocus = New System.Windows.Forms.Label()
-        Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.CheckBox_PlayCalibEnabled = New System.Windows.Forms.CheckBox()
-        Me.Button_RecenterButtonTimeReset = New System.Windows.Forms.Button()
         Me.NumericUpDown_RecenterButtonTime = New System.Windows.Forms.NumericUpDown()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Button_ResetRecenter = New System.Windows.Forms.Button()
@@ -105,7 +97,6 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
-        Me.Button_OscThreadSleepReset = New System.Windows.Forms.Button()
         Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -114,6 +105,8 @@ Partial Class UCVirtualMotionTracker
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.TabPage_PlayspaceCalib = New System.Windows.Forms.TabPage()
+        Me.NumericUpDown_PlayCalibPrepTime = New System.Windows.Forms.NumericUpDown()
+        Me.Label41 = New System.Windows.Forms.Label()
         Me.Panel_PlayCalibSteps = New System.Windows.Forms.Panel()
         Me.Panel16 = New System.Windows.Forms.Panel()
         Me.Panel15 = New System.Windows.Forms.Panel()
@@ -159,8 +152,15 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Label41 = New System.Windows.Forms.Label()
-        Me.NumericUpDown_PlayCalibPrepTime = New System.Windows.Forms.NumericUpDown()
+        Me.TabPage_SettingsPlaysapce = New System.Windows.Forms.TabPage()
+        Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -194,8 +194,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSmove.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -203,6 +201,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsOther.SuspendLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_PlayspaceCalib.SuspendLayout()
+        CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_PlayCalibSteps.SuspendLayout()
         Me.Panel15.SuspendLayout()
         Me.Panel14.SuspendLayout()
@@ -212,7 +211,10 @@ Partial Class UCVirtualMotionTracker
         Me.Panel5.SuspendLayout()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
-        CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage_SettingsPlaysapce.SuspendLayout()
+        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox3.SuspendLayout()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -617,6 +619,7 @@ Partial Class UCVirtualMotionTracker
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPSmove)
+        Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPlaysapce)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsOther)
         Me.TabControl_SettingsDevices.Location = New System.Drawing.Point(6, 6)
         Me.TabControl_SettingsDevices.Name = "TabControl_SettingsDevices"
@@ -639,17 +642,9 @@ Partial Class UCVirtualMotionTracker
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.ComboBox_PlayCalibForwardMethod)
-        Me.GroupBox1.Controls.Add(Me.Label40)
-        Me.GroupBox1.Controls.Add(Me.NumericUpDown_PlayCalibHeightOffset)
-        Me.GroupBox1.Controls.Add(Me.Label29)
         Me.GroupBox1.Controls.Add(Me.Label_ScrollFocus)
-        Me.GroupBox1.Controls.Add(Me.NumericUpDown_PlayCalibForwardOffset)
-        Me.GroupBox1.Controls.Add(Me.Label26)
-        Me.GroupBox1.Controls.Add(Me.Button_PlayCalibReset)
         Me.GroupBox1.Controls.Add(Me.Label25)
         Me.GroupBox1.Controls.Add(Me.CheckBox_PlayCalibEnabled)
-        Me.GroupBox1.Controls.Add(Me.Button_RecenterButtonTimeReset)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_RecenterButtonTime)
         Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.Button_ResetRecenter)
@@ -670,96 +665,20 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox1.Location = New System.Drawing.Point(3, 241)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(734, 738)
+        Me.GroupBox1.Size = New System.Drawing.Size(734, 589)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
-        '
-        'ComboBox_PlayCalibForwardMethod
-        '
-        Me.ComboBox_PlayCalibForwardMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_PlayCalibForwardMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_PlayCalibForwardMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_PlayCalibForwardMethod.FormattingEnabled = True
-        Me.ComboBox_PlayCalibForwardMethod.Location = New System.Drawing.Point(236, 601)
-        Me.ComboBox_PlayCalibForwardMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
-        Me.ComboBox_PlayCalibForwardMethod.Name = "ComboBox_PlayCalibForwardMethod"
-        Me.ComboBox_PlayCalibForwardMethod.Size = New System.Drawing.Size(447, 21)
-        Me.ComboBox_PlayCalibForwardMethod.TabIndex = 74
-        '
-        'Label40
-        '
-        Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(19, 604)
-        Me.Label40.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(191, 13)
-        Me.Label40.TabIndex = 73
-        Me.Label40.Text = "Playspace recenter forward method:"
-        '
-        'NumericUpDown_PlayCalibHeightOffset
-        '
-        Me.NumericUpDown_PlayCalibHeightOffset.Location = New System.Drawing.Point(236, 573)
-        Me.NumericUpDown_PlayCalibHeightOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibHeightOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
-        Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
-        Me.NumericUpDown_PlayCalibHeightOffset.Size = New System.Drawing.Size(95, 22)
-        Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 72
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(19, 575)
-        Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(197, 13)
-        Me.Label29.TabIndex = 71
-        Me.Label29.Text = "Playspace recenter height offset (cm):"
         '
         'Label_ScrollFocus
         '
         Me.Label_ScrollFocus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label_ScrollFocus.AutoSize = True
-        Me.Label_ScrollFocus.Location = New System.Drawing.Point(636, 722)
+        Me.Label_ScrollFocus.Location = New System.Drawing.Point(636, 573)
         Me.Label_ScrollFocus.Name = "Label_ScrollFocus"
         Me.Label_ScrollFocus.Size = New System.Drawing.Size(92, 13)
         Me.Label_ScrollFocus.TabIndex = 70
         Me.Label_ScrollFocus.Text = "<<FOR FOCUS>"
-        '
-        'NumericUpDown_PlayCalibForwardOffset
-        '
-        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(236, 545)
-        Me.NumericUpDown_PlayCalibForwardOffset.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
-        Me.NumericUpDown_PlayCalibForwardOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibForwardOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
-        Me.NumericUpDown_PlayCalibForwardOffset.Name = "NumericUpDown_PlayCalibForwardOffset"
-        Me.NumericUpDown_PlayCalibForwardOffset.Size = New System.Drawing.Size(95, 22)
-        Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 69
-        Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(19, 547)
-        Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(204, 13)
-        Me.Label26.TabIndex = 68
-        Me.Label26.Text = "Playspace recenter forward offset (cm):"
-        '
-        'Button_PlayCalibReset
-        '
-        Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 641)
-        Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
-        Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
-        Me.Button_PlayCalibReset.TabIndex = 67
-        Me.Button_PlayCalibReset.Text = "Reset playspace calibration"
-        Me.Button_PlayCalibReset.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.Button_PlayCalibReset.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.Button_PlayCalibReset.UseVisualStyleBackColor = True
         '
         'Label25
         '
@@ -786,30 +705,22 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_PlayCalibEnabled.Text = "Enable playspace recentering shortcut"
         Me.CheckBox_PlayCalibEnabled.UseVisualStyleBackColor = True
         '
-        'Button_RecenterButtonTimeReset
-        '
-        Me.Button_RecenterButtonTimeReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.Button_RecenterButtonTimeReset.Location = New System.Drawing.Point(298, 680)
-        Me.Button_RecenterButtonTimeReset.Name = "Button_RecenterButtonTimeReset"
-        Me.Button_RecenterButtonTimeReset.Size = New System.Drawing.Size(23, 23)
-        Me.Button_RecenterButtonTimeReset.TabIndex = 62
-        Me.Button_RecenterButtonTimeReset.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_RecenterButtonTime
         '
-        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 681)
+        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 547)
         Me.NumericUpDown_RecenterButtonTime.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_RecenterButtonTime.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_RecenterButtonTime.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.NumericUpDown_RecenterButtonTime.Name = "NumericUpDown_RecenterButtonTime"
         Me.NumericUpDown_RecenterButtonTime.Size = New System.Drawing.Size(95, 22)
         Me.NumericUpDown_RecenterButtonTime.TabIndex = 61
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_RecenterButtonTime, "Default: 500")
         Me.NumericUpDown_RecenterButtonTime.Value = New Decimal(New Integer() {500, 0, 0, 0})
         '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(19, 683)
+        Me.Label13.Location = New System.Drawing.Point(19, 549)
         Me.Label13.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(172, 13)
@@ -855,7 +766,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
         Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
-        Me.ToolTip1.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if OSC Server is not running.")
+        Me.ToolTip1.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label18
         '
@@ -940,7 +851,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
         Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_RecenterFromDevice.TabIndex = 50
-        Me.ToolTip1.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if OSC Server is not running.")
+        Me.ToolTip1.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label15
         '
@@ -1042,6 +953,8 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_TouchpadTouchArea.Name = "NumericUpDown_TouchpadTouchArea"
         Me.NumericUpDown_TouchpadTouchArea.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_TouchpadTouchArea.TabIndex = 52
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_TouchpadTouchArea, "Default: 7,50")
+        Me.NumericUpDown_TouchpadTouchArea.Value = New Decimal(New Integer() {750, 0, 0, 131072})
         '
         'Label23
         '
@@ -1062,6 +975,8 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_TouchpadClickDeadzone.Name = "NumericUpDown_TouchpadClickDeadzone"
         Me.NumericUpDown_TouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_TouchpadClickDeadzone.TabIndex = 50
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_TouchpadClickDeadzone, "Default: 0,25")
+        Me.NumericUpDown_TouchpadClickDeadzone.Value = New Decimal(New Integer() {25, 0, 0, 131072})
         '
         'Label22
         '
@@ -1198,7 +1113,6 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_SettingsOther
         '
-        Me.TabPage_SettingsOther.Controls.Add(Me.Button_OscThreadSleepReset)
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscThreadSleep)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label21)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label7)
@@ -1212,15 +1126,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsOther.Text = "Other"
         Me.TabPage_SettingsOther.UseVisualStyleBackColor = True
         '
-        'Button_OscThreadSleepReset
-        '
-        Me.Button_OscThreadSleepReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.Button_OscThreadSleepReset.Location = New System.Drawing.Point(274, 177)
-        Me.Button_OscThreadSleepReset.Name = "Button_OscThreadSleepReset"
-        Me.Button_OscThreadSleepReset.Size = New System.Drawing.Size(23, 23)
-        Me.Button_OscThreadSleepReset.TabIndex = 50
-        Me.Button_OscThreadSleepReset.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_OscThreadSleep
         '
         Me.NumericUpDown_OscThreadSleep.Location = New System.Drawing.Point(177, 178)
@@ -1228,6 +1133,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_OscThreadSleep.Name = "NumericUpDown_OscThreadSleep"
         Me.NumericUpDown_OscThreadSleep.Size = New System.Drawing.Size(91, 22)
         Me.NumericUpDown_OscThreadSleep.TabIndex = 49
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_OscThreadSleep, "Default: 1")
         Me.NumericUpDown_OscThreadSleep.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label21
@@ -1323,6 +1229,26 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_PlayspaceCalib.TabIndex = 5
         Me.TabPage_PlayspaceCalib.Text = "Playspace Calibration"
         Me.TabPage_PlayspaceCalib.UseVisualStyleBackColor = True
+        '
+        'NumericUpDown_PlayCalibPrepTime
+        '
+        Me.NumericUpDown_PlayCalibPrepTime.Location = New System.Drawing.Point(168, 134)
+        Me.NumericUpDown_PlayCalibPrepTime.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibPrepTime.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibPrepTime.Name = "NumericUpDown_PlayCalibPrepTime"
+        Me.NumericUpDown_PlayCalibPrepTime.Size = New System.Drawing.Size(132, 22)
+        Me.NumericUpDown_PlayCalibPrepTime.TabIndex = 71
+        Me.NumericUpDown_PlayCalibPrepTime.Value = New Decimal(New Integer() {5, 0, 0, 0})
+        '
+        'Label41
+        '
+        Me.Label41.AutoSize = True
+        Me.Label41.Location = New System.Drawing.Point(16, 136)
+        Me.Label41.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label41.Name = "Label41"
+        Me.Label41.Size = New System.Drawing.Size(146, 13)
+        Me.Label41.TabIndex = 70
+        Me.Label41.Text = "Preparation time (seconds):"
         '
         'Panel_PlayCalibSteps
         '
@@ -1636,7 +1562,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_PlayCalibControllerID.Location = New System.Drawing.Point(168, 104)
         Me.ComboBox_PlayCalibControllerID.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
-        Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(211, 21)
+        Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(132, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 68
         Me.ToolTip1.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The PSMS-EX controller id you want to use for playspace calibration.")
         '
@@ -1821,25 +1747,111 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Information"
         '
-        'Label41
+        'TabPage_SettingsPlaysapce
         '
-        Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(16, 136)
-        Me.Label41.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label41.Name = "Label41"
-        Me.Label41.Size = New System.Drawing.Size(146, 13)
-        Me.Label41.TabIndex = 70
-        Me.Label41.Text = "Preparation time (seconds):"
+        Me.TabPage_SettingsPlaysapce.Controls.Add(Me.GroupBox3)
+        Me.TabPage_SettingsPlaysapce.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_SettingsPlaysapce.Name = "TabPage_SettingsPlaysapce"
+        Me.TabPage_SettingsPlaysapce.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_SettingsPlaysapce.Size = New System.Drawing.Size(740, 1158)
+        Me.TabPage_SettingsPlaysapce.TabIndex = 2
+        Me.TabPage_SettingsPlaysapce.Text = "Playspace"
+        Me.TabPage_SettingsPlaysapce.UseVisualStyleBackColor = True
         '
-        'NumericUpDown_PlayCalibPrepTime
+        'ComboBox_PlayCalibForwardMethod
         '
-        Me.NumericUpDown_PlayCalibPrepTime.Location = New System.Drawing.Point(168, 134)
-        Me.NumericUpDown_PlayCalibPrepTime.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibPrepTime.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibPrepTime.Name = "NumericUpDown_PlayCalibPrepTime"
-        Me.NumericUpDown_PlayCalibPrepTime.Size = New System.Drawing.Size(211, 22)
-        Me.NumericUpDown_PlayCalibPrepTime.TabIndex = 71
-        Me.NumericUpDown_PlayCalibPrepTime.Value = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.ComboBox_PlayCalibForwardMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_PlayCalibForwardMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_PlayCalibForwardMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_PlayCalibForwardMethod.FormattingEnabled = True
+        Me.ComboBox_PlayCalibForwardMethod.Location = New System.Drawing.Point(134, 88)
+        Me.ComboBox_PlayCalibForwardMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_PlayCalibForwardMethod.Name = "ComboBox_PlayCalibForwardMethod"
+        Me.ComboBox_PlayCalibForwardMethod.Size = New System.Drawing.Size(549, 21)
+        Me.ComboBox_PlayCalibForwardMethod.TabIndex = 81
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Location = New System.Drawing.Point(19, 91)
+        Me.Label40.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(96, 13)
+        Me.Label40.TabIndex = 80
+        Me.Label40.Text = "Forward method:"
+        '
+        'NumericUpDown_PlayCalibHeightOffset
+        '
+        Me.NumericUpDown_PlayCalibHeightOffset.Location = New System.Drawing.Point(134, 60)
+        Me.NumericUpDown_PlayCalibHeightOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibHeightOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
+        Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
+        Me.NumericUpDown_PlayCalibHeightOffset.Size = New System.Drawing.Size(95, 22)
+        Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(19, 62)
+        Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(101, 13)
+        Me.Label29.TabIndex = 78
+        Me.Label29.Text = "Height offset (cm):"
+        '
+        'NumericUpDown_PlayCalibForwardOffset
+        '
+        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(134, 32)
+        Me.NumericUpDown_PlayCalibForwardOffset.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
+        Me.NumericUpDown_PlayCalibForwardOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibForwardOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
+        Me.NumericUpDown_PlayCalibForwardOffset.Name = "NumericUpDown_PlayCalibForwardOffset"
+        Me.NumericUpDown_PlayCalibForwardOffset.Size = New System.Drawing.Size(95, 22)
+        Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
+        Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(19, 34)
+        Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(109, 13)
+        Me.Label26.TabIndex = 76
+        Me.Label26.Text = "Forward offset (cm):"
+        '
+        'Button_PlayCalibReset
+        '
+        Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 128)
+        Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
+        Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
+        Me.Button_PlayCalibReset.TabIndex = 75
+        Me.Button_PlayCalibReset.Text = "Reset playspace calibration"
+        Me.Button_PlayCalibReset.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_PlayCalibReset.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_PlayCalibReset.UseVisualStyleBackColor = True
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.Label26)
+        Me.GroupBox3.Controls.Add(Me.ComboBox_PlayCalibForwardMethod)
+        Me.GroupBox3.Controls.Add(Me.Button_PlayCalibReset)
+        Me.GroupBox3.Controls.Add(Me.Label40)
+        Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibForwardOffset)
+        Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibHeightOffset)
+        Me.GroupBox3.Controls.Add(Me.Label29)
+        Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox3.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(734, 166)
+        Me.GroupBox3.TabIndex = 82
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Playsapce Calibration"
         '
         'ListView_OscDevices
         '
@@ -2063,8 +2075,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsPSmove.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
@@ -2075,6 +2085,7 @@ Partial Class UCVirtualMotionTracker
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_PlayspaceCalib.ResumeLayout(False)
         Me.TabPage_PlayspaceCalib.PerformLayout()
+        CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel_PlayCalibSteps.ResumeLayout(False)
         Me.Panel15.ResumeLayout(False)
         Me.Panel15.PerformLayout()
@@ -2090,7 +2101,11 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
-        CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage_SettingsPlaysapce.ResumeLayout(False)
+        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2195,8 +2210,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label13 As Label
     Friend WithEvents NumericUpDown_OscThreadSleep As NumericUpDown
     Friend WithEvents Label21 As Label
-    Friend WithEvents Button_OscThreadSleepReset As Button
-    Friend WithEvents Button_RecenterButtonTimeReset As Button
     Friend WithEvents LinkLabel_SteamSettings As LinkLabel
     Friend WithEvents LinkLabel_TouchpadShortcutHelp As LinkLabel
     Friend WithEvents NumericUpDown_TouchpadClickDeadzone As NumericUpDown
@@ -2208,9 +2221,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label24 As Label
     Friend WithEvents ClassPictureBoxQuality3 As ClassPictureBoxQuality
     Friend WithEvents Button_PlaySpaceManualCalib As Button
-    Friend WithEvents NumericUpDown_PlayCalibForwardOffset As NumericUpDown
-    Friend WithEvents Label26 As Label
-    Friend WithEvents Button_PlayCalibReset As Button
     Friend WithEvents Label25 As Label
     Friend WithEvents CheckBox_PlayCalibEnabled As CheckBox
     Friend WithEvents LinkLabel_PlayCalibShowSettings As LinkLabel
@@ -2252,11 +2262,16 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel17 As Panel
     Friend WithEvents Panel18 As Panel
     Friend WithEvents Label_ScrollFocus As Label
-    Friend WithEvents NumericUpDown_PlayCalibHeightOffset As NumericUpDown
-    Friend WithEvents Label29 As Label
-    Friend WithEvents ComboBox_PlayCalibForwardMethod As ComboBox
-    Friend WithEvents Label40 As Label
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents NumericUpDown_PlayCalibPrepTime As NumericUpDown
     Friend WithEvents Label41 As Label
+    Friend WithEvents TabPage_SettingsPlaysapce As TabPage
+    Friend WithEvents ComboBox_PlayCalibForwardMethod As ComboBox
+    Friend WithEvents Label40 As Label
+    Friend WithEvents NumericUpDown_PlayCalibHeightOffset As NumericUpDown
+    Friend WithEvents Label29 As Label
+    Friend WithEvents NumericUpDown_PlayCalibForwardOffset As NumericUpDown
+    Friend WithEvents Label26 As Label
+    Friend WithEvents Button_PlayCalibReset As Button
+    Friend WithEvents GroupBox3 As GroupBox
 End Class

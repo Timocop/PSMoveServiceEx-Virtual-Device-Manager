@@ -311,14 +311,6 @@
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_OscThreadSleepReset_Click(sender As Object, e As EventArgs) Handles Button_OscThreadSleepReset.Click
-        NumericUpDown_OscThreadSleep.Value = 1
-    End Sub
-
-    Private Sub Button_RecenterButtonTimeReset_Click(sender As Object, e As EventArgs) Handles Button_RecenterButtonTimeReset.Click
-        NumericUpDown_RecenterButtonTime.Value = 500
-    End Sub
-
     Private Sub Button_PlayCalibReset_Click(sender As Object, e As EventArgs) Handles Button_PlayCalibReset.Click
         If (g_bIgnoreEvents) Then
             Return
