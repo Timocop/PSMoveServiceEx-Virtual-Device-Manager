@@ -1,6 +1,8 @@
 ﻿Imports System.Numerics
 
 Public Class UCStartPage
+    Private _ThreadLock As New Object
+
     Private g_FormMain As FormMain
     Private g_bIgnoreEvents As Boolean = False
 
@@ -9,6 +11,9 @@ Public Class UCStartPage
 
     Private g_mDriverInstallThread As Threading.Thread = Nothing
     Private g_mDriverInstallFormLoad As FormLoading = Nothing
+
+    Private g_bIsServiceRunning As Boolean = False
+    Private g_bIsServiceConnected As Boolean = False
 
     Public Sub New(mFormMain As FormMain)
         g_FormMain = mFormMain
@@ -19,7 +24,7 @@ Public Class UCStartPage
         ' Add any initialization after the InitializeComponent() call.
 
 
-        SetStatusServiceConnected(False)
+        SetStatusServiceConnected()
 
         g_mStatusThread = New Threading.Thread(AddressOf CheckConnection_Thread)
         g_mStatusThread.IsBackground = True
@@ -57,29 +62,60 @@ Public Class UCStartPage
         End Try
     End Sub
 
-    Private Sub SetStatusServiceConnected(bConnected As Boolean)
-        If (bConnected) Then
-            Label_PsmsxStatus.Text = "Service Connected"
-            Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
-        Else
-            Label_PsmsxStatus.Text = "Service Disconnected"
-            Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
-        End If
+    Private Sub SetStatusServiceConnected()
+        SyncLock _ThreadLock
+            If (g_bIsServiceRunning And Not g_bIsServiceConnected) Then
+                Label_PsmsxStatus.Text = "Connecting to Service..."
+                Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
+                Return
+            End If
+
+            If (g_bIsServiceConnected) Then
+                Label_PsmsxStatus.Text = "Service Connected"
+                Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
+            Else
+                Label_PsmsxStatus.Text = "Service Disconnected"
+                Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
+            End If
+        End SyncLock
     End Sub
 
     Private Sub CheckConnection_Thread()
         While True
             Try
-                Threading.Thread.Sleep(1000)
+                ' Check if PSMoveServiceEx is running
+                Dim bServiceRunning = (Process.GetProcessesByName("PSMoveService").Count > 0)
 
-                Dim bIsConnected = g_FormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected
+                SyncLock _ThreadLock
+                    If (g_bIsServiceRunning <> bServiceRunning) Then
+                        g_bIsServiceRunning = bServiceRunning
 
-                Me.BeginInvoke(Sub() SetStatusServiceConnected(bIsConnected))
+                        Me.BeginInvoke(Sub() SetStatusServiceConnected())
+                    End If
+                End SyncLock
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
             End Try
+
+            Try
+                ' Check if we are connected ot not
+                Dim bIsConnected = g_FormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected
+
+                SyncLock _ThreadLock
+                    If (g_bIsServiceConnected <> bIsConnected) Then
+                        g_bIsServiceConnected = bIsConnected
+
+                        Me.BeginInvoke(Sub() SetStatusServiceConnected())
+                    End If
+                End SyncLock
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+            End Try
+
+            Threading.Thread.Sleep(1000)
         End While
     End Sub
 
@@ -290,33 +326,23 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ServiceRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRun.LinkClicked
         Try
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                Throw New ArgumentException("PSMoveServiceEx is already running!")
-            End If
+            RunService(True)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
+    Private Sub LinkLabel_ServiceRunCmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRunCmd.LinkClicked
+        Try
+            RunService(False)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 
-            If (Not mConfig.FileExist()) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
-                Else
-                    If (mConfig.SearchForService) Then
-                        mConfig.SaveConfig()
-                    Else
-                        Return
-                    End If
-                End If
-            End If
-
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = mConfig.m_FileName
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(mConfig.m_FileName)
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-
-            End Using
+    Private Sub LinkLabel_ConfigToolRunCmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolRunCmd.LinkClicked
+        Try
+            RunServiceConfigTool(False)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -324,6 +350,77 @@ Public Class UCStartPage
 
     Public Sub LinkLabel_ServiceRestart_Click()
         LinkLabel_ServiceRestart_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub RunService(bHidden As Boolean)
+        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+            Throw New ArgumentException("PSMoveServiceEx is already running!")
+        End If
+
+        Dim mConfig As New ClassServiceInfo
+        mConfig.LoadConfig()
+
+        If (Not mConfig.FileExist()) Then
+            If (mConfig.FindByProcess()) Then
+                mConfig.SaveConfig()
+            Else
+                If (mConfig.SearchForService) Then
+                    mConfig.SaveConfig()
+                Else
+                    Return
+                End If
+            End If
+        End If
+
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = mConfig.m_FileName
+            mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(mConfig.m_FileName)
+            mProcess.StartInfo.UseShellExecute = False
+            mProcess.StartInfo.CreateNoWindow = bHidden
+
+            mProcess.Start()
+        End Using
+    End Sub
+
+    Private Sub RunServiceConfigTool(bHidden As Boolean)
+        If (Process.GetProcessesByName("PSMoveConfigTool").Count > 0) Then
+            Dim sMsg As New Text.StringBuilder
+            sMsg.AppendLine("PSMoveServiceEx Config Tool is already running!")
+            sMsg.AppendLine("Do you want to run another instance?")
+            If (MessageBox.Show(sMsg.ToString, "Instance already running", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                Return
+            End If
+        End If
+
+        Dim mConfig As New ClassServiceInfo
+        mConfig.LoadConfig()
+
+        If (Not mConfig.FileExist()) Then
+            If (mConfig.FindByProcess()) Then
+                mConfig.SaveConfig()
+            Else
+                If (mConfig.SearchForService) Then
+                    mConfig.SaveConfig()
+                Else
+                    Return
+                End If
+            End If
+        End If
+
+        Dim sFilePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(mConfig.m_FileName), "PSMoveConfigTool.exe")
+        If (Not IO.File.Exists(sFilePath)) Then
+            Throw New ArgumentException("PSMoveConfigTool.exe does not exist!")
+        End If
+
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = sFilePath
+            mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sFilePath)
+            mProcess.StartInfo.Arguments = "\autoConnect"
+            mProcess.StartInfo.UseShellExecute = False
+            mProcess.StartInfo.CreateNoWindow = bHidden
+
+            mProcess.Start()
+        End Using
     End Sub
 
     Private Sub LinkLabel_ServiceRestart_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRestart.LinkClicked
@@ -394,43 +491,7 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ConfigToolRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolRun.LinkClicked
         Try
-            If (Process.GetProcessesByName("PSMoveConfigTool").Count > 0) Then
-                Dim sMsg As New Text.StringBuilder
-                sMsg.AppendLine("PSMoveServiceEx Config Tool is already running!")
-                sMsg.AppendLine("Do you want to run another instance?")
-                If (MessageBox.Show(sMsg.ToString, "Instance already running", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
-                    Return
-                End If
-            End If
-
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
-
-            If (Not mConfig.FileExist()) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
-                Else
-                    If (mConfig.SearchForService) Then
-                        mConfig.SaveConfig()
-                    Else
-                        Return
-                    End If
-                End If
-            End If
-
-            Dim sFilePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(mConfig.m_FileName), "PSMoveConfigTool.exe")
-            If (Not IO.File.Exists(sFilePath)) Then
-                Throw New ArgumentException("PSMoveConfigTool.exe does not exist!")
-            End If
-
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = sFilePath
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sFilePath)
-                mProcess.StartInfo.Arguments = "\autoConnect"
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-            End Using
+            RunServiceConfigTool(True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try

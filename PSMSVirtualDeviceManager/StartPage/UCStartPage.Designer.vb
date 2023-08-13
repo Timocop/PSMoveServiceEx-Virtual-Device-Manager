@@ -35,12 +35,14 @@ Partial Class UCStartPage
         Me.Label7 = New System.Windows.Forms.Label()
         Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
         Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_ServiceRunCmd = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.LinkLabel_ServiceRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceRestart = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceStop = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_ConfigToolRunCmd = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ConfigToolClose = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LinkLabel_ConfigToolRun = New System.Windows.Forms.LinkLabel()
@@ -132,13 +134,13 @@ Partial Class UCStartPage
         Me.Panel1.Location = New System.Drawing.Point(16, 19)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(861, 274)
+        Me.Panel1.Size = New System.Drawing.Size(861, 278)
         Me.Panel1.TabIndex = 0
         '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.99999!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Panel7, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 0, 0)
@@ -148,9 +150,9 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 230)
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.11966!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.88034!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 234)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'Panel7
@@ -160,10 +162,10 @@ Partial Class UCStartPage
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
         Me.Panel7.Controls.Add(Me.LinkLabel_Github)
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(429, 115)
+        Me.Panel7.Location = New System.Drawing.Point(429, 136)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(430, 115)
+        Me.Panel7.Size = New System.Drawing.Size(430, 98)
         Me.Panel7.TabIndex = 7
         '
         'LinkLabel_Updates
@@ -211,6 +213,7 @@ Partial Class UCStartPage
         '
         'Panel4
         '
+        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceRunCmd)
         Me.Panel4.Controls.Add(Me.LinkLabel_ServicePath)
         Me.Panel4.Controls.Add(Me.Label1)
         Me.Panel4.Controls.Add(Me.ClassPictureBoxQuality1)
@@ -221,8 +224,25 @@ Partial Class UCStartPage
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(429, 115)
+        Me.Panel4.Size = New System.Drawing.Size(429, 136)
         Me.Panel4.TabIndex = 1
+        '
+        'LinkLabel_ServiceRunCmd
+        '
+        Me.LinkLabel_ServiceRunCmd.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ServiceRunCmd.AutoSize = True
+        Me.LinkLabel_ServiceRunCmd.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ServiceRunCmd.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ServiceRunCmd.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ServiceRunCmd.Location = New System.Drawing.Point(103, 59)
+        Me.LinkLabel_ServiceRunCmd.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ServiceRunCmd.Name = "LinkLabel_ServiceRunCmd"
+        Me.LinkLabel_ServiceRunCmd.Size = New System.Drawing.Size(80, 13)
+        Me.LinkLabel_ServiceRunCmd.TabIndex = 20
+        Me.LinkLabel_ServiceRunCmd.TabStop = True
+        Me.LinkLabel_ServiceRunCmd.Text = "Debug Service"
+        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServiceRunCmd, "Tooltip")
+        Me.LinkLabel_ServiceRunCmd.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_ServicePath
         '
@@ -231,7 +251,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServicePath.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServicePath.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServicePath.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 91)
+        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 107)
         Me.LinkLabel_ServicePath.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServicePath.Name = "LinkLabel_ServicePath"
         Me.LinkLabel_ServicePath.Size = New System.Drawing.Size(96, 13)
@@ -276,7 +296,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceRestart.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceRestart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceRestart.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceRestart.Location = New System.Drawing.Point(103, 59)
+        Me.LinkLabel_ServiceRestart.Location = New System.Drawing.Point(103, 75)
         Me.LinkLabel_ServiceRestart.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceRestart.Name = "LinkLabel_ServiceRestart"
         Me.LinkLabel_ServiceRestart.Size = New System.Drawing.Size(81, 13)
@@ -293,7 +313,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceStop.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceStop.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceStop.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceStop.Location = New System.Drawing.Point(103, 75)
+        Me.LinkLabel_ServiceStop.Location = New System.Drawing.Point(103, 91)
         Me.LinkLabel_ServiceStop.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceStop.Name = "LinkLabel_ServiceStop"
         Me.LinkLabel_ServiceStop.Size = New System.Drawing.Size(69, 13)
@@ -305,6 +325,7 @@ Partial Class UCStartPage
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolRunCmd)
         Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolClose)
         Me.Panel2.Controls.Add(Me.Label2)
         Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality2)
@@ -313,8 +334,25 @@ Partial Class UCStartPage
         Me.Panel2.Location = New System.Drawing.Point(429, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(430, 115)
+        Me.Panel2.Size = New System.Drawing.Size(430, 136)
         Me.Panel2.TabIndex = 0
+        '
+        'LinkLabel_ConfigToolRunCmd
+        '
+        Me.LinkLabel_ConfigToolRunCmd.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ConfigToolRunCmd.AutoSize = True
+        Me.LinkLabel_ConfigToolRunCmd.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigToolRunCmd.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ConfigToolRunCmd.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigToolRunCmd.Location = New System.Drawing.Point(103, 59)
+        Me.LinkLabel_ConfigToolRunCmd.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ConfigToolRunCmd.Name = "LinkLabel_ConfigToolRunCmd"
+        Me.LinkLabel_ConfigToolRunCmd.Size = New System.Drawing.Size(105, 13)
+        Me.LinkLabel_ConfigToolRunCmd.TabIndex = 25
+        Me.LinkLabel_ConfigToolRunCmd.TabStop = True
+        Me.LinkLabel_ConfigToolRunCmd.Text = "Debug Config Tool"
+        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ConfigToolRunCmd, "Tooltip")
+        Me.LinkLabel_ConfigToolRunCmd.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_ConfigToolClose
         '
@@ -323,7 +361,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ConfigToolClose.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ConfigToolClose.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ConfigToolClose.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 59)
+        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 75)
         Me.LinkLabel_ConfigToolClose.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ConfigToolClose.Name = "LinkLabel_ConfigToolClose"
         Me.LinkLabel_ConfigToolClose.Size = New System.Drawing.Size(98, 13)
@@ -368,10 +406,10 @@ Partial Class UCStartPage
         Me.Panel5.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Panel5.Controls.Add(Me.LinkLabel_InstallDrivers)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(0, 115)
+        Me.Panel5.Location = New System.Drawing.Point(0, 136)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(429, 115)
+        Me.Panel5.Size = New System.Drawing.Size(429, 98)
         Me.Panel5.TabIndex = 6
         '
         'LinkLabel_ServiceFactory
@@ -752,14 +790,14 @@ Partial Class UCStartPage
         Me.Panel20.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel20.Location = New System.Drawing.Point(0, 414)
         Me.Panel20.Name = "Panel20"
-        Me.Panel20.Size = New System.Drawing.Size(893, 309)
+        Me.Panel20.Size = New System.Drawing.Size(893, 313)
         Me.Panel20.TabIndex = 6
         '
         'Panel21
         '
         Me.Panel21.Controls.Add(Me.Panel8)
         Me.Panel21.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel21.Location = New System.Drawing.Point(0, 723)
+        Me.Panel21.Location = New System.Drawing.Point(0, 727)
         Me.Panel21.Name = "Panel21"
         Me.Panel21.Size = New System.Drawing.Size(893, 300)
         Me.Panel21.TabIndex = 7
@@ -1013,4 +1051,6 @@ Partial Class UCStartPage
     Friend WithEvents Button_VdmUpdateIgnore As Button
     Friend WithEvents ColumnHeader_ID As ColumnHeader
     Friend WithEvents ColumnHeader_Color As ColumnHeader
+    Friend WithEvents LinkLabel_ServiceRunCmd As LinkLabel
+    Friend WithEvents LinkLabel_ConfigToolRunCmd As LinkLabel
 End Class
