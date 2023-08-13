@@ -218,7 +218,7 @@ Public Class UCVirtualMotionTracker
                 ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, g_ClassControllerSettings.m_ControllerRecenterMethod))
 
                 ComboBox_RecenterFromDevice.Items.Clear()
-                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_ControllerRecenterFromDeviceName, "Any HMD"))
+                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_ControllerRecenterFromDeviceName, "Any Head-Mounted Display"))
                 ComboBox_RecenterFromDevice.SelectedIndex = 0
 
                 CheckBox_HmdRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableHmdRecenter
