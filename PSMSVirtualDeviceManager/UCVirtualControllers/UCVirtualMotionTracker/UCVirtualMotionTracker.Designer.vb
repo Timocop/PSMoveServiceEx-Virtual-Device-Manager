@@ -889,15 +889,14 @@ Partial Class UCVirtualMotionTracker
         '
         'Label17
         '
-        Me.Label17.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label17.AutoSize = True
         Me.Label17.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label17.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.Label17.Location = New System.Drawing.Point(15, 21)
         Me.Label17.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label17.Name = "Label17"
         Me.Label17.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label17.Size = New System.Drawing.Size(713, 71)
+        Me.Label17.Size = New System.Drawing.Size(516, 71)
         Me.Label17.TabIndex = 53
         Me.Label17.Text = resources.GetString("Label17.Text")
         '
