@@ -40,7 +40,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -50,6 +49,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Label_TrackerName = New System.Windows.Forms.Label()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -59,7 +60,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_ControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_ControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_ControllerID.FormattingEnabled = True
-        Me.ComboBox_ControllerID.Location = New System.Drawing.Point(134, 16)
+        Me.ComboBox_ControllerID.Location = New System.Drawing.Point(134, 45)
         Me.ComboBox_ControllerID.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.ComboBox_ControllerID.Name = "ComboBox_ControllerID"
         Me.ComboBox_ControllerID.Size = New System.Drawing.Size(150, 21)
@@ -69,7 +70,7 @@ Partial Class UCVirtualMotionTrackerItem
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(16, 19)
+        Me.Label1.Location = New System.Drawing.Point(16, 48)
         Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(76, 13)
@@ -85,7 +86,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 142)
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 171)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(120, 23)
@@ -98,7 +99,7 @@ Partial Class UCVirtualMotionTrackerItem
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(16, 46)
+        Me.Label3.Location = New System.Drawing.Point(16, 75)
         Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(86, 13)
@@ -110,7 +111,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_VMTTrackerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VMTTrackerID.FormattingEnabled = True
-        Me.ComboBox_VMTTrackerID.Location = New System.Drawing.Point(134, 43)
+        Me.ComboBox_VMTTrackerID.Location = New System.Drawing.Point(134, 72)
         Me.ComboBox_VMTTrackerID.Name = "ComboBox_VMTTrackerID"
         Me.ComboBox_VMTTrackerID.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_VMTTrackerID.TabIndex = 17
@@ -136,7 +137,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 147)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 176)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -150,7 +151,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Gyro.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Gyro.Cursor = System.Windows.Forms.Cursors.Default
         Me.TextBox_Gyro.HideSelection = False
-        Me.TextBox_Gyro.Location = New System.Drawing.Point(134, 102)
+        Me.TextBox_Gyro.Location = New System.Drawing.Point(134, 131)
         Me.TextBox_Gyro.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
         Me.TextBox_Gyro.Multiline = True
         Me.TextBox_Gyro.Name = "TextBox_Gyro"
@@ -166,7 +167,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Pos.Cursor = System.Windows.Forms.Cursors.Default
         Me.TextBox_Pos.HideSelection = False
-        Me.TextBox_Pos.Location = New System.Drawing.Point(13, 102)
+        Me.TextBox_Pos.Location = New System.Drawing.Point(13, 131)
         Me.TextBox_Pos.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.TextBox_Pos.Multiline = True
         Me.TextBox_Pos.Name = "TextBox_Pos"
@@ -189,22 +190,11 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Panel_Status.Controls.Add(Me.PictureBox_StatusImage)
         Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
         Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
-        Me.Panel_Status.Location = New System.Drawing.Point(16, 182)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 204)
         Me.Panel_Status.Margin = New System.Windows.Forms.Padding(3, 6, 3, 16)
         Me.Panel_Status.Name = "Panel_Status"
         Me.Panel_Status.Size = New System.Drawing.Size(585, 75)
         Me.Panel_Status.TabIndex = 36
-        '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
         '
         'Label_StatusMessage
         '
@@ -242,7 +232,7 @@ Partial Class UCVirtualMotionTrackerItem
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(16, 73)
+        Me.Label2.Location = New System.Drawing.Point(16, 102)
         Me.Label2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(95, 13)
@@ -254,7 +244,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_VMTTrackerRole.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VMTTrackerRole.FormattingEnabled = True
-        Me.ComboBox_VMTTrackerRole.Location = New System.Drawing.Point(134, 70)
+        Me.ComboBox_VMTTrackerRole.Location = New System.Drawing.Point(134, 99)
         Me.ComboBox_VMTTrackerRole.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
         Me.ComboBox_VMTTrackerRole.Name = "ComboBox_VMTTrackerRole"
         Me.ComboBox_VMTTrackerRole.Size = New System.Drawing.Size(150, 21)
@@ -265,7 +255,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(324, 46)
+        Me.Label4.Location = New System.Drawing.Point(324, 102)
         Me.Label4.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(117, 13)
@@ -278,7 +268,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_SteamTrackerRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_SteamTrackerRole.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_SteamTrackerRole.FormattingEnabled = True
-        Me.ComboBox_SteamTrackerRole.Location = New System.Drawing.Point(451, 43)
+        Me.ComboBox_SteamTrackerRole.Location = New System.Drawing.Point(451, 99)
         Me.ComboBox_SteamTrackerRole.Name = "ComboBox_SteamTrackerRole"
         Me.ComboBox_SteamTrackerRole.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_SteamTrackerRole.TabIndex = 40
@@ -295,12 +285,35 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Information"
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
+        'Label_TrackerName
+        '
+        Me.Label_TrackerName.AutoSize = True
+        Me.Label_TrackerName.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_TrackerName.Location = New System.Drawing.Point(16, 16)
+        Me.Label_TrackerName.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Label_TrackerName.Name = "Label_TrackerName"
+        Me.Label_TrackerName.Size = New System.Drawing.Size(118, 13)
+        Me.Label_TrackerName.TabIndex = 42
+        Me.Label_TrackerName.Text = "Tracker Name: Invalid"
+        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.Label_TrackerName)
         Me.Controls.Add(Me.ComboBox_SteamTrackerRole)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label2)
@@ -317,7 +330,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Controls.Add(Me.ComboBox_ControllerID)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTrackerItem"
-        Me.Size = New System.Drawing.Size(617, 273)
+        Me.Size = New System.Drawing.Size(617, 295)
         Me.Panel_Status.ResumeLayout(False)
         Me.Panel_Status.PerformLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).EndInit()
@@ -347,4 +360,5 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents Label4 As Label
     Friend WithEvents ComboBox_SteamTrackerRole As ComboBox
     Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents Label_TrackerName As Label
 End Class

@@ -128,6 +128,19 @@ Public Class UCVirtualMotionTrackerItem
         Me.Height = g_iStatusHideHeight
     End Sub
 
+    Private Sub UpdateTrackerTitle()
+        Dim iControllerID As Integer = CInt(ComboBox_ControllerID.SelectedItem)
+        Dim iVmtTrackerID As Integer = CInt(ComboBox_VMTTrackerID.SelectedItem)
+        Dim sVmtTrackerRole As String = CStr(ComboBox_VMTTrackerRole.SelectedItem)
+        Dim sTrackerRole As String = CStr(ComboBox_SteamTrackerRole.SelectedItem)
+
+        If (iVmtTrackerID < 0 OrElse iControllerID < 0) Then
+            Label_TrackerName.Text = "Tracker Name: Invalid"
+        Else
+            Label_TrackerName.Text = String.Format("Tracker Name: {0}{1} - {2} ({3})", ClassVmtConst.VMT_DEVICE_NAME, iVmtTrackerID, sVmtTrackerRole, sTrackerRole)
+        End If
+    End Sub
+
     Private Sub OnOscSuspendChanged()
         If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
             Return
@@ -293,6 +306,8 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
+        UpdateTrackerTitle()
+
         If (g_bIgnoreEvents) Then
             Return
         End If
@@ -313,6 +328,8 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub ComboBox_VMTTrackerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerID.SelectedIndexChanged
+        UpdateTrackerTitle()
+
         If (g_bIgnoreEvents) Then
             Return
         End If
@@ -324,6 +341,8 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
+        UpdateTrackerTitle()
+
         If (g_bIgnoreEvents) Then
             Return
         End If
@@ -333,6 +352,8 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub ComboBox_TrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_SteamTrackerRole.SelectedIndexChanged
+        UpdateTrackerTitle()
+
         If (g_bIgnoreEvents) Then
             Return
         End If
@@ -1979,7 +2000,7 @@ Public Class UCVirtualMotionTrackerItem
 
             Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
-                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "-1")))
+                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
                 End Using
             End Using
