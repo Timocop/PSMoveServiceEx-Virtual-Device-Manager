@@ -767,7 +767,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label25.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label25.Name = "Label25"
         Me.Label25.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label25.Size = New System.Drawing.Size(613, 45)
+        Me.Label25.Size = New System.Drawing.Size(574, 45)
         Me.Label25.TabIndex = 66
         Me.Label25.Text = resources.GetString("Label25.Text")
         '
