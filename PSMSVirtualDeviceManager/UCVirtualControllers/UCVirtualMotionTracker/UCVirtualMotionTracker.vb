@@ -107,7 +107,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head Mount Display"))
+            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
 
             ComboBox_RecenterFromDevice.SelectedIndex = 0
         Finally
@@ -145,7 +145,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_PlayCalibForwardMethod.Items.Clear()
-            ComboBox_PlayCalibForwardMethod.Items.Add("Use Head Mount Display Forward")
+            ComboBox_PlayCalibForwardMethod.Items.Add("Use Head-Mounted Display Forward")
             ComboBox_PlayCalibForwardMethod.Items.Add("Use Calibrated Playspace Forward")
 
             ComboBox_PlayCalibForwardMethod.SelectedIndex = 0

@@ -106,8 +106,8 @@ Partial Class FormSteamSettings
         Me.CheckBox_EnableNullDriver.Size = New System.Drawing.Size(124, 18)
         Me.CheckBox_EnableNullDriver.TabIndex = 24
         Me.CheckBox_EnableNullDriver.Text = "Enable Null Driver"
-        Me.ToolTip1.SetToolTip(Me.CheckBox_EnableNullDriver, "Enables a dummy head mount display when enabled. Allowed to see VR view on your d" &
-        "esktop and fully simulates a head mount display.")
+        Me.ToolTip1.SetToolTip(Me.CheckBox_EnableNullDriver, "Enables a dummy head-mounted display when enabled. Allowed to see VR view on your d" &
+        "esktop and fully simulates a head-mounted display.")
         Me.CheckBox_EnableNullDriver.UseVisualStyleBackColor = True
         '
         'CheckBox_ForceNullDriver
@@ -132,9 +132,9 @@ Partial Class FormSteamSettings
         Me.CheckBox_RequireHmd.Name = "CheckBox_RequireHmd"
         Me.CheckBox_RequireHmd.Size = New System.Drawing.Size(180, 18)
         Me.CheckBox_RequireHmd.TabIndex = 26
-        Me.CheckBox_RequireHmd.Text = "Require Head Mount Display"
-        Me.ToolTip1.SetToolTip(Me.CheckBox_RequireHmd, "Make SteamVR require a head mount display. Disable this if you want to run SteamV" &
-        "R without any head mount display.")
+        Me.CheckBox_RequireHmd.Text = "Require Head-Mounted Display"
+        Me.ToolTip1.SetToolTip(Me.CheckBox_RequireHmd, "Make SteamVR require a head-mounted display. Disable this if you want to run SteamV" &
+        "R without any head-mounted display.")
         Me.CheckBox_RequireHmd.UseVisualStyleBackColor = True
         '
         'CheckBox_EnableMultipleDrivers
@@ -175,7 +175,7 @@ Partial Class FormSteamSettings
         Me.CheckBox_EnableMirror.Size = New System.Drawing.Size(150, 18)
         Me.CheckBox_EnableMirror.TabIndex = 29
         Me.CheckBox_EnableMirror.Text = "Enable SteamVR Mirror"
-        Me.ToolTip1.SetToolTip(Me.CheckBox_EnableMirror, "Enables the SteamVR mirror to view the head mount display's perspective.")
+        Me.ToolTip1.SetToolTip(Me.CheckBox_EnableMirror, "Enables the SteamVR mirror to view the head-mounted display's perspective.")
         Me.CheckBox_EnableMirror.UseVisualStyleBackColor = True
         '
         'CheckBox_EnablePerfGraph

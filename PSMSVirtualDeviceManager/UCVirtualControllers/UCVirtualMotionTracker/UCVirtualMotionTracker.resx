@@ -119,21 +119,11 @@
   </resheader>
   <data name="Label1.Text" xml:space="preserve">
     <value>Virtual Motion Trackers (VMT) enable you to create SteamVR trackers and OSC trackers (if supported).
-It offers a range of tracker roles, including body trackers, controllers, and replacement of Head Mount Display 6-DoF pose.</value>
-  </data>
-  <data name="Label7.Text" xml:space="preserve">
-    <value>        Enabling haptic feedback can significantly reduce battery life. 
-        On PSMove controllers, enabling the rumble motor may interfere with the IMU magnetometer and
-        lead to orientation drift.</value>
-  </data>
-  <data name="Label6.Text" xml:space="preserve">
-    <value>        Spawning Base Stations consumes device slots, and currently, SteamVR supports a maximum of 16 devices. 
-        If you are using numerous devices, consider disabling Base Station spawning to free up slots for trackers. 
-        It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
+It offers a range of tracker roles, including body trackers, controllers, and replacement of head-mounted display 6-DoF pose.</value>
   </data>
   <data name="Label25.Text" xml:space="preserve">
-    <value>        Holding the SELECT+START button on the PSmove controller will recenter the playspace to 
-        the head mount display. 
+    <value>        Holding the SELECT+START button on the PSmove controller while moving both the head-mounted display and 
+        controller forward, will recenter the playspace to the head-mounted display. 
         Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
   </data>
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -154,6 +144,16 @@ It offers a range of tracker roles, including body trackers, controllers, and re
     <value>        Holding the SELECT button on the PSmove controller will recenter the controllers orientation. 
         This is useful for controllers without magnetometers which experience yaw drift over time.</value>
   </data>
+  <data name="Label7.Text" xml:space="preserve">
+    <value>        Enabling haptic feedback can significantly reduce battery life. 
+        On PSMove controllers, enabling the rumble motor may interfere with the IMU magnetometer and
+        lead to orientation drift.</value>
+  </data>
+  <data name="Label6.Text" xml:space="preserve">
+    <value>        Spawning Base Stations consumes device slots, and currently, SteamVR supports a maximum of 16 devices. 
+        If you are using numerous devices, consider disabling Base Station spawning to free up slots for trackers. 
+        It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
+  </data>
   <data name="Label24.Text" xml:space="preserve">
     <value>The Playspace calibrator synchronizes the PSMoveServiceEx tracking universe with another one.
 If you are using third-party head-mounted displays, this step is required to utilize both tracking methods simultaneously.</value>
@@ -164,8 +164,5 @@ This is useful if, for example, you are using PhoneVR or any other third-party t
   </data>
   <metadata name="ContextMenuStrip_Autostart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>224, 17</value>
   </metadata>
 </root>

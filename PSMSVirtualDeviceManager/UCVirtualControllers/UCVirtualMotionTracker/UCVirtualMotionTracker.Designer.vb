@@ -767,7 +767,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label25.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label25.Name = "Label25"
         Me.Label25.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label25.Size = New System.Drawing.Size(504, 45)
+        Me.Label25.Size = New System.Drawing.Size(613, 45)
         Me.Label25.TabIndex = 66
         Me.Label25.Text = resources.GetString("Label25.Text")
         '
@@ -778,9 +778,9 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(19, 460)
         Me.CheckBox_PlayCalibEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_PlayCalibEnabled.Name = "CheckBox_PlayCalibEnabled"
-        Me.CheckBox_PlayCalibEnabled.Size = New System.Drawing.Size(182, 18)
+        Me.CheckBox_PlayCalibEnabled.Size = New System.Drawing.Size(228, 18)
         Me.CheckBox_PlayCalibEnabled.TabIndex = 65
-        Me.CheckBox_PlayCalibEnabled.Text = "Enable playspace recentering"
+        Me.CheckBox_PlayCalibEnabled.Text = "Enable playspace recentering shortcut"
         Me.CheckBox_PlayCalibEnabled.UseVisualStyleBackColor = True
         '
         'Button_RecenterButtonTimeReset
@@ -889,14 +889,15 @@ Partial Class UCVirtualMotionTracker
         '
         'Label17
         '
-        Me.Label17.AutoSize = True
+        Me.Label17.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label17.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label17.ImageAlign = System.Drawing.ContentAlignment.TopLeft
         Me.Label17.Location = New System.Drawing.Point(15, 21)
         Me.Label17.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label17.Name = "Label17"
         Me.Label17.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label17.Size = New System.Drawing.Size(516, 71)
+        Me.Label17.Size = New System.Drawing.Size(713, 71)
         Me.Label17.TabIndex = 53
         Me.Label17.Text = resources.GetString("Label17.Text")
         '
@@ -920,9 +921,9 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(19, 252)
         Me.CheckBox_HmdRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_HmdRecenterEnabled.Name = "CheckBox_HmdRecenterEnabled"
-        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(229, 18)
+        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(275, 18)
         Me.CheckBox_HmdRecenterEnabled.TabIndex = 51
-        Me.CheckBox_HmdRecenterEnabled.Text = "Enable remote orientation recentering"
+        Me.CheckBox_HmdRecenterEnabled.Text = "Enable remote orientation recentering shortcut"
         Me.CheckBox_HmdRecenterEnabled.UseVisualStyleBackColor = True
         '
         'ComboBox_RecenterFromDevice
@@ -992,9 +993,9 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 111)
         Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_ControllerRecenterEnabled.Name = "CheckBox_ControllerRecenterEnabled"
-        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(190, 18)
+        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(236, 18)
         Me.CheckBox_ControllerRecenterEnabled.TabIndex = 0
-        Me.CheckBox_ControllerRecenterEnabled.Text = "Enable orientation recentering"
+        Me.CheckBox_ControllerRecenterEnabled.Text = "Enable orientation recentering shortcut"
         Me.CheckBox_ControllerRecenterEnabled.UseVisualStyleBackColor = True
         '
         'GroupBox2
@@ -1682,7 +1683,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_PlaySpaceManualCalib.Name = "Button_PlaySpaceManualCalib"
         Me.Button_PlaySpaceManualCalib.Size = New System.Drawing.Size(214, 23)
         Me.Button_PlaySpaceManualCalib.TabIndex = 65
-        Me.Button_PlaySpaceManualCalib.Text = "Start Manual Calibration"
+        Me.Button_PlaySpaceManualCalib.Text = "Start Playspace Calibration"
         Me.Button_PlaySpaceManualCalib.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.Button_PlaySpaceManualCalib.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_PlaySpaceManualCalib.UseVisualStyleBackColor = True

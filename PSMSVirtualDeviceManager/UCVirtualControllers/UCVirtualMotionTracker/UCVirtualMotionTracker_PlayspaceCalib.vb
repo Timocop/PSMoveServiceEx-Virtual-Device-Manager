@@ -250,7 +250,7 @@
                                 End If
 
                                 If (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus <> UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
-                                    Throw New ArgumentException("Controller and head mount display have not been moved in time! Aborted.")
+                                    Throw New ArgumentException("Controller or head-mounted display have not been moved in time! Aborted.")
                                 End If
 
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
