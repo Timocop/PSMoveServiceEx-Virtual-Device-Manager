@@ -159,6 +159,8 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PlayCalibPrepTime = New System.Windows.Forms.NumericUpDown()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -210,6 +212,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel5.SuspendLayout()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
+        CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1304,6 +1307,8 @@ Partial Class UCVirtualMotionTracker
         'TabPage_PlayspaceCalib
         '
         Me.TabPage_PlayspaceCalib.AutoScroll = True
+        Me.TabPage_PlayspaceCalib.Controls.Add(Me.NumericUpDown_PlayCalibPrepTime)
+        Me.TabPage_PlayspaceCalib.Controls.Add(Me.Label41)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.Panel_PlayCalibSteps)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.ComboBox_PlayCalibControllerID)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.Label28)
@@ -1335,7 +1340,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel9)
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel7)
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel5)
-        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 182)
+        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 213)
         Me.Panel_PlayCalibSteps.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_PlayCalibSteps.Name = "Panel_PlayCalibSteps"
         Me.Panel_PlayCalibSteps.Size = New System.Drawing.Size(728, 367)
@@ -1628,11 +1633,12 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_PlayCalibControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_PlayCalibControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_PlayCalibControllerID.FormattingEnabled = True
-        Me.ComboBox_PlayCalibControllerID.Location = New System.Drawing.Point(98, 104)
+        Me.ComboBox_PlayCalibControllerID.Location = New System.Drawing.Point(168, 104)
         Me.ComboBox_PlayCalibControllerID.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
-        Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(219, 21)
+        Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(211, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 68
+        Me.ToolTip1.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The PSMS-EX controller id you want to use for playspace calibration.")
         '
         'Label28
         '
@@ -1664,7 +1670,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label27.AutoSize = True
         Me.Label27.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label27.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label27.Location = New System.Drawing.Point(13, 131)
+        Me.Label27.Location = New System.Drawing.Point(13, 162)
         Me.Label27.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label27.Name = "Label27"
         Me.Label27.Padding = New System.Windows.Forms.Padding(3)
@@ -1814,6 +1820,26 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip1.ReshowDelay = 20
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Information"
+        '
+        'Label41
+        '
+        Me.Label41.AutoSize = True
+        Me.Label41.Location = New System.Drawing.Point(16, 136)
+        Me.Label41.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label41.Name = "Label41"
+        Me.Label41.Size = New System.Drawing.Size(146, 13)
+        Me.Label41.TabIndex = 70
+        Me.Label41.Text = "Preparation time (seconds):"
+        '
+        'NumericUpDown_PlayCalibPrepTime
+        '
+        Me.NumericUpDown_PlayCalibPrepTime.Location = New System.Drawing.Point(168, 134)
+        Me.NumericUpDown_PlayCalibPrepTime.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibPrepTime.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibPrepTime.Name = "NumericUpDown_PlayCalibPrepTime"
+        Me.NumericUpDown_PlayCalibPrepTime.Size = New System.Drawing.Size(211, 22)
+        Me.NumericUpDown_PlayCalibPrepTime.TabIndex = 71
+        Me.NumericUpDown_PlayCalibPrepTime.Value = New Decimal(New Integer() {5, 0, 0, 0})
         '
         'ListView_OscDevices
         '
@@ -2064,6 +2090,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
+        CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2230,4 +2257,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents ComboBox_PlayCalibForwardMethod As ComboBox
     Friend WithEvents Label40 As Label
     Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents NumericUpDown_PlayCalibPrepTime As NumericUpDown
+    Friend WithEvents Label41 As Label
 End Class

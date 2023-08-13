@@ -164,7 +164,13 @@
         Dim iPercentage As Integer = 0
 
         Try
+            Me.Invoke(Sub() Button_PlaySpaceManualCalib.Enabled = False)
+
             Dim iControllerID As Integer = CInt(Me.Invoke(Function() ComboBox_PlayCalibControllerID.SelectedItem))
+            Dim iPrepTimeSec As Integer = CInt(Me.Invoke(Function() NumericUpDown_PlayCalibPrepTime.Value))
+            If (iPrepTimeSec < 1) Then
+                iPrepTimeSec = 1
+            End If
 
             Dim mTargetTracker = DirectCast(Me.Invoke(
                 Function()
@@ -197,7 +203,7 @@
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE
                             Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
 
-                            iPercentage += 20
+                            iPercentage += CInt(100.0F / iPrepTimeSec)
 
                             If (iPercentage >= 100) Then
                                 If (Not mControllerData.m_IsTracking) Then
@@ -274,6 +280,9 @@
         Catch ex As Exception
             Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, -1))
             MessageBox.Show(ex.Message, "Playspace Calibration Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, -1))
+            Me.BeginInvoke(Sub() Button_PlaySpaceManualCalib.Enabled = True)
         End Try
     End Sub
 
