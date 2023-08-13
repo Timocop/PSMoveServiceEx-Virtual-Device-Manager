@@ -18,6 +18,13 @@ Public Class UCVirtualMotionTracker
     Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
     Private g_mPlayspaceCalibrationThread As Threading.Thread = Nothing
 
+    Enum ENUM_SETTINGS_SAVE_TYPE_FLAGS
+        ALL = -1
+        CONTROLLER = (1 << 0)
+        PLAYSPACE_CALIBRATION = (1 << 1)
+        PLAYSPACE = (1 << 2)
+    End Enum
+
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
 
@@ -849,6 +856,8 @@ Public Class UCVirtualMotionTracker
 
             Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
+
+                    ' Controller Settings
                     m_JoystickShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutBindings", "false") = "true")
                     m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
                     m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
@@ -902,86 +911,7 @@ Public Class UCVirtualMotionTracker
 
                     m_EnablePlayspaceRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
 
-
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPosOffset.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPosOffset.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PosOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPosOffset.Z = tmpSng
-                    End If
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mAngOffset.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mAngOffset.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mAngOffset.Z = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "AngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mAngOffset.W = tmpSng
-                    End If
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointControllerBeginPos.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointControllerBeginPos.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointControllerBeginPos.Z = tmpSng
-                    End If
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointControllerEndPos.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointControllerEndPos.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointControllerEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointControllerEndPos.Z = tmpSng
-                    End If
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointHmdBeginPos.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointHmdBeginPos.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointHmdBeginPos.Z = tmpSng
-                    End If
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointHmdEndPos.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointHmdEndPos.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "PointHmdEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mPointHmdEndPos.Z = tmpSng
-                    End If
-
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mHmdAngOffset.X = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mHmdAngOffset.Y = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mHmdAngOffset.Z = tmpSng
-                    End If
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HmdAngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_PlayspaceSettings.mHmdAngOffset.W = tmpSng
-                    End If
-
-                    m_PlayspaceSettings.bValid = (mIni.ReadKeyValue("PlayspaceSettings", "Valid", "false") = "true")
-
+                    ' Playspace Settings
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_PlayspaceSettings.iForwardOffset = tmpSng
                     End If
@@ -994,11 +924,91 @@ Public Class UCVirtualMotionTracker
                         m_PlayspaceSettings.iForwardMethod = CType(tmpSng, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
                     End If
 
+
+                    ' Playspace Calibration Settings
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPosOffset.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPosOffset.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPosOffset.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.Z = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mAngOffset.W = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerBeginPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerBeginPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerBeginPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerEndPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerEndPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointControllerEndPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdBeginPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdBeginPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdBeginPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdEndPos.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdEndPos.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mPointHmdEndPos.Z = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.X = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.Y = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.Z = tmpSng
+                    End If
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_PlayspaceSettings.mHmdAngOffset.W = tmpSng
+                    End If
+
+                    m_PlayspaceSettings.bValid = (mIni.ReadKeyValue("PlayspaceCalibrationSettings", "Valid", "false") = "true")
+
                 End Using
             End Using
         End Sub
 
-        Public Sub SaveSettings(bPlayspaceOnly As Boolean)
+        Public Sub SaveSettings(iSaveFlags As ENUM_SETTINGS_SAVE_TYPE_FLAGS)
             If (Not g_bSettingsLoaded) Then
                 Return
             End If
@@ -1007,7 +1017,7 @@ Public Class UCVirtualMotionTracker
                 Using mIni As New ClassIni(mStream)
                     Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                    If (Not bPlayspaceOnly) Then
+                    If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.CONTROLLER) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_JoystickShortcutBinding, "true", "false")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_JoystickShortcutTouchpadClick, "true", "false")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "DisableBaseStationSpawning", If(m_DisableBaseStationSpawning, "true", "false")))
@@ -1029,40 +1039,45 @@ Public Class UCVirtualMotionTracker
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_EnablePlayspaceRecenter, "true", "false")))
                     End If
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetX", m_PlayspaceSettings.mPosOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetY", m_PlayspaceSettings.mPosOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PosOffsetZ", m_PlayspaceSettings.mPosOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardOffset", m_PlayspaceSettings.iForwardOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HeightOffset", m_PlayspaceSettings.iHeightOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardMethod", CStr(CInt(m_PlayspaceSettings.iForwardMethod))))
+                    End If
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetX", m_PlayspaceSettings.mAngOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetY", m_PlayspaceSettings.mAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetZ", m_PlayspaceSettings.mAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AngOffsetW", m_PlayspaceSettings.mAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+                    If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIBRATION) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PosOffsetX", m_PlayspaceSettings.mPosOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PosOffsetY", m_PlayspaceSettings.mPosOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PosOffsetZ", m_PlayspaceSettings.mPosOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerBeginPosX", m_PlayspaceSettings.mPointControllerBeginPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerBeginPosY", m_PlayspaceSettings.mPointControllerBeginPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerBeginPosZ", m_PlayspaceSettings.mPointControllerBeginPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "AngOffsetX", m_PlayspaceSettings.mAngOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "AngOffsetY", m_PlayspaceSettings.mAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "AngOffsetZ", m_PlayspaceSettings.mAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "AngOffsetW", m_PlayspaceSettings.mAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerEndPosX", m_PlayspaceSettings.mPointControllerEndPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerEndPosY", m_PlayspaceSettings.mPointControllerEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointControllerEndPosZ", m_PlayspaceSettings.mPointControllerEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointControllerBeginPosX", m_PlayspaceSettings.mPointControllerBeginPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointControllerBeginPosY", m_PlayspaceSettings.mPointControllerBeginPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointControllerBeginPosZ", m_PlayspaceSettings.mPointControllerBeginPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdBeginPosX", m_PlayspaceSettings.mPointHmdBeginPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdBeginPosY", m_PlayspaceSettings.mPointHmdBeginPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdBeginPosZ", m_PlayspaceSettings.mPointHmdBeginPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointControllerEndPosX", m_PlayspaceSettings.mPointControllerEndPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointControllerEndPosY", m_PlayspaceSettings.mPointControllerEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointControllerEndPosZ", m_PlayspaceSettings.mPointControllerEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosX", m_PlayspaceSettings.mPointHmdEndPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosY", m_PlayspaceSettings.mPointHmdEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "PointHmdEndPosZ", m_PlayspaceSettings.mPointHmdEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointHmdBeginPosX", m_PlayspaceSettings.mPointHmdBeginPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointHmdBeginPosY", m_PlayspaceSettings.mPointHmdBeginPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointHmdBeginPosZ", m_PlayspaceSettings.mPointHmdBeginPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetX", m_PlayspaceSettings.mHmdAngOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetY", m_PlayspaceSettings.mHmdAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetZ", m_PlayspaceSettings.mHmdAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HmdAngOffsetW", m_PlayspaceSettings.mHmdAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointHmdEndPosX", m_PlayspaceSettings.mPointHmdEndPos.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointHmdEndPosY", m_PlayspaceSettings.mPointHmdEndPos.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "PointHmdEndPosZ", m_PlayspaceSettings.mPointHmdEndPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "Valid", If(m_PlayspaceSettings.bValid, "true", "false")))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardOffset", m_PlayspaceSettings.iForwardOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HeightOffset", m_PlayspaceSettings.iHeightOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardMethod", CStr(CInt(m_PlayspaceSettings.iForwardMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetX", m_PlayspaceSettings.mHmdAngOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetY", m_PlayspaceSettings.mHmdAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetZ", m_PlayspaceSettings.mHmdAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetW", m_PlayspaceSettings.mHmdAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "Valid", If(m_PlayspaceSettings.bValid, "true", "false")))
+                    End If
 
                     mIni.WriteKeyValue(mIniContent.ToArray)
                 End Using

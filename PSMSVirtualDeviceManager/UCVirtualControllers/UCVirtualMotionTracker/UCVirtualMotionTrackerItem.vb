@@ -1446,7 +1446,7 @@ Public Class UCVirtualMotionTrackerItem
                         mPlayspaceRecenterCalibrationSave = False
 
                         'Save settings after calibration is done
-                        mClassControllerSettings.SaveSettings(True)
+                        mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIBRATION)
                     End If
                 End If
             Else

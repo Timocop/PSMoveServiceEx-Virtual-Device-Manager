@@ -358,7 +358,7 @@
 
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
-            g_ClassControllerSettings.SaveSettings(False)
+            g_ClassControllerSettings.SaveSettings(ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL)
             g_ClassControllerSettings.SetUnsavedState(False)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
