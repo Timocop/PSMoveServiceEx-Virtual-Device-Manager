@@ -74,7 +74,8 @@
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
                     Label_PlayCalibTitle.Text = "Playspace Calibration Completed"
-                    Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
+                    'Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
+                    Panel_PlayCalibStatus.BackColor = Color.FromArgb(224, 224, 224)
 
             End Select
         End If
