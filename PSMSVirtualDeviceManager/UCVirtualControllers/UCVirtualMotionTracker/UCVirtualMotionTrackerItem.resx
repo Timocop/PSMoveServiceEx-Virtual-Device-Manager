@@ -123,6 +123,11 @@
   <metadata name="TimerFPS.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="ComboBox_VMTTrackerID.ToolTip" xml:space="preserve">
+    <value>The VMT slot in the OSC server.
+Usually this is the same as the controller id but you can use any free slot.
+VMT trackers will be displayed as "PSMS_EX_#" with the VMT tracker id at the end of the serial.</value>
+  </data>
   <metadata name="TimerPose.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>106, 17</value>
   </metadata>

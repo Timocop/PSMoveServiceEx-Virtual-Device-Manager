@@ -114,8 +114,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerID.Name = "ComboBox_VMTTrackerID"
         Me.ComboBox_VMTTrackerID.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_VMTTrackerID.TabIndex = 17
-        Me.ToolTip1.SetToolTip(Me.ComboBox_VMTTrackerID, "The VMT slot in the OSC server." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Usually this is the same as the controller id bu" &
-        "t you can use any free slot.")
+        Me.ToolTip1.SetToolTip(Me.ComboBox_VMTTrackerID, resources.GetString("ComboBox_VMTTrackerID.ToolTip"))
         '
         'Label_Close
         '
