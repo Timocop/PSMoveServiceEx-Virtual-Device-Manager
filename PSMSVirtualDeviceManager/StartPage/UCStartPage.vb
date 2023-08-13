@@ -454,6 +454,7 @@ Public Class UCStartPage
                 mProcess.StartInfo.FileName = sPSMSPath
                 mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sPSMSPath)
                 mProcess.StartInfo.UseShellExecute = False
+                mProcess.StartInfo.CreateNoWindow = True
 
                 mProcess.Start()
             End Using
