@@ -40,6 +40,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -49,7 +50,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_TrackerName = New System.Windows.Forms.Label()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -196,6 +196,17 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Panel_Status.Size = New System.Drawing.Size(585, 75)
         Me.Panel_Status.TabIndex = 36
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
         'Label_StatusMessage
         '
         Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -284,17 +295,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ToolTip1.ReshowDelay = 20
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Information"
-        '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
         '
         'Label_TrackerName
         '
