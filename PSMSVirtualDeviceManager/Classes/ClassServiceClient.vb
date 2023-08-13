@@ -1,4 +1,5 @@
 ﻿Imports System.Numerics
+Imports PSMoveServiceExCAPI
 Imports PSMoveServiceExCAPI.PSMoveServiceExCAPI
 Imports PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants
 Imports PSMSVirtualDeviceManager
@@ -36,6 +37,7 @@ Public Class ClassServiceClient
 
         Property m_OutputSeqNum As Integer
         Property m_BatteryLevel As Single
+        Property m_TrackingColor As PSMTrackingColorType
 
         Property m_LastTimeStamp As Date
 
@@ -77,6 +79,7 @@ Public Class ClassServiceClient
 
         Public Property m_OutputSeqNum As Integer Implements IControllerData.m_OutputSeqNum
         Public Property m_BatteryLevel As Single Implements IControllerData.m_BatteryLevel
+        Public Property m_TrackingColor As PSMTrackingColorType Implements IControllerData.m_TrackingColor
 
         Public Property m_LastTimeStamp As Date Implements IControllerData.m_LastTimeStamp
 
@@ -361,6 +364,8 @@ Public Class ClassServiceClient
                                                                 mData.m_BatteryLevel = 1.0F
                                                         End Select
                                                     End If
+
+                                                    mData.m_TrackingColor = mController.m_Info.m_PSMoveState.m_TrackingColorType
 
                                                     mData.m_IsTracking = mController.m_Info.m_PSMoveState.m_bIsCurrentlyTracking
 

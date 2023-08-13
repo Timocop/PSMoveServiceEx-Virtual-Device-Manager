@@ -87,11 +87,12 @@ Public Class UCStartPage
         While True
             Try
                 Const LISTVIEW_SUBITEM_TYPE As Integer = 0
-                Const LISTVIEW_SUBITEM_ID As Integer = 1
-                Const LISTVIEW_SUBITEM_SERIAL As Integer = 2
-                Const LISTVIEW_SUBITEM_POSITION As Integer = 3
-                Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 4
-                Const LISTVIEW_SUBITEM_BATTERY As Integer = 5
+                Const LISTVIEW_SUBITEM_COLOR As Integer = 1
+                Const LISTVIEW_SUBITEM_ID As Integer = 2
+                Const LISTVIEW_SUBITEM_SERIAL As Integer = 3
+                Const LISTVIEW_SUBITEM_POSITION As Integer = 4
+                Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 5
+                Const LISTVIEW_SUBITEM_BATTERY As Integer = 6
 
                 ' List Controllers
                 If (True) Then
@@ -110,10 +111,27 @@ Public Class UCStartPage
                         Me.BeginInvoke(Sub()
                                            Dim bFound As Boolean = False
 
+                                           Dim sTrackingColor As String = "Unknown"
+                                           Select Case (mDevice.m_TrackingColor)
+                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Magenta
+                                                   sTrackingColor = "Magenta"
+                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Cyan
+                                                   sTrackingColor = "Cyan"
+                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Yellow
+                                                   sTrackingColor = "Yellow"
+                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Red
+                                                   sTrackingColor = "Red"
+                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Green
+                                                   sTrackingColor = "Green"
+                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Blue
+                                                   sTrackingColor = "Blue"
+                                           End Select
+
                                            ' Change info about device 
                                            ListView_ServiceDevices.BeginUpdate()
                                            For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
@@ -137,6 +155,7 @@ Public Class UCStartPage
 
                                                Dim mListViewItem = New ListViewItem(New String() {
                                                     sDeviceType,
+                                                    sTrackingColor,
                                                     CStr(mDevice.m_Id),
                                                     mDevice.m_Serial,
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
@@ -183,6 +202,7 @@ Public Class UCStartPage
                                            ListView_ServiceDevices.BeginUpdate()
                                            For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = ""
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
@@ -199,6 +219,7 @@ Public Class UCStartPage
                                            If (Not bFound) Then
                                                Dim mListViewItem = New ListViewItem(New String() {
                                                     "TRACKER",
+                                                    "",
                                                     CStr(mDevice.m_Id),
                                                     mDevice.m_Path,
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
