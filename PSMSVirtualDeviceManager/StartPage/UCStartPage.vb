@@ -183,7 +183,7 @@ Public Class UCStartPage
                                            ListView_ServiceDevices.BeginUpdate()
                                            For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = "-1"
+                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
@@ -199,7 +199,7 @@ Public Class UCStartPage
                                            If (Not bFound) Then
                                                Dim mListViewItem = New ListViewItem(New String() {
                                                     "TRACKER",
-                                                    "-1",
+                                                    CStr(mDevice.m_Id),
                                                     mDevice.m_Path,
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                     String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),

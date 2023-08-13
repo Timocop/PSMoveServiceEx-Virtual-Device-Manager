@@ -43,6 +43,7 @@ Public Class ClassServiceClient
     End Interface
 
     Public Interface ITrackerData
+        Property m_Id As Integer
         Property m_Path As String
 
         Property m_Position As Vector3
@@ -87,6 +88,7 @@ Public Class ClassServiceClient
     Structure STRUC_TRACKER_DATA
         Implements ITrackerData
 
+        Public Property m_Id As Integer Implements ITrackerData.m_Id
         Public Property m_Path As String Implements ITrackerData.m_Path
 
         Public Property m_Position As Vector3 Implements ITrackerData.m_Position
@@ -267,6 +269,7 @@ Public Class ClassServiceClient
 
                                 For Each mTracker As Trackers In mTrackers
                                     Dim mData As New STRUC_TRACKER_DATA
+                                    mData.m_Id = mTracker.m_Info.m_TrackerId
                                     mData.m_Path = mTracker.m_Info.m_DevicePath
 
                                     If (mTracker.m_Info.IsPoseValid) Then
