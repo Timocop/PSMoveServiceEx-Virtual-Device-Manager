@@ -509,163 +509,20 @@ Public Class UCVirtualMotionTracker
                 USE_PLAYSPACE_FORRWARD
             End Enum
 
-            Private mPosOffset As Vector3
-            Private mAngOffset As Quaternion
-            Private mHmdAngOffset As Quaternion
-
-            Private mPointControllerBeginPos As Vector3
-            Private mPointControllerEndPos As Vector3
-            Private mPointHmdBeginPos As Vector3
-            Private mPointHmdEndPos As Vector3
-            Private bValid As Boolean
-
-            ' Settings
-            Private iForwardOffset As Single
-            Private iHeightOffset As Single
-            Private iForwardMethod As ENUM_FORWARD_METHOD
-
             Public Property m_PosOffset As Vector3
-                Get
-                    SyncLock _ThreadLock
-                        Return mPosOffset
-                    End SyncLock
-                End Get
-                Set(value As Vector3)
-                    SyncLock _ThreadLock
-                        mPosOffset = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_AngOffset As Quaternion
-                Get
-                    SyncLock _ThreadLock
-                        Return mAngOffset
-                    End SyncLock
-                End Get
-                Set(value As Quaternion)
-                    SyncLock _ThreadLock
-                        mAngOffset = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_HmdAngOffset As Quaternion
-                Get
-                    SyncLock _ThreadLock
-                        Return mHmdAngOffset
-                    End SyncLock
-                End Get
-                Set(value As Quaternion)
-                    SyncLock _ThreadLock
-                        mHmdAngOffset = value
-                    End SyncLock
-                End Set
-            End Property
 
             Public Property m_PointControllerBeginPos As Vector3
-                Get
-                    SyncLock _ThreadLock
-                        Return mPointControllerBeginPos
-                    End SyncLock
-                End Get
-                Set(value As Vector3)
-                    SyncLock _ThreadLock
-                        mPointControllerBeginPos = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_PointControllerEndPos As Vector3
-                Get
-                    SyncLock _ThreadLock
-                        Return mPointControllerEndPos
-                    End SyncLock
-                End Get
-                Set(value As Vector3)
-                    SyncLock _ThreadLock
-                        mPointControllerEndPos = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_PointHmdBeginPos As Vector3
-                Get
-                    SyncLock _ThreadLock
-                        Return mPointHmdBeginPos
-                    End SyncLock
-                End Get
-                Set(value As Vector3)
-                    SyncLock _ThreadLock
-                        mPointHmdBeginPos = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_PointHmdEndPos As Vector3
-                Get
-                    SyncLock _ThreadLock
-                        Return mPointHmdEndPos
-                    End SyncLock
-                End Get
-                Set(value As Vector3)
-                    SyncLock _ThreadLock
-                        mPointHmdEndPos = value
-                    End SyncLock
-                End Set
-            End Property
 
             Public Property m_Valid As Boolean
-                Get
-                    SyncLock _ThreadLock
-                        Return bValid
-                    End SyncLock
-                End Get
-                Set(value As Boolean)
-                    SyncLock _ThreadLock
-                        bValid = value
-                    End SyncLock
-                End Set
-            End Property
 
             Public Property m_ForwardOffset As Single
-                Get
-                    SyncLock _ThreadLock
-                        Return iForwardOffset
-                    End SyncLock
-                End Get
-                Set(value As Single)
-                    SyncLock _ThreadLock
-                        iForwardOffset = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_HeightOffset As Single
-                Get
-                    SyncLock _ThreadLock
-                        Return iHeightOffset
-                    End SyncLock
-                End Get
-                Set(value As Single)
-                    SyncLock _ThreadLock
-                        iHeightOffset = value
-                    End SyncLock
-                End Set
-            End Property
-
             Public Property m_ForwardMethod As ENUM_FORWARD_METHOD
-                Get
-                    SyncLock _ThreadLock
-                        Return iForwardMethod
-                    End SyncLock
-                End Get
-                Set(value As ENUM_FORWARD_METHOD)
-                    SyncLock _ThreadLock
-                        iForwardMethod = value
-                    End SyncLock
-                End Set
-            End Property
 
             Public Sub Reset()
                 m_Valid = False
