@@ -23,15 +23,6 @@
         CheckBox_PlayCalibEnabled.Focus()
     End Sub
 
-    Private Sub ComboBox_PlayCalibControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PlayCalibControllerID.SelectedIndexChanged
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
-        g_ClassControllerSettings.m_PlayspaceSettings.iRecenterControllerID = CInt(ComboBox_PlayCalibControllerID.SelectedItem)
-        'g_ClassControllerSettings.SetUnsavedState(True) 'Make it optional
-    End Sub
-
     Public Sub StartPlayspaceCalibration()
         If (g_mPlayspaceCalibrationThread IsNot Nothing AndAlso g_mPlayspaceCalibrationThread.IsAlive) Then
             Return

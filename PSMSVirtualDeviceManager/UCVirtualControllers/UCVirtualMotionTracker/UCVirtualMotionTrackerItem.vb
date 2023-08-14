@@ -1298,32 +1298,32 @@ Public Class UCVirtualMotionTrackerItem
         Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS,
                                                            ByRef mPosition As Vector3,
                                                            ByRef mOrientation As Quaternion)
-            If (m_PlayspaceSettings.bValid) Then
+            If (m_PlayspaceSettings.m_Valid) Then
                 Dim mCalibrationForward As Quaternion
                 Dim mForward As Vector3
-                If (m_PlayspaceSettings.iForwardMethod = UCVirtualMotionTracker.ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
-                    mCalibrationForward = ClassQuaternionTools.ExtractYawQuaternion(m_PlayspaceSettings.mHmdAngOffset, -Vector3.UnitZ)
-                    mForward = Vector3.UnitZ * m_PlayspaceSettings.iForwardOffset
+                If (m_PlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
+                    mCalibrationForward = ClassQuaternionTools.ExtractYawQuaternion(m_PlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
+                    mForward = Vector3.UnitZ * m_PlayspaceSettings.m_ForwardOffset
                 Else
                     mCalibrationForward = ClassQuaternionTools.LookRotation(
-                        m_PlayspaceSettings.mPointHmdEndPos - m_PlayspaceSettings.mPointHmdBeginPos, Vector3.UnitY)
-                    mForward = Vector3.UnitY * m_PlayspaceSettings.iForwardOffset
+                        m_PlayspaceSettings.m_PointHmdEndPos - m_PlayspaceSettings.m_PointHmdBeginPos, Vector3.UnitY)
+                    mForward = Vector3.UnitY * m_PlayspaceSettings.m_ForwardOffset
                 End If
 
                 Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationForward, mForward)
 
                 Dim mPlayspaceCalibPointsRotated = ClassQuaternionTools.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.mAngOffset), m_PlayspaceSettings.mPointControllerBeginPos)
+                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), m_PlayspaceSettings.m_PointControllerBeginPos)
 
-                mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.mPointHmdBeginPos + mOffsetForward) - mPlayspaceCalibPointsRotated
+                mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward) - mPlayspaceCalibPointsRotated
 
                 Dim mPlayspaceRotated = ClassQuaternionTools.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.mAngOffset), mPosition)
+                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition)
 
-                Dim mHeightOffset = New Vector3(0.0F, m_PlayspaceSettings.iHeightOffset, 0.0F)
+                Dim mHeightOffset = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
 
                 mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated + mHeightOffset
-                mOrientation = Quaternion.Conjugate(m_PlayspaceSettings.mAngOffset) * mOrientation
+                mOrientation = Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset) * mOrientation
             End If
         End Sub
 
@@ -1370,8 +1370,8 @@ Public Class UCVirtualMotionTrackerItem
 
                             Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
                             If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
-                                mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
-                                mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos = mFoundDevice.GetPosCm()
+                                mClassControllerSettings.m_PlayspaceSettings.m_PointControllerBeginPos = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
+                                mClassControllerSettings.m_PlayspaceSettings.m_PointHmdBeginPos = mFoundDevice.GetPosCm()
                                 mPlayspaceRecenterLastHmdSerial = sCurrentRecenterDeviceName
                             End If
                         End If
@@ -1381,9 +1381,9 @@ Public Class UCVirtualMotionTrackerItem
                             If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(mPlayspaceRecenterLastHmdSerial, mFoundDevice)) Then
                                 Dim iMinDistance As Single = 10.0F
 
-                                Dim mControllerPosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.mPointControllerBeginPos
+                                Dim mControllerPosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.m_PointControllerBeginPos
                                 Dim mControllerPosEnd As Vector3 = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
-                                Dim mFromDevicePosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.mPointHmdBeginPos
+                                Dim mFromDevicePosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.m_PointHmdBeginPos
                                 Dim mFromDevicePosEnd As Vector3 = mFoundDevice.GetPosCm()
                                 Dim mFromDeviceOrientation As Quaternion = mFoundDevice.mOrientation
 
@@ -1405,13 +1405,13 @@ Public Class UCVirtualMotionTrackerItem
                                     Dim mRelDeviceVec = ClassQuaternionTools.LookRotation(mFromDevicePosEnd - mFromDevicePosBegin, Vector3.UnitY)
                                     Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
 
-                                    mClassControllerSettings.m_PlayspaceSettings.mPosOffset = mFromDevicePosEnd - mControllerPosEnd
-                                    mClassControllerSettings.m_PlayspaceSettings.mAngOffset = mVecDiff
-                                    mClassControllerSettings.m_PlayspaceSettings.mHmdAngOffset = mFromDeviceOrientation
+                                    mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mFromDevicePosEnd - mControllerPosEnd
+                                    mClassControllerSettings.m_PlayspaceSettings.m_AngOffset = mVecDiff
+                                    mClassControllerSettings.m_PlayspaceSettings.m_HmdAngOffset = mFromDeviceOrientation
 
-                                    mClassControllerSettings.m_PlayspaceSettings.mPointControllerEndPos = mControllerPosEnd
-                                    mClassControllerSettings.m_PlayspaceSettings.mPointHmdEndPos = mFromDevicePosEnd
-                                    mClassControllerSettings.m_PlayspaceSettings.bValid = True
+                                    mClassControllerSettings.m_PlayspaceSettings.m_PointControllerEndPos = mControllerPosEnd
+                                    mClassControllerSettings.m_PlayspaceSettings.m_PointHmdEndPos = mFromDevicePosEnd
+                                    mClassControllerSettings.m_PlayspaceSettings.m_Valid = True
 
                                     'Save settings after calibration is done 
                                     mPlayspaceRecenterCalibrationSave = True

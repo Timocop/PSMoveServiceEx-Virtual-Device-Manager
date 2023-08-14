@@ -334,7 +334,7 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.iForwardOffset = NumericUpDown_PlayCalibForwardOffset.Value
+        g_ClassControllerSettings.m_PlayspaceSettings.m_ForwardOffset = NumericUpDown_PlayCalibForwardOffset.Value
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
@@ -343,7 +343,7 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.iHeightOffset = NumericUpDown_PlayCalibHeightOffset.Value
+        g_ClassControllerSettings.m_PlayspaceSettings.m_HeightOffset = NumericUpDown_PlayCalibHeightOffset.Value
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
@@ -352,7 +352,7 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.iForwardMethod = CType(ComboBox_PlayCalibForwardMethod.SelectedIndex, ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
+        g_ClassControllerSettings.m_PlayspaceSettings.m_ForwardMethod = CType(ComboBox_PlayCalibForwardMethod.SelectedIndex, ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
         g_ClassControllerSettings.SetUnsavedState(True)
     End Sub
 
