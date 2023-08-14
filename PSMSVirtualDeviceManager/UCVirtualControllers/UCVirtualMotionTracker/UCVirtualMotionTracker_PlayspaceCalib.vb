@@ -280,7 +280,6 @@
             Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, -1))
             MessageBox.Show(ex.Message, "Playspace Calibration Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
-            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, -1))
             Me.BeginInvoke(Sub() Button_PlaySpaceManualCalib.Enabled = True)
         End Try
     End Sub
