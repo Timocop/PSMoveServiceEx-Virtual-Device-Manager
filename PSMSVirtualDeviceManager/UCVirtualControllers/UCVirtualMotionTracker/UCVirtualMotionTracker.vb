@@ -668,6 +668,8 @@ Public Class UCVirtualMotionTracker
             End Property
 
             Public Sub Reset()
+                m_Valid = False
+
                 m_PosOffset = New Vector3
                 m_AngOffset = Quaternion.Identity
                 m_HmdAngOffset = Quaternion.Identity
@@ -676,8 +678,6 @@ Public Class UCVirtualMotionTracker
                 m_PointControllerEndPos = New Vector3
                 m_PointHmdBeginPos = New Vector3
                 m_PointHmdEndPos = New Vector3
-
-                m_Valid = False
             End Sub
         End Class
 
