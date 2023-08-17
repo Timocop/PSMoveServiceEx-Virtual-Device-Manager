@@ -1,17 +1,8 @@
 {
-   "DefaultIconPrefix": "vmt",
-   "DefaultRenderModelPrefix": "vmt",
    "DriverName": "psmsex",
-   "GenericTrackerIconPrefix": "vmt",
-   "GenericTrackerRenderModelPrefix": "vmt",
-   "HMDisIndex0": true,
-   "LeftControllerIconPrefix": "vmt",
-   "LeftControllerRenderModelPrefix": "vmt",
-   "OptoutTrackingRole": true,
    "ReceivePort": 34570,
-   "RejectWhenCannotTracking": true,
-   "RightControllerIconPrefix": "vmt",
-   "RightControllerRenderModelPrefix": "vmt",
+   "SendPort": 34571,
+   "SerialPrefix": "PSMS_EX",
    "RoomMatrix": [
       1.0,
       0.0,
@@ -25,10 +16,5 @@
       0.0,
       1.0,
       0.0
-   ],
-   "SendPort": 34571,
-   "SerialPrefix": "PSMS_EX",
-   "TrackingReferenceIconPrefix": "vmt",
-   "TrackingReferenceRenderModelPrefix": "vmt",
-   "VelocityEnable": true
+   ]
 }
