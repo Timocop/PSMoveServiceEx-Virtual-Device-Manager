@@ -1,5 +1,4 @@
 {
-   "DefaultAutoPoseUpdateOn": true,
    "DefaultIconPrefix": "vmt",
    "DefaultRenderModelPrefix": "vmt",
    "DriverName": "psmsex",
@@ -31,5 +30,5 @@
    "SerialPrefix": "PSMS_EX",
    "TrackingReferenceIconPrefix": "vmt",
    "TrackingReferenceRenderModelPrefix": "vmt",
-   "VelocityEnable": false
+   "VelocityEnable": true
 }
