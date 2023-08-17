@@ -14,6 +14,7 @@ Public Class UCStartPage
 
     Private g_bIsServiceRunning As Boolean = False
     Private g_bIsServiceConnected As Boolean = False
+    Private g_mFormRestart As FormLoading = Nothing
 
     Public Sub New(mFormMain As FormMain)
         g_FormMain = mFormMain
@@ -325,6 +326,10 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRun.LinkClicked
+        If (g_mFormRestart IsNot Nothing AndAlso Not g_mFormRestart.IsDisposed) Then
+            Return
+        End If
+
         Try
             RunService(True)
         Catch ex As Exception
@@ -333,6 +338,10 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceRunCmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRunCmd.LinkClicked
+        If (g_mFormRestart IsNot Nothing AndAlso Not g_mFormRestart.IsDisposed) Then
+            Return
+        End If
+
         Try
             RunService(False)
         Catch ex As Exception
@@ -352,7 +361,7 @@ Public Class UCStartPage
         LinkLabel_ServiceRestart_LinkClicked(Nothing, Nothing)
     End Sub
 
-    Private Sub RunService(bHidden As Boolean)
+    Public Sub RunService(bHidden As Boolean)
         If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
             Throw New ArgumentException("PSMoveServiceEx is already running!")
         End If
@@ -382,7 +391,7 @@ Public Class UCStartPage
         End Using
     End Sub
 
-    Private Sub RunServiceConfigTool(bHidden As Boolean)
+    Public Sub RunServiceConfigTool(bHidden As Boolean)
         If (Process.GetProcessesByName("PSMoveConfigTool").Count > 0) Then
             Dim sMsg As New Text.StringBuilder
             sMsg.AppendLine("PSMoveServiceEx Config Tool is already running!")
@@ -424,40 +433,43 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceRestart_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRestart.LinkClicked
+        If (g_mFormRestart IsNot Nothing AndAlso Not g_mFormRestart.IsDisposed) Then
+            Return
+        End If
+
         Try
-            Dim sPSMSPath As String = Nothing
+            StopService()
 
-            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
-                Throw New ArgumentException("PSMoveServiceEx not running!")
-            End If
+            g_mFormRestart = New FormLoading
+            g_mFormRestart.Text = "Restarting PSMoveServiceEx..."
+            g_mFormRestart.Show(Me)
 
-            For Each mProcess In mProcesses
-                If (sPSMSPath Is Nothing) Then
-                    sPSMSPath = mProcess.MainModule.FileName
-                End If
+            Timer_RestartPsms.Enabled = True
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
 
-                If (mProcess.CloseMainWindow()) Then
-                    mProcess.WaitForExit(10000)
-                Else
-                    mProcess.Kill()
-                End If
-            Next
+    End Sub
 
-            If (sPSMSPath Is Nothing OrElse Not IO.File.Exists(sPSMSPath)) Then
-                Throw New ArgumentException("PSMoveServiceEx executable not found. Please start manualy.")
-            End If
+    Private Sub Timer_RestartPsms_Tick(sender As Object, e As EventArgs) Handles Timer_RestartPsms.Tick
+        If (g_mFormRestart Is Nothing OrElse g_mFormRestart.IsDisposed) Then
+            Timer_RestartPsms.Enabled = False
+            Return
+        End If
 
-            Threading.Thread.Sleep(1000)
+        g_mFormRestart.ProgressBar1.Value = Math.Min(g_mFormRestart.ProgressBar1.Value + 20, g_mFormRestart.ProgressBar1.Maximum)
 
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = sPSMSPath
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sPSMSPath)
-                mProcess.StartInfo.UseShellExecute = False
-                mProcess.StartInfo.CreateNoWindow = True
+        If (g_mFormRestart.ProgressBar1.Value < g_mFormRestart.ProgressBar1.Maximum) Then
+            Return
+        End If
 
-                mProcess.Start()
-            End Using
+        Timer_RestartPsms.Enabled = False
+
+        g_mFormRestart.Dispose()
+        g_mFormRestart = Nothing
+
+        Try
+            RunService(True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -468,22 +480,30 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceStop_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceStop.LinkClicked
-        Try
-            Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
-                Throw New ArgumentException("PSMoveServiceEx is not running!")
-            End If
+        If (g_mFormRestart IsNot Nothing AndAlso Not g_mFormRestart.IsDisposed) Then
+            Return
+        End If
 
-            For Each mProcess In mProcesses
-                If (mProcess.CloseMainWindow()) Then
-                    mProcess.WaitForExit(10000)
-                Else
-                    mProcess.Kill()
-                End If
-            Next
+        Try
+            StopService()
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
+
+    Public Sub StopService()
+        Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
+        If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
+            Throw New ArgumentException("PSMoveServiceEx is not running!")
+        End If
+
+        For Each mProcess In mProcesses
+            If (mProcess.CloseMainWindow()) Then
+                mProcess.WaitForExit(10000)
+            Else
+                mProcess.Kill()
+            End If
+        Next
     End Sub
 
     Public Sub LinkLabel_ConfigToolRun_Click()
