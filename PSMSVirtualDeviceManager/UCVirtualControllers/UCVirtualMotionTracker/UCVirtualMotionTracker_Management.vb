@@ -112,7 +112,7 @@ Partial Public Class UCVirtualMotionTracker
             mConfig.AddPath(sDriverRoot)
             mConfig.SaveConfig()
 
-            MessageBox.Show("Driver has ben successfully registered!", "Driver added to SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("Driver has been successfully registered!", "Driver added to SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -134,7 +134,7 @@ Partial Public Class UCVirtualMotionTracker
             mConfig.RemovePath(sDriverRoot)
             mConfig.SaveConfig()
 
-            MessageBox.Show("Driver has ben successfully unregistered!", "Driver removed from SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("Driver has been successfully unregistered!", "Driver removed from SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
