@@ -43,7 +43,7 @@ Public Class ClassUpdate
                 Return False
             End If
 
-            Return (sNextHash.ToUpperInvariant <> sFileHash.ToUpperInvariant)
+            Return (sNextHash.Trim.ToUpperInvariant <> sFileHash.Trim.ToUpperInvariant)
         End Function
 
         Public Shared Function CheckUpdateAvailable(ByRef r_sLocationInfo As String) As Boolean
