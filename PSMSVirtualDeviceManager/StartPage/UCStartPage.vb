@@ -553,7 +553,7 @@ Public Class UCStartPage
         g_mDriverInstallThread = New Threading.Thread(
             Sub()
                 Try
-                    If CheckIfServiceRunning() > 0 Then
+                    If (CheckIfServiceRunning() > 0) Then
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
@@ -705,9 +705,9 @@ Public Class UCStartPage
 
     Public Function CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
 
-        If Process.GetProcessesByName("PSMoveService").Count > 0 Then
+        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
             Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
-        ElseIf Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0 Then
+        ElseIf (Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0) Then
             Return ENUM_SERVICE_PROCESS_TYPE.ADMIN
         Else
             Return ENUM_SERVICE_PROCESS_TYPE.NONE
