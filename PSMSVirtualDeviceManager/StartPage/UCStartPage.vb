@@ -86,7 +86,7 @@ Public Class UCStartPage
         While True
             Try
                 ' Check if PSMoveServiceEx is running
-                Dim bServiceRunning = CheckIfServiceRunning() > 0
+                Dim bServiceRunning = (CheckIfServiceRunning() > 0)
 
                 SyncLock _ThreadLock
                     If (g_bIsServiceRunning <> bServiceRunning) Then
@@ -362,7 +362,7 @@ Public Class UCStartPage
     End Sub
 
     Public Sub RunService(bHidden As Boolean)
-        If CheckIfServiceRunning() > 0 Then
+        If (CheckIfServiceRunning() > 0) Then
             Throw New ArgumentException("PSMoveServiceEx is already running!")
         End If
 
@@ -392,7 +392,7 @@ Public Class UCStartPage
     End Sub
 
     Public Sub RunServiceConfigTool(bHidden As Boolean)
-        If CheckIfConfigToolRunning() = True Then
+        If (CheckIfConfigToolRunning()) Then
             Dim sMsg As New Text.StringBuilder
             sMsg.AppendLine("PSMoveServiceEx Config Tool is already running!")
             sMsg.AppendLine("Do you want to run another instance?")
@@ -492,21 +492,20 @@ Public Class UCStartPage
     End Sub
 
     Public Sub StopService()
-        Dim serviceStatus As Integer = CheckIfServiceRunning()
-        Dim mProcesses As Process()
-        If serviceStatus = 0 Then
-            Throw New ArgumentException("PSMoveServiceEx is not running!")
-        ElseIf serviceStatus = 1 Then
-            mProcesses = Process.GetProcessesByName("PSMoveService")
-            For Each mProcess In mProcesses
+        Dim iServiceStatus As Integer = CheckIfServiceRunning()
+
+        If iServiceStatus = ENUM_SERVICE_PROCESS_TYPE.NORMAL Then
+            For Each mProcess In Process.GetProcessesByName("PSMoveService")
                 If mProcess.CloseMainWindow() Then
                     mProcess.WaitForExit(10000)
                 Else
                     mProcess.Kill()
                 End If
             Next
-        ElseIf serviceStatus = 2 Then
+        ElseIf iServiceStatus = ENUM_SERVICE_PROCESS_TYPE.ADMIN Then
             MessageBox.Show("You have PSMoveServiceAdmin running, please stop the service manually.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning) ' this unpriviledged window can't close other priviledged windows
+        Else
+            Throw New ArgumentException("PSMoveServiceEx is not running!")
         End If
 
     End Sub
@@ -526,7 +525,7 @@ Public Class UCStartPage
     Private Sub LinkLabel_ConfigToolClose_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolClose.LinkClicked
         Try
             Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveConfigTool")
-            If CheckIfConfigToolRunning() = False Then
+            If (Not CheckIfConfigToolRunning()) Then
                 Throw New ArgumentException("PSMoveConfigTool is not running!")
             End If
 
@@ -619,7 +618,7 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ServiceFactory_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceFactory.LinkClicked
         Try
-            If CheckIfServiceRunning() > 0 Then
+            If (CheckIfServiceRunning() > 0) Then
                 Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
             End If
 
@@ -697,27 +696,28 @@ Public Class UCStartPage
         Panel_PsmsxUpdate.Visible = False
     End Sub
 
-    Public Function CheckIfServiceRunning() As Integer
-        Dim serviceProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-        Dim adminProcesses As Process() = Process.GetProcessesByName("PSMoveServiceAdmin")
+    Enum ENUM_SERVICE_PROCESS_TYPE
+        NONE
+        NORMAL
+        ADMIN
+    End Enum
 
-        If serviceProcesses IsNot Nothing AndAlso serviceProcesses.Length > 0 Then
-            Return 1
-        ElseIf adminProcesses IsNot Nothing AndAlso adminProcesses.Length > 0 Then
-            Return 2
+
+    Public Function CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
+
+        If Process.GetProcessesByName("PSMoveService").Count > 0 Then
+            Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
+        ElseIf Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0 Then
+            Return ENUM_SERVICE_PROCESS_TYPE.ADMIN
+        Else
+            Return ENUM_SERVICE_PROCESS_TYPE.NONE
         End If
-
 
     End Function
 
 
     Public Function CheckIfConfigToolRunning() As Boolean
-        Dim configProcesses As Process() = Process.GetProcessesByName("PSMoveConfigTool")
-        If configProcesses IsNot Nothing AndAlso configProcesses.Length > 0 Then
-            Return True
-        Else
-            Return False
-        End If
+        Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
     End Function
 
 
