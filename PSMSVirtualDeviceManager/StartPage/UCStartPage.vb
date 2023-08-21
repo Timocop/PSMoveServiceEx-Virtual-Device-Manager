@@ -86,7 +86,7 @@ Public Class UCStartPage
         While True
             Try
                 ' Check if PSMoveServiceEx is running
-                Dim bServiceRunning = (Process.GetProcessesByName("PSMoveService").Count > 0)
+                Dim bServiceRunning = (CheckIfServiceRunning() > 0)
 
                 SyncLock _ThreadLock
                     If (g_bIsServiceRunning <> bServiceRunning) Then
@@ -362,7 +362,7 @@ Public Class UCStartPage
     End Sub
 
     Public Sub RunService(bHidden As Boolean)
-        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+        If (CheckIfServiceRunning() > 0) Then
             Throw New ArgumentException("PSMoveServiceEx is already running!")
         End If
 
@@ -392,7 +392,7 @@ Public Class UCStartPage
     End Sub
 
     Public Sub RunServiceConfigTool(bHidden As Boolean)
-        If (Process.GetProcessesByName("PSMoveConfigTool").Count > 0) Then
+        If (CheckIfConfigToolRunning()) Then
             Dim sMsg As New Text.StringBuilder
             sMsg.AppendLine("PSMoveServiceEx Config Tool is already running!")
             sMsg.AppendLine("Do you want to run another instance?")
@@ -492,18 +492,22 @@ Public Class UCStartPage
     End Sub
 
     Public Sub StopService()
-        Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveService")
-        If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
+        Dim iServiceStatus As Integer = CheckIfServiceRunning()
+
+        If iServiceStatus = ENUM_SERVICE_PROCESS_TYPE.NORMAL Then
+            For Each mProcess In Process.GetProcessesByName("PSMoveService")
+                If mProcess.CloseMainWindow() Then
+                    mProcess.WaitForExit(10000)
+                Else
+                    mProcess.Kill()
+                End If
+            Next
+        ElseIf iServiceStatus = ENUM_SERVICE_PROCESS_TYPE.ADMIN Then
+            MessageBox.Show("You have PSMoveServiceAdmin running, please stop the service manually.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning) ' this unpriviledged window can't close other priviledged windows
+        Else
             Throw New ArgumentException("PSMoveServiceEx is not running!")
         End If
 
-        For Each mProcess In mProcesses
-            If (mProcess.CloseMainWindow()) Then
-                mProcess.WaitForExit(10000)
-            Else
-                mProcess.Kill()
-            End If
-        Next
     End Sub
 
     Public Sub LinkLabel_ConfigToolRun_Click()
@@ -521,7 +525,7 @@ Public Class UCStartPage
     Private Sub LinkLabel_ConfigToolClose_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolClose.LinkClicked
         Try
             Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveConfigTool")
-            If (mProcesses Is Nothing OrElse mProcesses.Length < 1) Then
+            If (Not CheckIfConfigToolRunning()) Then
                 Throw New ArgumentException("PSMoveConfigTool is not running!")
             End If
 
@@ -549,7 +553,7 @@ Public Class UCStartPage
         g_mDriverInstallThread = New Threading.Thread(
             Sub()
                 Try
-                    If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+                    If (CheckIfServiceRunning() > 0) Then
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
@@ -614,7 +618,7 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ServiceFactory_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceFactory.LinkClicked
         Try
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+            If (CheckIfServiceRunning() > 0) Then
                 Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
             End If
 
@@ -691,4 +695,33 @@ Public Class UCStartPage
     Private Sub Button_PsmsUpdateIgnore_Click(sender As Object, e As EventArgs) Handles Button_PsmsUpdateIgnore.Click
         Panel_PsmsxUpdate.Visible = False
     End Sub
+
+    Enum ENUM_SERVICE_PROCESS_TYPE
+        NONE
+        NORMAL
+        ADMIN
+    End Enum
+
+
+    Public Function CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
+
+        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+            Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
+        ElseIf (Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0) Then
+            Return ENUM_SERVICE_PROCESS_TYPE.ADMIN
+        Else
+            Return ENUM_SERVICE_PROCESS_TYPE.NONE
+        End If
+
+    End Function
+
+
+    Public Function CheckIfConfigToolRunning() As Boolean
+        Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
+    End Function
+
+
+
+
 End Class
+
