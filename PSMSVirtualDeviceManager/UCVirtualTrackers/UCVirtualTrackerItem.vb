@@ -236,6 +236,22 @@ Public Class UCVirtualTrackerItem
         SetUnsavedState(True)
     End Sub
 
+    Private Sub CheckBox_UseMjpg_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_UseMjpg.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_UseMJPG = CheckBox_UseMjpg.Checked
+        SetUnsavedState(True)
+
+        ' Config is currently loading, dont show messagebox
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    End Sub
+
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
         Try
             Me.Enabled = False
@@ -321,6 +337,7 @@ Public Class UCVirtualTrackerItem
         Private g_iDeviceIndex As Integer = -1
         Private g_sDevicePath As String = ""
         Private g_bFlipImage As Boolean = False
+        Private g_bUseMJPG As Boolean
 
         Enum ENUM_INTERPOLATION
             NEARST_NEIGHBOR
@@ -559,6 +576,19 @@ Public Class UCVirtualTrackerItem
             End Set
         End Property
 
+        Public Property m_UseMJPG As Boolean
+            Get
+                SyncLock g_mThreadLock
+                    Return g_bUseMJPG
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock g_mThreadLock
+                    g_bUseMJPG = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Property m_ImageInterpolation As ENUM_INTERPOLATION
             Get
                 SyncLock g_mThreadLock
@@ -648,10 +678,31 @@ Public Class UCVirtualTrackerItem
                     m_Capture.AutoFocus = False
                     m_Capture.WhiteBalanceBlueU = -1
                     m_Capture.WhiteBalanceRedV = -1
+
+                    If (m_UseMJPG) Then
+                        Dim sLastCodec As String = m_Capture.FourCC
+
+                        m_Capture.FourCC = "mjpg" 'Weird workaround 
+                        If (m_Capture.FourCC <> "mjpg") Then
+                            m_Capture.FourCC = "MJPG"
+                        End If
+
+                        ' MJPG failed fall back to last codec
+                        If (m_Capture.FourCC <> "MJPG") Then
+                            m_Capture.FourCC = sLastCodec
+                        End If
+                    End If
+
                     m_Capture.FrameHeight = 480
                     m_Capture.FrameWidth = 640
-                    m_Capture.Fps = 30 ' Probably does not work
+                    m_Capture.Fps = 60 ' Probably does not work
 
+                    Dim sCurrentCodec As String = m_Capture.FourCC
+                    If (sCurrentCodec.Trim(vbNullChar(0)).Length = 0) Then
+                        sCurrentCodec = "UNKNOWN"
+                    End If
+
+                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
                     g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
 
@@ -865,6 +916,7 @@ Public Class UCVirtualTrackerItem
                                                    m_PipeIndex = CInt(g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedItem)
                                                    m_FlipImage = g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked
                                                    m_ImageInterpolation = CType(g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex, ENUM_INTERPOLATION)
+                                                   m_UseMJPG = g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked
                                                End Sub)
 
                 g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
@@ -1161,6 +1213,7 @@ Public Class UCVirtualTrackerItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "TrackerId", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FlipImageHorizontal", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked, "True", "False")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ImageInterpolation", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "UseMJPG", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked, "True", "False")))
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
@@ -1170,20 +1223,23 @@ Public Class UCVirtualTrackerItem
             End Sub
 
             Public Sub LoadConfig()
+                Dim mUCVirtualTrackerItem = g_mClassCaptureLogic.g_mUCVirtualTrackerItem
+
                 Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
 
                 Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        SetTrackBarClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceExposure, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceExposure", "0")))
-                        SetTrackBarClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceGain, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceGain", "0")))
-                        SetTrackBarClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceGamma, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceGamma", "0")))
-                        SetTrackBarClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceContrast", "0")))
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceExposure", "0")))
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceGain", "0")))
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceGamma", "0")))
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceContrast", "0")))
 
-                        SetComboBoxClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
-                        g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
-                        SetComboBoxClamp(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
+                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
+                        mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
+                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
+                        mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "True") = "True")
 
-                        g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
+                        mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using
                 End Using
             End Sub

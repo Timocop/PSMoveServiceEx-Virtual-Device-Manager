@@ -46,7 +46,10 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
+        Me.Label_DeviceCodec = New System.Windows.Forms.Label()
         Me.TabPage_TrackerProperties = New System.Windows.Forms.TabPage()
+        Me.CheckBox_UseMjpg = New System.Windows.Forms.CheckBox()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.ComboBox_ImageInterpolation = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.CheckBox_FlipHorizontal = New System.Windows.Forms.CheckBox()
@@ -104,9 +107,9 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_DeviceTrackerId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_DeviceTrackerId.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_DeviceTrackerId.FormattingEnabled = True
-        Me.ComboBox_DeviceTrackerId.Location = New System.Drawing.Point(152, 6)
+        Me.ComboBox_DeviceTrackerId.Location = New System.Drawing.Point(168, 6)
         Me.ComboBox_DeviceTrackerId.Name = "ComboBox_DeviceTrackerId"
-        Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(317, 21)
+        Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(301, 21)
         Me.ComboBox_DeviceTrackerId.TabIndex = 3
         '
         'Label3
@@ -235,7 +238,7 @@ Partial Class UCVirtualTrackerItem
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(7, 75)
+        Me.Label8.Location = New System.Drawing.Point(6, 75)
         Me.Label8.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(59, 13)
@@ -283,6 +286,7 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_DeviceProperties
         '
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceCodec)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label3)
         Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceExposure)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label4)
@@ -299,8 +303,20 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Text = "Device Properties"
         Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
         '
+        'Label_DeviceCodec
+        '
+        Me.Label_DeviceCodec.AutoSize = True
+        Me.Label_DeviceCodec.Location = New System.Drawing.Point(6, 97)
+        Me.Label_DeviceCodec.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label_DeviceCodec.Name = "Label_DeviceCodec"
+        Me.Label_DeviceCodec.Size = New System.Drawing.Size(96, 13)
+        Me.Label_DeviceCodec.TabIndex = 19
+        Me.Label_DeviceCodec.Text = "Codec: Unknown"
+        '
         'TabPage_TrackerProperties
         '
+        Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_UseMjpg)
+        Me.TabPage_TrackerProperties.Controls.Add(Me.Label9)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_ImageInterpolation)
         Me.TabPage_TrackerProperties.Controls.Add(Me.Label5)
         Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_FlipHorizontal)
@@ -315,6 +331,29 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
         Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
         '
+        'CheckBox_UseMjpg
+        '
+        Me.CheckBox_UseMjpg.AutoSize = True
+        Me.CheckBox_UseMjpg.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_UseMjpg.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox_UseMjpg.Location = New System.Drawing.Point(168, 73)
+        Me.CheckBox_UseMjpg.Margin = New System.Windows.Forms.Padding(0)
+        Me.CheckBox_UseMjpg.Name = "CheckBox_UseMjpg"
+        Me.CheckBox_UseMjpg.Size = New System.Drawing.Size(35, 18)
+        Me.CheckBox_UseMjpg.TabIndex = 16
+        Me.CheckBox_UseMjpg.Text = " "
+        Me.CheckBox_UseMjpg.UseVisualStyleBackColor = True
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(6, 75)
+        Me.Label9.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(159, 13)
+        Me.Label9.TabIndex = 15
+        Me.Label9.Text = "Use MJPG Codec (if available):"
+        '
         'ComboBox_ImageInterpolation
         '
         Me.ComboBox_ImageInterpolation.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -322,9 +361,9 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_ImageInterpolation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_ImageInterpolation.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_ImageInterpolation.FormattingEnabled = True
-        Me.ComboBox_ImageInterpolation.Location = New System.Drawing.Point(152, 50)
+        Me.ComboBox_ImageInterpolation.Location = New System.Drawing.Point(168, 50)
         Me.ComboBox_ImageInterpolation.Name = "ComboBox_ImageInterpolation"
-        Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(317, 21)
+        Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(301, 21)
         Me.ComboBox_ImageInterpolation.TabIndex = 14
         '
         'Label5
@@ -341,7 +380,8 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_FlipHorizontal.AutoSize = True
         Me.CheckBox_FlipHorizontal.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_FlipHorizontal.Location = New System.Drawing.Point(152, 29)
+        Me.CheckBox_FlipHorizontal.Location = New System.Drawing.Point(168, 29)
+        Me.CheckBox_FlipHorizontal.Margin = New System.Windows.Forms.Padding(0)
         Me.CheckBox_FlipHorizontal.Name = "CheckBox_FlipHorizontal"
         Me.CheckBox_FlipHorizontal.Size = New System.Drawing.Size(35, 18)
         Me.CheckBox_FlipHorizontal.TabIndex = 12
@@ -446,4 +486,7 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Label5 As Label
     Friend WithEvents Button1 As Button
     Friend WithEvents TextBox_Fps As TextBox
+    Friend WithEvents Label_DeviceCodec As Label
+    Friend WithEvents CheckBox_UseMjpg As CheckBox
+    Friend WithEvents Label9 As Label
 End Class
