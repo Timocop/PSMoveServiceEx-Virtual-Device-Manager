@@ -337,7 +337,7 @@ Public Class UCVirtualTrackerItem
         Private g_iDeviceIndex As Integer = -1
         Private g_sDevicePath As String = ""
         Private g_bFlipImage As Boolean = False
-        Private g_bUseMJPG As Boolean
+        Private g_bUseMJPG As Boolean = True
 
         Enum ENUM_INTERPOLATION
             NEARST_NEIGHBOR
