@@ -27,6 +27,9 @@ Public Class UCVirtualTrackerItem
         g_mClassCaptureLogic = New ClassCaptureLogic(Me, mDeviceInfo.m_Index, mDeviceInfo.m_Path)
         Label_FriendlyName.Text = mDeviceInfo.m_Name
 
+        ' Keep the UI disabled until we are finished
+        Me.Enabled = False
+
         Try
             g_bIgnoreEvents = True
 
@@ -40,17 +43,22 @@ Public Class UCVirtualTrackerItem
             g_bIgnoreEvents = False
         End Try
 
-        ' Keep the UI disabled until we are finished
-        Me.Enabled = False
+        Try
+            g_bIgnoreEvents = True
 
-        ComboBox_ImageInterpolation.Items.Clear()
-        ComboBox_ImageInterpolation.Items.Add("Nearest Neighbot (fastest/worest)")
-        ComboBox_ImageInterpolation.Items.Add("Bilinear (default)")
-        ComboBox_ImageInterpolation.Items.Add("Bicubic")
-        ComboBox_ImageInterpolation.Items.Add("Lanczos (slowest/best)")
-        If ([Enum].GetNames(GetType(ClassCaptureLogic.ENUM_INTERPOLATION)).Count <> ComboBox_ImageInterpolation.Items.Count) Then
-            Throw New ArgumentException("Not equal")
-        End If
+            ComboBox_ImageInterpolation.Items.Clear()
+            ComboBox_ImageInterpolation.Items.Add("Nearest Neighbot (fastest/worest)")
+            ComboBox_ImageInterpolation.Items.Add("Bilinear (default)")
+            ComboBox_ImageInterpolation.Items.Add("Bicubic")
+            ComboBox_ImageInterpolation.Items.Add("Lanczos (slowest/best)")
+            If ([Enum].GetNames(GetType(ClassCaptureLogic.ENUM_INTERPOLATION)).Count <> ComboBox_ImageInterpolation.Items.Count) Then
+                Throw New ArgumentException("Not equal")
+            End If
+            ComboBox_ImageInterpolation.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
 
         ' Add a "Please wait" UI message while initalizing the video input device
         g_mMessageLabel = New Label()
@@ -67,6 +75,29 @@ Public Class UCVirtualTrackerItem
         SetUnsavedState(False)
 
         CreateControl()
+
+        Try
+            g_bIgnoreUnsaved = True
+
+            'Load settings
+            g_mClassCaptureLogic.g_mClassConfig.LoadConfig()
+
+            'Apply loaded settings
+            TrackBar_DeviceExposure_ValueChanged(Nothing, Nothing)
+            TrackBar_DeviceGain_ValueChanged(Nothing, Nothing)
+            TrackBar_DeviceGamma_ValueChanged(Nothing, Nothing)
+            TrackBar_DeviceConstrast_ValueChanged(Nothing, Nothing)
+            ComboBox_DeviceTrackerId_SelectedIndexChanged(Nothing, Nothing)
+            CheckBox_FlipHorizontal_CheckedChanged(Nothing, Nothing)
+            ComboBox_ImageInterpolation_SelectedIndexChanged(Nothing, Nothing)
+            CheckBox_UseMjpg_CheckedChanged(Nothing, Nothing)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            g_bIgnoreUnsaved = False
+        End Try
+
+        g_mClassCaptureLogic.StartInitThread(False)
     End Sub
 
     Private Sub SetUnsavedState(bIsUnsaved As Boolean)
@@ -81,10 +112,6 @@ Public Class UCVirtualTrackerItem
             Button_ConfigSave.Text = String.Format("Save Settings")
             Button_ConfigSave.Font = New Font(Button_ConfigSave.Font, FontStyle.Regular)
         End If
-    End Sub
-
-    Private Sub UCVirtualTrackerItem_Load(sender As Object, e As EventArgs) Handles Me.Load
-        g_mClassCaptureLogic.StartInitThread(False)
     End Sub
 
     ReadOnly Property m_DevicePath As String
@@ -679,30 +706,63 @@ Public Class UCVirtualTrackerItem
                     m_Capture.WhiteBalanceBlueU = -1
                     m_Capture.WhiteBalanceRedV = -1
 
+                    ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set first everytime
+                    Dim iFrameH As Integer = 480
+                    Dim iFrameW As Integer = 640
+                    Dim iFrameR As Integer = 60
+
                     If (m_UseMJPG) Then
                         Dim sLastCodec As String = m_Capture.FourCC
 
-                        m_Capture.FourCC = "mjpg" 'Weird workaround 
+                        m_Capture.FrameHeight = iFrameH
+                        m_Capture.FrameWidth = iFrameW
+                        m_Capture.Fps = iFrameR
+                        m_Capture.FourCC = "mjpg"
+
                         If (m_Capture.FourCC <> "mjpg") Then
+                            m_Capture.FrameHeight = iFrameH
+                            m_Capture.FrameWidth = iFrameW
+                            m_Capture.Fps = iFrameR
                             m_Capture.FourCC = "MJPG"
                         End If
 
                         ' MJPG failed fall back to last codec
                         If (m_Capture.FourCC <> "MJPG") Then
+                            m_Capture.FrameHeight = iFrameH
+                            m_Capture.FrameWidth = iFrameW
+                            m_Capture.Fps = iFrameR
+                            m_Capture.FourCC = sLastCodec
+                        End If
+                    Else
+                        Dim sLastCodec As String = m_Capture.FourCC
+
+                        ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to b
+                        m_Capture.FrameHeight = iFrameH
+                        m_Capture.FrameWidth = iFrameW
+                        m_Capture.Fps = iFrameR
+                        m_Capture.FourCC = "YUY2"
+
+                        If (m_Capture.FourCC <> "YUY2") Then
+                            m_Capture.FrameHeight = iFrameH
+                            m_Capture.FrameWidth = iFrameW
+                            m_Capture.Fps = iFrameR
                             m_Capture.FourCC = sLastCodec
                         End If
                     End If
 
-                    m_Capture.FrameHeight = 480
-                    m_Capture.FrameWidth = 640
-                    m_Capture.Fps = 60 ' Probably does not work
 
                     Dim sCurrentCodec As String = m_Capture.FourCC
                     If (sCurrentCodec.Trim(vbNullChar(0)).Length = 0) Then
                         sCurrentCodec = "UNKNOWN"
                     End If
 
+                    Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
+                    If (sCurrentResolution <> "640x480") Then
+                        sCurrentResolution &= " (not recommended resolution, will be scaled to 640x480)"
+                    End If
+
                     g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
+                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}", sCurrentResolution))
                     g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
 
@@ -928,19 +988,6 @@ Public Class UCVirtualTrackerItem
                 StartCaptureThread(False)
                 StartPipeThread(False)
                 StartDeviceWatchodogThread(False)
-
-                ' Load saved config for this device
-                g_mUCVirtualTrackerItem.BeginInvoke(Sub()
-                                                        Try
-                                                            g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
-
-                                                            g_mClassConfig.LoadConfig()
-                                                        Finally
-                                                            g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
-                                                        End Try
-
-                                                        g_mUCVirtualTrackerItem.SetUnsavedState(False)
-                                                    End Sub)
 
             Catch ex As Threading.ThreadAbortException
                 Throw
@@ -1182,6 +1229,7 @@ Public Class UCVirtualTrackerItem
             Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "devices.ini")
 
             Private g_mClassCaptureLogic As ClassCaptureLogic
+            Private g_bConfigLoaded As Boolean = False
 
             Public Sub New(_ClassCaptureLogic As ClassCaptureLogic)
                 g_mClassCaptureLogic = _ClassCaptureLogic
@@ -1198,6 +1246,10 @@ Public Class UCVirtualTrackerItem
             End Function
 
             Public Sub SaveConfig()
+                If (Not g_bConfigLoaded) Then
+                    Return
+                End If
+
                 Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
 
                 Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
@@ -1242,6 +1294,8 @@ Public Class UCVirtualTrackerItem
                         mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using
                 End Using
+
+                g_bConfigLoaded = True
             End Sub
 
             Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As Integer)

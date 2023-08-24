@@ -56,6 +56,7 @@ Partial Class UCVirtualTrackerItem
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
+        Me.Label_DeviceResolution = New System.Windows.Forms.Label()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -215,7 +216,7 @@ Partial Class UCVirtualTrackerItem
         Me.Button_RestartDevice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Button_RestartDevice.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
         Me.Button_RestartDevice.Location = New System.Drawing.Point(3, 258)
-        Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
+        Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
         Me.Button_RestartDevice.Name = "Button_RestartDevice"
         Me.Button_RestartDevice.Size = New System.Drawing.Size(116, 23)
         Me.Button_RestartDevice.TabIndex = 16
@@ -263,7 +264,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_Autostart.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_Autostart.AutoSize = True
-        Me.CheckBox_Autostart.Location = New System.Drawing.Point(6, 222)
+        Me.CheckBox_Autostart.Location = New System.Drawing.Point(6, 235)
         Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
         Me.CheckBox_Autostart.Size = New System.Drawing.Size(338, 17)
@@ -281,11 +282,12 @@ Partial Class UCVirtualTrackerItem
         Me.TabControl1.Location = New System.Drawing.Point(3, 52)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(483, 161)
+        Me.TabControl1.Size = New System.Drawing.Size(483, 174)
         Me.TabControl1.TabIndex = 21
         '
         'TabPage_DeviceProperties
         '
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceResolution)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceCodec)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label3)
         Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceExposure)
@@ -298,7 +300,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_DeviceProperties.Name = "TabPage_DeviceProperties"
         Me.TabPage_DeviceProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(475, 135)
+        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(475, 148)
         Me.TabPage_DeviceProperties.TabIndex = 0
         Me.TabPage_DeviceProperties.Text = "Device Properties"
         Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
@@ -425,6 +427,16 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps.TabIndex = 23
         Me.TextBox_Fps.Text = "FPS: 0 / I/O FPS: 0"
         '
+        'Label_DeviceResolution
+        '
+        Me.Label_DeviceResolution.AutoSize = True
+        Me.Label_DeviceResolution.Location = New System.Drawing.Point(6, 119)
+        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label_DeviceResolution.Name = "Label_DeviceResolution"
+        Me.Label_DeviceResolution.Size = New System.Drawing.Size(120, 13)
+        Me.Label_DeviceResolution.TabIndex = 20
+        Me.Label_DeviceResolution.Text = "Resolution: Unknown"
+        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -489,4 +501,5 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Label_DeviceCodec As Label
     Friend WithEvents CheckBox_UseMjpg As CheckBox
     Friend WithEvents Label9 As Label
+    Friend WithEvents Label_DeviceResolution As Label
 End Class
