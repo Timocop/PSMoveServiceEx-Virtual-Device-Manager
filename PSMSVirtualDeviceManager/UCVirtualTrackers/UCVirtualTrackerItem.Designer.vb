@@ -46,8 +46,11 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
+        Me.Label_DeviceResolution = New System.Windows.Forms.Label()
         Me.Label_DeviceCodec = New System.Windows.Forms.Label()
         Me.TabPage_TrackerProperties = New System.Windows.Forms.TabPage()
+        Me.CheckBox_DeviceSupersampling = New System.Windows.Forms.CheckBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.CheckBox_UseMjpg = New System.Windows.Forms.CheckBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.ComboBox_ImageInterpolation = New System.Windows.Forms.ComboBox()
@@ -56,7 +59,6 @@ Partial Class UCVirtualTrackerItem
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
-        Me.Label_DeviceResolution = New System.Windows.Forms.Label()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -232,6 +234,8 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceConstrast.AutoSize = False
         Me.TrackBar_DeviceConstrast.LargeChange = 1
         Me.TrackBar_DeviceConstrast.Location = New System.Drawing.Point(124, 75)
+        Me.TrackBar_DeviceConstrast.Maximum = 9999
+        Me.TrackBar_DeviceConstrast.Minimum = -9999
         Me.TrackBar_DeviceConstrast.Name = "TrackBar_DeviceConstrast"
         Me.TrackBar_DeviceConstrast.Size = New System.Drawing.Size(346, 16)
         Me.TrackBar_DeviceConstrast.TabIndex = 18
@@ -305,6 +309,16 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Text = "Device Properties"
         Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
         '
+        'Label_DeviceResolution
+        '
+        Me.Label_DeviceResolution.AutoSize = True
+        Me.Label_DeviceResolution.Location = New System.Drawing.Point(6, 119)
+        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label_DeviceResolution.Name = "Label_DeviceResolution"
+        Me.Label_DeviceResolution.Size = New System.Drawing.Size(120, 13)
+        Me.Label_DeviceResolution.TabIndex = 20
+        Me.Label_DeviceResolution.Text = "Resolution: Unknown"
+        '
         'Label_DeviceCodec
         '
         Me.Label_DeviceCodec.AutoSize = True
@@ -317,6 +331,8 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_TrackerProperties
         '
+        Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_DeviceSupersampling)
+        Me.TabPage_TrackerProperties.Controls.Add(Me.Label10)
         Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_UseMjpg)
         Me.TabPage_TrackerProperties.Controls.Add(Me.Label9)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_ImageInterpolation)
@@ -328,10 +344,33 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_TrackerProperties.Name = "TabPage_TrackerProperties"
         Me.TabPage_TrackerProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(475, 135)
+        Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(475, 148)
         Me.TabPage_TrackerProperties.TabIndex = 1
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
         Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
+        '
+        'CheckBox_DeviceSupersampling
+        '
+        Me.CheckBox_DeviceSupersampling.AutoSize = True
+        Me.CheckBox_DeviceSupersampling.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_DeviceSupersampling.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox_DeviceSupersampling.Location = New System.Drawing.Point(168, 95)
+        Me.CheckBox_DeviceSupersampling.Margin = New System.Windows.Forms.Padding(0)
+        Me.CheckBox_DeviceSupersampling.Name = "CheckBox_DeviceSupersampling"
+        Me.CheckBox_DeviceSupersampling.Size = New System.Drawing.Size(35, 18)
+        Me.CheckBox_DeviceSupersampling.TabIndex = 18
+        Me.CheckBox_DeviceSupersampling.Text = " "
+        Me.CheckBox_DeviceSupersampling.UseVisualStyleBackColor = True
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(6, 97)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(87, 13)
+        Me.Label10.TabIndex = 17
+        Me.Label10.Text = "Supersampling:"
         '
         'CheckBox_UseMjpg
         '
@@ -427,16 +466,6 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps.TabIndex = 23
         Me.TextBox_Fps.Text = "FPS: 0 / I/O FPS: 0"
         '
-        'Label_DeviceResolution
-        '
-        Me.Label_DeviceResolution.AutoSize = True
-        Me.Label_DeviceResolution.Location = New System.Drawing.Point(6, 119)
-        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
-        Me.Label_DeviceResolution.Name = "Label_DeviceResolution"
-        Me.Label_DeviceResolution.Size = New System.Drawing.Size(120, 13)
-        Me.Label_DeviceResolution.TabIndex = 20
-        Me.Label_DeviceResolution.Text = "Resolution: Unknown"
-        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -502,4 +531,6 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents CheckBox_UseMjpg As CheckBox
     Friend WithEvents Label9 As Label
     Friend WithEvents Label_DeviceResolution As Label
+    Friend WithEvents CheckBox_DeviceSupersampling As CheckBox
+    Friend WithEvents Label10 As Label
 End Class

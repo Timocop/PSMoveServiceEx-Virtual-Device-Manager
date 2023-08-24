@@ -24,6 +24,16 @@ Public Class UCVirtualTrackerItem
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        TrackBar_DeviceExposure.Minimum = Short.MinValue
+        TrackBar_DeviceExposure.Maximum = Short.MaxValue
+        TrackBar_DeviceGain.Minimum = Short.MinValue
+        TrackBar_DeviceGain.Maximum = Short.MaxValue
+        TrackBar_DeviceGamma.Minimum = Short.MinValue
+        TrackBar_DeviceGamma.Maximum = Short.MaxValue
+        TrackBar_DeviceConstrast.Minimum = Short.MinValue
+        TrackBar_DeviceConstrast.Maximum = Short.MaxValue
+
+
         g_mClassCaptureLogic = New ClassCaptureLogic(Me, mDeviceInfo.m_Index, mDeviceInfo.m_Path)
         Label_FriendlyName.Text = mDeviceInfo.m_Name
 
@@ -91,6 +101,7 @@ Public Class UCVirtualTrackerItem
             CheckBox_FlipHorizontal_CheckedChanged(Nothing, Nothing)
             ComboBox_ImageInterpolation_SelectedIndexChanged(Nothing, Nothing)
             CheckBox_UseMjpg_CheckedChanged(Nothing, Nothing)
+            CheckBox_DeviceSupersampling_CheckedChanged(Nothing, Nothing)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
@@ -279,6 +290,22 @@ Public Class UCVirtualTrackerItem
         MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
     End Sub
 
+    Private Sub CheckBox_DeviceSupersampling_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_DeviceSupersampling.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_Supersampling = CheckBox_DeviceSupersampling.Checked
+        SetUnsavedState(True)
+
+        ' Config is currently loading, dont show messagebox
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    End Sub
+
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
         Try
             Me.Enabled = False
@@ -365,6 +392,7 @@ Public Class UCVirtualTrackerItem
         Private g_sDevicePath As String = ""
         Private g_bFlipImage As Boolean = False
         Private g_bUseMJPG As Boolean = True
+        Private g_bSupersampling As Boolean = False
 
         Enum ENUM_INTERPOLATION
             NEARST_NEIGHBOR
@@ -550,6 +578,8 @@ Public Class UCVirtualTrackerItem
                 End SyncLock
             End Get
             Set(value As Integer)
+                Dim bRefreshPipe As Boolean = False
+
                 SyncLock g_mThreadLock
                     If (value > ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1) Then
                         Return
@@ -558,9 +588,13 @@ Public Class UCVirtualTrackerItem
                     If (g_iPipeIndex <> value) Then
                         g_iPipeIndex = value
 
-                        StartPipeThread(True)
+                        bRefreshPipe = True
                     End If
                 End SyncLock
+
+                If (bRefreshPipe) Then
+                    StartPipeThread(True)
+                End If
             End Set
         End Property
 
@@ -612,6 +646,19 @@ Public Class UCVirtualTrackerItem
             Set(value As Boolean)
                 SyncLock g_mThreadLock
                     g_bUseMJPG = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Property m_Supersampling As Boolean
+            Get
+                SyncLock g_mThreadLock
+                    Return g_bSupersampling
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock g_mThreadLock
+                    g_bSupersampling = value
                 End SyncLock
             End Set
         End Property
@@ -709,7 +756,12 @@ Public Class UCVirtualTrackerItem
                     ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set first everytime
                     Dim iFrameH As Integer = 480
                     Dim iFrameW As Integer = 640
-                    Dim iFrameR As Integer = 60
+                    Dim iFrameR As Integer = 30
+
+                    If (m_Supersampling) Then
+                        iFrameH *= 2
+                        iFrameW *= 2
+                    End If
 
                     If (m_UseMJPG) Then
                         Dim sLastCodec As String = m_Capture.FourCC
@@ -754,6 +806,10 @@ Public Class UCVirtualTrackerItem
                     Dim sCurrentCodec As String = m_Capture.FourCC
                     If (sCurrentCodec.Trim(vbNullChar(0)).Length = 0) Then
                         sCurrentCodec = "UNKNOWN"
+                    End If
+
+                    If (sCurrentCodec = "MJPG") Then
+                        sCurrentCodec &= " (compressed)"
                     End If
 
                     Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
@@ -1138,11 +1194,13 @@ Public Class UCVirtualTrackerItem
                 Dim bExceptionSleep As Boolean = False
 
                 Try
-                    If (m_PipeIndex < 0) Then
+                    Dim iPipeIndex As Integer = m_PipeIndex
+
+                    If (iPipeIndex < 0) Then
                         Throw New ArgumentException("Invalid pipe index.")
                     End If
 
-                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", "PSMoveSerivceEx\VirtPSeyeStream_" & m_PipeIndex, IO.Pipes.PipeDirection.Out)
+                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", "PSMoveSerivceEx\VirtPSeyeStream_" & iPipeIndex, IO.Pipes.PipeDirection.Out)
                         ' The thread when aborting will hang if we dont put a timeout.
                         mPipe.Connect(5000)
 
@@ -1266,6 +1324,7 @@ Public Class UCVirtualTrackerItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FlipImageHorizontal", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked, "True", "False")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ImageInterpolation", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "UseMJPG", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked, "True", "False")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Supersampling", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked, "True", "False")))
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
@@ -1290,6 +1349,7 @@ Public Class UCVirtualTrackerItem
                         mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
                         mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "True") = "True")
+                        mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
 
                         mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using
