@@ -1434,4 +1434,18 @@ Public Class UCVirtualTrackerItem
         mHelp.RichTextBox_Help.Rtf = My.Resources.HelpVirtualTracker
         mHelp.ShowDialog(Me)
     End Sub
+
+    Private Sub LinkLabel_MiscSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_MiscSettings.LinkClicked
+        If (g_mClassCaptureLogic.m_Capture Is Nothing) Then
+            Return
+        End If
+
+        If (Not g_mClassCaptureLogic.m_Capture.IsOpened) Then
+            MessageBox.Show("Video input device not opened!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_Capture.Settings = 0
+        g_mClassCaptureLogic.m_Capture.Settings = 1
+    End Sub
 End Class
