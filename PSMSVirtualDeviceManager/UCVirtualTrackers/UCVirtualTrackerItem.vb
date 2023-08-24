@@ -391,7 +391,7 @@ Public Class UCVirtualTrackerItem
         Private g_iDeviceIndex As Integer = -1
         Private g_sDevicePath As String = ""
         Private g_bFlipImage As Boolean = False
-        Private g_bUseMJPG As Boolean = True
+        Private g_bUseMJPG As Boolean = False
         Private g_bSupersampling As Boolean = False
 
         Enum ENUM_INTERPOLATION
@@ -1027,14 +1027,6 @@ Public Class UCVirtualTrackerItem
                                                    End Try
                                                End Sub)
 
-                g_mUCVirtualTrackerItem.Invoke(Sub()
-                                                   m_ShowCaptureImage = g_mUCVirtualTrackerItem.CheckBox_ShowCaptureImage.Checked
-                                                   m_PipeIndex = CInt(g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedItem)
-                                                   m_FlipImage = g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked
-                                                   m_ImageInterpolation = CType(g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex, ENUM_INTERPOLATION)
-                                                   m_UseMJPG = g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked
-                                               End Sub)
-
                 g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
                 g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Enabled = True)
 
@@ -1348,7 +1340,7 @@ Public Class UCVirtualTrackerItem
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
                         mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
-                        mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "True") = "True")
+                        mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "False") = "True")
                         mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
 
                         mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
