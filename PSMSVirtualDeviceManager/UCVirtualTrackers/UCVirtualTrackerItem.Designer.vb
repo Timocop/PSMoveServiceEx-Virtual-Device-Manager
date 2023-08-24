@@ -46,6 +46,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
+        Me.LinkLabel_MiscSettings = New System.Windows.Forms.LinkLabel()
         Me.Label_DeviceResolution = New System.Windows.Forms.Label()
         Me.Label_DeviceCodec = New System.Windows.Forms.Label()
         Me.TabPage_TrackerProperties = New System.Windows.Forms.TabPage()
@@ -59,7 +60,6 @@ Partial Class UCVirtualTrackerItem
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
-        Me.LinkLabel_MiscSettings = New System.Windows.Forms.LinkLabel()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -235,8 +235,6 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceConstrast.AutoSize = False
         Me.TrackBar_DeviceConstrast.LargeChange = 1
         Me.TrackBar_DeviceConstrast.Location = New System.Drawing.Point(124, 75)
-        Me.TrackBar_DeviceConstrast.Maximum = 9999
-        Me.TrackBar_DeviceConstrast.Minimum = -9999
         Me.TrackBar_DeviceConstrast.Name = "TrackBar_DeviceConstrast"
         Me.TrackBar_DeviceConstrast.Size = New System.Drawing.Size(345, 16)
         Me.TrackBar_DeviceConstrast.TabIndex = 18
@@ -310,6 +308,22 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.TabIndex = 0
         Me.TabPage_DeviceProperties.Text = "Device Properties"
         Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
+        '
+        'LinkLabel_MiscSettings
+        '
+        Me.LinkLabel_MiscSettings.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_MiscSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LinkLabel_MiscSettings.AutoSize = True
+        Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(394, 132)
+        Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
+        Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
+        Me.LinkLabel_MiscSettings.TabIndex = 21
+        Me.LinkLabel_MiscSettings.TabStop = True
+        Me.LinkLabel_MiscSettings.Text = "Misc Settings"
+        Me.LinkLabel_MiscSettings.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Label_DeviceResolution
         '
@@ -467,22 +481,6 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps.Size = New System.Drawing.Size(209, 15)
         Me.TextBox_Fps.TabIndex = 23
         Me.TextBox_Fps.Text = "FPS: 0 / I/O FPS: 0"
-        '
-        'LinkLabel_MiscSettings
-        '
-        Me.LinkLabel_MiscSettings.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_MiscSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_MiscSettings.AutoSize = True
-        Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(394, 132)
-        Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
-        Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
-        Me.LinkLabel_MiscSettings.TabIndex = 21
-        Me.LinkLabel_MiscSettings.TabStop = True
-        Me.LinkLabel_MiscSettings.Text = "Misc Settings"
-        Me.LinkLabel_MiscSettings.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'UCVirtualTrackerItem
         '
