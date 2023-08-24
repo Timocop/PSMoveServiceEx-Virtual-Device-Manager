@@ -152,7 +152,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.TabPage_SettingsPlaysapce = New System.Windows.Forms.TabPage()
+        Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
         Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
@@ -211,7 +211,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel5.SuspendLayout()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
-        Me.TabPage_SettingsPlaysapce.SuspendLayout()
+        Me.TabPage_SettingsPlayspace.SuspendLayout()
         CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
@@ -619,7 +619,7 @@ Partial Class UCVirtualMotionTracker
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPSmove)
-        Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPlaysapce)
+        Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPlayspace)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsOther)
         Me.TabControl_SettingsDevices.Location = New System.Drawing.Point(6, 6)
         Me.TabControl_SettingsDevices.Name = "TabControl_SettingsDevices"
@@ -1747,16 +1747,16 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Information"
         '
-        'TabPage_SettingsPlaysapce
+        'TabPage_SettingsPlayspace
         '
-        Me.TabPage_SettingsPlaysapce.Controls.Add(Me.GroupBox3)
-        Me.TabPage_SettingsPlaysapce.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage_SettingsPlaysapce.Name = "TabPage_SettingsPlaysapce"
-        Me.TabPage_SettingsPlaysapce.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_SettingsPlaysapce.Size = New System.Drawing.Size(740, 1158)
-        Me.TabPage_SettingsPlaysapce.TabIndex = 2
-        Me.TabPage_SettingsPlaysapce.Text = "Playspace"
-        Me.TabPage_SettingsPlaysapce.UseVisualStyleBackColor = True
+        Me.TabPage_SettingsPlayspace.Controls.Add(Me.GroupBox3)
+        Me.TabPage_SettingsPlayspace.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_SettingsPlayspace.Name = "TabPage_SettingsPlayspace"
+        Me.TabPage_SettingsPlayspace.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_SettingsPlayspace.Size = New System.Drawing.Size(740, 1158)
+        Me.TabPage_SettingsPlayspace.TabIndex = 2
+        Me.TabPage_SettingsPlayspace.Text = "Playspace"
+        Me.TabPage_SettingsPlayspace.UseVisualStyleBackColor = True
         '
         'ComboBox_PlayCalibForwardMethod
         '
@@ -1851,7 +1851,7 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox3.Size = New System.Drawing.Size(734, 166)
         Me.GroupBox3.TabIndex = 82
         Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Playsapce Calibration"
+        Me.GroupBox3.Text = "Playspace Calibration"
         '
         'ListView_OscDevices
         '
@@ -2101,7 +2101,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
-        Me.TabPage_SettingsPlaysapce.ResumeLayout(False)
+        Me.TabPage_SettingsPlayspace.ResumeLayout(False)
         CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
@@ -2265,7 +2265,7 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents NumericUpDown_PlayCalibPrepTime As NumericUpDown
     Friend WithEvents Label41 As Label
-    Friend WithEvents TabPage_SettingsPlaysapce As TabPage
+    Friend WithEvents TabPage_SettingsPlayspace As TabPage
     Friend WithEvents ComboBox_PlayCalibForwardMethod As ComboBox
     Friend WithEvents Label40 As Label
     Friend WithEvents NumericUpDown_PlayCalibHeightOffset As NumericUpDown

@@ -17,7 +17,7 @@
 
     Private Sub LinkLabel_PlayCalibShowSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibShowSettings.LinkClicked
         TabControl_Vmt.SelectedTab = TabPage_Settings
-        TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPlaysapce
+        TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPlayspace
 
         ' Weird focus  
         CheckBox_PlayCalibEnabled.Focus()
@@ -233,7 +233,7 @@
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
                                 iPercentage = 0
 
-                                mTargetTracker.g_mClassIO.m_ManualPlaysapceCalibrationAllowSave = True
+                                mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationAllowSave = True
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END

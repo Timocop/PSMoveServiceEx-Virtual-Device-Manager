@@ -797,7 +797,7 @@ Public Class UCVirtualMotionTrackerItem
             End Get
         End Property
 
-        Property m_ManualPlaysapceCalibrationAllowSave As Boolean
+        Property m_ManualPlayspaceCalibrationAllowSave As Boolean
             Get
                 SyncLock _ThreadLock
                     Return g_bPlayCalibAllowSave
@@ -935,7 +935,7 @@ Public Class UCVirtualMotionTrackerItem
                                 Dim mRawPosition = m_ControllerData.m_Position
                                 Dim mCalibratedPosition = mRawPosition
 
-                                ' Playsapce offsets, used for playspace calibration
+                                ' Playspace offsets, used for playspace calibration
                                 If (Not mPlayspaceRecenterCalibrationRunning) Then
                                     InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
                                 End If
@@ -964,7 +964,7 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
                                         'Do playspace recenter
-                                        InternalPlaysapceRecenterLogic(bEnabledPlayspaceRecenter,
+                                        InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
                                                                         m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton,
                                                                         mRawPosition,
                                                                         mPlayspaceRecenterButtonPressed,
@@ -1193,7 +1193,7 @@ Public Class UCVirtualMotionTrackerItem
                                     Dim mRawPosition = m_TrackerData(i).m_Position
                                     Dim mCalibratedPosition = mRawPosition
 
-                                    ' Playsapce offsets, used for playspace calibration
+                                    ' Playspace offsets, used for playspace calibration
                                     InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
 
                                     Dim mOrientation As Quaternion = mCalibratedOrientation
@@ -1327,7 +1327,7 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Private Sub InternalPlaysapceRecenterLogic(ByRef bEnabledPlayspaceRecenter As Boolean,
+        Private Sub InternalPlayspaceRecenterLogic(ByRef bEnabledPlayspaceRecenter As Boolean,
                                                   ByRef bHoldingRecenterButtons As Boolean,
                                                   ByRef mRawPosition As Vector3,
                                                   ByRef mPlayspaceRecenterButtonPressed As Boolean,
