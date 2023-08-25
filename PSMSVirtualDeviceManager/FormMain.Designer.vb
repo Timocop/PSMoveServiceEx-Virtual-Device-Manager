@@ -535,7 +535,7 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.Size = New System.Drawing.Size(168, 19)
         Me.LinkLabel_HMDs.TabIndex = 1
         Me.LinkLabel_HMDs.TabStop = True
-        Me.LinkLabel_HMDs.Text = "Virtual Head Mount Devices"
+        Me.LinkLabel_HMDs.Text = "Virtual Head-Mounted Devices"
         Me.LinkLabel_HMDs.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'Panel3

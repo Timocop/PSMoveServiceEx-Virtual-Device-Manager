@@ -22,7 +22,7 @@
         Public Overrides Function ToString() As String
             Select Case (iOverrideType)
                 Case ENUM_OVERRIDE_TYPE.HEAD
-                    Return "Head Mount Device"
+                    Return "Head-Mounted Device"
 
                 Case ENUM_OVERRIDE_TYPE.LEFT_HAND
                     Return "Left Controller"

@@ -66,7 +66,7 @@ Public Class ClassSteamVRConfig
             g_sOverrideTypeNames(ENUM_OVERRIDE_TYPE.LEFT_HAND) = "/user/hand/left"
             g_sOverrideTypeNames(ENUM_OVERRIDE_TYPE.RIGHT_HAND) = "/user/hand/right"
 
-            g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.HEAD) = "Head Mount Device"
+            g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.HEAD) = "Head-Mounted Device"
             g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.LEFT_HAND) = "Left Controller"
             g_sOverrideTypeNamesReadable(ENUM_OVERRIDE_TYPE.RIGHT_HAND) = "Right Controller"
         End Sub
