@@ -26,6 +26,8 @@ Partial Class UCVirtualTrackerItem
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVirtualTrackerItem))
         Me.PictureBox_CaptureImage = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_FriendlyName = New System.Windows.Forms.Label()
@@ -60,6 +62,7 @@ Partial Class UCVirtualTrackerItem
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -115,6 +118,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_DeviceTrackerId.Name = "ComboBox_DeviceTrackerId"
         Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(301, 21)
         Me.ComboBox_DeviceTrackerId.TabIndex = 3
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_DeviceTrackerId, "The tracker id corresponding to the virtual tracker ids of PSMoveServiceE.")
         '
         'Label3
         '
@@ -376,6 +380,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_DeviceSupersampling.Size = New System.Drawing.Size(35, 18)
         Me.CheckBox_DeviceSupersampling.TabIndex = 18
         Me.CheckBox_DeviceSupersampling.Text = " "
+        Me.ToolTip_Info.SetToolTip(Me.CheckBox_DeviceSupersampling, resources.GetString("CheckBox_DeviceSupersampling.ToolTip"))
         Me.CheckBox_DeviceSupersampling.UseVisualStyleBackColor = True
         '
         'Label10
@@ -399,6 +404,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_UseMjpg.Size = New System.Drawing.Size(35, 18)
         Me.CheckBox_UseMjpg.TabIndex = 16
         Me.CheckBox_UseMjpg.Text = " "
+        Me.ToolTip_Info.SetToolTip(Me.CheckBox_UseMjpg, resources.GetString("CheckBox_UseMjpg.ToolTip"))
         Me.CheckBox_UseMjpg.UseVisualStyleBackColor = True
         '
         'Label9
@@ -422,6 +428,9 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_ImageInterpolation.Name = "ComboBox_ImageInterpolation"
         Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(301, 21)
         Me.ComboBox_ImageInterpolation.TabIndex = 14
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_ImageInterpolation, "The image interpolation method is used when the image is not at the recommended r" &
+        "esolution. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "However, using more advanced interpolation methods can lead to incr" &
+        "eased processing usage.")
         '
         'Label5
         '
@@ -443,6 +452,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_FlipHorizontal.Size = New System.Drawing.Size(35, 18)
         Me.CheckBox_FlipHorizontal.TabIndex = 12
         Me.CheckBox_FlipHorizontal.Text = " "
+        Me.ToolTip_Info.SetToolTip(Me.CheckBox_FlipHorizontal, "Click ""HELP"" for more details.")
         Me.CheckBox_FlipHorizontal.UseVisualStyleBackColor = True
         '
         'Label2
@@ -481,6 +491,16 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps.Size = New System.Drawing.Size(209, 15)
         Me.TextBox_Fps.TabIndex = 23
         Me.TextBox_Fps.Text = "FPS: 0 / I/O FPS: 0"
+        '
+        'ToolTip_Info
+        '
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.Tag = ""
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
         '
         'UCVirtualTrackerItem
         '
@@ -550,4 +570,5 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents CheckBox_DeviceSupersampling As CheckBox
     Friend WithEvents Label10 As Label
     Friend WithEvents LinkLabel_MiscSettings As LinkLabel
+    Friend WithEvents ToolTip_Info As ToolTip
 End Class

@@ -117,4 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="CheckBox_DeviceSupersampling.ToolTip" xml:space="preserve">
+    <value>Supersampling involves capturing higher-resolution images from the video input device and then reducing their size through downscaling to create smoother images. 
+However, this process requires more processing power.</value>
+  </data>
+  <data name="CheckBox_UseMjpg.ToolTip" xml:space="preserve">
+    <value>Which codec should you use? The most common codecs are YUY2 and MJPG. 
+The difference between YUY2 and MJPG is that YUY2 produces higher-quality images compared to MJPG. 
+However, the downside is that YUY2 requires more USB bandwidth as it does not use any compression. 
+So, if you experience stuttering or a low framerate, use MJPG instead.</value>
+  </data>
 </root>
