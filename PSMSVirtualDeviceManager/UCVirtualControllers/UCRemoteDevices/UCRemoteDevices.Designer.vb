@@ -87,7 +87,7 @@ Partial Class UCRemoteDevices
         Me.CheckBox_AllowNewDevices.Name = "CheckBox_AllowNewDevices"
         Me.CheckBox_AllowNewDevices.Size = New System.Drawing.Size(126, 18)
         Me.CheckBox_AllowNewDevices.TabIndex = 3
-        Me.CheckBox_AllowNewDevices.Text = "Allow new devcies"
+        Me.CheckBox_AllowNewDevices.Text = "Allow new devices"
         Me.CheckBox_AllowNewDevices.UseVisualStyleBackColor = True
         '
         'LinkLabel_EditPort
