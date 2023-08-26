@@ -467,7 +467,7 @@ Public Class FormMain
                 Dim sLocationInfo As String = ""
 
                 If (True) Then
-                    If (ClassUpdate.ClassVdm.CheckUpdateAvailable(sLocationInfo)) Then
+                    If (ClassUpdate.ClassVdm.CheckUpdateAvailable(Application.ExecutablePath, sLocationInfo)) Then
                         g_mFormMain.BeginInvoke(
                             Sub()
                                 g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
@@ -483,7 +483,7 @@ Public Class FormMain
                     mConfig.LoadConfig()
 
                     If (mConfig.FileExist) Then
-                        If (ClassUpdate.ClassPsms.CheckUpdateHash(mConfig.m_FileName, sLocationInfo)) Then
+                        If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
                             g_mFormMain.BeginInvoke(
                                 Sub()
                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
