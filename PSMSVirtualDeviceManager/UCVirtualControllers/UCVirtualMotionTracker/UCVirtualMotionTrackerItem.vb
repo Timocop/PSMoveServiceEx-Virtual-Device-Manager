@@ -396,6 +396,7 @@ Public Class UCVirtualMotionTrackerItem
 
                 g_mClassIO.m_FpsOscCounter = 0
             End SyncLock
+        Catch ex As Exception
         Finally
             TimerFPS.Start()
         End Try
@@ -421,6 +422,7 @@ Public Class UCVirtualMotionTrackerItem
                 End If
 
             End SyncLock
+        Catch ex As Exception
         Finally
             TimerPose.Start()
         End Try
@@ -537,6 +539,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
             End If
+        Catch ex As Exception
         Finally
             Timer_Status.Start()
         End Try

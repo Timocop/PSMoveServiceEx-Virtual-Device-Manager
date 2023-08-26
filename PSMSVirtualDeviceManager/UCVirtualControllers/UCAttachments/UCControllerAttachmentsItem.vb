@@ -264,6 +264,7 @@ Public Class UCControllerAttachmentsItem
 
                 g_mClassIO.m_FpsPipeCounter = 0
             End SyncLock
+        Catch ex As Exception
         Finally
             TimerFPS.Start()
         End Try

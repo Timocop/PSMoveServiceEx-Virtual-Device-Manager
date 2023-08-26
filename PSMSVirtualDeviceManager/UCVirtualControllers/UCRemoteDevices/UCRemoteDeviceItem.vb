@@ -167,6 +167,7 @@ Public Class UCRemoteDeviceItem
                 g_iFpsOrientationCounter = 0
                 g_mClassIO.m_FpsPipeCounter = 0
             End SyncLock
+        Catch ex As Exception
         Finally
             TimerFPS.Start()
         End Try
