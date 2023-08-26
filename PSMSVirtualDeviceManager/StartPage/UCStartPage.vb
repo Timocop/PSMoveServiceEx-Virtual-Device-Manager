@@ -303,7 +303,7 @@ Public Class UCStartPage
 
             End Try
 
-            Threading.Thread.Sleep(1000)
+            Threading.Thread.Sleep(500)
         End While
     End Sub
 

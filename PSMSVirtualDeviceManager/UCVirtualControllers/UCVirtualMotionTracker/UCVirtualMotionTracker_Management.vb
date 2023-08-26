@@ -284,7 +284,7 @@ Partial Public Class UCVirtualMotionTracker
 
             End Try
 
-            Threading.Thread.Sleep(1000)
+            Threading.Thread.Sleep(500)
         End While
     End Sub
 
