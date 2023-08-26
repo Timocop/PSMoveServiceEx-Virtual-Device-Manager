@@ -199,16 +199,16 @@ Public Class ClassUpdate
             SetTLS12()
 
 #If Not DEBUG Then
-        If (Not CheckUpdateAvailable(Nothing)) Then
-            Return
-        End If
+            If (Not CheckUpdateAvailable(Application.ExecutablePath, Nothing)) Then
+                Return
+            End If
 #End If
 
 #If DEBUG Then
             IO.Directory.CreateDirectory(IO.Path.Combine(Application.StartupPath, "UpdateTest"))
             Dim sDataPath As String = IO.Path.Combine(Application.StartupPath, "UpdateTest\VdmUpdaterSFX.exe")
 #Else
-        Dim sDataPath As String = IO.Path.Combine(Application.StartupPath, "VdmUpdaterSFX.exe")
+            Dim sDataPath As String = IO.Path.Combine(Application.StartupPath, "VdmUpdaterSFX.exe")
 #End If
 
             IO.File.Delete(sDataPath)
@@ -243,21 +243,21 @@ Public Class ClassUpdate
             End If
 
 #If Not DEBUG Then
-        For Each pProcess As Process In Process.GetProcessesByName(IO.Path.GetFileNameWithoutExtension(Application.ExecutablePath))
-            Try
-                If (pProcess.HasExited OrElse pProcess.Id = Process.GetCurrentProcess.Id) Then
-                    Continue For
-                End If
+            For Each pProcess As Process In Process.GetProcessesByName(IO.Path.GetFileNameWithoutExtension(Application.ExecutablePath))
+                Try
+                    If (pProcess.HasExited OrElse pProcess.Id = Process.GetCurrentProcess.Id) Then
+                        Continue For
+                    End If
 
-                If (IO.Path.GetFullPath(pProcess.MainModule.FileName).ToLower <> IO.Path.GetFullPath(Application.ExecutablePath).ToLower) Then
-                    Continue For
-                End If
+                    If (IO.Path.GetFullPath(pProcess.MainModule.FileName).ToLower <> IO.Path.GetFullPath(Application.ExecutablePath).ToLower) Then
+                        Continue For
+                    End If
 
-                pProcess.Kill()
-                pProcess.WaitForExit()
-            Catch ex As Exception
-            End Try
-        Next
+                    pProcess.Kill()
+                    pProcess.WaitForExit()
+                Catch ex As Exception
+                End Try
+            Next
 #End If
 
             Dim sBatchFile As String = IO.Path.Combine(Application.StartupPath, "InstallUpdate.bat")
@@ -281,8 +281,8 @@ Public Class ClassUpdate
             End Using
 
 #If Not DEBUG Then
-        Process.GetCurrentProcess.Kill()
-        End
+            Process.GetCurrentProcess.Kill()
+            End
 #End If
         End Sub
 
