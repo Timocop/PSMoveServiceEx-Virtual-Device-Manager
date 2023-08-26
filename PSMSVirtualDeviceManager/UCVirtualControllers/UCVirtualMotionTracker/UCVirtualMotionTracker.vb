@@ -6,7 +6,6 @@ Public Class UCVirtualMotionTracker
     Public g_mUCVirtualControllers As UCVirtualControllers
 
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
-    Private g_mVMTControllers As New List(Of UCVirtualMotionTrackerItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
@@ -24,6 +23,113 @@ Public Class UCVirtualMotionTracker
         PLAYSPACE_CALIBRATION = (1 << 1)
         PLAYSPACE = (1 << 2)
     End Enum
+
+    Class ClassTrackersListViewItem
+        Inherits ListViewItem
+        Implements IDisposable
+
+        Private g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
+        Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
+
+        Public Sub New(iControllerID As Integer, _UCVirtualMotionTracker As UCVirtualMotionTracker)
+            MyBase.New(New String() {"", "", ""})
+
+            g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+            g_UCVirtualMotionTrackerItem = New UCVirtualMotionTrackerItem(iControllerID, _UCVirtualMotionTracker)
+
+            UpdateItem()
+        End Sub
+
+        Public Sub UpdateItem()
+            If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
+                Return
+            End If
+
+            If (g_UCVirtualMotionTrackerItem.g_mClassIO Is Nothing) Then
+                Return
+            End If
+
+            Me.SubItems(0).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_Index)
+            Me.SubItems(1).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_VmtTracker)
+
+            If (g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem IsNot Nothing AndAlso g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem IsNot Nothing) Then
+                Me.SubItems(2).Text = String.Format("{0} ({1})", CStr(g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem), CStr(g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem))
+            Else
+                Me.SubItems(2).Text = ""
+            End If
+
+            'Is there any error?
+            If (g_UCVirtualMotionTrackerItem.Panel_Status.Visible) Then
+                Me.BackColor = Color.FromArgb(255, 192, 192)
+            Else
+                Me.BackColor = Color.FromArgb(255, 255, 255)
+            End If
+        End Sub
+
+        ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
+            Get
+                Return g_UCVirtualMotionTrackerItem
+            End Get
+        End Property
+
+        Property m_Visible As Boolean
+            Get
+                If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
+                    Return False
+                End If
+
+                Return (g_UCVirtualMotionTrackerItem.Parent Is g_UCVirtualMotionTracker.Panel_VMTTrackers)
+            End Get
+            Set(value As Boolean)
+                If (value) Then
+                    If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
+                        Return
+                    End If
+
+                    g_UCVirtualMotionTrackerItem.Parent = g_UCVirtualMotionTracker.Panel_VMTTrackers
+                    g_UCVirtualMotionTrackerItem.Dock = DockStyle.Top
+                Else
+                    g_UCVirtualMotionTrackerItem.Parent = Nothing
+                End If
+            End Set
+        End Property
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_UCVirtualMotionTrackerItem IsNot Nothing AndAlso Not g_UCVirtualMotionTrackerItem.IsDisposed) Then
+                        g_UCVirtualMotionTrackerItem.Dispose()
+                        g_UCVirtualMotionTrackerItem = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
 
     Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
         g_mUCVirtualControllers = _mUCVirtualControllers
@@ -286,12 +392,12 @@ Public Class UCVirtualMotionTracker
             g_mOscStatusThread = Nothing
         End If
 
-        For Each mItem In g_mVMTControllers
-            If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
-                mItem.Dispose()
-            End If
+        For Each mItem As ListViewItem In ListView_Trackers.Items
+            Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
+
+            mTrackerItem.Dispose()
         Next
-        g_mVMTControllers.Clear()
+        ListView_Trackers.Items.Clear()
 
         For Each mItem In g_mAutostartMenuStrips
             If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then

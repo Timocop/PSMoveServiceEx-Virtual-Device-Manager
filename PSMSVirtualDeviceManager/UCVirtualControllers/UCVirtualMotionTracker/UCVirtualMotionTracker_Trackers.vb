@@ -28,33 +28,25 @@ Partial Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub AddVmtTracker(id As Integer)
-        ' Remove disposed controls
-        For i = g_mVMTControllers.Count - 1 To 0 Step -1
-            If (g_mVMTControllers(i) Is Nothing OrElse g_mVMTControllers(i).IsDisposed) Then
-                g_mVMTControllers.RemoveAt(i)
-            End If
-        Next
-
-        If (g_mVMTControllers.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
+        If (ListView_Trackers.Items.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
             Throw New ArgumentException("Maximum number of trackers reached")
         End If
 
-        Dim mItem As New UCVirtualMotionTrackerItem(id, Me)
-        g_mVMTControllers.Add(mItem)
-
-        mItem.Parent = Panel_VMTTrackers
-        mItem.Dock = DockStyle.Top
+        Dim mItem = New ClassTrackersListViewItem(id, Me)
+        ListView_Trackers.Items.Add(mItem)
+        mItem.Selected = True
     End Sub
 
     Private Function GetVmtTrackers() As UCVirtualMotionTrackerItem()
         Dim mTrackerList As New List(Of UCVirtualMotionTrackerItem)
 
-        For i = 0 To g_mVMTControllers.Count - 1
-            If (g_mVMTControllers(i) Is Nothing OrElse g_mVMTControllers(i).IsDisposed) Then
+        For Each mItem As ListViewItem In ListView_Trackers.Items
+            Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
+            If (mTrackerItem.m_UCVirtualMotionTrackerItem Is Nothing OrElse mTrackerItem.m_UCVirtualMotionTrackerItem.IsDisposed) Then
                 Continue For
             End If
 
-            mTrackerList.Add(g_mVMTControllers(i))
+            mTrackerList.Add(mTrackerItem.m_UCVirtualMotionTrackerItem)
         Next
 
         Return mTrackerList.ToArray
@@ -107,4 +99,43 @@ Partial Public Class UCVirtualMotionTracker
         End Try
     End Sub
 
+    Private Sub ListView_Trackers_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Trackers.SelectedIndexChanged
+        For Each mItem As ListViewItem In ListView_Trackers.Items
+            Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
+            If (mTrackerItem.Selected) Then
+                If (Not mTrackerItem.m_Visible) Then
+                    mTrackerItem.m_Visible = True
+                End If
+            Else
+                If (mTrackerItem.m_Visible) Then
+                    mTrackerItem.m_Visible = False
+                End If
+            End If
+        Next
+    End Sub
+
+    Private Sub ToolStripMenuItem_TrackerRemove_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRemove.Click
+        If (ListView_Trackers.SelectedItems.Count < 1) Then
+            Return
+        End If
+
+        Dim mAttachmentItem = DirectCast(ListView_Trackers.SelectedItems(0), ClassTrackersListViewItem)
+        ListView_Trackers.Items.Remove(mAttachmentItem)
+
+        mAttachmentItem.Dispose()
+    End Sub
+
+
+    Private Sub Timer_VMTTrackers_Tick(sender As Object, e As EventArgs) Handles Timer_VMTTrackers.Tick
+        Try
+            Timer_VMTTrackers.Stop()
+
+            For Each mItem As ListViewItem In ListView_Trackers.Items
+                Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
+                mTrackerItem.UpdateItem()
+            Next
+        Finally
+            Timer_VMTTrackers.Start()
+        End Try
+    End Sub
 End Class

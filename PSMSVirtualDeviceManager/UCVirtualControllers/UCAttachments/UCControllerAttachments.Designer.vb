@@ -28,12 +28,19 @@ Partial Class UCControllerAttachments
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel_Attachments = New System.Windows.Forms.Panel()
+        Me.ListView_Attachments = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ContextMenuStrip_Attachments = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_AttachmentRemove = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Label1 = New System.Windows.Forms.Label()
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
-        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Button_Autostart = New System.Windows.Forms.Button()
         Me.Button_AddAttachment = New System.Windows.Forms.Button()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Timer_Attachment = New System.Windows.Forms.Timer(Me.components)
+        Me.ContextMenuStrip_Attachments.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -43,11 +50,51 @@ Partial Class UCControllerAttachments
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_Attachments.AutoScroll = True
-        Me.Panel_Attachments.Location = New System.Drawing.Point(16, 120)
+        Me.Panel_Attachments.Location = New System.Drawing.Point(16, 302)
         Me.Panel_Attachments.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_Attachments.Name = "Panel_Attachments"
-        Me.Panel_Attachments.Size = New System.Drawing.Size(768, 464)
+        Me.Panel_Attachments.Size = New System.Drawing.Size(768, 282)
         Me.Panel_Attachments.TabIndex = 7
+        '
+        'ListView_Attachments
+        '
+        Me.ListView_Attachments.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView_Attachments.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
+        Me.ListView_Attachments.ContextMenuStrip = Me.ContextMenuStrip_Attachments
+        Me.ListView_Attachments.FullRowSelect = True
+        Me.ListView_Attachments.HideSelection = False
+        Me.ListView_Attachments.Location = New System.Drawing.Point(16, 120)
+        Me.ListView_Attachments.Margin = New System.Windows.Forms.Padding(16)
+        Me.ListView_Attachments.MultiSelect = False
+        Me.ListView_Attachments.Name = "ListView_Attachments"
+        Me.ListView_Attachments.Size = New System.Drawing.Size(768, 150)
+        Me.ListView_Attachments.TabIndex = 0
+        Me.ListView_Attachments.UseCompatibleStateImageBehavior = False
+        Me.ListView_Attachments.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Controller ID"
+        Me.ColumnHeader1.Width = 150
+        '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Parent Controller ID"
+        Me.ColumnHeader2.Width = 150
+        '
+        'ContextMenuStrip_Attachments
+        '
+        Me.ContextMenuStrip_Attachments.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_AttachmentRemove})
+        Me.ContextMenuStrip_Attachments.Name = "ContextMenuStrip_Attachments"
+        Me.ContextMenuStrip_Attachments.Size = New System.Drawing.Size(118, 26)
+        '
+        'ToolStripMenuItem_AttachmentRemove
+        '
+        Me.ToolStripMenuItem_AttachmentRemove.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.ToolStripMenuItem_AttachmentRemove.Name = "ToolStripMenuItem_AttachmentRemove"
+        Me.ToolStripMenuItem_AttachmentRemove.Size = New System.Drawing.Size(117, 22)
+        Me.ToolStripMenuItem_AttachmentRemove.Text = "Remove"
         '
         'ContextMenuStrip_Autostart
         '
@@ -81,18 +128,6 @@ Partial Class UCControllerAttachments
         Me.LinkLabel_ReadMore.Text = "Read more"
         Me.LinkLabel_ReadMore.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
-        Me.PictureBox1.m_HighQuality = False
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 13
-        Me.PictureBox1.TabStop = False
-        '
         'Button_Autostart
         '
         Me.Button_Autostart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5353_16x16_32
@@ -120,11 +155,29 @@ Partial Class UCControllerAttachments
         Me.Button_AddAttachment.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_AddAttachment.UseVisualStyleBackColor = True
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
+        Me.PictureBox1.m_HighQuality = False
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 13
+        Me.PictureBox1.TabStop = False
+        '
+        'Timer_Attachment
+        '
+        Me.Timer_Attachment.Enabled = True
+        Me.Timer_Attachment.Interval = 500
+        '
         'UCControllerAttachments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.ListView_Attachments)
         Me.Controls.Add(Me.LinkLabel_ReadMore)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox1)
@@ -134,6 +187,7 @@ Partial Class UCControllerAttachments
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCControllerAttachments"
         Me.Size = New System.Drawing.Size(800, 600)
+        Me.ContextMenuStrip_Attachments.ResumeLayout(False)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -146,4 +200,10 @@ Partial Class UCControllerAttachments
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label1 As Label
     Friend WithEvents LinkLabel_ReadMore As LinkLabel
+    Friend WithEvents ListView_Attachments As ClassListViewEx
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents ColumnHeader2 As ColumnHeader
+    Friend WithEvents ContextMenuStrip_Attachments As ContextMenuStrip
+    Friend WithEvents ToolStripMenuItem_AttachmentRemove As ToolStripMenuItem
+    Friend WithEvents Timer_Attachment As Timer
 End Class

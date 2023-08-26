@@ -16,6 +16,12 @@ Public Class UCStartPage
     Private g_bIsServiceConnected As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
 
+    Enum ENUM_SERVICE_PROCESS_TYPE
+        NONE
+        NORMAL
+        ADMIN
+    End Enum
+
     Public Sub New(mFormMain As FormMain)
         g_FormMain = mFormMain
 
@@ -492,22 +498,22 @@ Public Class UCStartPage
     End Sub
 
     Public Sub StopService()
-        Dim iServiceStatus As Integer = CheckIfServiceRunning()
+        Dim iServiceStatus As ENUM_SERVICE_PROCESS_TYPE = CheckIfServiceRunning()
 
-        If iServiceStatus = ENUM_SERVICE_PROCESS_TYPE.NORMAL Then
-            For Each mProcess In Process.GetProcessesByName("PSMoveService")
-                If mProcess.CloseMainWindow() Then
-                    mProcess.WaitForExit(10000)
-                Else
-                    mProcess.Kill()
-                End If
-            Next
-        ElseIf iServiceStatus = ENUM_SERVICE_PROCESS_TYPE.ADMIN Then
-            MessageBox.Show("You have PSMoveServiceAdmin running, please stop the service manually.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning) ' this unpriviledged window can't close other priviledged windows
-        Else
-            Throw New ArgumentException("PSMoveServiceEx is not running!")
-        End If
-
+        Select Case (iServiceStatus)
+            Case ENUM_SERVICE_PROCESS_TYPE.NORMAL
+                For Each mProcess In Process.GetProcessesByName("PSMoveService")
+                    If mProcess.CloseMainWindow() Then
+                        mProcess.WaitForExit(10000)
+                    Else
+                        mProcess.Kill()
+                    End If
+                Next
+            Case ENUM_SERVICE_PROCESS_TYPE.ADMIN
+                MessageBox.Show("You have PSMoveServiceAdmin running, please stop the service manually.", "Unable to stop service", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Case Else
+                Throw New ArgumentException("PSMoveServiceEx is not running!")
+        End Select
     End Sub
 
     Public Sub LinkLabel_ConfigToolRun_Click()
@@ -696,15 +702,7 @@ Public Class UCStartPage
         Panel_PsmsxUpdate.Visible = False
     End Sub
 
-    Enum ENUM_SERVICE_PROCESS_TYPE
-        NONE
-        NORMAL
-        ADMIN
-    End Enum
-
-
     Public Function CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
-
         If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
             Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
         ElseIf (Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0) Then
@@ -712,16 +710,10 @@ Public Class UCStartPage
         Else
             Return ENUM_SERVICE_PROCESS_TYPE.NONE
         End If
-
     End Function
-
 
     Public Function CheckIfConfigToolRunning() As Boolean
         Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
     End Function
-
-
-
-
 End Class
 

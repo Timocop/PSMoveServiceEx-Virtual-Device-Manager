@@ -5,20 +5,131 @@ Imports System.Numerics
 Imports System.Text
 
 Public Class UCRemoteDevices
+    Public g_mUCVirtualControllers As UCVirtualControllers
+
     Const DEFAULT_SOCKET_PORT As Integer = 6969
 
     Shared _ThreadLock As New Object
 
     Public g_mClassStrackerSocket As ClassTrackerSocket
 
-    Private g_mRemoveDevices As New Dictionary(Of String, UCRemoteDeviceItem)
-
     Private g_iSocketPort As Integer = 0
     Private g_sLocalIP As String = ""
 
     Private g_mLocalAddressThread As Threading.Thread = Nothing
 
-    Public Sub New()
+    Class ClassRemoteDevicesListViewItem
+        Inherits ListViewItem
+        Implements IDisposable
+
+        Private g_UCRemoteDeviceItem As UCRemoteDeviceItem
+        Private g_UCRemoteDevices As UCRemoteDevices
+
+        Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
+            MyBase.New(New String() {""})
+
+            g_UCRemoteDevices = _UCRemoteDevices
+            g_UCRemoteDeviceItem = New UCRemoteDeviceItem(sTrackerName, _UCRemoteDevices)
+
+            UpdateItem()
+        End Sub
+
+        Public Sub UpdateItem()
+            If (g_UCRemoteDeviceItem Is Nothing OrElse g_UCRemoteDeviceItem.IsDisposed) Then
+                Return
+            End If
+
+            If (g_UCRemoteDeviceItem.g_mClassIO Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackerName As String = g_UCRemoteDeviceItem.m_TrackerName
+            If (Not String.IsNullOrEmpty(g_UCRemoteDeviceItem.m_Nickname)) Then
+                sTrackerName &= String.Format(" ({0})", g_UCRemoteDeviceItem.m_Nickname)
+            End If
+
+            Me.SubItems(0).Text = sTrackerName
+
+            'Is there any error?
+            If (g_UCRemoteDeviceItem.Panel_Status.Visible) Then
+                Me.BackColor = Color.FromArgb(255, 192, 192)
+            Else
+                Me.BackColor = Color.FromArgb(255, 255, 255)
+            End If
+        End Sub
+
+        ReadOnly Property m_TrackerName As String
+            Get
+                If (g_UCRemoteDeviceItem Is Nothing OrElse g_UCRemoteDeviceItem.IsDisposed) Then
+                    Return Nothing
+                End If
+
+                Return g_UCRemoteDeviceItem.m_TrackerName
+            End Get
+        End Property
+
+        Property m_Visible As Boolean
+            Get
+                If (g_UCRemoteDeviceItem Is Nothing OrElse g_UCRemoteDeviceItem.IsDisposed) Then
+                    Return False
+                End If
+
+                Return (g_UCRemoteDeviceItem.Parent Is g_UCRemoteDevices.Panel_RemoteDevices)
+            End Get
+            Set(value As Boolean)
+                If (value) Then
+                    If (g_UCRemoteDeviceItem Is Nothing OrElse g_UCRemoteDeviceItem.IsDisposed) Then
+                        Return
+                    End If
+
+                    g_UCRemoteDeviceItem.Parent = g_UCRemoteDevices.Panel_RemoteDevices
+                    g_UCRemoteDeviceItem.Dock = DockStyle.Top
+                Else
+                    g_UCRemoteDeviceItem.Parent = Nothing
+                End If
+            End Set
+        End Property
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_UCRemoteDeviceItem IsNot Nothing AndAlso Not g_UCRemoteDeviceItem.IsDisposed) Then
+                        g_UCRemoteDeviceItem.Dispose()
+                        g_UCRemoteDeviceItem = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
+
+    Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
+        g_mUCVirtualControllers = _mUCVirtualControllers
+
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -94,19 +205,17 @@ Public Class UCRemoteDevices
         SyncLock _ThreadLock
             Dim sTrackerName As String = mTracker.m_Name
 
-            If (g_mRemoveDevices.ContainsKey(sTrackerName)) Then
-                Return
-            End If
+            Me.BeginInvoke(Sub()
+                               For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+                                   Dim mRemoteDevicesItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+                                   If (mRemoteDevicesItem.m_TrackerName = sTrackerName) Then
+                                       Return
+                                   End If
+                               Next
 
-            Me.Invoke(Sub()
-                          Dim mNewDevice As New UCRemoteDeviceItem(sTrackerName, Me)
-                          g_mRemoveDevices(sTrackerName) = mNewDevice
-
-                          mNewDevice.Parent = Panel_RemoteDevices
-                          mNewDevice.Dock = DockStyle.Top
-
-                          Label_ConnectedDevices.Text = String.Format("Connected devices: {0}", g_mRemoveDevices.Keys.Count)
-                      End Sub)
+                               ListView_RemoteDevices.Items.Add(New ClassRemoteDevicesListViewItem(sTrackerName, Me))
+                               Label_ConnectedDevices.Text = String.Format("Connected devices: {0}", ListView_RemoteDevices.Items.Count)
+                           End Sub)
         End SyncLock
     End Sub
 
@@ -131,10 +240,12 @@ Public Class UCRemoteDevices
             g_mLocalAddressThread = Nothing
         End If
 
-        For Each mItem In g_mRemoveDevices
-            g_mRemoveDevices(mItem.Key).Dispose()
+        For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+            Dim mRemoteDevicesItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+
+            mRemoteDevicesItem.Dispose()
         Next
-        g_mRemoveDevices.Clear()
+        ListView_RemoteDevices.Items.Clear()
 
         If (g_mClassStrackerSocket IsNot Nothing) Then
             RemoveHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
@@ -149,9 +260,9 @@ Public Class UCRemoteDevices
             Timer_SocketCheck.Stop()
 
             Button_StartSocket.Enabled = (Not g_mClassStrackerSocket.IsListening)
-
-            Timer_SocketCheck.Start()
         Catch ex As Exception
+        Finally
+            Timer_SocketCheck.Start()
         End Try
     End Sub
 
@@ -751,5 +862,33 @@ Public Class UCRemoteDevices
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpRemoteDevices
         mMsg.ShowDialog(Me)
+    End Sub
+
+    Private Sub ListView_RemoteDevices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_RemoteDevices.SelectedIndexChanged
+        For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+            Dim mAttachmentItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+            If (mAttachmentItem.Selected) Then
+                If (Not mAttachmentItem.m_Visible) Then
+                    mAttachmentItem.m_Visible = True
+                End If
+            Else
+                If (mAttachmentItem.m_Visible) Then
+                    mAttachmentItem.m_Visible = False
+                End If
+            End If
+        Next
+    End Sub
+
+    Private Sub Timer_RemoteDevices_Tick(sender As Object, e As EventArgs) Handles Timer_RemoteDevices.Tick
+        Try
+            Timer_RemoteDevices.Stop()
+
+            For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+                Dim mAttachmentItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+                mAttachmentItem.UpdateItem()
+            Next
+        Finally
+            Timer_RemoteDevices.Start()
+        End Try
     End Sub
 End Class

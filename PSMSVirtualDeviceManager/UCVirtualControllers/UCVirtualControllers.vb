@@ -14,11 +14,11 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        g_mUCRemoteDevices = New UCRemoteDevices()
+        g_mUCRemoteDevices = New UCRemoteDevices(Me)
         g_mUCRemoteDevices.Parent = TabPage_RemoteSettings
         g_mUCRemoteDevices.Dock = DockStyle.Fill
 
-        g_mUCControllerAttachments = New UCControllerAttachments()
+        g_mUCControllerAttachments = New UCControllerAttachments(Me)
         g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
         g_mUCControllerAttachments.Dock = DockStyle.Fill
 

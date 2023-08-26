@@ -34,7 +34,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Button_SaveSettings = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ComboBox_VMTTrackerID = New System.Windows.Forms.ComboBox()
-        Me.Label_Close = New System.Windows.Forms.Label()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
@@ -117,21 +116,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_VMTTrackerID.TabIndex = 17
         Me.ToolTip1.SetToolTip(Me.ComboBox_VMTTrackerID, resources.GetString("ComboBox_VMTTrackerID.ToolTip"))
         '
-        'Label_Close
-        '
-        Me.Label_Close.AutoSize = True
-        Me.Label_Close.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Label_Close.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.Label_Close.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Label_Close.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_Close.ForeColor = System.Drawing.Color.White
-        Me.Label_Close.Location = New System.Drawing.Point(591, 0)
-        Me.Label_Close.Name = "Label_Close"
-        Me.Label_Close.Size = New System.Drawing.Size(26, 13)
-        Me.Label_Close.TabIndex = 31
-        Me.Label_Close.Text = "  X  "
-        Me.Label_Close.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'TextBox_Fps
         '
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
@@ -180,6 +164,7 @@ Partial Class UCVirtualMotionTrackerItem
         'TimerPose
         '
         Me.TimerPose.Enabled = True
+        Me.TimerPose.Interval = 500
         '
         'Panel_Status
         '
@@ -322,7 +307,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Controls.Add(Me.TextBox_Gyro)
         Me.Controls.Add(Me.TextBox_Pos)
         Me.Controls.Add(Me.TextBox_Fps)
-        Me.Controls.Add(Me.Label_Close)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.ComboBox_VMTTrackerID)
         Me.Controls.Add(Me.Button_SaveSettings)
@@ -344,7 +328,6 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents Button_SaveSettings As Button
     Friend WithEvents Label3 As Label
     Friend WithEvents ComboBox_VMTTrackerID As ComboBox
-    Friend WithEvents Label_Close As Label
     Friend WithEvents TextBox_Fps As TextBox
     Friend WithEvents TextBox_Gyro As TextBox
     Friend WithEvents TextBox_Pos As TextBox

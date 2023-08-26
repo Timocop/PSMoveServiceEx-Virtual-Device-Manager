@@ -32,6 +32,9 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
+        Me.ListView_RemoteDevices = New ClassListViewEx()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.Timer_RemoteDevices = New System.Windows.Forms.Timer(Me.components)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -53,10 +56,10 @@ Partial Class UCRemoteDevices
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_RemoteDevices.AutoScroll = True
-        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(16, 115)
+        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(16, 305)
         Me.Panel_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_RemoteDevices.Name = "Panel_RemoteDevices"
-        Me.Panel_RemoteDevices.Size = New System.Drawing.Size(768, 469)
+        Me.Panel_RemoteDevices.Size = New System.Drawing.Size(768, 279)
         Me.Panel_RemoteDevices.TabIndex = 1
         '
         'Button_StartSocket
@@ -144,6 +147,32 @@ Partial Class UCRemoteDevices
         Me.Label_ConnectedDevices.TabIndex = 19
         Me.Label_ConnectedDevices.Text = "Connected devices: 0"
         '
+        'ListView_RemoteDevices
+        '
+        Me.ListView_RemoteDevices.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView_RemoteDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
+        Me.ListView_RemoteDevices.FullRowSelect = True
+        Me.ListView_RemoteDevices.HideSelection = False
+        Me.ListView_RemoteDevices.Location = New System.Drawing.Point(16, 123)
+        Me.ListView_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
+        Me.ListView_RemoteDevices.MultiSelect = False
+        Me.ListView_RemoteDevices.Name = "ListView_RemoteDevices"
+        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(768, 150)
+        Me.ListView_RemoteDevices.TabIndex = 20
+        Me.ListView_RemoteDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_RemoteDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Tracker Name"
+        Me.ColumnHeader1.Width = 400
+        '
+        'Timer_RemoteDevices
+        '
+        Me.Timer_RemoteDevices.Enabled = True
+        Me.Timer_RemoteDevices.Interval = 500
+        '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -161,6 +190,7 @@ Partial Class UCRemoteDevices
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.ListView_RemoteDevices)
         Me.Controls.Add(Me.Label_ConnectedDevices)
         Me.Controls.Add(Me.LinkLabel_ReadMore)
         Me.Controls.Add(Me.Label1)
@@ -189,4 +219,7 @@ Partial Class UCRemoteDevices
     Friend WithEvents Label1 As Label
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label_ConnectedDevices As Label
+    Friend WithEvents ListView_RemoteDevices As ClassListViewEx
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents Timer_RemoteDevices As Timer
 End Class

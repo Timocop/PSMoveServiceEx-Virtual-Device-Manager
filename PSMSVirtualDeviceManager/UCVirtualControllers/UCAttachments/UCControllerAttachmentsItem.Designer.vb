@@ -67,7 +67,6 @@ Partial Class UCControllerAttachmentsItem
         Me.Button_ControllerPosX = New System.Windows.Forms.Button()
         Me.NumericUpDown_ControllerOffsetX = New System.Windows.Forms.NumericUpDown()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label_Close = New System.Windows.Forms.Label()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.CheckBox_JointOnly = New System.Windows.Forms.CheckBox()
         Me.GroupBox1.SuspendLayout()
@@ -524,21 +523,6 @@ Partial Class UCControllerAttachmentsItem
         Me.Label8.TabIndex = 20
         Me.Label8.Text = "X"
         '
-        'Label_Close
-        '
-        Me.Label_Close.AutoSize = True
-        Me.Label_Close.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Label_Close.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.Label_Close.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Label_Close.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_Close.ForeColor = System.Drawing.Color.White
-        Me.Label_Close.Location = New System.Drawing.Point(591, 0)
-        Me.Label_Close.Name = "Label_Close"
-        Me.Label_Close.Size = New System.Drawing.Size(26, 13)
-        Me.Label_Close.TabIndex = 31
-        Me.Label_Close.Text = "  X  "
-        Me.Label_Close.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'TextBox_Fps
         '
         Me.TextBox_Fps.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -573,7 +557,6 @@ Partial Class UCControllerAttachmentsItem
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Controls.Add(Me.CheckBox_JointOnly)
         Me.Controls.Add(Me.TextBox_Fps)
-        Me.Controls.Add(Me.Label_Close)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.Label3)
@@ -632,7 +615,6 @@ Partial Class UCControllerAttachmentsItem
     Friend WithEvents Button_ControllerPosX As Button
     Friend WithEvents NumericUpDown_ControllerOffsetX As NumericUpDown
     Friend WithEvents Label8 As Label
-    Friend WithEvents Label_Close As Label
     Friend WithEvents TextBox_Fps As TextBox
     Friend WithEvents Button_JointNegYaw As Button
     Friend WithEvents Button_JointPosYaw As Button

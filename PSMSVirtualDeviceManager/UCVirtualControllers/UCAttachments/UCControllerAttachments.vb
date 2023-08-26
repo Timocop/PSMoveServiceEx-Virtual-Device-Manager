@@ -1,11 +1,102 @@
 ﻿Imports System.ComponentModel
 
 Public Class UCControllerAttachments
+    Public g_mUCVirtualControllers As UCVirtualControllers
+
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
-    Private g_mAttachments As New List(Of UCControllerAttachmentsItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "attach_devices.ini")
 
-    Public Sub New()
+    Class ClassAttachmentListViewItem
+        Inherits ListViewItem
+        Implements IDisposable
+
+        Private g_UCControllerAttachmentsItem As UCControllerAttachmentsItem
+        Private g_UCControllerAttachments As UCControllerAttachments
+
+        Public Sub New(_Id As Integer, _UCControllerAttachments As UCControllerAttachments)
+            MyBase.New(New String() {"", ""})
+
+            g_UCControllerAttachments = _UCControllerAttachments
+            g_UCControllerAttachmentsItem = New UCControllerAttachmentsItem(_Id, _UCControllerAttachments)
+
+            UpdateItem()
+        End Sub
+
+        Public Sub UpdateItem()
+            If (g_UCControllerAttachmentsItem Is Nothing OrElse g_UCControllerAttachmentsItem.IsDisposed) Then
+                Return
+            End If
+
+            If (g_UCControllerAttachmentsItem.g_mClassIO Is Nothing) Then
+                Return
+            End If
+
+            Me.SubItems(0).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_Index)
+            Me.SubItems(1).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_ParentController)
+        End Sub
+
+        Property m_Visible As Boolean
+            Get
+                If (g_UCControllerAttachmentsItem Is Nothing OrElse g_UCControllerAttachmentsItem.IsDisposed) Then
+                    Return False
+                End If
+
+                Return (g_UCControllerAttachmentsItem.Parent Is g_UCControllerAttachments.Panel_Attachments)
+            End Get
+            Set(value As Boolean)
+                If (g_UCControllerAttachmentsItem Is Nothing OrElse g_UCControllerAttachmentsItem.IsDisposed) Then
+                    Return
+                End If
+
+                If (value) Then
+                    g_UCControllerAttachmentsItem.Parent = g_UCControllerAttachments.Panel_Attachments
+                    g_UCControllerAttachmentsItem.Dock = DockStyle.Top
+                Else
+                    g_UCControllerAttachmentsItem.Parent = Nothing
+                End If
+            End Set
+        End Property
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_UCControllerAttachmentsItem IsNot Nothing AndAlso Not g_UCControllerAttachmentsItem.IsDisposed) Then
+                        g_UCControllerAttachmentsItem.Dispose()
+                        g_UCControllerAttachmentsItem = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
+
+    Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
+        g_mUCVirtualControllers = _mUCVirtualControllers
+
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -54,22 +145,13 @@ Public Class UCControllerAttachments
     End Sub
 
     Private Sub AddAttachment(id As Integer)
-        ' Remove disposed controls
-        For i = g_mAttachments.Count - 1 To 0 Step -1
-            If (g_mAttachments(i) Is Nothing OrElse g_mAttachments(i).IsDisposed) Then
-                g_mAttachments.RemoveAt(i)
-            End If
-        Next
-
-        If (g_mAttachments.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
+        If (ListView_Attachments.Items.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
             Throw New ArgumentException("Maximum of attachments reached")
         End If
 
-        Dim mItem As New UCControllerAttachmentsItem(id, Me)
-        g_mAttachments.Add(mItem)
-
-        mItem.Parent = Panel_Attachments
-        mItem.Dock = DockStyle.Top
+        Dim mItem = New ClassAttachmentListViewItem(id, Me)
+        ListView_Attachments.Items.Add(mItem)
+        mItem.Selected = True
     End Sub
 
     Private Sub Button_Autostart_Click(sender As Object, e As EventArgs) Handles Button_Autostart.Click
@@ -126,12 +208,12 @@ Public Class UCControllerAttachments
     End Sub
 
     Private Sub CleanUp()
-        For Each mItem In g_mAttachments
-            If (mItem IsNot Nothing AndAlso Not mItem.IsDisposed) Then
-                mItem.Dispose()
-            End If
+        For Each mItem As ListViewItem In ListView_Attachments.Items
+            Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
+
+            mAttachmentItem.Dispose()
         Next
-        g_mAttachments.Clear()
+        ListView_Attachments.Items.Clear()
 
         For Each mItem In g_mAutostartMenuStrips
             If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
@@ -139,5 +221,44 @@ Public Class UCControllerAttachments
             End If
         Next
         g_mAutostartMenuStrips.Clear()
+    End Sub
+
+    Private Sub ToolStripMenuItem_AttachmentRemove_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_AttachmentRemove.Click
+        If (ListView_Attachments.SelectedItems.Count < 1) Then
+            Return
+        End If
+
+        Dim mAttachmentItem = DirectCast(ListView_Attachments.SelectedItems(0), ClassAttachmentListViewItem)
+        ListView_Attachments.Items.Remove(mAttachmentItem)
+
+        mAttachmentItem.Dispose()
+    End Sub
+
+    Private Sub ListView_Attachments_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Attachments.SelectedIndexChanged
+        For Each mItem As ListViewItem In ListView_Attachments.Items
+            Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
+            If (mAttachmentItem.Selected) Then
+                If (Not mAttachmentItem.m_Visible) Then
+                    mAttachmentItem.m_Visible = True
+                End If
+            Else
+                If (mAttachmentItem.m_Visible) Then
+                    mAttachmentItem.m_Visible = False
+                End If
+            End If
+        Next
+    End Sub
+
+    Private Sub Timer_Attachment_Tick(sender As Object, e As EventArgs) Handles Timer_Attachment.Tick
+        Try
+            Timer_Attachment.Stop()
+
+            For Each mItem As ListViewItem In ListView_Attachments.Items
+                Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
+                mAttachmentItem.UpdateItem()
+            Next
+        Finally
+            Timer_Attachment.Start()
+        End Try
     End Sub
 End Class

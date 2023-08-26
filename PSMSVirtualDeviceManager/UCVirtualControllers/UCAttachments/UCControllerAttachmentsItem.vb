@@ -264,7 +264,6 @@ Public Class UCControllerAttachmentsItem
 
                 g_mClassIO.m_FpsPipeCounter = 0
             End SyncLock
-
         Finally
             TimerFPS.Start()
         End Try
@@ -650,8 +649,4 @@ Public Class UCControllerAttachmentsItem
             mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
         End Sub
     End Class
-
-    Private Sub Label_Close_Click(sender As Object, e As EventArgs) Handles Label_Close.Click
-        Me.Dispose()
-    End Sub
 End Class
