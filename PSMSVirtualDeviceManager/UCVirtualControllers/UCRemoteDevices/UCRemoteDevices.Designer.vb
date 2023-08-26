@@ -43,9 +43,9 @@ Partial Class UCRemoteDevices
         Me.Label_Port.Location = New System.Drawing.Point(16, 78)
         Me.Label_Port.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label_Port.Name = "Label_Port"
-        Me.Label_Port.Size = New System.Drawing.Size(129, 13)
+        Me.Label_Port.Size = New System.Drawing.Size(104, 13)
         Me.Label_Port.TabIndex = 0
-        Me.Label_Port.Text = "Listening Socket Port: 0"
+        Me.Label_Port.Text = "Listening Socket: 0"
         '
         'Panel_RemoteDevices
         '
@@ -97,7 +97,7 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_EditPort.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_EditPort.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_EditPort.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_EditPort.Location = New System.Drawing.Point(169, 78)
+        Me.LinkLabel_EditPort.Location = New System.Drawing.Point(224, 77)
         Me.LinkLabel_EditPort.Name = "LinkLabel_EditPort"
         Me.LinkLabel_EditPort.Size = New System.Drawing.Size(52, 13)
         Me.LinkLabel_EditPort.TabIndex = 4

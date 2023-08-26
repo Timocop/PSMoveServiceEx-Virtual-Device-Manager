@@ -1,4 +1,5 @@
 ﻿Imports System.Net
+Imports System.Net.NetworkInformation
 Imports System.Net.Sockets
 Imports System.Numerics
 Imports System.Text
@@ -13,6 +14,9 @@ Public Class UCRemoteDevices
     Private g_mRemoveDevices As New Dictionary(Of String, UCRemoteDeviceItem)
 
     Private g_iSocketPort As Integer = 0
+    Private g_sLocalIP As String = ""
+
+    Private g_mLocalAddressThread As Threading.Thread = Nothing
 
     Public Sub New()
         ' This call is required by the designer.
@@ -24,8 +28,44 @@ Public Class UCRemoteDevices
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
 
         m_SocketPort = DEFAULT_SOCKET_PORT
+        m_SocketAddress = "127.0.0.1"
 
         CreateControl()
+
+        g_mLocalAddressThread = New Threading.Thread(AddressOf LocalAddressThread)
+        g_mLocalAddressThread.IsBackground = True
+        g_mLocalAddressThread.Start()
+    End Sub
+
+    Private Sub LocalAddressThread()
+        Try
+            Dim sAddress As String = "127.0.0.1"
+
+            For Each mAdapter As NetworkInterface In NetworkInterface.GetAllNetworkInterfaces()
+                If (mAdapter.OperationalStatus <> OperationalStatus.Up) Then
+                    Continue For
+                End If
+
+                Dim bSuccess As Boolean = False
+
+                For Each mAddress In mAdapter.GetIPProperties().UnicastAddresses
+                    If (mAddress.Address.AddressFamily = AddressFamily.InterNetwork AndAlso mAddress.IsDnsEligible) Then
+                        sAddress = mAddress.Address.ToString()
+                        bSuccess = True
+                        Exit For
+                    End If
+                Next
+
+                If (bSuccess) Then
+                    Exit For
+                End If
+            Next
+
+            Me.BeginInvoke(Sub() m_SocketAddress = sAddress)
+        Catch ex As Threading.ThreadAbortException
+            Throw
+        Catch ex As Exception
+        End Try
     End Sub
 
     Property m_SocketPort As Integer
@@ -35,7 +75,18 @@ Public Class UCRemoteDevices
         Set(value As Integer)
             g_iSocketPort = value
 
-            Label_Port.Text = String.Format("Listening Socket Port: {0}", g_iSocketPort)
+            Label_Port.Text = String.Format("Listening Socket: {0}:{1}", g_sLocalIP, g_iSocketPort)
+        End Set
+    End Property
+
+    Private Property m_SocketAddress As String
+        Get
+            Return g_sLocalIP
+        End Get
+        Set(value As String)
+            g_sLocalIP = value
+
+            Label_Port.Text = String.Format("Listening Socket: {0}:{1}", g_sLocalIP, g_iSocketPort)
         End Set
     End Property
 
@@ -74,6 +125,12 @@ Public Class UCRemoteDevices
     End Sub
 
     Private Sub CleanUp()
+        If (g_mLocalAddressThread IsNot Nothing AndAlso g_mLocalAddressThread.IsAlive) Then
+            g_mLocalAddressThread.Abort()
+            g_mLocalAddressThread.Join()
+            g_mLocalAddressThread = Nothing
+        End If
+
         For Each mItem In g_mRemoveDevices
             g_mRemoveDevices(mItem.Key).Dispose()
         Next
