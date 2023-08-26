@@ -33,6 +33,11 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl_Vmt = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
@@ -40,12 +45,14 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_OscRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_OscPause = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamSettings = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_SteamRun = New System.Windows.Forms.LinkLabel()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_DriverInstall = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_DriverUninstall = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
@@ -96,6 +103,15 @@ Partial Class UCVirtualMotionTracker
         Me.Label5 = New System.Windows.Forms.Label()
         Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
+        Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
+        Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
         Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -112,25 +128,30 @@ Partial Class UCVirtualMotionTracker
         Me.Panel15 = New System.Windows.Forms.Panel()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality_CalibStep5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep5 = New System.Windows.Forms.ProgressBar()
         Me.Panel14 = New System.Windows.Forms.Panel()
         Me.Label36 = New System.Windows.Forms.Label()
         Me.Label37 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality_CalibStep4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep4 = New System.Windows.Forms.ProgressBar()
         Me.Panel17 = New System.Windows.Forms.Panel()
         Me.Panel13 = New System.Windows.Forms.Panel()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality_CalibStep3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep3 = New System.Windows.Forms.ProgressBar()
         Me.Panel18 = New System.Windows.Forms.Panel()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality_CalibStep2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep2 = New System.Windows.Forms.ProgressBar()
         Me.Panel9 = New System.Windows.Forms.Panel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality_CalibStep1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep1 = New System.Windows.Forms.ProgressBar()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label_PlayCalibTitle = New System.Windows.Forms.Label()
@@ -142,43 +163,22 @@ Partial Class UCVirtualMotionTracker
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Button_PlaySpaceManualCalib = New System.Windows.Forms.Button()
         Me.Label24 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabPage_Overrides = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
-        Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
-        Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
-        Me.Label40 = New System.Windows.Forms.Label()
-        Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
-        Me.Label29 = New System.Windows.Forms.Label()
-        Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality_CalibStep5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality_CalibStep4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality_CalibStep3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality_CalibStep2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality_CalibStep1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
@@ -187,7 +187,9 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_Status.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.TabPage_Trackers.SuspendLayout()
         Me.TabPage_Settings.SuspendLayout()
@@ -198,31 +200,29 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2.SuspendLayout()
         CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage_SettingsPlayspace.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_SettingsOther.SuspendLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_PlayspaceCalib.SuspendLayout()
         CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_PlayCalibSteps.SuspendLayout()
         Me.Panel15.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel14.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel13.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel11.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel7.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
-        Me.TabPage_SettingsPlayspace.SuspendLayout()
-        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox3.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -296,6 +296,41 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
         Me.Panel_AvailableDevices.Size = New System.Drawing.Size(728, 250)
         Me.Panel_AvailableDevices.TabIndex = 2
+        '
+        'ListView_OscDevices
+        '
+        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
+        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_OscDevices.FullRowSelect = True
+        Me.ListView_OscDevices.HideSelection = False
+        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_OscDevices.Name = "ListView_OscDevices"
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
+        Me.ListView_OscDevices.TabIndex = 1
+        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 100
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Position
+        '
+        Me.ColumnHeader_Position.Text = "Position"
+        Me.ColumnHeader_Position.Width = 150
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 150
         '
         'Panel8
         '
@@ -382,6 +417,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label8.Size = New System.Drawing.Size(111, 21)
         Me.Label8.TabIndex = 18
         Me.Label8.Text = "Server Control"
+        '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 10
+        Me.ClassPictureBoxQuality1.TabStop = False
         '
         'LinkLabel_OscRun
         '
@@ -472,6 +519,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label9.Size = New System.Drawing.Size(133, 21)
         Me.Label9.TabIndex = 18
         Me.Label9.Text = "SteamVR Support"
+        '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 10
+        Me.ClassPictureBoxQuality2.TabStop = False
         '
         'LinkLabel_DriverInstall
         '
@@ -1111,6 +1170,112 @@ Partial Class UCVirtualMotionTracker
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "Touchpad click method:"
         '
+        'TabPage_SettingsPlayspace
+        '
+        Me.TabPage_SettingsPlayspace.Controls.Add(Me.GroupBox3)
+        Me.TabPage_SettingsPlayspace.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_SettingsPlayspace.Name = "TabPage_SettingsPlayspace"
+        Me.TabPage_SettingsPlayspace.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_SettingsPlayspace.Size = New System.Drawing.Size(740, 1158)
+        Me.TabPage_SettingsPlayspace.TabIndex = 2
+        Me.TabPage_SettingsPlayspace.Text = "Playspace"
+        Me.TabPage_SettingsPlayspace.UseVisualStyleBackColor = True
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.Label26)
+        Me.GroupBox3.Controls.Add(Me.ComboBox_PlayCalibForwardMethod)
+        Me.GroupBox3.Controls.Add(Me.Button_PlayCalibReset)
+        Me.GroupBox3.Controls.Add(Me.Label40)
+        Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibForwardOffset)
+        Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibHeightOffset)
+        Me.GroupBox3.Controls.Add(Me.Label29)
+        Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox3.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(734, 166)
+        Me.GroupBox3.TabIndex = 82
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Playspace Calibration Settings"
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(19, 34)
+        Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(109, 13)
+        Me.Label26.TabIndex = 76
+        Me.Label26.Text = "Forward offset (cm):"
+        '
+        'ComboBox_PlayCalibForwardMethod
+        '
+        Me.ComboBox_PlayCalibForwardMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_PlayCalibForwardMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_PlayCalibForwardMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_PlayCalibForwardMethod.FormattingEnabled = True
+        Me.ComboBox_PlayCalibForwardMethod.Location = New System.Drawing.Point(134, 88)
+        Me.ComboBox_PlayCalibForwardMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_PlayCalibForwardMethod.Name = "ComboBox_PlayCalibForwardMethod"
+        Me.ComboBox_PlayCalibForwardMethod.Size = New System.Drawing.Size(549, 21)
+        Me.ComboBox_PlayCalibForwardMethod.TabIndex = 81
+        '
+        'Button_PlayCalibReset
+        '
+        Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 128)
+        Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
+        Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
+        Me.Button_PlayCalibReset.TabIndex = 75
+        Me.Button_PlayCalibReset.Text = "Reset playspace calibration"
+        Me.Button_PlayCalibReset.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_PlayCalibReset.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_PlayCalibReset.UseVisualStyleBackColor = True
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Location = New System.Drawing.Point(19, 91)
+        Me.Label40.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(96, 13)
+        Me.Label40.TabIndex = 80
+        Me.Label40.Text = "Forward method:"
+        '
+        'NumericUpDown_PlayCalibForwardOffset
+        '
+        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(134, 32)
+        Me.NumericUpDown_PlayCalibForwardOffset.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
+        Me.NumericUpDown_PlayCalibForwardOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibForwardOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
+        Me.NumericUpDown_PlayCalibForwardOffset.Name = "NumericUpDown_PlayCalibForwardOffset"
+        Me.NumericUpDown_PlayCalibForwardOffset.Size = New System.Drawing.Size(95, 22)
+        Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
+        Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'NumericUpDown_PlayCalibHeightOffset
+        '
+        Me.NumericUpDown_PlayCalibHeightOffset.Location = New System.Drawing.Point(134, 60)
+        Me.NumericUpDown_PlayCalibHeightOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibHeightOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
+        Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
+        Me.NumericUpDown_PlayCalibHeightOffset.Size = New System.Drawing.Size(95, 22)
+        Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
+        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(19, 62)
+        Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(101, 13)
+        Me.Label29.TabIndex = 78
+        Me.Label29.Text = "Height offset (cm):"
+        '
         'TabPage_SettingsOther
         '
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscThreadSleep)
@@ -1313,6 +1478,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label39.TabIndex = 1
         Me.Label39.Text = "Step 5: Calibration Completed"
         '
+        'ClassPictureBoxQuality_CalibStep5
+        '
+        Me.ClassPictureBoxQuality_CalibStep5.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep5.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep5.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep5.Name = "ClassPictureBoxQuality_CalibStep5"
+        Me.ClassPictureBoxQuality_CalibStep5.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep5.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep5.TabStop = False
+        '
         'ProgressBar_PlayCalibStep5
         '
         Me.ProgressBar_PlayCalibStep5.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -1352,6 +1529,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label37.Size = New System.Drawing.Size(148, 13)
         Me.Label37.TabIndex = 1
         Me.Label37.Text = "Step 4: Sampling End Point"
+        '
+        'ClassPictureBoxQuality_CalibStep4
+        '
+        Me.ClassPictureBoxQuality_CalibStep4.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep4.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep4.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep4.Name = "ClassPictureBoxQuality_CalibStep4"
+        Me.ClassPictureBoxQuality_CalibStep4.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep4.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep4.TabStop = False
         '
         'ProgressBar_PlayCalibStep4
         '
@@ -1402,6 +1591,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label32.TabIndex = 1
         Me.Label32.Text = "Step 3: Move Forward"
         '
+        'ClassPictureBoxQuality_CalibStep3
+        '
+        Me.ClassPictureBoxQuality_CalibStep3.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep3.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep3.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep3.Name = "ClassPictureBoxQuality_CalibStep3"
+        Me.ClassPictureBoxQuality_CalibStep3.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep3.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep3.TabStop = False
+        '
         'ProgressBar_PlayCalibStep3
         '
         Me.ProgressBar_PlayCalibStep3.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -1450,6 +1651,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label33.Size = New System.Drawing.Size(152, 13)
         Me.Label33.TabIndex = 1
         Me.Label33.Text = "Step 2: Sampling Start Point"
+        '
+        'ClassPictureBoxQuality_CalibStep2
+        '
+        Me.ClassPictureBoxQuality_CalibStep2.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep2.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep2.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep2.Name = "ClassPictureBoxQuality_CalibStep2"
+        Me.ClassPictureBoxQuality_CalibStep2.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep2.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep2.TabStop = False
         '
         'ProgressBar_PlayCalibStep2
         '
@@ -1501,6 +1714,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label30.Size = New System.Drawing.Size(106, 13)
         Me.Label30.TabIndex = 1
         Me.Label30.Text = "Step 1: Preparation"
+        '
+        'ClassPictureBoxQuality_CalibStep1
+        '
+        Me.ClassPictureBoxQuality_CalibStep1.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep1.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep1.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep1.Name = "ClassPictureBoxQuality_CalibStep1"
+        Me.ClassPictureBoxQuality_CalibStep1.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep1.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep1.TabStop = False
         '
         'ProgressBar_PlayCalibStep1
         '
@@ -1630,6 +1855,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label24.TabIndex = 27
         Me.Label24.Text = resources.GetString("Label24.Text")
         '
+        'ClassPictureBoxQuality3
+        '
+        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(16, 16)
+        Me.ClassPictureBoxQuality3.m_HighQuality = False
+        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
+        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(16, 16)
+        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality3.TabIndex = 26
+        Me.ClassPictureBoxQuality3.TabStop = False
+        '
         'TabPage_Overrides
         '
         Me.TabPage_Overrides.Controls.Add(Me.Panel_SteamVRRestart)
@@ -1684,6 +1921,19 @@ Partial Class UCVirtualMotionTracker
         Me.Label3.Text = "SteamVR needs to be restarted for changes to take effect."
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
+        'PictureBox3
+        '
+        Me.PictureBox3.Dock = System.Windows.Forms.DockStyle.Left
+        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
+        Me.PictureBox3.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox3.m_HighQuality = False
+        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(42, 40)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.PictureBox3.TabIndex = 26
+        Me.PictureBox3.TabStop = False
+        '
         'Label2
         '
         Me.Label2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -1733,270 +1983,6 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Add.UseVisualStyleBackColor = True
         '
-        'ContextMenuStrip_Autostart
-        '
-        Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
-        '
-        'ToolTip1
-        '
-        Me.ToolTip1.AutomaticDelay = 100
-        Me.ToolTip1.AutoPopDelay = 30000
-        Me.ToolTip1.InitialDelay = 100
-        Me.ToolTip1.ReshowDelay = 20
-        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
-        Me.ToolTip1.ToolTipTitle = "Information"
-        '
-        'TabPage_SettingsPlayspace
-        '
-        Me.TabPage_SettingsPlayspace.Controls.Add(Me.GroupBox3)
-        Me.TabPage_SettingsPlayspace.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage_SettingsPlayspace.Name = "TabPage_SettingsPlayspace"
-        Me.TabPage_SettingsPlayspace.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_SettingsPlayspace.Size = New System.Drawing.Size(740, 1158)
-        Me.TabPage_SettingsPlayspace.TabIndex = 2
-        Me.TabPage_SettingsPlayspace.Text = "Playspace"
-        Me.TabPage_SettingsPlayspace.UseVisualStyleBackColor = True
-        '
-        'ComboBox_PlayCalibForwardMethod
-        '
-        Me.ComboBox_PlayCalibForwardMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_PlayCalibForwardMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_PlayCalibForwardMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_PlayCalibForwardMethod.FormattingEnabled = True
-        Me.ComboBox_PlayCalibForwardMethod.Location = New System.Drawing.Point(134, 88)
-        Me.ComboBox_PlayCalibForwardMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
-        Me.ComboBox_PlayCalibForwardMethod.Name = "ComboBox_PlayCalibForwardMethod"
-        Me.ComboBox_PlayCalibForwardMethod.Size = New System.Drawing.Size(549, 21)
-        Me.ComboBox_PlayCalibForwardMethod.TabIndex = 81
-        '
-        'Label40
-        '
-        Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(19, 91)
-        Me.Label40.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(96, 13)
-        Me.Label40.TabIndex = 80
-        Me.Label40.Text = "Forward method:"
-        '
-        'NumericUpDown_PlayCalibHeightOffset
-        '
-        Me.NumericUpDown_PlayCalibHeightOffset.Location = New System.Drawing.Point(134, 60)
-        Me.NumericUpDown_PlayCalibHeightOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibHeightOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
-        Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
-        Me.NumericUpDown_PlayCalibHeightOffset.Size = New System.Drawing.Size(95, 22)
-        Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(19, 62)
-        Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(101, 13)
-        Me.Label29.TabIndex = 78
-        Me.Label29.Text = "Height offset (cm):"
-        '
-        'NumericUpDown_PlayCalibForwardOffset
-        '
-        Me.NumericUpDown_PlayCalibForwardOffset.Location = New System.Drawing.Point(134, 32)
-        Me.NumericUpDown_PlayCalibForwardOffset.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
-        Me.NumericUpDown_PlayCalibForwardOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibForwardOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
-        Me.NumericUpDown_PlayCalibForwardOffset.Name = "NumericUpDown_PlayCalibForwardOffset"
-        Me.NumericUpDown_PlayCalibForwardOffset.Size = New System.Drawing.Size(95, 22)
-        Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
-        Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(19, 34)
-        Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(109, 13)
-        Me.Label26.TabIndex = 76
-        Me.Label26.Text = "Forward offset (cm):"
-        '
-        'Button_PlayCalibReset
-        '
-        Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 128)
-        Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
-        Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
-        Me.Button_PlayCalibReset.TabIndex = 75
-        Me.Button_PlayCalibReset.Text = "Reset playspace calibration"
-        Me.Button_PlayCalibReset.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.Button_PlayCalibReset.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.Button_PlayCalibReset.UseVisualStyleBackColor = True
-        '
-        'GroupBox3
-        '
-        Me.GroupBox3.Controls.Add(Me.Label26)
-        Me.GroupBox3.Controls.Add(Me.ComboBox_PlayCalibForwardMethod)
-        Me.GroupBox3.Controls.Add(Me.Button_PlayCalibReset)
-        Me.GroupBox3.Controls.Add(Me.Label40)
-        Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibForwardOffset)
-        Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibHeightOffset)
-        Me.GroupBox3.Controls.Add(Me.Label29)
-        Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox3.Location = New System.Drawing.Point(3, 3)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(734, 166)
-        Me.GroupBox3.TabIndex = 82
-        Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Playspace Calibration"
-        '
-        'ListView_OscDevices
-        '
-        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
-        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_OscDevices.FullRowSelect = True
-        Me.ListView_OscDevices.HideSelection = False
-        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
-        Me.ListView_OscDevices.TabIndex = 1
-        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Type
-        '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 100
-        '
-        'ColumnHeader_Serial
-        '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
-        '
-        'ColumnHeader_Position
-        '
-        Me.ColumnHeader_Position.Text = "Position"
-        Me.ColumnHeader_Position.Width = 150
-        '
-        'ColumnHeader_Orientation
-        '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 150
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 10
-        Me.ClassPictureBoxQuality1.TabStop = False
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 10
-        Me.ClassPictureBoxQuality2.TabStop = False
-        '
-        'ClassPictureBoxQuality_CalibStep5
-        '
-        Me.ClassPictureBoxQuality_CalibStep5.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep5.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep5.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep5.Name = "ClassPictureBoxQuality_CalibStep5"
-        Me.ClassPictureBoxQuality_CalibStep5.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep5.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep5.TabStop = False
-        '
-        'ClassPictureBoxQuality_CalibStep4
-        '
-        Me.ClassPictureBoxQuality_CalibStep4.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep4.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep4.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep4.Name = "ClassPictureBoxQuality_CalibStep4"
-        Me.ClassPictureBoxQuality_CalibStep4.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep4.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep4.TabStop = False
-        '
-        'ClassPictureBoxQuality_CalibStep3
-        '
-        Me.ClassPictureBoxQuality_CalibStep3.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep3.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep3.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep3.Name = "ClassPictureBoxQuality_CalibStep3"
-        Me.ClassPictureBoxQuality_CalibStep3.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep3.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep3.TabStop = False
-        '
-        'ClassPictureBoxQuality_CalibStep2
-        '
-        Me.ClassPictureBoxQuality_CalibStep2.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep2.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep2.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep2.Name = "ClassPictureBoxQuality_CalibStep2"
-        Me.ClassPictureBoxQuality_CalibStep2.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep2.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep2.TabStop = False
-        '
-        'ClassPictureBoxQuality_CalibStep1
-        '
-        Me.ClassPictureBoxQuality_CalibStep1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep1.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep1.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep1.Name = "ClassPictureBoxQuality_CalibStep1"
-        Me.ClassPictureBoxQuality_CalibStep1.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep1.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep1.TabStop = False
-        '
-        'ClassPictureBoxQuality3
-        '
-        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(16, 16)
-        Me.ClassPictureBoxQuality3.m_HighQuality = False
-        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
-        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(16, 16)
-        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality3.TabIndex = 26
-        Me.ClassPictureBoxQuality3.TabStop = False
-        '
-        'PictureBox3
-        '
-        Me.PictureBox3.Dock = System.Windows.Forms.DockStyle.Left
-        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
-        Me.PictureBox3.Location = New System.Drawing.Point(0, 0)
-        Me.PictureBox3.m_HighQuality = False
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(42, 40)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.PictureBox3.TabIndex = 26
-        Me.PictureBox3.TabStop = False
-        '
         'PictureBox2
         '
         Me.PictureBox2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -2034,6 +2020,20 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader2.Text = "Override"
         Me.ColumnHeader2.Width = 300
         '
+        'ContextMenuStrip_Autostart
+        '
+        Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
+        '
+        'ToolTip1
+        '
+        Me.ToolTip1.AutomaticDelay = 100
+        Me.ToolTip1.AutoPopDelay = 30000
+        Me.ToolTip1.InitialDelay = 100
+        Me.ToolTip1.ReshowDelay = 20
+        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip1.ToolTipTitle = "Information"
+        '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
@@ -2066,8 +2066,10 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.TabPage_Trackers.ResumeLayout(False)
         Me.TabPage_Settings.ResumeLayout(False)
@@ -2080,6 +2082,11 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2.PerformLayout()
         CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage_SettingsPlayspace.ResumeLayout(False)
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
+        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_SettingsOther.ResumeLayout(False)
         Me.TabPage_SettingsOther.PerformLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2089,31 +2096,24 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_PlayCalibSteps.ResumeLayout(False)
         Me.Panel15.ResumeLayout(False)
         Me.Panel15.PerformLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel14.ResumeLayout(False)
         Me.Panel14.PerformLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel13.ResumeLayout(False)
         Me.Panel13.PerformLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel11.ResumeLayout(False)
         Me.Panel11.PerformLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel7.ResumeLayout(False)
         Me.Panel7.PerformLayout()
+        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel5.ResumeLayout(False)
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
-        Me.TabPage_SettingsPlayspace.ResumeLayout(False)
-        CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox3.ResumeLayout(False)
-        Me.GroupBox3.PerformLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
