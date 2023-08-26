@@ -887,6 +887,7 @@ Public Class UCRemoteDevices
                 Dim mAttachmentItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
                 mAttachmentItem.UpdateItem()
             Next
+        Catch ex As Exception
         Finally
             Timer_RemoteDevices.Start()
         End Try

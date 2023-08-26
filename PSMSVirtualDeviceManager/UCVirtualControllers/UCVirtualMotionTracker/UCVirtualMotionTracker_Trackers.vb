@@ -134,6 +134,7 @@ Partial Public Class UCVirtualMotionTracker
                 Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
                 mTrackerItem.UpdateItem()
             Next
+        Catch ex As Exception
         Finally
             Timer_VMTTrackers.Start()
         End Try

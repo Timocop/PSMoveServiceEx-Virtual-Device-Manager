@@ -257,6 +257,7 @@ Public Class UCControllerAttachments
                 Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
                 mAttachmentItem.UpdateItem()
             Next
+        Catch ex As Exception
         Finally
             Timer_Attachment.Start()
         End Try
