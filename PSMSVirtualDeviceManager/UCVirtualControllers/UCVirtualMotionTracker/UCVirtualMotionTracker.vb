@@ -204,7 +204,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_RecenterMethod.Items.Clear()
-            ComboBox_RecenterMethod.Items.Add("Use Selected Tracker")
+            ComboBox_RecenterMethod.Items.Add("Use Current Controller")
             ComboBox_RecenterMethod.Items.Add("Use PSMoveServiceEx Playspace Orientation")
 
             ComboBox_RecenterMethod.SelectedIndex = 0
