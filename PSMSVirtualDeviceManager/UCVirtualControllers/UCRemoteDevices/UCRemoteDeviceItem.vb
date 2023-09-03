@@ -269,7 +269,7 @@ Public Class UCRemoteDeviceItem
     Private Sub LinkLabel_EditName_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EditName.LinkClicked
         Dim sName As String = InputBox("Enter a new device name:", "New device name", m_Nickname)
 
-        If (String.IsNullOrEmpty(sName)) Then
+        If (sName Is Nothing) Then
             Return
         End If
 
