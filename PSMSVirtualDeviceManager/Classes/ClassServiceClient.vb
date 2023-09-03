@@ -395,16 +395,16 @@ Public Class ClassServiceClient
                                                 End If
 
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
-                                                If (Double.IsNaN(mData.m_Position.X) OrElse
-                                                        Double.IsNaN(mData.m_Position.Y) OrElse
-                                                        Double.IsNaN(mData.m_Position.Z)) Then
+                                                If (Single.IsNaN(mData.m_Position.X) OrElse
+                                                        Single.IsNaN(mData.m_Position.Y) OrElse
+                                                        Single.IsNaN(mData.m_Position.Z)) Then
                                                     mData.m_Position = New Vector3(0, 0, 0)
                                                 End If
 
-                                                If (Double.IsNaN(mData.m_Orientation.X) OrElse
-                                                        Double.IsNaN(mData.m_Orientation.Y) OrElse
-                                                        Double.IsNaN(mData.m_Orientation.Z) OrElse
-                                                        Double.IsNaN(mData.m_Orientation.W)) Then
+                                                If (Single.IsNaN(mData.m_Orientation.X) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.Y) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.Z) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.W)) Then
                                                     mData.m_Orientation = Quaternion.Identity
                                                 End If
 
