@@ -193,9 +193,9 @@ Public Class UCRemoteDeviceItem
 
             mAngle = ClassQuaternionTools.NormalizeAngles(New Vector3(mAngle.X - mResetAngle.X, mAngle.Y - mResetAngle.Y, mAngle.Z - mResetAngle.Z - iOffsetAngle))
 
-            Me.BeginInvoke(Sub()
-                               TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z))
-                           End Sub)
+            ClassUtils.AsyncInvoke(Me, Sub()
+                                           TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z))
+                                       End Sub)
         End If
 
 
@@ -211,9 +211,9 @@ Public Class UCRemoteDeviceItem
         If (g_mGyroWait.ElapsedMilliseconds > 100) Then
             g_mGyroWait.Restart()
 
-            Me.BeginInvoke(Sub()
-                               TextBox_Gyro.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, iX.ToString(Globalization.CultureInfo.InvariantCulture), iY.ToString(Globalization.CultureInfo.InvariantCulture), iZ.ToString(Globalization.CultureInfo.InvariantCulture))
-                           End Sub)
+            ClassUtils.AsyncInvoke(Me, Sub()
+                                           TextBox_Gyro.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, iX.ToString(Globalization.CultureInfo.InvariantCulture), iY.ToString(Globalization.CultureInfo.InvariantCulture), iZ.ToString(Globalization.CultureInfo.InvariantCulture))
+                                       End Sub)
         End If
 
 
@@ -236,9 +236,9 @@ Public Class UCRemoteDeviceItem
 
         If (g_mBatteryWait.ElapsedMilliseconds > 1000) Then
             g_mBatteryWait.Restart()
-            Me.BeginInvoke(Sub()
-                               TextBox_Battery.Text = String.Format("Battery: {0}%", iBatteryPercent)
-                           End Sub)
+            ClassUtils.AsyncInvoke(Me, Sub()
+                                           TextBox_Battery.Text = String.Format("Battery: {0}%", iBatteryPercent)
+                                       End Sub)
         End If
     End Sub
 

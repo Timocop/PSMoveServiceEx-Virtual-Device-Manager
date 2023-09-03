@@ -718,8 +718,8 @@ Public Class UCVirtualTrackerItem
 
         Private Sub InitThread()
             Try
-                g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Initializing device...")
-                g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = True)
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Initializing device...")
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = True)
 
                 SyncLock g_mThreadLock
                     'Remove old capture before we create a new one
@@ -745,7 +745,7 @@ Public Class UCVirtualTrackerItem
                         m_Capture.Read(mMat)
                     End Using
 
-                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Setting default device properties...")
+                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Setting default device properties...")
 
                     ' Disable any unneeded stuff. Tho, some things wont work still...
                     m_Capture.AutoExposure = -1
@@ -817,9 +817,9 @@ Public Class UCVirtualTrackerItem
                         sCurrentResolution &= " (not recommended resolution, will be scaled to 640x480)"
                     End If
 
-                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
-                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}", sCurrentResolution))
-                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
+                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
+                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}", sCurrentResolution))
+                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
 
                 ' $TODO: Minimize copy paste code. This looks like ass.
@@ -947,88 +947,88 @@ Public Class UCVirtualTrackerItem
                     m_Capture.Contrast = iContrastDefault
                 End If
 
-                g_mUCVirtualTrackerItem.Invoke(Sub()
-                                                   Try
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
-                                                       Dim bDisabled As Boolean = (iExposureMin = iExposureMax)
-                                                       If (bDisabled) Then
-                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Enabled = False
-                                                           Return
-                                                       End If
+                                                                       Dim bDisabled As Boolean = (iExposureMin = iExposureMax)
+                                                                       If (bDisabled) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Enabled = False
+                                                                           Return
+                                                                       End If
 
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Minimum = CInt(iExposureMin)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Maximum = CInt(iExposureMax)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Max(iExposureMin, Math.Min(iExposureMax, iExposureDefault)))
-                                                   Finally
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
-                                                   End Try
-                                               End Sub)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Minimum = CInt(iExposureMin)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Maximum = CInt(iExposureMax)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Max(iExposureMin, Math.Min(iExposureMax, iExposureDefault)))
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
+                                                               End Sub)
 
-                g_mUCVirtualTrackerItem.Invoke(Sub()
-                                                   Try
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
-                                                       Dim bDisabled As Boolean = (iGainMin = iGainMax)
-                                                       If (bDisabled) Then
-                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Enabled = False
-                                                           Return
-                                                       End If
+                                                                       Dim bDisabled As Boolean = (iGainMin = iGainMax)
+                                                                       If (bDisabled) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Enabled = False
+                                                                           Return
+                                                                       End If
 
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Minimum = CInt(iGainMin)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Maximum = CInt(iGainMax)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Max(iGainMin, Math.Min(iGainMax, iGainDefault)))
-                                                   Finally
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
-                                                   End Try
-                                               End Sub)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Minimum = CInt(iGainMin)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Maximum = CInt(iGainMax)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Max(iGainMin, Math.Min(iGainMax, iGainDefault)))
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
+                                                               End Sub)
 
-                g_mUCVirtualTrackerItem.Invoke(Sub()
-                                                   Try
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
-                                                       Dim bDisabled As Boolean = (iGammaMin = iGammaMax)
-                                                       If (bDisabled) Then
-                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Enabled = False
-                                                           Return
-                                                       End If
+                                                                       Dim bDisabled As Boolean = (iGammaMin = iGammaMax)
+                                                                       If (bDisabled) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Enabled = False
+                                                                           Return
+                                                                       End If
 
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Minimum = CInt(iGammaMin)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Maximum = CInt(iGammaMax)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value = CInt(Math.Max(iGammaMin, Math.Min(iGammaMax, iGammaDefault)))
-                                                   Finally
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
-                                                   End Try
-                                               End Sub)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Minimum = CInt(iGammaMin)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Maximum = CInt(iGammaMax)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value = CInt(Math.Max(iGammaMin, Math.Min(iGammaMax, iGammaDefault)))
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
+                                                               End Sub)
 
-                g_mUCVirtualTrackerItem.Invoke(Sub()
-                                                   Try
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
 
-                                                       Dim bDisabled As Boolean = (iContrastMin = iContrastMax)
-                                                       If (bDisabled) Then
-                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Enabled = False
-                                                           Return
-                                                       End If
+                                                                       Dim bDisabled As Boolean = (iContrastMin = iContrastMax)
+                                                                       If (bDisabled) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Enabled = False
+                                                                           Return
+                                                                       End If
 
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Minimum = CInt(iContrastMin)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Maximum = CInt(iContrastMax)
-                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value = CInt(Math.Max(iContrastMin, Math.Min(iContrastMax, iContrastDefault)))
-                                                   Finally
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
-                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
-                                                   End Try
-                                               End Sub)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Minimum = CInt(iContrastMin)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Maximum = CInt(iContrastMax)
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value = CInt(Math.Max(iContrastMin, Math.Min(iContrastMax, iContrastDefault)))
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
+                                                               End Sub)
 
-                g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
-                g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Enabled = True)
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Enabled = True)
 
                 g_bInitalized = True
 
@@ -1042,7 +1042,7 @@ Public Class UCVirtualTrackerItem
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Unable to initalize video device", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
-                g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.Dispose())
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Dispose())
             End Try
         End Sub
 
@@ -1083,7 +1083,7 @@ Public Class UCVirtualTrackerItem
 
                             If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
                                 Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-                                g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1))
+                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1))
 
                                 mFramePrint.Restart()
                                 iFPS = 0
@@ -1126,23 +1126,25 @@ Public Class UCVirtualTrackerItem
                                     mBitmap = New Bitmap(mStream)
                                 End Using
 
-                                g_mUCVirtualTrackerItem.BeginInvoke(Sub()
-                                                                        If (g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image IsNot Nothing) Then
-                                                                            g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image.Dispose()
-                                                                            g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
-                                                                        End If
+                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem,
+                                                        Sub()
+                                                            If (g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image IsNot Nothing) Then
+                                                                g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image.Dispose()
+                                                                g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
+                                                            End If
 
-                                                                        g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = mBitmap
-                                                                    End Sub)
+                                                            g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = mBitmap
+                                                        End Sub)
                             Else
-                                g_mUCVirtualTrackerItem.BeginInvoke(Sub()
-                                                                        If (g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image IsNot Nothing) Then
-                                                                            g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image.Dispose()
-                                                                            g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
-                                                                        End If
+                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem,
+                                                        Sub()
+                                                            If (g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image IsNot Nothing) Then
+                                                                g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image.Dispose()
+                                                                g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
+                                                            End If
 
-                                                                        g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
-                                                                    End Sub)
+                                                            g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
+                                                        End Sub)
                             End If
                         End If
                     End Using
@@ -1152,7 +1154,7 @@ Public Class UCVirtualTrackerItem
                     bExceptionSleep = True
 
                     If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                        g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
+                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
 
                         mFramePrint.Restart()
                         iFPS = 0
@@ -1205,7 +1207,7 @@ Public Class UCVirtualTrackerItem
 
                                 If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
                                     Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-                                    g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iPrintFPS))
+                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iPrintFPS))
 
                                     mFramePrint.Restart()
                                     iFPS = 0
@@ -1230,7 +1232,7 @@ Public Class UCVirtualTrackerItem
                     bExceptionSleep = True
 
                     If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                        g_mUCVirtualTrackerItem.BeginInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
+                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
 
                         mFramePrint.Restart()
                         iFPS = 0
@@ -1255,9 +1257,7 @@ Public Class UCVirtualTrackerItem
 
                     If (Not IsDeviceValid()) Then
                         ' The device has changed somehow! Re-initiate!
-                        g_mUCVirtualTrackerItem.BeginInvoke(Sub()
-                                                                StartInitThread(True)
-                                                            End Sub)
+                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() StartInitThread(True))
 
                         Return
                     End If

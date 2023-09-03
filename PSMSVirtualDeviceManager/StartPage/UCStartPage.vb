@@ -98,7 +98,7 @@ Public Class UCStartPage
                     If (g_bIsServiceRunning <> bServiceRunning) Then
                         g_bIsServiceRunning = bServiceRunning
 
-                        Me.BeginInvoke(Sub() SetStatusServiceConnected())
+                        ClassUtils.AsyncInvoke(Me, Sub() SetStatusServiceConnected())
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -114,7 +114,7 @@ Public Class UCStartPage
                     If (g_bIsServiceConnected <> bIsConnected) Then
                         g_bIsServiceConnected = bIsConnected
 
-                        Me.BeginInvoke(Sub() SetStatusServiceConnected())
+                        ClassUtils.AsyncInvoke(Me, Sub() SetStatusServiceConnected())
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -151,52 +151,52 @@ Public Class UCStartPage
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
 
-                        Me.BeginInvoke(Sub()
-                                           Dim bFound As Boolean = False
+                        ClassUtils.AsyncInvoke(Me, Sub()
+                                                       Dim bFound As Boolean = False
 
-                                           Dim sTrackingColor As String = "Unknown"
-                                           Select Case (mDevice.m_TrackingColor)
-                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Magenta
-                                                   sTrackingColor = "Magenta"
-                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Cyan
-                                                   sTrackingColor = "Cyan"
-                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Yellow
-                                                   sTrackingColor = "Yellow"
-                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Red
-                                                   sTrackingColor = "Red"
-                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Green
-                                                   sTrackingColor = "Green"
-                                               Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Blue
-                                                   sTrackingColor = "Blue"
-                                           End Select
+                                                       Dim sTrackingColor As String = "Unknown"
+                                                       Select Case (mDevice.m_TrackingColor)
+                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Magenta
+                                                               sTrackingColor = "Magenta"
+                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Cyan
+                                                               sTrackingColor = "Cyan"
+                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Yellow
+                                                               sTrackingColor = "Yellow"
+                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Red
+                                                               sTrackingColor = "Red"
+                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Green
+                                                               sTrackingColor = "Green"
+                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Blue
+                                                               sTrackingColor = "Blue"
+                                                       End Select
 
-                                           ' Change info about device 
-                                           ListView_ServiceDevices.BeginUpdate()
-                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                       ' Change info about device 
+                                                       ListView_ServiceDevices.BeginUpdate()
+                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
-                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
+                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                   bFound = True
-                                               End If
-                                           Next
-                                           ListView_ServiceDevices.EndUpdate()
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                       ListView_ServiceDevices.EndUpdate()
 
-                                           ' Added device when not found
-                                           If (Not bFound) Then
-                                               Dim sDeviceType As String = "UNKNOWN"
+                                                       ' Added device when not found
+                                                       If (Not bFound) Then
+                                                           Dim sDeviceType As String = "UNKNOWN"
 
-                                               Select Case (True)
-                                                   Case TypeOf mDevice Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
-                                                       sDeviceType = "PSMOVE"
-                                               End Select
+                                                           Select Case (True)
+                                                               Case TypeOf mDevice Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
+                                                                   sDeviceType = "PSMOVE"
+                                                           End Select
 
-                                               Dim mListViewItem = New ListViewItem(New String() {
+                                                           Dim mListViewItem = New ListViewItem(New String() {
                                                     sDeviceType,
                                                     sTrackingColor,
                                                     CStr(mDevice.m_Id),
@@ -206,12 +206,12 @@ Public Class UCStartPage
                                                     "0",
                                                     "0 %"
                                                 })
-                                               mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                               mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                           mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                               ListView_ServiceDevices.Items.Add(mListViewItem)
-                                           End If
-                                       End Sub)
+                                                           ListView_ServiceDevices.Items.Add(mListViewItem)
+                                                       End If
+                                                   End Sub)
                     Next
                 End If
 
@@ -234,33 +234,33 @@ Public Class UCStartPage
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
 
-                        Me.BeginInvoke(Sub()
-                                           If (Not Me.Visible) Then
-                                               Return
-                                           End If
+                        ClassUtils.AsyncInvoke(Me, Sub()
+                                                       If (Not Me.Visible) Then
+                                                           Return
+                                                       End If
 
-                                           Dim bFound As Boolean = False
+                                                       Dim bFound As Boolean = False
 
-                                           ' Change info about device 
-                                           ListView_ServiceDevices.BeginUpdate()
-                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = ""
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                       ' Change info about device 
+                                                       ListView_ServiceDevices.BeginUpdate()
+                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = ""
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = ""
-                                                   mListVIewItem.Tag = New Object() {Now}
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = ""
+                                                               mListVIewItem.Tag = New Object() {Now}
 
-                                                   bFound = True
-                                               End If
-                                           Next
-                                           ListView_ServiceDevices.EndUpdate()
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                       ListView_ServiceDevices.EndUpdate()
 
-                                           ' Added device when not found
-                                           If (Not bFound) Then
-                                               Dim mListViewItem = New ListViewItem(New String() {
+                                                       ' Added device when not found
+                                                       If (Not bFound) Then
+                                                           Dim mListViewItem = New ListViewItem(New String() {
                                                     "TRACKER",
                                                     "",
                                                     CStr(mDevice.m_Id),
@@ -270,32 +270,32 @@ Public Class UCStartPage
                                                     "0",
                                                     ""
                                                 })
-                                               mListViewItem.Tag = New Object() {Now}
+                                                           mListViewItem.Tag = New Object() {Now}
 
-                                               ListView_ServiceDevices.Items.Add(mListViewItem)
-                                           End If
-                                       End Sub)
+                                                           ListView_ServiceDevices.Items.Add(mListViewItem)
+                                                       End If
+                                                   End Sub)
                     Next
                 End If
 
                 ' Show disconnected devices
-                Me.BeginInvoke(Sub()
-                                   If (Not Me.Visible) Then
-                                       Return
-                                   End If
+                ClassUtils.AsyncInvoke(Me, Sub()
+                                               If (Not Me.Visible) Then
+                                                   Return
+                                               End If
 
-                                   ListView_ServiceDevices.BeginUpdate()
-                                   For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                               ListView_ServiceDevices.BeginUpdate()
+                                               For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                       Else
-                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                       End If
-                                   Next
-                                   ListView_ServiceDevices.EndUpdate()
-                               End Sub)
+                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                   Else
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                   End If
+                                               Next
+                                               ListView_ServiceDevices.EndUpdate()
+                                           End Sub)
 
             Catch ex As Threading.ThreadAbortException
                 Throw
@@ -586,16 +586,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    Me.BeginInvoke(Sub()
-                                       If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                           g_mDriverInstallFormLoad.Dispose()
-                                           g_mDriverInstallFormLoad = Nothing
-                                       End If
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
 
-                                       g_mDriverInstallFormLoad = New FormLoading
-                                       g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                       g_mDriverInstallFormLoad.ShowDialog(Me)
-                                   End Sub)
+                                                   g_mDriverInstallFormLoad = New FormLoading
+                                                   g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                               End Sub)
 
                     Dim mDriverInstaller As New ClassLibusbDriver
                     mDriverInstaller.InstallDriver64()
@@ -606,12 +606,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Finally
-                    Me.BeginInvoke(Sub()
-                                       If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                           g_mDriverInstallFormLoad.Dispose()
-                                           g_mDriverInstallFormLoad = Nothing
-                                       End If
-                                   End Sub)
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+                                               End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True

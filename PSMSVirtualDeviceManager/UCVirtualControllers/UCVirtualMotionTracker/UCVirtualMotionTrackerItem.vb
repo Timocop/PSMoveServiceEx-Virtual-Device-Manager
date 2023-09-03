@@ -177,12 +177,12 @@ Public Class UCVirtualMotionTrackerItem
                         sDriverPath = CStr(mMessage(1))
                     End If
 
-                    Me.BeginInvoke(Sub()
-                                       g_mDriverLastResponse.Restart()
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   g_mDriverLastResponse.Restart()
 
-                                       g_sDriverVersion = sDriverVersion
-                                       g_sDriverPath = sDriverPath
-                                   End Sub)
+                                                   g_sDriverVersion = sDriverVersion
+                                                   g_sDriverPath = sDriverPath
+                                               End Sub)
                 Case "/VMT/Out/Haptic"
                     If (mMessage.Count < 4) Then
                         Return
@@ -224,19 +224,19 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (iCode = 0) Then
-                        Me.BeginInvoke(Sub()
-                                           g_mDriverLastResponse.Restart()
+                        ClassUtils.AsyncInvoke(Me, Sub()
+                                                       g_mDriverLastResponse.Restart()
 
-                                           g_sDriverLastResponseCode = iCode
-                                           g_sDriverLastResponseMessage = sReason
-                                       End Sub)
+                                                       g_sDriverLastResponseCode = iCode
+                                                       g_sDriverLastResponseMessage = sReason
+                                                   End Sub)
                     Else
-                        Me.BeginInvoke(Sub()
-                                           g_mDriverLastResponse.Restart()
+                        ClassUtils.AsyncInvoke(Me, Sub()
+                                                       g_mDriverLastResponse.Restart()
 
-                                           g_sDriverLastResponseCode = iCode
-                                           g_sDriverLastResponseMessage = sReason
-                                       End Sub)
+                                                       g_sDriverLastResponseCode = iCode
+                                                       g_sDriverLastResponseMessage = sReason
+                                                   End Sub)
                     End If
 
             End Select

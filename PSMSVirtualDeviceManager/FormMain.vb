@@ -468,13 +468,13 @@ Public Class FormMain
 
                 If (True) Then
                     If (ClassUpdate.ClassVdm.CheckUpdateAvailable(Application.ExecutablePath, sLocationInfo)) Then
-                        g_mFormMain.BeginInvoke(
-                            Sub()
-                                g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
-                                g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
+                        ClassUtils.AsyncInvoke(g_mFormMain,
+                                               Sub()
+                                                   g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
+                                                   g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
 
-                                g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
-                            End Sub)
+                                                   g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
+                                               End Sub)
                     End If
                 End If
 
@@ -484,7 +484,7 @@ Public Class FormMain
 
                     If (mConfig.FileExist) Then
                         If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
-                            g_mFormMain.BeginInvoke(
+                            ClassUtils.AsyncInvoke(g_mFormMain,
                                 Sub()
                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
                                 End Sub)

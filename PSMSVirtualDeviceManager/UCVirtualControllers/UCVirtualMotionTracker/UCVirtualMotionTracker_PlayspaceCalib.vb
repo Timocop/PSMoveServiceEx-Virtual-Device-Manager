@@ -154,28 +154,28 @@
         Dim iPercentage As Integer = 0
 
         Try
-            Me.Invoke(Sub() Button_PlaySpaceManualCalib.Enabled = False)
+            ClassUtils.SyncInvoke(Me, Sub() Button_PlaySpaceManualCalib.Enabled = False)
 
-            Dim iControllerID As Integer = CInt(Me.Invoke(Function() ComboBox_PlayCalibControllerID.SelectedItem))
-            Dim iPrepTimeSec As Integer = CInt(Me.Invoke(Function() NumericUpDown_PlayCalibPrepTime.Value))
+            Dim iControllerID As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Me, Function() ComboBox_PlayCalibControllerID.SelectedItem)
+            Dim iPrepTimeSec As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Me, Function() NumericUpDown_PlayCalibPrepTime.Value)
             If (iPrepTimeSec < 1) Then
                 iPrepTimeSec = 1
             End If
 
-            Dim mTargetTracker = DirectCast(Me.Invoke(
-                Function()
-                    Dim bFound As Boolean = False
+            Dim mTargetTracker = ClassUtils.SyncInvokeEx(Of UCVirtualMotionTrackerItem)(Me,
+                                    Function()
+                                        Dim bFound As Boolean = False
 
-                    For Each mTracker In GetVmtTrackers()
-                        If (mTracker.g_mClassIO.m_Index <> iControllerID) Then
-                            Continue For
-                        End If
+                                        For Each mTracker In GetVmtTrackers()
+                                            If (mTracker.g_mClassIO.m_Index <> iControllerID) Then
+                                                Continue For
+                                            End If
 
-                        Return mTracker
-                    Next
+                                            Return mTracker
+                                        Next
 
-                    Return Nothing
-                End Function), UCVirtualMotionTrackerItem)
+                                        Return Nothing
+                                    End Function)
 
             If (mTargetTracker Is Nothing) Then
                 Throw New ArgumentException("Controller is not available!")
@@ -191,7 +191,7 @@
 
                     Select Case (iStep)
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE
-                            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
 
                             iPercentage += CInt(100.0F / iPrepTimeSec)
 
@@ -207,7 +207,7 @@
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START
-                            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
 
                             iPercentage += 50
 
@@ -221,7 +221,7 @@
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.MOVE_FORWARD
-                            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
 
                             iPercentage += 20
 
@@ -237,7 +237,7 @@
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
-                            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, iPercentage))
 
                             iPercentage += 50
 
@@ -255,7 +255,7 @@
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
-                            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, 100))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, 100))
                             Exit While
                     End Select
 
@@ -268,10 +268,10 @@
         Catch ex As Threading.ThreadAbortException
             Throw
         Catch ex As Exception
-            Me.BeginInvoke(Sub() SetPlayspaceCalibrationStatus(iStep, -1))
+            ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, -1))
             MessageBox.Show(ex.Message, "Playspace Calibration Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
-            Me.BeginInvoke(Sub() Button_PlaySpaceManualCalib.Enabled = True)
+            ClassUtils.AsyncInvoke(Me, Sub() Button_PlaySpaceManualCalib.Enabled = True)
         End Try
     End Sub
 

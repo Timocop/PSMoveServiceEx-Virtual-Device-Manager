@@ -1,4 +1,21 @@
 ﻿Public Class ClassUtils
+    Public Shared Sub SyncInvoke(mControl As Control, mFunction As [Delegate])
+        mControl.Invoke(mFunction)
+    End Sub
+
+    Public Shared Function SyncInvokeEx(Of T)(mControl As Control, mFunction As [Delegate]) As T
+        Return DirectCast(mControl.Invoke(mFunction), T)
+    End Function
+
+    Public Shared Sub AsyncInvoke(mControl As Control, mFunction As [Delegate])
+        mControl.BeginInvoke(Sub()
+                                 Try
+                                     mFunction.DynamicInvoke()
+                                 Catch ex As Exception
+                                 End Try
+                             End Sub)
+    End Sub
+
     Public Shared Function FormatOutput(ByVal sContent As String) As String
         Dim mText = New Text.StringBuilder()
         Dim bEscape As Boolean = False

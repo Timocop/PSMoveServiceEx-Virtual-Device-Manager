@@ -182,17 +182,17 @@ Partial Public Class UCVirtualMotionTracker
         While True
             Try
                 If (g_ClassOscServer Is Nothing OrElse Not g_ClassOscServer.IsRunning()) Then
-                    Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
+                    ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
                 Else
                     If (g_ClassOscServer.m_SuspendRequests) Then
-                        Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED))
+                        ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED))
                     Else
                         Dim mLastResponse As TimeSpan = (Now - g_ClassOscServer.m_LastResponse)
 
                         If (mLastResponse.TotalMilliseconds > 5000) Then
-                            Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.TIMEOUT))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.TIMEOUT))
                         Else
-                            Me.BeginInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.CONNECTED))
+                            ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.CONNECTED))
                         End If
                     End If
                 End If
@@ -223,60 +223,60 @@ Partial Public Class UCVirtualMotionTracker
                     Dim mPos As Vector3 = mDevice.GetPosCm()
                     Dim mAng As Vector3 = mDevice.GetOrientationEuler()
 
-                    Me.BeginInvoke(Sub()
-                                       If (Not Me.Visible) Then
-                                           Return
-                                       End If
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (Not Me.Visible) Then
+                                                       Return
+                                                   End If
 
-                                       Dim bFound As Boolean = False
+                                                   Dim bFound As Boolean = False
 
-                                       ' Change info about device
-                                       ListView_OscDevices.BeginUpdate()
-                                       For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
+                                                   ' Change info about device
+                                                   ListView_OscDevices.BeginUpdate()
+                                                   For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                                       If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
 
-                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                               mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+                                                           mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                           mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                           mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
 
-                                               bFound = True
-                                           End If
-                                       Next
-                                       ListView_OscDevices.EndUpdate()
+                                                           bFound = True
+                                                       End If
+                                                   Next
+                                                   ListView_OscDevices.EndUpdate()
 
-                                       ' Added device when not found
-                                       If (Not bFound) Then
-                                           Dim mListViewItem = New ListViewItem(New String() {
+                                                   ' Added device when not found
+                                                   If (Not bFound) Then
+                                                       Dim mListViewItem = New ListViewItem(New String() {
                                                 mDevice.iType.ToString,
                                                 mDevice.sSerial,
                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
                                                 "0"
                                             })
-                                           mListViewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+                                                       mListViewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
 
-                                           ListView_OscDevices.Items.Add(mListViewItem)
-                                       End If
-                                   End Sub)
+                                                       ListView_OscDevices.Items.Add(mListViewItem)
+                                                   End If
+                                               End Sub)
                 Next
 
-                Me.BeginInvoke(Sub()
-                                   If (Not Me.Visible) Then
-                                       Return
-                                   End If
+                ClassUtils.AsyncInvoke(Me, Sub()
+                                               If (Not Me.Visible) Then
+                                                   Return
+                                               End If
 
-                                   ListView_OscDevices.BeginUpdate()
-                                   For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                               ListView_OscDevices.BeginUpdate()
+                                               For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                       Else
-                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                       End If
-                                   Next
-                                   ListView_OscDevices.EndUpdate()
-                               End Sub)
+                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                   Else
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                   End If
+                                               Next
+                                               ListView_OscDevices.EndUpdate()
+                                           End Sub)
 
             Catch ex As Threading.ThreadAbortException
                 Throw
