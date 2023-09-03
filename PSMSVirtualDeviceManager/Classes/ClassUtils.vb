@@ -4,7 +4,7 @@
     End Sub
 
     Public Shared Function SyncInvokeEx(Of T)(mControl As Control, mFunction As [Delegate]) As T
-        Return DirectCast(mControl.Invoke(mFunction), T)
+        Return CType(mControl.Invoke(mFunction), T)
     End Function
 
     Public Shared Sub AsyncInvoke(mControl As Control, mFunction As [Delegate])
