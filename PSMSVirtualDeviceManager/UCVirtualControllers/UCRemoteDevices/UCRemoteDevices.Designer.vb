@@ -32,7 +32,7 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
-        Me.ListView_RemoteDevices = New ClassListViewEx()
+        Me.ListView_RemoteDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Timer_RemoteDevices = New System.Windows.Forms.Timer(Me.components)
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -165,7 +165,7 @@ Partial Class UCRemoteDevices
         '
         'ColumnHeader1
         '
-        Me.ColumnHeader1.Text = "Tracker Name"
+        Me.ColumnHeader1.Text = "Device Name"
         Me.ColumnHeader1.Width = 400
         '
         'Timer_RemoteDevices
