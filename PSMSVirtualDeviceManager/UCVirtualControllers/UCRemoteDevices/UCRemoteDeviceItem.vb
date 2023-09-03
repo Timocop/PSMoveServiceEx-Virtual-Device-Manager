@@ -187,8 +187,8 @@ Public Class UCRemoteDeviceItem
         If (g_mRotationWait.ElapsedMilliseconds > 100) Then
             g_mRotationWait.Restart()
 
-            Dim mAngle As Vector3 = ClassQuaternionTools.FromQ2(New Quaternion(iX, iY, iZ, iW))
-            Dim mResetAngle As Vector3 = ClassQuaternionTools.FromQ2(g_mClassIO.m_ResetOrientation)
+            Dim mAngle As Vector3 = ClassQuaternionTools.FromQ(New Quaternion(iX, iY, iZ, iW))
+            Dim mResetAngle As Vector3 = ClassQuaternionTools.FromQ(g_mClassIO.m_ResetOrientation)
             Dim iOffsetAngle As Integer = +g_mClassIO.m_YawOrientationOffset
 
             mAngle = ClassQuaternionTools.NormalizeAngles(New Vector3(mAngle.X - mResetAngle.X, mAngle.Y - mResetAngle.Y, mAngle.Z - mResetAngle.Z - iOffsetAngle))

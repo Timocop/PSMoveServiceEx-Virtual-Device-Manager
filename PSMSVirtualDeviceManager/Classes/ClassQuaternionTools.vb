@@ -1,59 +1,59 @@
 ﻿Imports System.Numerics
 
 Public Class ClassQuaternionTools
-    Public Shared Function ToQ(v As Vector3) As Quaternion
-        Return ToQ(v.Y, v.X, v.Z)
-    End Function
-
     Public Shared Function ToQ(yaw As Single, pitch As Single, roll As Single) As Quaternion
-        yaw *= CSng(Math.PI / 180)
-        pitch *= CSng(Math.PI / 180)
-        roll *= CSng(Math.PI / 180)
-        Dim rollOver2 = roll * 0.5F
-        Dim sinRollOver2 As Single = CSng(Math.Sin(rollOver2))
-        Dim cosRollOver2 As Single = CSng(Math.Cos(rollOver2))
-        Dim pitchOver2 = pitch * 0.5F
-        Dim sinPitchOver2 As Single = CSng(Math.Sin(pitchOver2))
-        Dim cosPitchOver2 As Single = CSng(Math.Cos(pitchOver2))
-        Dim yawOver2 = yaw * 0.5F
-        Dim sinYawOver2 As Single = CSng(Math.Sin(yawOver2))
-        Dim cosYawOver2 As Single = CSng(Math.Cos(yawOver2))
-        Dim result As Quaternion
-        result.W = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2
-        result.X = cosYawOver2 * sinPitchOver2 * cosRollOver2 + sinYawOver2 * cosPitchOver2 * sinRollOver2
-        result.Y = sinYawOver2 * cosPitchOver2 * cosRollOver2 - cosYawOver2 * sinPitchOver2 * sinRollOver2
-        result.Z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2
-        Return result
+        ToQ(New Vector3(pitch, yaw, roll))
     End Function
 
-    Public Shared Function FromQ2(q1 As Quaternion) As Vector3
-        Dim sqw As Single = q1.W * q1.W
-        Dim sqx As Single = q1.X * q1.X
-        Dim sqy As Single = q1.Y * q1.Y
-        Dim sqz As Single = q1.Z * q1.Z
-        Dim unit = sqx + sqy + sqz + sqw ' if normalised is one, otherwise is correction factor
-        Dim test As Single = q1.X * q1.W - q1.Y * q1.Z
-        Dim v As Vector3
+    Public Shared Function ToQ(v As Vector3) As Quaternion
+        ' Convert Euler angles to quaternion
+        Dim yaw As Single = v.Y * CSng(Math.PI / 180.0) ' Yaw (rotation around Y-axis) in radians
+        Dim pitch As Single = v.X * CSng(Math.PI / 180.0) ' Pitch (rotation around X-axis) in radians
+        Dim roll As Single = v.Z * CSng(Math.PI / 180.0) ' Roll (rotation around Z-axis) in radians
 
-        If test > 0.4995F * unit Then ' singularity at north pole
-            v.Y = CSng(2.0F * Math.Atan2(q1.Y, q1.X))
-            v.X = Math.PI / 2
-            v.Z = 0
-            Return NormalizeAngles(v * (180 / Math.PI))
+        Dim cy As Single = CSng(Math.Cos(yaw * 0.5))
+        Dim sy As Single = CSng(Math.Sin(yaw * 0.5))
+        Dim cp As Single = CSng(Math.Cos(pitch * 0.5))
+        Dim sp As Single = CSng(Math.Sin(pitch * 0.5))
+        Dim cr As Single = CSng(Math.Cos(roll * 0.5))
+        Dim sr As Single = CSng(Math.Sin(roll * 0.5))
+
+        Dim qw As Single = cy * cp * cr + sy * sp * sr
+        Dim qx As Single = cy * cp * sr - sy * sp * cr
+        Dim qy As Single = sy * cp * sr + cy * sp * cr
+        Dim qz As Single = sy * cp * cr - cy * sp * sr
+
+        Return New Quaternion(qx, qy, qz, qw)
+    End Function
+
+    Public Shared Function FromQ(q As Quaternion) As Vector3
+        ' Convert quaternion to Euler angles
+        Dim euler As New Vector3()
+
+        ' Roll (X-axis rotation)
+        Dim sinr As Double = 2.0 * (q.W * q.X + q.Y * q.Z)
+        Dim cosr As Double = 1.0 - 2.0 * (q.X * q.X + q.Y * q.Y)
+        euler.X = CSng(Math.Atan2(sinr, cosr))
+
+        ' Pitch (Y-axis rotation)
+        Dim sinp As Double = 2.0 * (q.W * q.Y - q.Z * q.X)
+        If Math.Abs(sinp) >= 1 Then
+            euler.Y = CSng(If(sinp < 0, -Math.PI / 2, Math.PI / 2)) ' Use -90 or 90 degrees if out of range
+        Else
+            euler.Y = CSng(Math.Asin(sinp))
         End If
 
-        If test < -0.4995F * unit Then ' singularity at south pole
-            v.Y = CSng(-2.0F * Math.Atan2(q1.Y, q1.X))
-            v.X = -Math.PI / 2
-            v.Z = 0
-            Return NormalizeAngles(v * (180 / Math.PI))
-        End If
+        ' Yaw (Z-axis rotation)
+        Dim siny As Double = 2.0 * (q.W * q.Z + q.X * q.Y)
+        Dim cosy As Double = 1.0 - 2.0 * (q.Y * q.Y + q.Z * q.Z)
+        euler.Z = CSng(Math.Atan2(siny, cosy))
 
-        Dim q As Quaternion = New Quaternion(q1.W, q1.Z, q1.X, q1.Y)
-        v.Y = CSng(Math.Atan2(2.0F * q.X * q.W + 2.0F * q.Y * q.Z, 1 - 2.0F * (q.Z * q.Z + q.W * q.W)))     ' Yaw
-        v.X = CSng(Math.Asin(2.0F * (q.X * q.Z - q.W * q.Y)))                                               ' Pitch
-        v.Z = CSng(Math.Atan2(2.0F * q.X * q.Y + 2.0F * q.Z * q.W, 1 - 2.0F * (q.Y * q.Y + q.Z * q.Z)))     ' Roll
-        Return NormalizeAngles(v * (180 / Math.PI))
+        ' Convert Euler angles from radians to degrees
+        euler.X *= CSng(180.0 / Math.PI)
+        euler.Y *= CSng(180.0 / Math.PI)
+        euler.Z *= CSng(180.0 / Math.PI)
+
+        Return NormalizeAngles(euler)
     End Function
 
     Public Shared Function NormalizeAngles(angles As Vector3) As Vector3
@@ -63,16 +63,16 @@ Public Class ClassQuaternionTools
         Return angles
     End Function
 
-    Public Shared Function NormalizeAngle(angle As Single) As Single
-        While (angle > 360)
-            angle -= 360
+    Public Shared Function NormalizeAngle(i As Single) As Single
+        While (i > 360.0F)
+            i -= 360.0F
         End While
 
-        While (angle < 0)
-            angle += 360
+        While (i < 0.0F)
+            i += 360.0F
         End While
 
-        Return angle
+        Return i
     End Function
 
     Public Shared Function RotateVector(q As Quaternion, v As Vector3) As Vector3

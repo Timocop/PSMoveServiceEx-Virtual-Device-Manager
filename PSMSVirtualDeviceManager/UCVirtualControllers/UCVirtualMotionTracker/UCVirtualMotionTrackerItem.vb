@@ -411,7 +411,7 @@ Public Class UCVirtualMotionTrackerItem
                     If (Me.Visible) Then
                         TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_ControllerData.m_Position.X), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Y), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Z), Environment.NewLine)
 
-                        Dim iAng = ClassQuaternionTools.FromQ2(g_mClassIO.m_ControllerData.m_Orientation)
+                        Dim iAng = ClassQuaternionTools.FromQ(g_mClassIO.m_ControllerData.m_Orientation)
                         TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
                     End If
                 Else

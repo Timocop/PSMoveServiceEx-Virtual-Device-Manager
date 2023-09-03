@@ -84,7 +84,7 @@ Public Class ClassServiceClient
         Public Property m_LastTimeStamp As Date Implements IControllerData.m_LastTimeStamp
 
         Private Function IControllerData_GetOrientationEuler() As Vector3 Implements IControllerData.GetOrientationEuler
-            Return ClassQuaternionTools.FromQ2(m_Orientation)
+            Return ClassQuaternionTools.FromQ(m_Orientation)
         End Function
     End Structure
 
@@ -98,7 +98,7 @@ Public Class ClassServiceClient
         Public Property m_Orientation As Quaternion Implements ITrackerData.m_Orientation
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
-            Return ClassQuaternionTools.FromQ2(m_Orientation)
+            Return ClassQuaternionTools.FromQ(m_Orientation)
         End Function
     End Structure
 
@@ -392,6 +392,20 @@ Public Class ClassServiceClient
                                                         mController.m_Info.m_Pose.m_Orientation.y,
                                                         mController.m_Info.m_Pose.m_Orientation.z,
                                                         mController.m_Info.m_Pose.m_Orientation.w)
+                                                End If
+
+                                                'Santiy check, for some reason it can sometimes prodcuce NaN?
+                                                If (Double.IsNaN(mData.m_Position.X) OrElse
+                                                        Double.IsNaN(mData.m_Position.Y) OrElse
+                                                        Double.IsNaN(mData.m_Position.Z)) Then
+                                                    mData.m_Position = New Vector3(0, 0, 0)
+                                                End If
+
+                                                If (Double.IsNaN(mData.m_Orientation.X) OrElse
+                                                        Double.IsNaN(mData.m_Orientation.Y) OrElse
+                                                        Double.IsNaN(mData.m_Orientation.Z) OrElse
+                                                        Double.IsNaN(mData.m_Orientation.W)) Then
+                                                    mData.m_Orientation = Quaternion.Identity
                                                 End If
 
                                                 SyncLock __DataLock
