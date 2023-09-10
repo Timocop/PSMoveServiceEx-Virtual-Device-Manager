@@ -1,5 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Runtime.InteropServices
+﻿Imports System.Resources
 
 Public Class FormMain
     Public g_mUCStartPage As UCStartPage
@@ -10,7 +9,6 @@ Public Class FormMain
     Public g_mClassUpdateChecker As ClassUpdateChecker
 
     Private g_bIgnoreEvents As Boolean = False
-
     Enum ENUM_PAGE
         STARTPAGE
         VIRTUAL_CONTROLLERS
@@ -536,4 +534,81 @@ Public Class FormMain
         End Sub
 #End Region
     End Class
+
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ComboBox1.SelectedIndex = 0 ' auto choose english
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        Select Case ComboBox1.SelectedIndex
+            Case 1
+                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("pl-PL")
+            Case Else ' default
+                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
+        End Select
+        Dim rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly)
+        ' Navigation bar
+        ' Label2.Text = rm.GetString("Navigation")
+        LinkLabel_StartPage.Text = rm.GetString("ServiceManagement")
+        LinkLabel_RunPSMS.Text = rm.GetString("RunPSMS")
+        LinkLabel_StopPSMS.Text = rm.GetString("StopPSMS")
+        LinkLabel_RestartPSMS.Text = rm.GetString("RestartPSMS")
+        LinkLabel_RunPSMSTool.Text = rm.GetString("RunPSMS")
+        LinkLabel_Controllers.Text = rm.GetString("Controllers")
+        LinkLabel_ControllersGeneral.Text = rm.GetString("ControllersGeneral")
+        LinkLabel_ControllersRemote.Text = rm.GetString("ControllersRemote")
+        LinkLabel_RemoteStartSocket.Text = rm.GetString("RemoteStartSocket")
+        LinkLabel_ControllersAttachments.Text = rm.GetString("ControllerAttachements")
+        LinkLabel_ControllersVMT.Text = rm.GetString("ControllersVMT")
+        LinkLabel_VMTStartOscServer.Text = rm.GetString("VMTStartOscServer")
+        LinkLabel1LinkLabel_VMTPauseOscServer.Text = rm.GetString("VMTPauseOscServer")
+        LinkLabel_HMDs.Text = rm.GetString("HMDs")
+        LinkLabel_Trackers.Text = rm.GetString("Trackers")
+        Label4.Text = rm.GetString("Troubleshooting")
+        LinkLabel_InstallCameraDrivers.Text = rm.GetString("InstallCameraDrivers")
+        LinkLabel_FactoryResetService.Text = rm.GetString("FactoryResetService")
+        Label1.Text = rm.GetString("Language")
+        LinkLabel_RunSteamVR.Text = rm.GetString("RunSteamVR")
+        LinkLabel_Github.Text = rm.GetString("GitHub")
+        LinkLabel_Updates.Text = rm.GetString("Updates")
+        Label_Version.Text = rm.GetString("Version")
+        ' UCStartPage
+        g_mUCStartPage.Label3.Text = rm.GetString("ServiceManagement")
+        g_mUCStartPage.Label4.Text = rm.GetString("Label3")
+        g_mUCStartPage.Label8.Text = rm.GetString("PSMSUpdateAvailable")
+        g_mUCStartPage.Label10.Text = rm.GetString("PSMSUpdateText")
+        g_mUCStartPage.Button_PsmsxUpdateDownload.Text = rm.GetString("DownloadNow")
+        g_mUCStartPage.Button_PsmsUpdateIgnore.Text = rm.GetString("Ignore")
+        g_mUCStartPage.Label9.Text = rm.GetString("VDMUpdateAvailable")
+        g_mUCStartPage.Label11.Text = rm.GetString("VDMUpdateText")
+        g_mUCStartPage.Button_VdmUpdateDownload.Text = rm.GetString("DownloadNow")
+        g_mUCStartPage.Button_VdmUpdateIgnore.Text = rm.GetString("DownloadNow")
+        g_mUCStartPage.Label1.Text = rm.GetString("ServiceControl")
+        g_mUCStartPage.LinkLabel_ServiceRun.Text = rm.GetString("RunPSMS")
+        g_mUCStartPage.LinkLabel_ServiceRunCmd.Text = rm.GetString("DebugService")
+        g_mUCStartPage.LinkLabel_ServiceRestart.Text = rm.GetString("RestartPSMS")
+        g_mUCStartPage.LinkLabel_ServiceStop.Text = rm.GetString("StopPSMS")
+        g_mUCStartPage.LinkLabel_ServicePath.Text = rm.GetString("SetServicePath")
+        g_mUCStartPage.Label6.Text = rm.GetString("Troubleshooting")
+        g_mUCStartPage.LinkLabel_InstallDrivers.Text = rm.GetString("InstallCameraDrivers")
+        g_mUCStartPage.LinkLabel_ServiceFactory.Text = rm.GetString("FactoryResetService")
+        g_mUCStartPage.Label2.Text = rm.GetString("Configuration")
+        g_mUCStartPage.LinkLabel_ConfigToolRun.Text = rm.GetString("RunPSMSTool")
+        g_mUCStartPage.LinkLabel_ConfigToolRunCmd.Text = rm.GetString("RunPSMSToolCmd")
+        g_mUCStartPage.LinkLabel_ConfigToolClose.Text = rm.GetString("ClosePSMSTool")
+        g_mUCStartPage.Label7.Text = rm.GetString("SupportAndUpdates")
+        g_mUCStartPage.LinkLabel_Github.Text = rm.GetString("VisitGithub")
+        g_mUCStartPage.LinkLabel_Updates.Text = rm.GetString("CheckForUpdates")
+        g_mUCStartPage.Label12.Text = rm.GetString("AvailableServiceDevices")
+        g_mUCStartPage.ColumnHeader_Type.Text = rm.GetString("Type")
+        g_mUCStartPage.ColumnHeader_Color.Text = rm.GetString("Color")
+        g_mUCStartPage.ColumnHeader_ID.Text = rm.GetString("ID")
+        g_mUCStartPage.ColumnHeader_Serial.Text = rm.GetString("Serial")
+        g_mUCStartPage.ColumnHeader_Pos.Text = rm.GetString("Position")
+        g_mUCStartPage.ColumnHeader_Orientation.Text = rm.GetString("Orientation")
+        g_mUCStartPage.ColumnHeader_Battery.Text = rm.GetString("Battery")
+
+
+    End Sub
+
 End Class

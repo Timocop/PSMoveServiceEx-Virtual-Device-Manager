@@ -35,6 +35,8 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.LinkLabel_StartPage = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunSteamVR = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel1LinkLabel_VMTPauseOscServer = New System.Windows.Forms.LinkLabel()
@@ -164,6 +166,8 @@ Partial Class FormMain
         Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 700)
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel1.Controls.Add(Me.Label1)
+        Me.Panel1.Controls.Add(Me.ComboBox1)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMSTool)
         Me.Panel1.Controls.Add(Me.LinkLabel_StartPage)
@@ -193,6 +197,29 @@ Partial Class FormMain
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.BackColor = System.Drawing.Color.Transparent
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.ForeColor = System.Drawing.Color.Black
+        Me.Label1.Location = New System.Drawing.Point(17, 591)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(59, 13)
+        Me.Label1.TabIndex = 26
+        Me.Label1.Text = "Language"
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"English", "Polish"})
+        Me.ComboBox1.Location = New System.Drawing.Point(19, 617)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.TabIndex = 25
         '
         'LinkLabel_StartPage
         '
@@ -532,7 +559,7 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
         Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_HMDs.Size = New System.Drawing.Size(168, 19)
+        Me.LinkLabel_HMDs.Size = New System.Drawing.Size(182, 19)
         Me.LinkLabel_HMDs.TabIndex = 1
         Me.LinkLabel_HMDs.TabStop = True
         Me.LinkLabel_HMDs.Text = "Virtual Head-Mounted Devices"
@@ -627,4 +654,6 @@ Partial Class FormMain
     Friend WithEvents LinkLabel1LinkLabel_VMTPauseOscServer As LinkLabel
     Friend WithEvents LinkLabel_RunSteamVR As LinkLabel
     Friend WithEvents LinkLabel_StartPage As LinkLabel
+    Friend WithEvents Label1 As Label
+    Friend WithEvents ComboBox1 As ComboBox
 End Class

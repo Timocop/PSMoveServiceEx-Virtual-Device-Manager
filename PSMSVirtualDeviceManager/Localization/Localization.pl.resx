@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Updates" xml:space="preserve">
+    <value>Sprawdź aktualizację</value>
+  </data>
+  <data name="ControllersAttachements" xml:space="preserve">
+    <value>Dodatki do kontrolera</value>
+  </data>
+  <data name="FactoryResetService" xml:space="preserve">
+    <value>Przywróć ustawienia fabryczne PSMoveServiceEx</value>
+  </data>
+  <data name="ControllersGeneral" xml:space="preserve">
+    <value>Ogólne</value>
+  </data>
+  <data name="InstallCameraDrivers" xml:space="preserve">
+    <value>Zainstaluj sterowniki Playstation Eye</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="RunSteamVR" xml:space="preserve">
+    <value>Uruchom SteamVR</value>
+  </data>
+  <data name="Navigation" xml:space="preserve">
+    <value>Nawigacja</value>
+  </data>
+  <data name="VMTPauseOscServer" xml:space="preserve">
+    <value>Wstrzymaj serwer OSC</value>
+  </data>
+  <data name="ControllersRemote" xml:space="preserve">
+    <value>Zdalne urządzenia</value>
+  </data>
+  <data name="RestartPSMS" xml:space="preserve">
+    <value>Zrestartuj usługę</value>
+  </data>
+  <data name="RunPSMS" xml:space="preserve">
+    <value>Uruchom usługę</value>
+  </data>
+  <data name="RunPSMSTool" xml:space="preserve">
+    <value>Uruchom narzędzie konfiguracji usługi</value>
+  </data>
+  <data name="ServiceManagement" xml:space="preserve">
+    <value>Zarządzanie usługą</value>
+  </data>
+  <data name="VMTStartOscServer" xml:space="preserve">
+    <value>Uruchom serwer OSC</value>
+  </data>
+  <data name="RemoteStartSocket" xml:space="preserve">
+    <value>Uruchom socket</value>
+  </data>
+  <data name="StopPSMS" xml:space="preserve">
+    <value>Zatrzymaj usługę</value>
+  </data>
+  <data name="Troubleshooting" xml:space="preserve">
+    <value>Diagnostyka</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Wersja:</value>
+  </data>
+  <data name="Controllers" xml:space="preserve">
+    <value>Wirtualne kontrolery</value>
+  </data>
+  <data name="HMDs" xml:space="preserve">
+    <value>Wirtualne urządzenia na głowę (HMD)</value>
+  </data>
+  <data name="ControllersVMT" xml:space="preserve">
+    <value>Wirtualne trackery ruchy (VMT)</value>
+  </data>
+  <data name="Trackers" xml:space="preserve">
+    <value>Wirtualne trackery</value>
+  </data>
+  <data name="GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="DownloadNow" xml:space="preserve">
+    <value>Pobierz teraz</value>
+  </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignoruj</value>
+  </data>
+  <data name="Label3" xml:space="preserve">
+    <value>Tutaj można zarządzać usługami i konfiguracjami.</value>
+  </data>
+  <data name="PSMSDisconnected" xml:space="preserve">
+    <value>PSMoveServiceEx Rozłączono</value>
+  </data>
+  <data name="PSMSUpdateAvailable" xml:space="preserve">
+    <value>Aktualizacja oprogramowania PSMoveServiceEx dostępna</value>
+  </data>
+  <data name="PSMSUpdateText" xml:space="preserve">
+    <value>Nowa aktualizacja dla PSMoveServiceEx jest już dostępna.
+Aktualizacja ta zawiera różne ulepszenia, poprawki wydajności i dodatkowe funkcje.
+Aby skorzystać z najnowszych ulepszeń, warto rozważyć aktualizację oprogramowania.</value>
+  </data>
+  <data name="VDMUpdateAvailable" xml:space="preserve">
+    <value>Dostępna aktualizacja oprogramowania Virtual Device Manager</value>
+  </data>
+  <data name="VDMUpdateText" xml:space="preserve">
+    <value>Nowa aktualizacja dla PSMoveServiceEx - Virtual Device Manager jest już dostępna.
+Aktualizacja ta zawiera różne ulepszenia, poprawki wydajności i dodatkowe funkcje.
+Aby skorzystać z najnowszych ulepszeń, warto rozważyć aktualizację oprogramowania.</value>
+  </data>
+  <data name="ControllerAttachements" xml:space="preserve">
+    <value>Dodatki do kontrolera</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>Konfiguracja</value>
+  </data>
+  <data name="ClosePSMSTool" xml:space="preserve">
+    <value>Zamknij narzędzie konfiguracji</value>
+  </data>
+  <data name="VisitGithub" xml:space="preserve">
+    <value>Odwiedź GitHub'a</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Kolor</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Pozycja</value>
+  </data>
+  <data name="Orientation" xml:space="preserve">
+    <value>Orientacja</value>
+  </data>
+  <data name="Battery" xml:space="preserve">
+    <value>Bateria</value>
+  </data>
+  <data name="ServiceControl" xml:space="preserve">
+    <value>Kontrola usługi</value>
+  </data>
+  <data name="DebugService" xml:space="preserve">
+    <value>Zdebuguj usługę</value>
+  </data>
+  <data name="SetServicePath" xml:space="preserve">
+    <value>Ustaw ścieżkę usługi</value>
+  </data>
+  <data name="RunPSMSToolCmd" xml:space="preserve">
+    <value>Zdebuguj narzędzie konfiguracji usługi</value>
+  </data>
+  <data name="SupportAndUpdates" xml:space="preserve">
+    <value>Wsparcie i aktualizacje</value>
+  </data>
+  <data name="AvailableServiceDevices" xml:space="preserve">
+    <value>Dostępne urządzenia serwisowe</value>
+  </data>
+</root>
