@@ -7,7 +7,6 @@ Public Class FormMain
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
     Public g_mClassServiceInfo As ClassServiceInfo
-    Public rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly) ' should probably move this to another file
     Private g_bIgnoreEvents As Boolean = False
     Enum ENUM_PAGE
         STARTPAGE
@@ -71,9 +70,6 @@ Public Class FormMain
                 End If
             End Try
         End While
-
-        Label_Version.Text = String.Format("{0}: {1}", rm.GetString("Version"), Application.ProductVersion.ToString())
-
 
         g_mClassUpdateChecker = New ClassUpdateChecker(Me)
         g_mClassUpdateChecker.StartUpdateCheck()
@@ -543,95 +539,6 @@ Public Class FormMain
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        Select Case ComboBox1.SelectedIndex
-            Case 1
-                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("pl-PL")
-                g_mClassServiceInfo.LastSelectedLanguage = 1
-                g_mClassServiceInfo.SaveConfig()
-            Case 2
-                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("es")
-                g_mClassServiceInfo.LastSelectedLanguage = 2
-                g_mClassServiceInfo.SaveConfig()
-            Case 3
-                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("de")
-                g_mClassServiceInfo.LastSelectedLanguage = 3
-                g_mClassServiceInfo.SaveConfig()
-            Case Else ' default
-                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
-                g_mClassServiceInfo.LastSelectedLanguage = 0
-                g_mClassServiceInfo.SaveConfig()
-        End Select
-
-        ' Navigation bar
-        Label2.Text = rm.GetString("Navigation")
-        LinkLabel_StartPage.Text = rm.GetString("ServiceManagement")
-        LinkLabel_RunPSMS.Text = rm.GetString("RunPSMS")
-        LinkLabel_StopPSMS.Text = rm.GetString("StopPSMS")
-        LinkLabel_RestartPSMS.Text = rm.GetString("RestartPSMS")
-        LinkLabel_RunPSMSTool.Text = rm.GetString("RunPSMS")
-        LinkLabel_Controllers.Text = rm.GetString("Controllers")
-        LinkLabel_ControllersGeneral.Text = rm.GetString("ControllersGeneral")
-        LinkLabel_ControllersRemote.Text = rm.GetString("ControllersRemote")
-        LinkLabel_RemoteStartSocket.Text = rm.GetString("RemoteStartSocket")
-        LinkLabel_ControllersAttachments.Text = rm.GetString("ControllerAttachements")
-        LinkLabel_ControllersVMT.Text = rm.GetString("ControllersVMT")
-        LinkLabel_VMTStartOscServer.Text = rm.GetString("VMTStartOscServer")
-        LinkLabel1LinkLabel_VMTPauseOscServer.Text = rm.GetString("VMTPauseOscServer")
-        LinkLabel_HMDs.Text = rm.GetString("HMDs")
-        LinkLabel_Trackers.Text = rm.GetString("Trackers")
-        Label4.Text = rm.GetString("Troubleshooting")
-        LinkLabel_InstallCameraDrivers.Text = rm.GetString("InstallCameraDrivers")
-        LinkLabel_FactoryResetService.Text = rm.GetString("FactoryResetService")
-        Label1.Text = rm.GetString("Language")
-        ComboBox1.Items.Insert(0, rm.GetString("English")) ' i have to do it like this because if you do ComboBox1.Items(1) = (rm.GetString("English") its gonna detect a selectedindex
-        ComboBox1.Items.Insert(1, rm.GetString("Polish"))  ' change and make an infinite loop so now if you select an language its gonna work now but your selection will disappear.
-        ComboBox1.Items.Insert(2, rm.GetString("Spanish"))
-        ComboBox1.Items.Insert(3, rm.GetString("German"))
-        For i As Integer = ComboBox1.Items.Count - 1 To 4 Step -1 ' removing the additional languages created from the insert thing
-            ComboBox1.Items.RemoveAt(i)
-        Next
-
-        ToolTip1.SetToolTip(LanguageT, rm.GetString("LanguageT"))
-        LinkLabel_RunSteamVR.Text = rm.GetString("RunSteamVR")
-        LinkLabel_Github.Text = rm.GetString("GitHub")
-        LinkLabel_Updates.Text = rm.GetString("Updates")
-        Label_Version.Text = rm.GetString("Version")
-        ' UCStartPage
-        g_mUCStartPage.Label3.Text = rm.GetString("ServiceManagement")
-        g_mUCStartPage.Label4.Text = rm.GetString("Label3")
-        g_mUCStartPage.Label8.Text = rm.GetString("PSMSUpdateAvailable")
-        g_mUCStartPage.Label10.Text = rm.GetString("PSMSUpdateText")
-        g_mUCStartPage.Button_PsmsxUpdateDownload.Text = rm.GetString("DownloadNow")
-        g_mUCStartPage.Button_PsmsUpdateIgnore.Text = rm.GetString("Ignore")
-        g_mUCStartPage.Label9.Text = rm.GetString("VDMUpdateAvailable")
-        g_mUCStartPage.Label11.Text = rm.GetString("VDMUpdateText")
-        g_mUCStartPage.Button_VdmUpdateDownload.Text = rm.GetString("DownloadNow")
-        g_mUCStartPage.Button_VdmUpdateIgnore.Text = rm.GetString("DownloadNow")
-        g_mUCStartPage.Label1.Text = rm.GetString("ServiceControl")
-        g_mUCStartPage.LinkLabel_ServiceRun.Text = rm.GetString("RunPSMS")
-        g_mUCStartPage.LinkLabel_ServiceRunCmd.Text = rm.GetString("DebugService")
-        g_mUCStartPage.LinkLabel_ServiceRestart.Text = rm.GetString("RestartPSMS")
-        g_mUCStartPage.LinkLabel_ServiceStop.Text = rm.GetString("StopPSMS")
-        g_mUCStartPage.LinkLabel_ServicePath.Text = rm.GetString("SetServicePath")
-        g_mUCStartPage.Label6.Text = rm.GetString("Troubleshooting")
-        g_mUCStartPage.LinkLabel_InstallDrivers.Text = rm.GetString("InstallCameraDrivers")
-        g_mUCStartPage.LinkLabel_ServiceFactory.Text = rm.GetString("FactoryResetService")
-        g_mUCStartPage.Label2.Text = rm.GetString("Configuration")
-        g_mUCStartPage.LinkLabel_ConfigToolRun.Text = rm.GetString("RunPSMSTool")
-        g_mUCStartPage.LinkLabel_ConfigToolRunCmd.Text = rm.GetString("RunPSMSToolCmd")
-        g_mUCStartPage.LinkLabel_ConfigToolClose.Text = rm.GetString("ClosePSMSTool")
-        g_mUCStartPage.Label7.Text = rm.GetString("SupportAndUpdates")
-        g_mUCStartPage.LinkLabel_Github.Text = rm.GetString("VisitGithub")
-        g_mUCStartPage.LinkLabel_Updates.Text = rm.GetString("Updates")
-        g_mUCStartPage.Label12.Text = rm.GetString("AvailableServiceDevices")
-        g_mUCStartPage.ColumnHeader_Type.Text = rm.GetString("Type")
-        g_mUCStartPage.ColumnHeader_Color.Text = rm.GetString("Color")
-        g_mUCStartPage.ColumnHeader_ID.Text = rm.GetString("ID")
-        g_mUCStartPage.ColumnHeader_Serial.Text = rm.GetString("Serial")
-        g_mUCStartPage.ColumnHeader_Pos.Text = rm.GetString("Position")
-        g_mUCStartPage.ColumnHeader_Orientation.Text = rm.GetString("Orientation")
-        g_mUCStartPage.ColumnHeader_Battery.Text = rm.GetString("Battery")
-
+        g_mClassServiceInfo.ChangeLanguage()
     End Sub
-
 End Class

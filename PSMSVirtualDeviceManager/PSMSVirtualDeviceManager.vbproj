@@ -179,7 +179,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\ClassPrecisionSleep.vb" />
-    <Compile Include="Classes\ClassSerivceConst.vb" />
+    <Compile Include="Classes\ClassServiceConst.vb" />
     <Compile Include="Classes\ClassQuaternionTools.vb" />
     <Compile Include="Classes\ClassServiceConfig.vb" />
     <Compile Include="Classes\ClassServiceClient.vb" />
