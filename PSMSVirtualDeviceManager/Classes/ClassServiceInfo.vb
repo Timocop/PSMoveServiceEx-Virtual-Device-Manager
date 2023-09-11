@@ -1,18 +1,23 @@
 ﻿Public Class ClassServiceInfo
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "settings.ini")
     Private g_sFileName As String = ""
-
     Private g_bConfigsLoaded As Boolean = False
-
-    Public Sub New()
-    End Sub
-
+    Private g_iLastSelectedLanguage As Integer = 0
     Property m_FileName As String
         Get
             Return g_sFileName
         End Get
         Set(value As String)
             g_sFileName = value
+        End Set
+    End Property
+
+    Property LastSelectedLanguage() As Integer
+        Get
+            Return g_iLastSelectedLanguage
+        End Get
+        Set(value As Integer)
+            g_iLastSelectedLanguage = value
         End Set
     End Property
 
@@ -47,7 +52,6 @@
 
             If (mFileSearch.ShowDialog() = DialogResult.OK) Then
                 m_FileName = mFileSearch.FileName
-
                 Return True
             End If
 
@@ -65,6 +69,7 @@
                 Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
                 mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "PSMoveServiceLocation", m_FileName))
+                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "LastSelectedLanguage", g_iLastSelectedLanguage.ToString()))
 
                 mIni.WriteKeyValue(mIniContent.ToArray)
             End Using
@@ -75,6 +80,7 @@
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 m_FileName = mIni.ReadKeyValue("Settings", "PSMoveServiceLocation", "")
+                Integer.TryParse(mIni.ReadKeyValue("Settings", "LastSelectedLanguage", "0"), g_iLastSelectedLanguage)
             End Using
         End Using
 

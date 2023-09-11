@@ -6,6 +6,7 @@ Public Class FormMain
     Public g_mUCVirtualTrackers As UCVirtualTrackers
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
+    Dim mConfig As New ClassServiceInfo
     Public rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly)
     Private g_bIgnoreEvents As Boolean = False
     Enum ENUM_PAGE
@@ -536,15 +537,29 @@ Public Class FormMain
     End Class
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ComboBox1.SelectedIndex = 0 ' auto choose english
+
+        mConfig.LoadConfig()
+        ComboBox1.SelectedIndex = mConfig.lastselectedlanguage
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         Select Case ComboBox1.SelectedIndex
             Case 1
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("pl-PL")
+                mConfig.LastSelectedLanguage = 1
+                mConfig.SaveConfig()
+            Case 2
+                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("es")
+                mConfig.LastSelectedLanguage = 2
+                mConfig.SaveConfig()
+            Case 3
+                System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("de")
+                mConfig.LastSelectedLanguage = 3
+                mConfig.SaveConfig()
             Case Else ' default
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
+                mConfig.LastSelectedLanguage = 0
+                mConfig.SaveConfig()
         End Select
 
         ' Navigation bar
@@ -568,9 +583,14 @@ Public Class FormMain
         LinkLabel_InstallCameraDrivers.Text = rm.GetString("InstallCameraDrivers")
         LinkLabel_FactoryResetService.Text = rm.GetString("FactoryResetService")
         Label1.Text = rm.GetString("Language")
-        ComboBox1.Items(0) = rm.GetString("English")
-        ComboBox1.Items(1) = rm.GetString("Polish")
-        ComboBox1.Items(2) = rm.GetString("Spanish")
+        ComboBox1.Items.Insert(0, rm.GetString("English")) ' i have to do it like this because if you do ComboBox1.Items(1) = (rm.GetString("English") its gonna detect a selectedindex
+        ComboBox1.Items.Insert(1, rm.GetString("Polish"))  ' change and make an infinite loop so now if you select an language its gonna work now but your selection will disappear.
+        ComboBox1.Items.Insert(2, rm.GetString("Spanish"))
+        ComboBox1.Items.Insert(3, rm.GetString("German"))
+        For i As Integer = ComboBox1.Items.Count - 1 To 4 Step -1
+            ComboBox1.Items.RemoveAt(i)
+        Next
+
         ToolTip1.SetToolTip(LanguageT, rm.GetString("LanguageT"))
         LinkLabel_RunSteamVR.Text = rm.GetString("RunSteamVR")
         LinkLabel_Github.Text = rm.GetString("GitHub")
@@ -611,7 +631,6 @@ Public Class FormMain
         g_mUCStartPage.ColumnHeader_Pos.Text = rm.GetString("Position")
         g_mUCStartPage.ColumnHeader_Orientation.Text = rm.GetString("Orientation")
         g_mUCStartPage.ColumnHeader_Battery.Text = rm.GetString("Battery")
-
 
     End Sub
 
