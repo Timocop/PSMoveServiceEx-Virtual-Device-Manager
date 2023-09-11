@@ -15,13 +15,7 @@ Public Class UCStartPage
     Private g_bIsServiceRunning As Boolean = False
     Private g_bIsServiceConnected As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
-
-    Enum ENUM_SERVICE_PROCESS_TYPE
-        NONE
-        NORMAL
-        ADMIN
-    End Enum
-
+    Private g_mClassServiceInfo As ClassServiceInfo
     Public Sub New(mFormMain As FormMain)
         g_FormMain = mFormMain
 
@@ -92,7 +86,7 @@ Public Class UCStartPage
         While True
             Try
                 ' Check if PSMoveServiceEx is running
-                Dim bServiceRunning = (CheckIfServiceRunning() > 0)
+                Dim bServiceRunning = (g_mClassServiceInfo.CheckIfServiceRunning() > 0)
 
                 SyncLock _ThreadLock
                     If (g_bIsServiceRunning <> bServiceRunning) Then
@@ -368,7 +362,7 @@ Public Class UCStartPage
     End Sub
 
     Public Sub RunService(bHidden As Boolean)
-        If (CheckIfServiceRunning() > 0) Then
+        If (g_mClassServiceInfo.CheckIfServiceRunning() > 0) Then
             Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXAlreadyRunning"))
         End If
 
@@ -398,7 +392,7 @@ Public Class UCStartPage
     End Sub
 
     Public Sub RunServiceConfigTool(bHidden As Boolean)
-        If (CheckIfConfigToolRunning()) Then
+        If (g_mClassServiceInfo.CheckIfConfigToolRunning()) Then
             Dim sMsg As New Text.StringBuilder
             sMsg.AppendLine(g_FormMain.rm.GetString("PSMSXToolAlreadyRunning"))
             sMsg.AppendLine(g_FormMain.rm.GetString("AnotherInstancePrompt"))
@@ -498,10 +492,10 @@ Public Class UCStartPage
     End Sub
 
     Public Sub StopService()
-        Dim iServiceStatus As ENUM_SERVICE_PROCESS_TYPE = CheckIfServiceRunning()
+        Dim iServiceStatus As ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE = g_mClassServiceInfo.CheckIfServiceRunning()
 
         Select Case (iServiceStatus)
-            Case ENUM_SERVICE_PROCESS_TYPE.NORMAL
+            Case ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NORMAL
                 For Each mProcess In Process.GetProcessesByName("PSMoveService")
                     If mProcess.CloseMainWindow() Then
                         mProcess.WaitForExit(10000)
@@ -509,7 +503,7 @@ Public Class UCStartPage
                         mProcess.Kill()
                     End If
                 Next
-            Case ENUM_SERVICE_PROCESS_TYPE.ADMIN
+            Case ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.ADMIN
                 MessageBox.Show((FormMain.rm.GetString("PSMSXAdminExitPrompt")), (FormMain.rm.GetString("UnableToStopService")), MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Case Else
                 Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXNotRunning"))
@@ -531,7 +525,7 @@ Public Class UCStartPage
     Private Sub LinkLabel_ConfigToolClose_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolClose.LinkClicked
         Try
             Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveConfigTool")
-            If (Not CheckIfConfigToolRunning()) Then
+            If (Not g_mClassServiceInfo.CheckIfConfigToolRunning()) Then
                 Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXToolNotRunning"))
             End If
 
@@ -559,7 +553,7 @@ Public Class UCStartPage
         g_mDriverInstallThread = New Threading.Thread(
             Sub()
                 Try
-                    If (CheckIfServiceRunning() > 0) Then
+                    If (g_mClassServiceInfo.CheckIfServiceRunning() > 0) Then
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
@@ -624,7 +618,7 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ServiceFactory_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceFactory.LinkClicked
         Try
-            If (CheckIfServiceRunning() > 0) Then
+            If (g_mClassServiceInfo.CheckIfServiceRunning() > 0) Then
                 Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
             End If
 
@@ -701,19 +695,5 @@ Public Class UCStartPage
     Private Sub Button_PsmsUpdateIgnore_Click(sender As Object, e As EventArgs) Handles Button_PsmsUpdateIgnore.Click
         Panel_PsmsxUpdate.Visible = False
     End Sub
-
-    Public Function CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
-        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-            Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
-        ElseIf (Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0) Then
-            Return ENUM_SERVICE_PROCESS_TYPE.ADMIN
-        Else
-            Return ENUM_SERVICE_PROCESS_TYPE.NONE
-        End If
-    End Function
-
-    Public Function CheckIfConfigToolRunning() As Boolean
-        Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
-    End Function
 End Class
 

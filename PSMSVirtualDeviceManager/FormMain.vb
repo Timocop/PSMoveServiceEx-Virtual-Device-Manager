@@ -6,8 +6,8 @@ Public Class FormMain
     Public g_mUCVirtualTrackers As UCVirtualTrackers
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
-    Dim mConfig As New ClassServiceInfo
-    Public rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly)
+    Public g_mClassServiceInfo As ClassServiceInfo
+    Public rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly) ' should probably move this to another file
     Private g_bIgnoreEvents As Boolean = False
     Enum ENUM_PAGE
         STARTPAGE
@@ -134,12 +134,12 @@ Public Class FormMain
     Private Sub OnServiceConnectionStatusChanged()
         Try
             ' Lets find PSMS-EX when connection as been established and then save it to config.
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
+            Dim g_mClassServiceInfo As New ClassServiceInfo
+            g_mClassServiceInfo.LoadConfig()
 
-            If (Not mConfig.FileExist) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
+            If (Not g_mClassServiceInfo.FileExist) Then
+                If (g_mClassServiceInfo.FindByProcess()) Then
+                    g_mClassServiceInfo.SaveConfig()
                 End If
             End If
         Catch ex As Threading.ThreadAbortException
@@ -309,15 +309,15 @@ Public Class FormMain
                 Return
             End If
 
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
+            Dim g_mClassServiceInfo As New ClassServiceInfo
+            g_mClassServiceInfo.LoadConfig()
 
             Try
                 g_bIgnoreEvents = True
 
-                If (mConfig.FileExist) Then
+                If (g_mClassServiceInfo.FileExist) Then
                     ToolTip_Service.ToolTipTitle = "Service path:"
-                    ToolTip_Service.SetToolTip(e.AssociatedControl, mConfig.m_FileName)
+                    ToolTip_Service.SetToolTip(e.AssociatedControl, g_mClassServiceInfo.m_FileName)
                 Else
                     e.Cancel = True
                 End If
@@ -478,11 +478,11 @@ Public Class FormMain
                 End If
 
                 If (True) Then
-                    Dim mConfig As New ClassServiceInfo
-                    mConfig.LoadConfig()
+                    Dim g_mClassServiceInfo As New ClassServiceInfo
+                    g_mClassServiceInfo.LoadConfig()
 
-                    If (mConfig.FileExist) Then
-                        If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
+                    If (g_mClassServiceInfo.FileExist) Then
+                        If (ClassUpdate.ClassPsms.CheckUpdateAvailable(g_mClassServiceInfo.m_FileName, sLocationInfo)) Then
                             ClassUtils.AsyncInvoke(g_mFormMain,
                                 Sub()
                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
@@ -538,28 +538,28 @@ Public Class FormMain
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        mConfig.LoadConfig()
-        ComboBox1.SelectedIndex = mConfig.lastselectedlanguage
+        g_mClassServiceInfo.LoadConfig()
+        ComboBox1.SelectedIndex = g_mClassServiceInfo.LastSelectedLanguage
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         Select Case ComboBox1.SelectedIndex
             Case 1
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("pl-PL")
-                mConfig.LastSelectedLanguage = 1
-                mConfig.SaveConfig()
+                g_mClassServiceInfo.LastSelectedLanguage = 1
+                g_mClassServiceInfo.SaveConfig()
             Case 2
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("es")
-                mConfig.LastSelectedLanguage = 2
-                mConfig.SaveConfig()
+                g_mClassServiceInfo.LastSelectedLanguage = 2
+                g_mClassServiceInfo.SaveConfig()
             Case 3
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("de")
-                mConfig.LastSelectedLanguage = 3
-                mConfig.SaveConfig()
+                g_mClassServiceInfo.LastSelectedLanguage = 3
+                g_mClassServiceInfo.SaveConfig()
             Case Else ' default
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
-                mConfig.LastSelectedLanguage = 0
-                mConfig.SaveConfig()
+                g_mClassServiceInfo.LastSelectedLanguage = 0
+                g_mClassServiceInfo.SaveConfig()
         End Select
 
         ' Navigation bar
@@ -587,7 +587,7 @@ Public Class FormMain
         ComboBox1.Items.Insert(1, rm.GetString("Polish"))  ' change and make an infinite loop so now if you select an language its gonna work now but your selection will disappear.
         ComboBox1.Items.Insert(2, rm.GetString("Spanish"))
         ComboBox1.Items.Insert(3, rm.GetString("German"))
-        For i As Integer = ComboBox1.Items.Count - 1 To 4 Step -1
+        For i As Integer = ComboBox1.Items.Count - 1 To 4 Step -1 ' removing the additional languages created from the insert thing
             ComboBox1.Items.RemoveAt(i)
         Next
 
