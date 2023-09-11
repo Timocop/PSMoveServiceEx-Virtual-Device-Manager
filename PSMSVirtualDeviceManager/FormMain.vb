@@ -1,5 +1,4 @@
 ﻿Imports System.Resources
-
 Public Class FormMain
     Public g_mUCStartPage As UCStartPage
     Public g_mUCVirtualControllers As UCVirtualControllers
@@ -7,7 +6,7 @@ Public Class FormMain
     Public g_mUCVirtualTrackers As UCVirtualTrackers
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
-
+    Public rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly)
     Private g_bIgnoreEvents As Boolean = False
     Enum ENUM_PAGE
         STARTPAGE
@@ -72,7 +71,8 @@ Public Class FormMain
             End Try
         End While
 
-        Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
+        Label_Version.Text = String.Format("{0}: {1}", rm.GetString("Version"), Application.ProductVersion.ToString())
+
 
         g_mClassUpdateChecker = New ClassUpdateChecker(Me)
         g_mClassUpdateChecker.StartUpdateCheck()
@@ -546,9 +546,9 @@ Public Class FormMain
             Case Else ' default
                 System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
         End Select
-        Dim rm As New ResourceManager("PSMSVirtualDeviceManager.Localization", GetType(FormMain).Assembly)
+
         ' Navigation bar
-        ' Label2.Text = rm.GetString("Navigation")
+        Label2.Text = rm.GetString("Navigation")
         LinkLabel_StartPage.Text = rm.GetString("ServiceManagement")
         LinkLabel_RunPSMS.Text = rm.GetString("RunPSMS")
         LinkLabel_StopPSMS.Text = rm.GetString("StopPSMS")
@@ -568,6 +568,10 @@ Public Class FormMain
         LinkLabel_InstallCameraDrivers.Text = rm.GetString("InstallCameraDrivers")
         LinkLabel_FactoryResetService.Text = rm.GetString("FactoryResetService")
         Label1.Text = rm.GetString("Language")
+        ComboBox1.Items(0) = rm.GetString("English")
+        ComboBox1.Items(1) = rm.GetString("Polish")
+        ComboBox1.Items(2) = rm.GetString("Spanish")
+        ToolTip1.SetToolTip(LanguageT, rm.GetString("LanguageT"))
         LinkLabel_RunSteamVR.Text = rm.GetString("RunSteamVR")
         LinkLabel_Github.Text = rm.GetString("GitHub")
         LinkLabel_Updates.Text = rm.GetString("Updates")
@@ -598,7 +602,7 @@ Public Class FormMain
         g_mUCStartPage.LinkLabel_ConfigToolClose.Text = rm.GetString("ClosePSMSTool")
         g_mUCStartPage.Label7.Text = rm.GetString("SupportAndUpdates")
         g_mUCStartPage.LinkLabel_Github.Text = rm.GetString("VisitGithub")
-        g_mUCStartPage.LinkLabel_Updates.Text = rm.GetString("CheckForUpdates")
+        g_mUCStartPage.LinkLabel_Updates.Text = rm.GetString("Updates")
         g_mUCStartPage.Label12.Text = rm.GetString("AvailableServiceDevices")
         g_mUCStartPage.ColumnHeader_Type.Text = rm.GetString("Type")
         g_mUCStartPage.ColumnHeader_Color.Text = rm.GetString("Color")

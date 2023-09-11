@@ -55,7 +55,7 @@ Public Class UCStartPage
                 g_bIgnoreEvents = True
 
                 If (mConfig.FileExist) Then
-                    ToolTip_Service.ToolTipTitle = "Service path:"
+                    ToolTip_Service.ToolTipTitle = g_FormMain.rm.GetString("ServicePath")
                     ToolTip_Service.SetToolTip(e.AssociatedControl, mConfig.m_FileName)
                 Else
                     e.Cancel = True
@@ -72,17 +72,17 @@ Public Class UCStartPage
     Private Sub SetStatusServiceConnected()
         SyncLock _ThreadLock
             If (g_bIsServiceRunning And Not g_bIsServiceConnected) Then
-                Label_PsmsxStatus.Text = "Connecting to Service..."
+                Label_PsmsxStatus.Text = g_FormMain.rm.GetString("ConnectingToService")
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                 Return
             End If
 
             If (g_bIsServiceConnected) Then
-                Label_PsmsxStatus.Text = "Service Connected"
+                Label_PsmsxStatus.Text = g_FormMain.rm.GetString("ServiceConnected")
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
             Else
-                Label_PsmsxStatus.Text = "Service Disconnected"
+                Label_PsmsxStatus.Text = g_FormMain.rm.GetString("ServiceDisconnected")
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
             End If
         End SyncLock
@@ -157,17 +157,17 @@ Public Class UCStartPage
                                                        Dim sTrackingColor As String = "Unknown"
                                                        Select Case (mDevice.m_TrackingColor)
                                                            Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Magenta
-                                                               sTrackingColor = "Magenta"
+                                                               sTrackingColor = g_FormMain.rm.GetString("Magenta")
                                                            Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Cyan
-                                                               sTrackingColor = "Cyan"
+                                                               sTrackingColor = g_FormMain.rm.GetString("Cyan")
                                                            Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Yellow
-                                                               sTrackingColor = "Yellow"
+                                                               sTrackingColor = g_FormMain.rm.GetString("Yellow")
                                                            Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Red
-                                                               sTrackingColor = "Red"
+                                                               sTrackingColor = g_FormMain.rm.GetString("Red")
                                                            Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Green
-                                                               sTrackingColor = "Green"
+                                                               sTrackingColor = g_FormMain.rm.GetString("Green")
                                                            Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Blue
-                                                               sTrackingColor = "Blue"
+                                                               sTrackingColor = g_FormMain.rm.GetString("Blue")
                                                        End Select
 
                                                        ' Change info about device 
@@ -369,7 +369,7 @@ Public Class UCStartPage
 
     Public Sub RunService(bHidden As Boolean)
         If (CheckIfServiceRunning() > 0) Then
-            Throw New ArgumentException("PSMoveServiceEx is already running!")
+            Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXAlreadyRunning"))
         End If
 
         Dim mConfig As New ClassServiceInfo
@@ -400,9 +400,9 @@ Public Class UCStartPage
     Public Sub RunServiceConfigTool(bHidden As Boolean)
         If (CheckIfConfigToolRunning()) Then
             Dim sMsg As New Text.StringBuilder
-            sMsg.AppendLine("PSMoveServiceEx Config Tool is already running!")
-            sMsg.AppendLine("Do you want to run another instance?")
-            If (MessageBox.Show(sMsg.ToString, "Instance already running", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+            sMsg.AppendLine(g_FormMain.rm.GetString("PSMSXToolAlreadyRunning"))
+            sMsg.AppendLine(g_FormMain.rm.GetString("AnotherInstancePrompt"))
+            If (MessageBox.Show(sMsg.ToString, (g_FormMain.rm.GetString("InstanceAlreadyRunning")), MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                 Return
             End If
         End If
@@ -424,7 +424,7 @@ Public Class UCStartPage
 
         Dim sFilePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(mConfig.m_FileName), "PSMoveConfigTool.exe")
         If (Not IO.File.Exists(sFilePath)) Then
-            Throw New ArgumentException("PSMoveConfigTool.exe does not exist!")
+            Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXToolDoesntExist"))
         End If
 
         Using mProcess As New Process
@@ -447,7 +447,7 @@ Public Class UCStartPage
             StopService()
 
             g_mFormRestart = New FormLoading
-            g_mFormRestart.Text = "Restarting PSMoveServiceEx..."
+            g_mFormRestart.Text = g_FormMain.rm.GetString("RestartingPSMSX")
             g_mFormRestart.Show(Me)
 
             Timer_RestartPsms.Enabled = True
@@ -510,9 +510,9 @@ Public Class UCStartPage
                     End If
                 Next
             Case ENUM_SERVICE_PROCESS_TYPE.ADMIN
-                MessageBox.Show("You have PSMoveServiceAdmin running, please stop the service manually.", "Unable to stop service", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show((FormMain.rm.GetString("PSMSXAdminExitPrompt")), (FormMain.rm.GetString("UnableToStopService")), MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Case Else
-                Throw New ArgumentException("PSMoveServiceEx is not running!")
+                Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXNotRunning"))
         End Select
     End Sub
 
@@ -532,7 +532,7 @@ Public Class UCStartPage
         Try
             Dim mProcesses As Process() = Process.GetProcessesByName("PSMoveConfigTool")
             If (Not CheckIfConfigToolRunning()) Then
-                Throw New ArgumentException("PSMoveConfigTool is not running!")
+                Throw New ArgumentException(g_FormMain.rm.GetString("PSMSXToolNotRunning"))
             End If
 
             For Each mProcess In mProcesses
@@ -565,18 +565,18 @@ Public Class UCStartPage
 
                     If (True) Then
                         Dim sMessage As New Text.StringBuilder
-                        sMessage.AppendLine("You are about to install LibUSB drivers for Playstation Eye Cameras.")
-                        sMessage.AppendLine("Already existing Playstation Eye drivers will be replaced!")
+                        sMessage.AppendLine(g_FormMain.rm.GetString("AboutToInstallLibUSB"))
+                        sMessage.AppendLine(g_FormMain.rm.GetString("PSEyeDriversWillBeReplaced"))
                         sMessage.AppendLine()
-                        sMessage.AppendLine("Do you want to continue?")
-                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                        sMessage.AppendLine(g_FormMain.rm.GetString("ContinuePrompt"))
+                        If (MessageBox.Show(sMessage.ToString, FormMain.rm.GetString("DriverInstallation"), MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
                             Return
                         End If
                     End If
 
                     If (True) Then
                         Dim sMessage As New Text.StringBuilder
-                        sMessage.AppendLine("WARNING!")
+                        sMessage.AppendLine(g_FormMain.rm.GetString("DriverInstallation"))
                         sMessage.AppendLine("The Playstation Eye driver installation might trigger sensitive Anti-Virus programs!")
                         sMessage.AppendLine("It's recommended to whitelist the Virtual Device Manager folder before starting the installation to avoid any issues.")
                         sMessage.AppendLine()

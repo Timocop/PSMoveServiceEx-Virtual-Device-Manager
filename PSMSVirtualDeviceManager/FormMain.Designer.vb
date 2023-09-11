@@ -35,6 +35,7 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.LanguageT = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.LinkLabel_StartPage = New System.Windows.Forms.LinkLabel()
@@ -57,7 +58,9 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel1.SuspendLayout()
+        CType(Me.LanguageT, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel_Pages
@@ -166,6 +169,7 @@ Partial Class FormMain
         Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 700)
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel1.Controls.Add(Me.LanguageT)
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Controls.Add(Me.ComboBox1)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMS)
@@ -198,6 +202,18 @@ Partial Class FormMain
         Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
         '
+        'LanguageT
+        '
+        Me.LanguageT.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.LanguageT.Location = New System.Drawing.Point(147, 619)
+        Me.LanguageT.Name = "LanguageT"
+        Me.LanguageT.Size = New System.Drawing.Size(18, 21)
+        Me.LanguageT.TabIndex = 27
+        Me.LanguageT.TabStop = False
+        Me.ToolTip1.SetToolTip(Me.LanguageT, "Languages tagged with (T) mean that they were translated using an online tool." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "P" &
+        "lease, if you can, translate them by hand, so we can improve the accuracy of the" &
+        " translation." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
+        '
         'Label1
         '
         Me.Label1.AutoSize = True
@@ -215,7 +231,7 @@ Partial Class FormMain
         '
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Items.AddRange(New Object() {"English", "Polish"})
+        Me.ComboBox1.Items.AddRange(New Object() {"English", "Polish", "Spanish (T)"})
         Me.ComboBox1.Location = New System.Drawing.Point(19, 617)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
@@ -624,6 +640,7 @@ Partial Class FormMain
         Me.Text = "PSMoveServiceEx - Virtual Device Manager"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        CType(Me.LanguageT, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -656,4 +673,6 @@ Partial Class FormMain
     Friend WithEvents LinkLabel_StartPage As LinkLabel
     Friend WithEvents Label1 As Label
     Friend WithEvents ComboBox1 As ComboBox
+    Friend WithEvents LanguageT As PictureBox
+    Friend WithEvents ToolTip1 As ToolTip
 End Class

@@ -244,9 +244,6 @@ Aby skorzystać z najnowszych ulepszeń, warto rozważyć aktualizację oprogram
   <data name="Orientation" xml:space="preserve">
     <value>Orientacja</value>
   </data>
-  <data name="Battery" xml:space="preserve">
-    <value>Bateria</value>
-  </data>
   <data name="ServiceControl" xml:space="preserve">
     <value>Kontrola usługi</value>
   </data>
@@ -264,5 +261,107 @@ Aby skorzystać z najnowszych ulepszeń, warto rozważyć aktualizację oprogram
   </data>
   <data name="AvailableServiceDevices" xml:space="preserve">
     <value>Dostępne urządzenia serwisowe</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Niebieski</value>
+  </data>
+  <data name="Green" xml:space="preserve">
+    <value>Zielony</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>Czerwony</value>
+  </data>
+  <data name="Yellow" xml:space="preserve">
+    <value>Żółty</value>
+  </data>
+  <data name="ConnectingToService" xml:space="preserve">
+    <value>Łączenie z usługą...</value>
+  </data>
+  <data name="ServiceConnected" xml:space="preserve">
+    <value>Usługa połączona</value>
+  </data>
+  <data name="ServiceDisconnected" xml:space="preserve">
+    <value>Usługa odłączona</value>
+  </data>
+  <data name="Magenta" xml:space="preserve">
+    <value>Magenta</value>
+  </data>
+  <data name="Cyan" xml:space="preserve">
+    <value>Cyjan</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RestartingPSMSX" xml:space="preserve">
+    <value>Restartowanie PSMoveServiceEx...</value>
+  </data>
+  <data name="PSMSXAdminExitPrompt" xml:space="preserve">
+    <value>Usługa PSMoveServiceAdmin jest uruchomiona, zatrzymaj ją ręcznie.</value>
+  </data>
+  <data name="UnableToStopService" xml:space="preserve">
+    <value>Nie można zatrzymać usługi.</value>
+  </data>
+  <data name="ServicePath" xml:space="preserve">
+    <value>Ścieżka usługi:</value>
+  </data>
+  <data name="ContinuePrompt" xml:space="preserve">
+    <value>Czy chcesz kontynuować?</value>
+  </data>
+  <data name="DriverInstallation" xml:space="preserve">
+    <value>Instalacja sterowników</value>
+  </data>
+  <data name="Battery" xml:space="preserve">
+    <value>Bateria</value>
+  </data>
+  <data name="Serial" xml:space="preserve">
+    <value>Serial</value>
+  </data>
+  <data name="PSMSXAlreadyRunning" xml:space="preserve">
+    <value>Usługa PSMoveServiceEx jest już uruchomiona!</value>
+  </data>
+  <data name="PSMSXToolAlreadyRunning" xml:space="preserve">
+    <value>Narzędzie konfiguracyjne PSMoveServiceEx jest już uruchomione!</value>
+  </data>
+  <data name="AnotherInstancePrompt" xml:space="preserve">
+    <value>Czy chcesz uruchomić kolejną instancję?</value>
+  </data>
+  <data name="InstanceAlreadyRunning" xml:space="preserve">
+    <value>Instancja już uruchomiona</value>
+  </data>
+  <data name="PSMSXToolDoesntExist" xml:space="preserve">
+    <value>PSMoveConfigTool.exe nie istnieje!</value>
+  </data>
+  <data name="PSMSXNotRunning" xml:space="preserve">
+    <value>Usługa PSMoveServiceEx nie jest uruchomiona!</value>
+  </data>
+  <data name="PSMSXToolNotRunning" xml:space="preserve">
+    <value>Narzędzie konfiguracyjne PSMoveServiceEx nie jest uruchomione!</value>
+  </data>
+  <data name="PSMSXRunningPleaseClose" xml:space="preserve">
+    <value>Usługa PSMoveServiceEx jest uruchomiona. Zamknij PSMoveServiceEx!</value>
+  </data>
+  <data name="AboutToInstallLibUSB" xml:space="preserve">
+    <value>Właśnie instalujesz sterowniki LibUSB dla kamer Playstation Eye.</value>
+  </data>
+  <data name="PSEyeDriversWillBeReplaced" xml:space="preserve">
+    <value>Istniejące już sterowniki Playstation Eye zostaną zastąpione!</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>OSTRZEŻENIE!</value>
+  </data>
+  <data name="LanguageT" xml:space="preserve">
+    <value>Języki oznaczone (T) oznaczają, że zostały przetłumaczone za pomocą narzędzia online i mogą nie być dokładne. Jeśli możesz, przetłumacz je na swój język, abyśmy mogli poprawić dokładność tłumaczenia.</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polski</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Angielski</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Hiszpański</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Niemiecki</value>
   </data>
 </root>

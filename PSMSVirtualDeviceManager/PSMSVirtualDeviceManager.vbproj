@@ -326,6 +326,7 @@
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Localization\Localization.es.resx" />
     <EmbeddedResource Include="Localization\Localization.pl.resx" />
     <EmbeddedResource Include="Localization\Localization.resx" />
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -369,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.resx">
       <DependentUpon>UCRemoteDevices.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualTrackers\UCVirtualTrackerItem.pl.resx">
+      <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualTrackers\UCVirtualTrackerItem.resx">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>

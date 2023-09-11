@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,141 +117,144 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
   <data name="ControllerAttachements" xml:space="preserve">
-    <value>Controller Attachements</value>
+    <value>Controller-Anhänge</value>
   </data>
   <data name="Controllers" xml:space="preserve">
-    <value>Virtual Controllers</value>
+    <value>Virtuelle Steuergeräte</value>
   </data>
   <data name="ControllersAttachements" xml:space="preserve">
-    <value>Controller Attachements</value>
+    <value>Controller-Anhänge</value>
   </data>
   <data name="ControllersGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>Allgemein</value>
   </data>
   <data name="ControllersRemote" xml:space="preserve">
-    <value>Remote Devices</value>
+    <value>Entfernte Geräte</value>
   </data>
   <data name="ControllersVMT" xml:space="preserve">
-    <value>Virtual Motion Tracker</value>
+    <value>Virtueller Bewegungstracker</value>
   </data>
   <data name="DownloadNow" xml:space="preserve">
-    <value>Download Now</value>
+    <value>Jetzt herunterladen</value>
   </data>
   <data name="FactoryResetService" xml:space="preserve">
-    <value>Factory Reset PSMoveServiceEx</value>
+    <value>Werksrückstellung PSMoveServiceEx</value>
   </data>
   <data name="GitHub" xml:space="preserve">
     <value>GitHub</value>
   </data>
   <data name="HMDs" xml:space="preserve">
-    <value>Virtual Head-Mounted Devices</value>
+    <value>Virtuelle kopfgetragene Geräte</value>
   </data>
   <data name="Ignore" xml:space="preserve">
-    <value>Ignore</value>
+    <value>Ignorieren Sie</value>
   </data>
   <data name="InstallCameraDrivers" xml:space="preserve">
-    <value>Install Playstation Eye Drivers</value>
+    <value>Playstation Eye-Treiber installieren</value>
   </data>
   <data name="Label3" xml:space="preserve">
-    <value>Manage service and configurations here.</value>
+    <value>Hier können Sie Dienste und Konfigurationen verwalten.</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Sprache</value>
   </data>
   <data name="Navigation" xml:space="preserve">
     <value>Navigation</value>
   </data>
   <data name="PSMSDisconnected" xml:space="preserve">
-    <value>PSMoveServiceEx Disconnected</value>
+    <value>PSMoveServiceEx Abgekoppelt</value>
   </data>
   <data name="PSMSUpdateAvailable" xml:space="preserve">
-    <value>PSMoveServiceEx Software Update Available</value>
+    <value>PSMoveServiceEx Software-Update verfügbar</value>
   </data>
   <data name="PSMSUpdateText" xml:space="preserve">
-    <value>A new update for PSMoveServiceEx is now accessible.
-This update includes various improvements, performance enhancements, and additional features. 
-To experience the latest improvements, consider updating your software.</value>
+    <value>Ein neues Update für PSMoveServiceEx ist jetzt verfügbar.
+Dieses Update enthält verschiedene Verbesserungen, Leistungssteigerungen und zusätzliche Funktionen.
+Wenn Sie die neuesten Verbesserungen nutzen möchten, sollten Sie Ihre Software aktualisieren.</value>
   </data>
   <data name="RemoteStartSocket" xml:space="preserve">
-    <value>Start Socket</value>
+    <value>Start Steckdose</value>
   </data>
   <data name="RestartPSMS" xml:space="preserve">
-    <value>Restart Service</value>
+    <value>Dienst neu starten</value>
   </data>
   <data name="RunPSMS" xml:space="preserve">
-    <value>Run Service</value>
+    <value>Dienst ausführen</value>
   </data>
   <data name="RunPSMSTool" xml:space="preserve">
-    <value>Run Service Config Tool</value>
+    <value>Dienstkonfigurationsprogramm ausführen</value>
   </data>
   <data name="RunSteamVR" xml:space="preserve">
-    <value>Launch SteamVR</value>
+    <value>SteamVR starten</value>
   </data>
   <data name="ServiceManagement" xml:space="preserve">
-    <value>Service Management</value>
+    <value>Dienstleistungsverwaltung</value>
   </data>
   <data name="StopPSMS" xml:space="preserve">
-    <value>Stop Service</value>
+    <value>Dienst anhalten</value>
   </data>
   <data name="Trackers" xml:space="preserve">
-    <value>Virtual Trackers</value>
+    <value>Virtuelle Tracker</value>
   </data>
   <data name="Troubleshooting" xml:space="preserve">
-    <value>Troubleshooting</value>
+    <value>Fehlersuche</value>
   </data>
   <data name="Updates" xml:space="preserve">
-    <value>Check For Updates</value>
+    <value>Nach Updates suchen</value>
   </data>
   <data name="VDMUpdateAvailable" xml:space="preserve">
-    <value>Virtual Device Manager Software Update Available</value>
+    <value>Software-Update für Virtual Device Manager verfügbar</value>
   </data>
   <data name="VDMUpdateText" xml:space="preserve">
-    <value>A new update for PSMoveServiceEx - Virtual Device Manager is now accessible.
-This update includes various improvements, performance enhancements, and additional features. 
-To experience the latest improvements, consider updating your software.</value>
+    <value>Ein neues Update für PSMoveServiceEx - Virtual Device Manager ist jetzt verfügbar.
+Dieses Update enthält verschiedene Verbesserungen, Leistungssteigerungen und zusätzliche Funktionen.
+Wenn Sie die neuesten Verbesserungen nutzen möchten, sollten Sie Ihre Software aktualisieren.</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version:</value>
   </data>
   <data name="VMTPauseOscServer" xml:space="preserve">
-    <value>Pause OSC Server</value>
+    <value>OSC-Server anhalten</value>
   </data>
   <data name="VMTStartOscServer" xml:space="preserve">
-    <value>Start OSC Server</value>
+    <value>OSC-Server starten</value>
   </data>
   <data name="ServiceControl" xml:space="preserve">
-    <value>Service Control</value>
+    <value>Dienstleistungskontrolle</value>
   </data>
   <data name="DebugService" xml:space="preserve">
-    <value>Debug Service</value>
+    <value>Debug-Dienst</value>
   </data>
   <data name="SetServicePath" xml:space="preserve">
-    <value>Set Service Path</value>
+    <value>Dienstpfad festlegen</value>
   </data>
   <data name="Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>Konfiguration</value>
   </data>
   <data name="RunPSMSToolCmd" xml:space="preserve">
-    <value>Debug Config Tool</value>
+    <value>Debug-Konfigurationswerkzeug</value>
   </data>
   <data name="ClosePSMSTool" xml:space="preserve">
-    <value>Close Config Tool</value>
+    <value>Konfig-Tool schließen</value>
   </data>
   <data name="SupportAndUpdates" xml:space="preserve">
-    <value>Support and Updates</value>
+    <value>Unterstützung und Updates</value>
   </data>
   <data name="VisitGithub" xml:space="preserve">
-    <value>Visit GitHub</value>
+    <value>GitHub besuchen</value>
   </data>
   <data name="AvailableServiceDevices" xml:space="preserve">
-    <value>Available Service Devices</value>
+    <value>Verfügbare Servicegeräte</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Typ</value>
   </data>
   <data name="Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Farbe</value>
   </data>
   <data name="ID" xml:space="preserve">
     <value>ID</value>
@@ -260,16 +263,16 @@ To experience the latest improvements, consider updating your software.</value>
     <value>Position</value>
   </data>
   <data name="Orientation" xml:space="preserve">
-    <value>Orientation</value>
+    <value>Orientierung</value>
   </data>
   <data name="ConnectingToService" xml:space="preserve">
-    <value>Connecting to service...</value>
+    <value>Verbindung zum Dienst...</value>
   </data>
   <data name="ServiceConnected" xml:space="preserve">
-    <value>Service Connected</value>
+    <value>Service Verbunden</value>
   </data>
   <data name="ServiceDisconnected" xml:space="preserve">
-    <value>Service Disconnected</value>
+    <value>Dienst unterbrochen</value>
   </data>
   <data name="Magenta" xml:space="preserve">
     <value>Magenta</value>
@@ -278,90 +281,87 @@ To experience the latest improvements, consider updating your software.</value>
     <value>Cyan</value>
   </data>
   <data name="Yellow" xml:space="preserve">
-    <value>Yellow</value>
+    <value>Gelb</value>
   </data>
   <data name="Red" xml:space="preserve">
-    <value>Red</value>
+    <value>Rot</value>
   </data>
   <data name="Green" xml:space="preserve">
-    <value>Green</value>
+    <value>Grün</value>
   </data>
   <data name="Blue" xml:space="preserve">
-    <value>Blue</value>
+    <value>Blau</value>
   </data>
   <data name="RestartingPSMSX" xml:space="preserve">
-    <value>Restarting PSMoveServiceEx...</value>
+    <value>Neustart von PSMoveServiceEx...</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Error</value>
+    <value>Fehler</value>
   </data>
   <data name="PSMSXAdminExitPrompt" xml:space="preserve">
-    <value>You have PSMoveServiceAdmin running, please stop the service manually.</value>
+    <value>Sie haben PSMoveServiceAdmin laufen, bitte beenden Sie den Dienst manuell.</value>
   </data>
   <data name="UnableToStopService" xml:space="preserve">
-    <value>Unable to stop the service.</value>
+    <value>Der Dienst kann nicht angehalten werden.</value>
   </data>
   <data name="Serial" xml:space="preserve">
-    <value>Serial</value>
+    <value>Serienmäßig</value>
   </data>
   <data name="ServicePath" xml:space="preserve">
-    <value>Service path:</value>
+    <value>Dienstweg:</value>
   </data>
   <data name="PSMSXAlreadyRunning" xml:space="preserve">
-    <value>PSMoveServiceEx is already running!</value>
+    <value>PSMoveServiceEx läuft bereits!</value>
   </data>
   <data name="PSMSXToolAlreadyRunning" xml:space="preserve">
-    <value>PSMoveServiceEx Config Tool is already running!</value>
+    <value>Das PSMoveServiceEx-Konfigurationsprogramm läuft bereits!</value>
   </data>
   <data name="AnotherInstancePrompt" xml:space="preserve">
-    <value>Do you want to run another instance?</value>
+    <value>Möchten Sie eine weitere Instanz starten?</value>
   </data>
   <data name="InstanceAlreadyRunning" xml:space="preserve">
-    <value>Instance already running</value>
+    <value>Instanz läuft bereits</value>
   </data>
   <data name="PSMSXToolDoesntExist" xml:space="preserve">
-    <value>PSMoveConfigTool.exe does not exist!</value>
+    <value>PSMoveConfigTool.exe existiert nicht!</value>
   </data>
   <data name="PSMSXNotRunning" xml:space="preserve">
-    <value>PSMoveServiceEx is not running!</value>
+    <value>PSMoveServiceEx wird nicht ausgeführt!</value>
   </data>
   <data name="PSMSXToolNotRunning" xml:space="preserve">
-    <value>PsMoveServiceEx Config Tool is not running!</value>
+    <value>PsMoveServiceEx Config Tool wird nicht ausgeführt!</value>
   </data>
   <data name="PSMSXRunningPleaseClose" xml:space="preserve">
-    <value>PSMoveServiceEx is running. Please close PSMoveServiceEx!</value>
+    <value>PSMoveServiceEx wird ausgeführt. Bitte schließen Sie PSMoveServiceEx!</value>
   </data>
   <data name="AboutToInstallLibUSB" xml:space="preserve">
-    <value>You are about to install LibUSB drivers for Playstation Eye Cameras.</value>
+    <value>Sie sind dabei, die LibUSB-Treiber für Playstation Eye Cameras zu installieren.</value>
   </data>
   <data name="PSEyeDriversWillBeReplaced" xml:space="preserve">
-    <value>Already existing Playstation Eye drivers will be replaced!</value>
+    <value>Bereits vorhandene Playstation Eye-Treiber werden ersetzt!</value>
   </data>
   <data name="ContinuePrompt" xml:space="preserve">
-    <value>Do you want to continue?</value>
+    <value>Möchten Sie fortfahren?</value>
   </data>
   <data name="DriverInstallation" xml:space="preserve">
-    <value>Driver Installation</value>
+    <value>Treiber-Installation</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>WARNING!</value>
+    <value>WARNUNG!</value>
   </data>
   <data name="LanguageT" xml:space="preserve">
-    <value>Languages tagged with (T) mean that they were translated using an online tool and might not be accurate. Please, if you can, translate it to your language, so we can improve the translation accuracy.</value>
+    <value>Sprachen, die mit (T) gekennzeichnet sind, wurden mit einem Online-Tool übersetzt und sind möglicherweise nicht genau. Bitte übersetzen Sie den Text, wenn möglich, in Ihre Sprache, damit wir die Genauigkeit der Übersetzung verbessern können.</value>
   </data>
   <data name="Battery" xml:space="preserve">
-    <value>Battery</value>
+    <value>Batterie</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>English</value>
+    <value>Englisch</value>
   </data>
   <data name="Polish" xml:space="preserve">
-    <value>Polish</value>
+    <value>Polnisch</value>
   </data>
   <data name="Spanish" xml:space="preserve">
-    <value>Spanish (T)</value>
-  </data>
-  <data name="German" xml:space="preserve">
-    <value>German (T)</value>
+    <value>Spanisch (T)</value>
   </data>
 </root>
