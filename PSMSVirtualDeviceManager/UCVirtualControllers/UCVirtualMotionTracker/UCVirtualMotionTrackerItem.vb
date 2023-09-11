@@ -34,7 +34,7 @@ Public Class UCVirtualMotionTrackerItem
     Public Sub New(iControllerID As Integer, _UCVirtualMotionTracker As UCVirtualMotionTracker)
         g_mUCVirtualMotionTracker = _UCVirtualMotionTracker
 
-        If (iControllerID < 0 OrElse iControllerID > ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
+        If (iControllerID < 0 OrElse iControllerID > ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
             iControllerID = -1
         End If
 
@@ -46,7 +46,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = True
 
             ComboBox_ControllerID.Items.Clear()
-            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+            For i = -1 To ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_ControllerID.Items.Add(CStr(i))
             Next
             ComboBox_ControllerID.SelectedIndex = 0

@@ -266,7 +266,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = False
         End Try
 
-        For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+        For i = 0 To ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
             g_mAutostartMenuStrips(i) = mItem
@@ -280,7 +280,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_PlayCalibControllerID.Items.Clear()
-            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+            For i = 0 To ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                 ComboBox_PlayCalibControllerID.Items.Add(i)
             Next
 

@@ -6,7 +6,7 @@ Partial Public Class UCVirtualMotionTracker
 
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                For i = 0 To ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If
@@ -28,7 +28,7 @@ Partial Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub AddVmtTracker(id As Integer)
-        If (ListView_Trackers.Items.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
+        If (ListView_Trackers.Items.Count >= ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
             Throw New ArgumentException("Maximum number of trackers reached")
         End If
 
@@ -80,7 +80,7 @@ Partial Public Class UCVirtualMotionTracker
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                For i = 0 To ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If

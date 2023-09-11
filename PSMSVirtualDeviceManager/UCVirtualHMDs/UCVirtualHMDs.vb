@@ -11,7 +11,7 @@
             g_bIgnoreEvents = True
 
             ComboBox_VirtualHMDCount.Items.Clear()
-            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT
+            For i = 0 To ClassServiceConst.PSMOVESERVICE_MAX_HMD_COUNT
                 ComboBox_VirtualHMDCount.Items.Add(CStr(i))
             Next
         Finally

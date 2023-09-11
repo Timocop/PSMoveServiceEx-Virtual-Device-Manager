@@ -30,7 +30,7 @@
             g_bIgnoreEvents = True
 
             ComboBox_VirtualControllerCount.Items.Clear()
-            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT
+            For i = 0 To ClassServiceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT
                 ComboBox_VirtualControllerCount.Items.Add(CStr(i))
             Next
         Finally

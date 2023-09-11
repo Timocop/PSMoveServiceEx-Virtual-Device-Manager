@@ -45,7 +45,7 @@ Public Class UCVirtualTrackerItem
 
             ' Add all possible trackers. Where as -1 means disabled.
             ComboBox_DeviceTrackerId.Items.Clear()
-            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1
+            For i = -1 To ClassServiceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1
                 ComboBox_DeviceTrackerId.Items.Add(CStr(i))
             Next
             ComboBox_DeviceTrackerId.SelectedIndex = 0
@@ -581,7 +581,7 @@ Public Class UCVirtualTrackerItem
                 Dim bRefreshPipe As Boolean = False
 
                 SyncLock g_mThreadLock
-                    If (value > ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1) Then
+                    If (value > ClassServiceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1) Then
                         Return
                     End If
 
