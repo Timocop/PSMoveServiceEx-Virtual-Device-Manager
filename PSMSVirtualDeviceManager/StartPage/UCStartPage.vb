@@ -394,8 +394,8 @@ Public Class UCStartPage
     Public Sub RunServiceConfigTool(bHidden As Boolean)
         If (g_mClassServiceInfo.CheckIfConfigToolRunning()) Then
             Dim sMsg As New Text.StringBuilder
-            sMsg.AppendLine(g_FormMain.rm.GetString("PSMSXToolAlreadyRunning"))
-            sMsg.AppendLine(g_FormMain.rm.GetString("AnotherInstancePrompt"))
+            sMsg.AppendLine(g_mClassServiceInfo.rm.GetString("PSMSXToolAlreadyRunning"))
+            sMsg.AppendLine(g_mClassServiceInfo.rm.GetString("AnotherInstancePrompt"))
             If (MessageBox.Show(sMsg.ToString, (g_FormMain.rm.GetString("InstanceAlreadyRunning")), MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                 Return
             End If

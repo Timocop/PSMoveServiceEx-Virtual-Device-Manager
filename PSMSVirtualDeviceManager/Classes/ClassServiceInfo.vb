@@ -14,6 +14,13 @@ Public Class ClassServiceInfo
         End Set
     End Property
 
+    Enum ENUM_SERVICE_PROCESS_TYPE
+        NONE
+        NORMAL
+        ADMIN
+    End Enum
+
+
     Public Sub ChangeLanguage()
         Dim rm As ResourceManager = New ResourceManager(GetType(FormMain))
         Dim mUCStartPage As UCStartPage
@@ -184,4 +191,22 @@ Public Class ClassServiceInfo
 
         g_bConfigsLoaded = True
     End Sub
+    Public Function CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
+
+        ublic Function() CheckIfServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
+
+        If Process.GetProcessesByName("PSMoveService").Count > 0 Then
+            Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
+        ElseIf Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0 Then
+            Return ENUM_SERVICE_PROCESS_TYPE.ADMIN
+        Else
+            Return ENUM_SERVICE_PROCESS_TYPE.NONE
+        End If
+    End Function
+
+
+
+    Public Function CheckIfConfigToolRunning() As Boolean
+        Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
+    End Function
 End Class
