@@ -184,7 +184,7 @@
             Try
                 While True
                     ' Check if controller even exists
-                    Dim mControllerData = g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
+                    Dim mControllerData = g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
                     If (mControllerData Is Nothing) Then
                         Throw New ArgumentException("Controller is not available!")
                     End If

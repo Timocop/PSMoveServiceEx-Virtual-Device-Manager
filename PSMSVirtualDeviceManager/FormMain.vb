@@ -6,6 +6,8 @@ Public Class FormMain
     Public g_mUCVirtualControllers As UCVirtualControllers
     Public g_mUCVirtualHMDs As UCVirtualHMDs
     Public g_mUCVirtualTrackers As UCVirtualTrackers
+    Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
+
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
 
@@ -16,6 +18,7 @@ Public Class FormMain
         VIRTUAL_CONTROLLERS
         VIRTUAL_HMDS
         VIRTUAL_TRACKERS
+        VIRTUAL_MOTION_TRACKERS
     End Enum
 
     Public Sub New()
@@ -52,6 +55,13 @@ Public Class FormMain
         g_mUCVirtualTrackers.Dock = DockStyle.Fill
         g_mUCVirtualTrackers.Visible = False
         g_mUCVirtualTrackers.ResumeLayout()
+
+        g_mUCVirtualMotionTracker = New UCVirtualMotionTracker(Me)
+        g_mUCVirtualMotionTracker.SuspendLayout()
+        g_mUCVirtualMotionTracker.Parent = Panel_Pages
+        g_mUCVirtualMotionTracker.Dock = DockStyle.Fill
+        g_mUCVirtualMotionTracker.Visible = False
+        g_mUCVirtualMotionTracker.ResumeLayout()
 
         While True
             Try
@@ -91,44 +101,65 @@ Public Class FormMain
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
+                g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
+                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
 
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
                 g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = True
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
+                g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Bold)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
+                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
 
             Case ENUM_PAGE.VIRTUAL_HMDS
                 g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = True
                 g_mUCVirtualTrackers.Visible = False
+                g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Bold)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
+                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
 
             Case ENUM_PAGE.VIRTUAL_TRACKERS
                 g_mUCStartPage.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = True
+                g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Bold)
+                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+
+            Case ENUM_PAGE.VIRTUAL_MOTION_TRACKERS
+                g_mUCStartPage.Visible = False
+                g_mUCVirtualControllers.Visible = False
+                g_mUCVirtualHMDs.Visible = False
+                g_mUCVirtualTrackers.Visible = False
+                g_mUCVirtualMotionTracker.Visible = True
+
+                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
+                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Bold)
         End Select
     End Sub
 
@@ -186,12 +217,16 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
     End Sub
 
-    Public Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HMDs.LinkClicked
+    Public Sub LinkLabel_HMDs_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HMDs.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
     End Sub
 
-    Public Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Trackers.LinkClicked
+    Public Sub LinkLabel_Trackers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Trackers.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
+    End Sub
+
+    Private Sub LinkLabel_VMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMT.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
     End Sub
 
     Public Sub LinkLabel_ControllersGeneral_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersGeneral.LinkClicked
@@ -209,11 +244,6 @@ Public Class FormMain
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_ControllerAttachments
     End Sub
 
-    Public Sub LinkLabel_ControllersVMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersVMT.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
-    End Sub
-
     Public Sub LinkLabel_RemoteStartSocket_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RemoteStartSocket.LinkClicked
         If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
             Return
@@ -227,27 +257,50 @@ Public Class FormMain
     End Sub
 
     Public Sub LinkLabel_VMTStartOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMTStartOscServer.LinkClicked
-        If (g_mUCVirtualControllers.g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualControllers.g_mUCVirtualMotionTracker.IsDisposed) Then
+        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
             Return
         End If
 
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabPage_Management
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
 
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
+        g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
     End Sub
 
     Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
-        If (g_mUCVirtualControllers.g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualControllers.g_mUCVirtualMotionTracker.IsDisposed) Then
+        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
             Return
         End If
 
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_VMT
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualControllers.g_mUCVirtualMotionTracker.TabPage_Management
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
 
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.LinkLabel_OscPause_Click()
+        g_mUCVirtualMotionTracker.LinkLabel_OscPause_Click()
+    End Sub
+
+    Private Sub LinkLabel_VmtManagement_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtManagement.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
+    End Sub
+
+    Private Sub LinkLabel_VmtTrackers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtTrackers.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Trackers
+    End Sub
+
+    Private Sub LinkLabel_VmtSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtSettings.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Settings
+    End Sub
+
+    Private Sub LinkLabel_VmtPlayspaceCalib_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtPlayspaceCalib.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_PlayspaceCalib
+    End Sub
+
+    Private Sub LinkLabel_VmtSteamVrOverrides_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtSteamVrOverrides.LinkClicked
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Overrides
     End Sub
 
     Public Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
@@ -437,6 +490,12 @@ Public Class FormMain
             g_mUCVirtualTrackers.Dispose()
             g_mUCVirtualTrackers = Nothing
         End If
+
+        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso Not g_mUCVirtualMotionTracker.IsDisposed) Then
+            g_mUCVirtualMotionTracker.Dispose()
+            g_mUCVirtualMotionTracker = Nothing
+        End If
+
     End Sub
 
     Class ClassUpdateChecker
@@ -536,4 +595,5 @@ Public Class FormMain
         End Sub
 #End Region
     End Class
+
 End Class

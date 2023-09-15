@@ -889,7 +889,7 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
                     Dim bEnableHepticFeedback As Boolean = mClassControllerSettings.m_EnableHepticFeedback
 
-                    Dim mServiceClient = mUCVirtualMotionTracker.g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI
+                    Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
 
                     ' Get controller data
                     m_ControllerData = mServiceClient.m_ControllerData(g_iIndex)

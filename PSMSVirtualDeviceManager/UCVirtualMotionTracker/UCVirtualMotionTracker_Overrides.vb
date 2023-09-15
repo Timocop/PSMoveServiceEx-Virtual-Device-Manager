@@ -46,7 +46,7 @@
 
                     ' Check if SteamVR is running
                     If (Process.GetProcessesByName("vrserver").Length > 0) Then
-                        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+                        g_mFormMain.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
                     End If
                 End If
             End Using
@@ -85,7 +85,7 @@
 
             ' Check if SteamVR is running
             If (Process.GetProcessesByName("vrserver").Length > 0) Then
-                g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
+                g_mFormMain.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = True
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -113,6 +113,6 @@
     End Sub
 
     Private Sub LinkLabel_SteamVRRestartOff_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamVRRestartOff.LinkClicked
-        g_mUCVirtualControllers.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
+        g_mFormMain.g_mUCVirtualMotionTracker.Panel_SteamVRRestart.Visible = False
     End Sub
 End Class

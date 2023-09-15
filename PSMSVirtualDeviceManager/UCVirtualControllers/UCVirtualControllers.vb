@@ -3,7 +3,6 @@
 
     Public g_mUCRemoteDevices As UCRemoteDevices
     Public g_mUCControllerAttachments As UCControllerAttachments
-    Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
 
     Private g_bIgnoreEvents As Boolean = False
 
@@ -21,10 +20,6 @@
         g_mUCControllerAttachments = New UCControllerAttachments(Me)
         g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
         g_mUCControllerAttachments.Dock = DockStyle.Fill
-
-        g_mUCVirtualMotionTracker = New UCVirtualMotionTracker(Me)
-        g_mUCVirtualMotionTracker.Parent = TabPage_VMT
-        g_mUCVirtualMotionTracker.Dock = DockStyle.Fill
 
         Try
             g_bIgnoreEvents = True
@@ -196,11 +191,6 @@
     End Sub
 
     Private Sub CleanUp()
-        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso Not g_mUCVirtualMotionTracker.IsDisposed) Then
-            g_mUCVirtualMotionTracker.Dispose()
-            g_mUCVirtualMotionTracker = Nothing
-        End If
-
         If (g_mUCControllerAttachments IsNot Nothing AndAlso Not g_mUCControllerAttachments.IsDisposed) Then
             g_mUCControllerAttachments.Dispose()
             g_mUCControllerAttachments = Nothing

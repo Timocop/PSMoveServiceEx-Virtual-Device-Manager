@@ -3,7 +3,7 @@ Imports System.Numerics
 Imports Rug.Osc
 
 Public Class UCVirtualMotionTracker
-    Public g_mUCVirtualControllers As UCVirtualControllers
+    Public g_mFormMain As FormMain
 
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
@@ -131,8 +131,8 @@ Public Class UCVirtualMotionTracker
 #End Region
     End Class
 
-    Public Sub New(_mUCVirtualControllers As UCVirtualControllers)
-        g_mUCVirtualControllers = _mUCVirtualControllers
+    Public Sub New(_mFormMain As FormMain)
+        g_mFormMain = _mFormMain
 
         ' This call is required by the designer.
         InitializeComponent()

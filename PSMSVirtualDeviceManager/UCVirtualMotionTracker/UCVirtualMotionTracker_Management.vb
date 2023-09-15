@@ -24,7 +24,7 @@ Partial Public Class UCVirtualMotionTracker
 
             g_ClassOscDevices.StartThread()
 
-            g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
+            g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
         Catch ex As Exception
             With New Text.StringBuilder
                 .AppendLine("Unable to create OSC Server!")
@@ -39,7 +39,7 @@ Partial Public Class UCVirtualMotionTracker
     Private Sub LinkLabel_OscPause_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscPause.LinkClicked
         g_ClassOscServer.m_SuspendRequests = True
 
-        g_mUCVirtualControllers.g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
+        g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
     End Sub
 
     Private Sub LinkLabel_SteamRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamRun.LinkClicked

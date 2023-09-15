@@ -40,7 +40,6 @@ Partial Class UCVirtualControllers
         Me.ComboBox_PSmoveEmu = New System.Windows.Forms.ComboBox()
         Me.TabPage_RemoteSettings = New System.Windows.Forms.TabPage()
         Me.TabPage_ControllerAttachments = New System.Windows.Forms.TabPage()
-        Me.TabPage_VMT = New System.Windows.Forms.TabPage()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -134,7 +133,6 @@ Partial Class UCVirtualControllers
         Me.TabControl1.Controls.Add(Me.TabPage_General)
         Me.TabControl1.Controls.Add(Me.TabPage_RemoteSettings)
         Me.TabControl1.Controls.Add(Me.TabPage_ControllerAttachments)
-        Me.TabControl1.Controls.Add(Me.TabPage_VMT)
         Me.TabControl1.Location = New System.Drawing.Point(32, 75)
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(32, 8, 32, 32)
         Me.TabControl1.Name = "TabControl1"
@@ -210,15 +208,6 @@ Partial Class UCVirtualControllers
         Me.TabPage_ControllerAttachments.Text = "Controller Attachments"
         Me.TabPage_ControllerAttachments.UseVisualStyleBackColor = True
         '
-        'TabPage_VMT
-        '
-        Me.TabPage_VMT.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage_VMT.Name = "TabPage_VMT"
-        Me.TabPage_VMT.Size = New System.Drawing.Size(728, 467)
-        Me.TabPage_VMT.TabIndex = 3
-        Me.TabPage_VMT.Text = "Virtual Motion Tracker"
-        Me.TabPage_VMT.UseVisualStyleBackColor = True
-        '
         'UCVirtualControllers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -252,6 +241,5 @@ Partial Class UCVirtualControllers
     Friend WithEvents CheckBox_PSmoveEmu As CheckBox
     Friend WithEvents TabPage_ControllerAttachments As TabPage
     Friend WithEvents TabPage_General As TabPage
-    Friend WithEvents TabPage_VMT As TabPage
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
 End Class
