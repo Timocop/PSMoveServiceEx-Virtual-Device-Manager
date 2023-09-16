@@ -355,13 +355,13 @@ Aby skorzystać z najnowszych ulepszeń, warto rozważyć aktualizację oprogram
   <data name="Polish" xml:space="preserve">
     <value>Polski</value>
   </data>
-  <data name="English" xml:space="preserve">
-    <value>Angielski</value>
-  </data>
   <data name="Spanish" xml:space="preserve">
     <value>Hiszpański</value>
   </data>
   <data name="German" xml:space="preserve">
     <value>Niemiecki</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Angielski</value>
   </data>
 </root>

@@ -352,9 +352,6 @@ To experience the latest improvements, consider updating your software.</value>
   <data name="Battery" xml:space="preserve">
     <value>Battery</value>
   </data>
-  <data name="English" xml:space="preserve">
-    <value>English</value>
-  </data>
   <data name="Polish" xml:space="preserve">
     <value>Polish</value>
   </data>
@@ -363,5 +360,8 @@ To experience the latest improvements, consider updating your software.</value>
   </data>
   <data name="German" xml:space="preserve">
     <value>German (T)</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
   </data>
 </root>

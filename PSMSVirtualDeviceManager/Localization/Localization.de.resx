@@ -355,13 +355,13 @@ Wenn Sie die neuesten Verbesserungen nutzen möchten, sollten Sie Ihre Software 
   <data name="Battery" xml:space="preserve">
     <value>Batterie</value>
   </data>
-  <data name="English" xml:space="preserve">
-    <value>Englisch</value>
-  </data>
   <data name="Polish" xml:space="preserve">
     <value>Polnisch</value>
   </data>
   <data name="Spanish" xml:space="preserve">
     <value>Spanisch (T)</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
   </data>
 </root>

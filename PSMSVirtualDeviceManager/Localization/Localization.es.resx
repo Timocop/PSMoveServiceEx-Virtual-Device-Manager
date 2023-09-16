@@ -352,9 +352,6 @@ Para experimentar las últimas mejoras, considere la posibilidad de actualizar s
   <data name="Battery" xml:space="preserve">
     <value>Batería</value>
   </data>
-  <data name="English" xml:space="preserve">
-    <value>Inglés</value>
-  </data>
   <data name="Polish" xml:space="preserve">
     <value>Polaco</value>
   </data>
@@ -363,5 +360,8 @@ Para experimentar las últimas mejoras, considere la posibilidad de actualizar s
   </data>
   <data name="German" xml:space="preserve">
     <value>Alemán (T)</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Inglés</value>
   </data>
 </root>
