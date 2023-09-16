@@ -92,15 +92,6 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.STARTPAGE)
 
         AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
-
-        Dim __TEXT As New ClassMonitor
-
-        For Each mItem In __TEXT.GetMonitorList()
-            If (mItem.DeviceID.Contains("SNY6A04")) Then
-                __TEXT.ChangeRefreshRateForMonitor(mItem.DeviceName, 120)
-                '__TEXT.SetMonitorRefreshRate(mItem.DeviceName, 120)
-            End If
-        Next
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
