@@ -17,7 +17,7 @@ Public Class UCVirtualTrackerItem
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
 
-    Public Sub New(_UCVirtualTrackers As UCVirtualTrackers, mDeviceInfo As ClassDevices.ClassDeviceInfo)
+    Public Sub New(_UCVirtualTrackers As UCVirtualTrackers, mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         g_mUCVirtualTrackers = _UCVirtualTrackers
 
         ' This call is required by the designer.
@@ -704,8 +704,8 @@ Public Class UCVirtualTrackerItem
         End Function
 
         Public Function GetDeviceIndexByPath() As Integer
-            Dim mDeviceList As New List(Of ClassDevices.ClassDeviceInfo)
-            If (ClassDevices.GetDevicesOfVideoInput(mDeviceList)) Then
+            Dim mDeviceList As New List(Of ClassVideoInputDevices.ClassDeviceInfo)
+            If (ClassVideoInputDevices.GetDevicesOfVideoInput(mDeviceList)) Then
                 For i = 0 To mDeviceList.Count - 1
                     If (mDeviceList(i).m_Path = m_DevicePath) Then
                         Return mDeviceList(i).m_Index

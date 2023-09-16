@@ -1,12 +1,24 @@
 ﻿Public Class ClassLibusbDriver
     Public Const DRV_ROOT_NAME As String = "libusb_driver"
     Public Const DRV_INSTALLER_NAME As String = "wdi-simple.exe"
-    'Public ReadOnly DRV_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    'Public ReadOnly DRV_PSEYE_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
     '    New STRUC_DEVICE_DRIVER_INFO("USB Playstation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing), ' Unknown device (Composite device). 
     '    New STRUC_DEVICE_DRIVER_INFO("USB Playstation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "0") ' Device detected but no driver found. Audio works by default.
     '}
-    Public ReadOnly DRV_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public ReadOnly DRV_PSEYE_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB Playstation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing) ' Unknown device (Composite device).  
+    }
+
+    'Public ReadOnly DRV_PSVR_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    '    New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
+    '    New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04"),
+    '    New STRUC_DEVICE_DRIVER_INFO("PS VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
+    '    New STRUC_DEVICE_DRIVER_INFO("PS VR BulkIn", "Sony Corp.", "054C", "09AF", "07"), ' Just add a driver so it does not show as hardware issue.
+    '    New STRUC_DEVICE_DRIVER_INFO("PS VR 3D Audio", "Sony Corp.", "054C", "09AF", "00") ' Just add a driver so it does not show as hardware issue.
+    '}
+    Public ReadOnly DRV_PSVR_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
+        New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04")
     }
 
     Enum ENUM_WDI_ERROR
@@ -69,32 +81,41 @@
     Public Sub New()
     End Sub
 
-    Public Sub InstallDriver64()
+    Public Sub InstallPlaystationEyeDriver64()
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_INSTALLER_CONFIGS
+            InternalInstallDriver64(mConfig)
+        Next
+    End Sub
+
+    Public Sub InstallPSVRDrvier64()
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_INSTALLER_CONFIGS
+            InternalInstallDriver64(mConfig)
+        Next
+    End Sub
+
+    Private Sub InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO)
         Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_ROOT_NAME)
         Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_INSTALLER_NAME)
 
-        For Each mDrvConfig As STRUC_DEVICE_DRIVER_INFO In DRV_INSTALLER_CONFIGS
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = sInstallerPath
+            mProcess.StartInfo.Arguments = mInfo.CreateCommandLine()
+            mProcess.StartInfo.WorkingDirectory = sRootFolder
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
 
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = sInstallerPath
-                mProcess.StartInfo.Arguments = mDrvConfig.CreateCommandLine()
-                mProcess.StartInfo.WorkingDirectory = sRootFolder
-                mProcess.StartInfo.CreateNoWindow = True
-                mProcess.StartInfo.UseShellExecute = True
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
 
-                If (Environment.OSVersion.Version.Major > 5) Then
-                    mProcess.StartInfo.Verb = "runas"
-                End If
+            mProcess.Start()
 
-                mProcess.Start()
+            mProcess.WaitForExit()
 
-                mProcess.WaitForExit()
-
-                If (mProcess.ExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                    Throw New ArgumentException(String.Format("Driver installation failed with error {0} - {1}", mProcess.ExitCode, CType(mProcess.ExitCode, ENUM_WDI_ERROR).ToString))
-                End If
-            End Using
-        Next
+            If (mProcess.ExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                Throw New ArgumentException(String.Format("Driver installation failed with error {0} - {1}", mProcess.ExitCode, CType(mProcess.ExitCode, ENUM_WDI_ERROR).ToString))
+            End If
+        End Using
     End Sub
 
 End Class

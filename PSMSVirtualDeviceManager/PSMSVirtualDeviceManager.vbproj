@@ -167,7 +167,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\ClassDevices.vb" />
+    <Compile Include="Classes\ClassVideoInputDevices.vb" />
     <Compile Include="Classes\ClassIni.vb" />
     <Compile Include="Classes\ClassLibusbDriver.vb" />
     <Compile Include="Classes\ClassListViewEx.vb">

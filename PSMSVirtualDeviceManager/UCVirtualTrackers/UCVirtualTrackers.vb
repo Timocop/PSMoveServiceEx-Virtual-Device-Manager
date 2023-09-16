@@ -25,8 +25,8 @@
 
         Try
             ' Load all devices that autostart enabled.
-            Dim mDeviceList As New List(Of ClassDevices.ClassDeviceInfo)
-            If (ClassDevices.GetDevicesOfVideoInput(mDeviceList)) Then
+            Dim mDeviceList As New List(Of ClassVideoInputDevices.ClassDeviceInfo)
+            If (ClassVideoInputDevices.GetDevicesOfVideoInput(mDeviceList)) Then
                 For i = 0 To mDeviceList.Count - 1
                     Dim bAutostart As Boolean = UCVirtualTrackerItem.ClassCaptureLogic.ClassConfig.CanDeviceAutostart(mDeviceList(i).m_Path)
                     If (Not bAutostart) Then
@@ -113,8 +113,8 @@
             ComboBox_Devices.Items.Clear()
 
             ' Fill the list with video input devices.
-            Dim mDeviceList As New List(Of ClassDevices.ClassDeviceInfo)
-            If (ClassDevices.GetDevicesOfVideoInput(mDeviceList)) Then
+            Dim mDeviceList As New List(Of ClassVideoInputDevices.ClassDeviceInfo)
+            If (ClassVideoInputDevices.GetDevicesOfVideoInput(mDeviceList)) Then
                 For i = 0 To mDeviceList.Count - 1
                     ComboBox_Devices.Items.Add(New ClassComboBoxDeviceInfoItem(mDeviceList(i)))
                 Next
@@ -142,7 +142,7 @@
         End Try
     End Sub
 
-    Public Sub AddNewDevice(mDeviceInfo As ClassDevices.ClassDeviceInfo)
+    Public Sub AddNewDevice(mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         Dim mUCVirtualTrackerItem As UCVirtualTrackerItem
 
         For Each mUCVirtualTrackerItem In GetAllDevices()
@@ -172,9 +172,9 @@
     End Function
 
     Class ClassComboBoxDeviceInfoItem
-        Inherits ClassDevices.ClassDeviceInfo
+        Inherits ClassVideoInputDevices.ClassDeviceInfo
 
-        Public Sub New(mDeviceItem As ClassDevices.ClassDeviceInfo)
+        Public Sub New(mDeviceItem As ClassVideoInputDevices.ClassDeviceInfo)
             MyBase.New(mDeviceItem.m_Index, mDeviceItem.m_Name, mDeviceItem.m_Path, mDeviceItem.m_CLSID)
         End Sub
 

@@ -598,7 +598,7 @@ Public Class UCStartPage
                                                End Sub)
 
                     Dim mDriverInstaller As New ClassLibusbDriver
-                    mDriverInstaller.InstallDriver64()
+                    mDriverInstaller.InstallPlaystationEyeDriver64()
 
                     MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Threading.ThreadAbortException

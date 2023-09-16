@@ -1,7 +1,7 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Runtime.InteropServices.ComTypes
 
-Public Class ClassDevices
+Public Class ClassVideoInputDevices
     Private Class FilterCategory     ' uuids.h  :  CLSID_* 
         ''' <summary> CLSID_VideoInputDeviceCategory, video capture category </summary>
         Public Shared ReadOnly VideoInputDevice As Guid = New Guid(&H860BB310UI, &H5D01, &H11D0, &HBD, &H3B, &H0, &HA0, &HC9, &H11, &HCE, &H86)
@@ -152,7 +152,7 @@ Public Class ClassDevices
 
         Public Function GetIndexByPath() As Integer
             Dim mDeviceList As New List(Of ClassDeviceInfo)
-            If (ClassDevices.GetDevicesOfVideoInput(mDeviceList)) Then
+            If (ClassVideoInputDevices.GetDevicesOfVideoInput(mDeviceList)) Then
                 For i = 0 To mDeviceList.Count - 1
                     If (mDeviceList(i).m_Path <> m_Path) Then
                         Continue For

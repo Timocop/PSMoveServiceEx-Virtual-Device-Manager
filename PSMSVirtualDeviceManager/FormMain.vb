@@ -303,24 +303,6 @@ Public Class FormMain
         g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Overrides
     End Sub
 
-    Public Sub LinkLabel_InstallCameraDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallCameraDrivers.LinkClicked
-        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
-        g_mUCStartPage.LinkLabel_InstallDrivers_Click()
-    End Sub
-
-    Public Sub LinkLabel_FactoryResetService_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_FactoryResetService.LinkClicked
-        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
-        g_mUCStartPage.LinkLabel_ServiceFactory_Click()
-    End Sub
-
     Public Sub LinkLabel_RunPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMS.LinkClicked
         If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
             Return
@@ -596,4 +578,7 @@ Public Class FormMain
 #End Region
     End Class
 
+    Private Sub Label4_Click(sender As Object, e As EventArgs)
+
+    End Sub
 End Class
