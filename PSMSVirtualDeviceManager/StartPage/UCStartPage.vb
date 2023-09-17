@@ -616,8 +616,30 @@ Public Class UCStartPage
         g_mDriverInstallThread = New Threading.Thread(
             Sub()
                 Try
+                    Dim mDriverInstaller As New ClassLibusbDriver
+
                     If (CheckIfServiceRunning() > 0) Then
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+                    End If
+
+                    Dim bDriversInstalled As Boolean = True
+                    For Each mInfo In mDriverInstaller.DRV_PSEYE_INSTALLER_CONFIGS
+                        If (mDriverInstaller.IsDeviceLibusb(mInfo)) Then
+                            Continue For
+                        End If
+
+                        bDriversInstalled = False
+                        Exit For
+                    Next
+
+                    If (bDriversInstalled) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("It seems like you already have all the necessary LibUSB drivers for PlayStation Eye Cameras installed!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to reinstall all drivers for those devices?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                            Return
+                        End If
                     End If
 
                     If (True) Then
@@ -654,7 +676,6 @@ Public Class UCStartPage
                                                    g_mDriverInstallFormLoad.ShowDialog(Me)
                                                End Sub)
 
-                    Dim mDriverInstaller As New ClassLibusbDriver
                     mDriverInstaller.InstallPlaystationEyeDriver64()
 
                     MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)

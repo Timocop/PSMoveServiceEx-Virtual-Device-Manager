@@ -190,6 +190,10 @@ Public Class ClassLibusbDriver
 
     Public Function IsDeviceLibusb(sVID As String, sPID As String, sMI As String) As Boolean
         For Each mInfo In GetDeviceProvider(sVID, sPID, sMI)
+            If (Not mInfo.IsEnabled() OrElse mInfo.IsRemoved()) Then
+                Continue For
+            End If
+
             If (mInfo.sProviderName Is Nothing OrElse mInfo.sProviderVersion Is Nothing) Then
                 Return False
             End If
