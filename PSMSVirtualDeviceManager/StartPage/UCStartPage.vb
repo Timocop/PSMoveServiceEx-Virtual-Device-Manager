@@ -608,7 +608,7 @@ Public Class UCStartPage
         LinkLabel_InstallDrivers_LinkClicked(Nothing, Nothing)
     End Sub
 
-    Private Sub LinkLabel_InstallDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallDrivers.LinkClicked
+    Private Sub LinkLabel_InstallDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallPSEyeDrivers.LinkClicked
         If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
             Return
         End If
@@ -623,13 +623,18 @@ Public Class UCStartPage
                     End If
 
                     Dim bDriversInstalled As Boolean = True
-                    For Each mInfo In mDriverInstaller.DRV_PSEYE_INSTALLER_CONFIGS
-                        If (mDriverInstaller.IsDeviceLibusb(mInfo)) Then
-                            Continue For
-                        End If
+                    For Each mInfo In mDriverInstaller.DRV_PSEYE_LIBUSB_CONFIGS
+                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                            If (mUsbInfo.iConfigFlags <> 0) Then
+                                Continue For
+                            End If
 
-                        bDriversInstalled = False
-                        Exit For
+                            If (String.IsNullOrEmpty(mUsbInfo.sService) OrElse mUsbInfo.sService = ClassLibusbDriver.LIBUSB_SERVICE_NAME) Then
+                                Continue For
+                            End If
+
+                            bDriversInstalled = False
+                        Next
                     Next
 
                     If (bDriversInstalled) Then
@@ -677,6 +682,146 @@ Public Class UCStartPage
                                                End Sub)
 
                     mDriverInstaller.InstallPlaystationEyeDriver64()
+
+                    MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+                                               End Sub)
+                End Try
+            End Sub)
+        g_mDriverInstallThread.IsBackground = True
+        g_mDriverInstallThread.Start()
+    End Sub
+
+    Private Sub LinkLabel_InstallPSVRDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallPSVRDrivers.LinkClicked
+        If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mDriverInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    Dim mDriverInstaller As New ClassLibusbDriver
+
+                    If (CheckIfServiceRunning() > 0) Then
+                        Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+                    End If
+
+                    ' Check if we already installed libUSB for the device.
+                    Dim bDriversInstalled As Boolean = True
+                    For Each mInfo In mDriverInstaller.DRV_PSVR_LIBUSB_CONFIGS
+                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                            If (mUsbInfo.iConfigFlags <> 0) Then
+                                Continue For
+                            End If
+
+                            If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso mUsbInfo.sService = ClassLibusbDriver.LIBUSB_SERVICE_NAME) Then
+                                Continue For
+                            End If
+
+                            ' No driver or different driver installed?
+                            bDriversInstalled = False
+                        Next
+                    Next
+
+                    ' Check if the device is using HID and no other weird driver.
+                    Dim bHidInstalled As Boolean = True
+                    For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
+                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                            If (mUsbInfo.iConfigFlags <> 0) Then
+                                Continue For
+                            End If
+
+                            If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
+                                Continue For
+                            End If
+
+                            ' No driver or different driver installed?
+                            bHidInstalled = False
+                        Next
+                    Next
+
+                    If (bDriversInstalled AndAlso bHidInstalled) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("It seems like you already have all the necessary LibUSB drivers for PlayStation VR installed!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to reinstall all drivers for those devices?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                            Return
+                        End If
+                    End If
+
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("You are about to install LibUSB drivers for PlayStation VR.")
+                        sMessage.AppendLine("Already existing PlayStation VR drivers will be replaced!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
+
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("WARNING!")
+                        sMessage.AppendLine("The PlayStation VR driver installation might trigger sensitive Anti-Virus programs!")
+                        sMessage.AppendLine("It's recommended to whitelist the Virtual Device Manager folder before starting the installation to avoid any issues.")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
+
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+
+                                                   g_mDriverInstallFormLoad = New FormLoading
+                                                   g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                               End Sub)
+
+                    mDriverInstaller.InstallPSVRDrvier64()
+
+                    If (Not bHidInstalled) Then
+                        Dim bScanNewDevices As Boolean = False
+
+                        For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
+                            For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                                If (mUsbInfo.iConfigFlags <> 0) Then
+                                    Continue For
+                                End If
+
+                                If (String.IsNullOrEmpty(mUsbInfo.sService) OrElse mUsbInfo.sService = "HidUsb") Then
+                                    Continue For
+                                End If
+
+                                If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                                    Continue For
+                                End If
+
+                                mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
+                                mDriverInstaller.RemoveDevice(mUsbInfo.sDeviceID)
+                                bScanNewDevices = True
+                            Next
+                        Next
+
+                        If (bScanNewDevices) Then
+                            mDriverInstaller.ScanDevices()
+                        End If
+                    End If
 
                     MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Threading.ThreadAbortException

@@ -1,8 +1,8 @@
 ﻿Imports Microsoft.Win32
 
 Public Class ClassLibusbDriver
-    Public Const PROVIDER_NAME As String = "libusb-win32"
-    Public Const PROVIDER_VERSION As String = "1.2.6.0"
+    Public Const LIBUSB_SERVICE_NAME As String = "libusb0"
+    Public Const HID_SERVICE_NAME As String = "HidUsb"
 
     Public Const DRV_ROOT_NAME As String = "libusb_driver"
     Public Const DRV_INSTALLER_NAME As String = "wdi-simple.exe"
@@ -10,21 +10,31 @@ Public Class ClassLibusbDriver
     '    New STRUC_DEVICE_DRIVER_INFO("USB Playstation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing), ' Unknown device (Composite device). 
     '    New STRUC_DEVICE_DRIVER_INFO("USB Playstation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "0") ' Device detected but no driver found. Audio works by default.
     '}
-    Public ReadOnly DRV_PSEYE_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB Playstation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing) ' Unknown device (Composite device).  
     }
 
     'Public ReadOnly DRV_PSVR_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
     '    New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
-    '    New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04"),
+    '    New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04"), ' We dont install libUSB on this, HID is required for it to work.
     '    New STRUC_DEVICE_DRIVER_INFO("PS VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
     '    New STRUC_DEVICE_DRIVER_INFO("PS VR BulkIn", "Sony Corp.", "054C", "09AF", "07"), ' Just add a driver so it does not show as hardware issue.
     '    New STRUC_DEVICE_DRIVER_INFO("PS VR 3D Audio", "Sony Corp.", "054C", "09AF", "00") ' Just add a driver so it does not show as hardware issue.
     '}
-    Public ReadOnly DRV_PSVR_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
-        New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04")
+    Public ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05")
     }
+    Public ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+      New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04")
+    }
+
+    Enum ENUM_WDI_DRIVERTYPE
+        WINUSB = 0
+        LIBUSB = 1
+        LIBUSBK = 2
+        USBSER = 3
+        CUSTOM = 4
+    End Enum
 
     Enum ENUM_WDI_ERROR
         WDI_SUCCESS = 0
@@ -49,79 +59,6 @@ Public Class ClassLibusbDriver
         WDI_ERROR_UNSIGNED = -19
         WDI_ERROR_OTHER = -99
     End Enum
-
-    Structure STRUC_DEVICE_DRIVER_INFO
-        Dim sName As String
-        Dim sManufacture As String
-        Dim VID As String
-        Dim PID As String
-        Dim MM As String
-
-        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String)
-            sName = _Name
-            sManufacture = _Manufacture
-            VID = _VID
-            PID = _PID
-            MM = _MM
-        End Sub
-
-        Public Function CreateCommandLine() As String
-            Dim sCmd As New List(Of String)
-            sCmd.Add(String.Format("-n ""{0}""", sName))
-            sCmd.Add(String.Format("-f ""{0}.inf""", sName))
-            sCmd.Add(String.Format("-m ""{0}""", sManufacture))
-            sCmd.Add(String.Format("-v ""{0}""", Convert.ToInt32(VID, 16)))
-            sCmd.Add(String.Format("-p ""{0}""", Convert.ToInt32(PID, 16)))
-
-            If (MM IsNot Nothing) Then
-                sCmd.Add(String.Format("-i ""{0}""", Convert.ToInt32(MM, 16)))
-            End If
-
-            sCmd.Add(String.Format("-t ""{0}""", 1)) 'libusb
-
-            Return String.Join(" ", sCmd.ToArray)
-        End Function
-    End Structure
-
-    Public Sub New()
-    End Sub
-
-    Public Sub InstallPlaystationEyeDriver64()
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_INSTALLER_CONFIGS
-            InternalInstallDriver64(mConfig)
-        Next
-    End Sub
-
-    Public Sub InstallPSVRDrvier64()
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_INSTALLER_CONFIGS
-            InternalInstallDriver64(mConfig)
-        Next
-    End Sub
-
-    Private Sub InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO)
-        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_ROOT_NAME)
-        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_INSTALLER_NAME)
-
-        Using mProcess As New Process
-            mProcess.StartInfo.FileName = sInstallerPath
-            mProcess.StartInfo.Arguments = mInfo.CreateCommandLine()
-            mProcess.StartInfo.WorkingDirectory = sRootFolder
-            mProcess.StartInfo.CreateNoWindow = True
-            mProcess.StartInfo.UseShellExecute = True
-
-            If (Environment.OSVersion.Version.Major > 5) Then
-                mProcess.StartInfo.Verb = "runas"
-            End If
-
-            mProcess.Start()
-
-            mProcess.WaitForExit()
-
-            If (mProcess.ExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                Throw New ArgumentException(String.Format("Driver installation failed with error {0} - {1}", mProcess.ExitCode, CType(mProcess.ExitCode, ENUM_WDI_ERROR).ToString))
-            End If
-        End Using
-    End Sub
 
     <Flags>
     Public Enum DEVICE_CONFIG_FLAGS As Integer
@@ -168,8 +105,10 @@ Public Class ClassLibusbDriver
     Structure STRUC_DEVICE_PROVIDER
         Dim sDeviceID As String
         Dim iConfigFlags As DEVICE_CONFIG_FLAGS
+        Dim sService As String
         Dim sProviderName As String
         Dim sProviderVersion As String
+        Dim sDriverInfPath As String
 
         Public Function IsEnabled() As Boolean
             Return ((iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_DISABLED) = 0)
@@ -180,48 +119,122 @@ Public Class ClassLibusbDriver
         End Function
 
         Public Function HasDriverInstalled() As Boolean
-            Return (sProviderName Is Nothing OrElse sProviderVersion Is Nothing)
+            Return (sService Is Nothing)
         End Function
     End Structure
 
-    Public Function IsDeviceLibusb(mInfo As STRUC_DEVICE_DRIVER_INFO) As Boolean
-        Return IsDeviceLibusb(mInfo.VID, mInfo.PID, mInfo.MM)
-    End Function
+    Structure STRUC_DEVICE_DRIVER_INFO
+        Dim sName As String
+        Dim sManufacture As String
+        Dim VID As String
+        Dim PID As String
+        Dim MM As String
+        Dim iDriver As ENUM_WDI_DRIVERTYPE
 
-    Public Function IsDeviceLibusb(sVID As String, sPID As String, sMI As String) As Boolean
-        For Each mInfo In GetDeviceProvider(sVID, sPID, sMI)
-            If (Not mInfo.IsEnabled() OrElse mInfo.IsRemoved()) Then
-                Continue For
+        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String)
+            sName = _Name
+            sManufacture = _Manufacture
+            VID = _VID
+            PID = _PID
+            MM = _MM
+            iDriver = ENUM_WDI_DRIVERTYPE.LIBUSB
+        End Sub
+
+        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String, _Driver As ENUM_WDI_DRIVERTYPE)
+            sName = _Name
+            sManufacture = _Manufacture
+            VID = _VID
+            PID = _PID
+            MM = _MM
+            iDriver = _Driver
+        End Sub
+
+        Public Function CreateCommandLine() As String
+            Dim sCmd As New List(Of String)
+            sCmd.Add(String.Format("-n ""{0}""", sName))
+            sCmd.Add(String.Format("-f ""{0}.inf""", sName))
+            sCmd.Add(String.Format("-m ""{0}""", sManufacture))
+            sCmd.Add(String.Format("-v ""{0}""", Convert.ToInt32(VID, 16)))
+            sCmd.Add(String.Format("-p ""{0}""", Convert.ToInt32(PID, 16)))
+
+            If (MM IsNot Nothing) Then
+                sCmd.Add(String.Format("-i ""{0}""", Convert.ToInt32(MM, 16)))
             End If
 
-            If (mInfo.sProviderName Is Nothing OrElse mInfo.sProviderVersion Is Nothing) Then
-                Return False
-            End If
+            sCmd.Add(String.Format("-t ""{0}""", CInt(iDriver)))
 
-            If (mInfo.sProviderName <> PROVIDER_NAME OrElse mInfo.sProviderVersion <> PROVIDER_VERSION) Then
-                Return False
-            End If
+            Return String.Join(" ", sCmd.ToArray)
+        End Function
+    End Structure
+
+    Public Sub New()
+    End Sub
+
+    Public Sub InstallPlaystationEyeDriver64()
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_LIBUSB_CONFIGS
+            InternalInstallDriver64(mConfig)
         Next
+    End Sub
 
-        Return True
+    Public Sub InstallPSVRDrvier64()
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_LIBUSB_CONFIGS
+            InternalInstallDriver64(mConfig)
+        Next
+    End Sub
+
+    Private Sub InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO)
+        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_ROOT_NAME)
+        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_INSTALLER_NAME)
+
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = sInstallerPath
+            mProcess.StartInfo.Arguments = mInfo.CreateCommandLine()
+            mProcess.StartInfo.WorkingDirectory = sRootFolder
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+
+            If (mProcess.ExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", mProcess.ExitCode, CType(mProcess.ExitCode, ENUM_WDI_ERROR).ToString))
+            End If
+        End Using
+    End Sub
+
+    Public Function GetDeviceProviderUSB(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "USB")
     End Function
 
-    Public Function GetDeviceProvider(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
-        Return GetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM)
+    Public Function GetDeviceProviderUSB(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sVID, sPID, sMI, "USB")
     End Function
 
-    Public Function GetDeviceProvider(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
+    Public Function GetDeviceProviderHID(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "HID")
+    End Function
+
+    Public Function GetDeviceProviderHID(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sVID, sPID, sMI, "HID")
+    End Function
+
+    Private Function InternalGetDeviceProvider(sVID As String, sPID As String, sMI As String, sInterface As String) As STRUC_DEVICE_PROVIDER()
         Dim mProviderList As New List(Of STRUC_DEVICE_PROVIDER)
 
         Dim sUseDevice As String = Nothing
         If (String.IsNullOrEmpty(sMI)) Then
-            sUseDevice = String.Format("USB\VID_{0}&PID_{1}", sVID, sPID)
+            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
         Else
             If (sMI.Length = 1) Then
                 sMI = "0" & sMI
             End If
 
-            sUseDevice = String.Format("USB\VID_{0}&PID_{1}&MI_{2}", sVID, sPID, sMI)
+            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMI)
         End If
 
         Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sUseDevice))
@@ -238,6 +251,7 @@ Public Class ClassLibusbDriver
             Dim sDeviceID As String = String.Format("{0}\{1}", sUseDevice, mDeviceSubKey)
 
             Dim sDriverLocation As String = TryCast(mDeviceKey.GetValue("Driver"), String)
+            Dim sService As String = TryCast(mDeviceKey.GetValue("Service"), String)
             Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
 
             If (sDriverLocation IsNot Nothing) Then
@@ -248,12 +262,15 @@ Public Class ClassLibusbDriver
 
                 Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
                 Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
+                Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
                 If (sProviderVersion IsNot Nothing AndAlso sProviderName IsNot Nothing) Then
                     Dim mInfo As New STRUC_DEVICE_PROVIDER
                     mInfo.sDeviceID = sDeviceID
                     mInfo.iConfigFlags = sConfigFlags
+                    mInfo.sService = sService
                     mInfo.sProviderName = sProviderName
                     mInfo.sProviderVersion = sProviderVersion
+                    mInfo.sDriverInfPath = sDriverInfPath
 
                     mProviderList.Add(mInfo)
                 End If
@@ -262,8 +279,10 @@ Public Class ClassLibusbDriver
                 Dim mInfo As New STRUC_DEVICE_PROVIDER
                 mInfo.sDeviceID = sDeviceID
                 mInfo.iConfigFlags = sConfigFlags
+                mInfo.sService = sService
                 mInfo.sProviderName = Nothing
                 mInfo.sProviderVersion = Nothing
+                mInfo.sDriverInfPath = Nothing
 
                 mProviderList.Add(mInfo)
             End If
@@ -271,4 +290,75 @@ Public Class ClassLibusbDriver
 
         Return mProviderList.ToArray
     End Function
+
+    Public Sub ScanDevices()
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = "pnputil.exe"
+            mProcess.StartInfo.Arguments = "/scan-devices"
+            mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+
+            If (mProcess.ExitCode <> 0) Then
+                Throw New ArgumentException(String.Format("Driver installation failed with error: {0}", mProcess.ExitCode))
+            End If
+        End Using
+    End Sub
+
+    Public Sub RemoveDevice(sInstanceID As String)
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = "pnputil.exe"
+            mProcess.StartInfo.Arguments = String.Format("/remove-device ""{0}""", sInstanceID)
+            mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+
+            If (mProcess.ExitCode <> 0) Then
+                Throw New ArgumentException(String.Format("Driver installation failed with error: {0}", mProcess.ExitCode))
+            End If
+        End Using
+    End Sub
+
+    Public Sub RemoveDriver(sInfFile As String)
+        'We dont want anything else removed
+        If (Not sInfFile.ToLowerInvariant.StartsWith("oem")) Then
+            Throw New ArgumentException(String.Format("Unable to remove driver '{0}'. Driver is system driver.", sInfFile))
+        End If
+
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = "pnputil.exe"
+            mProcess.StartInfo.Arguments = String.Format("/delete-driver {0} /force", sInfFile)
+            mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+
+            If (mProcess.ExitCode <> 0) Then
+                Throw New ArgumentException(String.Format("Driver installation failed with error: {0}", mProcess.ExitCode))
+            End If
+        End Using
+    End Sub
 End Class

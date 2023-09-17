@@ -53,7 +53,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.LinkLabel_InstallDrivers = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_InstallPSEyeDrivers = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.Label_PsmsxStatus = New System.Windows.Forms.Label()
         Me.Panel_PsmsxStatus = New System.Windows.Forms.Panel()
@@ -97,6 +97,7 @@ Partial Class UCStartPage
         Me.Panel20 = New System.Windows.Forms.Panel()
         Me.Panel21 = New System.Windows.Forms.Panel()
         Me.Timer_RestartPsms = New System.Windows.Forms.Timer(Me.components)
+        Me.LinkLabel_InstallPSVRDrivers = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
@@ -135,7 +136,7 @@ Partial Class UCStartPage
         Me.Panel1.Location = New System.Drawing.Point(16, 19)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(861, 278)
+        Me.Panel1.Size = New System.Drawing.Size(861, 303)
         Me.Panel1.TabIndex = 0
         '
         'TableLayoutPanel1
@@ -151,9 +152,9 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.11966!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.88034!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 234)
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 54.44016!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.55984!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 259)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'Panel7
@@ -163,10 +164,10 @@ Partial Class UCStartPage
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
         Me.Panel7.Controls.Add(Me.LinkLabel_Github)
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(429, 136)
+        Me.Panel7.Location = New System.Drawing.Point(429, 141)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(430, 98)
+        Me.Panel7.Size = New System.Drawing.Size(430, 118)
         Me.Panel7.TabIndex = 7
         '
         'LinkLabel_Updates
@@ -237,7 +238,7 @@ Partial Class UCStartPage
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(429, 136)
+        Me.Panel4.Size = New System.Drawing.Size(429, 141)
         Me.Panel4.TabIndex = 1
         '
         'LinkLabel_ServiceRunCmd
@@ -359,7 +360,7 @@ Partial Class UCStartPage
         Me.Panel2.Location = New System.Drawing.Point(429, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(430, 136)
+        Me.Panel2.Size = New System.Drawing.Size(430, 141)
         Me.Panel2.TabIndex = 0
         '
         'LinkLabel_ConfigToolRunCmd
@@ -438,15 +439,16 @@ Partial Class UCStartPage
         '
         'Panel5
         '
+        Me.Panel5.Controls.Add(Me.LinkLabel_InstallPSVRDrivers)
         Me.Panel5.Controls.Add(Me.LinkLabel_ServiceFactory)
         Me.Panel5.Controls.Add(Me.Label6)
         Me.Panel5.Controls.Add(Me.ClassPictureBoxQuality3)
-        Me.Panel5.Controls.Add(Me.LinkLabel_InstallDrivers)
+        Me.Panel5.Controls.Add(Me.LinkLabel_InstallPSEyeDrivers)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(0, 136)
+        Me.Panel5.Location = New System.Drawing.Point(0, 141)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(429, 98)
+        Me.Panel5.Size = New System.Drawing.Size(429, 118)
         Me.Panel5.TabIndex = 6
         '
         'LinkLabel_ServiceFactory
@@ -456,7 +458,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceFactory.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceFactory.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 56)
+        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 72)
         Me.LinkLabel_ServiceFactory.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceFactory.Name = "LinkLabel_ServiceFactory"
         Me.LinkLabel_ServiceFactory.Size = New System.Drawing.Size(153, 13)
@@ -488,21 +490,21 @@ Partial Class UCStartPage
         Me.ClassPictureBoxQuality3.TabIndex = 24
         Me.ClassPictureBoxQuality3.TabStop = False
         '
-        'LinkLabel_InstallDrivers
+        'LinkLabel_InstallPSEyeDrivers
         '
-        Me.LinkLabel_InstallDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_InstallDrivers.AutoSize = True
-        Me.LinkLabel_InstallDrivers.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_InstallDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_InstallDrivers.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_InstallDrivers.Location = New System.Drawing.Point(103, 40)
-        Me.LinkLabel_InstallDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_InstallDrivers.Name = "LinkLabel_InstallDrivers"
-        Me.LinkLabel_InstallDrivers.Size = New System.Drawing.Size(152, 13)
-        Me.LinkLabel_InstallDrivers.TabIndex = 25
-        Me.LinkLabel_InstallDrivers.TabStop = True
-        Me.LinkLabel_InstallDrivers.Text = "Install PlaystationEye Drivers"
-        Me.LinkLabel_InstallDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSEyeDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_InstallPSEyeDrivers.AutoSize = True
+        Me.LinkLabel_InstallPSEyeDrivers.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSEyeDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_InstallPSEyeDrivers.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSEyeDrivers.Location = New System.Drawing.Point(103, 40)
+        Me.LinkLabel_InstallPSEyeDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_InstallPSEyeDrivers.Name = "LinkLabel_InstallPSEyeDrivers"
+        Me.LinkLabel_InstallPSEyeDrivers.Size = New System.Drawing.Size(152, 13)
+        Me.LinkLabel_InstallPSEyeDrivers.TabIndex = 25
+        Me.LinkLabel_InstallPSEyeDrivers.TabStop = True
+        Me.LinkLabel_InstallPSEyeDrivers.Text = "Install PlaystationEye Drivers"
+        Me.LinkLabel_InstallPSEyeDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Panel12
         '
@@ -924,14 +926,14 @@ Partial Class UCStartPage
         Me.Panel20.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel20.Location = New System.Drawing.Point(0, 414)
         Me.Panel20.Name = "Panel20"
-        Me.Panel20.Size = New System.Drawing.Size(893, 313)
+        Me.Panel20.Size = New System.Drawing.Size(893, 338)
         Me.Panel20.TabIndex = 6
         '
         'Panel21
         '
         Me.Panel21.Controls.Add(Me.Panel8)
         Me.Panel21.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel21.Location = New System.Drawing.Point(0, 727)
+        Me.Panel21.Location = New System.Drawing.Point(0, 752)
         Me.Panel21.Name = "Panel21"
         Me.Panel21.Size = New System.Drawing.Size(893, 300)
         Me.Panel21.TabIndex = 7
@@ -939,6 +941,22 @@ Partial Class UCStartPage
         'Timer_RestartPsms
         '
         Me.Timer_RestartPsms.Interval = 1000
+        '
+        'LinkLabel_InstallPSVRDrivers
+        '
+        Me.LinkLabel_InstallPSVRDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_InstallPSVRDrivers.AutoSize = True
+        Me.LinkLabel_InstallPSVRDrivers.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSVRDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_InstallPSVRDrivers.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSVRDrivers.Location = New System.Drawing.Point(103, 56)
+        Me.LinkLabel_InstallPSVRDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_InstallPSVRDrivers.Name = "LinkLabel_InstallPSVRDrivers"
+        Me.LinkLabel_InstallPSVRDrivers.Size = New System.Drawing.Size(152, 13)
+        Me.LinkLabel_InstallPSVRDrivers.TabIndex = 28
+        Me.LinkLabel_InstallPSVRDrivers.TabStop = True
+        Me.LinkLabel_InstallPSVRDrivers.Text = "Install Playstation VR Drivers"
+        Me.LinkLabel_InstallPSVRDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'UCStartPage
         '
@@ -1014,7 +1032,7 @@ Partial Class UCStartPage
     Friend WithEvents Panel5 As Panel
     Friend WithEvents Label6 As Label
     Friend WithEvents ClassPictureBoxQuality3 As ClassPictureBoxQuality
-    Friend WithEvents LinkLabel_InstallDrivers As LinkLabel
+    Friend WithEvents LinkLabel_InstallPSEyeDrivers As LinkLabel
     Friend WithEvents LinkLabel_ServiceFactory As LinkLabel
     Friend WithEvents LinkLabel_ServicePath As LinkLabel
     Friend WithEvents Panel_PsmsxStatus As Panel
@@ -1059,4 +1077,5 @@ Partial Class UCStartPage
     Friend WithEvents LinkLabel_ServiceRunCmd As LinkLabel
     Friend WithEvents LinkLabel_ConfigToolRunCmd As LinkLabel
     Friend WithEvents Timer_RestartPsms As Timer
+    Friend WithEvents LinkLabel_InstallPSVRDrivers As LinkLabel
 End Class
