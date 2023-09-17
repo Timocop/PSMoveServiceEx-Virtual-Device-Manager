@@ -197,15 +197,14 @@ Public Class UCStartPage
                                                            End Select
 
                                                            Dim mListViewItem = New ListViewItem(New String() {
-                                                    sDeviceType,
-                                                    sTrackingColor,
-                                                    CStr(mDevice.m_Id),
-                                                    mDevice.m_Serial,
-                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
-                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
-                                                    "0",
-                                                    "0 %"
-                                                })
+                                                                sDeviceType,
+                                                                sTrackingColor,
+                                                                CStr(mDevice.m_Id),
+                                                                mDevice.m_Serial,
+                                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                                "0 %"
+                                                            })
                                                            mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
                                                            mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
@@ -217,8 +216,67 @@ Public Class UCStartPage
 
                 ' List HMDs
                 If (True) Then
-                    ' TODO: List HMDs
+                    Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetHmdsData
+
+                    For i = 0 To mDevices.Length - 1
+                        Dim mDevice As ClassServiceClient.IHmdData = mDevices(i)
+
+                        If (String.IsNullOrEmpty(mDevice.m_Serial) OrElse mDevice.m_Serial.TrimEnd.Length = 0) Then
+                            Continue For
+                        End If
+
+                        Dim mPos As Vector3 = mDevice.m_Position
+                        Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+
+                        ClassUtils.AsyncInvoke(Me, Sub()
+                                                       Dim bFound As Boolean = False
+
+                                                       ' Change info about device 
+                                                       ListView_ServiceDevices.BeginUpdate()
+                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                       ListView_ServiceDevices.EndUpdate()
+
+                                                       ' Added device when not found
+                                                       If (Not bFound) Then
+                                                           Dim sDeviceType As String = "UNKNOWN"
+
+                                                           Select Case (True)
+                                                               Case TypeOf mDevice Is ClassServiceClient.STRUC_MORPHEUS_HMD_DATA
+                                                                   sDeviceType = "MORPHEUS"
+                                                               Case TypeOf mDevice Is ClassServiceClient.STRUC_VIRTUAL_HMD_DATA
+                                                                   sDeviceType = "VIRTUAL"
+                                                           End Select
+
+                                                           Dim mListViewItem = New ListViewItem(New String() {
+                                                                sDeviceType,
+                                                                "N/A",
+                                                                CStr(mDevice.m_Id),
+                                                                mDevice.m_Serial,
+                                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                                "N/A"
+                                                            })
+                                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                           mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                           ListView_ServiceDevices.Items.Add(mListViewItem)
+                                                       End If
+                                                   End Sub)
+                    Next
                 End If
+
 
                 ' List Trackers
                 If (True) Then
@@ -245,12 +303,12 @@ Public Class UCStartPage
                                                        ListView_ServiceDevices.BeginUpdate()
                                                        For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                            If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = ""
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = ""
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
                                                                mListVIewItem.Tag = New Object() {Now}
 
                                                                bFound = True
@@ -261,15 +319,14 @@ Public Class UCStartPage
                                                        ' Added device when not found
                                                        If (Not bFound) Then
                                                            Dim mListViewItem = New ListViewItem(New String() {
-                                                    "TRACKER",
-                                                    "",
-                                                    CStr(mDevice.m_Id),
-                                                    mDevice.m_Path,
-                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
-                                                    String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
-                                                    "0",
-                                                    ""
-                                                })
+                                                                "TRACKER",
+                                                                "N/A",
+                                                                CStr(mDevice.m_Id),
+                                                                mDevice.m_Path,
+                                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                                "N/A"
+                                                            })
                                                            mListViewItem.Tag = New Object() {Now}
 
                                                            ListView_ServiceDevices.Items.Add(mListViewItem)
