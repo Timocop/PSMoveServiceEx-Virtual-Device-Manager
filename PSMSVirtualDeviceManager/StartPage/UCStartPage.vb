@@ -622,22 +622,7 @@ Public Class UCStartPage
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
-                    Dim bDriversInstalled As Boolean = True
-                    For Each mInfo In mDriverInstaller.DRV_PSEYE_LIBUSB_CONFIGS
-                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                            If (mUsbInfo.iConfigFlags <> 0) Then
-                                Continue For
-                            End If
-
-                            If (String.IsNullOrEmpty(mUsbInfo.sService) OrElse mUsbInfo.sService = ClassLibusbDriver.LIBUSB_SERVICE_NAME) Then
-                                Continue For
-                            End If
-
-                            bDriversInstalled = False
-                        Next
-                    Next
-
-                    If (bDriversInstalled) Then
+                    If (Not mDriverInstaller.VerifyPlaystationEyeDriver64()) Then
                         Dim sMessage As New Text.StringBuilder
                         sMessage.AppendLine("It seems like you already have all the necessary LibUSB drivers for PlayStation Eye Cameras installed!")
                         sMessage.AppendLine()
@@ -715,41 +700,7 @@ Public Class UCStartPage
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
-                    ' Check if we already installed libUSB for the device.
-                    Dim bDriversInstalled As Boolean = True
-                    For Each mInfo In mDriverInstaller.DRV_PSVR_LIBUSB_CONFIGS
-                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                            If (mUsbInfo.iConfigFlags <> 0) Then
-                                Continue For
-                            End If
-
-                            If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso mUsbInfo.sService = ClassLibusbDriver.LIBUSB_SERVICE_NAME) Then
-                                Continue For
-                            End If
-
-                            ' No driver or different driver installed?
-                            bDriversInstalled = False
-                        Next
-                    Next
-
-                    ' Check if the device is using HID and no other weird driver.
-                    Dim bHidInstalled As Boolean = True
-                    For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
-                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                            If (mUsbInfo.iConfigFlags <> 0) Then
-                                Continue For
-                            End If
-
-                            If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
-                                Continue For
-                            End If
-
-                            ' No driver or different driver installed?
-                            bHidInstalled = False
-                        Next
-                    Next
-
-                    If (bDriversInstalled AndAlso bHidInstalled) Then
+                    If (Not mDriverInstaller.VerifyPlaystationVrDriver64()) Then
                         Dim sMessage As New Text.StringBuilder
                         sMessage.AppendLine("It seems like you already have all the necessary LibUSB drivers for PlayStation VR installed!")
                         sMessage.AppendLine()
@@ -793,34 +744,33 @@ Public Class UCStartPage
                                                    g_mDriverInstallFormLoad.ShowDialog(Me)
                                                End Sub)
 
-                    mDriverInstaller.InstallPSVRDrvier64()
+                    mDriverInstaller.InstallPlaystationVrDrvier64()
 
-                    If (Not bHidInstalled) Then
-                        Dim bScanNewDevices As Boolean = False
+                    ' Remove other drivers.
+                    Dim bScanNewDevices As Boolean = False
+                    For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
+                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                            If (mUsbInfo.iConfigFlags <> 0) Then
+                                Continue For
+                            End If
 
-                        For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
-                            For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                                If (mUsbInfo.iConfigFlags <> 0) Then
-                                    Continue For
-                                End If
+                            If (String.IsNullOrEmpty(mUsbInfo.sService) OrElse mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
+                                Continue For
+                            End If
 
-                                If (String.IsNullOrEmpty(mUsbInfo.sService) OrElse mUsbInfo.sService = "HidUsb") Then
-                                    Continue For
-                                End If
+                            ' Dont allow anything else than non-system drivers past here!
+                            If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                                Continue For
+                            End If
 
-                                If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
-                                    Continue For
-                                End If
-
-                                mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
-                                mDriverInstaller.RemoveDevice(mUsbInfo.sDeviceID)
-                                bScanNewDevices = True
-                            Next
+                            mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
+                            mDriverInstaller.RemoveDevice(mUsbInfo.sDeviceID)
+                            bScanNewDevices = True
                         Next
+                    Next
 
-                        If (bScanNewDevices) Then
-                            mDriverInstaller.ScanDevices()
-                        End If
+                    If (bScanNewDevices) Then
+                        mDriverInstaller.ScanDevices()
                     End If
 
                     MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)

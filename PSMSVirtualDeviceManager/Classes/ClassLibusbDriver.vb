@@ -176,11 +176,84 @@ Public Class ClassLibusbDriver
         Next
     End Sub
 
-    Public Sub InstallPSVRDrvier64()
+    Public Sub InstallPlaystationVrDrvier64()
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_LIBUSB_CONFIGS
             InternalInstallDriver64(mConfig)
         Next
     End Sub
+
+    Public Function VerifyPlaystationEyeDriver64() As Boolean
+        Dim bDriversInstalled As Boolean = True
+
+        For Each mInfo In DRV_PSEYE_LIBUSB_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                If (mUsbInfo.iConfigFlags <> 0) Then
+                    Continue For
+                End If
+
+                If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
+                    ' No driver
+                    bDriversInstalled = False
+                Else
+                    If (mUsbInfo.sService = LIBUSB_SERVICE_NAME) Then
+                        Continue For
+                    End If
+
+                    'Wrong driver
+                    bDriversInstalled = False
+                End If
+            Next
+        Next
+
+        Return bDriversInstalled
+    End Function
+
+    Public Function VerifyPlaystationVrDriver64() As Boolean
+        Dim bDriversInstalled As Boolean = True
+        Dim bHidInstalled As Boolean = True
+
+        For Each mInfo In DRV_PSVR_LIBUSB_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                If (mUsbInfo.iConfigFlags <> 0) Then
+                    Continue For
+                End If
+
+                If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
+                    ' No driver
+                    bDriversInstalled = False
+                Else
+                    If (mUsbInfo.sService = LIBUSB_SERVICE_NAME) Then
+                        Continue For
+                    End If
+
+                    'Wrong driver
+                    bDriversInstalled = False
+                End If
+            Next
+        Next
+
+        ' Check if the device is using HID and no other weird driver.
+        For Each mInfo In DRV_PSVR_HID_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                If (mUsbInfo.iConfigFlags <> 0) Then
+                    Continue For
+                End If
+
+                If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
+                    ' No driver
+                    bHidInstalled = False
+                Else
+                    If (mUsbInfo.sService = HID_SERVICE_NAME) Then
+                        Continue For
+                    End If
+
+                    'Wrong driver
+                    bHidInstalled = False
+                End If
+            Next
+        Next
+        Return (bDriversInstalled AndAlso bHidInstalled)
+    End Function
 
     Private Sub InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO)
         Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_ROOT_NAME)
