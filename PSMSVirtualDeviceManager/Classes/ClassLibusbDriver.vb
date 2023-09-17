@@ -191,15 +191,13 @@ Public Class ClassLibusbDriver
                     Continue For
                 End If
 
-                If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
-                    ' No driver
+                If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
                     If (mUsbInfo.sService = LIBUSB_SERVICE_NAME) Then
                         Continue For
                     End If
 
-                    'Wrong driver
                     bDriversInstalled = False
                 End If
             Next
@@ -218,21 +216,18 @@ Public Class ClassLibusbDriver
                     Continue For
                 End If
 
-                If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
-                    ' No driver
+                If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
                     If (mUsbInfo.sService = LIBUSB_SERVICE_NAME) Then
                         Continue For
                     End If
 
-                    'Wrong driver
                     bDriversInstalled = False
                 End If
             Next
         Next
 
-        ' Check if the device is using HID and no other weird driver.
         For Each mInfo In DRV_PSVR_HID_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 If (mUsbInfo.iConfigFlags <> 0) Then
@@ -240,14 +235,12 @@ Public Class ClassLibusbDriver
                 End If
 
                 If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
-                    ' No driver
                     bHidInstalled = False
                 Else
                     If (mUsbInfo.sService = HID_SERVICE_NAME) Then
                         Continue For
                     End If
 
-                    'Wrong driver
                     bHidInstalled = False
                 End If
             Next
