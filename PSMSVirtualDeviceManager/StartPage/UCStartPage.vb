@@ -754,7 +754,11 @@ Public Class UCStartPage
                                 Continue For
                             End If
 
-                            If (String.IsNullOrEmpty(mUsbInfo.sService) OrElse mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
+                            If (mUsbInfo.HasDriverInstalled()) Then
+                                Continue For
+                            End If
+
+                            If (mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
                                 Continue For
                             End If
 
