@@ -20,7 +20,9 @@ Public Class ClassServiceClient
     Private g_bIsConnected As Boolean = False
 
     Event OnControllerUpdate(iControllerId As Integer)
+    Event OnHmdUpdate(iHmdId As Integer)
     Event OnControllerListChanged()
+    Event OnHmdListChanged()
     Event OnTrackerListChanged()
     Event OnPlayspaceOffsetChanged()
     Event OnConnectionStatusChanged()
@@ -38,6 +40,23 @@ Public Class ClassServiceClient
         Property m_OutputSeqNum As Integer
         Property m_BatteryLevel As Single
         Property m_TrackingColor As PSMTrackingColorType
+
+        Property m_LastTimeStamp As Date
+
+        Function GetOrientationEuler() As Vector3
+    End Interface
+
+    Public Interface IHmdData
+        Property m_IsValid As Boolean
+        Property m_IsConnected As Boolean
+        Property m_IsTracking As Boolean
+        Property m_Id As Integer
+        Property m_Serial As String
+
+        Property m_Position As Vector3
+        Property m_Orientation As Quaternion
+
+        Property m_OutputSeqNum As Integer
 
         Property m_LastTimeStamp As Date
 
@@ -102,8 +121,49 @@ Public Class ClassServiceClient
         End Function
     End Structure
 
-    Private g_ControllerPool As New Dictionary(Of Integer, IControllerData)
-    Private g_TrackerPool As New Dictionary(Of Integer, STRUC_TRACKER_DATA)
+    Structure STRUC_MORPHEUS_HMD_DATA
+        Implements IHmdData
+
+        Public Property m_IsValid As Boolean Implements IHmdData.m_IsValid
+        Public Property m_IsConnected As Boolean Implements IHmdData.m_IsConnected
+        Public Property m_IsTracking As Boolean Implements IHmdData.m_IsTracking
+        Public Property m_Id As Integer Implements IHmdData.m_Id
+        Public Property m_Serial As String Implements IHmdData.m_Serial
+
+        Public Property m_Position As Vector3 Implements IHmdData.m_Position
+        Public Property m_Orientation As Quaternion Implements IHmdData.m_Orientation
+
+        Public Property m_OutputSeqNum As Integer Implements IHmdData.m_OutputSeqNum
+        Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
+
+        Public Function GetOrientationEuler() As Vector3 Implements IHmdData.GetOrientationEuler
+            Return ClassQuaternionTools.FromQ(m_Orientation)
+        End Function
+    End Structure
+
+    Structure STRUC_VIRTUAL_HMD_DATA
+        Implements IHmdData
+
+        Public Property m_IsValid As Boolean Implements IHmdData.m_IsValid
+        Public Property m_IsConnected As Boolean Implements IHmdData.m_IsConnected
+        Public Property m_IsTracking As Boolean Implements IHmdData.m_IsTracking
+        Public Property m_Id As Integer Implements IHmdData.m_Id
+        Public Property m_Serial As String Implements IHmdData.m_Serial
+
+        Public Property m_Position As Vector3 Implements IHmdData.m_Position
+        Public Property m_Orientation As Quaternion Implements IHmdData.m_Orientation
+
+        Public Property m_OutputSeqNum As Integer Implements IHmdData.m_OutputSeqNum
+        Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
+
+        Public Function GetOrientationEuler() As Vector3 Implements IHmdData.GetOrientationEuler
+            Return ClassQuaternionTools.FromQ(m_Orientation)
+        End Function
+    End Structure
+
+    Private g_mControllerPool As New Dictionary(Of Integer, IControllerData)
+    Private g_mHmdPool As New Dictionary(Of Integer, IHmdData)
+    Private g_mTrackerPool As New Dictionary(Of Integer, STRUC_TRACKER_DATA)
 
     Public Sub New()
     End Sub
@@ -124,8 +184,9 @@ Public Class ClassServiceClient
             End If
 
             SyncLock __DataLock
-                g_ControllerPool.Clear()
-                g_TrackerPool.Clear()
+                g_mControllerPool.Clear()
+                g_mHmdPool.Clear()
+                g_mTrackerPool.Clear()
             End SyncLock
         End SyncLock
     End Sub
@@ -180,8 +241,10 @@ Public Class ClassServiceClient
     Private Sub ProcessingThread()
         Try
             Dim mControllers As New List(Of Controllers)
+            Dim mHmds As New List(Of HeadMountedDevices)
             Dim mTrackers As New List(Of Trackers)
             Dim bRefreshControllerList As Boolean = True
+            Dim bRefreshHmdList As Boolean = True
             Dim bRefreshTrackerList As Boolean = True
 
             Dim bConnected As Boolean = False
@@ -199,6 +262,7 @@ Public Class ClassServiceClient
                                 bDisconnected = False
 
                                 bRefreshControllerList = True
+                                bRefreshHmdList = True
                                 bRefreshTrackerList = True
 
                                 RaiseEvent OnConnectionStatusChanged()
@@ -218,6 +282,7 @@ Public Class ClassServiceClient
                                 bDisconnected = False
 
                                 bRefreshControllerList = True
+                                bRefreshHmdList = True
                                 bRefreshTrackerList = True
 
                                 RaiseEvent OnConnectionStatusChanged()
@@ -227,6 +292,12 @@ Public Class ClassServiceClient
                                 bRefreshControllerList = True
 
                                 RaiseEvent OnControllerListChanged()
+                            End If
+
+                            If (g_PSMoveServiceServer.HasHMDListChanged) Then
+                                bRefreshHmdList = True
+
+                                RaiseEvent OnHmdListChanged()
                             End If
 
                             If (g_PSMoveServiceServer.HasTrackerListChanged) Then
@@ -252,7 +323,22 @@ Public Class ClassServiceClient
                                 mControllers.AddRange(Controllers.GetControllerList())
 
                                 SyncLock __DataLock
-                                    g_ControllerPool.Clear()
+                                    g_mControllerPool.Clear()
+                                End SyncLock
+                            End If
+
+                            If (bRefreshHmdList) Then
+                                bRefreshHmdList = False
+
+                                For i = 0 To mHmds.Count - 1
+                                    mHmds(i).Dispose()
+                                Next
+                                mHmds.Clear()
+
+                                mHmds.AddRange(HeadMountedDevices.GetHmdList())
+
+                                SyncLock __DataLock
+                                    g_mHmdPool.Clear()
                                 End SyncLock
                             End If
 
@@ -267,7 +353,7 @@ Public Class ClassServiceClient
                                 mTrackers.AddRange(Trackers.GetTrackerList())
 
                                 SyncLock __DataLock
-                                    g_TrackerPool.Clear()
+                                    g_mTrackerPool.Clear()
                                 End SyncLock
 
                                 For Each mTracker As Trackers In mTrackers
@@ -289,7 +375,7 @@ Public Class ClassServiceClient
                                     End If
 
                                     SyncLock __DataLock
-                                        g_TrackerPool(mTracker.m_Info.m_TrackerId) = mData
+                                        g_mTrackerPool(mTracker.m_Info.m_TrackerId) = mData
                                     End SyncLock
                                 Next
                             End If
@@ -321,8 +407,8 @@ Public Class ClassServiceClient
                                     Dim bNewData As Boolean = False
 
                                     SyncLock __DataLock
-                                        If (g_ControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
-                                            If (mController.m_Info.m_OutputSequenceNum <> g_ControllerPool(mController.m_Info.m_ControllerId).m_OutputSeqNum) Then
+                                        If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                            If (mController.m_Info.m_OutputSequenceNum <> g_mControllerPool(mController.m_Info.m_ControllerId).m_OutputSeqNum) Then
                                                 bNewData = True
                                             End If
                                         Else
@@ -409,11 +495,144 @@ Public Class ClassServiceClient
                                                 End If
 
                                                 SyncLock __DataLock
-                                                    g_ControllerPool(mController.m_Info.m_ControllerId) = mData
+                                                    g_mControllerPool(mController.m_Info.m_ControllerId) = mData
                                                 End SyncLock
                                         End Select
 
                                         RaiseEvent OnControllerUpdate(mController.m_Info.m_ControllerId)
+                                    End If
+
+                                End SyncLock
+                            Catch ex As Exception
+                                'Whatever
+                            End Try
+                        Next
+
+                        For Each mHmd As HeadMountedDevices In mHmds
+                            Try
+                                SyncLock __ClientLock
+                                    If (g_mPostStreamRequest.Count > 0) Then
+                                        If ((mHmd.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
+                                            mHmd.m_DataStreamFlags = (mHmd.m_DataStreamFlags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
+                                        End If
+                                    Else
+                                        If ((mHmd.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) > 0) Then
+                                            mHmd.m_DataStreamFlags = (mHmd.m_DataStreamFlags And Not PSMStreamFlags.PSMStreamFlags_includePositionData)
+                                        End If
+                                    End If
+
+                                    If (Not mHmd.m_Listening) Then
+                                        mHmd.m_Listening = True
+                                    End If
+
+                                    If (Not mHmd.m_DataStreamEnabled) Then
+                                        mHmd.m_DataStreamEnabled = True
+                                    End If
+
+                                    mHmd.Refresh(HeadMountedDevices.Info.RefreshFlags.RefreshType_All)
+
+                                    Dim bNewData As Boolean = False
+
+                                    SyncLock __DataLock
+                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                            If (mHmd.m_Info.m_OutputSequenceNum <> g_mHmdPool(mHmd.m_Info.m_HmdId).m_OutputSeqNum) Then
+                                                bNewData = True
+                                            End If
+                                        Else
+                                            bNewData = True
+                                        End If
+                                    End SyncLock
+
+                                    If (bNewData) Then
+                                        Select Case (mHmd.m_Info.m_HmdType)
+                                            Case PSMHmdType.PSMHmd_Morpheus
+                                                Dim mData As New STRUC_MORPHEUS_HMD_DATA
+                                                mData.m_IsConnected = mHmd.m_Info.m_IsConnected
+                                                mData.m_OutputSeqNum = mHmd.m_Info.m_OutputSequenceNum
+                                                mData.m_Id = mHmd.m_Info.m_HmdId
+                                                mData.m_Serial = mHmd.m_Info.m_HmdSerial
+                                                mData.m_LastTimeStamp = Now
+
+                                                If (mHmd.m_Info.IsStateValid) Then
+                                                    mData.m_IsTracking = mHmd.m_Info.m_PSMorpheusState.m_IsCurrentlyTracking
+                                                End If
+
+                                                If (mHmd.m_Info.IsPoseValid) Then
+                                                    mData.m_Position = New Vector3(
+                                                        mHmd.m_Info.m_Pose.m_Position.x,
+                                                        mHmd.m_Info.m_Pose.m_Position.y,
+                                                        mHmd.m_Info.m_Pose.m_Position.z)
+
+                                                    mData.m_Orientation = New Quaternion(
+                                                        mHmd.m_Info.m_Pose.m_Orientation.x,
+                                                        mHmd.m_Info.m_Pose.m_Orientation.y,
+                                                        mHmd.m_Info.m_Pose.m_Orientation.z,
+                                                        mHmd.m_Info.m_Pose.m_Orientation.w)
+                                                End If
+
+                                                'Santiy check, for some reason it can sometimes prodcuce NaN?
+                                                If (Single.IsNaN(mData.m_Position.X) OrElse
+                                                        Single.IsNaN(mData.m_Position.Y) OrElse
+                                                        Single.IsNaN(mData.m_Position.Z)) Then
+                                                    mData.m_Position = New Vector3(0, 0, 0)
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_Orientation.X) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.Y) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.Z) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.W)) Then
+                                                    mData.m_Orientation = Quaternion.Identity
+                                                End If
+
+                                                SyncLock __DataLock
+                                                    g_mHmdPool(mHmd.m_Info.m_HmdId) = mData
+                                                End SyncLock
+
+                                            Case PSMHmdType.PSMHmd_Virtual
+                                                Dim mData As New STRUC_VIRTUAL_HMD_DATA
+                                                mData.m_IsConnected = mHmd.m_Info.m_IsConnected
+                                                mData.m_OutputSeqNum = mHmd.m_Info.m_OutputSequenceNum
+                                                mData.m_Id = mHmd.m_Info.m_HmdId
+                                                mData.m_Serial = mHmd.m_Info.m_HmdSerial
+                                                mData.m_LastTimeStamp = Now
+
+                                                If (mHmd.m_Info.IsStateValid) Then
+                                                    mData.m_IsTracking = mHmd.m_Info.m_PSMorpheusState.m_IsCurrentlyTracking
+                                                End If
+
+                                                If (mHmd.m_Info.IsPoseValid) Then
+                                                    mData.m_Position = New Vector3(
+                                                        mHmd.m_Info.m_Pose.m_Position.x,
+                                                        mHmd.m_Info.m_Pose.m_Position.y,
+                                                        mHmd.m_Info.m_Pose.m_Position.z)
+
+                                                    mData.m_Orientation = New Quaternion(
+                                                        mHmd.m_Info.m_Pose.m_Orientation.x,
+                                                        mHmd.m_Info.m_Pose.m_Orientation.y,
+                                                        mHmd.m_Info.m_Pose.m_Orientation.z,
+                                                        mHmd.m_Info.m_Pose.m_Orientation.w)
+                                                End If
+
+                                                'Santiy check, for some reason it can sometimes prodcuce NaN?
+                                                If (Single.IsNaN(mData.m_Position.X) OrElse
+                                                        Single.IsNaN(mData.m_Position.Y) OrElse
+                                                        Single.IsNaN(mData.m_Position.Z)) Then
+                                                    mData.m_Position = New Vector3(0, 0, 0)
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_Orientation.X) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.Y) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.Z) OrElse
+                                                        Single.IsNaN(mData.m_Orientation.W)) Then
+                                                    mData.m_Orientation = Quaternion.Identity
+                                                End If
+
+                                                SyncLock __DataLock
+                                                    g_mHmdPool(mHmd.m_Info.m_HmdId) = mData
+                                                End SyncLock
+                                        End Select
+
+                                        RaiseEvent OnHmdUpdate(mHmd.m_Info.m_HmdId)
                                     End If
 
                                 End SyncLock
@@ -486,7 +705,7 @@ Public Class ClassServiceClient
         SyncLock __DataLock
             Dim mControllerList As New List(Of IControllerData)
 
-            For Each mItem In g_ControllerPool
+            For Each mItem In g_mControllerPool
                 mControllerList.Add(mItem.Value)
             Next
 
@@ -494,11 +713,23 @@ Public Class ClassServiceClient
         End SyncLock
     End Function
 
+    Public Function GetHmdsData() As IHmdData()
+        SyncLock __DataLock
+            Dim mHmsdList As New List(Of IHmdData)
+
+            For Each mItem In g_mHmdPool
+                mHmsdList.Add(mItem.Value)
+            Next
+
+            Return mHmsdList.ToArray
+        End SyncLock
+    End Function
+
     Public Function GetTrackersData() As ITrackerData()
         SyncLock __DataLock
             Dim mTrackersList As New List(Of ITrackerData)
 
-            For Each mItem In g_TrackerPool
+            For Each mItem In g_mTrackerPool
                 mTrackersList.Add(mItem.Value)
             Next
 
@@ -509,11 +740,23 @@ Public Class ClassServiceClient
     ReadOnly Property m_ControllerData(i As Integer) As IControllerData
         Get
             SyncLock __DataLock
-                If (Not g_ControllerPool.ContainsKey(i)) Then
+                If (Not g_mControllerPool.ContainsKey(i)) Then
                     Return Nothing
                 End If
 
-                Return g_ControllerPool(i)
+                Return g_mControllerPool(i)
+            End SyncLock
+        End Get
+    End Property
+
+    ReadOnly Property m_HmdData(i As Integer) As IHmdData
+        Get
+            SyncLock __DataLock
+                If (Not g_mHmdPool.ContainsKey(i)) Then
+                    Return Nothing
+                End If
+
+                Return g_mHmdPool(i)
             End SyncLock
         End Get
     End Property
@@ -521,11 +764,11 @@ Public Class ClassServiceClient
     ReadOnly Property m_TrackerData(i As Integer) As ITrackerData
         Get
             SyncLock __DataLock
-                If (Not g_TrackerPool.ContainsKey(i)) Then
+                If (Not g_mTrackerPool.ContainsKey(i)) Then
                     Return Nothing
                 End If
 
-                Return g_TrackerPool(i)
+                Return g_mTrackerPool(i)
             End SyncLock
         End Get
     End Property
