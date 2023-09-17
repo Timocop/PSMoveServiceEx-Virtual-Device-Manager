@@ -234,7 +234,7 @@ Public Class ClassLibusbDriver
                     Continue For
                 End If
 
-                If (String.IsNullOrEmpty(mUsbInfo.sService)) Then
+                If (Not mUsbInfo.HasDriverInstalled()) Then
                     bHidInstalled = False
                 Else
                     If (mUsbInfo.sService = HID_SERVICE_NAME) Then
