@@ -754,7 +754,7 @@ Public Class UCStartPage
                                 Continue For
                             End If
 
-                            If (mUsbInfo.HasDriverInstalled()) Then
+                            If (Not mUsbInfo.HasDriverInstalled()) Then
                                 Continue For
                             End If
 
