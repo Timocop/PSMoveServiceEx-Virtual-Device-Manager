@@ -92,10 +92,6 @@ Public Class FormMain
         SelectPage(ENUM_PAGE.STARTPAGE)
 
         AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
-
-
-        Dim __TEST As New ClassLibusbDriver
-        __TEST.IsUsbDeviceConnected("054C", "09AF")
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
