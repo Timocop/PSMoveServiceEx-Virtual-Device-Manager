@@ -53,8 +53,6 @@ Public Class ClassDevicesNotify
         GUID_DEVINTERFACE_MONITOR
         GUID_DEVINTERFACE_HID
         GUID_DEVINTERFACE_DISPLAY_ADAPTER
-
-        __MAX
     End Enum
     Private g_sDeviceGuid As String() = {
             "A5DCBF10-6530-11D2-901F-00C04FB951ED", ' GUID_DEVINTERFACE_USB_DEVICE
