@@ -1,6 +1,37 @@
-﻿Imports Microsoft.Win32
+﻿Imports System.Runtime.InteropServices
+Imports Microsoft.Win32
 
 Public Class ClassLibusbDriver
+    Protected Class ClassWin32
+        Public Const DIGCF_PRESENT As Integer = &H2
+        Public Const DIGCF_ALLCLASSES As Integer = &H4
+        Public Const SPDRP_HARDWAREID As Integer = &H1
+
+        <StructLayout(LayoutKind.Sequential)>
+        Public Class SP_DEVINFO_DATA
+            Public cbSize As Integer
+            Public ClassGuid As Guid
+            Public DevInst As Integer
+            Public Reserved As IntPtr
+        End Class
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function SetupDiGetClassDevs(ByRef ClassGuid As Guid, Enumerator As IntPtr, hwndParent As IntPtr, Flags As Integer) As IntPtr
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function SetupDiEnumDeviceInfo(DeviceInfoSet As IntPtr, MemberIndex As Integer, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA) As Boolean
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function SetupDiDestroyDeviceInfoList(DeviceInfoSet As IntPtr) As Boolean
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function SetupDiGetDeviceRegistryProperty(DeviceInfoSet As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA, Property_ As Integer, ByRef PropertyRegDataType As Integer, PropertyBuffer As IntPtr, PropertyBufferSize As Integer, ByRef RequiredSize As Integer) As Boolean
+        End Function
+    End Class
+
     Public Const LIBUSB_SERVICE_NAME As String = "libusb0"
     Public Const HID_SERVICE_NAME As String = "HidUsb"
 
@@ -472,4 +503,57 @@ Public Class ClassLibusbDriver
             End If
         End Using
     End Sub
+
+    Public Function IsUsbDeviceConnected(mInfo As STRUC_DEVICE_DRIVER_INFO) As Boolean
+        Return IsUsbDeviceConnected(mInfo.VID, mInfo.PID)
+    End Function
+
+    Public Function IsUsbDeviceConnected(sVID As String, sPID As String) As Boolean
+        Dim mDevInfo As IntPtr = ClassWin32.SetupDiGetClassDevs(Guid.Empty, IntPtr.Zero, IntPtr.Zero, ClassWin32.DIGCF_PRESENT Or ClassWin32.DIGCF_ALLCLASSES)
+        If (mDevInfo = IntPtr.Zero) Then
+            Throw New ArgumentException("SetupDiGetClassDevs failed")
+        End If
+
+        Try
+            Dim iDevIndex As Integer = 0
+            Dim mDevInfoData As New ClassWin32.SP_DEVINFO_DATA
+            mDevInfoData.cbSize = Marshal.SizeOf(mDevInfoData)
+
+            While (ClassWin32.SetupDiEnumDeviceInfo(mDevInfo, iDevIndex, mDevInfoData))
+                Dim iRegDataType As Integer = 0
+                Dim iBufferSize As Integer = 0
+
+                ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, IntPtr.Zero, 0, iBufferSize)
+
+                If (iBufferSize > 0) Then
+                    Dim iBuffer As IntPtr = Marshal.AllocHGlobal(iBufferSize)
+                    If (iBuffer = IntPtr.Zero) Then
+                        Throw New ArgumentException("AllocHGlobal failed")
+                    End If
+
+                    Try
+                        If (ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, iBuffer, iBufferSize, iBufferSize)) Then
+                            Dim sDeviceHardwareID As String = Marshal.PtrToStringAuto(iBuffer)
+
+                            If sDeviceHardwareID.StartsWith(String.Format("USB\VID_{0}&PID_{1}", sVID, sPID)) Then
+                                Return True
+                            End If
+                        End If
+                    Finally
+                        If (iBuffer <> IntPtr.Zero) Then
+                            Marshal.FreeHGlobal(iBuffer)
+                        End If
+                    End Try
+                End If
+
+                iDevIndex += 1
+            End While
+        Finally
+            If (mDevInfo <> IntPtr.Zero) Then
+                ClassWin32.SetupDiDestroyDeviceInfoList(mDevInfo)
+            End If
+        End Try
+
+        Return False ' Device is not connected
+    End Function
 End Class
