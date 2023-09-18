@@ -22,10 +22,13 @@ Public Class ClassLibusbDriver
     '    New STRUC_DEVICE_DRIVER_INFO("PS VR 3D Audio", "Sony Corp.", "054C", "09AF", "00") ' Just add a driver so it does not show as hardware issue.
     '}
     Public ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05")
+        New STRUC_DEVICE_DRIVER_INFO("Playstation VR Control", "Sony Corp.", "054C", "09AF", "05"),
+        New STRUC_DEVICE_DRIVER_INFO("Playstation VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("Playstation VR BulkIn", "Sony Corp.", "054C", "09AF", "07"), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("Playstation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00") ' Just add a driver so it does not show as hardware issue.
     }
     Public ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-      New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04")
+      New STRUC_DEVICE_DRIVER_INFO("Playstation VR Sensor", "Sony Corp.", "054C", "09AF", "04")
     }
 
     Enum ENUM_WDI_DRIVERTYPE
@@ -119,7 +122,7 @@ Public Class ClassLibusbDriver
         End Function
 
         Public Function HasDriverInstalled() As Boolean
-            Return (sService Is Nothing)
+            Return (Not String.IsNullOrEmpty(sService))
         End Function
     End Structure
 
@@ -187,8 +190,14 @@ Public Class ClassLibusbDriver
 
         For Each mInfo In DRV_PSEYE_LIBUSB_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
-                If (mUsbInfo.iConfigFlags <> 0) Then
-                    Continue For
+                If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
+                    If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
+                        Continue For
+                    End If
+                Else
+                    If (mUsbInfo.iConfigFlags <> 0) Then
+                        Continue For
+                    End If
                 End If
 
                 If (Not mUsbInfo.HasDriverInstalled()) Then
@@ -212,8 +221,14 @@ Public Class ClassLibusbDriver
 
         For Each mInfo In DRV_PSVR_LIBUSB_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
-                If (mUsbInfo.iConfigFlags <> 0) Then
-                    Continue For
+                If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
+                    If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
+                        Continue For
+                    End If
+                Else
+                    If (mUsbInfo.iConfigFlags <> 0) Then
+                        Continue For
+                    End If
                 End If
 
                 If (Not mUsbInfo.HasDriverInstalled()) Then
@@ -230,8 +245,14 @@ Public Class ClassLibusbDriver
 
         For Each mInfo In DRV_PSVR_HID_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
-                If (mUsbInfo.iConfigFlags <> 0) Then
-                    Continue For
+                If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
+                    If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
+                        Continue For
+                    End If
+                Else
+                    If (mUsbInfo.iConfigFlags <> 0) Then
+                        Continue For
+                    End If
                 End If
 
                 If (Not mUsbInfo.HasDriverInstalled()) Then
