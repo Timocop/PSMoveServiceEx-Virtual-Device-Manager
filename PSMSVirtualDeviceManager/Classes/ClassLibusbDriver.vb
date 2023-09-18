@@ -189,7 +189,11 @@ Public Class ClassLibusbDriver
         Dim bDriversInstalled As Boolean = True
 
         For Each mInfo In DRV_PSEYE_LIBUSB_CONFIGS
+            Dim bDeviceRegistered As Boolean = False
+
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                bDeviceRegistered = True
+
                 If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
                     If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
                         Continue For
@@ -210,6 +214,10 @@ Public Class ClassLibusbDriver
                     bDriversInstalled = False
                 End If
             Next
+
+            If (Not bDeviceRegistered) Then
+                bDriversInstalled = False
+            End If
         Next
 
         Return bDriversInstalled
@@ -220,7 +228,11 @@ Public Class ClassLibusbDriver
         Dim bHidInstalled As Boolean = True
 
         For Each mInfo In DRV_PSVR_LIBUSB_CONFIGS
+            Dim bDeviceRegistered As Boolean = False
+
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                bDeviceRegistered = True
+
                 If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
                     If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
                         Continue For
@@ -241,10 +253,18 @@ Public Class ClassLibusbDriver
                     bDriversInstalled = False
                 End If
             Next
+
+            If (Not bDeviceRegistered) Then
+                bDriversInstalled = False
+            End If
         Next
 
         For Each mInfo In DRV_PSVR_HID_CONFIGS
+            Dim bDeviceRegistered As Boolean = False
+
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                bDeviceRegistered = True
+
                 If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
                     If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
                         Continue For
@@ -265,6 +285,10 @@ Public Class ClassLibusbDriver
                     bHidInstalled = False
                 End If
             Next
+
+            If (Not bDeviceRegistered) Then
+                bDriversInstalled = False
+            End If
         Next
         Return (bDriversInstalled AndAlso bHidInstalled)
     End Function
