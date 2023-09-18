@@ -170,33 +170,33 @@
     <Compile Include="Classes\ClassDevicesNotify.vb" />
     <Compile Include="Classes\ClassMonitor.vb" />
     <Compile Include="Classes\ClassVideoInputDevices.vb" />
-    <Compile Include="Classes\ClassIni.vb" />
+    <Compile Include="Classes\Tools\ClassIni.vb" />
     <Compile Include="Classes\ClassLibusbDriver.vb" />
-    <Compile Include="Classes\ClassListViewEx.vb">
+    <Compile Include="Classes\Tools\ClassListViewEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\ClassOpenVRConfig.vb" />
-    <Compile Include="Classes\ClassOSC.vb" />
-    <Compile Include="Classes\ClassPictureBoxQuality.vb">
+    <Compile Include="Classes\Service\ClassOpenVRConfig.vb" />
+    <Compile Include="Classes\Service\ClassOSC.vb" />
+    <Compile Include="Classes\Tools\ClassPictureBoxQuality.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\ClassPrecisionSleep.vb" />
-    <Compile Include="Classes\ClassSerivceConst.vb" />
-    <Compile Include="Classes\ClassQuaternionTools.vb" />
-    <Compile Include="Classes\ClassServiceConfig.vb" />
-    <Compile Include="Classes\ClassServiceClient.vb" />
-    <Compile Include="Classes\ClassServiceInfo.vb" />
-    <Compile Include="Classes\ClassSteamVRConfig.vb" />
+    <Compile Include="Classes\Tools\ClassPrecisionSleep.vb" />
+    <Compile Include="Classes\Service\ClassSerivceConst.vb" />
+    <Compile Include="Classes\Tools\ClassQuaternionTools.vb" />
+    <Compile Include="Classes\Service\ClassServiceConfig.vb" />
+    <Compile Include="Classes\Service\ClassServiceClient.vb" />
+    <Compile Include="Classes\Service\ClassServiceInfo.vb" />
+    <Compile Include="Classes\Service\ClassSteamVRConfig.vb" />
     <Compile Include="Classes\ClassUpdate.vb" />
-    <Compile Include="Classes\ClassUtils.vb" />
-    <Compile Include="Classes\ClassVmtConst.vb" />
-    <Compile Include="Classes\FormLoading.Designer.vb">
+    <Compile Include="Classes\Tools\ClassUtils.vb" />
+    <Compile Include="Classes\Service\ClassVmtConst.vb" />
+    <Compile Include="Classes\Tools\FormLoading.Designer.vb">
       <DependentUpon>FormLoading.vb</DependentUpon>
     </Compile>
-    <Compile Include="Classes\FormLoading.vb">
+    <Compile Include="Classes\Tools\FormLoading.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Classes\ClassWebClientEx.vb">
+    <Compile Include="Classes\Tools\ClassWebClientEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="FormMain.vb">
@@ -251,10 +251,10 @@
     <Compile Include="UCVirtualControllers\UCVirtualControllers.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Classes\FormRtfHelp.Designer.vb">
+    <Compile Include="Classes\Tools\FormRtfHelp.Designer.vb">
       <DependentUpon>FormRtfHelp.vb</DependentUpon>
     </Compile>
-    <Compile Include="Classes\FormRtfHelp.vb">
+    <Compile Include="Classes\Tools\FormRtfHelp.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UCVirtualMotionTracker\FormSteamSettings.Designer.vb">
@@ -322,7 +322,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Classes\FormLoading.resx">
+    <EmbeddedResource Include="Classes\Tools\FormLoading.resx">
       <DependentUpon>FormLoading.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
@@ -349,7 +349,7 @@
     <EmbeddedResource Include="UCVirtualControllers\UCVirtualControllers.resx">
       <DependentUpon>UCVirtualControllers.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Classes\FormRtfHelp.resx">
+    <EmbeddedResource Include="Classes\Tools\FormRtfHelp.resx">
       <DependentUpon>FormRtfHelp.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualMotionTracker\FormSteamSettings.resx">
