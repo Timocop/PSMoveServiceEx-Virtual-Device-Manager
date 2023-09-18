@@ -8,36 +8,39 @@ Public Class ClassDevicesNotify
     Private g_mReceiveForm As ClassReceiverForm
     Private g_iDeviceType As ENUM_DEVICE_TYPE
 
-    Private Const WM_DEVICECHANGE As Integer = &H219
-    Private Const DBT_DEVICEARRIVAL As Integer = &H8000
-    Private Const DBT_DEVICEREMOVECOMPLETE As Integer = &H8004
-    Private Const DBT_DEVTYP_DEVICEINTERFACE As Integer = &H5
+    Protected Class ClassWin32
+        Public Const WM_DEVICECHANGE As Integer = &H219
+        Public Const DBT_DEVICEARRIVAL As Integer = &H8000
+        Public Const DBT_DEVICEREMOVECOMPLETE As Integer = &H8004
+        Public Const DBT_DEVTYP_DEVICEINTERFACE As Integer = &H5
 
-    <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)>
-    Class DEV_BROADCAST_DEVICEINTERFACE
-        Public dbcc_size As Integer
-        Public dbcc_devicetype As Integer
-        Public dbcc_reserved As Integer
-        Public dbcc_classguid As Guid
+        <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)>
+        Public Class DEV_BROADCAST_DEVICEINTERFACE
+            Public dbcc_size As Integer
+            Public dbcc_devicetype As Integer
+            Public dbcc_reserved As Integer
+            Public dbcc_classguid As Guid
 
-        <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=256)>
-        Public dbcc_name As String
+            <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=256)>
+            Public dbcc_name As String
+        End Class
+
+        <StructLayout(LayoutKind.Sequential)>
+        Public Class DEV_BROADCAST_HDR
+            Public dbch_size As Integer
+            Public dbch_devicetype As Integer
+            Public dbch_reserved As Integer
+        End Class
+
+        <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function RegisterDeviceNotification(hRecipient As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> NotificationFilter As DEV_BROADCAST_DEVICEINTERFACE, Flags As Integer) As IntPtr
+        End Function
+
+        <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function UnregisterDeviceNotification(hHandle As IntPtr) As Boolean
+        End Function
+
     End Class
-
-    <StructLayout(LayoutKind.Sequential)>
-    Class DEV_BROADCAST_HDR
-        Public dbch_size As Integer
-        Public dbch_devicetype As Integer
-        Public dbch_reserved As Integer
-    End Class
-
-    <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
-    Public Shared Function RegisterDeviceNotification(hRecipient As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> NotificationFilter As DEV_BROADCAST_DEVICEINTERFACE, Flags As Integer) As IntPtr
-    End Function
-
-    <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
-    Public Shared Function UnregisterDeviceNotification(hHandle As IntPtr) As Boolean
-    End Function
 
     Public Event OnDeviceConnectionChanged(bConnected As Boolean, sDeviceName As String)
 
@@ -76,15 +79,15 @@ Public Class ClassDevicesNotify
 
         g_iDeviceType = iDeviceType
 
-        Dim mDBI As New DEV_BROADCAST_DEVICEINTERFACE()
+        Dim mDBI As New ClassWin32.DEV_BROADCAST_DEVICEINTERFACE()
         mDBI.dbcc_size = Marshal.SizeOf(mDBI)
         mDBI.dbcc_name = Nothing
         mDBI.dbcc_reserved = 0
         mDBI.dbcc_classguid = New Guid(g_sDeviceGuid(iDeviceType))
-        mDBI.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE
+        mDBI.dbcc_devicetype = ClassWin32.DBT_DEVTYP_DEVICEINTERFACE
 
         ' Register for device change notifications 
-        g_mDeviceNotificationHandle = RegisterDeviceNotification(Me.Handle, mDBI, 0)
+        g_mDeviceNotificationHandle = ClassWin32.RegisterDeviceNotification(Me.Handle, mDBI, 0)
 
         If (g_mDeviceNotificationHandle = IntPtr.Zero) Then
             Throw New ArgumentException("RegisterDeviceNotification failed")
@@ -96,35 +99,38 @@ Public Class ClassDevicesNotify
             Return
         End If
 
-        UnregisterDeviceNotification(g_mDeviceNotificationHandle)
+        ClassWin32.UnregisterDeviceNotification(g_mDeviceNotificationHandle)
         g_mDeviceNotificationHandle = IntPtr.Zero
     End Sub
 
     Protected Overrides Sub WndProc(ByRef m As Message)
-        If (m.Msg = WM_DEVICECHANGE AndAlso m.LParam <> IntPtr.Zero) Then
-            Select Case (CInt(m.WParam))
-                Case DBT_DEVICEARRIVAL
-                    Dim mDBH As DEV_BROADCAST_HDR = CType(Marshal.PtrToStructure(m.LParam, GetType(DEV_BROADCAST_HDR)), DEV_BROADCAST_HDR)
+        Try
+            If (m.Msg = ClassWin32.WM_DEVICECHANGE AndAlso m.LParam <> IntPtr.Zero) Then
+                Select Case (CInt(m.WParam))
+                    Case ClassWin32.DBT_DEVICEARRIVAL
+                        Dim mDBH As ClassWin32.DEV_BROADCAST_HDR = CType(Marshal.PtrToStructure(m.LParam, GetType(ClassWin32.DEV_BROADCAST_HDR)), ClassWin32.DEV_BROADCAST_HDR)
 
-                    If (mDBH.dbch_devicetype = DBT_DEVTYP_DEVICEINTERFACE) Then
-                        Dim mDBI As DEV_BROADCAST_DEVICEINTERFACE = CType(Marshal.PtrToStructure(m.LParam, GetType(DEV_BROADCAST_DEVICEINTERFACE)), DEV_BROADCAST_DEVICEINTERFACE)
+                        If (mDBH.dbch_devicetype = ClassWin32.DBT_DEVTYP_DEVICEINTERFACE) Then
+                            Dim mDBI As ClassWin32.DEV_BROADCAST_DEVICEINTERFACE = CType(Marshal.PtrToStructure(m.LParam, GetType(ClassWin32.DEV_BROADCAST_DEVICEINTERFACE)), ClassWin32.DEV_BROADCAST_DEVICEINTERFACE)
 
-                        If (mDBI.dbcc_classguid = New Guid(g_sDeviceGuid(g_iDeviceType))) Then
-                            RaiseEvent OnDeviceConnectionChanged(True, mDBI.dbcc_name)
+                            If (mDBI.dbcc_classguid = New Guid(g_sDeviceGuid(g_iDeviceType))) Then
+                                RaiseEvent OnDeviceConnectionChanged(True, mDBI.dbcc_name)
+                            End If
                         End If
-                    End If
-                Case DBT_DEVICEREMOVECOMPLETE
-                    Dim mDBH As DEV_BROADCAST_HDR = CType(Marshal.PtrToStructure(m.LParam, GetType(DEV_BROADCAST_HDR)), DEV_BROADCAST_HDR)
+                    Case ClassWin32.DBT_DEVICEREMOVECOMPLETE
+                        Dim mDBH As ClassWin32.DEV_BROADCAST_HDR = CType(Marshal.PtrToStructure(m.LParam, GetType(ClassWin32.DEV_BROADCAST_HDR)), ClassWin32.DEV_BROADCAST_HDR)
 
-                    If (mDBH.dbch_devicetype = DBT_DEVTYP_DEVICEINTERFACE) Then
-                        Dim mDBI As DEV_BROADCAST_DEVICEINTERFACE = CType(Marshal.PtrToStructure(m.LParam, GetType(DEV_BROADCAST_DEVICEINTERFACE)), DEV_BROADCAST_DEVICEINTERFACE)
+                        If (mDBH.dbch_devicetype = ClassWin32.DBT_DEVTYP_DEVICEINTERFACE) Then
+                            Dim mDBI As ClassWin32.DEV_BROADCAST_DEVICEINTERFACE = CType(Marshal.PtrToStructure(m.LParam, GetType(ClassWin32.DEV_BROADCAST_DEVICEINTERFACE)), ClassWin32.DEV_BROADCAST_DEVICEINTERFACE)
 
-                        If (mDBI.dbcc_classguid = New Guid(g_sDeviceGuid(g_iDeviceType))) Then
-                            RaiseEvent OnDeviceConnectionChanged(False, mDBI.dbcc_name)
+                            If (mDBI.dbcc_classguid = New Guid(g_sDeviceGuid(g_iDeviceType))) Then
+                                RaiseEvent OnDeviceConnectionChanged(False, mDBI.dbcc_name)
+                            End If
                         End If
-                    End If
-            End Select
-        End If
+                End Select
+            End If
+        Catch ex As Exception
+        End Try
 
         MyBase.WndProc(m)
     End Sub

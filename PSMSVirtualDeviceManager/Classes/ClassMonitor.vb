@@ -3,37 +3,39 @@ Imports System.Runtime.InteropServices
 Imports System.Text
 
 Public Class ClassMonitor
-    <DllImport("user32.dll")>
-    Private Shared Function ChangeDisplaySettingsEx(lpszDeviceName As String, ByRef lpDevMode As DEVMODE, hwnd As IntPtr, dwflags As ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS, lParam As IntPtr) As ENUM_DISPLAY_SETTINGS_ERROR
-    End Function
+    Protected Class ClassWin32
+        <DllImport("user32.dll")>
+        Public Shared Function ChangeDisplaySettingsEx(lpszDeviceName As String, ByRef lpDevMode As DEVMODE, hwnd As IntPtr, dwflags As ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS, lParam As IntPtr) As ENUM_DISPLAY_SETTINGS_ERROR
+        End Function
 
-    <DllImport("user32.dll")>
-    Private Shared Function EnumDisplayDevices(lpDevice As String, iDevNum As Integer, ByRef lpDisplayDevice As DISPLAY_DEVICE, dwFlags As Integer) As Boolean
-    End Function
+        <DllImport("user32.dll")>
+        Public Shared Function EnumDisplayDevices(lpDevice As String, iDevNum As Integer, ByRef lpDisplayDevice As DISPLAY_DEVICE, dwFlags As Integer) As Boolean
+        End Function
 
-    <DllImport("user32.dll")>
-    Private Shared Function EnumDisplayDevices(lpDevice As String, iDevNum As Integer, ByRef lpDisplayDevice As MONITOR_DEVICE, dwFlags As Integer) As Boolean
-    End Function
+        <DllImport("user32.dll")>
+        Public Shared Function EnumDisplayDevices(lpDevice As String, iDevNum As Integer, ByRef lpDisplayDevice As MONITOR_DEVICE, dwFlags As Integer) As Boolean
+        End Function
 
-    <DllImport("user32.dll", CharSet:=CharSet.Ansi)>
-    Private Shared Function EnumDisplaySettings(lpszDeviceName As String, iModeNum As Integer, ByRef lpDevMode As DEVMODE) As Boolean
-    End Function
+        <DllImport("user32.dll", CharSet:=CharSet.Ansi)>
+        Public Shared Function EnumDisplaySettings(lpszDeviceName As String, iModeNum As Integer, ByRef lpDevMode As DEVMODE) As Boolean
+        End Function
 
-    Const ENUM_CURRENT_SETTINGS As Integer = -1
-    Const ENUM_REGISTRY_SETTINGS As Integer = -2
+        Public Const ENUM_CURRENT_SETTINGS As Integer = -1
+        Public Const ENUM_REGISTRY_SETTINGS As Integer = -2
 
-    Const DISP_CHANGE_SUCCESSFUL As Integer = 0
-    Const DISP_CHANGE_RESTART As Integer = 1
-    Const DISP_CHANGE_FAILED As Integer = -1
-    Const DISP_CHANGE_BADMODE As Integer = -2
-    Const DISP_CHANGE_NOTUPDATED As Integer = -3
+        Public Const DISP_CHANGE_SUCCESSFUL As Integer = 0
+        Public Const DISP_CHANGE_RESTART As Integer = 1
+        Public Const DISP_CHANGE_FAILED As Integer = -1
+        Public Const DISP_CHANGE_BADMODE As Integer = -2
+        Public Const DISP_CHANGE_NOTUPDATED As Integer = -3
 
-    Const DM_BITSPERPEL As Integer = &H40000
-    Const DM_PELSWIDTH As Integer = &H80000
-    Const DM_PELSHEIGHT As Integer = &H100000
-    Const DM_DISPLAYFREQUENCY As Integer = &H400000
+        Public Const DM_BITSPERPEL As Integer = &H40000
+        Public Const DM_PELSWIDTH As Integer = &H80000
+        Public Const DM_PELSHEIGHT As Integer = &H100000
+        Public Const DM_DISPLAYFREQUENCY As Integer = &H400000
 
-    Const CCHFORMNAME As Integer = 32
+        Public Const CCHFORMNAME As Integer = 32
+    End Class
 
     Private Interface INullable
     End Interface
@@ -52,7 +54,7 @@ Public Class ClassMonitor
     Public Structure DEVMODE
         Implements INullable
 
-        <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=CCHFORMNAME)>
+        <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=ClassWin32.CCHFORMNAME)>
         Public dmDeviceName As String
         Public dmSpecVersion As Short
         Public dmDriverVersion As Short
@@ -68,7 +70,7 @@ Public Class ClassMonitor
         Public dmYResolution As Short
         Public dmTTOption As Short
         Public dmCollate As Short
-        <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=CCHFORMNAME)>
+        <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=ClassWin32.CCHFORMNAME)>
         Public dmFormName As String
         Public dmLogPixels As Short
         Public dmBitsPerPel As Integer
@@ -114,14 +116,6 @@ Public Class ClassMonitor
         Public DeviceKey As String
     End Structure
 
-    Public Enum ENUM_DISPLAY_SETTINGS_ERROR
-        DISP_CHANGE_SUCCESSFUL = 0
-        DISP_CHANGE_RESTART = 1
-        DISP_CHANGE_FAILED = -1
-        DISP_CHANGE_BADMODE = -2
-        DISP_CHANGE_NOTUPDATED = -3
-    End Enum
-
     <Flags>
     Public Enum ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS
         CDS_NONE = 0
@@ -138,6 +132,14 @@ Public Class ClassMonitor
         CDS_NORESET = &H10000000
     End Enum
 
+    Public Enum ENUM_DISPLAY_SETTINGS_ERROR
+        DISP_CHANGE_SUCCESSFUL = 0
+        DISP_CHANGE_RESTART = 1
+        DISP_CHANGE_FAILED = -1
+        DISP_CHANGE_BADMODE = -2
+        DISP_CHANGE_NOTUPDATED = -3
+    End Enum
+
     Public Function GetMonitorList() As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)()
         Dim mMonitors As New List(Of KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE))
 
@@ -145,12 +147,12 @@ Public Class ClassMonitor
         mDisplayDevice.cb = Marshal.SizeOf(mDisplayDevice)
 
         Dim i As Integer = 0
-        While (EnumDisplayDevices(Nothing, i, mDisplayDevice, 0))
+        While (ClassWin32.EnumDisplayDevices(Nothing, i, mDisplayDevice, 0))
 
             Dim mMonitorDevice As New MONITOR_DEVICE()
             mMonitorDevice.cb = Marshal.SizeOf(mMonitorDevice)
 
-            If (EnumDisplayDevices(mDisplayDevice.DeviceName, 0, mMonitorDevice, 0)) Then
+            If (ClassWin32.EnumDisplayDevices(mDisplayDevice.DeviceName, 0, mMonitorDevice, 0)) Then
                 mMonitors.Add(New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mDisplayDevice, mMonitorDevice))
             End If
 
@@ -166,9 +168,9 @@ Public Class ClassMonitor
 
     Public Function GetMonitorInfo(sDeviceName As String) As DEVMODE
         Dim mDevMode As New DEVMODE()
-        mDevMode.dmSize = CType(Marshal.SizeOf(GetType(DEVMODE)), Short)
+        mDevMode.dmSize = CType(Marshal.SizeOf(mDevMode), Short)
 
-        If (EnumDisplaySettings(sDeviceName, ENUM_CURRENT_SETTINGS, mDevMode)) Then
+        If (ClassWin32.EnumDisplaySettings(sDeviceName, ClassWin32.ENUM_CURRENT_SETTINGS, mDevMode)) Then
             Return Nothing
         End If
 
@@ -181,17 +183,17 @@ Public Class ClassMonitor
 
     Public Function ChangeRefreshRateForMonitor(sDeviceName As String, iDisplayFrequency As Integer) As ENUM_DISPLAY_SETTINGS_ERROR
         Dim mDevMode As New DEVMODE()
-        mDevMode.dmSize = CType(Marshal.SizeOf(GetType(DEVMODE)), Short)
+        mDevMode.dmSize = CType(Marshal.SizeOf(mDevMode), Short)
 
-        If (Not EnumDisplaySettings(sDeviceName, ENUM_CURRENT_SETTINGS, mDevMode)) Then
+        If (Not ClassWin32.EnumDisplaySettings(sDeviceName, ClassWin32.ENUM_CURRENT_SETTINGS, mDevMode)) Then
             Return ENUM_DISPLAY_SETTINGS_ERROR.DISP_CHANGE_FAILED
         End If
 
         mDevMode.dmDisplayFrequency = iDisplayFrequency
-        Dim result As ENUM_DISPLAY_SETTINGS_ERROR = ChangeDisplaySettingsEx(sDeviceName, mDevMode, IntPtr.Zero, ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS.CDS_TEST, IntPtr.Zero)
+        Dim result As ENUM_DISPLAY_SETTINGS_ERROR = ClassWin32.ChangeDisplaySettingsEx(sDeviceName, mDevMode, IntPtr.Zero, ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS.CDS_TEST, IntPtr.Zero)
 
-        If (result = DISP_CHANGE_SUCCESSFUL) Then
-            Return ChangeDisplaySettingsEx(sDeviceName, mDevMode, IntPtr.Zero, ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS.CDS_UPDATEREGISTRY, IntPtr.Zero)
+        If (result = ClassWin32.DISP_CHANGE_SUCCESSFUL) Then
+            Return ClassWin32.ChangeDisplaySettingsEx(sDeviceName, mDevMode, IntPtr.Zero, ENUM_CHANGE_DISPLAY_SETTINGS_FLAGS.CDS_UPDATEREGISTRY, IntPtr.Zero)
         Else
             Return result
         End If
