@@ -1,8 +1,6 @@
-﻿Imports System.ComponentModel
-Imports System.Runtime.InteropServices
-
-Public Class FormMain
+﻿Public Class FormMain
     Public g_mUCStartPage As UCStartPage
+    Public g_mUCPlaystationVR As UCPlaystationVR
     Public g_mUCVirtualControllers As UCVirtualControllers
     Public g_mUCVirtualHMDs As UCVirtualHMDs
     Public g_mUCVirtualTrackers As UCVirtualTrackers
@@ -15,6 +13,7 @@ Public Class FormMain
 
     Enum ENUM_PAGE
         STARTPAGE
+        PLAYSTATION_VR
         VIRTUAL_CONTROLLERS
         VIRTUAL_HMDS
         VIRTUAL_TRACKERS
@@ -34,6 +33,13 @@ Public Class FormMain
         g_mUCStartPage.Dock = DockStyle.Fill
         g_mUCStartPage.Visible = False
         g_mUCStartPage.ResumeLayout()
+
+        g_mUCPlaystationVR = New UCPlaystationVR(Me)
+        g_mUCPlaystationVR.SuspendLayout()
+        g_mUCPlaystationVR.Parent = Panel_Pages
+        g_mUCPlaystationVR.Dock = DockStyle.Fill
+        g_mUCPlaystationVR.Visible = False
+        g_mUCPlaystationVR.ResumeLayout()
 
         g_mUCVirtualControllers = New UCVirtualControllers(Me)
         g_mUCVirtualControllers.SuspendLayout()
@@ -98,12 +104,29 @@ Public Class FormMain
         Select Case (iPage)
             Case ENUM_PAGE.STARTPAGE
                 g_mUCStartPage.Visible = True
+                g_mUCPlaystationVR.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
+                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
+                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
+                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
+                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
+                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+
+            Case ENUM_PAGE.PLAYSTATION_VR
+                g_mUCStartPage.Visible = False
+                g_mUCPlaystationVR.Visible = True
+                g_mUCVirtualControllers.Visible = False
+                g_mUCVirtualHMDs.Visible = False
+                g_mUCVirtualTrackers.Visible = False
+                g_mUCVirtualMotionTracker.Visible = False
+
+                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Bold)
                 LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
                 LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
                 LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
@@ -111,12 +134,14 @@ Public Class FormMain
 
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
                 g_mUCStartPage.Visible = False
+                g_mUCPlaystationVR.Visible = False
                 g_mUCVirtualControllers.Visible = True
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
                 LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Bold)
                 LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
                 LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
@@ -124,12 +149,14 @@ Public Class FormMain
 
             Case ENUM_PAGE.VIRTUAL_HMDS
                 g_mUCStartPage.Visible = False
+                g_mUCPlaystationVR.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = True
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
                 LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
                 LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Bold)
                 LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
@@ -137,12 +164,14 @@ Public Class FormMain
 
             Case ENUM_PAGE.VIRTUAL_TRACKERS
                 g_mUCStartPage.Visible = False
+                g_mUCPlaystationVR.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = True
                 g_mUCVirtualMotionTracker.Visible = False
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
                 LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
                 LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
                 LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Bold)
@@ -150,12 +179,14 @@ Public Class FormMain
 
             Case ENUM_PAGE.VIRTUAL_MOTION_TRACKERS
                 g_mUCStartPage.Visible = False
+                g_mUCPlaystationVR.Visible = False
                 g_mUCVirtualControllers.Visible = False
                 g_mUCVirtualHMDs.Visible = False
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = True
 
                 LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
+                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
                 LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
                 LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
                 LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
@@ -211,6 +242,10 @@ Public Class FormMain
 
     Public Sub LinkLabel_StartPage_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StartPage.LinkClicked
         SelectPage(ENUM_PAGE.STARTPAGE)
+    End Sub
+
+    Private Sub LinkLabel_PSVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PSVR.LinkClicked
+        SelectPage(ENUM_PAGE.PLAYSTATION_VR)
     End Sub
 
     Public Sub LinkLabel_Controllers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Controllers.LinkClicked
@@ -456,6 +491,11 @@ Public Class FormMain
         If (g_mUCStartPage IsNot Nothing AndAlso Not g_mUCStartPage.IsDisposed) Then
             g_mUCStartPage.Dispose()
             g_mUCStartPage = Nothing
+        End If
+
+        If (g_mUCPlaystationVR IsNot Nothing AndAlso Not g_mUCPlaystationVR.IsDisposed) Then
+            g_mUCPlaystationVR.Dispose()
+            g_mUCPlaystationVR = Nothing
         End If
 
         If (g_mUCVirtualControllers IsNot Nothing AndAlso Not g_mUCVirtualControllers.IsDisposed) Then

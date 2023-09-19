@@ -93,6 +93,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property _450() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("450", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property _453() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("453", resourceCulture)
@@ -136,6 +146,86 @@ Namespace My.Resources
         Friend ReadOnly Property connect_10504_256x256_32() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("connect_10504_256x256-32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_HDMI_FAIL() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_HDMI_FAIL", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_HDMI_Normal() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_HDMI_Normal", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_HDMI_OK() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_HDMI_OK", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_HDMI_WARN() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_HDMI_WARN", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_USB_FAIL() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_USB_FAIL", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_USB_Normal() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_USB_Normal", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_USB_OK() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_USB_OK", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Connection_USB_WARN() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Connection_USB_WARN", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UCVirtualHMDs
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class UCVirtualHMDs
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -29,7 +29,6 @@ Partial Class UCVirtualHMDs
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox_VirtualHMDCount = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -67,8 +66,8 @@ Partial Class UCVirtualHMDs
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(731, 30)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Create virtual Head-Mounted Devices in PSMoveService and control their orientation " &
-    "data and more."
+        Me.Label4.Text = "Create virtual Head-Mounted Devices in PSMoveService and control their orientatio" &
+    "n data and more."
         '
         'Label2
         '
@@ -77,7 +76,7 @@ Partial Class UCVirtualHMDs
         Me.Label2.Location = New System.Drawing.Point(66, 3)
         Me.Label2.Margin = New System.Windows.Forms.Padding(3)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(224, 21)
+        Me.Label2.Size = New System.Drawing.Size(245, 21)
         Me.Label2.TabIndex = 1
         Me.Label2.Text = "Virtual Head-Mounted Devices"
         '
@@ -108,35 +107,21 @@ Partial Class UCVirtualHMDs
         Me.Label5.Location = New System.Drawing.Point(32, 83)
         Me.Label5.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(97, 13)
+        Me.Label5.Size = New System.Drawing.Size(106, 13)
         Me.Label5.TabIndex = 7
         Me.Label5.Text = "Virtual HMD count:"
-        '
-        'Label3
-        '
-        Me.Label3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.ForeColor = System.Drawing.Color.Silver
-        Me.Label3.Location = New System.Drawing.Point(3, 104)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Padding = New System.Windows.Forms.Padding(0, 12, 0, 0)
-        Me.Label3.Size = New System.Drawing.Size(794, 81)
-        Me.Label3.TabIndex = 9
-        Me.Label3.Text = "Nothing here yet. Come back later."
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'UCVirtualHMDs
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.ComboBox_VirtualHMDCount)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Panel1)
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualHMDs"
-        Me.Size = New System.Drawing.Size(800, 260)
+        Me.Size = New System.Drawing.Size(800, 658)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -151,6 +136,5 @@ Partial Class UCVirtualHMDs
     Friend WithEvents Label1 As Label
     Friend WithEvents ComboBox_VirtualHMDCount As ComboBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents Label3 As Label
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
 End Class

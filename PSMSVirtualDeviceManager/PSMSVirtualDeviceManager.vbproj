@@ -227,6 +227,12 @@
     <Compile Include="StartPage\UCStartPage.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCPlaystationVR\UCPlaystationVR.Designer.vb">
+      <DependentUpon>UCPlaystationVR.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCPlaystationVR\UCPlaystationVR.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UCVirtualControllers\UCAttachments\UCControllerAttachments.Designer.vb">
       <DependentUpon>UCControllerAttachments.vb</DependentUpon>
     </Compile>
@@ -337,6 +343,9 @@
     <EmbeddedResource Include="StartPage\UCStartPage.resx">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UCPlaystationVR\UCPlaystationVR.resx">
+      <DependentUpon>UCPlaystationVR.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCAttachments\UCControllerAttachments.resx">
       <DependentUpon>UCControllerAttachments.vb</DependentUpon>
     </EmbeddedResource>
@@ -392,6 +401,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\450.png" />
+    <None Include="Resources\Connection_USB_WARN.png" />
+    <None Include="Resources\Connection_USB_OK.png" />
+    <None Include="Resources\Connection_USB_Normal.png" />
+    <None Include="Resources\Connection_USB_FAIL.png" />
+    <None Include="Resources\Connection_HDMI_WARN.png" />
+    <None Include="Resources\Connection_HDMI_OK.png" />
+    <None Include="Resources\Connection_HDMI_Normal.png" />
+    <None Include="Resources\Connection_HDMI_FAIL.png" />
     <None Include="Resources\374.png" />
     <None Include="Resources\453.png" />
     <None Include="Resources\netshell_1607_32x32-32.png" />

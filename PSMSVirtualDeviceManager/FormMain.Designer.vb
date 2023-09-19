@@ -57,6 +57,7 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.LinkLabel_PSVR = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -163,9 +164,10 @@ Partial Class FormMain
         'Panel1
         '
         Me.Panel1.AutoScroll = True
-        Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 700)
+        Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 750)
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel1.Controls.Add(Me.LinkLabel_PSVR)
         Me.Panel1.Controls.Add(Me.LinkLabel_VmtSteamVrOverrides)
         Me.Panel1.Controls.Add(Me.LinkLabel_VmtPlayspaceCalib)
         Me.Panel1.Controls.Add(Me.LinkLabel_VmtSettings)
@@ -209,7 +211,7 @@ Partial Class FormMain
         Me.LinkLabel_VmtSteamVrOverrides.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VmtSteamVrOverrides.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VmtSteamVrOverrides.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtSteamVrOverrides.Location = New System.Drawing.Point(32, 583)
+        Me.LinkLabel_VmtSteamVrOverrides.Location = New System.Drawing.Point(32, 610)
         Me.LinkLabel_VmtSteamVrOverrides.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_VmtSteamVrOverrides.Name = "LinkLabel_VmtSteamVrOverrides"
         Me.LinkLabel_VmtSteamVrOverrides.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -230,7 +232,7 @@ Partial Class FormMain
         Me.LinkLabel_VmtPlayspaceCalib.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VmtPlayspaceCalib.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VmtPlayspaceCalib.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtPlayspaceCalib.Location = New System.Drawing.Point(32, 556)
+        Me.LinkLabel_VmtPlayspaceCalib.Location = New System.Drawing.Point(32, 583)
         Me.LinkLabel_VmtPlayspaceCalib.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_VmtPlayspaceCalib.Name = "LinkLabel_VmtPlayspaceCalib"
         Me.LinkLabel_VmtPlayspaceCalib.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -251,7 +253,7 @@ Partial Class FormMain
         Me.LinkLabel_VmtSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VmtSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VmtSettings.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtSettings.Location = New System.Drawing.Point(32, 529)
+        Me.LinkLabel_VmtSettings.Location = New System.Drawing.Point(32, 556)
         Me.LinkLabel_VmtSettings.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_VmtSettings.Name = "LinkLabel_VmtSettings"
         Me.LinkLabel_VmtSettings.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -272,7 +274,7 @@ Partial Class FormMain
         Me.LinkLabel_VmtTrackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VmtTrackers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VmtTrackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtTrackers.Location = New System.Drawing.Point(32, 502)
+        Me.LinkLabel_VmtTrackers.Location = New System.Drawing.Point(32, 529)
         Me.LinkLabel_VmtTrackers.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_VmtTrackers.Name = "LinkLabel_VmtTrackers"
         Me.LinkLabel_VmtTrackers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -293,7 +295,7 @@ Partial Class FormMain
         Me.LinkLabel_VmtManagement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VmtManagement.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VmtManagement.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtManagement.Location = New System.Drawing.Point(32, 421)
+        Me.LinkLabel_VmtManagement.Location = New System.Drawing.Point(32, 448)
         Me.LinkLabel_VmtManagement.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_VmtManagement.Name = "LinkLabel_VmtManagement"
         Me.LinkLabel_VmtManagement.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -314,7 +316,7 @@ Partial Class FormMain
         Me.LinkLabel_VMT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VMT.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 394)
+        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 421)
         Me.LinkLabel_VMT.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_VMT.Name = "LinkLabel_VMT"
         Me.LinkLabel_VMT.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -378,7 +380,7 @@ Partial Class FormMain
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Location = New System.Drawing.Point(57, 475)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Location = New System.Drawing.Point(57, 502)
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Name = "LinkLabel1LinkLabel_VMTPauseOscServer"
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -399,7 +401,7 @@ Partial Class FormMain
         Me.LinkLabel_RemoteStartSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RemoteStartSocket.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RemoteStartSocket.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(57, 286)
+        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(57, 313)
         Me.LinkLabel_RemoteStartSocket.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RemoteStartSocket.Name = "LinkLabel_RemoteStartSocket"
         Me.LinkLabel_RemoteStartSocket.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -420,7 +422,7 @@ Partial Class FormMain
         Me.LinkLabel_VMTStartOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VMTStartOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VMTStartOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(57, 448)
+        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(57, 475)
         Me.LinkLabel_VMTStartOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_VMTStartOscServer.Name = "LinkLabel_VMTStartOscServer"
         Me.LinkLabel_VMTStartOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -498,7 +500,7 @@ Partial Class FormMain
         Me.LinkLabel_ControllersAttachments.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersAttachments.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ControllersAttachments.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 313)
+        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 340)
         Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_ControllersAttachments.Name = "LinkLabel_ControllersAttachments"
         Me.LinkLabel_ControllersAttachments.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -519,7 +521,7 @@ Partial Class FormMain
         Me.LinkLabel_ControllersRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersRemote.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ControllersRemote.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersRemote.Location = New System.Drawing.Point(32, 259)
+        Me.LinkLabel_ControllersRemote.Location = New System.Drawing.Point(32, 286)
         Me.LinkLabel_ControllersRemote.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_ControllersRemote.Name = "LinkLabel_ControllersRemote"
         Me.LinkLabel_ControllersRemote.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -540,7 +542,7 @@ Partial Class FormMain
         Me.LinkLabel_ControllersGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_ControllersGeneral.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ControllersGeneral.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersGeneral.Location = New System.Drawing.Point(32, 232)
+        Me.LinkLabel_ControllersGeneral.Location = New System.Drawing.Point(32, 259)
         Me.LinkLabel_ControllersGeneral.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_ControllersGeneral.Name = "LinkLabel_ControllersGeneral"
         Me.LinkLabel_ControllersGeneral.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -561,7 +563,7 @@ Partial Class FormMain
         Me.LinkLabel_Trackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Trackers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_Trackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 367)
+        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 394)
         Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_Trackers.Name = "LinkLabel_Trackers"
         Me.LinkLabel_Trackers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -582,7 +584,7 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_HMDs.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_HMDs.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 340)
+        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 367)
         Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
         Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -612,7 +614,7 @@ Partial Class FormMain
         Me.LinkLabel_Controllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 205)
+        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 232)
         Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
         Me.LinkLabel_Controllers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -634,6 +636,27 @@ Partial Class FormMain
         Me.Label2.Size = New System.Drawing.Size(65, 13)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Navigation"
+        '
+        'LinkLabel_PSVR
+        '
+        Me.LinkLabel_PSVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_PSVR.AutoSize = True
+        Me.LinkLabel_PSVR.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PSVR.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_PSVR.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PSVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.LinkLabel_PSVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_PSVR.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_PSVR.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PSVR.Location = New System.Drawing.Point(17, 205)
+        Me.LinkLabel_PSVR.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_PSVR.Name = "LinkLabel_PSVR"
+        Me.LinkLabel_PSVR.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.LinkLabel_PSVR.Size = New System.Drawing.Size(170, 19)
+        Me.LinkLabel_PSVR.TabIndex = 31
+        Me.LinkLabel_PSVR.TabStop = True
+        Me.LinkLabel_PSVR.Text = "PlayStation VR Management"
+        Me.LinkLabel_PSVR.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'FormMain
         '
@@ -683,4 +706,5 @@ Partial Class FormMain
     Friend WithEvents LinkLabel_VmtPlayspaceCalib As LinkLabel
     Friend WithEvents LinkLabel_VmtSettings As LinkLabel
     Friend WithEvents LinkLabel_VmtTrackers As LinkLabel
+    Friend WithEvents LinkLabel_PSVR As LinkLabel
 End Class
