@@ -11,6 +11,9 @@
 
     Private g_bIgnoreEvents As Boolean = False
 
+    Private g_mMutex As Threading.Mutex
+    Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
+
     Enum ENUM_PAGE
         STARTPAGE
         PLAYSTATION_VR
@@ -21,6 +24,11 @@
     End Enum
 
     Public Sub New()
+
+        If (Not IsSingleInstance()) Then
+            Environment.Exit(0)
+            End
+        End If
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -99,6 +107,18 @@
 
         AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
     End Sub
+
+    Private Function IsSingleInstance() As Boolean
+        Try
+            Threading.Mutex.OpenExisting(MUTEX_NAME)
+        Catch ex As Exception
+            g_mMutex = New Threading.Mutex(True, MUTEX_NAME)
+
+            Return True
+        End Try
+
+        Return False
+    End Function
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
         Select Case (iPage)
