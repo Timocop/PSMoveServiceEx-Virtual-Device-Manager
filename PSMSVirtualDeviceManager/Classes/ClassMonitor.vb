@@ -1,6 +1,7 @@
 ﻿Imports System.Management
 Imports System.Runtime.InteropServices
 Imports System.Text
+Imports Microsoft.Win32
 
 Public Class ClassMonitor
     Protected Class ClassWin32
@@ -37,8 +38,8 @@ Public Class ClassMonitor
         Public Const CCHFORMNAME As Integer = 32
     End Class
 
-    Private Interface INullable
-    End Interface
+    Public Const PSVR_MONITOR_GEN1_NAME As String = "MONITOR\SNYB403"
+    Public Const PSVR_MONITOR_GEN2_NAME As String = "MONITOR\SNY6A04"
 
     <Flags>
     Public Enum DisplayDeviceStateFlags As Integer
@@ -52,8 +53,6 @@ Public Class ClassMonitor
 
     <StructLayout(LayoutKind.Sequential)>
     Public Structure DEVMODE
-        Implements INullable
-
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=ClassWin32.CCHFORMNAME)>
         Public dmDeviceName As String
         Public dmSpecVersion As Short
@@ -140,6 +139,20 @@ Public Class ClassMonitor
         DISP_CHANGE_NOTUPDATED = -3
     End Enum
 
+    Public Function FindPlaystationVrMonitor(ByRef mResult As DEVMODE, ByRef mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)) As Boolean
+        For Each mInfo In GetMonitorList()
+            Dim mMonitorInfo As DEVMODE = GetMonitorInfo(mInfo.Key)
+
+            If (mInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME) OrElse mInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME)) Then
+                mResult = mMonitorInfo
+                mDisplayInfo = mInfo
+                Return True
+            End If
+        Next
+
+        Return False
+    End Function
+
     Public Function GetMonitorList() As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)()
         Dim mMonitors As New List(Of KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE))
 
@@ -170,7 +183,7 @@ Public Class ClassMonitor
         Dim mDevMode As New DEVMODE()
         mDevMode.dmSize = CType(Marshal.SizeOf(mDevMode), Short)
 
-        If (ClassWin32.EnumDisplaySettings(sDeviceName, ClassWin32.ENUM_CURRENT_SETTINGS, mDevMode)) Then
+        If (Not ClassWin32.EnumDisplaySettings(sDeviceName, ClassWin32.ENUM_CURRENT_SETTINGS, mDevMode)) Then
             Return Nothing
         End If
 
@@ -198,4 +211,71 @@ Public Class ClassMonitor
             Return result
         End If
     End Function
+
+    Public Sub PatchPlaystationVrRegistry()
+        Dim mClassMonitor As New ClassMonitor
+
+        Dim mDisplayDev As DEVMODE = Nothing
+        Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
+
+        If (Not mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo)) Then
+            Throw New ArgumentException("Unable to find PSVR monitor")
+        End If
+
+        'Find the monitors registry key.
+        Dim mMonitorsKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", True)
+        If (mMonitorsKey Is Nothing) Then
+            Throw New ArgumentException("Unable to open registry 'SYSTEM\CurrentControlSet\Enum\DISPLAY'")
+        End If
+
+        For Each sMonitorName As String In mMonitorsKey.GetSubKeyNames()
+            Dim mMonitorKey As RegistryKey = mMonitorsKey.OpenSubKey(sMonitorName, True)
+            If (mMonitorKey Is Nothing) Then
+                Continue For
+            End If
+
+            For Each sId As String In mMonitorKey.GetSubKeyNames()
+                Dim mIdKey As RegistryKey = mMonitorKey.OpenSubKey(sId, True)
+                If (mIdKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sDriver As String = TryCast(mIdKey.GetValue("Driver", Nothing), String)
+                If (sDriver Is Nothing) Then
+                    Continue For
+                End If
+
+                ' Check if the driver is correct.
+                If (Not mDisplayInfo.Value.DeviceID.EndsWith(sDriver)) Then
+                    Continue For
+                End If
+
+                Dim mParametersKey As RegistryKey = mIdKey.OpenSubKey("Device Parameters", True)
+                If (mParametersKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim mEdidOverride As RegistryKey = mParametersKey.CreateSubKey("EDID_OVERRIDE")
+                If (mEdidOverride Is Nothing) Then
+                    Continue For
+                End If
+
+                ' Give it a sexy friendly name for the device manager.
+                mIdKey.SetValue("FriendlyName", "PSVR", RegistryValueKind.String)
+
+                Select Case (True)
+                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
+                        mEdidOverride.SetValue("0", My.Resources.EDID_PSVR1_MULTI, RegistryValueKind.Binary)
+
+                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
+                        mEdidOverride.SetValue("0", My.Resources.EDID_PSVR2_MULTI, RegistryValueKind.Binary)
+
+                    Case Else
+                        Throw New ArgumentException("Unknown PSVR monitor hardware id")
+                End Select
+
+                Exit For
+            Next
+        Next
+    End Sub
 End Class

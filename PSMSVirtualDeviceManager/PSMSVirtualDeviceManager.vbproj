@@ -412,6 +412,8 @@
     <None Include="Resources\Connection_HDMI_FAIL.png" />
     <None Include="Resources\374.png" />
     <None Include="Resources\453.png" />
+    <None Include="Resources\EDID_PSVR1_MULTI.bin" />
+    <None Include="Resources\EDID_PSVR2_MULTI.bin" />
     <None Include="Resources\netshell_1607_32x32-32.png" />
     <None Include="Resources\user32_101_64x64-32.png" />
     <None Include="Resources\HelpTouchpadShortcuts.rtf" />

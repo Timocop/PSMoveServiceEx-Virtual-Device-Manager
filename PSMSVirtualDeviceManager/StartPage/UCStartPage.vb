@@ -33,6 +33,8 @@ Public Class UCStartPage
 
         SetStatusServiceConnected()
 
+        CreateControl()
+
         g_mStatusThread = New Threading.Thread(AddressOf CheckConnection_Thread)
         g_mStatusThread.IsBackground = True
         g_mStatusThread.Start()

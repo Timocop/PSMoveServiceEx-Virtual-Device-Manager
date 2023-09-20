@@ -6,6 +6,10 @@ Partial Class UCPlaystationVR
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
+            If (disposing) Then
+                CleanUp()
+            End If
+
             If disposing AndAlso components IsNot Nothing Then
                 components.Dispose()
             End If
@@ -28,21 +32,21 @@ Partial Class UCPlaystationVR
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Label_USBStatusText = New System.Windows.Forms.Label()
+        Me.Label_USBStatus = New System.Windows.Forms.Label()
+        Me.ClassPictureBox_USBStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Label_HDMIStatusText = New System.Windows.Forms.Label()
+        Me.Label_HDMIStatus = New System.Windows.Forms.Label()
+        Me.ClassPictureBox_HDMIStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel12 = New System.Windows.Forms.Panel()
-        Me.Label_PsmsxStatus = New System.Windows.Forms.Label()
-        Me.Panel_PsmsxStatus = New System.Windows.Forms.Panel()
+        Me.Label_PSVRStatus = New System.Windows.Forms.Label()
+        Me.Panel_PSVRStatus = New System.Windows.Forms.Panel()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -106,12 +110,12 @@ Partial Class UCPlaystationVR
         Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel2.Controls.Add(Me.Label7)
-        Me.Panel2.Controls.Add(Me.Label8)
-        Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality2)
-        Me.Panel2.Controls.Add(Me.Label6)
-        Me.Panel2.Controls.Add(Me.Label3)
-        Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality1)
+        Me.Panel2.Controls.Add(Me.Label_USBStatusText)
+        Me.Panel2.Controls.Add(Me.Label_USBStatus)
+        Me.Panel2.Controls.Add(Me.ClassPictureBox_USBStatus)
+        Me.Panel2.Controls.Add(Me.Label_HDMIStatusText)
+        Me.Panel2.Controls.Add(Me.Label_HDMIStatus)
+        Me.Panel2.Controls.Add(Me.ClassPictureBox_HDMIStatus)
         Me.Panel2.Controls.Add(Me.Panel12)
         Me.Panel2.Location = New System.Drawing.Point(16, 83)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(16)
@@ -119,87 +123,87 @@ Partial Class UCPlaystationVR
         Me.Panel2.Size = New System.Drawing.Size(768, 242)
         Me.Panel2.TabIndex = 10
         '
-        'Label7
+        'Label_USBStatusText
         '
-        Me.Label7.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Label_USBStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label7.Location = New System.Drawing.Point(108, 181)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label7.Size = New System.Drawing.Size(655, 45)
-        Me.Label7.TabIndex = 6
-        Me.Label7.Text = "Please attach the PlayStation VR USB cable to your computer."
+        Me.Label_USBStatusText.Location = New System.Drawing.Point(108, 181)
+        Me.Label_USBStatusText.Name = "Label_USBStatusText"
+        Me.Label_USBStatusText.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label_USBStatusText.Size = New System.Drawing.Size(655, 45)
+        Me.Label_USBStatusText.TabIndex = 6
+        Me.Label_USBStatusText.Text = "Please attach the PlayStation VR USB cable to your computer."
         '
-        'Label8
+        'Label_USBStatus
         '
-        Me.Label8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Label_USBStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label8.BackColor = System.Drawing.Color.Transparent
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.Color.Navy
-        Me.Label8.Location = New System.Drawing.Point(108, 140)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label8.Size = New System.Drawing.Size(655, 41)
-        Me.Label8.TabIndex = 5
-        Me.Label8.Text = "USB Disconnected"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_USBStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_USBStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_USBStatus.ForeColor = System.Drawing.Color.Navy
+        Me.Label_USBStatus.Location = New System.Drawing.Point(108, 140)
+        Me.Label_USBStatus.Name = "Label_USBStatus"
+        Me.Label_USBStatus.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label_USBStatus.Size = New System.Drawing.Size(655, 41)
+        Me.Label_USBStatus.TabIndex = 5
+        Me.Label_USBStatus.Text = "USB Disconnected"
+        Me.Label_USBStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'ClassPictureBoxQuality2
+        'ClassPictureBox_USBStatus
         '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_USB_FAIL
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(16, 140)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(86, 86)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 4
-        Me.ClassPictureBoxQuality2.TabStop = False
+        Me.ClassPictureBox_USBStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_USB_FAIL
+        Me.ClassPictureBox_USBStatus.Location = New System.Drawing.Point(16, 140)
+        Me.ClassPictureBox_USBStatus.m_HighQuality = True
+        Me.ClassPictureBox_USBStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.ClassPictureBox_USBStatus.Name = "ClassPictureBox_USBStatus"
+        Me.ClassPictureBox_USBStatus.Size = New System.Drawing.Size(86, 86)
+        Me.ClassPictureBox_USBStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBox_USBStatus.TabIndex = 4
+        Me.ClassPictureBox_USBStatus.TabStop = False
         '
-        'Label6
+        'Label_HDMIStatusText
         '
-        Me.Label6.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Label_HDMIStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label6.Location = New System.Drawing.Point(108, 89)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label6.Size = New System.Drawing.Size(655, 45)
-        Me.Label6.TabIndex = 3
-        Me.Label6.Text = "Please attach the PlayStation VR HDMI cable to your computer."
+        Me.Label_HDMIStatusText.Location = New System.Drawing.Point(108, 89)
+        Me.Label_HDMIStatusText.Name = "Label_HDMIStatusText"
+        Me.Label_HDMIStatusText.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label_HDMIStatusText.Size = New System.Drawing.Size(655, 45)
+        Me.Label_HDMIStatusText.TabIndex = 3
+        Me.Label_HDMIStatusText.Text = "Please attach the PlayStation VR HDMI cable to your computer."
         '
-        'Label3
+        'Label_HDMIStatus
         '
-        Me.Label3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Label_HDMIStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label3.BackColor = System.Drawing.Color.Transparent
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.ForeColor = System.Drawing.Color.Navy
-        Me.Label3.Location = New System.Drawing.Point(108, 48)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label3.Size = New System.Drawing.Size(655, 41)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "HDMI Disconnected"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_HDMIStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_HDMIStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_HDMIStatus.ForeColor = System.Drawing.Color.Navy
+        Me.Label_HDMIStatus.Location = New System.Drawing.Point(108, 48)
+        Me.Label_HDMIStatus.Name = "Label_HDMIStatus"
+        Me.Label_HDMIStatus.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label_HDMIStatus.Size = New System.Drawing.Size(655, 41)
+        Me.Label_HDMIStatus.TabIndex = 2
+        Me.Label_HDMIStatus.Text = "HDMI Disconnected"
+        Me.Label_HDMIStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'ClassPictureBoxQuality1
+        'ClassPictureBox_HDMIStatus
         '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_HDMI_FAIL
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(16, 48)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(86, 86)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 1
-        Me.ClassPictureBoxQuality1.TabStop = False
+        Me.ClassPictureBox_HDMIStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_HDMI_FAIL
+        Me.ClassPictureBox_HDMIStatus.Location = New System.Drawing.Point(16, 48)
+        Me.ClassPictureBox_HDMIStatus.m_HighQuality = True
+        Me.ClassPictureBox_HDMIStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.ClassPictureBox_HDMIStatus.Name = "ClassPictureBox_HDMIStatus"
+        Me.ClassPictureBox_HDMIStatus.Size = New System.Drawing.Size(86, 86)
+        Me.ClassPictureBox_HDMIStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBox_HDMIStatus.TabIndex = 1
+        Me.ClassPictureBox_HDMIStatus.TabStop = False
         '
         'Panel12
         '
         Me.Panel12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.Panel12.Controls.Add(Me.Label_PsmsxStatus)
-        Me.Panel12.Controls.Add(Me.Panel_PsmsxStatus)
+        Me.Panel12.Controls.Add(Me.Label_PSVRStatus)
+        Me.Panel12.Controls.Add(Me.Panel_PSVRStatus)
         Me.Panel12.Controls.Add(Me.Panel6)
         Me.Panel12.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel12.Location = New System.Drawing.Point(0, 0)
@@ -207,28 +211,28 @@ Partial Class UCPlaystationVR
         Me.Panel12.Size = New System.Drawing.Size(766, 42)
         Me.Panel12.TabIndex = 0
         '
-        'Label_PsmsxStatus
+        'Label_PSVRStatus
         '
-        Me.Label_PsmsxStatus.BackColor = System.Drawing.Color.Transparent
-        Me.Label_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label_PsmsxStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_PsmsxStatus.ForeColor = System.Drawing.Color.Navy
-        Me.Label_PsmsxStatus.Location = New System.Drawing.Point(19, 0)
-        Me.Label_PsmsxStatus.Name = "Label_PsmsxStatus"
-        Me.Label_PsmsxStatus.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label_PsmsxStatus.Size = New System.Drawing.Size(747, 41)
-        Me.Label_PsmsxStatus.TabIndex = 1
-        Me.Label_PsmsxStatus.Text = "PlayStation VR Disconnected"
-        Me.Label_PsmsxStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_PSVRStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_PSVRStatus.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label_PSVRStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_PSVRStatus.ForeColor = System.Drawing.Color.Navy
+        Me.Label_PSVRStatus.Location = New System.Drawing.Point(19, 0)
+        Me.Label_PSVRStatus.Name = "Label_PSVRStatus"
+        Me.Label_PSVRStatus.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label_PSVRStatus.Size = New System.Drawing.Size(747, 41)
+        Me.Label_PSVRStatus.TabIndex = 1
+        Me.Label_PSVRStatus.Text = "PlayStation VR Disconnected"
+        Me.Label_PSVRStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'Panel_PsmsxStatus
+        'Panel_PSVRStatus
         '
-        Me.Panel_PsmsxStatus.BackColor = System.Drawing.Color.LightGray
-        Me.Panel_PsmsxStatus.Dock = System.Windows.Forms.DockStyle.Left
-        Me.Panel_PsmsxStatus.Location = New System.Drawing.Point(0, 0)
-        Me.Panel_PsmsxStatus.Name = "Panel_PsmsxStatus"
-        Me.Panel_PsmsxStatus.Size = New System.Drawing.Size(19, 41)
-        Me.Panel_PsmsxStatus.TabIndex = 2
+        Me.Panel_PSVRStatus.BackColor = System.Drawing.Color.LightGray
+        Me.Panel_PSVRStatus.Dock = System.Windows.Forms.DockStyle.Left
+        Me.Panel_PSVRStatus.Location = New System.Drawing.Point(0, 0)
+        Me.Panel_PSVRStatus.Name = "Panel_PSVRStatus"
+        Me.Panel_PSVRStatus.Size = New System.Drawing.Size(19, 41)
+        Me.Panel_PSVRStatus.TabIndex = 2
         '
         'Panel6
         '
@@ -252,8 +256,8 @@ Partial Class UCPlaystationVR
         Me.Panel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.ResumeLayout(False)
 
@@ -265,14 +269,14 @@ Partial Class UCPlaystationVR
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents Label7 As Label
-    Friend WithEvents Label8 As Label
-    Friend WithEvents ClassPictureBoxQuality2 As ClassPictureBoxQuality
-    Friend WithEvents Label6 As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents ClassPictureBoxQuality1 As ClassPictureBoxQuality
+    Friend WithEvents Label_USBStatusText As Label
+    Friend WithEvents Label_USBStatus As Label
+    Friend WithEvents ClassPictureBox_USBStatus As ClassPictureBoxQuality
+    Friend WithEvents Label_HDMIStatusText As Label
+    Friend WithEvents Label_HDMIStatus As Label
+    Friend WithEvents ClassPictureBox_HDMIStatus As ClassPictureBoxQuality
     Friend WithEvents Panel12 As Panel
-    Friend WithEvents Label_PsmsxStatus As Label
-    Friend WithEvents Panel_PsmsxStatus As Panel
+    Friend WithEvents Label_PSVRStatus As Label
+    Friend WithEvents Panel_PSVRStatus As Panel
     Friend WithEvents Panel6 As Panel
 End Class

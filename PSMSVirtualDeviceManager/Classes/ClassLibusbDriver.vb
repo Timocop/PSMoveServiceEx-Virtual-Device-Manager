@@ -504,6 +504,22 @@ Public Class ClassLibusbDriver
         End Using
     End Sub
 
+    Public Function IsPlaystationVrUsbDeviceConnected() As Boolean
+        For Each mItem In DRV_PSVR_HID_CONFIGS
+            Return IsUsbDeviceConnected(mItem)
+        Next
+
+        Return False
+    End Function
+
+    Public Function IsPlaystationEyeUsbDeviceConnected() As Boolean
+        For Each mItem In DRV_PSEYE_LIBUSB_CONFIGS
+            Return IsUsbDeviceConnected(mItem)
+        Next
+
+        Return False
+    End Function
+
     Public Function IsUsbDeviceConnected(mInfo As STRUC_DEVICE_DRIVER_INFO) As Boolean
         Return IsUsbDeviceConnected(mInfo.VID, mInfo.PID)
     End Function
