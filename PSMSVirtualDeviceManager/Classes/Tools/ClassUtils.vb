@@ -1,4 +1,23 @@
 ﻿Public Class ClassUtils
+    Public Shared Function RunWithAdmin(sCmds As String()) As Integer
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = Application.ExecutablePath
+            mProcess.StartInfo.Arguments = String.Join(" ", sCmds)
+            mProcess.StartInfo.WorkingDirectory = Application.StartupPath
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+            mProcess.WaitForExit()
+
+            Return mProcess.ExitCode
+        End Using
+    End Function
+
     Public Shared Sub SyncInvoke(mControl As Control, mFunction As [Delegate])
         mControl.Invoke(mFunction)
     End Sub

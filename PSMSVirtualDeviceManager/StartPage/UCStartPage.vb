@@ -668,7 +668,10 @@ Public Class UCStartPage
                                                    g_mDriverInstallFormLoad.ShowDialog(Me)
                                                End Sub)
 
-                    mDriverInstaller.InstallPlaystationEyeDriver64()
+                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSEYE_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
+                    If (iExitCode <> 0) Then
+                        Throw New ArgumentException("Driver installation failed")
+                    End If
 
                     MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Threading.ThreadAbortException
@@ -746,37 +749,9 @@ Public Class UCStartPage
                                                    g_mDriverInstallFormLoad.ShowDialog(Me)
                                                End Sub)
 
-                    mDriverInstaller.InstallPlaystationVrDrvier64()
-
-                    ' Remove other drivers.
-                    Dim bScanNewDevices As Boolean = False
-                    For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
-                        For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                            If (mUsbInfo.iConfigFlags <> 0) Then
-                                Continue For
-                            End If
-
-                            If (Not mUsbInfo.HasDriverInstalled()) Then
-                                Continue For
-                            End If
-
-                            If (mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
-                                Continue For
-                            End If
-
-                            ' Dont allow anything else than non-system drivers past here!
-                            If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
-                                Continue For
-                            End If
-
-                            mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
-                            mDriverInstaller.RemoveDevice(mUsbInfo.sDeviceID)
-                            bScanNewDevices = True
-                        Next
-                    Next
-
-                    If (bScanNewDevices) Then
-                        mDriverInstaller.ScanDevices()
+                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSVR_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
+                    If (iExitCode <> 0) Then
+                        Throw New ArgumentException("Driver installation failed")
                     End If
 
                     MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)

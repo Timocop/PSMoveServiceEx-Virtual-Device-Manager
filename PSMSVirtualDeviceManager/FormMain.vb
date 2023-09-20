@@ -14,6 +14,11 @@
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
 
+    Public Const COMMANDLINE_PATCH_PSVR_MONITOR As String = "-patch-psvr-monitor"
+    Public Const COMMANDLINE_INSTALL_PSVR_DRIVERS As String = "-install-psvr-drivers"
+    Public Const COMMANDLINE_INSTALL_PSEYE_DRIVERS As String = "-install-pseye-drivers"
+    Public Const COMMANDLINE_VERBOSE As String = "-verbose"
+
     Enum ENUM_PAGE
         STARTPAGE
         PLAYSTATION_VR
@@ -24,6 +29,8 @@
     End Enum
 
     Public Sub New()
+
+        ProcessCommandline()
 
         If (Not IsSingleInstance()) Then
             Environment.Exit(0)
@@ -119,6 +126,124 @@
 
         Return False
     End Function
+
+    Private Sub ProcessCommandline()
+        Dim sCmdLines As String() = Environment.GetCommandLineArgs
+
+        For Each sCommand As String In sCmdLines
+            Select Case (sCommand.ToLowerInvariant)
+                Case COMMANDLINE_PATCH_PSVR_MONITOR
+                    ' Patch the PSVR monitor registry to allow 120/90/60 Hz refresh rates
+
+                    Try
+                        Dim mClassMonitor As New ClassMonitor
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        mClassMonitor.PatchPlaystationVrRegistry()
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+
+                        Environment.Exit(-1)
+                        End
+                    End Try
+
+                    Environment.Exit(0)
+                    End
+
+                Case COMMANDLINE_INSTALL_PSVR_DRIVERS
+                    ' Un/Install PSVR libusb drivers.
+
+                    Try
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        ' Remove old drivers.
+                        mDriverInstaller.UninstallPlaystationVrDriver64()
+
+                        ' Install drivers
+                        If (True) Then
+                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationVrDrvier64()
+                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                            End If
+                        End If
+
+                        ' Remove conflicting drivers (e.g libusb on hid).
+                        If (True) Then
+                            Dim bScanNewDevices As Boolean = False
+                            For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
+                                For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                                    If (mUsbInfo.iConfigFlags <> 0) Then
+                                        Continue For
+                                    End If
+
+                                    If (Not mUsbInfo.HasDriverInstalled()) Then
+                                        Continue For
+                                    End If
+
+                                    If (mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
+                                        Continue For
+                                    End If
+
+                                    ' Dont allow anything else than non-system drivers past here!
+                                    If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                                        Continue For
+                                    End If
+
+                                    mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
+                                    mDriverInstaller.RemoveDevice(mUsbInfo.sDeviceID, True)
+                                    bScanNewDevices = True
+                                Next
+                            Next
+
+                            If (bScanNewDevices) Then
+                                mDriverInstaller.ScanDevices()
+                            End If
+                        End If
+
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+
+                        Environment.Exit(-1)
+                        End
+                    End Try
+
+                    Environment.Exit(0)
+                    End
+                Case COMMANDLINE_INSTALL_PSEYE_DRIVERS
+                    ' Un/Install PSEye libusb drivers.
+
+                    Try
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        ' Remove old drivers.
+                        mDriverInstaller.UninstallPlaystationEyeDriver64()
+
+                        ' Install drivers
+                        If (True) Then
+                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationEyeDriver64()
+                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                            End If
+                        End If
+
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+
+                        Environment.Exit(-1)
+                        End
+                    End Try
+
+                    Environment.Exit(0)
+                    End
+            End Select
+        Next
+    End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
         Select Case (iPage)

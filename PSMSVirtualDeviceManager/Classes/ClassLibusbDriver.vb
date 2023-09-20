@@ -37,29 +37,33 @@ Public Class ClassLibusbDriver
 
     Public Const DRV_ROOT_NAME As String = "libusb_driver"
     Public Const DRV_INSTALLER_NAME As String = "wdi-simple.exe"
-    'Public ReadOnly DRV_PSEYE_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-    '    New STRUC_DEVICE_DRIVER_INFO("Playstation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing), ' Unknown device (Composite device). 
-    '    New STRUC_DEVICE_DRIVER_INFO("Playstation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "0") ' Device detected but no driver found. Audio works by default.
-    '}
+    Public ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01")
+    }
     Public ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("Playstation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing) ' Unknown device (Composite device).  
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing)
     }
 
-    'Public ReadOnly DRV_PSVR_INSTALLER_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-    '    New STRUC_DEVICE_DRIVER_INFO("PS VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
-    '    New STRUC_DEVICE_DRIVER_INFO("PS VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04"), ' We dont install libUSB on this, HID is required for it to work.
-    '    New STRUC_DEVICE_DRIVER_INFO("PS VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
-    '    New STRUC_DEVICE_DRIVER_INFO("PS VR BulkIn", "Sony Corp.", "054C", "09AF", "07"), ' Just add a driver so it does not show as hardware issue.
-    '    New STRUC_DEVICE_DRIVER_INFO("PS VR 3D Audio", "Sony Corp.", "054C", "09AF", "00") ' Just add a driver so it does not show as hardware issue.
-    '}
+    Public ReadOnly DRV_PSVR_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR (Composite Device)", "Sony Corp.", "054C", "09AF", Nothing),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Audio Device", "Sony Corp.", "054C", "09AF", "01"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Input Device", "Sony Corp.", "054C", "09AF", "08")
+    }
     Public ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("Playstation VR Control", "Sony Corp.", "054C", "09AF", "05"),
-        New STRUC_DEVICE_DRIVER_INFO("Playstation VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
-        New STRUC_DEVICE_DRIVER_INFO("Playstation VR BulkIn", "Sony Corp.", "054C", "09AF", "07"), ' Just add a driver so it does not show as hardware issue.
-        New STRUC_DEVICE_DRIVER_INFO("Playstation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00") ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00"), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control", "Sony Corp.", "054C", "09AF", "05"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07") ' Just add a driver so it does not show as hardware issue.
     }
     Public ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-      New STRUC_DEVICE_DRIVER_INFO("Playstation VR Sensor", "Sony Corp.", "054C", "09AF", "04")
+      New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor", "Sony Corp.", "054C", "09AF", "04")
     }
 
     Enum ENUM_WDI_DRIVERTYPE
@@ -204,16 +208,64 @@ Public Class ClassLibusbDriver
     Public Sub New()
     End Sub
 
-    Public Sub InstallPlaystationEyeDriver64()
+    Public Function InstallPlaystationEyeDriver64() As ENUM_WDI_ERROR
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_LIBUSB_CONFIGS
-            InternalInstallDriver64(mConfig)
+            Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
+            If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                Return iExitCode
+            End If
         Next
+
+        Return ENUM_WDI_ERROR.WDI_SUCCESS
+    End Function
+
+    Public Function InstallPlaystationVrDrvier64() As ENUM_WDI_ERROR
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_LIBUSB_CONFIGS
+            Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
+            If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                Return iExitCode
+            End If
+        Next
+
+        Return ENUM_WDI_ERROR.WDI_SUCCESS
+    End Function
+
+    Public Sub UninstallPlaystationEyeDriver64()
+        Dim bScanNewDevices As Boolean = False
+        For Each mInfo In DRV_PSEYE_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                ' Dont allow anything else than non-system drivers past here!
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                    RemoveDriver(mUsbInfo.sDriverInfPath)
+                End If
+
+                RemoveDevice(mUsbInfo.sDeviceID, True)
+                bScanNewDevices = True
+            Next
+        Next
+
+        If (bScanNewDevices) Then
+            ScanDevices()
+        End If
     End Sub
 
-    Public Sub InstallPlaystationVrDrvier64()
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_LIBUSB_CONFIGS
-            InternalInstallDriver64(mConfig)
+    Public Sub UninstallPlaystationVrDriver64()
+        Dim bScanNewDevices As Boolean = False
+        For Each mInfo In DRV_PSVR_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                ' Dont allow anything else than non-system drivers past here!
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                    RemoveDriver(mUsbInfo.sDriverInfPath)
+                End If
+
+                RemoveDevice(mUsbInfo.sDeviceID, True)
+                bScanNewDevices = True
+            Next
         Next
+
+        If (bScanNewDevices) Then
+            ScanDevices()
+        End If
     End Sub
 
     Public Function VerifyPlaystationEyeDriver64() As Boolean
@@ -324,7 +376,7 @@ Public Class ClassLibusbDriver
         Return (bDriversInstalled AndAlso bHidInstalled)
     End Function
 
-    Private Sub InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO)
+    Private Function InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO) As ENUM_WDI_ERROR
         Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_ROOT_NAME)
         Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_INSTALLER_NAME)
 
@@ -334,6 +386,7 @@ Public Class ClassLibusbDriver
             mProcess.StartInfo.WorkingDirectory = sRootFolder
             mProcess.StartInfo.CreateNoWindow = True
             mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
             If (Environment.OSVersion.Version.Major > 5) Then
                 mProcess.StartInfo.Verb = "runas"
@@ -343,11 +396,9 @@ Public Class ClassLibusbDriver
 
             mProcess.WaitForExit()
 
-            If (mProcess.ExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", mProcess.ExitCode, CType(mProcess.ExitCode, ENUM_WDI_ERROR).ToString))
-            End If
+            Return CType(mProcess.ExitCode, ENUM_WDI_ERROR)
         End Using
-    End Sub
+    End Function
 
     Public Function GetDeviceProviderUSB(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
         Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "USB")
@@ -433,13 +484,14 @@ Public Class ClassLibusbDriver
         Return mProviderList.ToArray
     End Function
 
-    Public Sub ScanDevices()
+    Public Function ScanDevices() As Integer
         Using mProcess As New Process
             mProcess.StartInfo.FileName = "pnputil.exe"
             mProcess.StartInfo.Arguments = "/scan-devices"
             mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
             mProcess.StartInfo.CreateNoWindow = True
             mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
             If (Environment.OSVersion.Version.Major > 5) Then
                 mProcess.StartInfo.Verb = "runas"
@@ -449,19 +501,24 @@ Public Class ClassLibusbDriver
 
             mProcess.WaitForExit()
 
-            If (mProcess.ExitCode <> 0) Then
-                Throw New ArgumentException(String.Format("Driver installation failed with error: {0}", mProcess.ExitCode))
-            End If
+            Return mProcess.ExitCode
         End Using
-    End Sub
+    End Function
 
-    Public Sub RemoveDevice(sInstanceID As String)
+    Public Function DeviceSetState(sInstanceID As String, bEnable As Boolean) As Integer
         Using mProcess As New Process
             mProcess.StartInfo.FileName = "pnputil.exe"
-            mProcess.StartInfo.Arguments = String.Format("/remove-device ""{0}""", sInstanceID)
+
+            If (bEnable) Then
+                mProcess.StartInfo.Arguments = String.Format("/enable-device ""{0}""", sInstanceID)
+            Else
+                mProcess.StartInfo.Arguments = String.Format("/disable-device ""{0}""", sInstanceID)
+            End If
+
             mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
             mProcess.StartInfo.CreateNoWindow = True
             mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
             If (Environment.OSVersion.Version.Major > 5) Then
                 mProcess.StartInfo.Verb = "runas"
@@ -471,13 +528,59 @@ Public Class ClassLibusbDriver
 
             mProcess.WaitForExit()
 
-            If (mProcess.ExitCode <> 0) Then
-                Throw New ArgumentException(String.Format("Driver installation failed with error: {0}", mProcess.ExitCode))
-            End If
+            Return mProcess.ExitCode
         End Using
-    End Sub
+    End Function
 
-    Public Sub RemoveDriver(sInfFile As String)
+    Public Function RestartDevice(sInstanceID As String) As Integer
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = "pnputil.exe"
+            mProcess.StartInfo.Arguments = String.Format("/restart-device ""{0}""", sInstanceID)
+            mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+
+            Return mProcess.ExitCode
+        End Using
+    End Function
+
+    Public Function RemoveDevice(sInstanceID As String, bRemoveSubInstances As Boolean) As Integer
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = "pnputil.exe"
+
+            If (bRemoveSubInstances) Then
+                mProcess.StartInfo.Arguments = String.Format("/remove-device ""{0}"" /subtree", sInstanceID)
+            Else
+                mProcess.StartInfo.Arguments = String.Format("/remove-device ""{0}""", sInstanceID)
+            End If
+
+            mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+
+            Return mProcess.ExitCode
+        End Using
+    End Function
+
+    Public Function RemoveDriver(sInfFile As String) As Integer
         'We dont want anything else removed
         If (Not sInfFile.ToLowerInvariant.StartsWith("oem")) Then
             Throw New ArgumentException(String.Format("Unable to remove driver '{0}'. Driver is system driver.", sInfFile))
@@ -489,6 +592,7 @@ Public Class ClassLibusbDriver
             mProcess.StartInfo.WorkingDirectory = Environment.SystemDirectory
             mProcess.StartInfo.CreateNoWindow = True
             mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
             If (Environment.OSVersion.Version.Major > 5) Then
                 mProcess.StartInfo.Verb = "runas"
@@ -498,11 +602,9 @@ Public Class ClassLibusbDriver
 
             mProcess.WaitForExit()
 
-            If (mProcess.ExitCode <> 0) Then
-                Throw New ArgumentException(String.Format("Driver installation failed with error: {0}", mProcess.ExitCode))
-            End If
+            Return mProcess.ExitCode
         End Using
-    End Sub
+    End Function
 
     Public Function IsPlaystationVrUsbDeviceConnected() As Boolean
         For Each mItem In DRV_PSVR_HID_CONFIGS
@@ -551,7 +653,7 @@ Public Class ClassLibusbDriver
                         If (ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, iBuffer, iBufferSize, iBufferSize)) Then
                             Dim sDeviceHardwareID As String = Marshal.PtrToStringAuto(iBuffer)
 
-                            If sDeviceHardwareID.StartsWith(String.Format("USB\VID_{0}&PID_{1}", sVID, sPID)) Then
+                            If (sDeviceHardwareID.StartsWith(String.Format("USB\VID_{0}&PID_{1}", sVID, sPID))) Then
                                 Return True
                             End If
                         End If
