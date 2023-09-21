@@ -220,7 +220,12 @@
                                 iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
 
                             Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED
-                                iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
+                                If (mPsvrMonitor.dmDeviceName Is Nothing) Then
+                                    ' Monitor disabled?
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
+                                Else
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
+                                End If
 
                             Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
                                 iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
