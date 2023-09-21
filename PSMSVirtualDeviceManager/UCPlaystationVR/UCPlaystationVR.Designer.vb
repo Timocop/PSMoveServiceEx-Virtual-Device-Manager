@@ -31,26 +31,32 @@ Partial Class UCPlaystationVR
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Label_DisplayStatusText = New System.Windows.Forms.Label()
+        Me.Label_DisplayStatus = New System.Windows.Forms.Label()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Label_HDMIStatus = New System.Windows.Forms.Label()
+        Me.Label_HDMIStatusText = New System.Windows.Forms.Label()
+        Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label_USBStatusText = New System.Windows.Forms.Label()
         Me.Label_USBStatus = New System.Windows.Forms.Label()
-        Me.Label_HDMIStatusText = New System.Windows.Forms.Label()
-        Me.Label_HDMIStatus = New System.Windows.Forms.Label()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.Label_PSVRStatus = New System.Windows.Forms.Label()
         Me.Panel_PSVRStatus = New System.Windows.Forms.Panel()
         Me.Panel6 = New System.Windows.Forms.Panel()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.ClassPictureBox_DisplayStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBox_HDMIStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBox_USBStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        Me.Panel12.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel4.SuspendLayout()
+        Me.Panel12.SuspendLayout()
+        CType(Me.ClassPictureBox_DisplayStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -110,8 +116,112 @@ Partial Class UCPlaystationVR
         Me.Panel2.Location = New System.Drawing.Point(16, 83)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(768, 242)
+        Me.Panel2.Size = New System.Drawing.Size(768, 268)
         Me.Panel2.TabIndex = 10
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 2
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel5, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel3, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 1, 0)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 46.42857!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 53.57143!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(766, 224)
+        Me.TableLayoutPanel1.TabIndex = 1
+        '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.Label_DisplayStatusText)
+        Me.Panel5.Controls.Add(Me.ClassPictureBox_DisplayStatus)
+        Me.Panel5.Controls.Add(Me.Label_DisplayStatus)
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel5.Location = New System.Drawing.Point(0, 103)
+        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(383, 121)
+        Me.Panel5.TabIndex = 2
+        '
+        'Label_DisplayStatusText
+        '
+        Me.Label_DisplayStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label_DisplayStatusText.Location = New System.Drawing.Point(109, 43)
+        Me.Label_DisplayStatusText.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label_DisplayStatusText.Name = "Label_DisplayStatusText"
+        Me.Label_DisplayStatusText.Size = New System.Drawing.Size(271, 49)
+        Me.Label_DisplayStatusText.TabIndex = 6
+        Me.Label_DisplayStatusText.Text = "The PlayStation VR display has not been configured correctly."
+        '
+        'Label_DisplayStatus
+        '
+        Me.Label_DisplayStatus.AutoSize = True
+        Me.Label_DisplayStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_DisplayStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_DisplayStatus.ForeColor = System.Drawing.Color.Navy
+        Me.Label_DisplayStatus.Location = New System.Drawing.Point(108, 19)
+        Me.Label_DisplayStatus.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
+        Me.Label_DisplayStatus.Name = "Label_DisplayStatus"
+        Me.Label_DisplayStatus.Size = New System.Drawing.Size(167, 21)
+        Me.Label_DisplayStatus.TabIndex = 5
+        Me.Label_DisplayStatus.Text = "Display not configured"
+        Me.Label_DisplayStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.ClassPictureBox_HDMIStatus)
+        Me.Panel3.Controls.Add(Me.Label_HDMIStatus)
+        Me.Panel3.Controls.Add(Me.Label_HDMIStatusText)
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel3.Location = New System.Drawing.Point(0, 0)
+        Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(383, 103)
+        Me.Panel3.TabIndex = 0
+        '
+        'Label_HDMIStatus
+        '
+        Me.Label_HDMIStatus.AutoSize = True
+        Me.Label_HDMIStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_HDMIStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_HDMIStatus.ForeColor = System.Drawing.Color.Navy
+        Me.Label_HDMIStatus.Location = New System.Drawing.Point(107, 19)
+        Me.Label_HDMIStatus.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
+        Me.Label_HDMIStatus.Name = "Label_HDMIStatus"
+        Me.Label_HDMIStatus.Size = New System.Drawing.Size(147, 21)
+        Me.Label_HDMIStatus.TabIndex = 2
+        Me.Label_HDMIStatus.Text = "HDMI Disconnected"
+        Me.Label_HDMIStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Label_HDMIStatusText
+        '
+        Me.Label_HDMIStatusText.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label_HDMIStatusText.Location = New System.Drawing.Point(108, 43)
+        Me.Label_HDMIStatusText.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label_HDMIStatusText.Name = "Label_HDMIStatusText"
+        Me.Label_HDMIStatusText.Size = New System.Drawing.Size(272, 53)
+        Me.Label_HDMIStatusText.TabIndex = 3
+        Me.Label_HDMIStatusText.Text = "Please attach the PlayStation VR HDMI cable to your computer."
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.Label_USBStatusText)
+        Me.Panel4.Controls.Add(Me.ClassPictureBox_USBStatus)
+        Me.Panel4.Controls.Add(Me.Label_USBStatus)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel4.Location = New System.Drawing.Point(383, 0)
+        Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(383, 103)
+        Me.Panel4.TabIndex = 1
         '
         'Label_USBStatusText
         '
@@ -137,32 +247,6 @@ Partial Class UCPlaystationVR
         Me.Label_USBStatus.TabIndex = 5
         Me.Label_USBStatus.Text = "USB Disconnected"
         Me.Label_USBStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'Label_HDMIStatusText
-        '
-        Me.Label_HDMIStatusText.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label_HDMIStatusText.Location = New System.Drawing.Point(108, 43)
-        Me.Label_HDMIStatusText.Margin = New System.Windows.Forms.Padding(3)
-        Me.Label_HDMIStatusText.Name = "Label_HDMIStatusText"
-        Me.Label_HDMIStatusText.Size = New System.Drawing.Size(272, 49)
-        Me.Label_HDMIStatusText.TabIndex = 3
-        Me.Label_HDMIStatusText.Text = "Please attach the PlayStation VR HDMI cable to your computer."
-        '
-        'Label_HDMIStatus
-        '
-        Me.Label_HDMIStatus.AutoSize = True
-        Me.Label_HDMIStatus.BackColor = System.Drawing.Color.Transparent
-        Me.Label_HDMIStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_HDMIStatus.ForeColor = System.Drawing.Color.Navy
-        Me.Label_HDMIStatus.Location = New System.Drawing.Point(107, 19)
-        Me.Label_HDMIStatus.Margin = New System.Windows.Forms.Padding(3, 16, 3, 0)
-        Me.Label_HDMIStatus.Name = "Label_HDMIStatus"
-        Me.Label_HDMIStatus.Size = New System.Drawing.Size(147, 21)
-        Me.Label_HDMIStatus.TabIndex = 2
-        Me.Label_HDMIStatus.Text = "HDMI Disconnected"
-        Me.Label_HDMIStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Panel12
         '
@@ -208,45 +292,17 @@ Partial Class UCPlaystationVR
         Me.Panel6.Size = New System.Drawing.Size(766, 1)
         Me.Panel6.TabIndex = 0
         '
-        'TableLayoutPanel1
+        'ClassPictureBox_DisplayStatus
         '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.Panel3, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Panel4, 1, 0)
-        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(766, 198)
-        Me.TableLayoutPanel1.TabIndex = 1
-        '
-        'Panel3
-        '
-        Me.Panel3.Controls.Add(Me.ClassPictureBox_HDMIStatus)
-        Me.Panel3.Controls.Add(Me.Label_HDMIStatus)
-        Me.Panel3.Controls.Add(Me.Label_HDMIStatusText)
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel3.Location = New System.Drawing.Point(0, 0)
-        Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(383, 99)
-        Me.Panel3.TabIndex = 0
-        '
-        'Panel4
-        '
-        Me.Panel4.Controls.Add(Me.Label_USBStatusText)
-        Me.Panel4.Controls.Add(Me.ClassPictureBox_USBStatus)
-        Me.Panel4.Controls.Add(Me.Label_USBStatus)
-        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel4.Location = New System.Drawing.Point(383, 0)
-        Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(383, 99)
-        Me.Panel4.TabIndex = 1
+        Me.ClassPictureBox_DisplayStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_DISPLAY_FAIL
+        Me.ClassPictureBox_DisplayStatus.Location = New System.Drawing.Point(16, 6)
+        Me.ClassPictureBox_DisplayStatus.m_HighQuality = True
+        Me.ClassPictureBox_DisplayStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.ClassPictureBox_DisplayStatus.Name = "ClassPictureBox_DisplayStatus"
+        Me.ClassPictureBox_DisplayStatus.Size = New System.Drawing.Size(86, 86)
+        Me.ClassPictureBox_DisplayStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBox_DisplayStatus.TabIndex = 4
+        Me.ClassPictureBox_DisplayStatus.TabStop = False
         '
         'ClassPictureBox_HDMIStatus
         '
@@ -295,12 +351,15 @@ Partial Class UCPlaystationVR
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
-        Me.Panel12.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.Panel5.ResumeLayout(False)
+        Me.Panel5.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
+        Me.Panel12.ResumeLayout(False)
+        CType(Me.ClassPictureBox_DisplayStatus, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -327,4 +386,8 @@ Partial Class UCPlaystationVR
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents Panel3 As Panel
     Friend WithEvents Panel4 As Panel
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents Label_DisplayStatusText As Label
+    Friend WithEvents ClassPictureBox_DisplayStatus As ClassPictureBoxQuality
+    Friend WithEvents Label_DisplayStatus As Label
 End Class

@@ -50,6 +50,7 @@ Partial Class UCStartPage
         Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ConfigToolRun = New System.Windows.Forms.LinkLabel()
         Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_InstallPSVRDrivers = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -97,7 +98,7 @@ Partial Class UCStartPage
         Me.Panel20 = New System.Windows.Forms.Panel()
         Me.Panel21 = New System.Windows.Forms.Panel()
         Me.Timer_RestartPsms = New System.Windows.Forms.Timer(Me.components)
-        Me.LinkLabel_InstallPSVRDrivers = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_ConfigPSVRDisplay = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
@@ -439,6 +440,7 @@ Partial Class UCStartPage
         '
         'Panel5
         '
+        Me.Panel5.Controls.Add(Me.LinkLabel_ConfigPSVRDisplay)
         Me.Panel5.Controls.Add(Me.LinkLabel_InstallPSVRDrivers)
         Me.Panel5.Controls.Add(Me.LinkLabel_ServiceFactory)
         Me.Panel5.Controls.Add(Me.Label6)
@@ -451,6 +453,22 @@ Partial Class UCStartPage
         Me.Panel5.Size = New System.Drawing.Size(429, 118)
         Me.Panel5.TabIndex = 6
         '
+        'LinkLabel_InstallPSVRDrivers
+        '
+        Me.LinkLabel_InstallPSVRDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_InstallPSVRDrivers.AutoSize = True
+        Me.LinkLabel_InstallPSVRDrivers.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSVRDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_InstallPSVRDrivers.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_InstallPSVRDrivers.Location = New System.Drawing.Point(103, 56)
+        Me.LinkLabel_InstallPSVRDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_InstallPSVRDrivers.Name = "LinkLabel_InstallPSVRDrivers"
+        Me.LinkLabel_InstallPSVRDrivers.Size = New System.Drawing.Size(152, 13)
+        Me.LinkLabel_InstallPSVRDrivers.TabIndex = 28
+        Me.LinkLabel_InstallPSVRDrivers.TabStop = True
+        Me.LinkLabel_InstallPSVRDrivers.Text = "Install Playstation VR Drivers"
+        Me.LinkLabel_InstallPSVRDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'LinkLabel_ServiceFactory
         '
         Me.LinkLabel_ServiceFactory.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -458,7 +476,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceFactory.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceFactory.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 72)
+        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 88)
         Me.LinkLabel_ServiceFactory.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceFactory.Name = "LinkLabel_ServiceFactory"
         Me.LinkLabel_ServiceFactory.Size = New System.Drawing.Size(153, 13)
@@ -942,21 +960,21 @@ Partial Class UCStartPage
         '
         Me.Timer_RestartPsms.Interval = 1000
         '
-        'LinkLabel_InstallPSVRDrivers
+        'LinkLabel_ConfigPSVRDisplay
         '
-        Me.LinkLabel_InstallPSVRDrivers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_InstallPSVRDrivers.AutoSize = True
-        Me.LinkLabel_InstallPSVRDrivers.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_InstallPSVRDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_InstallPSVRDrivers.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_InstallPSVRDrivers.Location = New System.Drawing.Point(103, 56)
-        Me.LinkLabel_InstallPSVRDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_InstallPSVRDrivers.Name = "LinkLabel_InstallPSVRDrivers"
-        Me.LinkLabel_InstallPSVRDrivers.Size = New System.Drawing.Size(152, 13)
-        Me.LinkLabel_InstallPSVRDrivers.TabIndex = 28
-        Me.LinkLabel_InstallPSVRDrivers.TabStop = True
-        Me.LinkLabel_InstallPSVRDrivers.Text = "Install Playstation VR Drivers"
-        Me.LinkLabel_InstallPSVRDrivers.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigPSVRDisplay.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_ConfigPSVRDisplay.AutoSize = True
+        Me.LinkLabel_ConfigPSVRDisplay.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigPSVRDisplay.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_ConfigPSVRDisplay.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_ConfigPSVRDisplay.Location = New System.Drawing.Point(103, 72)
+        Me.LinkLabel_ConfigPSVRDisplay.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ConfigPSVRDisplay.Name = "LinkLabel_ConfigPSVRDisplay"
+        Me.LinkLabel_ConfigPSVRDisplay.Size = New System.Drawing.Size(175, 13)
+        Me.LinkLabel_ConfigPSVRDisplay.TabIndex = 29
+        Me.LinkLabel_ConfigPSVRDisplay.TabStop = True
+        Me.LinkLabel_ConfigPSVRDisplay.Text = "Configure Playstation VR Display"
+        Me.LinkLabel_ConfigPSVRDisplay.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'UCStartPage
         '
@@ -1078,4 +1096,5 @@ Partial Class UCStartPage
     Friend WithEvents LinkLabel_ConfigToolRunCmd As LinkLabel
     Friend WithEvents Timer_RestartPsms As Timer
     Friend WithEvents LinkLabel_InstallPSVRDrivers As LinkLabel
+    Friend WithEvents LinkLabel_ConfigPSVRDisplay As LinkLabel
 End Class

@@ -139,6 +139,12 @@ Public Class ClassMonitor
         DISP_CHANGE_NOTUPDATED = -3
     End Enum
 
+    Public Enum ENUM_PATCHED_RESGITRY_STATE
+        NOT_PATCHED
+        WAITING_FOR_RELOAD
+        PATCHED
+    End Enum
+
     Public Function FindPlaystationVrMonitor(ByRef mResult As DEVMODE, ByRef mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)) As Boolean
         For Each mInfo In GetMonitorList()
             Dim mMonitorInfo As DEVMODE = GetMonitorInfo(mInfo.Key)
@@ -212,7 +218,7 @@ Public Class ClassMonitor
         End If
     End Function
 
-    Public Sub PatchPlaystationVrRegistry()
+    Public Sub PatchPlaystationVrMonitor()
         Dim mClassMonitor As New ClassMonitor
 
         Dim mDisplayDev As DEVMODE = Nothing
@@ -263,19 +269,135 @@ Public Class ClassMonitor
                 ' Give it a sexy friendly name for the device manager.
                 mIdKey.SetValue("FriendlyName", "PSVR", RegistryValueKind.String)
 
+                Dim iNewEIDI As Byte() = Nothing
+
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
-                        mEdidOverride.SetValue("0", My.Resources.EDID_PSVR1_MULTI, RegistryValueKind.Binary)
-
+                        iNewEIDI = My.Resources.EDID_PSVR1_MULTI
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
-                        mEdidOverride.SetValue("0", My.Resources.EDID_PSVR2_MULTI, RegistryValueKind.Binary)
-
+                        iNewEIDI = My.Resources.EDID_PSVR2_MULTI
                     Case Else
                         Throw New ArgumentException("Unknown PSVR monitor hardware id")
                 End Select
+
+                mEdidOverride.SetValue("0", iNewEIDI, RegistryValueKind.Binary)
 
                 Exit For
             Next
         Next
     End Sub
+
+    Public Function IsPlaystationVrMonitorPatched() As ENUM_PATCHED_RESGITRY_STATE
+        Dim mClassMonitor As New ClassMonitor
+
+        Dim mDisplayDev As DEVMODE = Nothing
+        Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
+
+        If (Not mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo)) Then
+            Throw New ArgumentException("Unable to find PSVR monitor")
+        End If
+
+        'Find the monitors registry key.
+        Dim mMonitorsKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", False)
+        If (mMonitorsKey Is Nothing) Then
+            Throw New ArgumentException("Unable to open registry 'SYSTEM\CurrentControlSet\Enum\DISPLAY'")
+        End If
+
+        For Each sMonitorName As String In mMonitorsKey.GetSubKeyNames()
+            Dim mMonitorKey As RegistryKey = mMonitorsKey.OpenSubKey(sMonitorName, False)
+            If (mMonitorKey Is Nothing) Then
+                Continue For
+            End If
+
+            For Each sId As String In mMonitorKey.GetSubKeyNames()
+                Dim mIdKey As RegistryKey = mMonitorKey.OpenSubKey(sId, False)
+                If (mIdKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sDriver As String = TryCast(mIdKey.GetValue("Driver", Nothing), String)
+                If (sDriver Is Nothing) Then
+                    Continue For
+                End If
+
+                ' Check if the driver is correct.
+                If (Not mDisplayInfo.Value.DeviceID.EndsWith(sDriver)) Then
+                    Continue For
+                End If
+
+                Dim mParametersKey As RegistryKey = mIdKey.OpenSubKey("Device Parameters", False)
+                If (mParametersKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim mEdidOverride As RegistryKey = mParametersKey.OpenSubKey("EDID_OVERRIDE")
+                If (mEdidOverride Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim iNewEIDI As Byte() = Nothing
+
+                Select Case (True)
+                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
+                        iNewEIDI = My.Resources.EDID_PSVR1_MULTI
+                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
+                        iNewEIDI = My.Resources.EDID_PSVR2_MULTI
+                    Case Else
+                        Throw New ArgumentException("Unknown PSVR monitor hardware id")
+                End Select
+
+                ' Check if overrides are the same as VDMs EDID overrides.
+                Dim iOverrideEDID As Byte() = TryCast(mEdidOverride.GetValue("0", Nothing), Byte())
+                If (iOverrideEDID IsNot Nothing) Then
+                    Dim bEqualEDID As Boolean = True
+                    If (iOverrideEDID.Length = iNewEIDI.Length) Then
+                        For i = 0 To iOverrideEDID.Length - 1
+                            If (iOverrideEDID(i) = iNewEIDI(i)) Then
+                                Continue For
+                            End If
+
+                            bEqualEDID = False
+                            Exit For
+                        Next
+                    Else
+                        bEqualEDID = False
+                    End If
+
+                    If (Not bEqualEDID) Then
+                        Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+                    End If
+                Else
+                    Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+                End If
+
+                ' Check if current EDID is equal to patched. If not, then reboot or replug device to update.
+                Dim iCurrentEDID As Byte() = TryCast(mParametersKey.GetValue("EDID", Nothing), Byte())
+                If (iCurrentEDID IsNot Nothing) Then
+                    Dim bEqualEDID As Boolean = True
+                    If (iOverrideEDID.Length = iNewEIDI.Length) Then
+                        For i = 0 To iOverrideEDID.Length - 1
+                            If (iOverrideEDID(i) = iNewEIDI(i)) Then
+                                Continue For
+                            End If
+
+                            bEqualEDID = False
+                            Exit For
+                        Next
+                    Else
+                        bEqualEDID = False
+                    End If
+
+                    If (Not bEqualEDID) Then
+                        Return ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                    End If
+                Else
+                    Return ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                End If
+
+                Return ENUM_PATCHED_RESGITRY_STATE.PATCHED
+            Next
+        Next
+
+        Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+    End Function
 End Class

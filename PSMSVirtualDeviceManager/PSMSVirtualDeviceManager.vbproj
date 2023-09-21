@@ -401,6 +401,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\Connection_DISPLAY_WARN.png" />
+    <None Include="Resources\Connection_DISPLAY_OK.png" />
+    <None Include="Resources\Connection_DISPLAY_Normal.png" />
+    <None Include="Resources\Connection_DISPLAY_FAIL.png" />
     <None Include="Resources\450.png" />
     <None Include="Resources\Connection_USB_WARN.png" />
     <None Include="Resources\Connection_USB_OK.png" />

@@ -772,6 +772,76 @@ Public Class UCStartPage
         g_mDriverInstallThread.Start()
     End Sub
 
+    Private Sub LinkLabel_ConfigPSVRDisplay_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigPSVRDisplay.LinkClicked
+        If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mDriverInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    Dim mMonitor As New ClassMonitor
+
+                    If (CheckIfServiceRunning() > 0) Then
+                        Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+                    End If
+
+                    Select Case (mMonitor.IsPlaystationVrMonitorPatched())
+                        Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED, ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                            Dim sMessage As New Text.StringBuilder
+                            sMessage.AppendLine("It seems like you already have the PlayStation VR display configured!")
+                            sMessage.AppendLine()
+                            sMessage.AppendLine("Do you want to re-configure the PlayStation VR display?")
+                            If (MessageBox.Show(sMessage.ToString, "Configuration Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                                Return
+                            End If
+                    End Select
+
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("You are about to install display configurations for PlayStation VR.")
+                        sMessage.AppendLine("Already existing PlayStation VR display configurations will be replaced!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Configuration Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
+
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+
+                                                   g_mDriverInstallFormLoad = New FormLoading
+                                                   g_mDriverInstallFormLoad.Text = "Installing configuration..."
+                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                               End Sub)
+
+                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_PATCH_PSVR_MONITOR, FormMain.COMMANDLINE_VERBOSE})
+                    If (iExitCode <> 0) Then
+                        Throw New ArgumentException("Configuration installation failed")
+                    End If
+
+                    MessageBox.Show("Configuration installed successfully!", "Configuration Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+                                               End Sub)
+                End Try
+            End Sub)
+        g_mDriverInstallThread.IsBackground = True
+        g_mDriverInstallThread.Start()
+    End Sub
+
     Public Sub LinkLabel_ServiceFactory_Click()
         LinkLabel_ServiceFactory_LinkClicked(Nothing, Nothing)
     End Sub

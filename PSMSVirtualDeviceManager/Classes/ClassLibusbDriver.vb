@@ -235,7 +235,7 @@ Public Class ClassLibusbDriver
         For Each mInfo In DRV_PSEYE_KNOWN_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
-                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
                     RemoveDriver(mUsbInfo.sDriverInfPath)
                 End If
 
@@ -254,7 +254,7 @@ Public Class ClassLibusbDriver
         For Each mInfo In DRV_PSVR_KNOWN_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
-                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
                     RemoveDriver(mUsbInfo.sDriverInfPath)
                 End If
 
@@ -416,19 +416,30 @@ Public Class ClassLibusbDriver
         Return InternalGetDeviceProvider(sVID, sPID, sMI, "HID")
     End Function
 
+    Public Function GetDeviceProviderDISPLAY(sSerial As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sSerial, Nothing, Nothing, "DISPLAY")
+    End Function
+
     Private Function InternalGetDeviceProvider(sVID As String, sPID As String, sMI As String, sInterface As String) As STRUC_DEVICE_PROVIDER()
         Dim mProviderList As New List(Of STRUC_DEVICE_PROVIDER)
 
         Dim sUseDevice As String = Nothing
-        If (String.IsNullOrEmpty(sMI)) Then
-            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
-        Else
-            If (sMI.Length = 1) Then
-                sMI = "0" & sMI
-            End If
+        Select Case (sInterface)
+            Case "DISPLAY"
+                sUseDevice = String.Format("{0}\{1}", sInterface, sVID)
+            Case Else
+                If (String.IsNullOrEmpty(sMI)) Then
+                    sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
+                Else
+                    If (sMI.Length = 1) Then
+                        sMI = "0" & sMI
+                    End If
 
-            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMI)
-        End If
+                    sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMI)
+                End If
+        End Select
+
+
 
         Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sUseDevice))
         If (mUsbDeviceKey Is Nothing) Then

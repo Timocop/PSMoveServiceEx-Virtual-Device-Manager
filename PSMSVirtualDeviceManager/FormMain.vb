@@ -139,7 +139,49 @@
                         Dim mClassMonitor As New ClassMonitor
                         Dim mDriverInstaller As New ClassLibusbDriver
 
-                        mClassMonitor.PatchPlaystationVrRegistry()
+                        Dim sDisplayNames As String() = New String() {
+                            ClassMonitor.PSVR_MONITOR_GEN1_NAME.Replace("MONITOR\", ""),
+                            ClassMonitor.PSVR_MONITOR_GEN2_NAME.Replace("MONITOR\", "")
+                        }
+
+                        ' Remove conflicting drivers (e.g libusb on hid).
+                        If (True) Then
+                            Dim bScanNewDevices As Boolean = False
+                            For Each sMonitorSerial As String In sDisplayNames
+                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
+                                    ' Dont allow anything else than non-system drivers past here!
+                                    If (Not String.IsNullOrEmpty(mDisplayInfo.sDriverInfPath) AndAlso mDisplayInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
+                                        mDriverInstaller.RemoveDriver(mDisplayInfo.sDriverInfPath)
+                                    End If
+
+                                    mDriverInstaller.RemoveDevice(mDisplayInfo.sDeviceID, True)
+                                    bScanNewDevices = True
+                                Next
+                            Next
+
+                            If (bScanNewDevices) Then
+                                mDriverInstaller.ScanDevices()
+                            End If
+                        End If
+
+                        mClassMonitor.PatchPlaystationVrMonitor()
+
+                        ' Restart monitors.
+                        If (True) Then
+                            Dim bScanNewDevices As Boolean = False
+                            For Each sMonitorSerial As String In sDisplayNames
+                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
+                                    mDriverInstaller.RestartDevice(mDisplayInfo.sDeviceID)
+                                    bScanNewDevices = True
+                                Next
+                            Next
+
+                            If (bScanNewDevices) Then
+                                mDriverInstaller.ScanDevices()
+                            End If
+                        End If
+
+
                     Catch ex As Exception
                         If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
                             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -187,7 +229,7 @@
                                     End If
 
                                     ' Dont allow anything else than non-system drivers past here!
-                                    If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLower.StartsWith("oem")) Then
+                                    If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
                                         Continue For
                                     End If
 
