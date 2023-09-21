@@ -232,6 +232,9 @@ Public Class ClassLibusbDriver
 
     Public Sub UninstallPlaystationEyeDriver64()
         Dim bScanNewDevices As Boolean = False
+
+        Dim sDevicesToRemove As New List(Of String)
+
         For Each mInfo In DRV_PSEYE_KNOWN_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
@@ -239,9 +242,14 @@ Public Class ClassLibusbDriver
                     RemoveDriver(mUsbInfo.sDriverInfPath)
                 End If
 
-                RemoveDevice(mUsbInfo.sDeviceID, True)
-                bScanNewDevices = True
+                sDevicesToRemove.Add(mUsbInfo.sDeviceID)
             Next
+        Next
+
+        ' Remove devices after everything is done.
+        For Each mDeviceID As String In sDevicesToRemove
+            RemoveDevice(mDeviceID, True)
+            bScanNewDevices = True
         Next
 
         If (bScanNewDevices) Then
@@ -251,6 +259,8 @@ Public Class ClassLibusbDriver
 
     Public Sub UninstallPlaystationVrDriver64()
         Dim bScanNewDevices As Boolean = False
+        Dim sDevicesToRemove As New List(Of String)
+
         For Each mInfo In DRV_PSVR_KNOWN_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
@@ -258,9 +268,14 @@ Public Class ClassLibusbDriver
                     RemoveDriver(mUsbInfo.sDriverInfPath)
                 End If
 
-                RemoveDevice(mUsbInfo.sDeviceID, True)
-                bScanNewDevices = True
+                sDevicesToRemove.Add(mUsbInfo.sDeviceID)
             Next
+        Next
+
+        ' Remove devices after everything is done.
+        For Each mDeviceID As String In sDevicesToRemove
+            RemoveDevice(mDeviceID, True)
+            bScanNewDevices = True
         Next
 
         If (bScanNewDevices) Then
@@ -427,6 +442,7 @@ Public Class ClassLibusbDriver
         Select Case (sInterface)
             Case "DISPLAY"
                 sUseDevice = String.Format("{0}\{1}", sInterface, sVID)
+
             Case Else
                 If (String.IsNullOrEmpty(sMI)) Then
                     sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
@@ -467,17 +483,16 @@ Public Class ClassLibusbDriver
                 Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
                 Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
                 Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
-                If (sProviderVersion IsNot Nothing AndAlso sProviderName IsNot Nothing) Then
-                    Dim mInfo As New STRUC_DEVICE_PROVIDER
-                    mInfo.sDeviceID = sDeviceID
-                    mInfo.iConfigFlags = sConfigFlags
-                    mInfo.sService = sService
-                    mInfo.sProviderName = sProviderName
-                    mInfo.sProviderVersion = sProviderVersion
-                    mInfo.sDriverInfPath = sDriverInfPath
 
-                    mProviderList.Add(mInfo)
-                End If
+                Dim mInfo As New STRUC_DEVICE_PROVIDER
+                mInfo.sDeviceID = sDeviceID
+                mInfo.iConfigFlags = sConfigFlags
+                mInfo.sService = sService
+                mInfo.sProviderName = sProviderName
+                mInfo.sProviderVersion = sProviderVersion
+                mInfo.sDriverInfPath = sDriverInfPath
+
+                mProviderList.Add(mInfo)
             Else
                 ' No driver installed
                 Dim mInfo As New STRUC_DEVICE_PROVIDER

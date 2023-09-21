@@ -281,4 +281,16 @@
         End If
 
     End Sub
+
+    Private Sub LinkLabel_InstallPSVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallPSVRDrivers.LinkClicked
+        g_FormMain.g_mUCStartPage.LinkLabel_InstallPSVRDrivers_Click()
+    End Sub
+
+    Private Sub LinkLabel_ConfigPSVRDisplay_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigPSVRDisplay.LinkClicked
+        g_FormMain.g_mUCStartPage.LinkLabel_ConfigPSVRDisplay_Click()
+    End Sub
+
+    Private Sub LinkLabel_UninstallPSVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallPSVR.LinkClicked
+        g_FormMain.g_mUCStartPage.LinkLabel_UninstallPSVRDrivers_Click()
+    End Sub
 End Class
