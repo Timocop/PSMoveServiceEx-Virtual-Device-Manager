@@ -7,6 +7,13 @@ Public Class UCVirtualMotionTrackerItem
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
 
+    Const DISPLAY_DISTORTION_K0 As Single = 0.18F * 5.0F
+    Const DISPLAY_DISTORTION_K1 As Single = 0.18F * 25.0F
+    Const DISPLAY_DISTORTION_SCALE As Single = 0.86F
+    Const DISPLAY_FOV As Single = 110.0F
+
+    Const VMT_LIGHTHOUSE_BEGIN_INDEX As Integer = (ClassVmtConst.VMT_TRACKER_MAX + 1)
+
     Shared _ThreadLock As New Object
 
     Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
@@ -30,29 +37,53 @@ Public Class UCVirtualMotionTrackerItem
     Public g_sDriverLastResponseMessage As String = ""
     Public g_sDriverVersion As String = ""
     Public g_sDriverPath As String = ""
+    Public g_bIsHMD As Boolean = False
 
-    Public Sub New(iControllerID As Integer, _UCVirtualMotionTracker As UCVirtualMotionTracker)
+    Public Sub New(iDeviceID As Integer, bIsHMD As Boolean, _UCVirtualMotionTracker As UCVirtualMotionTracker)
         g_mUCVirtualMotionTracker = _UCVirtualMotionTracker
 
-        If (iControllerID < 0 OrElse iControllerID > ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
-            iControllerID = -1
+        g_bIsHMD = bIsHMD
+
+        If (bIsHMD) Then
+            If (iDeviceID < 0 OrElse iDeviceID > ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1) Then
+                iDeviceID = -1
+            End If
+        Else
+            If (iDeviceID < 0 OrElse iDeviceID > ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1) Then
+                iDeviceID = -1
+            End If
         End If
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.   
+
+        If (g_bIsHMD) Then
+            Label_DeviceID.Text = "HMD ID:"
+        Else
+            Label_DeviceID.Text = "Controller ID:"
+        End If
+
         Try
             g_bIgnoreEvents = True
 
-            ComboBox_ControllerID.Items.Clear()
-            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                ComboBox_ControllerID.Items.Add(CStr(i))
-            Next
-            ComboBox_ControllerID.SelectedIndex = 0
+            If (bIsHMD) Then
+                ComboBox_DeviceID.Items.Clear()
+                For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                    ComboBox_DeviceID.Items.Add(CStr(i))
+                Next
+                ComboBox_DeviceID.SelectedIndex = 0
+            Else
+                ComboBox_DeviceID.Items.Clear()
+                For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                    ComboBox_DeviceID.Items.Add(CStr(i))
+                Next
+                ComboBox_DeviceID.SelectedIndex = 0
+            End If
 
-            If (iControllerID > -1) Then
-                ComboBox_ControllerID.SelectedIndex = iControllerID + 1
+            If (iDeviceID > -1) Then
+                ComboBox_DeviceID.SelectedIndex = iDeviceID + 1
             End If
         Finally
             g_bIgnoreEvents = False
@@ -62,10 +93,21 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreEvents = True
 
             ComboBox_VMTTrackerID.Items.Clear()
-            For i = -1 To ClassVmtConst.VMT_TRACKER_MAX
-                ComboBox_VMTTrackerID.Items.Add(CStr(i))
-            Next
+
+            If (bIsHMD) Then
+                ComboBox_VMTTrackerID.Items.Add("-1")
+            Else
+                ComboBox_VMTTrackerID.Items.Add("-1")
+
+                For i = 0 To ClassVmtConst.VMT_TRACKER_MAX
+                    ComboBox_VMTTrackerID.Items.Add(CStr(i))
+                Next
+            End If
             ComboBox_VMTTrackerID.SelectedIndex = 0
+
+            If (bIsHMD) Then
+                ComboBox_VMTTrackerID.Enabled = False
+            End If
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -86,6 +128,10 @@ Public Class UCVirtualMotionTrackerItem
             End If
 
             ComboBox_VMTTrackerRole.SelectedIndex = 0
+
+            If (bIsHMD) Then
+                ComboBox_VMTTrackerRole.Enabled = False
+            End If
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -99,6 +145,10 @@ Public Class UCVirtualMotionTrackerItem
                 ComboBox_SteamTrackerRole.Items.Add(mConfig.m_ClassTrackerRoles.GetTrackerRoleReadableName(CType(i, ClassSteamVRConfig.ClassTrackerRoles.ENUM_TRACKER_ROLE_TYPE)))
             Next
             ComboBox_SteamTrackerRole.SelectedIndex = 0
+
+            If (bIsHMD) Then
+                ComboBox_SteamTrackerRole.Enabled = False
+            End If
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -106,7 +156,8 @@ Public Class UCVirtualMotionTrackerItem
         g_mClassIO = New ClassIO(Me)
         g_mClassConfig = New ClassConfig(Me)
 
-        g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
+        g_mClassIO.m_Index = CInt(ComboBox_DeviceID.SelectedItem)
+        g_mClassIO.m_IsHMD = bIsHMD
         g_mClassIO.Enable()
 
         g_mDriverLastResponse.Start()
@@ -129,16 +180,26 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub UpdateTrackerTitle()
-        Dim iControllerID As Integer = CInt(ComboBox_ControllerID.SelectedItem)
+        Dim iDeviceID As Integer = CInt(ComboBox_DeviceID.SelectedItem)
         Dim iVmtTrackerID As Integer = CInt(ComboBox_VMTTrackerID.SelectedItem)
         Dim sVmtTrackerRole As String = CStr(ComboBox_VMTTrackerRole.SelectedItem)
         Dim sTrackerRole As String = CStr(ComboBox_SteamTrackerRole.SelectedItem)
 
-        If (iVmtTrackerID < 0 OrElse iControllerID < 0) Then
-            Label_TrackerName.Text = "Tracker Name: Invalid"
+        If (g_bIsHMD) Then
+            If (iDeviceID < 0) Then
+                Label_TrackerName.Text = "HMD Name: Invalid"
+            Else
+                Label_TrackerName.Text = String.Format("HMD Name: {0}{1} - {2} ({3})", ClassVmtConst.VMT_DEVICE_NAME, "HMD", sVmtTrackerRole, sTrackerRole)
+            End If
         Else
-            Label_TrackerName.Text = String.Format("Tracker Name: {0}{1} - {2} ({3})", ClassVmtConst.VMT_DEVICE_NAME, iVmtTrackerID, sVmtTrackerRole, sTrackerRole)
+            If (iVmtTrackerID < 0 OrElse iDeviceID < 0) Then
+                Label_TrackerName.Text = "Tracker Name: Invalid"
+            Else
+                Label_TrackerName.Text = String.Format("Tracker Name: {0}{1} - {2} ({3})", ClassVmtConst.VMT_DEVICE_NAME, iVmtTrackerID, sVmtTrackerRole, sTrackerRole)
+            End If
         End If
+
+
     End Sub
 
     Private Sub OnOscSuspendChanged()
@@ -148,9 +209,9 @@ Public Class UCVirtualMotionTrackerItem
 
         Dim bEnabled As Boolean = (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests)
 
-        ComboBox_ControllerID.Enabled = bEnabled
-        ComboBox_VMTTrackerID.Enabled = bEnabled
-        ComboBox_VMTTrackerRole.Enabled = bEnabled
+        ComboBox_DeviceID.Enabled = bEnabled
+        ComboBox_VMTTrackerID.Enabled = (bEnabled AndAlso Not g_bIsHMD)
+        ComboBox_VMTTrackerRole.Enabled = (bEnabled AndAlso Not g_bIsHMD)
     End Sub
 
     Private Sub OnOscProcessMessage(mMessage As OscMessage)
@@ -305,7 +366,7 @@ Public Class UCVirtualMotionTrackerItem
         End Try
     End Sub
 
-    Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
+    Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_DeviceID.SelectedIndexChanged
         UpdateTrackerTitle()
 
         If (g_bIgnoreEvents) Then
@@ -319,7 +380,7 @@ Public Class UCVirtualMotionTrackerItem
             g_bIgnoreUnsaved = False
         End Try
 
-        g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
+        g_mClassIO.m_Index = CInt(ComboBox_DeviceID.SelectedItem)
         g_mClassIO.Enable()
 
         UpdateTrackerRoleComboBox()
@@ -407,11 +468,28 @@ Public Class UCVirtualMotionTrackerItem
             TimerPose.Stop()
 
             SyncLock _ThreadLock
-                If (g_mClassIO.m_ControllerData IsNot Nothing) Then
-                    If (Me.Visible) Then
-                        TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(g_mClassIO.m_ControllerData.m_Position.X), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Y), Math.Floor(g_mClassIO.m_ControllerData.m_Position.Z), Environment.NewLine)
+                Dim mPosition As New Vector3(0, 0, 0)
+                Dim mOrientation As Quaternion = Quaternion.Identity
+                Dim bValid As Boolean = False
 
-                        Dim iAng = ClassQuaternionTools.FromQ(g_mClassIO.m_ControllerData.m_Orientation)
+                Select Case (True)
+                    Case (g_mClassIO.m_ControllerData IsNot Nothing)
+                        mPosition = g_mClassIO.m_ControllerData.m_Position
+                        mOrientation = g_mClassIO.m_ControllerData.m_Orientation
+                        bValid = True
+
+                    Case (g_mClassIO.m_HmdData IsNot Nothing)
+                        mPosition = g_mClassIO.m_HmdData.m_Position
+                        mOrientation = g_mClassIO.m_HmdData.m_Orientation
+                        bValid = True
+
+                End Select
+
+                If (bValid) Then
+                    If (Me.Visible) Then
+                        TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(mPosition.X), Math.Floor(mPosition.Y), Math.Floor(mPosition.Z), Environment.NewLine)
+
+                        Dim iAng = ClassQuaternionTools.FromQ(mOrientation)
                         TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
                     End If
                 Else
@@ -577,6 +655,7 @@ Public Class UCVirtualMotionTrackerItem
         Const ENABLE_HTC_VIVE_CONTROLLER_L As Integer = 6
         Const ENABLE_HTC_VIVE_CONTROLLER_R As Integer = 7
         Const ENABLE_HTC_VIVE_LIGHTHOUSE As Integer = 8
+        Const ENABLE_HMD As Integer = 9
 
         Const GEN_BUTTON_MOVE = 0
         Const GEN_BUTTON_MENU = 1
@@ -606,6 +685,7 @@ Public Class UCVirtualMotionTrackerItem
         End Enum
 
         Private g_iIndex As Integer = -1
+        Private g_bIsHMD As Boolean = False
         Private g_iVmtTracker As Integer = -1
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
         Private g_mOscThread As Threading.Thread = Nothing
@@ -618,6 +698,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private g_iFpsOscCounter As Integer = 0
         Private g_mControllerData As ClassServiceClient.IControllerData
+        Private g_mHmdData As ClassServiceClient.IHmdData
         Private g_mTrackerData As New Dictionary(Of Integer, ClassServiceClient.ITrackerData)
 
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
@@ -665,16 +746,33 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_Index As Integer
             Get
-                Return g_iIndex
+                SyncLock _ThreadLock
+                    Return g_iIndex
+                End SyncLock
             End Get
             Set(value As Integer)
-                If (g_mOscThread IsNot Nothing AndAlso g_mOscThread.IsAlive) Then
-                    Disable()
-                    g_iIndex = value
-                    Enable()
-                Else
-                    g_iIndex = value
-                End If
+                SyncLock _ThreadLock
+                    If (g_mOscThread IsNot Nothing AndAlso g_mOscThread.IsAlive) Then
+                        Disable()
+                        g_iIndex = value
+                        Enable()
+                    Else
+                        g_iIndex = value
+                    End If
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_IsHMD As Boolean
+            Get
+                SyncLock _ThreadLock
+                    Return g_bIsHMD
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock _ThreadLock
+                    g_bIsHMD = value
+                End SyncLock
             End Set
         End Property
 
@@ -727,6 +825,19 @@ Public Class UCVirtualMotionTrackerItem
             Set(value As Integer)
                 SyncLock _ThreadLock
                     g_iFpsOscCounter = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_HmdData As ClassServiceClient.IHmdData
+            Get
+                SyncLock _ThreadLock
+                    Return g_mHmdData
+                End SyncLock
+            End Get
+            Set(value As ClassServiceClient.IHmdData)
+                SyncLock _ThreadLock
+                    g_mHmdData = value
                 End SyncLock
             End Set
         End Property
@@ -825,6 +936,8 @@ Public Class UCVirtualMotionTrackerItem
 
         Private Sub ThreadOsc()
             Dim iLastOutputSeqNum As Integer = 0
+
+            ' Controller
             Dim bJoystickButtonPressed As Boolean = False
             Dim bGripButtonPressed As Boolean = False
             Dim mJoystickButtonPressedTime As New Stopwatch
@@ -843,6 +956,17 @@ Public Class UCVirtualMotionTrackerItem
             Dim mPlayspaceRecenterLastHmdSerial As String = ""
             Dim mPlayspaceRecenterCalibrationRunning As Boolean = False
             Dim mPlayspaceRecenterCalibrationSave As Boolean = False
+
+            Dim iDisplayX As Integer = 0
+            Dim iDisplayY As Integer = 0
+            Dim iDisplayW As Integer = 0
+            Dim iDisplayH As Integer = 0
+            Dim iRenderW As Integer = 0
+            Dim iRenderH As Integer = 0
+            Dim iFrameRate As Integer = 0
+            Dim bDisplaySuccess As Boolean = False
+            Dim mDisplayNextUpdate As New Stopwatch
+            Dim mDisplaySetupUpdate As New Stopwatch
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
@@ -889,71 +1013,171 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
                     Dim bEnableHepticFeedback As Boolean = mClassControllerSettings.m_EnableHepticFeedback
 
+                    ' Get controller settings
+                    Dim bJoystickShortcutBinding = mClassControllerSettings.m_JoystickShortcutBinding
+                    Dim bJoystickShortcutTouchpadClick = mClassControllerSettings.m_JoystickShortcutTouchpadClick
+                    Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
+                    Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
+                    Dim bClampTouchpadToBounds = mClassControllerSettings.m_HtcClampTouchpadToBounds
+                    Dim iHtcTouchpadMethod = mClassControllerSettings.m_HtcTouchpadMethod
+                    Dim bEnableControllerRecenter = mClassControllerSettings.m_EnableControllerRecenter
+                    Dim iRecenterMethod = mClassControllerSettings.m_ControllerRecenterMethod
+                    Dim sRecenterFromDeviceName = mClassControllerSettings.m_ControllerRecenterFromDeviceName
+                    Dim bEnableHmdRecenter = mClassControllerSettings.m_EnableHmdRecenter
+                    Dim iHmdRecenterMethod = mClassControllerSettings.m_HmdRecenterMethod
+                    Dim sHmdRecenterFromDeviceName = mClassControllerSettings.m_HmdRecenterFromDeviceName
+                    Dim iRecenterButtonTimeMs = mClassControllerSettings.m_RecenterButtonTimeMs
+                    Dim iTouchpadTouchAreaCm = mClassControllerSettings.m_HtcTouchpadTouchAreaCm
+                    Dim iTouchpadClickDeadzone = mClassControllerSettings.m_HtcTouchpadClickDeadzone
+                    Dim bEnabledPlayspaceRecenter = mClassControllerSettings.m_EnablePlayspaceRecenter
+
                     Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
 
-                    ' Get controller data
-                    m_ControllerData = mServiceClient.m_ControllerData(g_iIndex)
 
-                    If (m_ControllerData IsNot Nothing) Then
-                        ' Set controller rumble
-                        Select Case (True)
-                            Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                InternalHepticFeedbackLogic(bEnableHepticFeedback,
+                    If (m_IsHMD) Then
+                        ' Get hmd data
+                        g_mHmdData = mServiceClient.m_HmdData(m_Index)
+
+                        If (g_mHmdData IsNot Nothing) Then
+                            ' We got any new data?
+                            If (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
+                                SyncLock _ThreadLock
+                                    Dim mRawOrientation = g_mHmdData.m_Orientation
+                                    Dim mCalibratedOrientation = mRawOrientation
+
+                                    Dim mRawPosition = g_mHmdData.m_Position
+                                    Dim mCalibratedPosition = mRawPosition
+
+                                    ' Playspace offsets, used for playspace calibration
+                                    If (Not mPlayspaceRecenterCalibrationRunning) Then
+                                        InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                    End If
+
+                                    Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                    Dim mPosition = mCalibratedPosition
+
+                                    g_mOscDataPack.mOrientation = mOrientation
+                                    g_mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+
+                                    ' $TODO Do something cool?
+
+                                    'Do Hmd/remote recenter
+                                    InternalRecenterHmd(bEnableHmdRecenter,
+                                                            mServiceClient,
+                                                            mHmdRecenterButtonPressed,
+                                                            mLastHmdRecenterTime,
+                                                            iRecenterButtonTimeMs,
+                                                            iHmdRecenterMethod,
+                                                            sHmdRecenterFromDeviceName,
+                                                            mCalibratedPosition,
+                                                            mCalibratedOrientation,
+                                                            mRecenterQuat,
+                                                            mUCVirtualMotionTracker,
+                                                            True)
+
+                                    If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
+                                        mDisplayNextUpdate.Restart()
+
+                                        Dim mClassMonitor As New ClassMonitor
+                                        Dim mDevMode As ClassMonitor.DEVMODE = Nothing
+                                        If (mClassMonitor.FindPlaystationVrMonitor(mDevMode, Nothing)) Then
+                                            If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
+                                                iDisplayX = mDevMode.dmPositionX
+                                                iDisplayY = mDevMode.dmPositionY
+                                                iDisplayW = mDevMode.dmPelsWidth
+                                                iDisplayH = mDevMode.dmPelsHeight
+                                                iRenderW = iDisplayW
+                                                iRenderH = iDisplayH
+                                                iFrameRate = mDevMode.dmDisplayFrequency
+
+                                                bDisplaySuccess = True
+                                            End If
+                                        End If
+                                    End If
+
+                                    If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
+                                        ' Setup the display
+                                        ' $TODO Make this less retarded. Get status from the driver if something isnt set up properly.
+                                        If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 100) Then
+                                            mDisplaySetupUpdate.Restart()
+
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                New OscMessage(
+                                                    "/VMT/HMD/Display",
+                                                    iDisplayX, iDisplayY,
+                                                    iDisplayW, iDisplayH,
+                                                    iRenderW, iRenderH,
+                                                    DISPLAY_DISTORTION_K0, DISPLAY_DISTORTION_K1, DISPLAY_DISTORTION_SCALE,
+                                                    DISPLAY_FOV, iFrameRate
+                                                ))
+                                        End If
+
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                            New OscMessage(
+                                                "/VMT/HMD/Room/Driver",
+                                                0.0F,
+                                                g_mOscDataPack.mPosition.X,
+                                                g_mOscDataPack.mPosition.Y,
+                                                g_mOscDataPack.mPosition.Z,
+                                                g_mOscDataPack.mOrientation.X,
+                                                g_mOscDataPack.mOrientation.Y,
+                                                g_mOscDataPack.mOrientation.Z,
+                                                g_mOscDataPack.mOrientation.W
+                                            ))
+                                    End If
+
+                                End SyncLock
+
+                                m_FpsOscCounter += 1
+                            End If
+                        End If
+                    Else
+                        ' Get controller data
+                        m_ControllerData = mServiceClient.m_ControllerData(m_Index)
+
+                        If (m_ControllerData IsNot Nothing) Then
+                            ' Set controller rumble
+                            Select Case (True)
+                                Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                    InternalHepticFeedbackLogic(bEnableHepticFeedback,
                                                             mRumbleLastTimeSendValid,
                                                             mRumbleLastTimeSend,
                                                             mServiceClient)
-                        End Select
+                            End Select
 
-                        ' We got any new data?
-                        If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
-                            iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
+                            ' We got any new data?
+                            If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
+                                iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
 
-                            Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
-                            Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
-
-                            ' Get controller settings
-                            Dim bJoystickShortcutBinding = mClassControllerSettings.m_JoystickShortcutBinding
-                            Dim bJoystickShortcutTouchpadClick = mClassControllerSettings.m_JoystickShortcutTouchpadClick
-                            Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
-                            Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
-                            Dim bClampTouchpadToBounds = mClassControllerSettings.m_HtcClampTouchpadToBounds
-                            Dim iHtcTouchpadMethod = mClassControllerSettings.m_HtcTouchpadMethod
-                            Dim bEnableControllerRecenter = mClassControllerSettings.m_EnableControllerRecenter
-                            Dim iRecenterMethod = mClassControllerSettings.m_ControllerRecenterMethod
-                            Dim sRecenterFromDeviceName = mClassControllerSettings.m_ControllerRecenterFromDeviceName
-                            Dim bEnableHmdRecenter = mClassControllerSettings.m_EnableHmdRecenter
-                            Dim iHmdRecenterMethod = mClassControllerSettings.m_HmdRecenterMethod
-                            Dim sHmdRecenterFromDeviceName = mClassControllerSettings.m_HmdRecenterFromDeviceName
-                            Dim iRecenterButtonTimeMs = mClassControllerSettings.m_RecenterButtonTimeMs
-                            Dim iTouchpadTouchAreaCm = mClassControllerSettings.m_HtcTouchpadTouchAreaCm
-                            Dim iTouchpadClickDeadzone = mClassControllerSettings.m_HtcTouchpadClickDeadzone
-                            Dim bEnabledPlayspaceRecenter = mClassControllerSettings.m_EnablePlayspaceRecenter
+                                Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
+                                Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
 
 
 
-                            SyncLock _ThreadLock
-                                Dim mRawOrientation = m_ControllerData.m_Orientation
-                                Dim mCalibratedOrientation = mRawOrientation
+                                SyncLock _ThreadLock
+                                    Dim mRawOrientation = m_ControllerData.m_Orientation
+                                    Dim mCalibratedOrientation = mRawOrientation
 
-                                Dim mRawPosition = m_ControllerData.m_Position
-                                Dim mCalibratedPosition = mRawPosition
+                                    Dim mRawPosition = m_ControllerData.m_Position
+                                    Dim mCalibratedPosition = mRawPosition
 
-                                ' Playspace offsets, used for playspace calibration
-                                If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                    InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
-                                End If
+                                    ' Playspace offsets, used for playspace calibration
+                                    If (Not mPlayspaceRecenterCalibrationRunning) Then
+                                        InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                    End If
 
-                                Dim mOrientation = mRecenterQuat * mCalibratedOrientation
-                                Dim mPosition = mCalibratedPosition
+                                    Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                    Dim mPosition = mCalibratedPosition
 
-                                g_mOscDataPack.mOrientation = mOrientation
-                                g_mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                    g_mOscDataPack.mOrientation = mOrientation
+                                    g_mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
 
-                                Select Case (True)
-                                    Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                        Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                    Select Case (True)
+                                        Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                            Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
 
-                                        Dim mButtons As Boolean() = New Boolean() {
+                                            Dim mButtons As Boolean() = New Boolean() {
                                             m_PSMoveData.m_MoveButton,
                                             m_PSMoveData.m_PSButton,
                                             m_PSMoveData.m_StartButton,
@@ -964,10 +1188,10 @@ Public Class UCVirtualMotionTrackerItem
                                             m_PSMoveData.m_TriangleButton
                                         }
 
-                                        Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
+                                            Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
 
-                                        'Do playspace recenter
-                                        InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
+                                            'Do playspace recenter
+                                            InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
                                                                         m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton,
                                                                         mRawPosition,
                                                                         mPlayspaceRecenterButtonPressed,
@@ -980,8 +1204,8 @@ Public Class UCVirtualMotionTrackerItem
                                                                         mClassControllerSettings,
                                                                         mUCVirtualMotionTracker)
 
-                                        'Do controller recenter
-                                        InternalRecenterControllerLogic(bEnableControllerRecenter,
+                                            'Do controller recenter
+                                            InternalRecenterControllerLogic(bEnableControllerRecenter,
                                                                         m_PSMoveData.m_SelectButton AndAlso Not m_PSMoveData.m_StartButton,
                                                                         mRecenterButtonPressed,
                                                                         mLastRecenterTime,
@@ -993,8 +1217,8 @@ Public Class UCVirtualMotionTrackerItem
                                                                         mCalibratedOrientation,
                                                                         mUCVirtualMotionTracker)
 
-                                        'Do Hmd/remote recenter
-                                        InternalRecenterHmd(bEnableHmdRecenter,
+                                            'Do Hmd/remote recenter
+                                            InternalRecenterHmd(bEnableHmdRecenter,
                                                             mServiceClient,
                                                             mHmdRecenterButtonPressed,
                                                             mLastHmdRecenterTime,
@@ -1004,10 +1228,11 @@ Public Class UCVirtualMotionTrackerItem
                                                             mCalibratedPosition,
                                                             mCalibratedOrientation,
                                                             mRecenterQuat,
-                                                            mUCVirtualMotionTracker)
+                                                            mUCVirtualMotionTracker,
+                                                            False)
 
-                                        'Send buttons
-                                        InternalButtonsLogic(mButtons,
+                                            'Send buttons
+                                            InternalButtonsLogic(mButtons,
                                                             m_PSMoveData,
                                                             bJoystickTrigger,
                                                             iHtcGripButtonMethod,
@@ -1015,8 +1240,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             bGripToggled,
                                                             iHtcTouchpadEmulationClickMethod)
 
-                                        'Joystick emulation
-                                        InternalJoystickEmulationLogic(bJoystickTrigger,
+                                            'Joystick emulation
+                                            InternalJoystickEmulationLogic(bJoystickTrigger,
                                                                         iHtcTouchpadMethod,
                                                                         bJoystickButtonPressed,
                                                                         mJoystickButtonPressedTime,
@@ -1032,25 +1257,25 @@ Public Class UCVirtualMotionTrackerItem
                                                                         mButtons,
                                                                         mJoystickShortcuts,
                                                                         bJoystickShortcutTouchpadClick)
-                                End Select
-                            End SyncLock
+                                    End Select
+                                End SyncLock
 
-                            'Send battery level to
-                            If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
-                                mLastBatteryReport.Restart()
+                                'Send battery level to
+                                If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
+                                    mLastBatteryReport.Restart()
 
-                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Property/Battery",
                                             m_VmtTracker,
                                             iBatteryValue
                                         ))
-                            End If
+                                End If
 
-                            Select Case (m_VmtTrackerRole)
-                                Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                Select Case (m_VmtTrackerRole)
+                                    Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, ENABLE_TRACKER, 0.0F,
@@ -1063,42 +1288,42 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
+                                    Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER,
                                      ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
 
-                                    Dim iController As Integer = ENABLE_TRACKER
-                                    Select Case (m_VmtTrackerRole)
-                                        Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
-                                            iController = ENABLE_CONTROLLER_L
+                                        Dim iController As Integer = ENABLE_TRACKER
+                                        Select Case (m_VmtTrackerRole)
+                                            Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
+                                                iController = ENABLE_CONTROLLER_L
 
-                                        Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
-                                            iController = ENABLE_CONTROLLER_R
-                                    End Select
+                                            Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                                                iController = ENABLE_CONTROLLER_R
+                                        End Select
 
-                                    For Each mButton In g_mOscDataPack.mButtons
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mButton In g_mOscDataPack.mButtons
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Input/Button",
                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                             ))
-                                    Next
+                                        Next
 
-                                    For Each mTrigger In g_mOscDataPack.mTrigger
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mTrigger In g_mOscDataPack.mTrigger
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                            New OscMessage(
                                                "/VMT/Input/Trigger",
                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                            ))
-                                    Next
+                                        Next
 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Input/Joystick",
                                             m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
                                         ))
 
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, iController, 0.0F,
@@ -1111,9 +1336,9 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
@@ -1126,42 +1351,42 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                                Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
-                                     ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
+                                             ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
 
-                                    Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
-                                    Select Case (m_VmtTrackerRole)
-                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
-                                            iController = ENABLE_HTC_VIVE_CONTROLLER_L
+                                        Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
+                                        Select Case (m_VmtTrackerRole)
+                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
+                                                iController = ENABLE_HTC_VIVE_CONTROLLER_L
 
-                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
-                                            iController = ENABLE_HTC_VIVE_CONTROLLER_R
-                                    End Select
+                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                                iController = ENABLE_HTC_VIVE_CONTROLLER_R
+                                        End Select
 
-                                    For Each mButton In g_mOscDataPack.mButtons
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mButton In g_mOscDataPack.mButtons
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Input/Button",
                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                             ))
-                                    Next
+                                        Next
 
-                                    For Each mTrigger In g_mOscDataPack.mTrigger
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        For Each mTrigger In g_mOscDataPack.mTrigger
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                            New OscMessage(
                                                "/VMT/Input/Trigger",
                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                            ))
-                                    Next
+                                        Next
 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Input/Joystick",
                                             m_VmtTracker, 0, 0.0F, g_mOscDataPack.mJoyStick.X, g_mOscDataPack.mJoyStick.Y
                                         ))
 
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                        'Use Right-Handed space for SteamVR 
+                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
                                             m_VmtTracker, iController, 0.0F,
@@ -1174,9 +1399,10 @@ Public Class UCVirtualMotionTrackerItem
                                             g_mOscDataPack.mOrientation.W
                                         ))
 
-                            End Select
+                                End Select
 
-                            m_FpsOscCounter += 1
+                                m_FpsOscCounter += 1
+                            End If
                         End If
                     End If
 
@@ -1209,7 +1435,7 @@ Public Class UCVirtualMotionTrackerItem
                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                         New OscMessage(
                                             "/VMT/Room/Driver",
-                                            ClassVmtConst.VMT_TRACKER_MAX + i + 1, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
+                                            VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
                                             mPosition.X,
                                             mPosition.Y,
                                             mPosition.Z,
@@ -1530,14 +1756,17 @@ Public Class UCVirtualMotionTrackerItem
                                         ByRef mCalibratedPosition As Vector3,
                                         ByRef mCalibratedOrientation As Quaternion,
                                         ByRef mRecenterQuat As Quaternion,
-                                        ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
+                                        ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
+                                        ByRef bIsHmd As Boolean)
             Dim bOtherControllerRecenterButtonPressed As Boolean = False
             Dim bOtherControllerPos As New Vector3
 
             If (bEnableHmdRecenter) Then
                 For Each mControllerDataSearch In mServiceClient.GetControllersData()
-                    If (mControllerDataSearch.m_Id = m_ControllerData.m_Id) Then
-                        Continue For
+                    If (Not bIsHmd) Then
+                        If (mControllerDataSearch.m_Id = m_ControllerData.m_Id) Then
+                            Continue For
+                        End If
                     End If
 
                     Select Case (True)
@@ -1589,7 +1818,15 @@ Public Class UCVirtualMotionTrackerItem
                             End If
 
                             ' Check if we are the target device.
-                            If ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName) Then
+                            Dim bIsTarget As Boolean = False
+
+                            If (bIsHmd) Then
+                                bIsTarget = ((ClassVmtConst.VMT_DEVICE_NAME & "HMD") = sCurrentRecenterDeviceName)
+                            Else
+                                bIsTarget = ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName)
+                            End If
+
+                            If (bIsTarget) Then
                                 Dim mControllerPos As Vector3 = bOtherControllerPos
                                 Dim mFromDevicePos As Vector3 = mCalibratedPosition
 
@@ -1966,39 +2203,78 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Public Sub SaveConfig()
-            If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
+            If (CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem) < 0) Then
                 Return
             End If
 
-            Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
+            Dim iDeviceID As Integer = CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem)
 
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    SyncLock _ThreadLock
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+            If (g_mUCRemoteDeviceItem.g_bIsHMD) Then
+                ' For HMDs 
+                Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
 
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
+                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        SyncLock _ThreadLock
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                        mIni.WriteKeyValue(mIniContent.ToArray)
-                    End SyncLock
+                            ' Nothing?
+
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        End SyncLock
+                    End Using
                 End Using
-            End Using
+            Else
+                ' For Controllers
+                Dim sDevicePath As String = CStr(iDeviceID)
+
+                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        SyncLock _ThreadLock
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
+
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        End SyncLock
+                    End Using
+                End Using
+            End If
+
+
         End Sub
 
         Public Sub LoadConfig()
-            If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
+            If (CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem) < 0) Then
                 Return
             End If
 
-            Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
+            Dim iDeviceID As Integer = CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem)
 
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
-                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+            If (g_mUCRemoteDeviceItem.g_bIsHMD) Then
+                ' For HMDs 
+                Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
+
+                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+
+                        ' Nothing?
+
+                    End Using
                 End Using
-            End Using
+            Else
+                ' For Controllers
+                Dim sDevicePath As String = CStr(iDeviceID)
+
+                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
+                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+                    End Using
+                End Using
+            End If
+
         End Sub
 
         Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Single)

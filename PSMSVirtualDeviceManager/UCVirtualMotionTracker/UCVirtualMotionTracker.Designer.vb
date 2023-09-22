@@ -167,6 +167,9 @@ Partial Class UCVirtualMotionTracker
         Me.Label42 = New System.Windows.Forms.Label()
         Me.Label43 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
+        Me.ContextMenuStrip_AddTracker = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -176,6 +179,7 @@ Partial Class UCVirtualMotionTracker
         Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ListView_Trackers = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -227,6 +231,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.ContextMenuStrip_AddTracker.SuspendLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -612,7 +617,7 @@ Partial Class UCVirtualMotionTracker
         Me.Button_AddVMTController.Name = "Button_AddVMTController"
         Me.Button_AddVMTController.Size = New System.Drawing.Size(120, 23)
         Me.Button_AddVMTController.TabIndex = 13
-        Me.Button_AddVMTController.Text = "Add tracker"
+        Me.Button_AddVMTController.Text = "Add tracker..."
         Me.Button_AddVMTController.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.Button_AddVMTController.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_AddVMTController.UseVisualStyleBackColor = True
@@ -1919,6 +1924,24 @@ Partial Class UCVirtualMotionTracker
         Me.Label44.Size = New System.Drawing.Size(800, 1)
         Me.Label44.TabIndex = 0
         '
+        'ContextMenuStrip_AddTracker
+        '
+        Me.ContextMenuStrip_AddTracker.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_AddTracker, Me.ToolStripMenuItem_AddHmd})
+        Me.ContextMenuStrip_AddTracker.Name = "ContextMenuStrip_AddTracker"
+        Me.ContextMenuStrip_AddTracker.Size = New System.Drawing.Size(214, 70)
+        '
+        'ToolStripMenuItem_AddTracker
+        '
+        Me.ToolStripMenuItem_AddTracker.Name = "ToolStripMenuItem_AddTracker"
+        Me.ToolStripMenuItem_AddTracker.Size = New System.Drawing.Size(213, 22)
+        Me.ToolStripMenuItem_AddTracker.Text = "By Controller"
+        '
+        'ToolStripMenuItem_AddHmd
+        '
+        Me.ToolStripMenuItem_AddHmd.Name = "ToolStripMenuItem_AddHmd"
+        Me.ToolStripMenuItem_AddHmd.Size = New System.Drawing.Size(213, 22)
+        Me.ToolStripMenuItem_AddHmd.Text = "By Head-Mounted Display"
+        '
         'ClassPictureBoxQuality4
         '
         Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._374
@@ -1993,7 +2016,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.ListView_Trackers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ListView_Trackers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5})
+        Me.ListView_Trackers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader6, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5})
         Me.ListView_Trackers.ContextMenuStrip = Me.ContextMenuStrip_Trackers
         Me.ListView_Trackers.FullRowSelect = True
         Me.ListView_Trackers.HideSelection = False
@@ -2006,20 +2029,25 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_Trackers.UseCompatibleStateImageBehavior = False
         Me.ListView_Trackers.View = System.Windows.Forms.View.Details
         '
+        'ColumnHeader6
+        '
+        Me.ColumnHeader6.Text = "Type"
+        Me.ColumnHeader6.Width = 100
+        '
         'ColumnHeader3
         '
-        Me.ColumnHeader3.Text = "Controller ID"
-        Me.ColumnHeader3.Width = 100
+        Me.ColumnHeader3.Text = "ID"
+        Me.ColumnHeader3.Width = 75
         '
         'ColumnHeader4
         '
         Me.ColumnHeader4.Text = "VMT ID"
-        Me.ColumnHeader4.Width = 100
+        Me.ColumnHeader4.Width = 75
         '
         'ColumnHeader5
         '
         Me.ColumnHeader5.Text = "Tracker Role"
-        Me.ColumnHeader5.Width = 300
+        Me.ColumnHeader5.Width = 400
         '
         'ClassPictureBoxQuality_CalibStep5
         '
@@ -2204,6 +2232,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_SteamVRRestart.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.ContextMenuStrip_AddTracker.ResumeLayout(False)
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2381,4 +2410,8 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label42 As Label
     Friend WithEvents Label43 As Label
     Friend WithEvents Label44 As Label
+    Friend WithEvents ContextMenuStrip_AddTracker As ContextMenuStrip
+    Friend WithEvents ToolStripMenuItem_AddTracker As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem_AddHmd As ToolStripMenuItem
+    Friend WithEvents ColumnHeader6 As ColumnHeader
 End Class

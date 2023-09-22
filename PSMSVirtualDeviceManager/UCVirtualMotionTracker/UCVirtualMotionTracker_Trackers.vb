@@ -2,37 +2,56 @@
 
 Partial Public Class UCVirtualMotionTracker
     Private Sub AutostartLoad()
-        Dim mAutostartIndexes As New List(Of Integer)
+        Dim mAutostartControllerIndexes As New List(Of Integer)
+        Dim mAutostartHmdIndexes As New List(Of Integer)
 
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                    If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
+                    If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If
 
                     If (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true") Then
-                        mAutostartIndexes.Add(i)
+                        mAutostartControllerIndexes.Add(i)
+                    End If
+                Next
+
+                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                    If (g_mAutostartHmdMenuStrips(i) Is Nothing OrElse g_mAutostartHmdMenuStrips(i).IsDisposed) Then
+                        Continue For
+                    End If
+
+                    If (mIni.ReadKeyValue("AutostartHmd", CStr(i), "false") = "true") Then
+                        mAutostartHmdIndexes.Add(i)
                     End If
                 Next
             End Using
         End Using
 
-        For i = 0 To mAutostartIndexes.Count - 1
+        For i = 0 To mAutostartControllerIndexes.Count - 1
             Try
-                AddVmtTracker(mAutostartIndexes(i))
+                AddVmtTracker(mAutostartControllerIndexes(i), False)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        Next
+
+        For i = 0 To mAutostartHmdIndexes.Count - 1
+            Try
+                AddVmtTracker(mAutostartHmdIndexes(i), True)
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Next
     End Sub
 
-    Private Sub AddVmtTracker(id As Integer)
-        If (ListView_Trackers.Items.Count >= ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT) Then
+    Private Sub AddVmtTracker(id As Integer, bIsHmd As Boolean)
+        If (ListView_Trackers.Items.Count >= ClassVmtConst.VMT_TRACKER_MAX) Then
             Throw New ArgumentException("Maximum number of trackers reached")
         End If
 
-        Dim mItem = New ClassTrackersListViewItem(id, Me)
+        Dim mItem = New ClassTrackersListViewItem(id, bIsHmd, Me)
         ListView_Trackers.Items.Add(mItem)
         mItem.Selected = True
     End Sub
@@ -64,15 +83,25 @@ Partial Public Class UCVirtualMotionTracker
 
         mItem.Checked = Not mItem.Checked
 
-        Dim iIndex As Integer = CInt(mItem.Tag)
+        Dim mTagData As Object() = CType(mItem.Tag, Object())
+        Dim bIsHMD As Boolean = CBool(mTagData(0))
+        Dim iIndex As Integer = CInt(mTagData(1))
 
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
-                Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                If (bIsHMD) Then
+                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("AutostartHmd", CStr(iIndex), If(mItem.Checked, "true", "false")))
 
-                mIni.WriteKeyValue(mIniContent.ToArray)
+                    mIni.WriteKeyValue(mIniContent.ToArray)
+                Else
+                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
+
+                    mIni.WriteKeyValue(mIniContent.ToArray)
+                End If
             End Using
         End Using
     End Sub
@@ -81,19 +110,39 @@ Partial Public Class UCVirtualMotionTracker
         Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                    If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
+                    If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
                         Continue For
                     End If
 
-                    g_mAutostartMenuStrips(i).Checked = (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true")
+                    g_mAutostartControllerMenuStrips(i).Checked = (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true")
+                Next
+
+                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                    If (g_mAutostartHmdMenuStrips(i) Is Nothing OrElse g_mAutostartHmdMenuStrips(i).IsDisposed) Then
+                        Continue For
+                    End If
+
+                    g_mAutostartHmdMenuStrips(i).Checked = (mIni.ReadKeyValue("AutostartHmd", CStr(i), "false") = "true")
                 Next
             End Using
         End Using
     End Sub
 
     Private Sub Button_AddVMTController_Click(sender As Object, e As EventArgs) Handles Button_AddVMTController.Click
+        ContextMenuStrip_AddTracker.Show(Button_AddVMTController, 0, Button_AddVMTController.Height)
+    End Sub
+
+    Private Sub ToolStripMenuItem_AddTracker_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_AddTracker.Click
         Try
-            AddVmtTracker(-1)
+            AddVmtTracker(-1, False)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ToolStripMenuItem_AddHmd_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_AddHmd.Click
+        Try
+            AddVmtTracker(-1, True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try

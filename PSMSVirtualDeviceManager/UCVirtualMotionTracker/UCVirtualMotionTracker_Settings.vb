@@ -254,7 +254,7 @@
 
             ComboBox_HmdRecenterFromDevice.BeginUpdate()
             ComboBox_HmdRecenterFromDevice.Items.Clear()
-            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "No Device Selected"))
+            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
             ComboBox_HmdRecenterFromDevice.Items.AddRange(mDevices.ToArray)
             ComboBox_HmdRecenterFromDevice.EndUpdate()
 
@@ -270,7 +270,7 @@
 
             If (bLastFound) Then
                 ' Create new one if its not in the list
-                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName, "No Device Selected")
+                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName, "Any Head-Mounted Display")
 
                 ComboBox_HmdRecenterFromDevice.Items.Add(mSelectedItem)
                 ComboBox_HmdRecenterFromDevice.SelectedItem = mSelectedItem

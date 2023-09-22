@@ -172,4 +172,7 @@ This is useful if, for example, you are using PhoneVR or any other third-party t
 It offers a range of tracker roles, including body trackers, controllers, and replacement of head-mounted display 6-DoF pose.
 </value>
   </data>
+  <metadata name="ContextMenuStrip_AddTracker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>682, 17</value>
+  </metadata>
 </root>

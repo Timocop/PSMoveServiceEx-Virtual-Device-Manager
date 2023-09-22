@@ -28,8 +28,8 @@ Partial Class UCVirtualMotionTrackerItem
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVirtualMotionTrackerItem))
-        Me.ComboBox_ControllerID = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ComboBox_DeviceID = New System.Windows.Forms.ComboBox()
+        Me.Label_DeviceID = New System.Windows.Forms.Label()
         Me.TimerFPS = New System.Windows.Forms.Timer(Me.components)
         Me.Button_SaveSettings = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -39,7 +39,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -50,31 +49,32 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Label_TrackerName = New System.Windows.Forms.Label()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'ComboBox_ControllerID
+        'ComboBox_DeviceID
         '
-        Me.ComboBox_ControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_ControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_ControllerID.FormattingEnabled = True
-        Me.ComboBox_ControllerID.Location = New System.Drawing.Point(134, 45)
-        Me.ComboBox_ControllerID.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
-        Me.ComboBox_ControllerID.Name = "ComboBox_ControllerID"
-        Me.ComboBox_ControllerID.Size = New System.Drawing.Size(150, 21)
-        Me.ComboBox_ControllerID.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.ComboBox_ControllerID, "The PSMoveServiceEx controller id that will be used for this tracker.")
+        Me.ComboBox_DeviceID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_DeviceID.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_DeviceID.FormattingEnabled = True
+        Me.ComboBox_DeviceID.Location = New System.Drawing.Point(134, 45)
+        Me.ComboBox_DeviceID.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
+        Me.ComboBox_DeviceID.Name = "ComboBox_DeviceID"
+        Me.ComboBox_DeviceID.Size = New System.Drawing.Size(150, 21)
+        Me.ComboBox_DeviceID.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.ComboBox_DeviceID, "The PSMoveServiceEx controller id that will be used for this tracker.")
         '
-        'Label1
+        'Label_DeviceID
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(16, 48)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(76, 13)
-        Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Controller ID:"
+        Me.Label_DeviceID.AutoSize = True
+        Me.Label_DeviceID.Location = New System.Drawing.Point(16, 48)
+        Me.Label_DeviceID.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label_DeviceID.Name = "Label_DeviceID"
+        Me.Label_DeviceID.Size = New System.Drawing.Size(57, 13)
+        Me.Label_DeviceID.TabIndex = 6
+        Me.Label_DeviceID.Text = "Device ID:"
         '
         'TimerFPS
         '
@@ -181,17 +181,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Panel_Status.Size = New System.Drawing.Size(585, 75)
         Me.Panel_Status.TabIndex = 36
         '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
-        '
         'Label_StatusMessage
         '
         Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -292,6 +281,17 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label_TrackerName.TabIndex = 42
         Me.Label_TrackerName.Text = "Tracker Name: Invalid"
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -310,8 +310,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.ComboBox_VMTTrackerID)
         Me.Controls.Add(Me.Button_SaveSettings)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.ComboBox_ControllerID)
+        Me.Controls.Add(Me.Label_DeviceID)
+        Me.Controls.Add(Me.ComboBox_DeviceID)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTrackerItem"
         Me.Size = New System.Drawing.Size(617, 295)
@@ -322,8 +322,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents ComboBox_ControllerID As ComboBox
-    Friend WithEvents Label1 As Label
+    Friend WithEvents ComboBox_DeviceID As ComboBox
+    Friend WithEvents Label_DeviceID As Label
     Friend WithEvents TimerFPS As Timer
     Friend WithEvents Button_SaveSettings As Button
     Friend WithEvents Label3 As Label

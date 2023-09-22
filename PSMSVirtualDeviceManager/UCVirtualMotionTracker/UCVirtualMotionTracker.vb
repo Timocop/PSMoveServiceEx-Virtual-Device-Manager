@@ -5,7 +5,8 @@ Imports Rug.Osc
 Public Class UCVirtualMotionTracker
     Public g_mFormMain As FormMain
 
-    Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
+    Private g_mAutostartControllerMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
+    Private g_mAutostartHmdMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
@@ -31,11 +32,11 @@ Public Class UCVirtualMotionTracker
         Private g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
         Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
 
-        Public Sub New(iControllerID As Integer, _UCVirtualMotionTracker As UCVirtualMotionTracker)
-            MyBase.New(New String() {"", "", ""})
+        Public Sub New(iControllerID As Integer, bIsHmd As Boolean, _UCVirtualMotionTracker As UCVirtualMotionTracker)
+            MyBase.New(New String() {"", "", "", ""})
 
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
-            g_UCVirtualMotionTrackerItem = New UCVirtualMotionTrackerItem(iControllerID, _UCVirtualMotionTracker)
+            g_UCVirtualMotionTrackerItem = New UCVirtualMotionTrackerItem(iControllerID, bIsHmd, _UCVirtualMotionTracker)
 
             UpdateItem()
         End Sub
@@ -49,13 +50,23 @@ Public Class UCVirtualMotionTracker
                 Return
             End If
 
-            Me.SubItems(0).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_Index)
-            Me.SubItems(1).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_VmtTracker)
-
-            If (g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem IsNot Nothing AndAlso g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem IsNot Nothing) Then
-                Me.SubItems(2).Text = String.Format("{0} ({1})", CStr(g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem), CStr(g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem))
+            If (g_UCVirtualMotionTrackerItem.g_mClassIO.m_IsHMD) Then
+                Me.SubItems(0).Text = "HMD"
             Else
-                Me.SubItems(2).Text = ""
+                Me.SubItems(0).Text = "Controller"
+            End If
+
+            Me.SubItems(1).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_Index)
+            Me.SubItems(2).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_VmtTracker)
+
+            If (g_UCVirtualMotionTrackerItem.g_mClassIO.m_IsHMD) Then
+                Me.SubItems(3).Text = "Head-Mounted Display"
+            Else
+                If (g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem IsNot Nothing AndAlso g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem IsNot Nothing) Then
+                    Me.SubItems(3).Text = String.Format("{0} ({1})", CStr(g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem), CStr(g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem))
+                Else
+                    Me.SubItems(3).Text = ""
+                End If
             End If
 
             'Is there any error?
@@ -247,7 +258,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_HmdRecenterFromDevice.Items.Clear()
-            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "No Device Selected"))
+            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
 
             ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
         Finally
@@ -266,15 +277,33 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = False
         End Try
 
-        For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-            Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
+        If (True) Then
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
-            g_mAutostartMenuStrips(i) = mItem
+                g_mAutostartControllerMenuStrips(i) = mItem
 
-            mItem.Tag = i
+                mItem.Tag = New Object() {
+                    False,
+                    i
+                }
 
-            ContextMenuStrip_Autostart.Items.Add(mItem)
-        Next
+                ContextMenuStrip_Autostart.Items.Add(mItem)
+            Next
+
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                Dim mItem As New ToolStripMenuItem("HMD ID: " & CStr(i))
+
+                g_mAutostartHmdMenuStrips(i) = mItem
+
+                mItem.Tag = New Object() {
+                    True,
+                    i
+                }
+
+                ContextMenuStrip_Autostart.Items.Add(mItem)
+            Next
+        End If
 
         Try
             g_bIgnoreEvents = True
@@ -331,7 +360,7 @@ Public Class UCVirtualMotionTracker
                 ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, g_ClassControllerSettings.m_HmdRecenterMethod))
 
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
-                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_HmdRecenterFromDeviceName, "No Device Selected"))
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_HmdRecenterFromDeviceName, "Any Head-Mounted Display"))
                 ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
 
                 NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassControllerSettings.m_RecenterButtonTimeMs))
@@ -399,12 +428,19 @@ Public Class UCVirtualMotionTracker
         Next
         ListView_Trackers.Items.Clear()
 
-        For Each mItem In g_mAutostartMenuStrips
+        For Each mItem In g_mAutostartControllerMenuStrips
             If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
                 mItem.Value.Dispose()
             End If
         Next
-        g_mAutostartMenuStrips.Clear()
+        g_mAutostartControllerMenuStrips.Clear()
+
+        For Each mItem In g_mAutostartHmdMenuStrips
+            If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
+                mItem.Value.Dispose()
+            End If
+        Next
+        g_mAutostartHmdMenuStrips.Clear()
 
         If (g_ClassOscDevices IsNot Nothing) Then
             g_ClassOscDevices.Dispose()
