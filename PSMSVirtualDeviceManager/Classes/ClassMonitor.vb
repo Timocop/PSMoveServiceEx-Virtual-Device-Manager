@@ -150,31 +150,41 @@ Public Class ClassMonitor
         PATCHED
     End Enum
 
-    Public Function FindPlaystationVrMonitor(ByRef mResult As DEVMODE, ByRef mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)) As Boolean
+    Public Enum ENUM_PSVR_MONITOR_STATUS
+        SUCCESS
+        ERROR_MIRRROED
+        ERROR_NOT_ACTIVE
+        ERROR_NOT_FOUND
+    End Enum
+
+    Public Function FindPlaystationVrMonitor(ByRef mResult As DEVMODE, ByRef mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)) As ENUM_PSVR_MONITOR_STATUS
         For Each mInfo In GetMonitorList()
             Dim mMonitorInfo As DEVMODE = GetMonitorInfo(mInfo.Key)
-
-            ' Ignore mirrored or invalid monitors
-            If (mInfo.Value.Length <> 1) Then
+            If (mInfo.Value.Length < 1) Then
                 Continue For
             End If
 
             Dim mPrimMonitor = mInfo.Value(0)
 
-            ' Ignore non-active monitors
-            If ((mPrimMonitor.StateFlags And DISPLAY_DEVICE_STATE.DISPLAY_DEVICE_ACTIVE) = 0) Then
-                Continue For
-            End If
-
             If (mPrimMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME) OrElse mPrimMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME)) Then
+                ' Is monitor mirrored?
+                If (mInfo.Value.Length > 1) Then
+                    Return ENUM_PSVR_MONITOR_STATUS.ERROR_MIRRROED
+                End If
+
+                ' Is monitor not active?
+                If ((mPrimMonitor.StateFlags And DISPLAY_DEVICE_STATE.DISPLAY_DEVICE_ACTIVE) = 0) Then
+                    Return ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
+                End If
+
                 mResult = mMonitorInfo
 
                 mDisplayInfo = New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mInfo.Key, mPrimMonitor)
-                Return True
+                Return ENUM_PSVR_MONITOR_STATUS.SUCCESS
             End If
         Next
 
-        Return False
+        Return ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
     End Function
 
     Public Function GetMonitorList() As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE())()
@@ -252,7 +262,7 @@ Public Class ClassMonitor
         Dim mDisplayDev As DEVMODE = Nothing
         Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
 
-        If (Not mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo)) Then
+        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) <> ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
             Throw New ArgumentException("Unable to find PSVR monitor")
         End If
 
@@ -321,7 +331,7 @@ Public Class ClassMonitor
         Dim mDisplayDev As DEVMODE = Nothing
         Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
 
-        If (Not mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo)) Then
+        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) <> ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
             Throw New ArgumentException("Unable to find PSVR monitor")
         End If
 

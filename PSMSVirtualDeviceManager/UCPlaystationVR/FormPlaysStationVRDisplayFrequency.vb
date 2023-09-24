@@ -30,7 +30,7 @@
         Dim mMonitor As New ClassMonitor
 
         Dim mMonitorInfo As ClassMonitor.DEVMODE = Nothing
-        If (mMonitor.FindPlaystationVrMonitor(mMonitorInfo, Nothing)) Then
+        If (mMonitor.FindPlaystationVrMonitor(mMonitorInfo, Nothing) = ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
             Return mMonitorInfo.dmDisplayFrequency
         End If
 
@@ -46,7 +46,7 @@
 
             Dim mMonitorInfo As ClassMonitor.DEVMODE = Nothing
             Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
-            If (mMonitor.FindPlaystationVrMonitor(mMonitorInfo, mDisplayInfo)) Then
+            If (mMonitor.FindPlaystationVrMonitor(mMonitorInfo, mDisplayInfo) = ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
                 Dim iResult = mMonitor.ChangeRefreshRateForMonitor(mDisplayInfo.Key, iNewFrequency)
 
                 If (iResult <> ClassMonitor.ENUM_DISPLAY_SETTINGS_ERROR.DISP_CHANGE_SUCCESSFUL) Then

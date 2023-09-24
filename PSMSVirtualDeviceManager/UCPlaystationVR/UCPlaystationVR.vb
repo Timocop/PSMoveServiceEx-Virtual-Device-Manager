@@ -26,6 +26,9 @@
         CONFIGURED
         WAITING_FOR_RELOAD
         NOT_CONFIGURED
+        MIRRROED
+        DISABLED
+        BAD_FREQUENCY
         GENERAL_ISSUE
     End Enum
 
@@ -58,7 +61,7 @@
         Select Case (iHdmiStatus)
             Case ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED
                 Label_HDMIStatus.Text = "HDMI Disconnected"
-                Label_HDMIStatusText.Text = "HDMI cable is not connected. Please attach the PlayStation VR HDMI cable to your computer."
+                Label_HDMIStatusText.Text = "HDMI cable is not connected. Please attach the HDMI cable to your computer."
                 ClassPictureBox_HDMIStatus.Image = My.Resources.Connection_HDMI_FAIL
 
             Case ENUM_DEVICE_HDMI_STATUS.CONNECTED
@@ -76,17 +79,17 @@
         Select Case (iUsbStatus)
             Case ENUM_DEVICE_USB_STATUS.NOT_CONNECTED
                 Label_USBStatus.Text = "USB Disconnected"
-                Label_USBStatusText.Text = "USB cable is not connected. Please attach the PlayStation VR USB cable to your computer."
+                Label_USBStatusText.Text = "USB cable is not connected. Please attach the USB cable to your computer."
                 ClassPictureBox_USBStatus.Image = My.Resources.Connection_USB_FAIL
 
             Case ENUM_DEVICE_USB_STATUS.CONNECTED
                 Label_USBStatus.Text = "USB Connected"
                 Label_USBStatusText.Text = "USB cable is connected."
                 ClassPictureBox_USBStatus.Image = My.Resources.Connection_USB_OK
-                
+
             Case ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE
                 Label_USBStatus.Text = "USB Driver Issue"
-                Label_USBStatusText.Text = "USB drivers are not properly installed. Please install the Playstation VR USB drivers correctly."
+                Label_USBStatusText.Text = "USB drivers are not properly installed. Please install the USB drivers correctly."
                 ClassPictureBox_USBStatus.Image = My.Resources.Connection_USB_WARN
 
             Case Else
@@ -99,7 +102,7 @@
         Select Case (iDisplayStatus)
             Case ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED
                 Label_DisplayStatus.Text = "Display Disconnected"
-                Label_DisplayStatusText.Text = "Display is not connected. Please attach the PlayStation VR HDMI cable to your computer."
+                Label_DisplayStatusText.Text = "Display is not connected. Please attach the HDMI cable to your computer."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
 
             Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
@@ -109,13 +112,28 @@
 
             Case ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
                 Label_DisplayStatus.Text = "Display not configured"
-                Label_DisplayStatusText.Text = "The PlayStation VR display has not been configured correctly. Please setup the PlayStation VR display correctly."
+                Label_DisplayStatusText.Text = "Display has not been configured correctly. Please setup the display correctly."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
 
             Case ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
                 Label_DisplayStatus.Text = "Display waiting for update"
-                Label_DisplayStatusText.Text = "The PlayStation VR display has been set up correctly but is waiting to apply the new configuration. Please replug the HDMI cable or reboot your computer."
+                Label_DisplayStatusText.Text = "Display has been set up correctly but is waiting to apply the new configuration. Please replug the HDMI cable or reboot your computer."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
+
+            Case ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY
+                Label_DisplayStatus.Text = "Display frequency too low"
+                Label_DisplayStatusText.Text = "Display is running at a low frequency which is not recommended to use while in VR-Mode. Switch to a higher display frequency."
+                ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
+
+            Case ENUM_DEVICE_DISPLAY_STATUS.MIRRROED
+                Label_DisplayStatus.Text = "Display not in extended mode"
+                Label_DisplayStatusText.Text = "Display is currently not in extended-mode. Please use extended-mode for the display in the Windows display settings."
+                ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
+
+            Case ENUM_DEVICE_DISPLAY_STATUS.DISABLED
+                Label_DisplayStatus.Text = "Display Disabled"
+                Label_DisplayStatusText.Text = "Display has been disabled. Please enable the display in the Windows display settings."
+                ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
 
             Case Else
                 Label_DisplayStatus.Text = "Display Error"
@@ -125,27 +143,40 @@
         End Select
 
         Select Case (True)
-            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED AndAlso iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED AndAlso iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED)
+            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED AndAlso
+                    iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED AndAlso
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED)
                 ' All good
                 Label_PSVRStatus.Text = "PlayStation VR Connected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(0, 192, 0)
 
-            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED AndAlso iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED AndAlso iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
+            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED AndAlso
+                    iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED AndAlso
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
                 ' Nothing connected issues.
                 Label_PSVRStatus.Text = "PlayStation VR Disconnected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(224, 224, 224)
 
-            Case (iUsbStatus = ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE OrElse iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED OrElse iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD)
+            Case (iUsbStatus = ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.MIRRROED OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.DISABLED OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY)
                 ' USB driver or Display configuration iggues.
                 Label_PSVRStatus.Text = "PlayStation VR Issues Detected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(255, 128, 0)
 
-            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.GENERAL_ISSUE OrElse iUsbStatus = ENUM_DEVICE_USB_STATUS.GENERAL_ISSUE OrElse iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE)
+            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.GENERAL_ISSUE OrElse
+                    iUsbStatus = ENUM_DEVICE_USB_STATUS.GENERAL_ISSUE OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE)
                 ' USB, HDMI or Display general issues.
                 Label_PSVRStatus.Text = "PlayStation VR Error"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(192, 0, 0)
 
-            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED OrElse iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED OrElse iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
+            Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED OrElse
+                    iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
                 ' If something isnt connected issues.
                 Label_PSVRStatus.Text = "PlayStation VR Not Properly Connected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(255, 128, 0)
@@ -179,11 +210,16 @@
                 Try
                     Dim mClassMonitor As New ClassMonitor
                     Dim mPsvrMonitor As ClassMonitor.DEVMODE = Nothing
-                    If (mClassMonitor.FindPlaystationVrMonitor(mPsvrMonitor, Nothing)) Then
-                        iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED
-                    Else
-                        iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED
-                    End If
+                    Select Case (mClassMonitor.FindPlaystationVrMonitor(mPsvrMonitor, Nothing))
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS,
+                             ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE,
+                             ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_MIRRROED
+                            iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED
+
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
+                            iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED
+
+                    End Select
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -214,29 +250,42 @@
                 Try
                     Dim mClassMonitor As New ClassMonitor
                     Dim mPsvrMonitor As ClassMonitor.DEVMODE = Nothing
-                    If (mClassMonitor.FindPlaystationVrMonitor(mPsvrMonitor, Nothing)) Then
-                        Select Case (mClassMonitor.IsPlaystationVrMonitorPatched())
-                            Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
-                                iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
+                    Select Case (mClassMonitor.FindPlaystationVrMonitor(mPsvrMonitor, Nothing))
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_MIRRROED
+                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.MIRRROED
 
-                            Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED
-                                If (mPsvrMonitor.dmDeviceName Is Nothing) Then
-                                    ' Monitor disabled?
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
+                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.DISABLED
+
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
+                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED
+
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                            Select Case (mClassMonitor.IsPlaystationVrMonitorPatched())
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
+
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED
+                                    If (mPsvrMonitor.dmDeviceName Is Nothing) Then
+                                        ' Monitor disabled?
+                                        iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
+                                    Else
+                                        If (mPsvrMonitor.dmDisplayFrequency < 90) Then
+                                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY
+                                        Else
+                                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
+                                        End If
+                                    End If
+
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
+
+                                Case Else
                                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
-                                Else
-                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
-                                End If
 
-                            Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
-                                iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
+                            End Select
 
-                            Case Else
-                                iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
-
-                        End Select
-                    Else
-                        iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED
-                    End If
+                    End Select
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -303,5 +352,7 @@
         Using mForm As New FormPlaysStationVRDisplayFrequency
             mForm.ShowDialog(Me)
         End Using
+
+        UpdateHardwareChangeStatusNow()
     End Sub
 End Class

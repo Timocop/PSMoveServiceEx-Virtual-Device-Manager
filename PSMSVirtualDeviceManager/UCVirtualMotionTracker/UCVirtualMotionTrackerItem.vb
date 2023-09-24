@@ -1080,7 +1080,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                         Dim mClassMonitor As New ClassMonitor
                                         Dim mDevMode As ClassMonitor.DEVMODE = Nothing
-                                        If (mClassMonitor.FindPlaystationVrMonitor(mDevMode, Nothing)) Then
+                                        If (mClassMonitor.FindPlaystationVrMonitor(mDevMode, Nothing) = ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
                                             If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
                                                 iDisplayX = mDevMode.dmPositionX
                                                 iDisplayY = mDevMode.dmPositionY
