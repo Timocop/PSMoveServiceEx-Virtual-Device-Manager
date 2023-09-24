@@ -77,82 +77,108 @@
                     Dim iRenderH As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Me, Function() Me.Height)
 
                     Dim mPatternThreads As New List(Of Threading.Thread)
+                    Try
+                        For i = 0 To mEyeBitmap.Length - 1
+                            Dim _i = i
 
-                    For i = 0 To mEyeBitmap.Length - 1
-                        Dim _i = i
+                            If (mEyeBitmap(_i) IsNot Nothing) Then
+                                mEyeBitmap(_i).Dispose()
+                                mEyeBitmap(_i) = Nothing
+                            End If
 
-                        If (mEyeBitmap(_i) IsNot Nothing) Then
-                            mEyeBitmap(_i).Dispose()
-                            mEyeBitmap(_i) = Nothing
-                        End If
+                            Dim mPatternThread As New Threading.Thread(
+                                Sub()
+                                    Using mPattern = CreateCheckerboard(iRenderH, CInt(iRenderW / 2), iPatternSize)
+                                        Using mFov = ApplyFOV(mPattern, iDistortFov)
+                                            Dim mRgbChannels = SeparateRGBChannels(mFov)
 
-                        Dim mPatternThread As New Threading.Thread(Sub()
-                                                                       Using mPattern = CreateCheckerboard(iRenderH, CInt(iRenderW / 2), iPatternSize)
-                                                                           Using mFov = ApplyFOV(mPattern, iDistortFov)
-                                                                               Dim mRgbChannels = SeparateRGBChannels(mFov)
+                                            Try
+                                                Dim mDistortThreads As New List(Of Threading.Thread)
 
-                                                                               Try
-                                                                                   Dim mDistortThreads As New List(Of Threading.Thread)
+                                                Try
+                                                    For j = 0 To mRgbChannels.Length - 1
+                                                        Dim _j = j
+                                                        Dim mDistortThread As New Threading.Thread(
+                                                            Sub()
+                                                                Try
+                                                                    Select Case (_j)
+                                                                        Case 0
+                                                                            Dim tmp = ApplyDistortionToBitmap(mRgbChannels(_j), iDistortK0, iDistortK1, iDistortScale + iDistortRScale)
+                                                                            mRgbChannels(_j).Dispose()
+                                                                            mRgbChannels(_j) = tmp
+                                                                        Case 1
+                                                                            Dim tmp = ApplyDistortionToBitmap(mRgbChannels(_j), iDistortK0, iDistortK1, iDistortScale + iDistortGScale)
+                                                                            mRgbChannels(_j).Dispose()
+                                                                            mRgbChannels(_j) = tmp
+                                                                        Case 2
+                                                                            Dim tmp = ApplyDistortionToBitmap(mRgbChannels(_j), iDistortK0, iDistortK1, iDistortScale + iDistortBScale)
+                                                                            mRgbChannels(_j).Dispose()
+                                                                            mRgbChannels(_j) = tmp
+                                                                    End Select
+                                                                Catch ex As Threading.ThreadAbortException
+                                                                    Throw
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End Sub)
 
-                                                                                   For j = 0 To mRgbChannels.Length - 1
-                                                                                       Dim _j = j
-                                                                                       Dim mDistortThread As New Threading.Thread(Sub()
-                                                                                                                                      Try
-                                                                                                                                          Select Case (_j)
-                                                                                                                                              Case 0
-                                                                                                                                                  mRgbChannels(_j) = ApplyDistortionToBitmap(mRgbChannels(_j), iDistortK0, iDistortK1, iDistortScale + iDistortRScale)
-                                                                                                                                              Case 1
-                                                                                                                                                  mRgbChannels(_j) = ApplyDistortionToBitmap(mRgbChannels(_j), iDistortK0, iDistortK1, iDistortScale + iDistortGScale)
-                                                                                                                                              Case 2
-                                                                                                                                                  mRgbChannels(_j) = ApplyDistortionToBitmap(mRgbChannels(_j), iDistortK0, iDistortK1, iDistortScale + iDistortBScale)
-                                                                                                                                          End Select
-                                                                                                                                      Catch ex As Exception
+                                                        mDistortThread.IsBackground = True
+                                                        mDistortThread.Start()
+                                                        mDistortThreads.Add(mDistortThread)
+                                                    Next
+                                                Catch ex As Threading.ThreadAbortException
+                                                    For Each mThread As Threading.Thread In mPatternThreads
+                                                        mThread.Abort()
+                                                    Next
 
-                                                                                                                                      End Try
-                                                                                                                                  End Sub)
+                                                    Throw
+                                                Catch ex As Exception
+                                                Finally
+                                                    For Each mThread As Threading.Thread In mDistortThreads
+                                                        mThread.Join()
+                                                    Next
+                                                End Try
 
-                                                                                       mDistortThread.IsBackground = True
-                                                                                       mDistortThread.Start()
-                                                                                       mDistortThreads.Add(mDistortThread)
-                                                                                   Next
+                                                mEyeBitmap(_i) = CombineRGBBitmaps(mRgbChannels)
+                                            Finally
+                                                For j = 0 To mRgbChannels.Length - 1
+                                                    mRgbChannels(j).Dispose()
+                                                Next
+                                            End Try
+                                        End Using
+                                    End Using
 
-                                                                                   For Each mThread As Threading.Thread In mDistortThreads
-                                                                                       mThread.Join()
-                                                                                   Next
+                                    Using g As Graphics = Graphics.FromImage(mEyeBitmap(_i))
+                                        ' Define the font and brush for drawing the number
+                                        ' Define the font and brush for drawing the number
+                                        Dim font As New Font("Arial", 24)
+                                        Dim brush As New SolidBrush(Color.Red)
 
-                                                                                   mEyeBitmap(_i) = CombineRGBBitmaps(mRgbChannels)
-                                                                               Finally
-                                                                                   For j = 0 To mRgbChannels.Length - 1
-                                                                                       mRgbChannels(j).Dispose()
-                                                                                   Next
-                                                                               End Try
-                                                                           End Using
-                                                                       End Using
+                                        ' Calculate the position to center the text
+                                        Dim text As String = iFrameCount.ToString()
+                                        Dim textSize As SizeF = g.MeasureString(text, font)
+                                        Dim x As Single = (mEyeBitmap(_i).Width - textSize.Width) / 2
+                                        Dim y As Single = (mEyeBitmap(_i).Height - textSize.Height) / 2
 
-                                                                       Using g As Graphics = Graphics.FromImage(mEyeBitmap(_i))
-                                                                           ' Define the font and brush for drawing the number
-                                                                           ' Define the font and brush for drawing the number
-                                                                           Dim font As New Font("Arial", 24)
-                                                                           Dim brush As New SolidBrush(Color.Red)
+                                        ' Draw the number on the Bitmap
+                                        g.DrawString(text, font, brush, x, y)
+                                    End Using
+                                End Sub)
+                            mPatternThread.IsBackground = True
+                            mPatternThread.Start()
+                            mPatternThreads.Add(mPatternThread)
+                        Next
+                    Catch ex As Threading.ThreadAbortException
+                        For Each mThread As Threading.Thread In mPatternThreads
+                            mThread.Abort()
+                        Next
 
-                                                                           ' Calculate the position to center the text
-                                                                           Dim text As String = iFrameCount.ToString()
-                                                                           Dim textSize As SizeF = g.MeasureString(text, font)
-                                                                           Dim x As Single = (mEyeBitmap(_i).Width - textSize.Width) / 2
-                                                                           Dim y As Single = (mEyeBitmap(_i).Height - textSize.Height) / 2
-
-                                                                           ' Draw the number on the Bitmap
-                                                                           g.DrawString(text, font, brush, x, y)
-                                                                       End Using
-                                                                   End Sub)
-                        mPatternThread.IsBackground = True
-                        mPatternThread.Start()
-                        mPatternThreads.Add(mPatternThread)
-                    Next
-
-                    For Each mThread As Threading.Thread In mPatternThreads
-                        mThread.Join()
-                    Next
+                        Throw
+                    Catch ex As Exception
+                    Finally
+                        For Each mThread As Threading.Thread In mPatternThreads
+                            mThread.Join()
+                        Next
+                    End Try
 
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    PictureBox_EyeL.Image = mEyeBitmap(EYE_LEFT)
@@ -162,7 +188,6 @@
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    Debug.WriteLine(ex.Message)
                 End Try
 
                 Threading.Thread.Sleep(100)
@@ -237,7 +262,7 @@
         Return fovImage
     End Function
 
-    Function SeparateRGBChannels(ByVal inputBitmap As Bitmap) As Bitmap()
+    Private Function SeparateRGBChannels(inputBitmap As Bitmap) As Bitmap()
         Dim redChannelBitmap As New Bitmap(inputBitmap)
         Dim greenChannelBitmap As New Bitmap(inputBitmap)
         Dim blueChannelBitmap As New Bitmap(inputBitmap)
@@ -254,7 +279,7 @@
         Return {redChannelBitmap, greenChannelBitmap, blueChannelBitmap}
     End Function
 
-    Function ApplyDistortionToBitmap(ByVal inputImage As Bitmap, ByVal k0 As Single, ByVal k1 As Single, ByVal scale As Single) As Bitmap
+    Private Function ApplyDistortionToBitmap(inputImage As Bitmap, k0 As Single, k1 As Single, scale As Single) As Bitmap
         Dim width As Integer = inputImage.Width
         Dim height As Integer = inputImage.Height
         Dim distortedImage As New Bitmap(width, height)
@@ -297,7 +322,7 @@
         Return distortedImage
     End Function
 
-    Function CombineRGBBitmaps(ByVal rgbChannels As Bitmap()) As Bitmap
+    Private Function CombineRGBBitmaps(rgbChannels As Bitmap()) As Bitmap
         Dim width As Integer = rgbChannels(0).Width
         Dim height As Integer = rgbChannels(0).Height
         Dim combinedBitmap As New Bitmap(width, height)
@@ -314,39 +339,6 @@
 
         Return combinedBitmap
     End Function
-
-
-    Private Function InterpolateColor(image As Bitmap, x As Double, y As Double) As Color
-        Dim width As Integer = image.Width
-        Dim height As Integer = image.Height
-
-        ' Ensure x and y are within the valid pixel coordinates
-        x = Math.Max(0, Math.Min(width - 1, x))
-        y = Math.Max(0, Math.Min(height - 1, y))
-
-        Dim x0 As Integer = CInt(Math.Floor(x))
-        Dim y0 As Integer = CInt(Math.Floor(y))
-        Dim x1 = Math.Min(x0 + 1, width - 1)
-        Dim y1 = Math.Min(y0 + 1, height - 1)
-
-        ' Perform bilinear interpolation
-        Dim topLeft As Color = image.GetPixel(x0, y0)
-        Dim topRight As Color = image.GetPixel(x1, y0)
-        Dim bottomLeft As Color = image.GetPixel(x0, y1)
-        Dim bottomRight As Color = image.GetPixel(x1, y1)
-
-        Dim xWeight = x - x0
-        Dim yWeight = y - y0
-
-        Dim red = CInt(topLeft.R * (1 - xWeight) * (1 - yWeight) + topRight.R * xWeight * (1 - yWeight) + bottomLeft.R * (1 - xWeight) * yWeight + bottomRight.R * xWeight * yWeight)
-
-        Dim green = CInt(topLeft.G * (1 - xWeight) * (1 - yWeight) + topRight.G * xWeight * (1 - yWeight) + bottomLeft.G * (1 - xWeight) * yWeight + bottomRight.G * xWeight * yWeight)
-
-        Dim blue = CInt(topLeft.B * (1 - xWeight) * (1 - yWeight) + topRight.B * xWeight * (1 - yWeight) + bottomLeft.B * (1 - xWeight) * yWeight + bottomRight.B * xWeight * yWeight)
-
-        Return Color.FromArgb(red, green, blue)
-    End Function
-
 
     Private Sub FormDisplayDistortMonitor_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
         CleanUp()
