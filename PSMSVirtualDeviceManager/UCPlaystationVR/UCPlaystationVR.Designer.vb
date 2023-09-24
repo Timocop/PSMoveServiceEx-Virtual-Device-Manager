@@ -27,7 +27,6 @@ Partial Class UCPlaystationVR
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -35,15 +34,12 @@ Partial Class UCPlaystationVR
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label_DisplayStatusText = New System.Windows.Forms.Label()
-        Me.ClassPictureBox_DisplayStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_DisplayStatus = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.ClassPictureBox_HDMIStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_HDMIStatus = New System.Windows.Forms.Label()
         Me.Label_HDMIStatusText = New System.Windows.Forms.Label()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label_USBStatusText = New System.Windows.Forms.Label()
-        Me.ClassPictureBox_USBStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_USBStatus = New System.Windows.Forms.Label()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.Label_PSVRStatus = New System.Windows.Forms.Label()
@@ -53,41 +49,45 @@ Partial Class UCPlaystationVR
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
         Me.Panel9 = New System.Windows.Forms.Panel()
         Me.LinkLabel_ConfigPSVRDisplay = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_UninstallPSVR = New System.Windows.Forms.LinkLabel()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_InstallPSVRDrivers = New System.Windows.Forms.LinkLabel()
         Me.Panel14 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel16 = New System.Windows.Forms.Panel()
+        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBox_DisplayStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBox_HDMIStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBox_USBStatus = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel1.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
-        CType(Me.ClassPictureBox_DisplayStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
-        CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
-        CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel10.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel7.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel9.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel14.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBox_DisplayStatus, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -101,17 +101,6 @@ Partial Class UCPlaystationVR
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(800, 64)
         Me.Panel1.TabIndex = 2
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._450
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.m_HighQuality = True
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 16
-        Me.PictureBox1.TabStop = False
         '
         'Label4
         '
@@ -198,18 +187,6 @@ Partial Class UCPlaystationVR
         Me.Label_DisplayStatusText.TabIndex = 6
         Me.Label_DisplayStatusText.Text = "The PlayStation VR display has not been configured correctly."
         '
-        'ClassPictureBox_DisplayStatus
-        '
-        Me.ClassPictureBox_DisplayStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_DISPLAY_FAIL
-        Me.ClassPictureBox_DisplayStatus.Location = New System.Drawing.Point(16, 6)
-        Me.ClassPictureBox_DisplayStatus.m_HighQuality = True
-        Me.ClassPictureBox_DisplayStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.ClassPictureBox_DisplayStatus.Name = "ClassPictureBox_DisplayStatus"
-        Me.ClassPictureBox_DisplayStatus.Size = New System.Drawing.Size(86, 86)
-        Me.ClassPictureBox_DisplayStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBox_DisplayStatus.TabIndex = 4
-        Me.ClassPictureBox_DisplayStatus.TabStop = False
-        '
         'Label_DisplayStatus
         '
         Me.Label_DisplayStatus.AutoSize = True
@@ -235,18 +212,6 @@ Partial Class UCPlaystationVR
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(383, 103)
         Me.Panel3.TabIndex = 0
-        '
-        'ClassPictureBox_HDMIStatus
-        '
-        Me.ClassPictureBox_HDMIStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_HDMI_FAIL
-        Me.ClassPictureBox_HDMIStatus.Location = New System.Drawing.Point(16, 6)
-        Me.ClassPictureBox_HDMIStatus.m_HighQuality = True
-        Me.ClassPictureBox_HDMIStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.ClassPictureBox_HDMIStatus.Name = "ClassPictureBox_HDMIStatus"
-        Me.ClassPictureBox_HDMIStatus.Size = New System.Drawing.Size(86, 86)
-        Me.ClassPictureBox_HDMIStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBox_HDMIStatus.TabIndex = 1
-        Me.ClassPictureBox_HDMIStatus.TabStop = False
         '
         'Label_HDMIStatus
         '
@@ -296,18 +261,6 @@ Partial Class UCPlaystationVR
         Me.Label_USBStatusText.Size = New System.Drawing.Size(271, 49)
         Me.Label_USBStatusText.TabIndex = 6
         Me.Label_USBStatusText.Text = "Please attach the PlayStation VR USB cable to your computer."
-        '
-        'ClassPictureBox_USBStatus
-        '
-        Me.ClassPictureBox_USBStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_USB_FAIL
-        Me.ClassPictureBox_USBStatus.Location = New System.Drawing.Point(16, 6)
-        Me.ClassPictureBox_USBStatus.m_HighQuality = True
-        Me.ClassPictureBox_USBStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.ClassPictureBox_USBStatus.Name = "ClassPictureBox_USBStatus"
-        Me.ClassPictureBox_USBStatus.Size = New System.Drawing.Size(86, 86)
-        Me.ClassPictureBox_USBStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBox_USBStatus.TabIndex = 4
-        Me.ClassPictureBox_USBStatus.TabStop = False
         '
         'Label_USBStatus
         '
@@ -416,21 +369,9 @@ Partial Class UCPlaystationVR
         Me.Label6.ForeColor = System.Drawing.Color.Navy
         Me.Label6.Location = New System.Drawing.Point(102, 19)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(227, 21)
+        Me.Label6.Size = New System.Drawing.Size(87, 21)
         Me.Label6.TabIndex = 23
-        Me.Label6.Text = "SteamVR Render Configuration"
-        '
-        'ClassPictureBoxQuality3
-        '
-        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._355
-        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality3.m_HighQuality = True
-        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
-        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality3.TabIndex = 19
-        Me.ClassPictureBoxQuality3.TabStop = False
+        Me.Label6.Text = "Debugging"
         '
         'LinkLabel1
         '
@@ -442,10 +383,10 @@ Partial Class UCPlaystationVR
         Me.LinkLabel1.Location = New System.Drawing.Point(103, 43)
         Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Size = New System.Drawing.Size(155, 13)
+        Me.LinkLabel1.Size = New System.Drawing.Size(137, 13)
         Me.LinkLabel1.TabIndex = 22
         Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "Customize Render Distortion"
+        Me.LinkLabel1.Text = "Debug Display Distortion"
         Me.LinkLabel1.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Panel7
@@ -470,18 +411,6 @@ Partial Class UCPlaystationVR
         Me.Label3.Size = New System.Drawing.Size(161, 21)
         Me.Label3.TabIndex = 23
         Me.Label3.Text = "Display Configuration"
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._381
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 19
-        Me.ClassPictureBoxQuality2.TabStop = False
         '
         'LinkLabel3
         '
@@ -552,21 +481,9 @@ Partial Class UCPlaystationVR
         Me.Label5.ForeColor = System.Drawing.Color.Navy
         Me.Label5.Location = New System.Drawing.Point(102, 19)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(145, 21)
+        Me.Label5.Size = New System.Drawing.Size(102, 21)
         Me.Label5.TabIndex = 23
-        Me.Label5.Text = "Drivers and Display"
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 19
-        Me.ClassPictureBoxQuality1.TabStop = False
+        Me.Label5.Text = "Management"
         '
         'LinkLabel_InstallPSVRDrivers
         '
@@ -618,6 +535,89 @@ Partial Class UCPlaystationVR
         Me.Panel16.Size = New System.Drawing.Size(766, 1)
         Me.Panel16.TabIndex = 0
         '
+        'ClassPictureBoxQuality3
+        '
+        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._355
+        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality3.m_HighQuality = True
+        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
+        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality3.TabIndex = 19
+        Me.ClassPictureBoxQuality3.TabStop = False
+        '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._381
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 19
+        Me.ClassPictureBoxQuality2.TabStop = False
+        '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._366
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 19
+        Me.ClassPictureBoxQuality1.TabStop = False
+        '
+        'ClassPictureBox_DisplayStatus
+        '
+        Me.ClassPictureBox_DisplayStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_DISPLAY_FAIL
+        Me.ClassPictureBox_DisplayStatus.Location = New System.Drawing.Point(16, 6)
+        Me.ClassPictureBox_DisplayStatus.m_HighQuality = True
+        Me.ClassPictureBox_DisplayStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.ClassPictureBox_DisplayStatus.Name = "ClassPictureBox_DisplayStatus"
+        Me.ClassPictureBox_DisplayStatus.Size = New System.Drawing.Size(86, 86)
+        Me.ClassPictureBox_DisplayStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBox_DisplayStatus.TabIndex = 4
+        Me.ClassPictureBox_DisplayStatus.TabStop = False
+        '
+        'ClassPictureBox_HDMIStatus
+        '
+        Me.ClassPictureBox_HDMIStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_HDMI_FAIL
+        Me.ClassPictureBox_HDMIStatus.Location = New System.Drawing.Point(16, 6)
+        Me.ClassPictureBox_HDMIStatus.m_HighQuality = True
+        Me.ClassPictureBox_HDMIStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.ClassPictureBox_HDMIStatus.Name = "ClassPictureBox_HDMIStatus"
+        Me.ClassPictureBox_HDMIStatus.Size = New System.Drawing.Size(86, 86)
+        Me.ClassPictureBox_HDMIStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBox_HDMIStatus.TabIndex = 1
+        Me.ClassPictureBox_HDMIStatus.TabStop = False
+        '
+        'ClassPictureBox_USBStatus
+        '
+        Me.ClassPictureBox_USBStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Connection_USB_FAIL
+        Me.ClassPictureBox_USBStatus.Location = New System.Drawing.Point(16, 6)
+        Me.ClassPictureBox_USBStatus.m_HighQuality = True
+        Me.ClassPictureBox_USBStatus.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.ClassPictureBox_USBStatus.Name = "ClassPictureBox_USBStatus"
+        Me.ClassPictureBox_USBStatus.Size = New System.Drawing.Size(86, 86)
+        Me.ClassPictureBox_USBStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBox_USBStatus.TabIndex = 4
+        Me.ClassPictureBox_USBStatus.TabStop = False
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._450
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.m_HighQuality = True
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(57, 57)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 16
+        Me.PictureBox1.TabStop = False
+        '
         'UCPlaystationVR
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -630,31 +630,31 @@ Partial Class UCPlaystationVR
         Me.Size = New System.Drawing.Size(800, 755)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
-        CType(Me.ClassPictureBox_DisplayStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
-        CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.Panel10.ResumeLayout(False)
         Me.Panel10.PerformLayout()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel7.ResumeLayout(False)
         Me.Panel7.PerformLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel9.ResumeLayout(False)
         Me.Panel9.PerformLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel14.ResumeLayout(False)
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBox_DisplayStatus, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBox_HDMIStatus, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBox_USBStatus, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
