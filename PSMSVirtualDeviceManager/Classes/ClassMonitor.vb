@@ -42,13 +42,18 @@ Public Class ClassMonitor
     Public Const PSVR_MONITOR_GEN2_NAME As String = "MONITOR\SNY6A04"
 
     <Flags>
-    Public Enum DisplayDeviceStateFlags As Integer
-        AttachedToDesktop = &H1
-        PrimaryDevice = &H4
-        MirroringDriver = &H8
-        VGACompatible = &H10
-        Removable = &H20
-        VGA = &H40
+    Public Enum DISPLAY_DEVICE_STATE As Integer
+        DISPLAY_DEVICE_ATTACHED_TO_DESKTOP = &H1
+        DISPLAY_DEVICE_PRIMARY_DEVICE = &H2
+        DISPLAY_DEVICE_MIRRORING_DRIVER = &H4
+        DISPLAY_DEVICE_VGA_COMPATIBLE = &H8
+        DISPLAY_DEVICE_REMOVABLE = &H10
+        DISPLAY_DEVICE_DISCONNECT = &H2000000
+        DISPLAY_DEVICE_REMOTE = &H4000000
+        DISPLAY_DEVICE_MODESPRUNED = &H8000000
+        DISPLAY_DEVICE_MULTI_DRIVER = &H20000000
+        DISPLAY_DEVICE_HARDWARE = &H80
+        DISPLAY_DEVICE_ACTIVE = &H1
     End Enum
 
     <StructLayout(LayoutKind.Sequential)>
@@ -94,7 +99,7 @@ Public Class ClassMonitor
         Public DeviceName As String
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=128)>
         Public DeviceString As String
-        Public StateFlags As DisplayDeviceStateFlags
+        Public StateFlags As DISPLAY_DEVICE_STATE
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=128)>
         Public DeviceID As String
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=128)>
@@ -108,7 +113,7 @@ Public Class ClassMonitor
         Public DeviceName As String
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=128)>
         Public DeviceString As String
-        Public StateFlags As DisplayDeviceStateFlags
+        Public StateFlags As DISPLAY_DEVICE_STATE
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=128)>
         Public DeviceID As String
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=128)>
@@ -149,9 +154,22 @@ Public Class ClassMonitor
         For Each mInfo In GetMonitorList()
             Dim mMonitorInfo As DEVMODE = GetMonitorInfo(mInfo.Key)
 
-            If (mInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME) OrElse mInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME)) Then
+            ' Ignore mirrored or invalid monitors
+            If (mInfo.Value.Length <> 1) Then
+                Continue For
+            End If
+
+            Dim mPrimMonitor = mInfo.Value(0)
+
+            ' Ignore non-active monitors
+            If ((mPrimMonitor.StateFlags And DISPLAY_DEVICE_STATE.DISPLAY_DEVICE_ACTIVE) = 0) Then
+                Continue For
+            End If
+
+            If (mPrimMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME) OrElse mPrimMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME)) Then
                 mResult = mMonitorInfo
-                mDisplayInfo = mInfo
+
+                mDisplayInfo = New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mInfo.Key, mPrimMonitor)
                 Return True
             End If
         Next
@@ -159,8 +177,8 @@ Public Class ClassMonitor
         Return False
     End Function
 
-    Public Function GetMonitorList() As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)()
-        Dim mMonitors As New List(Of KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE))
+    Public Function GetMonitorList() As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE())()
+        Dim mDisplays As New List(Of KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE()))
 
         Dim mDisplayDevice As New DISPLAY_DEVICE()
         mDisplayDevice.cb = Marshal.SizeOf(mDisplayDevice)
@@ -171,14 +189,24 @@ Public Class ClassMonitor
             Dim mMonitorDevice As New MONITOR_DEVICE()
             mMonitorDevice.cb = Marshal.SizeOf(mMonitorDevice)
 
-            If (ClassWin32.EnumDisplayDevices(mDisplayDevice.DeviceName, 0, mMonitorDevice, 0)) Then
-                mMonitors.Add(New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mDisplayDevice, mMonitorDevice))
+
+            Dim mMonitors As New List(Of MONITOR_DEVICE)
+
+            ' If we get multiple monitors on one display, that means we got mirrored monitors.
+            Dim j As Integer = 0
+            While (ClassWin32.EnumDisplayDevices(mDisplayDevice.DeviceName, j, mMonitorDevice, 0))
+                mMonitors.Add(mMonitorDevice)
+                j += 1
+            End While
+
+            If (j > 0) Then
+                mDisplays.Add(New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE())(mDisplayDevice, mMonitors.ToArray))
             End If
 
             i += 1
         End While
 
-        Return mMonitors.ToArray
+        Return mDisplays.ToArray
     End Function
 
     Public Function GetMonitorInfo(mDevice As DISPLAY_DEVICE) As DEVMODE
