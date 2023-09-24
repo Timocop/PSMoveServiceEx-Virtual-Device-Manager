@@ -59,6 +59,30 @@ Partial Class UCVirtualMotionTracker
         Me.Button_AddVMTController = New System.Windows.Forms.Button()
         Me.TabPage_Settings = New System.Windows.Forms.TabPage()
         Me.TabControl_SettingsDevices = New System.Windows.Forms.TabControl()
+        Me.TabPage_SettingsPSVR = New System.Windows.Forms.TabPage()
+        Me.GroupBox_Distortion = New System.Windows.Forms.GroupBox()
+        Me.LinkLabel_PsvrDistReset = New System.Windows.Forms.LinkLabel()
+        Me.NumericUpDown_PsvrVFov = New System.Windows.Forms.NumericUpDown()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrHFov = New System.Windows.Forms.NumericUpDown()
+        Me.Label52 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrDistBlueOffset = New System.Windows.Forms.NumericUpDown()
+        Me.Label51 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrDistGreenOffset = New System.Windows.Forms.NumericUpDown()
+        Me.Label50 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrDistRedOffset = New System.Windows.Forms.NumericUpDown()
+        Me.Label49 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrDistScale = New System.Windows.Forms.NumericUpDown()
+        Me.Label48 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrDistK1 = New System.Windows.Forms.NumericUpDown()
+        Me.Label47 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PsvrDistK0 = New System.Windows.Forms.NumericUpDown()
+        Me.Label46 = New System.Windows.Forms.Label()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.NumericUpDown_PsvrIPD = New System.Windows.Forms.NumericUpDown()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ComboBox_PsvrRenderResolution = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsPSmove = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label_ScrollFocus = New System.Windows.Forms.Label()
@@ -170,6 +194,8 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_AddTracker = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CheckBox_ShowDistSettings = New System.Windows.Forms.CheckBox()
+        Me.Label54 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -194,6 +220,15 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.Label63 = New System.Windows.Forms.Label()
+        Me.Label55 = New System.Windows.Forms.Label()
+        Me.Label56 = New System.Windows.Forms.Label()
+        Me.Label57 = New System.Windows.Forms.Label()
+        Me.Label58 = New System.Windows.Forms.Label()
+        Me.Label59 = New System.Windows.Forms.Label()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.Label61 = New System.Windows.Forms.Label()
+        Me.Label62 = New System.Windows.Forms.Label()
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -207,6 +242,18 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Trackers.SuspendLayout()
         Me.TabPage_Settings.SuspendLayout()
         Me.TabControl_SettingsDevices.SuspendLayout()
+        Me.TabPage_SettingsPSVR.SuspendLayout()
+        Me.GroupBox_Distortion.SuspendLayout()
+        CType(Me.NumericUpDown_PsvrVFov, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrHFov, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrDistBlueOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrDistGreenOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrDistRedOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrDistScale, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrDistK1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_PsvrDistK0, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox4.SuspendLayout()
+        CType(Me.NumericUpDown_PsvrIPD, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_SettingsPSmove.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -558,6 +605,7 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_Trackers
         '
+        Me.TabPage_Trackers.BackColor = System.Drawing.Color.White
         Me.TabPage_Trackers.Controls.Add(Me.ListView_Trackers)
         Me.TabPage_Trackers.Controls.Add(Me.Panel_VMTTrackers)
         Me.TabPage_Trackers.Controls.Add(Me.Button_VMTControllers)
@@ -568,7 +616,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 1225)
         Me.TabPage_Trackers.TabIndex = 0
         Me.TabPage_Trackers.Text = "Trackers"
-        Me.TabPage_Trackers.UseVisualStyleBackColor = True
         '
         'ContextMenuStrip_Trackers
         '
@@ -624,6 +671,7 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_Settings
         '
+        Me.TabPage_Settings.BackColor = System.Drawing.Color.White
         Me.TabPage_Settings.Controls.Add(Me.TabControl_SettingsDevices)
         Me.TabPage_Settings.Controls.Add(Me.Button_SaveControllerSettings)
         Me.TabPage_Settings.Location = New System.Drawing.Point(4, 22)
@@ -632,13 +680,13 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Settings.Size = New System.Drawing.Size(760, 1225)
         Me.TabPage_Settings.TabIndex = 3
         Me.TabPage_Settings.Text = "Settings"
-        Me.TabPage_Settings.UseVisualStyleBackColor = True
         '
         'TabControl_SettingsDevices
         '
         Me.TabControl_SettingsDevices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPSVR)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPSmove)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPlayspace)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsOther)
@@ -648,9 +696,284 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl_SettingsDevices.Size = New System.Drawing.Size(748, 1158)
         Me.TabControl_SettingsDevices.TabIndex = 47
         '
+        'TabPage_SettingsPSVR
+        '
+        Me.TabPage_SettingsPSVR.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsPSVR.Controls.Add(Me.GroupBox_Distortion)
+        Me.TabPage_SettingsPSVR.Controls.Add(Me.GroupBox4)
+        Me.TabPage_SettingsPSVR.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_SettingsPSVR.Name = "TabPage_SettingsPSVR"
+        Me.TabPage_SettingsPSVR.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_SettingsPSVR.Size = New System.Drawing.Size(740, 1132)
+        Me.TabPage_SettingsPSVR.TabIndex = 3
+        Me.TabPage_SettingsPSVR.Text = "PlayStation VR"
+        '
+        'GroupBox_Distortion
+        '
+        Me.GroupBox_Distortion.Controls.Add(Me.Label62)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label61)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label60)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label59)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label58)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label57)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label56)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label55)
+        Me.GroupBox_Distortion.Controls.Add(Me.LinkLabel_PsvrDistReset)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrVFov)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label53)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrHFov)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label52)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrDistBlueOffset)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label51)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrDistGreenOffset)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label50)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrDistRedOffset)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label49)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrDistScale)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label48)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrDistK1)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label47)
+        Me.GroupBox_Distortion.Controls.Add(Me.NumericUpDown_PsvrDistK0)
+        Me.GroupBox_Distortion.Controls.Add(Me.Label46)
+        Me.GroupBox_Distortion.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox_Distortion.Location = New System.Drawing.Point(3, 121)
+        Me.GroupBox_Distortion.Name = "GroupBox_Distortion"
+        Me.GroupBox_Distortion.Size = New System.Drawing.Size(734, 286)
+        Me.GroupBox_Distortion.TabIndex = 4
+        Me.GroupBox_Distortion.TabStop = False
+        Me.GroupBox_Distortion.Text = "Distortion Settings"
+        '
+        'LinkLabel_PsvrDistReset
+        '
+        Me.LinkLabel_PsvrDistReset.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_PsvrDistReset.AutoSize = True
+        Me.LinkLabel_PsvrDistReset.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_PsvrDistReset.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_PsvrDistReset.Location = New System.Drawing.Point(16, 254)
+        Me.LinkLabel_PsvrDistReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.LinkLabel_PsvrDistReset.Name = "LinkLabel_PsvrDistReset"
+        Me.LinkLabel_PsvrDistReset.Size = New System.Drawing.Size(124, 13)
+        Me.LinkLabel_PsvrDistReset.TabIndex = 19
+        Me.LinkLabel_PsvrDistReset.TabStop = True
+        Me.LinkLabel_PsvrDistReset.Text = "Reset distortion values"
+        Me.LinkLabel_PsvrDistReset.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'NumericUpDown_PsvrVFov
+        '
+        Me.NumericUpDown_PsvrVFov.Location = New System.Drawing.Point(146, 220)
+        Me.NumericUpDown_PsvrVFov.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
+        Me.NumericUpDown_PsvrVFov.Name = "NumericUpDown_PsvrVFov"
+        Me.NumericUpDown_PsvrVFov.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrVFov.TabIndex = 18
+        '
+        'Label53
+        '
+        Me.Label53.AutoSize = True
+        Me.Label53.Location = New System.Drawing.Point(19, 222)
+        Me.Label53.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label53.Name = "Label53"
+        Me.Label53.Size = New System.Drawing.Size(45, 13)
+        Me.Label53.TabIndex = 17
+        Me.Label53.Text = "V. FOV:"
+        '
+        'NumericUpDown_PsvrHFov
+        '
+        Me.NumericUpDown_PsvrHFov.Location = New System.Drawing.Point(146, 192)
+        Me.NumericUpDown_PsvrHFov.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
+        Me.NumericUpDown_PsvrHFov.Name = "NumericUpDown_PsvrHFov"
+        Me.NumericUpDown_PsvrHFov.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrHFov.TabIndex = 16
+        '
+        'Label52
+        '
+        Me.Label52.AutoSize = True
+        Me.Label52.Location = New System.Drawing.Point(19, 194)
+        Me.Label52.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label52.Name = "Label52"
+        Me.Label52.Size = New System.Drawing.Size(46, 13)
+        Me.Label52.TabIndex = 15
+        Me.Label52.Text = "H. FOV:"
+        '
+        'NumericUpDown_PsvrDistBlueOffset
+        '
+        Me.NumericUpDown_PsvrDistBlueOffset.DecimalPlaces = 4
+        Me.NumericUpDown_PsvrDistBlueOffset.Increment = New Decimal(New Integer() {1, 0, 0, 196608})
+        Me.NumericUpDown_PsvrDistBlueOffset.Location = New System.Drawing.Point(146, 164)
+        Me.NumericUpDown_PsvrDistBlueOffset.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_PsvrDistBlueOffset.Name = "NumericUpDown_PsvrDistBlueOffset"
+        Me.NumericUpDown_PsvrDistBlueOffset.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrDistBlueOffset.TabIndex = 14
+        '
+        'Label51
+        '
+        Me.Label51.AutoSize = True
+        Me.Label51.Location = New System.Drawing.Point(19, 166)
+        Me.Label51.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label51.Name = "Label51"
+        Me.Label51.Size = New System.Drawing.Size(67, 13)
+        Me.Label51.TabIndex = 13
+        Me.Label51.Text = "Blue Offset:"
+        '
+        'NumericUpDown_PsvrDistGreenOffset
+        '
+        Me.NumericUpDown_PsvrDistGreenOffset.DecimalPlaces = 4
+        Me.NumericUpDown_PsvrDistGreenOffset.Increment = New Decimal(New Integer() {1, 0, 0, 196608})
+        Me.NumericUpDown_PsvrDistGreenOffset.Location = New System.Drawing.Point(146, 136)
+        Me.NumericUpDown_PsvrDistGreenOffset.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_PsvrDistGreenOffset.Name = "NumericUpDown_PsvrDistGreenOffset"
+        Me.NumericUpDown_PsvrDistGreenOffset.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrDistGreenOffset.TabIndex = 12
+        '
+        'Label50
+        '
+        Me.Label50.AutoSize = True
+        Me.Label50.Location = New System.Drawing.Point(19, 138)
+        Me.Label50.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label50.Name = "Label50"
+        Me.Label50.Size = New System.Drawing.Size(76, 13)
+        Me.Label50.TabIndex = 11
+        Me.Label50.Text = "Green Offset:"
+        '
+        'NumericUpDown_PsvrDistRedOffset
+        '
+        Me.NumericUpDown_PsvrDistRedOffset.DecimalPlaces = 4
+        Me.NumericUpDown_PsvrDistRedOffset.Increment = New Decimal(New Integer() {1, 0, 0, 196608})
+        Me.NumericUpDown_PsvrDistRedOffset.Location = New System.Drawing.Point(146, 108)
+        Me.NumericUpDown_PsvrDistRedOffset.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_PsvrDistRedOffset.Name = "NumericUpDown_PsvrDistRedOffset"
+        Me.NumericUpDown_PsvrDistRedOffset.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrDistRedOffset.TabIndex = 10
+        '
+        'Label49
+        '
+        Me.Label49.AutoSize = True
+        Me.Label49.Location = New System.Drawing.Point(19, 110)
+        Me.Label49.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label49.Name = "Label49"
+        Me.Label49.Size = New System.Drawing.Size(65, 13)
+        Me.Label49.TabIndex = 9
+        Me.Label49.Text = "Red Offset:"
+        '
+        'NumericUpDown_PsvrDistScale
+        '
+        Me.NumericUpDown_PsvrDistScale.DecimalPlaces = 4
+        Me.NumericUpDown_PsvrDistScale.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.NumericUpDown_PsvrDistScale.Location = New System.Drawing.Point(146, 80)
+        Me.NumericUpDown_PsvrDistScale.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_PsvrDistScale.Name = "NumericUpDown_PsvrDistScale"
+        Me.NumericUpDown_PsvrDistScale.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrDistScale.TabIndex = 7
+        '
+        'Label48
+        '
+        Me.Label48.AutoSize = True
+        Me.Label48.Location = New System.Drawing.Point(19, 82)
+        Me.Label48.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label48.Name = "Label48"
+        Me.Label48.Size = New System.Drawing.Size(91, 13)
+        Me.Label48.TabIndex = 6
+        Me.Label48.Text = "Distortion Scale:"
+        '
+        'NumericUpDown_PsvrDistK1
+        '
+        Me.NumericUpDown_PsvrDistK1.DecimalPlaces = 4
+        Me.NumericUpDown_PsvrDistK1.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.NumericUpDown_PsvrDistK1.Location = New System.Drawing.Point(146, 52)
+        Me.NumericUpDown_PsvrDistK1.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_PsvrDistK1.Name = "NumericUpDown_PsvrDistK1"
+        Me.NumericUpDown_PsvrDistK1.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrDistK1.TabIndex = 5
+        '
+        'Label47
+        '
+        Me.Label47.AutoSize = True
+        Me.Label47.Location = New System.Drawing.Point(19, 54)
+        Me.Label47.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label47.Name = "Label47"
+        Me.Label47.Size = New System.Drawing.Size(77, 13)
+        Me.Label47.TabIndex = 4
+        Me.Label47.Text = "Distortion K1:"
+        '
+        'NumericUpDown_PsvrDistK0
+        '
+        Me.NumericUpDown_PsvrDistK0.DecimalPlaces = 4
+        Me.NumericUpDown_PsvrDistK0.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.NumericUpDown_PsvrDistK0.Location = New System.Drawing.Point(146, 24)
+        Me.NumericUpDown_PsvrDistK0.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_PsvrDistK0.Name = "NumericUpDown_PsvrDistK0"
+        Me.NumericUpDown_PsvrDistK0.Size = New System.Drawing.Size(182, 22)
+        Me.NumericUpDown_PsvrDistK0.TabIndex = 3
+        '
+        'Label46
+        '
+        Me.Label46.AutoSize = True
+        Me.Label46.Location = New System.Drawing.Point(19, 26)
+        Me.Label46.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label46.Name = "Label46"
+        Me.Label46.Size = New System.Drawing.Size(77, 13)
+        Me.Label46.TabIndex = 2
+        Me.Label46.Text = "Distortion K0:"
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.Label63)
+        Me.GroupBox4.Controls.Add(Me.Label54)
+        Me.GroupBox4.Controls.Add(Me.CheckBox_ShowDistSettings)
+        Me.GroupBox4.Controls.Add(Me.NumericUpDown_PsvrIPD)
+        Me.GroupBox4.Controls.Add(Me.Label45)
+        Me.GroupBox4.Controls.Add(Me.Label1)
+        Me.GroupBox4.Controls.Add(Me.ComboBox_PsvrRenderResolution)
+        Me.GroupBox4.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox4.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(734, 118)
+        Me.GroupBox4.TabIndex = 2
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Render Settings"
+        '
+        'NumericUpDown_PsvrIPD
+        '
+        Me.NumericUpDown_PsvrIPD.Location = New System.Drawing.Point(174, 50)
+        Me.NumericUpDown_PsvrIPD.Minimum = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.NumericUpDown_PsvrIPD.Name = "NumericUpDown_PsvrIPD"
+        Me.NumericUpDown_PsvrIPD.Size = New System.Drawing.Size(186, 22)
+        Me.NumericUpDown_PsvrIPD.TabIndex = 3
+        Me.NumericUpDown_PsvrIPD.Value = New Decimal(New Integer() {50, 0, 0, 0})
+        '
+        'Label45
+        '
+        Me.Label45.AutoSize = True
+        Me.Label45.Location = New System.Drawing.Point(16, 52)
+        Me.Label45.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label45.Name = "Label45"
+        Me.Label45.Size = New System.Drawing.Size(152, 13)
+        Me.Label45.TabIndex = 2
+        Me.Label45.Text = "Interpupillary Distance (IPD):"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(19, 26)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(141, 13)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Default render resolution:"
+        '
+        'ComboBox_PsvrRenderResolution
+        '
+        Me.ComboBox_PsvrRenderResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_PsvrRenderResolution.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_PsvrRenderResolution.FormattingEnabled = True
+        Me.ComboBox_PsvrRenderResolution.Location = New System.Drawing.Point(174, 23)
+        Me.ComboBox_PsvrRenderResolution.Name = "ComboBox_PsvrRenderResolution"
+        Me.ComboBox_PsvrRenderResolution.Size = New System.Drawing.Size(186, 21)
+        Me.ComboBox_PsvrRenderResolution.TabIndex = 1
+        '
         'TabPage_SettingsPSmove
         '
         Me.TabPage_SettingsPSmove.AutoScroll = True
+        Me.TabPage_SettingsPSmove.BackColor = System.Drawing.Color.White
         Me.TabPage_SettingsPSmove.Controls.Add(Me.GroupBox1)
         Me.TabPage_SettingsPSmove.Controls.Add(Me.GroupBox2)
         Me.TabPage_SettingsPSmove.Location = New System.Drawing.Point(4, 22)
@@ -659,7 +982,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsPSmove.Size = New System.Drawing.Size(740, 1132)
         Me.TabPage_SettingsPSmove.TabIndex = 0
         Me.TabPage_SettingsPSmove.Text = "PSMove Controller"
-        Me.TabPage_SettingsPSmove.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
@@ -1134,6 +1456,7 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_SettingsPlayspace
         '
+        Me.TabPage_SettingsPlayspace.BackColor = System.Drawing.Color.White
         Me.TabPage_SettingsPlayspace.Controls.Add(Me.GroupBox3)
         Me.TabPage_SettingsPlayspace.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_SettingsPlayspace.Name = "TabPage_SettingsPlayspace"
@@ -1141,7 +1464,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsPlayspace.Size = New System.Drawing.Size(740, 1132)
         Me.TabPage_SettingsPlayspace.TabIndex = 2
         Me.TabPage_SettingsPlayspace.Text = "Playspace"
-        Me.TabPage_SettingsPlayspace.UseVisualStyleBackColor = True
         '
         'GroupBox3
         '
@@ -1240,6 +1562,7 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_SettingsOther
         '
+        Me.TabPage_SettingsOther.BackColor = System.Drawing.Color.White
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscThreadSleep)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label21)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label7)
@@ -1251,7 +1574,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsOther.Size = New System.Drawing.Size(740, 1132)
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
-        Me.TabPage_SettingsOther.UseVisualStyleBackColor = True
         '
         'NumericUpDown_OscThreadSleep
         '
@@ -1340,6 +1662,7 @@ Partial Class UCVirtualMotionTracker
         'TabPage_PlayspaceCalib
         '
         Me.TabPage_PlayspaceCalib.AutoScroll = True
+        Me.TabPage_PlayspaceCalib.BackColor = System.Drawing.Color.White
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.NumericUpDown_PlayCalibPrepTime)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.Label41)
         Me.TabPage_PlayspaceCalib.Controls.Add(Me.Panel_PlayCalibSteps)
@@ -1355,7 +1678,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_PlayspaceCalib.Size = New System.Drawing.Size(760, 1225)
         Me.TabPage_PlayspaceCalib.TabIndex = 5
         Me.TabPage_PlayspaceCalib.Text = "Playspace Calibration"
-        Me.TabPage_PlayspaceCalib.UseVisualStyleBackColor = True
         '
         'NumericUpDown_PlayCalibPrepTime
         '
@@ -1759,6 +2081,7 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_Overrides
         '
+        Me.TabPage_Overrides.BackColor = System.Drawing.Color.White
         Me.TabPage_Overrides.Controls.Add(Me.Panel_SteamVRRestart)
         Me.TabPage_Overrides.Controls.Add(Me.Label2)
         Me.TabPage_Overrides.Controls.Add(Me.Button_Refresh)
@@ -1771,7 +2094,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 1225)
         Me.TabPage_Overrides.TabIndex = 2
         Me.TabPage_Overrides.Text = "SteamVR Tracker Overrides"
-        Me.TabPage_Overrides.UseVisualStyleBackColor = True
         '
         'Panel_SteamVRRestart
         '
@@ -1928,7 +2250,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.ContextMenuStrip_AddTracker.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_AddTracker, Me.ToolStripMenuItem_AddHmd})
         Me.ContextMenuStrip_AddTracker.Name = "ContextMenuStrip_AddTracker"
-        Me.ContextMenuStrip_AddTracker.Size = New System.Drawing.Size(214, 70)
+        Me.ContextMenuStrip_AddTracker.Size = New System.Drawing.Size(214, 48)
         '
         'ToolStripMenuItem_AddTracker
         '
@@ -1941,6 +2263,28 @@ Partial Class UCVirtualMotionTracker
         Me.ToolStripMenuItem_AddHmd.Name = "ToolStripMenuItem_AddHmd"
         Me.ToolStripMenuItem_AddHmd.Size = New System.Drawing.Size(213, 22)
         Me.ToolStripMenuItem_AddHmd.Text = "By Head-Mounted Display"
+        '
+        'CheckBox_ShowDistSettings
+        '
+        Me.CheckBox_ShowDistSettings.AutoSize = True
+        Me.CheckBox_ShowDistSettings.Location = New System.Drawing.Point(19, 78)
+        Me.CheckBox_ShowDistSettings.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_ShowDistSettings.Name = "CheckBox_ShowDistSettings"
+        Me.CheckBox_ShowDistSettings.Size = New System.Drawing.Size(284, 17)
+        Me.CheckBox_ShowDistSettings.TabIndex = 4
+        Me.CheckBox_ShowDistSettings.Text = "Show distortion settings (only for advanced users)"
+        Me.CheckBox_ShowDistSettings.UseVisualStyleBackColor = True
+        '
+        'Label54
+        '
+        Me.Label54.AutoSize = True
+        Me.Label54.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label54.ForeColor = System.Drawing.Color.Gray
+        Me.Label54.Location = New System.Drawing.Point(366, 26)
+        Me.Label54.Name = "Label54"
+        Me.Label54.Size = New System.Drawing.Size(129, 13)
+        Me.Label54.TabIndex = 5
+        Me.Label54.Text = "(requires SteamVR restart)"
         '
         'ClassPictureBoxQuality4
         '
@@ -2171,6 +2515,103 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader2.Text = "Override"
         Me.ColumnHeader2.Width = 300
         '
+        'Label63
+        '
+        Me.Label63.AutoSize = True
+        Me.Label63.Location = New System.Drawing.Point(366, 52)
+        Me.Label63.Name = "Label63"
+        Me.Label63.Size = New System.Drawing.Size(25, 13)
+        Me.Label63.TabIndex = 6
+        Me.Label63.Text = "mm"
+        '
+        'Label55
+        '
+        Me.Label55.AutoSize = True
+        Me.Label55.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label55.ForeColor = System.Drawing.Color.Gray
+        Me.Label55.Location = New System.Drawing.Point(334, 26)
+        Me.Label55.Name = "Label55"
+        Me.Label55.Size = New System.Drawing.Size(129, 13)
+        Me.Label55.TabIndex = 6
+        Me.Label55.Text = "(requires SteamVR restart)"
+        '
+        'Label56
+        '
+        Me.Label56.AutoSize = True
+        Me.Label56.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label56.ForeColor = System.Drawing.Color.Gray
+        Me.Label56.Location = New System.Drawing.Point(334, 54)
+        Me.Label56.Name = "Label56"
+        Me.Label56.Size = New System.Drawing.Size(129, 13)
+        Me.Label56.TabIndex = 20
+        Me.Label56.Text = "(requires SteamVR restart)"
+        '
+        'Label57
+        '
+        Me.Label57.AutoSize = True
+        Me.Label57.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label57.ForeColor = System.Drawing.Color.Gray
+        Me.Label57.Location = New System.Drawing.Point(334, 82)
+        Me.Label57.Name = "Label57"
+        Me.Label57.Size = New System.Drawing.Size(129, 13)
+        Me.Label57.TabIndex = 21
+        Me.Label57.Text = "(requires SteamVR restart)"
+        '
+        'Label58
+        '
+        Me.Label58.AutoSize = True
+        Me.Label58.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label58.ForeColor = System.Drawing.Color.Gray
+        Me.Label58.Location = New System.Drawing.Point(334, 110)
+        Me.Label58.Name = "Label58"
+        Me.Label58.Size = New System.Drawing.Size(129, 13)
+        Me.Label58.TabIndex = 22
+        Me.Label58.Text = "(requires SteamVR restart)"
+        '
+        'Label59
+        '
+        Me.Label59.AutoSize = True
+        Me.Label59.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label59.ForeColor = System.Drawing.Color.Gray
+        Me.Label59.Location = New System.Drawing.Point(334, 138)
+        Me.Label59.Name = "Label59"
+        Me.Label59.Size = New System.Drawing.Size(129, 13)
+        Me.Label59.TabIndex = 23
+        Me.Label59.Text = "(requires SteamVR restart)"
+        '
+        'Label60
+        '
+        Me.Label60.AutoSize = True
+        Me.Label60.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label60.ForeColor = System.Drawing.Color.Gray
+        Me.Label60.Location = New System.Drawing.Point(334, 166)
+        Me.Label60.Name = "Label60"
+        Me.Label60.Size = New System.Drawing.Size(129, 13)
+        Me.Label60.TabIndex = 24
+        Me.Label60.Text = "(requires SteamVR restart)"
+        '
+        'Label61
+        '
+        Me.Label61.AutoSize = True
+        Me.Label61.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label61.ForeColor = System.Drawing.Color.Gray
+        Me.Label61.Location = New System.Drawing.Point(334, 194)
+        Me.Label61.Name = "Label61"
+        Me.Label61.Size = New System.Drawing.Size(129, 13)
+        Me.Label61.TabIndex = 25
+        Me.Label61.Text = "(requires SteamVR restart)"
+        '
+        'Label62
+        '
+        Me.Label62.AutoSize = True
+        Me.Label62.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label62.ForeColor = System.Drawing.Color.Gray
+        Me.Label62.Location = New System.Drawing.Point(334, 222)
+        Me.Label62.Name = "Label62"
+        Me.Label62.Size = New System.Drawing.Size(129, 13)
+        Me.Label62.TabIndex = 26
+        Me.Label62.Text = "(requires SteamVR restart)"
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2196,6 +2637,20 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Trackers.ResumeLayout(False)
         Me.TabPage_Settings.ResumeLayout(False)
         Me.TabControl_SettingsDevices.ResumeLayout(False)
+        Me.TabPage_SettingsPSVR.ResumeLayout(False)
+        Me.GroupBox_Distortion.ResumeLayout(False)
+        Me.GroupBox_Distortion.PerformLayout()
+        CType(Me.NumericUpDown_PsvrVFov, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrHFov, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrDistBlueOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrDistGreenOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrDistRedOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrDistScale, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrDistK1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_PsvrDistK0, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
+        CType(Me.NumericUpDown_PsvrIPD, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_SettingsPSmove.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
@@ -2414,4 +2869,39 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents ToolStripMenuItem_AddTracker As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem_AddHmd As ToolStripMenuItem
     Friend WithEvents ColumnHeader6 As ColumnHeader
+    Friend WithEvents TabPage_SettingsPSVR As TabPage
+    Friend WithEvents GroupBox4 As GroupBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents NumericUpDown_PsvrIPD As NumericUpDown
+    Friend WithEvents Label45 As Label
+    Friend WithEvents GroupBox_Distortion As GroupBox
+    Friend WithEvents NumericUpDown_PsvrDistK0 As NumericUpDown
+    Friend WithEvents Label46 As Label
+    Friend WithEvents NumericUpDown_PsvrDistScale As NumericUpDown
+    Friend WithEvents Label48 As Label
+    Friend WithEvents NumericUpDown_PsvrDistK1 As NumericUpDown
+    Friend WithEvents Label47 As Label
+    Friend WithEvents NumericUpDown_PsvrVFov As NumericUpDown
+    Friend WithEvents Label53 As Label
+    Friend WithEvents NumericUpDown_PsvrHFov As NumericUpDown
+    Friend WithEvents Label52 As Label
+    Friend WithEvents NumericUpDown_PsvrDistBlueOffset As NumericUpDown
+    Friend WithEvents Label51 As Label
+    Friend WithEvents NumericUpDown_PsvrDistGreenOffset As NumericUpDown
+    Friend WithEvents Label50 As Label
+    Friend WithEvents NumericUpDown_PsvrDistRedOffset As NumericUpDown
+    Friend WithEvents Label49 As Label
+    Friend WithEvents ComboBox_PsvrRenderResolution As ComboBox
+    Friend WithEvents LinkLabel_PsvrDistReset As LinkLabel
+    Friend WithEvents CheckBox_ShowDistSettings As CheckBox
+    Friend WithEvents Label54 As Label
+    Friend WithEvents Label62 As Label
+    Friend WithEvents Label61 As Label
+    Friend WithEvents Label60 As Label
+    Friend WithEvents Label59 As Label
+    Friend WithEvents Label58 As Label
+    Friend WithEvents Label57 As Label
+    Friend WithEvents Label56 As Label
+    Friend WithEvents Label55 As Label
+    Friend WithEvents Label63 As Label
 End Class

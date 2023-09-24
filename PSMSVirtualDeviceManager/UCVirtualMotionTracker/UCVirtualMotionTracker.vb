@@ -10,7 +10,7 @@ Public Class UCVirtualMotionTracker
     Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
-    Public g_ClassControllerSettings As ClassControllerSettings
+    Public g_ClassSettings As ClassSettings
     Public g_ClassOscDevices As ClassOscDevices
 
     Private g_bIgnoreEvents As Boolean = True
@@ -20,10 +20,22 @@ Public Class UCVirtualMotionTracker
 
     Enum ENUM_SETTINGS_SAVE_TYPE_FLAGS
         ALL = -1
-        CONTROLLER = (1 << 0)
+        DEVICE = (1 << 0)
         PLAYSPACE_CALIBRATION = (1 << 1)
         PLAYSPACE = (1 << 2)
     End Enum
+
+    Structure STRUC_RENDER_RES_ITEM
+        Public g_iScale As Single
+
+        Public Sub New(_Scale As Single)
+            g_iScale = _Scale
+        End Sub
+
+        Public Overrides Function ToString() As String
+            Return String.Format("{0}% - {1}x{2}", CInt(g_iScale * 100), CStr(1920 * g_iScale), CStr(1080 * g_iScale))
+        End Function
+    End Structure
 
     Class ClassTrackersListViewItem
         Inherits ListViewItem
@@ -150,11 +162,12 @@ Public Class UCVirtualMotionTracker
 
         ' Add any initialization after the InitializeComponent() call. 
         Label_ScrollFocus.Text = ""
+        GroupBox_Distortion.Visible = False
 
         g_bIgnoreEvents = False
 
         g_ClassOscServer = New ClassOscServer
-        g_ClassControllerSettings = New ClassControllerSettings(Me)
+        g_ClassSettings = New ClassSettings(Me)
         g_ClassOscDevices = New ClassOscDevices(Me)
 
         Try
@@ -168,7 +181,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_TouchpadClickMethod.SelectedIndex = 0
 
-            If (ComboBox_TouchpadClickMethod.Items.Count <> ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX) Then
+            If (ComboBox_TouchpadClickMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -188,7 +201,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_GrabButtonMethod.SelectedIndex = 0
 
-            If (ComboBox_GrabButtonMethod.Items.Count <> ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.__MAX) Then
+            If (ComboBox_GrabButtonMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -204,7 +217,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_TouchpadMethod.SelectedIndex = 0
 
-            If (ComboBox_TouchpadMethod.Items.Count <> ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.__MAX) Then
+            If (ComboBox_TouchpadMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -220,7 +233,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_RecenterMethod.SelectedIndex = 0
 
-            If (ComboBox_RecenterMethod.Items.Count <> ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
+            If (ComboBox_RecenterMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -247,7 +260,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_HmdRecenterMethod.SelectedIndex = 0
 
-            If (ComboBox_HmdRecenterMethod.Items.Count <> ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
+            If (ComboBox_HmdRecenterMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -318,6 +331,32 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = False
         End Try
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_PsvrRenderResolution.Items.Clear()
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.25F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.5F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.75F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.0F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.25F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.5F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.75F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(2.0F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(2.5F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(3.0F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(3.5F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(4.0F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(4.5F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(5.0F))
+
+            ComboBox_PsvrRenderResolution.SelectedIndex = 0
+
+            ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(1.0F)
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
         CreateControl()
 
         Panel_SteamVRRestart.Visible = False
@@ -335,46 +374,61 @@ Public Class UCVirtualMotionTracker
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
-            g_ClassControllerSettings.LoadSettings()
+            g_ClassSettings.LoadSettings()
 
             Try
                 g_bIgnoreEvents = True
 
-                CheckBox_TouchpadShortcuts.Checked = g_ClassControllerSettings.m_JoystickShortcutBinding
-                CheckBox_TouchpadShortcutClick.Checked = g_ClassControllerSettings.m_JoystickShortcutTouchpadClick
-                CheckBox_DisableBasestations.Checked = g_ClassControllerSettings.m_DisableBaseStationSpawning
-                CheckBox_EnableHeptics.Checked = g_ClassControllerSettings.m_EnableHepticFeedback
-                ComboBox_TouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadClickMethod.Items.Count - 1, g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod))
-                ComboBox_GrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_GrabButtonMethod.Items.Count - 1, g_ClassControllerSettings.m_HtcGripButtonMethod))
-                CheckBox_TouchpadClampBounds.Checked = g_ClassControllerSettings.m_HtcClampTouchpadToBounds
-                ComboBox_TouchpadMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadMethod.Items.Count - 1, g_ClassControllerSettings.m_HtcTouchpadMethod))
+                ' Controller Settings
+                CheckBox_TouchpadShortcuts.Checked = g_ClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
+                CheckBox_TouchpadShortcutClick.Checked = g_ClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
+                CheckBox_DisableBasestations.Checked = g_ClassSettings.m_ControllerSettings.m_DisableBaseStationSpawning
+                CheckBox_EnableHeptics.Checked = g_ClassSettings.m_ControllerSettings.m_EnableHepticFeedback
+                ComboBox_TouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadClickMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))
+                ComboBox_GrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_GrabButtonMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcGripButtonMethod))
+                CheckBox_TouchpadClampBounds.Checked = g_ClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
+                ComboBox_TouchpadMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadMethod))
 
-                CheckBox_ControllerRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableControllerRecenter
-                ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, g_ClassControllerSettings.m_ControllerRecenterMethod))
+                CheckBox_ControllerRecenterEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnableControllerRecenter
+                ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_ControllerRecenterMethod))
 
                 ComboBox_RecenterFromDevice.Items.Clear()
-                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_ControllerRecenterFromDeviceName, "Any Head-Mounted Display"))
+                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName, "Any Head-Mounted Display"))
                 ComboBox_RecenterFromDevice.SelectedIndex = 0
 
-                CheckBox_HmdRecenterEnabled.Checked = g_ClassControllerSettings.m_EnableHmdRecenter
-                ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, g_ClassControllerSettings.m_HmdRecenterMethod))
+                CheckBox_HmdRecenterEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnableHmdRecenter
+                ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HmdRecenterMethod))
 
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
-                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassControllerSettings.m_HmdRecenterFromDeviceName, "Any Head-Mounted Display"))
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName, "Any Head-Mounted Display"))
                 ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
 
-                NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassControllerSettings.m_RecenterButtonTimeMs))
-                NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, g_ClassControllerSettings.m_OscThreadSleepMs))
+                NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs))
+                NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
 
-                NumericUpDown_TouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_TouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_TouchpadClickDeadzone.Maximum, g_ClassControllerSettings.m_HtcTouchpadClickDeadzone)))
-                NumericUpDown_TouchpadTouchArea.Value = CDec(Math.Max(NumericUpDown_TouchpadTouchArea.Minimum, Math.Min(NumericUpDown_TouchpadTouchArea.Maximum, g_ClassControllerSettings.m_HtcTouchpadTouchAreaCm)))
+                NumericUpDown_TouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_TouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_TouchpadClickDeadzone.Maximum, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone)))
+                NumericUpDown_TouchpadTouchArea.Value = CDec(Math.Max(NumericUpDown_TouchpadTouchArea.Minimum, Math.Min(NumericUpDown_TouchpadTouchArea.Maximum, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm)))
 
-                CheckBox_PlayCalibEnabled.Checked = g_ClassControllerSettings.m_EnablePlayspaceRecenter
-                NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassControllerSettings.m_PlayspaceSettings.m_ForwardOffset)))
-                NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassControllerSettings.m_PlayspaceSettings.m_HeightOffset)))
-                ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassControllerSettings.m_PlayspaceSettings.m_ForwardMethod))
+                CheckBox_PlayCalibEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
 
-                g_ClassControllerSettings.SetUnsavedState(False)
+                ' Hmd Settings
+                NumericUpDown_PsvrDistK0.Value = CDec(Math.Max(NumericUpDown_PsvrDistK0.Minimum, Math.Min(NumericUpDown_PsvrDistK0.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK0)))
+                NumericUpDown_PsvrDistK1.Value = CDec(Math.Max(NumericUpDown_PsvrDistK1.Minimum, Math.Min(NumericUpDown_PsvrDistK1.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK1)))
+                NumericUpDown_PsvrDistScale.Value = CDec(Math.Max(NumericUpDown_PsvrDistScale.Minimum, Math.Min(NumericUpDown_PsvrDistScale.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionScale)))
+                NumericUpDown_PsvrDistRedOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistRedOffset.Minimum, Math.Min(NumericUpDown_PsvrDistRedOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionRedOffset)))
+                NumericUpDown_PsvrDistGreenOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistGreenOffset.Minimum, Math.Min(NumericUpDown_PsvrDistGreenOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset)))
+                NumericUpDown_PsvrDistBlueOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistBlueOffset.Minimum, Math.Min(NumericUpDown_PsvrDistBlueOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset)))
+                NumericUpDown_PsvrHFov.Value = CDec(Math.Max(NumericUpDown_PsvrHFov.Minimum, Math.Min(NumericUpDown_PsvrHFov.Maximum, g_ClassSettings.m_HmdSettings.m_HFov)))
+                NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, g_ClassSettings.m_HmdSettings.m_VFov)))
+                NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, g_ClassSettings.m_HmdSettings.m_IPD)))
+                ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(g_ClassSettings.m_HmdSettings.m_RenderScale)
+
+                ' Playspace Settings
+                NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
+                NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_HeightOffset)))
+                ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_ForwardMethod))
+
+                g_ClassSettings.SetUnsavedState(False)
             Finally
                 g_bIgnoreEvents = False
             End Try
@@ -583,67 +637,207 @@ Public Class UCVirtualMotionTracker
 
     End Class
 
-    Class ClassControllerSettings
+    Class ClassSettings
         Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
         Private Shared _ThreadLock As New Object
 
         Private g_bSettingsLoaded As Boolean = False
 
-        Enum ENUM_HTC_TOUCHPAD_CLICK_METHOD
-            BUTTON_MIRRORED
-            BUTTON_STRICT_SQUARE
-            BUTTON_STRICT_TRIANGLE
-            MOVE_ALWAYS
-
-            __MAX
-        End Enum
-
-        Enum ENUM_HTC_GRIP_BUTTON_METHOD
-            BUTTON_TOGGLE_MIRRORED
-            BUTTON_TOGGLE_STRICT_CROSS
-            BUTTON_TOGGLE_STRICT_CIRCLE
-            BUTTON_HOLDING_MIRRORED
-            BUTTON_HOLDING_STRICT_CROSS
-            BUTTON_HOLDING_STRICT_CIRCLE
-
-            __MAX
-        End Enum
-
-        Enum ENUM_HTC_TOUCHPAD_METHOD
-            USE_POSITION
-            USE_ORIENTATION
-
-            __MAX
-        End Enum
-
-        Enum ENUM_DEVICE_RECENTER_METHOD
-            USE_DEVICE
-            USE_PLAYSPACE
-
-            __MAX
-        End Enum
-
-        Private g_bTouchpadShortcutBinding As Boolean = False
-        Private g_bTouchpadShortcutTouchpadClick As Boolean = False
-        Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
-        Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
-        Private g_bDisableBaseStationSpawning As Boolean = False
-        Private g_bEnableHepticFeedback As Boolean = True
-        Private g_bHtcClampTouchpadToBounds As Boolean = True
-        Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION
-
-        Private g_bEnableControllerRecenter As Boolean = True
-        Private g_iControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
-        Private g_sControllerRecenterFromDeviceName As String = ""
-        Private g_bEnableHmdRecenter As Boolean = True
-        Private g_iHmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
-        Private g_sHmdRecenterFromDeviceName As String = ""
-        Private g_iRecenterButtonTimeMs As Long = 500
-        Private g_iOscThreadSleepMs As Long = 1
-        Private g_iTouchpadTouchAreaCm As Single = 7.5F
-        Private g_iTouchpadClickDeadzone As Single = 0.25F
+        Private g_mControllerSettings As STRUC_CONTROLLER_SETTINGS
+        Private g_mHmdSettings As STRUC_HMD_SETTINGS
         Private g_mPlaySpaceSettings As STRUC_PLAYSPACE_SETTINGS
-        Private g_bEnablePlayspaceRecenter As Boolean
+
+        Public Const DISPLAY_DISTORTION_K0 As Single = 0.45F
+        Public Const DISPLAY_DISTORTION_K1 As Single = 4.5F
+        Public Const DISPLAY_DISTORTION_SCALE As Single = 0.86F
+        Public Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
+        Public Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
+        Public Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
+        Public Const DISPLAY_HFOV As Single = 90.0F
+        Public Const DISPLAY_VFOV As Single = 100.0F
+
+        Class STRUC_HMD_SETTINGS
+            Private g_iDistortionK0 As Single = DISPLAY_DISTORTION_K0
+            Private g_iDistortionK1 As Single = DISPLAY_DISTORTION_K1
+            Private g_iDistortionScale As Single = DISPLAY_DISTORTION_SCALE
+            Private g_iDistortionRedOffset As Single = DISPLAY_DISTORTION_RED_OFFSET
+            Private g_iDistortionGreenOffset As Single = DISPLAY_DISTORTION_GREEN_OFFSET
+            Private g_iDistortionBlueOffset As Single = DISPLAY_DISTORTION_BLUE_OFFSET
+            Private g_iHFov As Single = DISPLAY_HFOV
+            Private g_iVFov As Single = DISPLAY_VFOV
+            Private g_iIPD As Single = 67.0F
+            Private g_iRenderScale As Single = 1.0F
+
+            Public Property m_DistortionK0 As Single
+                Get
+                    Return g_iDistortionK0
+                End Get
+                Set(value As Single)
+                    If (value < -100.0F) Then
+                        value = -100.0F
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iDistortionK0 = value
+                End Set
+            End Property
+
+            Public Property m_DistortionK1 As Single
+                Get
+                    Return g_iDistortionK1
+                End Get
+                Set(value As Single)
+                    If (value < -100.0F) Then
+                        value = -100.0F
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iDistortionK1 = value
+                End Set
+            End Property
+
+            Public Property m_DistortionScale As Single
+                Get
+                    Return g_iDistortionScale
+                End Get
+                Set(value As Single)
+                    If (value < -100.0F) Then
+                        value = -100.0F
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iDistortionScale = value
+                End Set
+            End Property
+
+            Public Property m_DistortionRedOffset As Single
+                Get
+                    Return g_iDistortionRedOffset
+                End Get
+                Set(value As Single)
+                    If (value < -100.0F) Then
+                        value = -100.0F
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iDistortionRedOffset = value
+                End Set
+            End Property
+
+            Public Property m_DistortionGreenOffset As Single
+                Get
+                    Return g_iDistortionGreenOffset
+                End Get
+                Set(value As Single)
+                    If (value < -100.0F) Then
+                        value = -100.0F
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iDistortionGreenOffset = value
+                End Set
+            End Property
+
+            Public Property m_DistortionBlueOffset As Single
+                Get
+                    Return g_iDistortionBlueOffset
+                End Get
+                Set(value As Single)
+                    If (value < -100.0F) Then
+                        value = -100.0F
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iDistortionBlueOffset = value
+                End Set
+            End Property
+
+            Public Property m_HFov As Single
+                Get
+                    Return g_iHFov
+                End Get
+                Set(value As Single)
+                    If (value < 10) Then
+                        value = 10
+                    End If
+
+                    If (value > 180.0F) Then
+                        value = 180.0F
+                    End If
+
+                    g_iHFov = value
+                End Set
+            End Property
+
+            Public Property m_VFov As Single
+                Get
+                    Return g_iVFov
+                End Get
+                Set(value As Single)
+                    If (value < 10) Then
+                        value = 10
+                    End If
+
+                    If (value > 180.0F) Then
+                        value = 180.0F
+                    End If
+
+                    g_iVFov = value
+                End Set
+            End Property
+
+            Public Property m_IPD As Single
+                Get
+                    Return g_iIPD
+                End Get
+                Set(value As Single)
+                    If (value < 50) Then
+                        value = 50
+                    End If
+
+                    If (value > 100.0F) Then
+                        value = 100.0F
+                    End If
+
+                    g_iIPD = value
+                End Set
+            End Property
+
+            Public Property m_RenderScale As Single
+                Get
+                    Return g_iRenderScale
+                End Get
+                Set(value As Single)
+                    If (value < 0.2F) Then
+                        value = 0.2F
+                    End If
+
+                    If (value > 5.0F) Then
+                        value = 5.0F
+                    End If
+
+                    g_iRenderScale = value
+                End Set
+            End Property
+        End Class
 
         Class STRUC_PLAYSPACE_SETTINGS
             Enum ENUM_FORWARD_METHOD
@@ -680,219 +874,209 @@ Public Class UCVirtualMotionTracker
             End Sub
         End Class
 
-        Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
-            g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+        Class STRUC_CONTROLLER_SETTINGS
+            Enum ENUM_HTC_TOUCHPAD_CLICK_METHOD
+                BUTTON_MIRRORED
+                BUTTON_STRICT_SQUARE
+                BUTTON_STRICT_TRIANGLE
+                MOVE_ALWAYS
 
-            g_mPlaySpaceSettings = New STRUC_PLAYSPACE_SETTINGS()
-            g_mPlaySpaceSettings.Reset()
-        End Sub
+                __MAX
+            End Enum
 
-        Property m_JoystickShortcutBinding As Boolean
-            Get
-                SyncLock _ThreadLock
+            Enum ENUM_HTC_GRIP_BUTTON_METHOD
+                BUTTON_TOGGLE_MIRRORED
+                BUTTON_TOGGLE_STRICT_CROSS
+                BUTTON_TOGGLE_STRICT_CIRCLE
+                BUTTON_HOLDING_MIRRORED
+                BUTTON_HOLDING_STRICT_CROSS
+                BUTTON_HOLDING_STRICT_CIRCLE
+
+                __MAX
+            End Enum
+
+            Enum ENUM_HTC_TOUCHPAD_METHOD
+                USE_POSITION
+                USE_ORIENTATION
+
+                __MAX
+            End Enum
+
+            Enum ENUM_DEVICE_RECENTER_METHOD
+                USE_DEVICE
+                USE_PLAYSPACE
+
+                __MAX
+            End Enum
+
+            Private g_bTouchpadShortcutBinding As Boolean = False
+            Private g_bTouchpadShortcutTouchpadClick As Boolean = False
+            Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
+            Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
+            Private g_bDisableBaseStationSpawning As Boolean = False
+            Private g_bEnableHepticFeedback As Boolean = True
+            Private g_bHtcClampTouchpadToBounds As Boolean = True
+            Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION
+
+            Private g_bEnableControllerRecenter As Boolean = True
+            Private g_iControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+            Private g_sControllerRecenterFromDeviceName As String = ""
+            Private g_bEnableHmdRecenter As Boolean = True
+            Private g_iHmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+            Private g_sHmdRecenterFromDeviceName As String = ""
+            Private g_iRecenterButtonTimeMs As Long = 500
+            Private g_iOscThreadSleepMs As Long = 1
+            Private g_iTouchpadTouchAreaCm As Single = 7.5F
+            Private g_iTouchpadClickDeadzone As Single = 0.25F
+            Private g_bEnablePlayspaceRecenter As Boolean
+
+            Property m_JoystickShortcutBinding As Boolean
+                Get
                     Return g_bTouchpadShortcutBinding
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bTouchpadShortcutBinding = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_JoystickShortcutTouchpadClick As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_JoystickShortcutTouchpadClick As Boolean
+                Get
                     Return g_bTouchpadShortcutTouchpadClick
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bTouchpadShortcutTouchpadClick = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD
-            Get
-                SyncLock _ThreadLock
+            Property m_HtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD
+                Get
                     Return g_iHtcTouchpadEmulationClickMethod
-                End SyncLock
-            End Get
-            Set(value As ENUM_HTC_TOUCHPAD_CLICK_METHOD)
-                If (value < 0) Then
-                    value = 0
-                End If
+                End Get
+                Set(value As ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                    If (value < 0) Then
+                        value = 0
+                    End If
 
-                If (value > ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX - 1) Then
-                    value = CType(ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX - 1, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
-                End If
+                    If (value > ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX - 1) Then
+                        value = CType(ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX - 1, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                    End If
 
-                SyncLock _ThreadLock
                     g_iHtcTouchpadEmulationClickMethod = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD
-            Get
-                SyncLock _ThreadLock
+            Property m_HtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD
+                Get
                     Return g_iHtcGripButtonMethod
-                End SyncLock
-            End Get
-            Set(value As ENUM_HTC_GRIP_BUTTON_METHOD)
-                If (value < 0) Then
-                    value = 0
-                End If
+                End Get
+                Set(value As ENUM_HTC_GRIP_BUTTON_METHOD)
+                    If (value < 0) Then
+                        value = 0
+                    End If
 
-                If (value > ENUM_HTC_GRIP_BUTTON_METHOD.__MAX - 1) Then
-                    value = CType(ENUM_HTC_GRIP_BUTTON_METHOD.__MAX - 1, ENUM_HTC_GRIP_BUTTON_METHOD)
-                End If
+                    If (value > ENUM_HTC_GRIP_BUTTON_METHOD.__MAX - 1) Then
+                        value = CType(ENUM_HTC_GRIP_BUTTON_METHOD.__MAX - 1, ENUM_HTC_GRIP_BUTTON_METHOD)
+                    End If
 
-                SyncLock _ThreadLock
                     g_iHtcGripButtonMethod = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_DisableBaseStationSpawning As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_DisableBaseStationSpawning As Boolean
+                Get
                     Return g_bDisableBaseStationSpawning
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bDisableBaseStationSpawning = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_EnableHepticFeedback As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_EnableHepticFeedback As Boolean
+                Get
                     Return g_bEnableHepticFeedback
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bEnableHepticFeedback = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HtcClampTouchpadToBounds As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_HtcClampTouchpadToBounds As Boolean
+                Get
                     Return g_bHtcClampTouchpadToBounds
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bHtcClampTouchpadToBounds = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD
-            Get
-                SyncLock _ThreadLock
+            Property m_HtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD
+                Get
                     Return g_iHtcTouchpadMethod
-                End SyncLock
-            End Get
-            Set(value As ENUM_HTC_TOUCHPAD_METHOD)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As ENUM_HTC_TOUCHPAD_METHOD)
                     g_iHtcTouchpadMethod = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_EnableControllerRecenter As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_EnableControllerRecenter As Boolean
+                Get
                     Return g_bEnableControllerRecenter
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bEnableControllerRecenter = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_ControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD
-            Get
-                SyncLock _ThreadLock
+            Property m_ControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD
+                Get
                     Return g_iControllerRecenterMethod
-                End SyncLock
-            End Get
-            Set(value As ENUM_DEVICE_RECENTER_METHOD)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As ENUM_DEVICE_RECENTER_METHOD)
                     g_iControllerRecenterMethod = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_ControllerRecenterFromDeviceName As String
-            Get
-                SyncLock _ThreadLock
+            Property m_ControllerRecenterFromDeviceName As String
+                Get
                     Return g_sControllerRecenterFromDeviceName
-                End SyncLock
-            End Get
-            Set(value As String)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As String)
                     g_sControllerRecenterFromDeviceName = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_EnableHmdRecenter As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_EnableHmdRecenter As Boolean
+                Get
                     Return g_bEnableHmdRecenter
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bEnableHmdRecenter = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD
-            Get
-                SyncLock _ThreadLock
+            Property m_HmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD
+                Get
                     Return g_iHmdRecenterMethod
-                End SyncLock
-            End Get
-            Set(value As ENUM_DEVICE_RECENTER_METHOD)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As ENUM_DEVICE_RECENTER_METHOD)
                     g_iHmdRecenterMethod = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HmdRecenterFromDeviceName As String
-            Get
-                SyncLock _ThreadLock
+            Property m_HmdRecenterFromDeviceName As String
+                Get
                     Return g_sHmdRecenterFromDeviceName
-                End SyncLock
-            End Get
-            Set(value As String)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As String)
                     g_sHmdRecenterFromDeviceName = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_RecenterButtonTimeMs As Long
-            Get
-                SyncLock _ThreadLock
+            Property m_RecenterButtonTimeMs As Long
+                Get
                     Return g_iRecenterButtonTimeMs
-                End SyncLock
-            End Get
-            Set(value As Long)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Long)
                     If (value < 1) Then
                         value = 1
                     End If
@@ -901,18 +1085,14 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iRecenterButtonTimeMs = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_OscThreadSleepMs As Long
-            Get
-                SyncLock _ThreadLock
+            Property m_OscThreadSleepMs As Long
+                Get
                     Return g_iOscThreadSleepMs
-                End SyncLock
-            End Get
-            Set(value As Long)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Long)
                     If (value < 1) Then
                         value = 1
                     End If
@@ -921,18 +1101,14 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iOscThreadSleepMs = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HtcTouchpadTouchAreaCm As Single
-            Get
-                SyncLock _ThreadLock
+            Property m_HtcTouchpadTouchAreaCm As Single
+                Get
                     Return g_iTouchpadTouchAreaCm
-                End SyncLock
-            End Get
-            Set(value As Single)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Single)
                     If (value < 1.0F) Then
                         value = 1.0F
                     End If
@@ -941,18 +1117,14 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iTouchpadTouchAreaCm = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_HtcTouchpadClickDeadzone As Single
-            Get
-                SyncLock _ThreadLock
+            Property m_HtcTouchpadClickDeadzone As Single
+                Get
                     Return g_iTouchpadClickDeadzone
-                End SyncLock
-            End Get
-            Set(value As Single)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Single)
                     If (value < 0.0F) Then
                         value = 0.0F
                     End If
@@ -961,27 +1133,50 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iTouchpadClickDeadzone = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
 
-        Property m_EnablePlayspaceRecenter As Boolean
-            Get
-                SyncLock _ThreadLock
+            Property m_EnablePlayspaceRecenter As Boolean
+                Get
                     Return g_bEnablePlayspaceRecenter
-                End SyncLock
-            End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
+                End Get
+                Set(value As Boolean)
                     g_bEnablePlayspaceRecenter = value
-                End SyncLock
-            End Set
-        End Property
+                End Set
+            End Property
+
+        End Class
+
+        Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
+            g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+
+            g_mControllerSettings = New STRUC_CONTROLLER_SETTINGS()
+            g_mHmdSettings = New STRUC_HMD_SETTINGS()
+
+            g_mPlaySpaceSettings = New STRUC_PLAYSPACE_SETTINGS()
+            g_mPlaySpaceSettings.Reset()
+        End Sub
 
         ReadOnly Property m_PlayspaceSettings As STRUC_PLAYSPACE_SETTINGS
             Get
                 SyncLock _ThreadLock
                     Return g_mPlaySpaceSettings
+                End SyncLock
+            End Get
+        End Property
+
+        ReadOnly Property m_ControllerSettings As STRUC_CONTROLLER_SETTINGS
+            Get
+                SyncLock _ThreadLock
+                    Return g_mControllerSettings
+                End SyncLock
+            End Get
+        End Property
+
+        ReadOnly Property m_HmdSettings As STRUC_HMD_SETTINGS
+            Get
+                SyncLock _ThreadLock
+                    Return g_mHmdSettings
                 End SyncLock
             End Get
         End Property
@@ -999,58 +1194,100 @@ Public Class UCVirtualMotionTracker
                 Using mIni As New ClassIni(mStream)
 
                     ' Controller Settings
-                    m_JoystickShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutBindings", "false") = "true")
-                    m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
-                    m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
-                    m_EnableHepticFeedback = (mIni.ReadKeyValue("ControllerSettings", "EnableHepticFeedback", "true") = "true")
+                    m_ControllerSettings.m_JoystickShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutBindings", "false") = "true")
+                    m_ControllerSettings.m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
+                    m_ControllerSettings.m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
+                    m_ControllerSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("ControllerSettings", "EnableHepticFeedback", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmpInt)) Then
-                        m_HtcTouchpadEmulationClickMethod = CType(tmpInt, ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmpInt)) Then
+                        m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
                     End If
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmpInt)) Then
-                        m_HtcGripButtonMethod = CType(tmpInt, ENUM_HTC_GRIP_BUTTON_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmpInt)) Then
+                        m_ControllerSettings.m_HtcGripButtonMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
                     End If
 
-                    m_HtcClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "HtcClampTouchpadToBounds", "true") = "true")
+                    m_ControllerSettings.m_HtcClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "HtcClampTouchpadToBounds", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION))), tmpInt)) Then
-                        m_HtcTouchpadMethod = CType(tmpInt, ENUM_HTC_TOUCHPAD_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION))), tmpInt)) Then
+                        m_ControllerSettings.m_HtcTouchpadMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD)
                     End If
 
-                    m_EnableControllerRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
+                    m_ControllerSettings.m_EnableControllerRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
-                        m_ControllerRecenterMethod = CType(tmpInt, ENUM_DEVICE_RECENTER_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
+                        m_ControllerSettings.m_ControllerRecenterMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
                     End If
 
-                    m_ControllerRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterFromDeviceName", "")
+                    m_ControllerSettings.m_ControllerRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterFromDeviceName", "")
 
-                    m_EnableHmdRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableHmdRecenter", "true") = "true")
+                    m_ControllerSettings.m_EnableHmdRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableHmdRecenter", "true") = "true")
 
-                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
-                        m_HmdRecenterMethod = CType(tmpInt, ENUM_DEVICE_RECENTER_METHOD)
+                    If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
+                        m_ControllerSettings.m_HmdRecenterMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
                     End If
 
-                    m_HmdRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "HmdRecenterFromDeviceName", "")
+                    m_ControllerSettings.m_HmdRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "HmdRecenterFromDeviceName", "")
 
                     If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "RecenterButtonTimeMs", "500"), tmpLng)) Then
-                        m_RecenterButtonTimeMs = tmpLng
+                        m_ControllerSettings.m_RecenterButtonTimeMs = tmpLng
                     End If
 
                     If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"), tmpLng)) Then
-                        m_OscThreadSleepMs = tmpLng
+                        m_ControllerSettings.m_OscThreadSleepMs = tmpLng
                     End If
 
                     If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadTouchAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HtcTouchpadTouchAreaCm = tmpSng
+                        m_ControllerSettings.m_HtcTouchpadTouchAreaCm = tmpSng
                     End If
 
                     If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadClickDeadzone", "0.25"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HtcTouchpadClickDeadzone = tmpSng
+                        m_ControllerSettings.m_HtcTouchpadClickDeadzone = tmpSng
                     End If
 
-                    m_EnablePlayspaceRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
+                    m_ControllerSettings.m_EnablePlayspaceRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
+
+                    ' Hmd Settings
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK0", "0.45"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionK0 = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK1", "4.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionK1 = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionScale", "0.86"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionScale = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionRedOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionRedOffset = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionGreenOffset", "0.009"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionGreenOffset = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionBlueOffset", "0.019"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionBlueOffset = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "HFov", "90.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_HFov = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "VFov", "100.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_VFov = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "IPD", "67.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_IPD = tmpSng
+                    End If
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "RenderScale", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_RenderScale = tmpSng
+                    End If
+
 
                     ' Playspace Settings
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1061,7 +1298,7 @@ Public Class UCVirtualMotionTracker
                         m_PlayspaceSettings.m_HeightOffset = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                    If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                         m_PlayspaceSettings.m_ForwardMethod = CType(tmpSng, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
                     End If
 
@@ -1172,26 +1409,37 @@ Public Class UCVirtualMotionTracker
                 Using mIni As New ClassIni(mStream)
                     Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                    If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.CONTROLLER) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_JoystickShortcutBinding, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_JoystickShortcutTouchpadClick, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "DisableBaseStationSpawning", If(m_DisableBaseStationSpawning, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_EnableHepticFeedback, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_HtcTouchpadEmulationClickMethod))))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_HtcGripButtonMethod))))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_HtcClampTouchpadToBounds, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_HtcTouchpadMethod))))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_EnableControllerRecenter, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerRecenterMethod))))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterFromDeviceName", m_ControllerRecenterFromDeviceName))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHmdRecenter", If(m_EnableHmdRecenter, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterMethod", CStr(CInt(m_HmdRecenterMethod))))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_HmdRecenterFromDeviceName))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_RecenterButtonTimeMs)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_OscThreadSleepMs)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_EnablePlayspaceRecenter, "true", "false")))
+                    If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_ControllerSettings.m_JoystickShortcutBinding, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_ControllerSettings.m_JoystickShortcutTouchpadClick, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "DisableBaseStationSpawning", If(m_ControllerSettings.m_DisableBaseStationSpawning, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_ControllerSettings.m_EnableHepticFeedback, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_ControllerSettings.m_HtcGripButtonMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_ControllerSettings.m_HtcClampTouchpadToBounds, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_ControllerSettings.m_HtcTouchpadMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_ControllerSettings.m_EnableControllerRecenter, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerSettings.m_ControllerRecenterMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterFromDeviceName", m_ControllerSettings.m_ControllerRecenterFromDeviceName))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHmdRecenter", If(m_ControllerSettings.m_EnableHmdRecenter, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterMethod", CStr(CInt(m_ControllerSettings.m_HmdRecenterMethod))))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_ControllerSettings.m_HmdRecenterFromDeviceName))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_ControllerSettings.m_RecenterButtonTimeMs)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_ControllerSettings.m_OscThreadSleepMs)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_ControllerSettings.m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_ControllerSettings.m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_ControllerSettings.m_EnablePlayspaceRecenter, "true", "false")))
+
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionK0", m_HmdSettings.m_DistortionK0.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionK1", m_HmdSettings.m_DistortionK1.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionScale", m_HmdSettings.m_DistortionScale.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionRedOffset", m_HmdSettings.m_DistortionRedOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionGreenOffset", m_HmdSettings.m_DistortionGreenOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionBlueOffset", m_HmdSettings.m_DistortionBlueOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HFov", m_HmdSettings.m_HFov.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "VFov", m_HmdSettings.m_VFov.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "IPD", m_HmdSettings.m_IPD.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "RenderScale", m_HmdSettings.m_RenderScale.ToString(Globalization.CultureInfo.InvariantCulture)))
                     End If
 
                     If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
@@ -1356,7 +1604,7 @@ Public Class UCVirtualMotionTracker
 
                 End Try
 
-                ClassPrecisionSleep.Sleep(CInt(g_UCVirtualMotionTracker.g_ClassControllerSettings.m_OscThreadSleepMs))
+                ClassPrecisionSleep.Sleep(CInt(g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
             End While
         End Sub
 
@@ -1530,4 +1778,8 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
+
+    Private Sub CheckBox_ShowDistSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowDistSettings.CheckedChanged
+        GroupBox_Distortion.Visible = CheckBox_ShowDistSettings.Checked
+    End Sub
 End Class

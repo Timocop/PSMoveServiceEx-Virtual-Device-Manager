@@ -7,16 +7,6 @@ Public Class UCVirtualMotionTrackerItem
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
 
-    Const DISPLAY_DISTORTION_K0 As Single = 0.45F
-    Const DISPLAY_DISTORTION_K1 As Single = 4.5F
-    Const DISPLAY_DISTORTION_SCALE As Single = 0.86F
-    Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
-    Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
-    Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
-    Const DISPLAY_HFOV As Single = 90.0F
-    Const DISPLAY_VFOV As Single = 100.0F
-    Const DISPLAY_IPD As Single = 0.067F
-
     Const VMT_LIGHTHOUSE_BEGIN_INDEX As Integer = (ClassVmtConst.VMT_TRACKER_MAX + 1)
 
     Shared _ThreadLock As New Object
@@ -874,8 +864,8 @@ Public Class UCVirtualMotionTrackerItem
         End Property
 
         Public Sub SetHepticFeedback(fFrequency As Single, fAmplitude As Single, fDuration As Single)
-            Dim mClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
-            If (Not mClassControllerSettings.m_EnableHepticFeedback) Then
+            Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
+            If (Not mClassSettings.m_ControllerSettings.m_EnableHepticFeedback) Then
                 Return
             End If
 
@@ -1014,27 +1004,40 @@ Public Class UCVirtualMotionTrackerItem
                         End If
                     End SyncLock
 
-                    Dim mClassControllerSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassControllerSettings
-                    Dim bDisableBaseStationSpawning As Boolean = mClassControllerSettings.m_DisableBaseStationSpawning
-                    Dim bEnableHepticFeedback As Boolean = mClassControllerSettings.m_EnableHepticFeedback
+                    Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
+                    Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_ControllerSettings.m_DisableBaseStationSpawning
+                    Dim bEnableHepticFeedback As Boolean = mClassSettings.m_ControllerSettings.m_EnableHepticFeedback
 
                     ' Get controller settings
-                    Dim bJoystickShortcutBinding = mClassControllerSettings.m_JoystickShortcutBinding
-                    Dim bJoystickShortcutTouchpadClick = mClassControllerSettings.m_JoystickShortcutTouchpadClick
-                    Dim iHtcTouchpadEmulationClickMethod = mClassControllerSettings.m_HtcTouchpadEmulationClickMethod
-                    Dim iHtcGripButtonMethod = mClassControllerSettings.m_HtcGripButtonMethod
-                    Dim bClampTouchpadToBounds = mClassControllerSettings.m_HtcClampTouchpadToBounds
-                    Dim iHtcTouchpadMethod = mClassControllerSettings.m_HtcTouchpadMethod
-                    Dim bEnableControllerRecenter = mClassControllerSettings.m_EnableControllerRecenter
-                    Dim iRecenterMethod = mClassControllerSettings.m_ControllerRecenterMethod
-                    Dim sRecenterFromDeviceName = mClassControllerSettings.m_ControllerRecenterFromDeviceName
-                    Dim bEnableHmdRecenter = mClassControllerSettings.m_EnableHmdRecenter
-                    Dim iHmdRecenterMethod = mClassControllerSettings.m_HmdRecenterMethod
-                    Dim sHmdRecenterFromDeviceName = mClassControllerSettings.m_HmdRecenterFromDeviceName
-                    Dim iRecenterButtonTimeMs = mClassControllerSettings.m_RecenterButtonTimeMs
-                    Dim iTouchpadTouchAreaCm = mClassControllerSettings.m_HtcTouchpadTouchAreaCm
-                    Dim iTouchpadClickDeadzone = mClassControllerSettings.m_HtcTouchpadClickDeadzone
-                    Dim bEnabledPlayspaceRecenter = mClassControllerSettings.m_EnablePlayspaceRecenter
+                    Dim bJoystickShortcutBinding = mClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
+                    Dim bJoystickShortcutTouchpadClick = mClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
+                    Dim iHtcTouchpadEmulationClickMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod
+                    Dim iHtcGripButtonMethod = mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod
+                    Dim bClampTouchpadToBounds = mClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
+                    Dim iHtcTouchpadMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadMethod
+                    Dim bEnableControllerRecenter = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
+                    Dim iRecenterMethod = mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod
+                    Dim sRecenterFromDeviceName = mClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName
+                    Dim bEnableHmdRecenter = mClassSettings.m_ControllerSettings.m_EnableHmdRecenter
+                    Dim iHmdRecenterMethod = mClassSettings.m_ControllerSettings.m_HmdRecenterMethod
+                    Dim sHmdRecenterFromDeviceName = mClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName
+                    Dim iRecenterButtonTimeMs = mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs
+                    Dim iTouchpadTouchAreaCm = mClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm
+                    Dim iTouchpadClickDeadzone = mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone
+                    Dim bEnabledPlayspaceRecenter = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
+
+                    ' Get HMD settings
+                    Dim iHmdDistortK0 = mClassSettings.m_HmdSettings.m_DistortionK0
+                    Dim iHmdDistortK1 = mClassSettings.m_HmdSettings.m_DistortionK1
+                    Dim iHmdDistortScale = mClassSettings.m_HmdSettings.m_DistortionScale
+                    Dim iHmdDistortRedOffset = mClassSettings.m_HmdSettings.m_DistortionRedOffset
+                    Dim iHmdDistortGreenOffset = mClassSettings.m_HmdSettings.m_DistortionGreenOffset
+                    Dim iHmdDistortBlueOffset = mClassSettings.m_HmdSettings.m_DistortionBlueOffset
+                    Dim iHmdHFov = mClassSettings.m_HmdSettings.m_HFov
+                    Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov
+                    Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
+                    Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
+
 
                     Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
 
@@ -1055,7 +1058,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                     ' Playspace offsets, used for playspace calibration
                                     If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                        InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
                                     End If
 
                                     Dim mOrientation = mRecenterQuat * mCalibratedOrientation
@@ -1091,8 +1094,8 @@ Public Class UCVirtualMotionTrackerItem
                                                 iDisplayY = mDevMode.dmPositionY
                                                 iDisplayW = mDevMode.dmPelsWidth
                                                 iDisplayH = mDevMode.dmPelsHeight
-                                                iRenderW = iDisplayW
-                                                iRenderH = iDisplayH
+                                                iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                iRenderH = CInt((iDisplayH * iHmdRenderScale))
                                                 iFrameRate = mDevMode.dmDisplayFrequency
 
                                                 bDisplaySuccess = True
@@ -1118,15 +1121,15 @@ Public Class UCVirtualMotionTrackerItem
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
                                                     "/VMT/HMD/SetupRender",
-                                                    DISPLAY_DISTORTION_K0, DISPLAY_DISTORTION_K1, DISPLAY_DISTORTION_SCALE,
-                                                    -DISPLAY_DISTORTION_RED_OFFSET, -DISPLAY_DISTORTION_GREEN_OFFSET, -DISPLAY_DISTORTION_BLUE_OFFSET,
-                                                    DISPLAY_HFOV, DISPLAY_VFOV
+                                                    iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
+                                                    -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
+                                                    iHmdHFov, iHmdVFov
                                                 ))
 
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
                                                     "/VMT/HMD/SetIpdMeters",
-                                                    DISPLAY_IPD
+                                                    iHmdIPD
                                                 ))
                                         End If
 
@@ -1182,7 +1185,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                     ' Playspace offsets, used for playspace calibration
                                     If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                        InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
                                     End If
 
                                     Dim mOrientation = mRecenterQuat * mCalibratedOrientation
@@ -1219,7 +1222,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                         mPlayspaceRecenterCalibrationRunning,
                                                                         mPlayspaceRecenterLastHmdSerial,
                                                                         mPlayspaceRecenterCalibrationSave,
-                                                                        mClassControllerSettings,
+                                                                        mClassSettings,
                                                                         mUCVirtualMotionTracker)
 
                                             'Do controller recenter
@@ -1441,7 +1444,7 @@ Public Class UCVirtualMotionTrackerItem
                                     Dim mCalibratedPosition = mRawPosition
 
                                     ' Playspace offsets, used for playspace calibration
-                                    InternalApplyPlayspaceCalibrationLogic(mClassControllerSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                    InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
 
                                     Dim mOrientation As Quaternion = mCalibratedOrientation
                                     Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
@@ -1468,7 +1471,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
 
 
-                    ClassPrecisionSleep.Sleep(CInt(mUCVirtualMotionTracker.g_ClassControllerSettings.m_OscThreadSleepMs))
+                    ClassPrecisionSleep.Sleep(CInt(mUCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -1542,13 +1545,13 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS,
+        Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
                                                            ByRef mPosition As Vector3,
                                                            ByRef mOrientation As Quaternion)
             If (m_PlayspaceSettings.m_Valid) Then
                 Dim mCalibrationForward As Quaternion
                 Dim mForward As Vector3
-                If (m_PlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
+                If (m_PlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
                     mCalibrationForward = ClassQuaternionTools.ExtractYawQuaternion(m_PlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
                     mForward = Vector3.UnitZ * m_PlayspaceSettings.m_ForwardOffset
                 Else
@@ -1584,7 +1587,7 @@ Public Class UCVirtualMotionTrackerItem
                                                   ByRef mPlayspaceRecenterCalibrationRunning As Boolean,
                                                   ByRef mPlayspaceRecenterLastHmdSerial As String,
                                                   ByRef mPlayspaceRecenterCalibrationSave As Boolean,
-                                                  ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassControllerSettings,
+                                                  ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings,
                                                   ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
             If ((bEnabledPlayspaceRecenter AndAlso bHoldingRecenterButtons) OrElse g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                 If (Not mPlayspaceRecenterButtonPressed) Then
@@ -1702,7 +1705,7 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef mRecenterButtonPressed As Boolean,
                                                    ByRef mLastRecenterTime As Stopwatch,
                                                    ByRef iRecenterButtonTimeMs As Long,
-                                                   ByRef iRecenterMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD,
+                                                   ByRef iRecenterMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD,
                                                    ByRef sRecenterFromDeviceName As String,
                                                    ByRef mRecenterQuat As Quaternion,
                                                    ByRef mCalibratedPosition As Vector3,
@@ -1722,7 +1725,7 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bDoFactoryRecenter As Boolean = True
 
                     Select Case (iRecenterMethod)
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
                             Dim sCurrentRecenterDeviceName As String = sRecenterFromDeviceName
 
                             ' If empty, do a autoamtic search and get any available HMD
@@ -1769,7 +1772,7 @@ Public Class UCVirtualMotionTrackerItem
                                         ByRef mHmdRecenterButtonPressed As Boolean,
                                         ByRef mLastHmdRecenterTime As Stopwatch,
                                         ByRef iRecenterButtonTimeMs As Long,
-                                        ByRef iHmdRecenterMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD,
+                                        ByRef iHmdRecenterMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD,
                                         ByRef sHmdRecenterFromDeviceName As String,
                                         ByRef mCalibratedPosition As Vector3,
                                         ByRef mCalibratedOrientation As Quaternion,
@@ -1821,7 +1824,7 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bDoFactoryRecenter As Boolean = True
 
                     Select Case (iHmdRecenterMethod)
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
                             Dim sCurrentRecenterDeviceName As String = sHmdRecenterFromDeviceName
 
                             ' If empty, do a autoamtic search and get any available HMD
@@ -1876,7 +1879,7 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Private Sub InternalJoystickEmulationLogic(ByRef bJoystickTrigger As Boolean,
-                                                   ByRef iHtcTouchpadMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD,
+                                                   ByRef iHtcTouchpadMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD,
                                                    ByRef bJoystickButtonPressed As Boolean,
                                                    ByRef mJoystickButtonPressedTime As Stopwatch,
                                                    ByRef mJoystickPressedLastOrientation As Quaternion,
@@ -1886,7 +1889,7 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef bClampTouchpadToBounds As Boolean,
                                                    ByRef iTouchpadTouchAreaCm As Single,
                                                    ByRef iTouchpadClickDeadzone As Single,
-                                                   ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD,
+                                                   ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD,
                                                    ByRef bJoystickShortcutBinding As Boolean,
                                                    ByRef mButtons As Boolean(),
                                                    ByRef mJoystickShortcuts As Dictionary(Of Integer, Vector2),
@@ -1901,7 +1904,7 @@ Public Class UCVirtualMotionTrackerItem
                 ' Just pressed
                 Dim mNewPos As Vector3
 
-                If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
+                If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
                     If (Not bJoystickButtonPressed) Then
                         bJoystickButtonPressed = True
 
@@ -1947,7 +1950,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
 
-                If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
+                If (iHtcTouchpadMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION) Then
                     mNewPos = (mNewPos - mJoystickPressedLastPosition) * TOUCHPAD_GYRO_MULTI
                     mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
                     mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
@@ -1965,10 +1968,10 @@ Public Class UCVirtualMotionTrackerItem
                     ' Only start pressing when we moved a distance
                     If (Math.Abs(mJoystickVec.X) >= iTouchpadClickDeadzone OrElse Math.Abs(mJoystickVec.Y) >= iTouchpadClickDeadzone) Then
                         Select Case (iHtcTouchpadEmulationClickMethod)
-                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
+                            Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.MOVE_ALWAYS
                                 g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
 
-                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
+                            Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
                                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                     If (m_PSMoveData.m_TriangleButton) Then
                                         g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
@@ -1979,12 +1982,12 @@ Public Class UCVirtualMotionTrackerItem
                                     End If
                                 End If
 
-                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
+                            Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
                                 If (m_PSMoveData.m_SquareButton) Then
                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                 End If
 
-                            Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
+                            Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
                                 If (m_PSMoveData.m_TriangleButton) Then
                                     g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                 End If
@@ -2045,10 +2048,10 @@ Public Class UCVirtualMotionTrackerItem
         Private Sub InternalButtonsLogic(ByRef mButtons As Boolean(),
                                          ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
                                          ByRef bJoystickTrigger As Boolean,
-                                         ByRef iHtcGripButtonMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD,
+                                         ByRef iHtcGripButtonMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD,
                                          ByRef bGripButtonPressed As Boolean,
                                          ByRef bGripToggled As Boolean,
-                                         ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                                         ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
             Select Case (m_VmtTrackerRole)
                 Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
                     For i = 0 To mButtons.Length - 1
@@ -2065,7 +2068,7 @@ Public Class UCVirtualMotionTrackerItem
 
                     ' Do grip button
                     Select Case (iHtcGripButtonMethod)
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                 bGripButtonPressed = m_PSMoveData.m_CircleButton
                                 g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
@@ -2074,15 +2077,15 @@ Public Class UCVirtualMotionTrackerItem
                                 g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
                             End If
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
                             bGripButtonPressed = m_PSMoveData.m_CircleButton
                             g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CircleButton
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
                             bGripButtonPressed = m_PSMoveData.m_CrossButton
                             g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = m_PSMoveData.m_CrossButton
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                 If (m_PSMoveData.m_CircleButton) Then
                                     If (Not bGripButtonPressed) Then
@@ -2111,7 +2114,7 @@ Public Class UCVirtualMotionTrackerItem
 
                             g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
                             If (m_PSMoveData.m_CircleButton) Then
                                 If (Not bGripButtonPressed) Then
                                     bGripButtonPressed = True
@@ -2126,7 +2129,7 @@ Public Class UCVirtualMotionTrackerItem
 
                             g_mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
                             If (m_PSMoveData.m_CrossButton) Then
                                 If (Not bGripButtonPressed) Then
                                     bGripButtonPressed = True
@@ -2145,7 +2148,7 @@ Public Class UCVirtualMotionTrackerItem
 
                     ' Do touchpad click
                     Select Case (iHtcTouchpadEmulationClickMethod)
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
                                 If (m_PSMoveData.m_TriangleButton) Then
                                     bJoystickTrigger = True
@@ -2156,12 +2159,12 @@ Public Class UCVirtualMotionTrackerItem
                                 End If
                             End If
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
                             If (m_PSMoveData.m_SquareButton) Then
                                 bJoystickTrigger = True
                             End If
 
-                        Case UCVirtualMotionTracker.ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
+                        Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
                             If (m_PSMoveData.m_TriangleButton) Then
                                 bJoystickTrigger = True
                             End If

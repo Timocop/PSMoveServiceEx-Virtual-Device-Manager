@@ -38,8 +38,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_JoystickShortcutBinding = CheckBox_TouchpadShortcuts.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_JoystickShortcutBinding = CheckBox_TouchpadShortcuts.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_JoystickShortcutClick_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcutClick.CheckedChanged
@@ -47,8 +47,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_JoystickShortcutTouchpadClick = CheckBox_TouchpadShortcutClick.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick = CheckBox_TouchpadShortcutClick.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_TouchpadClickMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_TouchpadClickMethod.SelectedIndexChanged
@@ -56,8 +56,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(ComboBox_TouchpadClickMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(ComboBox_TouchpadClickMethod.SelectedIndex, ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_GrabButtonMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_GrabButtonMethod.SelectedIndexChanged
@@ -65,8 +65,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HtcGripButtonMethod = CType(ComboBox_GrabButtonMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_GRIP_BUTTON_METHOD)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HtcGripButtonMethod = CType(ComboBox_GrabButtonMethod.SelectedIndex, ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_DisableBasestations_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_DisableBasestations.CheckedChanged
@@ -74,8 +74,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_DisableBaseStationSpawning = CheckBox_DisableBasestations.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_DisableBaseStationSpawning = CheckBox_DisableBasestations.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_EnableHeptics_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableHeptics.CheckedChanged
@@ -83,8 +83,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_EnableHepticFeedback = CheckBox_EnableHeptics.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_EnableHepticFeedback = CheckBox_EnableHeptics.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_TouchpadClampBounds_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadClampBounds.CheckedChanged
@@ -92,8 +92,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HtcClampTouchpadToBounds = CheckBox_TouchpadClampBounds.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds = CheckBox_TouchpadClampBounds.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_TouchpadMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_TouchpadMethod.SelectedIndexChanged
@@ -101,8 +101,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HtcTouchpadMethod = CType(ComboBox_TouchpadMethod.SelectedIndex, ClassControllerSettings.ENUM_HTC_TOUCHPAD_METHOD)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HtcTouchpadMethod = CType(ComboBox_TouchpadMethod.SelectedIndex, ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
 
@@ -111,8 +111,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_EnableControllerRecenter = CheckBox_ControllerRecenterEnabled.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_EnableControllerRecenter = CheckBox_ControllerRecenterEnabled.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_RecenterMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_RecenterMethod.SelectedIndexChanged
@@ -120,8 +120,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_ControllerRecenterMethod = CType(ComboBox_RecenterMethod.SelectedIndex, ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_ControllerRecenterMethod = CType(ComboBox_RecenterMethod.SelectedIndex, ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_TouchpadClickDeadzone_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_TouchpadClickDeadzone.ValueChanged
@@ -129,8 +129,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HtcTouchpadClickDeadzone = NumericUpDown_TouchpadClickDeadzone.Value
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone = NumericUpDown_TouchpadClickDeadzone.Value
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_TouchpadTouchArea_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_TouchpadTouchArea.ValueChanged
@@ -141,8 +141,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HtcTouchpadTouchAreaCm = NumericUpDown_TouchpadTouchArea.Value
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm = NumericUpDown_TouchpadTouchArea.Value
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_RecenterFromDevice_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_RecenterFromDevice.SelectedIndexChanged
@@ -151,8 +151,8 @@
                 Return
             End If
 
-            g_ClassControllerSettings.m_ControllerRecenterFromDeviceName = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
-            g_ClassControllerSettings.SetUnsavedState(True)
+            g_ClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName = DirectCast(ComboBox_RecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            g_ClassSettings.SetUnsavedState(True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -210,8 +210,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_EnableHmdRecenter = CheckBox_HmdRecenterEnabled.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_EnableHmdRecenter = CheckBox_HmdRecenterEnabled.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_HmdRecenterMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdRecenterMethod.SelectedIndexChanged
@@ -219,8 +219,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_HmdRecenterMethod = CType(ComboBox_HmdRecenterMethod.SelectedIndex, ClassControllerSettings.ENUM_DEVICE_RECENTER_METHOD)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_HmdRecenterMethod = CType(ComboBox_HmdRecenterMethod.SelectedIndex, ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_HmdRecenterFromDevice_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdRecenterFromDevice.SelectedIndexChanged
@@ -229,8 +229,8 @@
                 Return
             End If
 
-            g_ClassControllerSettings.m_HmdRecenterFromDeviceName = DirectCast(ComboBox_HmdRecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
-            g_ClassControllerSettings.SetUnsavedState(True)
+            g_ClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName = DirectCast(ComboBox_HmdRecenterFromDevice.SelectedItem, ClassRecenterDeviceItem).GetRealName()
+            g_ClassSettings.SetUnsavedState(True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -298,8 +298,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_RecenterButtonTimeMs = CLng(NumericUpDown_RecenterButtonTime.Value)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs = CLng(NumericUpDown_RecenterButtonTime.Value)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_OscThreadSleep_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_OscThreadSleep.ValueChanged
@@ -307,8 +307,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_OscThreadSleepMs = CLng(NumericUpDown_OscThreadSleep.Value)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs = CLng(NumericUpDown_OscThreadSleep.Value)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub Button_PlayCalibReset_Click(sender As Object, e As EventArgs) Handles Button_PlayCalibReset.Click
@@ -316,8 +316,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.Reset()
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_PlayspaceSettings.Reset()
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub CheckBox_PlayCalibEnabled_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_PlayCalibEnabled.CheckedChanged
@@ -325,8 +325,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_EnablePlayspaceRecenter = CheckBox_PlayCalibEnabled.Checked
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter = CheckBox_PlayCalibEnabled.Checked
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_PlayCalibForwardOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PlayCalibForwardOffset.ValueChanged
@@ -334,8 +334,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.m_ForwardOffset = NumericUpDown_PlayCalibForwardOffset.Value
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_PlayspaceSettings.m_ForwardOffset = NumericUpDown_PlayCalibForwardOffset.Value
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_PlayCalibHeightOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PlayCalibHeightOffset.ValueChanged
@@ -343,8 +343,8 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.m_HeightOffset = NumericUpDown_PlayCalibHeightOffset.Value
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_PlayspaceSettings.m_HeightOffset = NumericUpDown_PlayCalibHeightOffset.Value
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub ComboBox_PlayCalibForwardMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PlayCalibForwardMethod.SelectedIndexChanged
@@ -352,14 +352,120 @@
             Return
         End If
 
-        g_ClassControllerSettings.m_PlayspaceSettings.m_ForwardMethod = CType(ComboBox_PlayCalibForwardMethod.SelectedIndex, ClassControllerSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
-        g_ClassControllerSettings.SetUnsavedState(True)
+        g_ClassSettings.m_PlayspaceSettings.m_ForwardMethod = CType(ComboBox_PlayCalibForwardMethod.SelectedIndex, ClassSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_PsvrRenderResolution_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PsvrRenderResolution.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_RenderScale = CType(ComboBox_PsvrRenderResolution.SelectedItem, STRUC_RENDER_RES_ITEM).g_iScale
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrIPD_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrIPD.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_IPD = NumericUpDown_PsvrIPD.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrDistK0_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistK0.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_DistortionK0 = NumericUpDown_PsvrDistK0.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrDistK1_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistK1.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_DistortionK1 = NumericUpDown_PsvrDistK1.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrDistScale_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistScale.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_DistortionScale = NumericUpDown_PsvrDistScale.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrDistRedOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistRedOffset.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_DistortionRedOffset = NumericUpDown_PsvrDistRedOffset.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrDistGreenOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistGreenOffset.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset = NumericUpDown_PsvrDistGreenOffset.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrDistBlueOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistBlueOffset.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset = NumericUpDown_PsvrDistBlueOffset.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrHFov_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrHFov.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_HFov = NumericUpDown_PsvrHFov.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_PsvrVFov_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrVFov.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_VFov = NumericUpDown_PsvrVFov.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub LinkLabel_PsvrDistReset_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PsvrDistReset.LinkClicked
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        NumericUpDown_PsvrDistK0.Value = CDec(ClassSettings.DISPLAY_DISTORTION_K0)
+        NumericUpDown_PsvrDistK1.Value = CDec(ClassSettings.DISPLAY_DISTORTION_K1)
+        NumericUpDown_PsvrDistScale.Value = CDec(ClassSettings.DISPLAY_DISTORTION_SCALE)
+        NumericUpDown_PsvrDistRedOffset.Value = CDec(ClassSettings.DISPLAY_DISTORTION_RED_OFFSET)
+        NumericUpDown_PsvrDistGreenOffset.Value = CDec(ClassSettings.DISPLAY_DISTORTION_GREEN_OFFSET)
+        NumericUpDown_PsvrDistBlueOffset.Value = CDec(ClassSettings.DISPLAY_DISTORTION_BLUE_OFFSET)
+        NumericUpDown_PsvrHFov.Value = CDec(ClassSettings.DISPLAY_HFOV)
+        NumericUpDown_PsvrVFov.Value = CDec(ClassSettings.DISPLAY_VFOV)
+        g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
-            g_ClassControllerSettings.SaveSettings(ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL)
-            g_ClassControllerSettings.SetUnsavedState(False)
+            g_ClassSettings.SaveSettings(ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL)
+            g_ClassSettings.SetUnsavedState(False)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
