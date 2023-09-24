@@ -123,7 +123,7 @@ Partial Class UCPlaystationVR
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(731, 30)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Manage or confugure your PlayStation VR hardware."
+        Me.Label4.Text = "Manage or configure your PlayStation VR hardware."
         '
         'Label2
         '
