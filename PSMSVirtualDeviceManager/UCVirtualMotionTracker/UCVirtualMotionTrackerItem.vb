@@ -7,10 +7,15 @@ Public Class UCVirtualMotionTrackerItem
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
 
-    Const DISPLAY_DISTORTION_K0 As Single = 0.18F * 5.0F
-    Const DISPLAY_DISTORTION_K1 As Single = 0.18F * 25.0F
+    Const DISPLAY_DISTORTION_K0 As Single = 0.45F
+    Const DISPLAY_DISTORTION_K1 As Single = 4.5F
     Const DISPLAY_DISTORTION_SCALE As Single = 0.86F
-    Const DISPLAY_FOV As Single = 110.0F
+    Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
+    Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
+    Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
+    Const DISPLAY_HFOV As Single = 90.0F
+    Const DISPLAY_VFOV As Single = 100.0F
+    Const DISPLAY_IPD As Single = 0.067F
 
     Const VMT_LIGHTHOUSE_BEGIN_INDEX As Integer = (ClassVmtConst.VMT_TRACKER_MAX + 1)
 
@@ -1096,19 +1101,32 @@ Public Class UCVirtualMotionTrackerItem
                                     End If
 
                                     If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
-                                        ' Setup the display
+                                        ' Setup the HMD
                                         ' $TODO Make this less retarded. Get status from the driver if something isnt set up properly.
-                                        If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 100) Then
+                                        If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
                                             mDisplaySetupUpdate.Restart()
 
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
-                                                    "/VMT/HMD/Display",
+                                                    "/VMT/HMD/SetupDisplay",
                                                     iDisplayX, iDisplayY,
                                                     iDisplayW, iDisplayH,
                                                     iRenderW, iRenderH,
+                                                    iFrameRate
+                                                ))
+
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                New OscMessage(
+                                                    "/VMT/HMD/SetupRender",
                                                     DISPLAY_DISTORTION_K0, DISPLAY_DISTORTION_K1, DISPLAY_DISTORTION_SCALE,
-                                                    DISPLAY_FOV, iFrameRate
+                                                    -DISPLAY_DISTORTION_RED_OFFSET, -DISPLAY_DISTORTION_GREEN_OFFSET, -DISPLAY_DISTORTION_BLUE_OFFSET,
+                                                    DISPLAY_HFOV, DISPLAY_VFOV
+                                                ))
+
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                New OscMessage(
+                                                    "/VMT/HMD/SetIpdMeters",
+                                                    DISPLAY_IPD
                                                 ))
                                         End If
 
