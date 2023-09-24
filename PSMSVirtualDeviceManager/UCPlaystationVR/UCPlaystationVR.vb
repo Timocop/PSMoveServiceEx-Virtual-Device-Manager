@@ -298,4 +298,10 @@
     Private Sub LinkLabel_UninstallPSVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallPSVR.LinkClicked
         g_FormMain.g_mUCStartPage.LinkLabel_UninstallPSVRDrivers_Click()
     End Sub
+
+    Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
+        Using mForm As New FormPlaysStationVRDisplayFrequency
+            mForm.ShowDialog(Me)
+        End Using
+    End Sub
 End Class
