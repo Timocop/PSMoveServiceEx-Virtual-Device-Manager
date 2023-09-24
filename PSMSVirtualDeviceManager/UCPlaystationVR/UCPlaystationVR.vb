@@ -349,7 +349,7 @@
     End Sub
 
     Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
-        Using mForm As New FormPlaysStationVRDisplayFrequency
+        Using mForm As New FormDisplayFrequency
             mForm.ShowDialog(Me)
         End Using
 

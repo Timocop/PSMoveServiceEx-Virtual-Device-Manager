@@ -1,4 +1,4 @@
-﻿Public Class FormPlaysStationVRDisplayFrequency
+﻿Public Class FormDisplayFrequency
     Private KNONW_DISPLAY_FREQUENCYS As Integer() = New Integer() {60, 90, 120}
 
     Public Sub New()

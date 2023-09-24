@@ -227,10 +227,10 @@
     <Compile Include="StartPage\UCStartPage.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCPlaystationVR\FormPlaysStationVRDisplayFrequency.Designer.vb">
-      <DependentUpon>FormPlaysStationVRDisplayFrequency.vb</DependentUpon>
+    <Compile Include="UCPlaystationVR\FormDisplayFrequency.Designer.vb">
+      <DependentUpon>FormDisplayFrequency.vb</DependentUpon>
     </Compile>
-    <Compile Include="UCPlaystationVR\FormPlaysStationVRDisplayFrequency.vb">
+    <Compile Include="UCPlaystationVR\FormDisplayFrequency.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UCPlaystationVR\UCPlaystationVR.Designer.vb">
@@ -349,8 +349,8 @@
     <EmbeddedResource Include="StartPage\UCStartPage.resx">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCPlaystationVR\FormPlaysStationVRDisplayFrequency.resx">
-      <DependentUpon>FormPlaysStationVRDisplayFrequency.vb</DependentUpon>
+    <EmbeddedResource Include="UCPlaystationVR\FormDisplayFrequency.resx">
+      <DependentUpon>FormDisplayFrequency.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCPlaystationVR\UCPlaystationVR.resx">
       <DependentUpon>UCPlaystationVR.vb</DependentUpon>
