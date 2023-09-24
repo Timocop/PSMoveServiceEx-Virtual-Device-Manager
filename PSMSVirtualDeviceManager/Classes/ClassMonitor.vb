@@ -167,6 +167,9 @@ Public Class ClassMonitor
             Dim mPrimMonitor = mInfo.Value(0)
 
             If (mPrimMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME) OrElse mPrimMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME)) Then
+                mResult = mMonitorInfo
+                mDisplayInfo = New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mInfo.Key, mPrimMonitor)
+
                 ' Is monitor mirrored?
                 If (mInfo.Value.Length > 1) Then
                     Return ENUM_PSVR_MONITOR_STATUS.ERROR_MIRRROED
@@ -177,9 +180,6 @@ Public Class ClassMonitor
                     Return ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
                 End If
 
-                mResult = mMonitorInfo
-
-                mDisplayInfo = New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mInfo.Key, mPrimMonitor)
                 Return ENUM_PSVR_MONITOR_STATUS.SUCCESS
             End If
         Next
