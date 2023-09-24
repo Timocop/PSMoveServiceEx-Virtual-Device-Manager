@@ -262,7 +262,7 @@ Public Class ClassMonitor
         Dim mDisplayDev As DEVMODE = Nothing
         Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
 
-        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) <> ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
+        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) = ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND) Then
             Throw New ArgumentException("Unable to find PSVR monitor")
         End If
 
@@ -331,7 +331,7 @@ Public Class ClassMonitor
         Dim mDisplayDev As DEVMODE = Nothing
         Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
 
-        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) <> ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
+        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) = ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND) Then
             Throw New ArgumentException("Unable to find PSVR monitor")
         End If
 
