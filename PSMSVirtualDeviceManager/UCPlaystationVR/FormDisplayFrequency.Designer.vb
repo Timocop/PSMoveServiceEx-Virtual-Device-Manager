@@ -78,6 +78,8 @@ Partial Class FormDisplayFrequency
         '
         'ComboBox_Frequency
         '
+        Me.ComboBox_Frequency.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ComboBox_Frequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_Frequency.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_Frequency.FormattingEnabled = True
@@ -96,10 +98,10 @@ Partial Class FormDisplayFrequency
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Choose display frequency:"
         '
-        'FormPlaysStationVRDisplayFrequency
+        'FormDisplayFrequency
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.Button_Cancel
         Me.ClientSize = New System.Drawing.Size(329, 148)
@@ -110,7 +112,7 @@ Partial Class FormDisplayFrequency
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "FormPlaysStationVRDisplayFrequency"
+        Me.Name = "FormDisplayFrequency"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent

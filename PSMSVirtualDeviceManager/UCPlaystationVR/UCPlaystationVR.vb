@@ -355,4 +355,10 @@
 
         UpdateHardwareChangeStatusNow()
     End Sub
+
+    Private Sub LinkLabel_DisplayDistortDebug_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_DisplayDistortDebug.LinkClicked
+        Using mForm As New FormDisplayDistortCalibrator
+            mForm.ShowDialog(Me)
+        End Using
+    End Sub
 End Class
