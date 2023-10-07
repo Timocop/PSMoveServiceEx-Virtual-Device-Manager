@@ -144,10 +144,9 @@
         This is useful for controllers without magnetometers which experience yaw drift over time.</value>
   </data>
   <data name="Label64.Text" xml:space="preserve">
-    <value>        Only send OSC packets if they differ from the previous send packet.
-        This will reduce the number of send packets.
-        Disable this setting if you expeciance packet loss or abnormal behaviour.
-</value>
+    <value>        Only send OSC packets if they are different from the previous send packet.
+        This reduces the number of transmission packets.
+        Disable this setting if you notice packet loss or unusual behavior.</value>
   </data>
   <data name="Label7.Text" xml:space="preserve">
     <value>        Enabling haptic feedback can significantly reduce battery life. 

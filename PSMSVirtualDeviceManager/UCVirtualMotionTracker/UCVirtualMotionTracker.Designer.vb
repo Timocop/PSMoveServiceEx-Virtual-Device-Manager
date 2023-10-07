@@ -1803,7 +1803,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label64.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
         Me.Label64.Name = "Label64"
         Me.Label64.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label64.Size = New System.Drawing.Size(411, 45)
+        Me.Label64.Size = New System.Drawing.Size(420, 45)
         Me.Label64.TabIndex = 51
         Me.Label64.Text = resources.GetString("Label64.Text")
         '
@@ -1814,9 +1814,9 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_OptimizePackets.Location = New System.Drawing.Point(16, 206)
         Me.CheckBox_OptimizePackets.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_OptimizePackets.Name = "CheckBox_OptimizePackets"
-        Me.CheckBox_OptimizePackets.Size = New System.Drawing.Size(185, 18)
+        Me.CheckBox_OptimizePackets.Size = New System.Drawing.Size(208, 18)
         Me.CheckBox_OptimizePackets.TabIndex = 50
-        Me.CheckBox_OptimizePackets.Text = "Optimize OSC packet sending"
+        Me.CheckBox_OptimizePackets.Text = "Optimize OSC packet transmission"
         Me.CheckBox_OptimizePackets.UseVisualStyleBackColor = True
         '
         'NumericUpDown_OscThreadSleep
