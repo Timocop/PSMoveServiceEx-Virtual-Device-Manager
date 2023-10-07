@@ -977,7 +977,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Public Sub SetHepticFeedback(fFrequency As Single, fAmplitude As Single, fDuration As Single)
             Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
-            If (Not mClassSettings.m_ControllerSettings.m_EnableHepticFeedback) Then
+            If (Not mClassSettings.m_MiscSettings.m_EnableHepticFeedback) Then
                 Return
             End If
 
@@ -1119,8 +1119,6 @@ Public Class UCVirtualMotionTrackerItem
                     End SyncLock
 
                     Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
-                    Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_ControllerSettings.m_DisableBaseStationSpawning
-                    Dim bEnableHepticFeedback As Boolean = mClassSettings.m_ControllerSettings.m_EnableHepticFeedback
 
                     ' Get controller settings
                     Dim bJoystickShortcutBinding = mClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
@@ -1151,6 +1149,11 @@ Public Class UCVirtualMotionTrackerItem
                     Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov
                     Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
                     Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
+
+                    ' Get misc settings
+                    Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
+                    Dim bEnableHepticFeedback As Boolean = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
+                    Dim bOptimizeTransportPackets As Boolean = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
 
 
                     Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
@@ -1250,7 +1253,8 @@ Public Class UCVirtualMotionTrackerItem
                                             m_FpsOscCounter += 1
                                         End If
 
-                                        If (Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                        If (Not bOptimizeTransportPackets OrElse
+                                                Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
                                                     "/VMT/HMD/Room/Driver",
@@ -1411,15 +1415,11 @@ Public Class UCVirtualMotionTrackerItem
                                         m_FpsOscCounter += 1
                                     End If
 
-                                    Dim bNewPack As Boolean = True
-                                    If (g_mOscDataPack.Equals(mOscDataPack)) Then
-                                        bNewPack = False
-                                    End If
-
                                     Select Case (m_VmtTrackerRole)
                                         Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
 
-                                            If (Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                            If (Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/Room/Driver",
@@ -1448,7 +1448,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     iController = ENABLE_CONTROLLER_R
                                             End Select
 
-                                            If (Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                            If (Not bOptimizeTransportPackets OrElse Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
                                                 For Each mButton In mOscDataPack.mButtons
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
@@ -1476,7 +1476,8 @@ Public Class UCVirtualMotionTrackerItem
 
                                             End If
 
-                                            If (Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                            If (Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/Room/Driver",
@@ -1496,7 +1497,8 @@ Public Class UCVirtualMotionTrackerItem
 
                                         Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
 
-                                            If (Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                            If (Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/Room/Driver",
@@ -1525,7 +1527,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     iController = ENABLE_HTC_VIVE_CONTROLLER_R
                                             End Select
 
-                                            If (Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                            If (Not bOptimizeTransportPackets OrElse Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
                                                 For Each mButton In mOscDataPack.mButtons
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
@@ -1552,7 +1554,8 @@ Public Class UCVirtualMotionTrackerItem
                                                 m_FpsOscCounter += 1
                                             End If
 
-                                            If (Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                            If (Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/Room/Driver",

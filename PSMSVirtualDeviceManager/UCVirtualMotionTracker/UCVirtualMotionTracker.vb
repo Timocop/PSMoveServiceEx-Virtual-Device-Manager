@@ -382,8 +382,6 @@ Public Class UCVirtualMotionTracker
                 ' Controller Settings
                 CheckBox_TouchpadShortcuts.Checked = g_ClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
                 CheckBox_TouchpadShortcutClick.Checked = g_ClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
-                CheckBox_DisableBasestations.Checked = g_ClassSettings.m_ControllerSettings.m_DisableBaseStationSpawning
-                CheckBox_EnableHeptics.Checked = g_ClassSettings.m_ControllerSettings.m_EnableHepticFeedback
                 ComboBox_TouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadClickMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))
                 ComboBox_GrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_GrabButtonMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcGripButtonMethod))
                 CheckBox_TouchpadClampBounds.Checked = g_ClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
@@ -422,6 +420,11 @@ Public Class UCVirtualMotionTracker
                 NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, g_ClassSettings.m_HmdSettings.m_VFov)))
                 NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, g_ClassSettings.m_HmdSettings.m_IPD)))
                 ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(g_ClassSettings.m_HmdSettings.m_RenderScale)
+
+                'Misc Settings
+                CheckBox_DisableBasestations.Checked = g_ClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
+                CheckBox_EnableHeptics.Checked = g_ClassSettings.m_MiscSettings.m_EnableHepticFeedback
+                CheckBox_OptimizePackets.Checked = g_ClassSettings.m_MiscSettings.m_OptimizeTransportPackets
 
                 ' Playspace Settings
                 NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
@@ -645,6 +648,7 @@ Public Class UCVirtualMotionTracker
 
         Private g_mControllerSettings As STRUC_CONTROLLER_SETTINGS
         Private g_mHmdSettings As STRUC_HMD_SETTINGS
+        Private g_mMiscSettings As STRUC_MISC_SETTINGS
         Private g_mPlaySpaceSettings As STRUC_PLAYSPACE_SETTINGS
 
         Public Const DISPLAY_DISTORTION_K0 As Single = 0.45F
@@ -913,8 +917,6 @@ Public Class UCVirtualMotionTracker
             Private g_bTouchpadShortcutTouchpadClick As Boolean = False
             Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
             Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
-            Private g_bDisableBaseStationSpawning As Boolean = False
-            Private g_bEnableHepticFeedback As Boolean = True
             Private g_bHtcClampTouchpadToBounds As Boolean = True
             Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION
 
@@ -979,24 +981,6 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iHtcGripButtonMethod = value
-                End Set
-            End Property
-
-            Property m_DisableBaseStationSpawning As Boolean
-                Get
-                    Return g_bDisableBaseStationSpawning
-                End Get
-                Set(value As Boolean)
-                    g_bDisableBaseStationSpawning = value
-                End Set
-            End Property
-
-            Property m_EnableHepticFeedback As Boolean
-                Get
-                    Return g_bEnableHepticFeedback
-                End Get
-                Set(value As Boolean)
-                    g_bEnableHepticFeedback = value
                 End Set
             End Property
 
@@ -1147,23 +1131,49 @@ Public Class UCVirtualMotionTracker
 
         End Class
 
+        Class STRUC_MISC_SETTINGS
+            Private g_bDisableBaseStationSpawning As Boolean = False
+            Private g_bEnableHepticFeedback As Boolean = True
+            Private g_bOptimizeTransportPackets As Boolean = True
+
+            Property m_DisableBaseStationSpawning As Boolean
+                Get
+                    Return g_bDisableBaseStationSpawning
+                End Get
+                Set(value As Boolean)
+                    g_bDisableBaseStationSpawning = value
+                End Set
+            End Property
+
+            Property m_EnableHepticFeedback As Boolean
+                Get
+                    Return g_bEnableHepticFeedback
+                End Get
+                Set(value As Boolean)
+                    g_bEnableHepticFeedback = value
+                End Set
+            End Property
+
+            Property m_OptimizeTransportPackets As Boolean
+                Get
+                    Return g_bOptimizeTransportPackets
+                End Get
+                Set(value As Boolean)
+                    g_bOptimizeTransportPackets = value
+                End Set
+            End Property
+        End Class
+
         Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
 
             g_mControllerSettings = New STRUC_CONTROLLER_SETTINGS()
             g_mHmdSettings = New STRUC_HMD_SETTINGS()
+            g_mMiscSettings = New STRUC_MISC_SETTINGS()
 
             g_mPlaySpaceSettings = New STRUC_PLAYSPACE_SETTINGS()
             g_mPlaySpaceSettings.Reset()
         End Sub
-
-        ReadOnly Property m_PlayspaceSettings As STRUC_PLAYSPACE_SETTINGS
-            Get
-                SyncLock _ThreadLock
-                    Return g_mPlaySpaceSettings
-                End SyncLock
-            End Get
-        End Property
 
         ReadOnly Property m_ControllerSettings As STRUC_CONTROLLER_SETTINGS
             Get
@@ -1177,6 +1187,22 @@ Public Class UCVirtualMotionTracker
             Get
                 SyncLock _ThreadLock
                     Return g_mHmdSettings
+                End SyncLock
+            End Get
+        End Property
+
+        ReadOnly Property m_MiscSettings As STRUC_MISC_SETTINGS
+            Get
+                SyncLock _ThreadLock
+                    Return g_mMiscSettings
+                End SyncLock
+            End Get
+        End Property
+
+        ReadOnly Property m_PlayspaceSettings As STRUC_PLAYSPACE_SETTINGS
+            Get
+                SyncLock _ThreadLock
+                    Return g_mPlaySpaceSettings
                 End SyncLock
             End Get
         End Property
@@ -1196,8 +1222,6 @@ Public Class UCVirtualMotionTracker
                     ' Controller Settings
                     m_ControllerSettings.m_JoystickShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutBindings", "false") = "true")
                     m_ControllerSettings.m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
-                    m_ControllerSettings.m_DisableBaseStationSpawning = (mIni.ReadKeyValue("ControllerSettings", "DisableBaseStationSpawning", "false") = "true")
-                    m_ControllerSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("ControllerSettings", "EnableHepticFeedback", "true") = "true")
 
                     If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmpInt)) Then
                         m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
@@ -1288,6 +1312,10 @@ Public Class UCVirtualMotionTracker
                         m_HmdSettings.m_RenderScale = tmpSng
                     End If
 
+                    ' Misc Settings 
+                    g_mMiscSettings.m_DisableBaseStationSpawning = (mIni.ReadKeyValue("MiscSettings", "DisableBaseStationSpawning", "false") = "true")
+                    g_mMiscSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("MiscSettings", "EnableHepticFeedback", "true") = "true")
+                    g_mMiscSettings.m_OptimizeTransportPackets = (mIni.ReadKeyValue("MiscSettings", "OptimizeTransportPackets", "true") = "true")
 
                     ' Playspace Settings
                     If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1412,8 +1440,6 @@ Public Class UCVirtualMotionTracker
                     If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_ControllerSettings.m_JoystickShortcutBinding, "true", "false")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_ControllerSettings.m_JoystickShortcutTouchpadClick, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "DisableBaseStationSpawning", If(m_ControllerSettings.m_DisableBaseStationSpawning, "true", "false")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableHepticFeedback", If(m_ControllerSettings.m_EnableHepticFeedback, "true", "false")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_ControllerSettings.m_HtcGripButtonMethod))))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_ControllerSettings.m_HtcClampTouchpadToBounds, "true", "false")))
@@ -1440,6 +1466,10 @@ Public Class UCVirtualMotionTracker
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "VFov", m_HmdSettings.m_VFov.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "IPD", m_HmdSettings.m_IPD.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "RenderScale", m_HmdSettings.m_RenderScale.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "DisableBaseStationSpawning", If(g_mMiscSettings.m_DisableBaseStationSpawning, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OptimizeTransportPackets", If(g_mMiscSettings.m_OptimizeTransportPackets, "true", "false")))
                     End If
 
                     If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
@@ -1778,8 +1808,4 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
-
-    Private Sub CheckBox_ShowDistSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowDistSettings.CheckedChanged
-        GroupBox_Distortion.Visible = CheckBox_ShowDistSettings.Checked
-    End Sub
 End Class

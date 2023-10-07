@@ -154,6 +154,8 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
+        Me.Label64 = New System.Windows.Forms.Label()
+        Me.CheckBox_OptimizePackets = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -1778,6 +1780,8 @@ Partial Class UCVirtualMotionTracker
         'TabPage_SettingsOther
         '
         Me.TabPage_SettingsOther.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsOther.Controls.Add(Me.Label64)
+        Me.TabPage_SettingsOther.Controls.Add(Me.CheckBox_OptimizePackets)
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscThreadSleep)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label21)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label7)
@@ -1789,6 +1793,31 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsOther.Size = New System.Drawing.Size(740, 1132)
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
+        '
+        'Label64
+        '
+        Me.Label64.AutoSize = True
+        Me.Label64.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Label64.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label64.Location = New System.Drawing.Point(16, 227)
+        Me.Label64.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
+        Me.Label64.Name = "Label64"
+        Me.Label64.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label64.Size = New System.Drawing.Size(411, 45)
+        Me.Label64.TabIndex = 51
+        Me.Label64.Text = resources.GetString("Label64.Text")
+        '
+        'CheckBox_OptimizePackets
+        '
+        Me.CheckBox_OptimizePackets.AutoSize = True
+        Me.CheckBox_OptimizePackets.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_OptimizePackets.Location = New System.Drawing.Point(16, 206)
+        Me.CheckBox_OptimizePackets.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_OptimizePackets.Name = "CheckBox_OptimizePackets"
+        Me.CheckBox_OptimizePackets.Size = New System.Drawing.Size(185, 18)
+        Me.CheckBox_OptimizePackets.TabIndex = 50
+        Me.CheckBox_OptimizePackets.Text = "Optimize OSC packet sending"
+        Me.CheckBox_OptimizePackets.UseVisualStyleBackColor = True
         '
         'NumericUpDown_OscThreadSleep
         '
@@ -2904,4 +2933,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label56 As Label
     Friend WithEvents Label55 As Label
     Friend WithEvents Label63 As Label
+    Friend WithEvents Label64 As Label
+    Friend WithEvents CheckBox_OptimizePackets As CheckBox
 End Class

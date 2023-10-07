@@ -74,7 +74,7 @@
             Return
         End If
 
-        g_ClassSettings.m_ControllerSettings.m_DisableBaseStationSpawning = CheckBox_DisableBasestations.Checked
+        g_ClassSettings.m_MiscSettings.m_DisableBaseStationSpawning = CheckBox_DisableBasestations.Checked
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -83,7 +83,16 @@
             Return
         End If
 
-        g_ClassSettings.m_ControllerSettings.m_EnableHepticFeedback = CheckBox_EnableHeptics.Checked
+        g_ClassSettings.m_MiscSettings.m_EnableHepticFeedback = CheckBox_EnableHeptics.Checked
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_OptimizePackets_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_OptimizePackets.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_MiscSettings.m_OptimizeTransportPackets = CheckBox_OptimizePackets.Checked
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -471,4 +480,7 @@
         End Try
     End Sub
 
+    Private Sub CheckBox_ShowDistSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowDistSettings.CheckedChanged
+        GroupBox_Distortion.Visible = CheckBox_ShowDistSettings.Checked
+    End Sub
 End Class
