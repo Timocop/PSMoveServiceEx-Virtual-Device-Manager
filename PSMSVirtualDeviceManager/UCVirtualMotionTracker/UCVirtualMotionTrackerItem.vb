@@ -184,7 +184,7 @@ Public Class UCVirtualMotionTrackerItem
             If (iDeviceID < 0) Then
                 Label_TrackerName.Text = "HMD Name: Invalid"
             Else
-                Label_TrackerName.Text = String.Format("HMD Name: {0}{1} - {2} ({3})", ClassVmtConst.VMT_DEVICE_NAME, "HMD", sVmtTrackerRole, sTrackerRole)
+                Label_TrackerName.Text = String.Format("HMD Name: {0}{1}", ClassVmtConst.VMT_DEVICE_NAME, "HMD")
             End If
         Else
             If (iVmtTrackerID < 0 OrElse iDeviceID < 0) Then
@@ -390,6 +390,10 @@ Public Class UCVirtualMotionTrackerItem
             Return
         End If
 
+        If (g_bIsHMD) Then
+            Return
+        End If
+
         g_mClassIO.m_VmtTracker = CInt(ComboBox_VMTTrackerID.SelectedItem)
         SetUnsavedState(True)
 
@@ -400,6 +404,10 @@ Public Class UCVirtualMotionTrackerItem
         UpdateTrackerTitle()
 
         If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        If (g_bIsHMD) Then
             Return
         End If
 
