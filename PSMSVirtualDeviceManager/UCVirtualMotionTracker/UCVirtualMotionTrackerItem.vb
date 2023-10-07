@@ -1045,6 +1045,7 @@ Public Class UCVirtualMotionTrackerItem
             Dim iLastOutputSeqNum As Integer = 0
 
             Dim mOscDataPack As New STRUC_OSC_DATA_PACK()
+            Dim mEnforcePacketUpdate As New Stopwatch
 
             ' Controller
             Dim bJoystickButtonPressed As Boolean = False
@@ -1108,6 +1109,7 @@ Public Class UCVirtualMotionTrackerItem
 
                         mTrackerDataUpdate.Restart()
                         mLastBatteryReport.Restart()
+                        mEnforcePacketUpdate.Restart()
                     End If
 
                     SyncLock _ThreadLock
@@ -1155,6 +1157,13 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bEnableHepticFeedback As Boolean = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
                     Dim bOptimizeTransportPackets As Boolean = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
 
+
+                    Dim bEnfocePacketUpdate As Boolean = False
+                    If (mEnforcePacketUpdate.ElapsedMilliseconds > 1000) Then
+                        mEnforcePacketUpdate.Restart()
+
+                        bEnfocePacketUpdate = True
+                    End If
 
                     Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
 
@@ -1253,7 +1262,7 @@ Public Class UCVirtualMotionTrackerItem
                                             m_FpsOscCounter += 1
                                         End If
 
-                                        If (Not bOptimizeTransportPackets OrElse
+                                        If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                 Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
@@ -1418,7 +1427,7 @@ Public Class UCVirtualMotionTrackerItem
                                     Select Case (m_VmtTrackerRole)
                                         Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
 
-                                            If (Not bOptimizeTransportPackets OrElse
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
@@ -1448,7 +1457,8 @@ Public Class UCVirtualMotionTrackerItem
                                                     iController = ENABLE_CONTROLLER_R
                                             End Select
 
-                                            If (Not bOptimizeTransportPackets OrElse Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
                                                 For Each mButton In mOscDataPack.mButtons
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
@@ -1476,7 +1486,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                             End If
 
-                                            If (Not bOptimizeTransportPackets OrElse
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
@@ -1497,7 +1507,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                         Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
 
-                                            If (Not bOptimizeTransportPackets OrElse
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
@@ -1527,7 +1537,8 @@ Public Class UCVirtualMotionTrackerItem
                                                     iController = ENABLE_HTC_VIVE_CONTROLLER_R
                                             End Select
 
-                                            If (Not bOptimizeTransportPackets OrElse Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
                                                 For Each mButton In mOscDataPack.mButtons
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
@@ -1554,7 +1565,7 @@ Public Class UCVirtualMotionTrackerItem
                                                 m_FpsOscCounter += 1
                                             End If
 
-                                            If (Not bOptimizeTransportPackets OrElse
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
