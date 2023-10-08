@@ -1183,6 +1183,8 @@ Public Class UCVirtualMotionTrackerItem
                         If (g_mHmdData IsNot Nothing) Then
                             ' We got any new data?
                             If (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
+                                iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
+
                                 SyncLock _ThreadLock
                                     Dim mRawOrientation = g_mHmdData.m_Orientation
                                     Dim mCalibratedOrientation = mRawOrientation
