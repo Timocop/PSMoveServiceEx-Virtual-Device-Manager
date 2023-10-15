@@ -42,12 +42,6 @@ Public Class ClassUpdate
                 Throw New IO.DirectoryNotFoundException(String.Format("Path '{0}' does not exist", sPath))
             End If
 
-#If Not DEBUG Then
-            If (Not CheckUpdateAvailable(Application.ExecutablePath, Nothing)) Then
-                Return
-            End If
-#End If
-
 #If DEBUG Then
             IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
             Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\PSMSXUpdaterSFX.exe")
@@ -301,12 +295,6 @@ Public Class ClassUpdate
             If (String.IsNullOrEmpty(sPath) OrElse Not IO.Directory.Exists(sPath)) Then
                 Throw New IO.DirectoryNotFoundException(String.Format("Path '{0}' does not exist", sPath))
             End If
-
-#If Not DEBUG Then
-            If (Not CheckUpdateAvailable(Application.ExecutablePath, Nothing)) Then
-                Return
-            End If
-#End If
 
 #If DEBUG Then
             IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
