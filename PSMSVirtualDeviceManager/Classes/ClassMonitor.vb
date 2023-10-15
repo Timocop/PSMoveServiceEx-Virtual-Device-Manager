@@ -307,18 +307,38 @@ Public Class ClassMonitor
                 ' Give it a sexy friendly name for the device manager.
                 mIdKey.SetValue("FriendlyName", "PSVR", RegistryValueKind.String)
 
-                Dim iNewEIDI As Byte() = Nothing
+                Dim iFullEDID As Byte() = Nothing
 
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
-                        iNewEIDI = My.Resources.EDID_PSVR1_MULTI
+                        iFullEDID = My.Resources.EDID_PSVR1_MULTI
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
-                        iNewEIDI = My.Resources.EDID_PSVR2_MULTI
+                        iFullEDID = My.Resources.EDID_PSVR2_MULTI
                     Case Else
                         Throw New ArgumentException("Unknown PSVR monitor hardware id")
                 End Select
 
+                Dim iNewEIDI As Byte() = Nothing
+                Dim iNewExtension As Byte() = Nothing
+
+                If (True) Then
+                    Dim iBaseEDID As New List(Of Byte)
+                    Dim iExtEDID As New List(Of Byte)
+
+                    For i = 0 To iFullEDID.Length - 1
+                        If (i < 128) Then
+                            iBaseEDID.Add(iFullEDID(i))
+                        Else
+                            iExtEDID.Add(iFullEDID(i))
+                        End If
+                    Next
+
+                    iNewEIDI = iBaseEDID.ToArray
+                    iNewExtension = iExtEDID.ToArray
+                End If
+
                 mEdidOverride.SetValue("0", iNewEIDI, RegistryValueKind.Binary)
+                mEdidOverride.SetValue("1", iNewExtension, RegistryValueKind.Binary)
 
                 Exit For
             Next
@@ -373,18 +393,37 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                Dim iNewEIDI As Byte() = Nothing
+                Dim iFullEDID As Byte() = Nothing
 
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
-                        iNewEIDI = My.Resources.EDID_PSVR1_MULTI
+                        iFullEDID = My.Resources.EDID_PSVR1_MULTI
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
-                        iNewEIDI = My.Resources.EDID_PSVR2_MULTI
+                        iFullEDID = My.Resources.EDID_PSVR2_MULTI
                     Case Else
                         Throw New ArgumentException("Unknown PSVR monitor hardware id")
                 End Select
 
-                ' Check if overrides are the same as VDMs EDID overrides.
+                Dim iNewEIDI As Byte() = New Byte() {}
+                Dim iNewExtension As Byte() = New Byte() {}
+
+                If (True) Then
+                    Dim iBaseEDID As New List(Of Byte)
+                    Dim iExtEDID As New List(Of Byte)
+
+                    For i = 0 To iFullEDID.Length - 1
+                        If (i < 128) Then
+                            iBaseEDID.Add(iFullEDID(i))
+                        Else
+                            iExtEDID.Add(iFullEDID(i))
+                        End If
+                    Next
+
+                    iNewEIDI = iBaseEDID.ToArray
+                    iNewExtension = iExtEDID.ToArray
+                End If
+
+                ' Check if overrides are the same as VDMs EDID overrides. 
                 Dim iOverrideEDID As Byte() = TryCast(mEdidOverride.GetValue("0", Nothing), Byte())
                 If (iOverrideEDID IsNot Nothing) Then
                     Dim bEqualEDID As Boolean = True
@@ -408,13 +447,38 @@ Public Class ClassMonitor
                     Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                 End If
 
+                If (iNewExtension.Length > 0) Then
+                    Dim iOverrideEXT As Byte() = TryCast(mEdidOverride.GetValue("1", Nothing), Byte())
+                    If (iOverrideEXT IsNot Nothing) Then
+                        Dim bEqualEDID As Boolean = True
+                        If (iOverrideEXT.Length = iNewExtension.Length) Then
+                            For i = 0 To iOverrideEXT.Length - 1
+                                If (iOverrideEXT(i) = iNewExtension(i)) Then
+                                    Continue For
+                                End If
+
+                                bEqualEDID = False
+                                Exit For
+                            Next
+                        Else
+                            bEqualEDID = False
+                        End If
+
+                        If (Not bEqualEDID) Then
+                            Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+                        End If
+                    Else
+                        Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+                    End If
+                End If
+
                 ' Check if current EDID is equal to patched. If not, then reboot or replug device to update.
                 Dim iCurrentEDID As Byte() = TryCast(mParametersKey.GetValue("EDID", Nothing), Byte())
                 If (iCurrentEDID IsNot Nothing) Then
                     Dim bEqualEDID As Boolean = True
-                    If (iOverrideEDID.Length = iNewEIDI.Length) Then
-                        For i = 0 To iOverrideEDID.Length - 1
-                            If (iOverrideEDID(i) = iNewEIDI(i)) Then
+                    If (iCurrentEDID.Length = iNewEIDI.Length) Then
+                        For i = 0 To iCurrentEDID.Length - 1
+                            If (iCurrentEDID(i) = iNewEIDI(i)) Then
                                 Continue For
                             End If
 
