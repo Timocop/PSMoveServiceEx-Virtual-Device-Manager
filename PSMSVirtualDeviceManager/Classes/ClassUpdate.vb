@@ -50,7 +50,7 @@ Public Class ClassUpdate
 
 #If DEBUG Then
             IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
-            Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\PsmsxUpdaterSFX.exe")
+            Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\PSMSXUpdaterSFX.exe")
 #Else
             Dim sDataPath As String = IO.Path.Combine(sPath, "VdmUpdaterSFX.exe")
 #End If
@@ -310,7 +310,7 @@ Public Class ClassUpdate
 
 #If DEBUG Then
             IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
-            Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\VdmUpdaterSFX.exe")
+            Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\VDMUpdaterSFX.exe")
 #Else
             Dim sDataPath As String = IO.Path.Combine(sPath, "VdmUpdaterSFX.exe")
 #End If

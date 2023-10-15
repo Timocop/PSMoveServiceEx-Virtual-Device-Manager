@@ -44,6 +44,10 @@
 
         ' Add any initialization after the InitializeComponent() call. 
 
+#If DEBUG Then
+        Me.Text &= " (DEBUGGING)"
+#End If
+
         g_mUCStartPage = New UCStartPage(Me)
         g_mUCStartPage.SuspendLayout()
         g_mUCStartPage.Parent = Panel_Pages
