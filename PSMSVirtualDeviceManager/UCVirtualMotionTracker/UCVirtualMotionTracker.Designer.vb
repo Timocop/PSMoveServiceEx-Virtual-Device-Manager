@@ -1143,9 +1143,9 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_ShowDistSettings.Location = New System.Drawing.Point(19, 78)
         Me.CheckBox_ShowDistSettings.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_ShowDistSettings.Name = "CheckBox_ShowDistSettings"
-        Me.CheckBox_ShowDistSettings.Size = New System.Drawing.Size(284, 17)
+        Me.CheckBox_ShowDistSettings.Size = New System.Drawing.Size(314, 17)
         Me.CheckBox_ShowDistSettings.TabIndex = 4
-        Me.CheckBox_ShowDistSettings.Text = "Show distortion settings (only for advanced users)"
+        Me.CheckBox_ShowDistSettings.Text = "Use custom distortion settings (only for advanced users)"
         Me.CheckBox_ShowDistSettings.UseVisualStyleBackColor = True
         '
         'NumericUpDown_PsvrIPD

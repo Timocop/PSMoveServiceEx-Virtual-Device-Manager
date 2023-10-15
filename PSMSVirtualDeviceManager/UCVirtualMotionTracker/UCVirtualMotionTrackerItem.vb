@@ -1149,14 +1149,15 @@ Public Class UCVirtualMotionTrackerItem
                     Dim bEnabledPlayspaceRecenter = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
 
                     ' Get HMD settings
-                    Dim iHmdDistortK0 = mClassSettings.m_HmdSettings.m_DistortionK0
-                    Dim iHmdDistortK1 = mClassSettings.m_HmdSettings.m_DistortionK1
-                    Dim iHmdDistortScale = mClassSettings.m_HmdSettings.m_DistortionScale
-                    Dim iHmdDistortRedOffset = mClassSettings.m_HmdSettings.m_DistortionRedOffset
-                    Dim iHmdDistortGreenOffset = mClassSettings.m_HmdSettings.m_DistortionGreenOffset
-                    Dim iHmdDistortBlueOffset = mClassSettings.m_HmdSettings.m_DistortionBlueOffset
-                    Dim iHmdHFov = mClassSettings.m_HmdSettings.m_HFov
-                    Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov
+                    Dim bUseCustomDistortion = mClassSettings.m_HmdSettings.m_UseCustomDistortion
+                    Dim iHmdDistortK0 = mClassSettings.m_HmdSettings.m_DistortionK0(bUseCustomDistortion)
+                    Dim iHmdDistortK1 = mClassSettings.m_HmdSettings.m_DistortionK1(bUseCustomDistortion)
+                    Dim iHmdDistortScale = mClassSettings.m_HmdSettings.m_DistortionScale(bUseCustomDistortion)
+                    Dim iHmdDistortRedOffset = mClassSettings.m_HmdSettings.m_DistortionRedOffset(bUseCustomDistortion)
+                    Dim iHmdDistortGreenOffset = mClassSettings.m_HmdSettings.m_DistortionGreenOffset(bUseCustomDistortion)
+                    Dim iHmdDistortBlueOffset = mClassSettings.m_HmdSettings.m_DistortionBlueOffset(bUseCustomDistortion)
+                    Dim iHmdHFov = mClassSettings.m_HmdSettings.m_HFov(bUseCustomDistortion)
+                    Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov(bUseCustomDistortion)
                     Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
                     Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
 

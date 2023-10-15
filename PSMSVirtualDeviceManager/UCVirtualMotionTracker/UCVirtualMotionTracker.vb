@@ -410,14 +410,15 @@ Public Class UCVirtualMotionTracker
                 CheckBox_PlayCalibEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
 
                 ' Hmd Settings
-                NumericUpDown_PsvrDistK0.Value = CDec(Math.Max(NumericUpDown_PsvrDistK0.Minimum, Math.Min(NumericUpDown_PsvrDistK0.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK0)))
-                NumericUpDown_PsvrDistK1.Value = CDec(Math.Max(NumericUpDown_PsvrDistK1.Minimum, Math.Min(NumericUpDown_PsvrDistK1.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK1)))
-                NumericUpDown_PsvrDistScale.Value = CDec(Math.Max(NumericUpDown_PsvrDistScale.Minimum, Math.Min(NumericUpDown_PsvrDistScale.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionScale)))
-                NumericUpDown_PsvrDistRedOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistRedOffset.Minimum, Math.Min(NumericUpDown_PsvrDistRedOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionRedOffset)))
-                NumericUpDown_PsvrDistGreenOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistGreenOffset.Minimum, Math.Min(NumericUpDown_PsvrDistGreenOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset)))
-                NumericUpDown_PsvrDistBlueOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistBlueOffset.Minimum, Math.Min(NumericUpDown_PsvrDistBlueOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset)))
-                NumericUpDown_PsvrHFov.Value = CDec(Math.Max(NumericUpDown_PsvrHFov.Minimum, Math.Min(NumericUpDown_PsvrHFov.Maximum, g_ClassSettings.m_HmdSettings.m_HFov)))
-                NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, g_ClassSettings.m_HmdSettings.m_VFov)))
+                CheckBox_ShowDistSettings.Checked = g_ClassSettings.m_HmdSettings.m_UseCustomDistortion
+                NumericUpDown_PsvrDistK0.Value = CDec(Math.Max(NumericUpDown_PsvrDistK0.Minimum, Math.Min(NumericUpDown_PsvrDistK0.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK0(True))))
+                NumericUpDown_PsvrDistK1.Value = CDec(Math.Max(NumericUpDown_PsvrDistK1.Minimum, Math.Min(NumericUpDown_PsvrDistK1.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK1(True))))
+                NumericUpDown_PsvrDistScale.Value = CDec(Math.Max(NumericUpDown_PsvrDistScale.Minimum, Math.Min(NumericUpDown_PsvrDistScale.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionScale(True))))
+                NumericUpDown_PsvrDistRedOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistRedOffset.Minimum, Math.Min(NumericUpDown_PsvrDistRedOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionRedOffset(True))))
+                NumericUpDown_PsvrDistGreenOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistGreenOffset.Minimum, Math.Min(NumericUpDown_PsvrDistGreenOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset(True))))
+                NumericUpDown_PsvrDistBlueOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistBlueOffset.Minimum, Math.Min(NumericUpDown_PsvrDistBlueOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset(True))))
+                NumericUpDown_PsvrHFov.Value = CDec(Math.Max(NumericUpDown_PsvrHFov.Minimum, Math.Min(NumericUpDown_PsvrHFov.Maximum, g_ClassSettings.m_HmdSettings.m_HFov(True))))
+                NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, g_ClassSettings.m_HmdSettings.m_VFov(True))))
                 NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, g_ClassSettings.m_HmdSettings.m_IPD)))
                 ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(g_ClassSettings.m_HmdSettings.m_RenderScale)
 
@@ -651,9 +652,9 @@ Public Class UCVirtualMotionTracker
         Private g_mMiscSettings As STRUC_MISC_SETTINGS
         Private g_mPlaySpaceSettings As STRUC_PLAYSPACE_SETTINGS
 
-        Public Const DISPLAY_DISTORTION_K0 As Single = 0.45F
-        Public Const DISPLAY_DISTORTION_K1 As Single = 4.5F
-        Public Const DISPLAY_DISTORTION_SCALE As Single = 0.86F
+        Public Const DISPLAY_DISTORTION_K0 As Single = 0.75F
+        Public Const DISPLAY_DISTORTION_K1 As Single = 4.0F
+        Public Const DISPLAY_DISTORTION_SCALE As Single = 1.0F
         Public Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
         Public Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
         Public Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
@@ -661,6 +662,7 @@ Public Class UCVirtualMotionTracker
         Public Const DISPLAY_VFOV As Single = 100.0F
 
         Class STRUC_HMD_SETTINGS
+            Private g_bUseCustomDistortion As Boolean = False
             Private g_iDistortionK0 As Single = DISPLAY_DISTORTION_K0
             Private g_iDistortionK1 As Single = DISPLAY_DISTORTION_K1
             Private g_iDistortionScale As Single = DISPLAY_DISTORTION_SCALE
@@ -672,8 +674,21 @@ Public Class UCVirtualMotionTracker
             Private g_iIPD As Single = 67.0F
             Private g_iRenderScale As Single = 1.0F
 
-            Public Property m_DistortionK0 As Single
+            Public Property m_UseCustomDistortion As Boolean
                 Get
+                    Return g_bUseCustomDistortion
+                End Get
+                Set(value As Boolean)
+                    g_bUseCustomDistortion = value
+                End Set
+            End Property
+
+            Public Property m_DistortionK0(bUseCustomDistortion As Boolean) As Single
+                Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_DISTORTION_K0
+                    End If
+
                     Return g_iDistortionK0
                 End Get
                 Set(value As Single)
@@ -689,8 +704,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_DistortionK1 As Single
+            Public Property m_DistortionK1(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_DISTORTION_K1
+                    End If
+
                     Return g_iDistortionK1
                 End Get
                 Set(value As Single)
@@ -706,8 +725,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_DistortionScale As Single
+            Public Property m_DistortionScale(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_DISTORTION_SCALE
+                    End If
+
                     Return g_iDistortionScale
                 End Get
                 Set(value As Single)
@@ -723,8 +746,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_DistortionRedOffset As Single
+            Public Property m_DistortionRedOffset(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_DISTORTION_RED_OFFSET
+                    End If
+
                     Return g_iDistortionRedOffset
                 End Get
                 Set(value As Single)
@@ -740,8 +767,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_DistortionGreenOffset As Single
+            Public Property m_DistortionGreenOffset(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_DISTORTION_GREEN_OFFSET
+                    End If
+
                     Return g_iDistortionGreenOffset
                 End Get
                 Set(value As Single)
@@ -757,8 +788,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_DistortionBlueOffset As Single
+            Public Property m_DistortionBlueOffset(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_DISTORTION_BLUE_OFFSET
+                    End If
+
                     Return g_iDistortionBlueOffset
                 End Get
                 Set(value As Single)
@@ -774,8 +809,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_HFov As Single
+            Public Property m_HFov(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_HFOV
+                    End If
+
                     Return g_iHFov
                 End Get
                 Set(value As Single)
@@ -791,8 +830,12 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Public Property m_VFov As Single
+            Public Property m_VFov(bUseCustomDistortion As Boolean) As Single
                 Get
+                    If (Not bUseCustomDistortion) Then
+                        Return DISPLAY_VFOV
+                    End If
+
                     Return g_iVFov
                 End Get
                 Set(value As Single)
@@ -1272,36 +1315,38 @@ Public Class UCVirtualMotionTracker
                     m_ControllerSettings.m_EnablePlayspaceRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
 
                     ' Hmd Settings
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK0", "0.45"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_DistortionK0 = tmpSng
+                    m_HmdSettings.m_UseCustomDistortion = (mIni.ReadKeyValue("HmdSettings", "UseCustomDistortion", "false") = "true")
+
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK0", DISPLAY_DISTORTION_K0.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionK0(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK1", "4.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_DistortionK1 = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK1", DISPLAY_DISTORTION_K1.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionK1(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionScale", "0.86"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_DistortionScale = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionScale", DISPLAY_DISTORTION_SCALE.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionScale(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionRedOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_DistortionRedOffset = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionRedOffset", DISPLAY_DISTORTION_RED_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionRedOffset(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionGreenOffset", "0.009"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_DistortionGreenOffset = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionGreenOffset", DISPLAY_DISTORTION_GREEN_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionGreenOffset(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionBlueOffset", "0.019"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_DistortionBlueOffset = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionBlueOffset", DISPLAY_DISTORTION_BLUE_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_DistortionBlueOffset(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "HFov", "90.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_HFov = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "HFov", DISPLAY_HFOV.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_HFov(True) = tmpSng
                     End If
 
-                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "VFov", "100.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                        m_HmdSettings.m_VFov = tmpSng
+                    If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "VFov", DISPLAY_VFOV.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        m_HmdSettings.m_VFov(True) = tmpSng
                     End If
 
                     If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "IPD", "67.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1456,14 +1501,16 @@ Public Class UCVirtualMotionTracker
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_ControllerSettings.m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_ControllerSettings.m_EnablePlayspaceRecenter, "true", "false")))
 
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionK0", m_HmdSettings.m_DistortionK0.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionK1", m_HmdSettings.m_DistortionK1.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionScale", m_HmdSettings.m_DistortionScale.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionRedOffset", m_HmdSettings.m_DistortionRedOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionGreenOffset", m_HmdSettings.m_DistortionGreenOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionBlueOffset", m_HmdSettings.m_DistortionBlueOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HFov", m_HmdSettings.m_HFov.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "VFov", m_HmdSettings.m_VFov.ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "UseCustomDistortion", If(m_HmdSettings.m_UseCustomDistortion, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionK0", m_HmdSettings.m_DistortionK0(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionK1", m_HmdSettings.m_DistortionK1(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionScale", m_HmdSettings.m_DistortionScale(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionRedOffset", m_HmdSettings.m_DistortionRedOffset(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionGreenOffset", m_HmdSettings.m_DistortionGreenOffset(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "DistortionBlueOffset", m_HmdSettings.m_DistortionBlueOffset(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HFov", m_HmdSettings.m_HFov(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "VFov", m_HmdSettings.m_VFov(True).ToString(Globalization.CultureInfo.InvariantCulture)))
+
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "IPD", m_HmdSettings.m_IPD.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "RenderScale", m_HmdSettings.m_RenderScale.ToString(Globalization.CultureInfo.InvariantCulture)))
 

@@ -388,7 +388,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_DistortionK0 = NumericUpDown_PsvrDistK0.Value
+        g_ClassSettings.m_HmdSettings.m_DistortionK0(True) = NumericUpDown_PsvrDistK0.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -397,7 +397,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_DistortionK1 = NumericUpDown_PsvrDistK1.Value
+        g_ClassSettings.m_HmdSettings.m_DistortionK1(True) = NumericUpDown_PsvrDistK1.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -406,7 +406,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_DistortionScale = NumericUpDown_PsvrDistScale.Value
+        g_ClassSettings.m_HmdSettings.m_DistortionScale(True) = NumericUpDown_PsvrDistScale.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -415,7 +415,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_DistortionRedOffset = NumericUpDown_PsvrDistRedOffset.Value
+        g_ClassSettings.m_HmdSettings.m_DistortionRedOffset(True) = NumericUpDown_PsvrDistRedOffset.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -424,7 +424,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset = NumericUpDown_PsvrDistGreenOffset.Value
+        g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset(True) = NumericUpDown_PsvrDistGreenOffset.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -433,7 +433,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset = NumericUpDown_PsvrDistBlueOffset.Value
+        g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset(True) = NumericUpDown_PsvrDistBlueOffset.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -442,7 +442,7 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_HFov = NumericUpDown_PsvrHFov.Value
+        g_ClassSettings.m_HmdSettings.m_HFov(True) = NumericUpDown_PsvrHFov.Value
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -451,7 +451,18 @@
             Return
         End If
 
-        g_ClassSettings.m_HmdSettings.m_VFov = NumericUpDown_PsvrVFov.Value
+        g_ClassSettings.m_HmdSettings.m_VFov(True) = NumericUpDown_PsvrVFov.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_ShowDistSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowDistSettings.CheckedChanged
+        GroupBox_Distortion.Visible = CheckBox_ShowDistSettings.Checked
+
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_HmdSettings.m_UseCustomDistortion = CheckBox_ShowDistSettings.Checked
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -478,9 +489,5 @@
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
-    End Sub
-
-    Private Sub CheckBox_ShowDistSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowDistSettings.CheckedChanged
-        GroupBox_Distortion.Visible = CheckBox_ShowDistSettings.Checked
     End Sub
 End Class
