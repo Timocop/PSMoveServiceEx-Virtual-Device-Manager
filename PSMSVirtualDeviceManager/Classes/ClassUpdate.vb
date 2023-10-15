@@ -35,6 +35,106 @@ Public Class ClassUpdate
                                        STRUC_UPDATE_LOCATIONS.ENUM_VERSION_TYPE.VERSION)
         }
 
+        Public Shared Sub InstallUpdate(sPath As String, sProcessNamesKill As String())
+            SetTLS12()
+
+            If (String.IsNullOrEmpty(sPath) OrElse Not IO.Directory.Exists(sPath)) Then
+                Throw New IO.DirectoryNotFoundException(String.Format("Path '{0}' does not exist", sPath))
+            End If
+
+#If Not DEBUG Then
+            If (Not CheckUpdateAvailable(Application.ExecutablePath, Nothing)) Then
+                Return
+            End If
+#End If
+
+#If DEBUG Then
+            IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
+            Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\PsmsxUpdaterSFX.exe")
+#Else
+            Dim sDataPath As String = IO.Path.Combine(sPath, "VdmUpdaterSFX.exe")
+#End If
+
+            IO.File.Delete(sDataPath)
+
+            Dim bSuccess As Boolean = False
+
+            For Each mItem In g_mUpdateLocations
+                Try
+                    'Test if server files are available
+                    Using mWC As New ClassWebClientEx
+                        If (Not String.IsNullOrEmpty(mItem.sUserAgent)) Then
+                            mWC.Headers("User-Agent") = mItem.sUserAgent
+                        End If
+
+                        IO.File.Delete(sDataPath)
+
+                        mWC.DownloadFile(mItem.sDataUrl, sDataPath)
+
+                        If (Not IO.File.Exists(sDataPath)) Then
+                            Throw New ArgumentException("Files does not exist")
+                        End If
+                    End Using
+
+                    bSuccess = True
+                    Exit For
+                Catch ex As Exception
+                End Try
+            Next
+
+            If (Not bSuccess) Then
+                Throw New ArgumentException("Unable to find update files")
+            End If
+
+#If Not DEBUG Then
+            For Each pProcess As Process In Process.GetProcessesByName(IO.Path.GetFileNameWithoutExtension(Application.ExecutablePath))
+                Try
+                    If (pProcess.HasExited OrElse pProcess.Id = Process.GetCurrentProcess.Id) Then
+                        Continue For
+                    End If
+
+                    If (IO.Path.GetFullPath(pProcess.MainModule.FileName).ToLower <> IO.Path.GetFullPath(Application.ExecutablePath).ToLower) Then
+                        Continue For
+                    End If
+
+                    pProcess.Kill()
+                    pProcess.WaitForExit()
+                Catch ex As Exception
+                End Try
+            Next
+#End If
+
+            Dim sBatchFile As String = IO.Path.Combine(sPath, "InstallUpdate.bat")
+
+            Dim sUpdateBatch As New Text.StringBuilder
+            sUpdateBatch.AppendLine("@echo off")
+
+            For Each sProcessName As String In sProcessNamesKill
+                sUpdateBatch.AppendFormat("taskkill /F /T /IM ""{0}""", sProcessName).AppendLine() 'Terminate processes
+            Next
+
+            sUpdateBatch.AppendFormat("start /w """" ""{0}"" -y", sDataPath).AppendLine() 'Run 7zip SFX and wait
+            sUpdateBatch.AppendFormat("start """" ""{0}""", Application.ExecutablePath).AppendLine() 'Run setup but do not wait
+            sUpdateBatch.AppendFormat("del ""{0}""", sBatchFile).AppendLine() 'KMS 
+
+            IO.File.WriteAllText(sBatchFile, sUpdateBatch.ToString)
+
+            Using i As New Process
+                i.StartInfo.FileName = sBatchFile
+                i.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sBatchFile)
+
+                i.StartInfo.UseShellExecute = False
+                i.StartInfo.CreateNoWindow = True
+
+                i.Start()
+            End Using
+
+#If Not DEBUG Then
+            Process.GetCurrentProcess.Kill()
+            End
+#End If
+        End Sub
+
         Public Shared Function CheckUpdateHash(sFile As String, ByRef r_sLocationInfo As String) As Boolean
             Dim sNextHash As String = GetNextHash(r_sLocationInfo)
             Dim sFileHash As String = HashFileSHA256(sFile)
@@ -190,13 +290,17 @@ Public Class ClassUpdate
         Public Shared g_mUpdateLocations As STRUC_UPDATE_LOCATIONS() = {
             New STRUC_UPDATE_LOCATIONS("github.com",
                                        "https://raw.githubusercontent.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/master/PSMSVirtualDeviceManager/updater/app_version.txt",
-                                       "",
+                                       "https://raw.githubusercontent.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/master/PSMSVirtualDeviceManager/updater/PSMSVirtualDeviceManagerUpdateSFX.dat",
                                        String.Format("PSMS-EX Virtual Device Manager/{0} (compatible; Windows NT)", Application.ProductVersion),
-                                        STRUC_UPDATE_LOCATIONS.ENUM_VERSION_TYPE.VERSION)
+                                       STRUC_UPDATE_LOCATIONS.ENUM_VERSION_TYPE.VERSION)
         }
 
-        Public Shared Sub InstallUpdate()
+        Public Shared Sub InstallUpdate(sPath As String, sProcessNamesKill As String())
             SetTLS12()
+
+            If (String.IsNullOrEmpty(sPath) OrElse Not IO.Directory.Exists(sPath)) Then
+                Throw New IO.DirectoryNotFoundException(String.Format("Path '{0}' does not exist", sPath))
+            End If
 
 #If Not DEBUG Then
             If (Not CheckUpdateAvailable(Application.ExecutablePath, Nothing)) Then
@@ -205,10 +309,10 @@ Public Class ClassUpdate
 #End If
 
 #If DEBUG Then
-            IO.Directory.CreateDirectory(IO.Path.Combine(Application.StartupPath, "UpdateTest"))
-            Dim sDataPath As String = IO.Path.Combine(Application.StartupPath, "UpdateTest\VdmUpdaterSFX.exe")
+            IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
+            Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\VdmUpdaterSFX.exe")
 #Else
-            Dim sDataPath As String = IO.Path.Combine(Application.StartupPath, "VdmUpdaterSFX.exe")
+            Dim sDataPath As String = IO.Path.Combine(sPath, "VdmUpdaterSFX.exe")
 #End If
 
             IO.File.Delete(sDataPath)
@@ -260,10 +364,15 @@ Public Class ClassUpdate
             Next
 #End If
 
-            Dim sBatchFile As String = IO.Path.Combine(Application.StartupPath, "InstallUpdate.bat")
+            Dim sBatchFile As String = IO.Path.Combine(sPath, "InstallUpdate.bat")
 
             Dim sUpdateBatch As New Text.StringBuilder
             sUpdateBatch.AppendLine("@echo off")
+
+            For Each sProcessName As String In sProcessNamesKill
+                sUpdateBatch.AppendFormat("taskkill /F /T /IM ""{0}""", sProcessName).AppendLine() 'Terminate processes
+            Next
+
             sUpdateBatch.AppendFormat("start /w """" ""{0}"" -y", sDataPath).AppendLine() 'Run 7zip SFX and wait
             sUpdateBatch.AppendFormat("start """" ""{0}""", Application.ExecutablePath).AppendLine() 'Run setup but do not wait
             sUpdateBatch.AppendFormat("del ""{0}""", sBatchFile).AppendLine() 'KMS 
