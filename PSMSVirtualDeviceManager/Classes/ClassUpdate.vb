@@ -110,7 +110,7 @@ Public Class ClassUpdate
             sUpdateBatch.AppendLine("@echo off")
 
             For Each sProcessName As String In sProcessNamesKill
-                sUpdateBatch.AppendFormat("taskkill /F /T /IM ""{0}""", sProcessName).AppendLine() 'Terminate processes
+                sUpdateBatch.AppendFormat("taskkill /F /IM ""{0}""", sProcessName).AppendLine() 'Terminate processes
             Next
 
             sUpdateBatch.AppendFormat("start /w """" ""{0}"" -y", sDataPath).AppendLine() 'Run 7zip SFX and wait
@@ -370,7 +370,7 @@ Public Class ClassUpdate
             sUpdateBatch.AppendLine("@echo off")
 
             For Each sProcessName As String In sProcessNamesKill
-                sUpdateBatch.AppendFormat("taskkill /F /T /IM ""{0}""", sProcessName).AppendLine() 'Terminate processes
+                sUpdateBatch.AppendFormat("taskkill /F /IM ""{0}""", sProcessName).AppendLine() 'Terminate processes
             Next
 
             sUpdateBatch.AppendFormat("start /w """" ""{0}"" -y", sDataPath).AppendLine() 'Run 7zip SFX and wait

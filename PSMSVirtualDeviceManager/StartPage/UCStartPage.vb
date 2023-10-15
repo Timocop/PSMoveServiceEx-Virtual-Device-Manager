@@ -1062,11 +1062,21 @@ Public Class UCStartPage
                                                                   End If
                                                               End If
 
-                                                              Dim sServicePath As String = mConfig.m_FileName
+                                                              Dim sServicePath As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
 
                                                               Dim sEndProcessNames As New List(Of String)
                                                               sEndProcessNames.Add("PSMoveService.exe")
                                                               sEndProcessNames.Add("PSMoveServiceAdmin.exe")
+
+                                                              sEndProcessNames.Add("test_camera.exe")
+                                                              sEndProcessNames.Add("test_camera_parallel.exe")
+                                                              sEndProcessNames.Add("test_console_CAPI.exe")
+                                                              sEndProcessNames.Add("test_ds4_controller.exe")
+                                                              sEndProcessNames.Add("test_kalman_filter.exe")
+                                                              sEndProcessNames.Add("test_navi_controller.exe")
+                                                              sEndProcessNames.Add("test_psmove_controller.exe")
+                                                              sEndProcessNames.Add("unit_test_suite.exe")
+
                                                               sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
                                                               ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
@@ -1108,6 +1118,16 @@ Public Class UCStartPage
                                                               Dim sEndProcessNames As New List(Of String)
                                                               sEndProcessNames.Add("PSMoveService.exe")
                                                               sEndProcessNames.Add("PSMoveServiceAdmin.exe")
+
+                                                              sEndProcessNames.Add("test_camera.exe")
+                                                              sEndProcessNames.Add("test_camera_parallel.exe")
+                                                              sEndProcessNames.Add("test_console_CAPI.exe")
+                                                              sEndProcessNames.Add("test_ds4_controller.exe")
+                                                              sEndProcessNames.Add("test_kalman_filter.exe")
+                                                              sEndProcessNames.Add("test_navi_controller.exe")
+                                                              sEndProcessNames.Add("test_psmove_controller.exe")
+                                                              sEndProcessNames.Add("unit_test_suite.exe")
+
                                                               sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
                                                               ClassUpdate.ClassVdm.InstallUpdate(Application.StartupPath, sEndProcessNames.ToArray)
