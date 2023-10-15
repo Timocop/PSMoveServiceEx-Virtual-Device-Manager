@@ -30,7 +30,7 @@ Public Class ClassUpdate
         Public Shared g_mUpdateLocations As STRUC_UPDATE_LOCATIONS() = {
             New STRUC_UPDATE_LOCATIONS("github.com",
                                        "https://raw.githubusercontent.com/Timocop/PSMoveServiceEx/master-experimental/updater/app_version.txt",
-                                       "",
+                                       "https://raw.githubusercontent.com/Timocop/PSMoveServiceEx/master-experimental/updater/PSMoveServiceUpdateSFX.dat",
                                        String.Format("PSMS-EX Virtual Device Manager/{0} (compatible; Windows NT)", Application.ProductVersion),
                                        STRUC_UPDATE_LOCATIONS.ENUM_VERSION_TYPE.VERSION)
         }

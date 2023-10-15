@@ -814,7 +814,7 @@ Partial Class UCStartPage
         Me.Button_PsmsxUpdateDownload.Name = "Button_PsmsxUpdateDownload"
         Me.Button_PsmsxUpdateDownload.Size = New System.Drawing.Size(139, 23)
         Me.Button_PsmsxUpdateDownload.TabIndex = 3
-        Me.Button_PsmsxUpdateDownload.Text = "Download Now"
+        Me.Button_PsmsxUpdateDownload.Text = "Download and Install"
         Me.Button_PsmsxUpdateDownload.UseVisualStyleBackColor = True
         '
         'Label10
@@ -931,7 +931,7 @@ Partial Class UCStartPage
         Me.Button_VdmUpdateDownload.Name = "Button_VdmUpdateDownload"
         Me.Button_VdmUpdateDownload.Size = New System.Drawing.Size(139, 23)
         Me.Button_VdmUpdateDownload.TabIndex = 6
-        Me.Button_VdmUpdateDownload.Text = "Download Now"
+        Me.Button_VdmUpdateDownload.Text = "Download and Install"
         Me.Button_VdmUpdateDownload.UseVisualStyleBackColor = True
         '
         'Label11

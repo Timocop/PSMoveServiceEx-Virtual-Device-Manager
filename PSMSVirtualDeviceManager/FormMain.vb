@@ -773,6 +773,15 @@
                 Dim sLocationInfo As String = ""
 
                 If (True) Then
+#If DEBUG Then
+                    ClassUtils.AsyncInvoke(g_mFormMain,
+                                            Sub()
+                                                g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
+                                                g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
+
+                                                g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
+                                            End Sub)
+#Else
                     If (ClassUpdate.ClassVdm.CheckUpdateAvailable(Application.ExecutablePath, sLocationInfo)) Then
                         ClassUtils.AsyncInvoke(g_mFormMain,
                                                Sub()
@@ -782,6 +791,7 @@
                                                    g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
                                                End Sub)
                     End If
+#End If
                 End If
 
                 If (True) Then
@@ -789,12 +799,20 @@
                     mConfig.LoadConfig()
 
                     If (mConfig.FileExist) Then
+
+#If DEBUG Then
+                        ClassUtils.AsyncInvoke(g_mFormMain,
+                                                Sub()
+                                                    g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
+                                                End Sub)
+#Else
                         If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
                             ClassUtils.AsyncInvoke(g_mFormMain,
-                                Sub()
-                                    g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
-                                End Sub)
+                                                    Sub()
+                                                        g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
+                                                    End Sub)
                         End If
+#End If
                     End If
                 End If
 

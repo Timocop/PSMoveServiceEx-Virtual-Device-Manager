@@ -12,6 +12,9 @@ Public Class UCStartPage
     Private g_mDriverInstallThread As Threading.Thread = Nothing
     Private g_mDriverInstallFormLoad As FormLoading = Nothing
 
+    Private g_mUpdateInstallThread As Threading.Thread = Nothing
+    Private g_mUpdateInstallFormLoad As FormLoading = Nothing
+
     Private g_bIsServiceRunning As Boolean = False
     Private g_bIsServiceConnected As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
@@ -379,6 +382,12 @@ Public Class UCStartPage
             g_mStatusThread = Nothing
         End If
 
+        If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
+            g_mUpdateInstallThread.Abort()
+            g_mUpdateInstallThread.Join()
+            g_mUpdateInstallThread = Nothing
+        End If
+
         If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
             g_mDriverInstallThread.Abort()
             g_mDriverInstallThread.Join()
@@ -522,7 +531,7 @@ Public Class UCStartPage
             Return
         End If
 
-        g_mFormRestart.ProgressBar1.Value = Math.Min(g_mFormRestart.ProgressBar1.Value + 20, g_mFormRestart.ProgressBar1.Maximum)
+        g_mFormRestart.ProgressBar1.Value = Math.Min(g_mFormRestart.ProgressBar1.Value + 25, g_mFormRestart.ProgressBar1.Maximum)
 
         If (g_mFormRestart.ProgressBar1.Value < g_mFormRestart.ProgressBar1.Maximum) Then
             Return
@@ -1025,17 +1034,98 @@ Public Class UCStartPage
     End Sub
 
     Private Sub Button_PsmsxUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxUpdateDownload.Click
-        Try
-            Process.Start("https://github.com/Timocop/PSMoveServiceEx/releases")
-        Catch ex As Exception
-        End Try
+        If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mUpdateInstallThread = New Threading.Thread(Sub()
+                                                          Try
+                                                              ClassUtils.AsyncInvoke(Me, Sub()
+                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                                                                 g_mUpdateInstallFormLoad.Dispose()
+                                                                                                 g_mUpdateInstallFormLoad = Nothing
+                                                                                             End If
+
+                                                                                             g_mUpdateInstallFormLoad = New FormLoading
+                                                                                             g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
+                                                                                             g_mUpdateInstallFormLoad.ShowDialog(Me)
+                                                                                         End Sub)
+
+                                                              Dim mConfig As New ClassServiceInfo
+                                                              mConfig.LoadConfig()
+
+                                                              If (Not mConfig.FileExist()) Then
+                                                                  If (Not mConfig.FindByProcess()) Then
+                                                                      If (Not mConfig.SearchForService()) Then
+                                                                          Throw New ArgumentException("Unable to find PSMoveServiceEx")
+                                                                      End If
+                                                                  End If
+                                                              End If
+
+                                                              Dim sServicePath As String = mConfig.m_FileName
+
+                                                              Dim sEndProcessNames As New List(Of String)
+                                                              sEndProcessNames.Add("PSMoveService.exe")
+                                                              sEndProcessNames.Add("PSMoveServiceAdmin.exe")
+                                                              sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
+
+                                                              ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
+                                                          Catch ex As Threading.ThreadAbortException
+                                                              Throw
+                                                          Catch ex As Exception
+                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                          Finally
+                                                              ClassUtils.AsyncInvoke(Me, Sub()
+                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                                                                 g_mUpdateInstallFormLoad.Dispose()
+                                                                                                 g_mUpdateInstallFormLoad = Nothing
+                                                                                             End If
+                                                                                         End Sub)
+                                                          End Try
+                                                      End Sub)
+        g_mUpdateInstallThread.IsBackground = True
+        g_mUpdateInstallThread.Start()
     End Sub
 
     Private Sub Button_VdmUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateDownload.Click
-        Try
-            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
-        Catch ex As Exception
-        End Try
+        If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mUpdateInstallThread = New Threading.Thread(Sub()
+                                                          Try
+                                                              ClassUtils.AsyncInvoke(Me, Sub()
+                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                                                                 g_mUpdateInstallFormLoad.Dispose()
+                                                                                                 g_mUpdateInstallFormLoad = Nothing
+                                                                                             End If
+
+                                                                                             g_mUpdateInstallFormLoad = New FormLoading
+                                                                                             g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
+                                                                                             g_mUpdateInstallFormLoad.ShowDialog(Me)
+                                                                                         End Sub)
+
+                                                              Dim sEndProcessNames As New List(Of String)
+                                                              sEndProcessNames.Add("PSMoveService.exe")
+                                                              sEndProcessNames.Add("PSMoveServiceAdmin.exe")
+                                                              sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
+
+                                                              ClassUpdate.ClassVdm.InstallUpdate(Application.StartupPath, sEndProcessNames.ToArray)
+                                                          Catch ex As Threading.ThreadAbortException
+                                                              Throw
+                                                          Catch ex As Exception
+                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                          Finally
+                                                              ClassUtils.AsyncInvoke(Me, Sub()
+                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                                                                 g_mUpdateInstallFormLoad.Dispose()
+                                                                                                 g_mUpdateInstallFormLoad = Nothing
+                                                                                             End If
+                                                                                         End Sub)
+                                                          End Try
+                                                      End Sub)
+        g_mUpdateInstallThread.IsBackground = True
+        g_mUpdateInstallThread.Start()
     End Sub
 
     Private Sub Button_VdmUpdateIgnore_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateIgnore.Click
