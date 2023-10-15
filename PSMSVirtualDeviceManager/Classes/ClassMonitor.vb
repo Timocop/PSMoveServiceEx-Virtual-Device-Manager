@@ -307,7 +307,7 @@ Public Class ClassMonitor
                 ' Give it a sexy friendly name for the device manager.
                 mIdKey.SetValue("FriendlyName", "PSVR", RegistryValueKind.String)
 
-                Dim iFullEDID As Byte() = Nothing
+                Dim iFullEDID As Byte() = New Byte() {}
 
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
@@ -318,8 +318,8 @@ Public Class ClassMonitor
                         Throw New ArgumentException("Unknown PSVR monitor hardware id")
                 End Select
 
-                Dim iNewEIDI As Byte() = Nothing
-                Dim iNewExtension As Byte() = Nothing
+                Dim iNewEIDI As Byte() = New Byte() {}
+                Dim iNewExtension As Byte() = New Byte() {}
 
                 If (True) Then
                     Dim iBaseEDID As New List(Of Byte)
@@ -393,7 +393,7 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                Dim iFullEDID As Byte() = Nothing
+                Dim iFullEDID As Byte() = New Byte() {}
 
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
