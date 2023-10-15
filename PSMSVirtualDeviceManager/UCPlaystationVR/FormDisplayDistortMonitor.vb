@@ -5,9 +5,9 @@
     Public g_iDistortK0 As Single = 0.0F
     Public g_iDistortK1 As Single = 0.0F
     Public g_iDistortScale As Single = 1.0F
-    Public g_iDistortRScale As Single = 1.0F
-    Public g_iDistortGScale As Single = 1.0F
-    Public g_iDistortBScale As Single = 1.0F
+    Public g_iDistortRScale As Single = 0.0F
+    Public g_iDistortGScale As Single = 0.0F
+    Public g_iDistortBScale As Single = 0.0F
 
     Public g_iPatternSize As Integer = 64
 

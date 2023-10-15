@@ -1,4 +1,5 @@
-﻿Public Class FormDisplayDistortCalibrator
+﻿
+Public Class FormDisplayDistortCalibrator
     Private g_FormDisplayDistortMonitor As FormDisplayDistortMonitor
     Private g_bIgnoreEvents As Boolean = True
 
@@ -8,6 +9,14 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+
+        NumericUpDown_Fov.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_HFOV)
+        NumericUpDown_DistortK0.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_DISTORTION_K0)
+        NumericUpDown_DistortK1.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_DISTORTION_K1)
+        NumericUpDown_DistortScale.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_DISTORTION_SCALE)
+        NumericUpDown_RedScale.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_DISTORTION_RED_OFFSET)
+        NumericUpDown_GreenScale.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_DISTORTION_GREEN_OFFSET)
+        NumericUpDown_BlueScale.Value = CDec(UCVirtualMotionTracker.ClassSettings.DISPLAY_DISTORTION_BLUE_OFFSET)
 
         g_FormDisplayDistortMonitor = New FormDisplayDistortMonitor
         g_FormDisplayDistortMonitor.g_iDistortFov = NumericUpDown_Fov.Value
