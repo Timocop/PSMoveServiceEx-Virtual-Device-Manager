@@ -295,6 +295,7 @@ Public Class UCRemoteDevices
         Private g_mLastKeepup As New Stopwatch
         Private g_mTrackers As New Dictionary(Of String, ClassTracker)
         Private g_bAllowNewDevices As Boolean = False
+        Private g_iLastPacketCount As ULong = 0
 
         Shared HANDSHAKE_BUFFER As Byte() = New Byte(64) {}
         Shared KEEPUP_BUFFER As Byte() = New Byte(64) {}
@@ -467,7 +468,12 @@ Public Class UCRemoteDevices
                                             Exit Select
                                         End If
 
-                                        mBinReader.ReadInt64()
+                                        Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
+                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                            Exit Select
+                                        End If
+
+                                        g_iLastPacketCount = iPacketIndex
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
@@ -486,7 +492,12 @@ Public Class UCRemoteDevices
                                             Exit Select
                                         End If
 
-                                        mBinReader.ReadInt64()
+                                        Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
+                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                            Exit Select
+                                        End If
+
+                                        g_iLastPacketCount = iPacketIndex
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
@@ -499,7 +510,12 @@ Public Class UCRemoteDevices
                                             Exit Select
                                         End If
 
-                                        mBinReader.ReadInt64()
+                                        Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
+                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                            Exit Select
+                                        End If
+
+                                        g_iLastPacketCount = iPacketIndex
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
@@ -512,7 +528,12 @@ Public Class UCRemoteDevices
                                             Exit Select
                                         End If
 
-                                        mBinReader.ReadInt64()
+                                        Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
+                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                            Exit Select
+                                        End If
+
+                                        g_iLastPacketCount = iPacketIndex
 
                                         Dim iVoltage As Single = BR_ReadSingle(mBinReader)
                                         ' Dim iPercentage As Single = BR_ReadSingle(mBinReader) 'SlimeVR only
@@ -560,7 +581,12 @@ Public Class UCRemoteDevices
                                             Exit Select
                                         End If
 
-                                        mBinReader.ReadInt64()
+                                        Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
+                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                            Exit Select
+                                        End If
+
+                                        g_iLastPacketCount = iPacketIndex
 
                                         Dim iSensorId As Integer = (mBinReader.ReadByte And &HFF)
 
@@ -643,6 +669,8 @@ Public Class UCRemoteDevices
                 Dim sMacAddress As String = ""
                 Dim iProtocolType As ClassTracker.ENUM_PROTOCOL_TYPE = ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR
 
+                g_iLastPacketCount = 0
+
                 mBinReader.ReadInt64() ' Skip packet number
 
                 mBinReader.ReadInt32() ' (SlimeVR) Board Type  
@@ -710,6 +738,13 @@ Public Class UCRemoteDevices
                 End SyncLock
 
                 RaiseEvent OnTrackerConnected(mTracker)
+            Else
+                Dim iPakcetIndex As ULong = BR_ReadUInt64(mBinReader)
+
+                If (iPakcetIndex = 0) Then
+                    g_iLastPacketCount = 0
+                End If
+
             End If
 
             g_mSocket.SendTo(HANDSHAKE_BUFFER, SocketFlags.None, mEndPoint)
@@ -723,6 +758,26 @@ Public Class UCRemoteDevices
             Dim bytes As Byte() = BitConverter.GetBytes(br.ReadInt32())
             Array.Reverse(bytes)
             Return BitConverter.ToInt32(bytes, 0)
+        End Function
+
+        Private Function BR_ReadInt64(br As IO.BinaryReader) As Long
+            If (Not BitConverter.IsLittleEndian) Then
+                Return br.ReadInt64
+            End If
+
+            Dim bytes As Byte() = BitConverter.GetBytes(br.ReadInt64())
+            Array.Reverse(bytes)
+            Return BitConverter.ToInt64(bytes, 0)
+        End Function
+
+        Private Function BR_ReadUInt64(br As IO.BinaryReader) As ULong
+            If (Not BitConverter.IsLittleEndian) Then
+                Return br.ReadUInt64
+            End If
+
+            Dim bytes As Byte() = BitConverter.GetBytes(br.ReadUInt64())
+            Array.Reverse(bytes)
+            Return BitConverter.ToUInt64(bytes, 0)
         End Function
 
         Private Function BR_ReadSingle(br As IO.BinaryReader) As Single
