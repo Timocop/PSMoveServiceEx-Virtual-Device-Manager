@@ -158,12 +158,20 @@
                 Label_PSVRStatus.Text = "PlayStation VR Connected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(0, 192, 0)
 
+                ' Label Status in MainForm
+                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Connected"
+                g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_GREEN_16
+
             Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED AndAlso
                     iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED AndAlso
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
                 ' Nothing connected issues.
                 Label_PSVRStatus.Text = "PlayStation VR Disconnected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(224, 224, 224)
+
+                ' Label Status in MainForm
+                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Disconnected"
+                g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_WHITE_16
 
             Case (iUsbStatus = ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE OrElse
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED OrElse
@@ -175,12 +183,20 @@
                 Label_PSVRStatus.Text = "PlayStation VR Issues Detected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(255, 128, 0)
 
+                ' Label Status in MainForm
+                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Warning"
+                g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_YELLOW_16
+
             Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.GENERAL_ISSUE OrElse
                     iUsbStatus = ENUM_DEVICE_USB_STATUS.GENERAL_ISSUE OrElse
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE)
                 ' USB, HDMI or Display general issues.
                 Label_PSVRStatus.Text = "PlayStation VR Error"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(192, 0, 0)
+
+                ' Label Status in MainForm
+                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Error"
+                g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_RED_16
 
             Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED OrElse
                     iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED OrElse
@@ -189,10 +205,18 @@
                 Label_PSVRStatus.Text = "PlayStation VR Not Properly Connected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(255, 128, 0)
 
+                ' Label Status in MainForm
+                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Warning"
+                g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_YELLOW_16
+
             Case Else
                 ' Dunno.
                 Label_PSVRStatus.Text = "PlayStation VR Unknown Status"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(224, 224, 224)
+
+                ' Label Status in MainForm
+                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Unknown Status"
+                g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_WHITE_16
 
         End Select
     End Sub

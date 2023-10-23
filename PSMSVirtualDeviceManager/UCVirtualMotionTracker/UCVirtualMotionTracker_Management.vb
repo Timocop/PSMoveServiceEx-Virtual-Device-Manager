@@ -163,17 +163,33 @@ Partial Public Class UCVirtualMotionTracker
                 Label_OscStatus.Text = "OSC Uninitialized"
                 Panel_OscStatus.BackColor = Color.FromArgb(224, 224, 224)
 
+                ' Label Status in MainForm
+                g_mFormMain.Label_VmtStatus.Text = "OSC Uninitialized"
+                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_WHITE_16
+
             Case ENUM_OSC_CONNECTION_STATUS.CONNECTED
                 Label_OscStatus.Text = "OSC Connected"
                 Panel_OscStatus.BackColor = Color.FromArgb(0, 192, 0)
+
+                ' Label Status in MainForm
+                g_mFormMain.Label_VmtStatus.Text = "OSC Connected"
+                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_GREEN_16
 
             Case ENUM_OSC_CONNECTION_STATUS.DISCONNETED
                 Label_OscStatus.Text = "OSC Disconnected"
                 Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
 
+                ' Label Status in MainForm
+                g_mFormMain.Label_VmtStatus.Text = "OSC Disconnected"
+                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
+
             Case ENUM_OSC_CONNECTION_STATUS.TIMEOUT
                 Label_OscStatus.Text = "OSC Timeout"
                 Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
+
+                ' Label Status in MainForm
+                g_mFormMain.Label_VmtStatus.Text = "OSC Timeout"
+                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
 
         End Select
     End Sub

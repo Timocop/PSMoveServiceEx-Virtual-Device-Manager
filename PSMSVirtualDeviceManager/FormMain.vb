@@ -493,21 +493,6 @@
         SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
     End Sub
 
-    Public Sub LinkLabel_ControllersGeneral_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersGeneral.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_General
-    End Sub
-
-    Public Sub LinkLabel_ControllersRemote_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersRemote.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
-    End Sub
-
-    Public Sub LinkLabel_ControllersAttachments_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ControllersAttachments.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_ControllerAttachments
-    End Sub
-
     Public Sub LinkLabel_RemoteStartSocket_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RemoteStartSocket.LinkClicked
         If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
             Return
@@ -542,29 +527,9 @@
         g_mUCVirtualMotionTracker.LinkLabel_OscPause_Click()
     End Sub
 
-    Private Sub LinkLabel_VmtManagement_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtManagement.LinkClicked
+    Private Sub LinkLabel_VmtManagement_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Label_VmtStatus.LinkClicked
         SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
         g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
-    End Sub
-
-    Private Sub LinkLabel_VmtTrackers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtTrackers.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Trackers
-    End Sub
-
-    Private Sub LinkLabel_VmtSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtSettings.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Settings
-    End Sub
-
-    Private Sub LinkLabel_VmtPlayspaceCalib_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtPlayspaceCalib.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_PlayspaceCalib
-    End Sub
-
-    Private Sub LinkLabel_VmtSteamVrOverrides_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VmtSteamVrOverrides.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Overrides
     End Sub
 
     Public Sub LinkLabel_RunPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMS.LinkClicked

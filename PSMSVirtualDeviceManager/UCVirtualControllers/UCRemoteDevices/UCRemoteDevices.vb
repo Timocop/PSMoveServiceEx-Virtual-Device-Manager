@@ -141,6 +141,9 @@ Public Class UCRemoteDevices
         m_SocketPort = DEFAULT_SOCKET_PORT
         m_SocketAddress = "127.0.0.1"
 
+
+        SetStatus(False)
+
         CreateControl()
 
         g_mLocalAddressThread = New Threading.Thread(AddressOf LocalAddressThread)
@@ -223,10 +226,27 @@ Public Class UCRemoteDevices
         Try
             g_mClassStrackerSocket.Init()
 
-            LinkLabel_EditPort.Enabled = False
+            SetStatus(True)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
+
+    Private Sub SetStatus(bEnabled As Boolean)
+        If (bEnabled) Then
+            LinkLabel_EditPort.Enabled = False
+
+            ' Label Status in MainForm
+            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Text = "Remote Devices Enabled"
+            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Image = My.Resources.Status_GREEN_16
+        Else
+            LinkLabel_EditPort.Enabled = True
+
+            ' Label Status in MainForm
+            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Text = "Remote Devices Disabled"
+            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Image = My.Resources.Status_WHITE_16
+        End If
+
     End Sub
 
     Private Sub CheckBox_AllowNewDevices_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_AllowNewDevices.CheckedChanged

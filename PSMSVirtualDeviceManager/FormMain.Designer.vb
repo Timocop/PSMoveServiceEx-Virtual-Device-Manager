@@ -35,11 +35,11 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_VmtSteamVrOverrides = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_VmtPlayspaceCalib = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_VmtSettings = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_VmtTrackers = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_VmtManagement = New System.Windows.Forms.LinkLabel()
+        Me.Label_PsvrStatus = New System.Windows.Forms.LinkLabel()
+        Me.Label_RemoteDeviceStatus = New System.Windows.Forms.LinkLabel()
+        Me.Label_ServiceStatus = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_PSVR = New System.Windows.Forms.LinkLabel()
+        Me.Label_VmtStatus = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_VMT = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_StartPage = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunSteamVR = New System.Windows.Forms.LinkLabel()
@@ -49,15 +49,11 @@ Partial Class FormMain
         Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
         Me.Label_Version = New System.Windows.Forms.Label()
-        Me.LinkLabel_ControllersAttachments = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_ControllersRemote = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_ControllersGeneral = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Trackers = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_HMDs = New System.Windows.Forms.LinkLabel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.LinkLabel_PSVR = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -84,8 +80,8 @@ Partial Class FormMain
         Me.LinkLabel_RestartPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RestartPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RestartPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(41, 151)
-        Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(48, 178)
+        Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RestartPSMS.Name = "LinkLabel_RestartPSMS"
         Me.LinkLabel_RestartPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_RestartPSMS.Size = New System.Drawing.Size(99, 19)
@@ -106,8 +102,8 @@ Partial Class FormMain
         Me.LinkLabel_StopPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_StopPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_StopPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StopPSMS.Location = New System.Drawing.Point(41, 124)
-        Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.LinkLabel_StopPSMS.Location = New System.Drawing.Point(48, 151)
+        Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_StopPSMS.Name = "LinkLabel_StopPSMS"
         Me.LinkLabel_StopPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_StopPSMS.Size = New System.Drawing.Size(87, 19)
@@ -128,8 +124,8 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RunPSMSTool.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RunPSMSTool.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(41, 178)
-        Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(48, 205)
+        Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RunPSMSTool.Name = "LinkLabel_RunPSMSTool"
         Me.LinkLabel_RunPSMSTool.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_RunPSMSTool.Size = New System.Drawing.Size(147, 19)
@@ -150,8 +146,8 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RunPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RunPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMS.Location = New System.Drawing.Point(41, 97)
-        Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.LinkLabel_RunPSMS.Location = New System.Drawing.Point(48, 124)
+        Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RunPSMS.Name = "LinkLabel_RunPSMS"
         Me.LinkLabel_RunPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_RunPSMS.Size = New System.Drawing.Size(84, 19)
@@ -167,12 +163,11 @@ Partial Class FormMain
         Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 750)
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel1.Controls.Add(Me.Label_PsvrStatus)
+        Me.Panel1.Controls.Add(Me.Label_RemoteDeviceStatus)
+        Me.Panel1.Controls.Add(Me.Label_ServiceStatus)
         Me.Panel1.Controls.Add(Me.LinkLabel_PSVR)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VmtSteamVrOverrides)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VmtPlayspaceCalib)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VmtSettings)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VmtTrackers)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VmtManagement)
+        Me.Panel1.Controls.Add(Me.Label_VmtStatus)
         Me.Panel1.Controls.Add(Me.LinkLabel_VMT)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMSTool)
@@ -186,9 +181,6 @@ Partial Class FormMain
         Me.Panel1.Controls.Add(Me.LinkLabel_Updates)
         Me.Panel1.Controls.Add(Me.LinkLabel_Github)
         Me.Panel1.Controls.Add(Me.Label_Version)
-        Me.Panel1.Controls.Add(Me.LinkLabel_ControllersAttachments)
-        Me.Panel1.Controls.Add(Me.LinkLabel_ControllersRemote)
-        Me.Panel1.Controls.Add(Me.LinkLabel_ControllersGeneral)
         Me.Panel1.Controls.Add(Me.LinkLabel_Trackers)
         Me.Panel1.Controls.Add(Me.LinkLabel_HMDs)
         Me.Panel1.Controls.Add(Me.Panel3)
@@ -200,110 +192,110 @@ Partial Class FormMain
         Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
         '
-        'LinkLabel_VmtSteamVrOverrides
+        'Label_PsvrStatus
         '
-        Me.LinkLabel_VmtSteamVrOverrides.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VmtSteamVrOverrides.AutoSize = True
-        Me.LinkLabel_VmtSteamVrOverrides.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_VmtSteamVrOverrides.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VmtSteamVrOverrides.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtSteamVrOverrides.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_VmtSteamVrOverrides.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VmtSteamVrOverrides.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VmtSteamVrOverrides.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtSteamVrOverrides.Location = New System.Drawing.Point(32, 610)
-        Me.LinkLabel_VmtSteamVrOverrides.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_VmtSteamVrOverrides.Name = "LinkLabel_VmtSteamVrOverrides"
-        Me.LinkLabel_VmtSteamVrOverrides.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VmtSteamVrOverrides.Size = New System.Drawing.Size(161, 19)
-        Me.LinkLabel_VmtSteamVrOverrides.TabIndex = 30
-        Me.LinkLabel_VmtSteamVrOverrides.TabStop = True
-        Me.LinkLabel_VmtSteamVrOverrides.Text = "SteamVR Tracker Overrides"
-        Me.LinkLabel_VmtSteamVrOverrides.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Label_PsvrStatus.ActiveLinkColor = System.Drawing.Color.Black
+        Me.Label_PsvrStatus.AutoSize = True
+        Me.Label_PsvrStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_PsvrStatus.DisabledLinkColor = System.Drawing.Color.Black
+        Me.Label_PsvrStatus.ForeColor = System.Drawing.Color.Black
+        Me.Label_PsvrStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Label_PsvrStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_PsvrStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
+        Me.Label_PsvrStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.Label_PsvrStatus.LinkColor = System.Drawing.Color.Black
+        Me.Label_PsvrStatus.Location = New System.Drawing.Point(32, 267)
+        Me.Label_PsvrStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.Label_PsvrStatus.Name = "Label_PsvrStatus"
+        Me.Label_PsvrStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.Label_PsvrStatus.Size = New System.Drawing.Size(128, 19)
+        Me.Label_PsvrStatus.TabIndex = 34
+        Me.Label_PsvrStatus.Text = "Management Status"
+        Me.Label_PsvrStatus.VisitedLinkColor = System.Drawing.Color.Black
         '
-        'LinkLabel_VmtPlayspaceCalib
+        'Label_RemoteDeviceStatus
         '
-        Me.LinkLabel_VmtPlayspaceCalib.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VmtPlayspaceCalib.AutoSize = True
-        Me.LinkLabel_VmtPlayspaceCalib.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_VmtPlayspaceCalib.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VmtPlayspaceCalib.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtPlayspaceCalib.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_VmtPlayspaceCalib.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VmtPlayspaceCalib.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VmtPlayspaceCalib.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtPlayspaceCalib.Location = New System.Drawing.Point(32, 583)
-        Me.LinkLabel_VmtPlayspaceCalib.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_VmtPlayspaceCalib.Name = "LinkLabel_VmtPlayspaceCalib"
-        Me.LinkLabel_VmtPlayspaceCalib.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VmtPlayspaceCalib.Size = New System.Drawing.Size(134, 19)
-        Me.LinkLabel_VmtPlayspaceCalib.TabIndex = 29
-        Me.LinkLabel_VmtPlayspaceCalib.TabStop = True
-        Me.LinkLabel_VmtPlayspaceCalib.Text = "Playspace Calibration"
-        Me.LinkLabel_VmtPlayspaceCalib.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Label_RemoteDeviceStatus.ActiveLinkColor = System.Drawing.Color.Black
+        Me.Label_RemoteDeviceStatus.AutoSize = True
+        Me.Label_RemoteDeviceStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_RemoteDeviceStatus.DisabledLinkColor = System.Drawing.Color.Black
+        Me.Label_RemoteDeviceStatus.ForeColor = System.Drawing.Color.Black
+        Me.Label_RemoteDeviceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Label_RemoteDeviceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_RemoteDeviceStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
+        Me.Label_RemoteDeviceStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.Label_RemoteDeviceStatus.LinkColor = System.Drawing.Color.Black
+        Me.Label_RemoteDeviceStatus.Location = New System.Drawing.Point(32, 329)
+        Me.Label_RemoteDeviceStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.Label_RemoteDeviceStatus.Name = "Label_RemoteDeviceStatus"
+        Me.Label_RemoteDeviceStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.Label_RemoteDeviceStatus.Size = New System.Drawing.Size(140, 19)
+        Me.Label_RemoteDeviceStatus.TabIndex = 33
+        Me.Label_RemoteDeviceStatus.Text = "Remote Devices Status"
+        Me.Label_RemoteDeviceStatus.VisitedLinkColor = System.Drawing.Color.Black
         '
-        'LinkLabel_VmtSettings
+        'Label_ServiceStatus
         '
-        Me.LinkLabel_VmtSettings.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VmtSettings.AutoSize = True
-        Me.LinkLabel_VmtSettings.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_VmtSettings.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VmtSettings.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_VmtSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VmtSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VmtSettings.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtSettings.Location = New System.Drawing.Point(32, 556)
-        Me.LinkLabel_VmtSettings.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_VmtSettings.Name = "LinkLabel_VmtSettings"
-        Me.LinkLabel_VmtSettings.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VmtSettings.Size = New System.Drawing.Size(67, 19)
-        Me.LinkLabel_VmtSettings.TabIndex = 28
-        Me.LinkLabel_VmtSettings.TabStop = True
-        Me.LinkLabel_VmtSettings.Text = "Settings"
-        Me.LinkLabel_VmtSettings.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Label_ServiceStatus.ActiveLinkColor = System.Drawing.Color.Black
+        Me.Label_ServiceStatus.AutoSize = True
+        Me.Label_ServiceStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_ServiceStatus.DisabledLinkColor = System.Drawing.Color.Black
+        Me.Label_ServiceStatus.ForeColor = System.Drawing.Color.Black
+        Me.Label_ServiceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Label_ServiceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_ServiceStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
+        Me.Label_ServiceStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.Label_ServiceStatus.LinkColor = System.Drawing.Color.Black
+        Me.Label_ServiceStatus.Location = New System.Drawing.Point(32, 97)
+        Me.Label_ServiceStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.Label_ServiceStatus.Name = "Label_ServiceStatus"
+        Me.Label_ServiceStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.Label_ServiceStatus.Size = New System.Drawing.Size(128, 19)
+        Me.Label_ServiceStatus.TabIndex = 32
+        Me.Label_ServiceStatus.Text = "Management Status"
+        Me.Label_ServiceStatus.VisitedLinkColor = System.Drawing.Color.Black
         '
-        'LinkLabel_VmtTrackers
+        'LinkLabel_PSVR
         '
-        Me.LinkLabel_VmtTrackers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VmtTrackers.AutoSize = True
-        Me.LinkLabel_VmtTrackers.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_VmtTrackers.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VmtTrackers.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtTrackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_VmtTrackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VmtTrackers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VmtTrackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtTrackers.Location = New System.Drawing.Point(32, 529)
-        Me.LinkLabel_VmtTrackers.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_VmtTrackers.Name = "LinkLabel_VmtTrackers"
-        Me.LinkLabel_VmtTrackers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VmtTrackers.Size = New System.Drawing.Size(66, 19)
-        Me.LinkLabel_VmtTrackers.TabIndex = 27
-        Me.LinkLabel_VmtTrackers.TabStop = True
-        Me.LinkLabel_VmtTrackers.Text = "Trackers"
-        Me.LinkLabel_VmtTrackers.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PSVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_PSVR.AutoSize = True
+        Me.LinkLabel_PSVR.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PSVR.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_PSVR.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PSVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.LinkLabel_PSVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_PSVR.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_PSVR.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PSVR.Location = New System.Drawing.Point(17, 240)
+        Me.LinkLabel_PSVR.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
+        Me.LinkLabel_PSVR.Name = "LinkLabel_PSVR"
+        Me.LinkLabel_PSVR.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.LinkLabel_PSVR.Size = New System.Drawing.Size(170, 19)
+        Me.LinkLabel_PSVR.TabIndex = 31
+        Me.LinkLabel_PSVR.TabStop = True
+        Me.LinkLabel_PSVR.Text = "PlayStation VR Management"
+        Me.LinkLabel_PSVR.VisitedLinkColor = System.Drawing.Color.Navy
         '
-        'LinkLabel_VmtManagement
+        'Label_VmtStatus
         '
-        Me.LinkLabel_VmtManagement.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VmtManagement.AutoSize = True
-        Me.LinkLabel_VmtManagement.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_VmtManagement.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VmtManagement.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtManagement.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_VmtManagement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VmtManagement.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VmtManagement.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VmtManagement.Location = New System.Drawing.Point(32, 448)
-        Me.LinkLabel_VmtManagement.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_VmtManagement.Name = "LinkLabel_VmtManagement"
-        Me.LinkLabel_VmtManagement.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VmtManagement.Size = New System.Drawing.Size(93, 19)
-        Me.LinkLabel_VmtManagement.TabIndex = 26
-        Me.LinkLabel_VmtManagement.TabStop = True
-        Me.LinkLabel_VmtManagement.Text = "Management"
-        Me.LinkLabel_VmtManagement.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Label_VmtStatus.ActiveLinkColor = System.Drawing.Color.Black
+        Me.Label_VmtStatus.AutoSize = True
+        Me.Label_VmtStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_VmtStatus.DisabledLinkColor = System.Drawing.Color.Black
+        Me.Label_VmtStatus.ForeColor = System.Drawing.Color.Black
+        Me.Label_VmtStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Label_VmtStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label_VmtStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
+        Me.Label_VmtStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.Label_VmtStatus.LinkColor = System.Drawing.Color.Black
+        Me.Label_VmtStatus.Location = New System.Drawing.Point(32, 472)
+        Me.Label_VmtStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.Label_VmtStatus.Name = "Label_VmtStatus"
+        Me.Label_VmtStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.Label_VmtStatus.Size = New System.Drawing.Size(128, 19)
+        Me.Label_VmtStatus.TabIndex = 26
+        Me.Label_VmtStatus.Text = "Management Status"
+        Me.Label_VmtStatus.VisitedLinkColor = System.Drawing.Color.Black
         '
         'LinkLabel_VMT
         '
@@ -316,7 +308,7 @@ Partial Class FormMain
         Me.LinkLabel_VMT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VMT.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 421)
+        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 445)
         Me.LinkLabel_VMT.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_VMT.Name = "LinkLabel_VMT"
         Me.LinkLabel_VMT.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -380,7 +372,7 @@ Partial Class FormMain
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Location = New System.Drawing.Point(57, 502)
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Location = New System.Drawing.Point(48, 526)
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Name = "LinkLabel1LinkLabel_VMTPauseOscServer"
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -401,7 +393,7 @@ Partial Class FormMain
         Me.LinkLabel_RemoteStartSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RemoteStartSocket.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RemoteStartSocket.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(57, 313)
+        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(48, 356)
         Me.LinkLabel_RemoteStartSocket.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RemoteStartSocket.Name = "LinkLabel_RemoteStartSocket"
         Me.LinkLabel_RemoteStartSocket.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -422,7 +414,7 @@ Partial Class FormMain
         Me.LinkLabel_VMTStartOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VMTStartOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VMTStartOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(57, 475)
+        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(48, 499)
         Me.LinkLabel_VMTStartOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_VMTStartOscServer.Name = "LinkLabel_VMTStartOscServer"
         Me.LinkLabel_VMTStartOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -489,69 +481,6 @@ Partial Class FormMain
         Me.Label_Version.TabIndex = 2
         Me.Label_Version.Text = "Version: 1.0"
         '
-        'LinkLabel_ControllersAttachments
-        '
-        Me.LinkLabel_ControllersAttachments.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ControllersAttachments.AutoSize = True
-        Me.LinkLabel_ControllersAttachments.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_ControllersAttachments.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_ControllersAttachments.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_ControllersAttachments.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_ControllersAttachments.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ControllersAttachments.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersAttachments.Location = New System.Drawing.Point(32, 340)
-        Me.LinkLabel_ControllersAttachments.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_ControllersAttachments.Name = "LinkLabel_ControllersAttachments"
-        Me.LinkLabel_ControllersAttachments.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_ControllersAttachments.Size = New System.Drawing.Size(144, 19)
-        Me.LinkLabel_ControllersAttachments.TabIndex = 5
-        Me.LinkLabel_ControllersAttachments.TabStop = True
-        Me.LinkLabel_ControllersAttachments.Text = "Controller Attachments"
-        Me.LinkLabel_ControllersAttachments.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel_ControllersRemote
-        '
-        Me.LinkLabel_ControllersRemote.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ControllersRemote.AutoSize = True
-        Me.LinkLabel_ControllersRemote.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_ControllersRemote.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_ControllersRemote.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersRemote.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_ControllersRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_ControllersRemote.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ControllersRemote.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersRemote.Location = New System.Drawing.Point(32, 286)
-        Me.LinkLabel_ControllersRemote.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_ControllersRemote.Name = "LinkLabel_ControllersRemote"
-        Me.LinkLabel_ControllersRemote.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_ControllersRemote.Size = New System.Drawing.Size(105, 19)
-        Me.LinkLabel_ControllersRemote.TabIndex = 4
-        Me.LinkLabel_ControllersRemote.TabStop = True
-        Me.LinkLabel_ControllersRemote.Text = "Remote Devices"
-        Me.LinkLabel_ControllersRemote.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel_ControllersGeneral
-        '
-        Me.LinkLabel_ControllersGeneral.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ControllersGeneral.AutoSize = True
-        Me.LinkLabel_ControllersGeneral.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_ControllersGeneral.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_ControllersGeneral.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersGeneral.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Unpin_16x16_32
-        Me.LinkLabel_ControllersGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_ControllersGeneral.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ControllersGeneral.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_ControllersGeneral.Location = New System.Drawing.Point(32, 259)
-        Me.LinkLabel_ControllersGeneral.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_ControllersGeneral.Name = "LinkLabel_ControllersGeneral"
-        Me.LinkLabel_ControllersGeneral.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_ControllersGeneral.Size = New System.Drawing.Size(65, 19)
-        Me.LinkLabel_ControllersGeneral.TabIndex = 3
-        Me.LinkLabel_ControllersGeneral.TabStop = True
-        Me.LinkLabel_ControllersGeneral.Text = "General"
-        Me.LinkLabel_ControllersGeneral.VisitedLinkColor = System.Drawing.Color.Navy
-        '
         'LinkLabel_Trackers
         '
         Me.LinkLabel_Trackers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -563,7 +492,7 @@ Partial Class FormMain
         Me.LinkLabel_Trackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Trackers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_Trackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 394)
+        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 418)
         Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_Trackers.Name = "LinkLabel_Trackers"
         Me.LinkLabel_Trackers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -584,8 +513,8 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_HMDs.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_HMDs.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 367)
-        Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 391)
+        Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
         Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_HMDs.Size = New System.Drawing.Size(182, 19)
@@ -614,8 +543,8 @@ Partial Class FormMain
         Me.LinkLabel_Controllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 232)
-        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
+        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 302)
+        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
         Me.LinkLabel_Controllers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_Controllers.Size = New System.Drawing.Size(119, 19)
@@ -636,27 +565,6 @@ Partial Class FormMain
         Me.Label2.Size = New System.Drawing.Size(65, 13)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Navigation"
-        '
-        'LinkLabel_PSVR
-        '
-        Me.LinkLabel_PSVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_PSVR.AutoSize = True
-        Me.LinkLabel_PSVR.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_PSVR.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_PSVR.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PSVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_PSVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_PSVR.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_PSVR.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PSVR.Location = New System.Drawing.Point(17, 205)
-        Me.LinkLabel_PSVR.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel_PSVR.Name = "LinkLabel_PSVR"
-        Me.LinkLabel_PSVR.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_PSVR.Size = New System.Drawing.Size(170, 19)
-        Me.LinkLabel_PSVR.TabIndex = 31
-        Me.LinkLabel_PSVR.TabStop = True
-        Me.LinkLabel_PSVR.Text = "PlayStation VR Management"
-        Me.LinkLabel_PSVR.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'FormMain
         '
@@ -685,9 +593,6 @@ Partial Class FormMain
     Friend WithEvents Panel3 As Panel
     Friend WithEvents LinkLabel_HMDs As LinkLabel
     Friend WithEvents LinkLabel_Trackers As LinkLabel
-    Friend WithEvents LinkLabel_ControllersRemote As LinkLabel
-    Friend WithEvents LinkLabel_ControllersGeneral As LinkLabel
-    Friend WithEvents LinkLabel_ControllersAttachments As LinkLabel
     Friend WithEvents LinkLabel_RunPSMS As LinkLabel
     Friend WithEvents LinkLabel_RunPSMSTool As LinkLabel
     Friend WithEvents LinkLabel_RestartPSMS As LinkLabel
@@ -699,12 +604,11 @@ Partial Class FormMain
     Friend WithEvents LinkLabel_RunSteamVR As LinkLabel
     Friend WithEvents LinkLabel_StartPage As LinkLabel
     Friend WithEvents LinkLabel_VMT As LinkLabel
-    Friend WithEvents LinkLabel_VmtManagement As LinkLabel
+    Friend WithEvents Label_VmtStatus As LinkLabel
     Friend WithEvents LinkLabel1LinkLabel_VMTPauseOscServer As LinkLabel
     Friend WithEvents LinkLabel_VMTStartOscServer As LinkLabel
-    Friend WithEvents LinkLabel_VmtSteamVrOverrides As LinkLabel
-    Friend WithEvents LinkLabel_VmtPlayspaceCalib As LinkLabel
-    Friend WithEvents LinkLabel_VmtSettings As LinkLabel
-    Friend WithEvents LinkLabel_VmtTrackers As LinkLabel
     Friend WithEvents LinkLabel_PSVR As LinkLabel
+    Friend WithEvents Label_RemoteDeviceStatus As LinkLabel
+    Friend WithEvents Label_ServiceStatus As LinkLabel
+    Friend WithEvents Label_PsvrStatus As LinkLabel
 End Class
