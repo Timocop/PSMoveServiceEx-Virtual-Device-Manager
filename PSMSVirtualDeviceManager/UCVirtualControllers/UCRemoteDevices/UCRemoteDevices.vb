@@ -315,7 +315,6 @@ Public Class UCRemoteDevices
         Private g_mLastKeepup As New Stopwatch
         Private g_mTrackers As New Dictionary(Of String, ClassTracker)
         Private g_bAllowNewDevices As Boolean = False
-        Private g_iLastPacketCount As ULong = 0
 
         Shared HANDSHAKE_BUFFER As Byte() = New Byte(64) {}
         Shared KEEPUP_BUFFER As Byte() = New Byte(64) {}
@@ -489,11 +488,11 @@ Public Class UCRemoteDevices
                                         End If
 
                                         Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
-                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                        If (mTracker.m_LastPacketIndex >= iPacketIndex) Then
                                             Exit Select
                                         End If
 
-                                        g_iLastPacketCount = iPacketIndex
+                                        mTracker.m_LastPacketIndex = iPacketIndex
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
@@ -513,11 +512,11 @@ Public Class UCRemoteDevices
                                         End If
 
                                         Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
-                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                        If (mTracker.m_LastPacketIndex >= iPacketIndex) Then
                                             Exit Select
                                         End If
 
-                                        g_iLastPacketCount = iPacketIndex
+                                        mTracker.m_LastPacketIndex = iPacketIndex
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
@@ -531,11 +530,11 @@ Public Class UCRemoteDevices
                                         End If
 
                                         Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
-                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                        If (mTracker.m_LastPacketIndex >= iPacketIndex) Then
                                             Exit Select
                                         End If
 
-                                        g_iLastPacketCount = iPacketIndex
+                                        mTracker.m_LastPacketIndex = iPacketIndex
 
                                         Dim iX As Single = BR_ReadSingle(mBinReader)
                                         Dim iY As Single = BR_ReadSingle(mBinReader)
@@ -549,11 +548,11 @@ Public Class UCRemoteDevices
                                         End If
 
                                         Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
-                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                        If (mTracker.m_LastPacketIndex >= iPacketIndex) Then
                                             Exit Select
                                         End If
 
-                                        g_iLastPacketCount = iPacketIndex
+                                        mTracker.m_LastPacketIndex = iPacketIndex
 
                                         Dim iVoltage As Single = BR_ReadSingle(mBinReader)
                                         ' Dim iPercentage As Single = BR_ReadSingle(mBinReader) 'SlimeVR only
@@ -602,11 +601,11 @@ Public Class UCRemoteDevices
                                         End If
 
                                         Dim iPacketIndex As ULong = BR_ReadUInt64(mBinReader)
-                                        If (g_iLastPacketCount >= iPacketIndex) Then
+                                        If (mTracker.m_LastPacketIndex >= iPacketIndex) Then
                                             Exit Select
                                         End If
 
-                                        g_iLastPacketCount = iPacketIndex
+                                        mTracker.m_LastPacketIndex = iPacketIndex
 
                                         Dim iSensorId As Integer = (mBinReader.ReadByte And &HFF)
 
@@ -689,8 +688,6 @@ Public Class UCRemoteDevices
                 Dim sMacAddress As String = ""
                 Dim iProtocolType As ClassTracker.ENUM_PROTOCOL_TYPE = ClassTracker.ENUM_PROTOCOL_TYPE.SLIMEVR
 
-                g_iLastPacketCount = 0
-
                 mBinReader.ReadInt64() ' Skip packet number
 
                 mBinReader.ReadInt32() ' (SlimeVR) Board Type  
@@ -761,8 +758,9 @@ Public Class UCRemoteDevices
             Else
                 Dim iPakcetIndex As ULong = BR_ReadUInt64(mBinReader)
 
+                ' Initial packet
                 If (iPakcetIndex = 0) Then
-                    g_iLastPacketCount = 0
+                    mTracker.m_LastPacketIndex = 0
                 End If
 
             End If
@@ -868,7 +866,7 @@ Public Class UCRemoteDevices
 
             Private g_mEndPoint As IPEndPoint
             Private g_mLastPacket As New Stopwatch
-            Private g_iLastPacketId As Integer = -1
+            Private g_iLastPacketIndex As ULong = 0
             Private g_mOrientation As New Quaternion
             Private g_iProtocolType As ENUM_PROTOCOL_TYPE = ENUM_PROTOCOL_TYPE.INVALID
 
@@ -892,12 +890,12 @@ Public Class UCRemoteDevices
                 End Get
             End Property
 
-            Property m_PacketId As Integer
+            Property m_LastPacketIndex As ULong
                 Get
-                    Return g_iLastPacketId
+                    Return g_iLastPacketIndex
                 End Get
-                Set(value As Integer)
-                    g_iLastPacketId = value
+                Set(value As ULong)
+                    g_iLastPacketIndex = value
                 End Set
             End Property
 
