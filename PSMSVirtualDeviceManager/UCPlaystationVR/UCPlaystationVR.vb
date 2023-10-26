@@ -23,7 +23,8 @@
 
     Enum ENUM_DEVICE_DISPLAY_STATUS
         NOT_CONNECTED
-        CONFIGURED
+        CONFIGURED_MULTI
+        CONFIGURED_DIRECT
         WAITING_FOR_RELOAD
         NOT_CONFIGURED
         MIRRROED
@@ -113,9 +114,14 @@
                 Label_DisplayStatusText.Text = "Display is not connected. Please attach the HDMI cable to your computer."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
 
-            Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
+            Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI
                 Label_DisplayStatus.Text = "Display Working"
-                Label_DisplayStatusText.Text = "Display is working correctly."
+                Label_DisplayStatusText.Text = "Display is currently working in virtual-mode (compatibility mode)."
+                ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_OK
+
+            Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT
+                Label_DisplayStatus.Text = "Display Working"
+                Label_DisplayStatusText.Text = "Display is currently working in direct-mode."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_OK
 
             Case ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
@@ -153,7 +159,7 @@
         Select Case (True)
             Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED AndAlso
                     iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED AndAlso
-                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED)
+                    (iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI OrElse iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT))
                 ' All good
                 Label_PSVRStatus.Text = "PlayStation VR Connected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(0, 192, 0)
@@ -297,7 +303,7 @@
                                 Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
 
-                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI
                                     If (mPsvrMonitor.dmDeviceName Is Nothing) Then
                                         ' Monitor disabled?
                                         iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
@@ -305,8 +311,16 @@
                                         If (mPsvrMonitor.dmDisplayFrequency < 90) Then
                                             iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY
                                         Else
-                                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED
+                                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI
                                         End If
+                                    End If
+
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT
+                                    If (mPsvrMonitor.dmDeviceName Is Nothing) Then
+                                        ' Monitor disabled?
+                                        iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
+                                    Else
+                                        iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT
                                     End If
 
                                 Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD

@@ -817,7 +817,9 @@ Public Class UCStartPage
                     End If
 
                     Select Case (mMonitor.IsPlaystationVrMonitorPatched())
-                        Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED, ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                        Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI,
+                                 ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT,
+                                 ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
                             Dim sMessage As New Text.StringBuilder
                             sMessage.AppendLine("It seems like you already have the PlayStation VR display configured!")
                             sMessage.AppendLine()

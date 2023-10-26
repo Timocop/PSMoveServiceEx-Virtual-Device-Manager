@@ -428,6 +428,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\EDID_PSVR1_DIRECT.bin" />
+    <None Include="Resources\EDID_PSVR2_DIRECT.bin" />
     <None Include="Resources\Status_WHITE_16.png" />
     <None Include="Resources\Status_YELLOW_16.png" />
     <None Include="Resources\Status_UNKNOWN_16.png" />

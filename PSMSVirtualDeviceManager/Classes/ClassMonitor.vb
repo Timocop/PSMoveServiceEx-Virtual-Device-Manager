@@ -147,7 +147,8 @@ Public Class ClassMonitor
     Public Enum ENUM_PATCHED_RESGITRY_STATE
         NOT_PATCHED
         WAITING_FOR_RELOAD
-        PATCHED
+        PATCHED_DIRECT
+        PATCHED_MULTI
     End Enum
 
     Public Enum ENUM_PSVR_MONITOR_STATUS
@@ -393,113 +394,113 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                Dim iFullEDID As Byte() = New Byte() {}
+                Dim iFullEDID_Multi = New Byte() {}
+                Dim iFullEDID_Direct = New Byte() {}
 
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
-                        iFullEDID = My.Resources.EDID_PSVR1_MULTI
+                        iFullEDID_Multi = My.Resources.EDID_PSVR1_MULTI
+                        iFullEDID_Direct = My.Resources.EDID_PSVR1_DIRECT
+
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
-                        iFullEDID = My.Resources.EDID_PSVR2_MULTI
+                        iFullEDID_Multi = My.Resources.EDID_PSVR2_MULTI
+                        iFullEDID_Direct = My.Resources.EDID_PSVR2_DIRECT
                     Case Else
                         Throw New ArgumentException("Unknown PSVR monitor hardware id")
                 End Select
 
-                Dim iNewEIDI As Byte() = New Byte() {}
-                Dim iNewExtension As Byte() = New Byte() {}
+                Dim iSplitBase_Multi = New Byte() {}
+                Dim iSplitExt_Multi = New Byte() {}
+                Dim iSplitBase_Direct = New Byte() {}
+                Dim iSplitExt_Direct = New Byte() {}
 
+                ' Multi
                 If (True) Then
-                    Dim iBaseEDID As New List(Of Byte)
-                    Dim iExtEDID As New List(Of Byte)
+                    Dim iBase As New List(Of Byte)
+                    Dim iExt As New List(Of Byte)
 
-                    For i = 0 To iFullEDID.Length - 1
+                    For i = 0 To iFullEDID_Multi.Length - 1
                         If (i < 128) Then
-                            iBaseEDID.Add(iFullEDID(i))
+                            iBase.Add(iFullEDID_Multi(i))
                         Else
-                            iExtEDID.Add(iFullEDID(i))
+                            iExt.Add(iFullEDID_Multi(i))
                         End If
                     Next
 
-                    iNewEIDI = iBaseEDID.ToArray
-                    iNewExtension = iExtEDID.ToArray
+                    iSplitBase_Multi = iBase.ToArray
+                    iSplitExt_Multi = iExt.ToArray
+                End If
+
+                ' Direct
+                If (True) Then
+                    Dim iBase As New List(Of Byte)
+                    Dim iExt As New List(Of Byte)
+
+                    For i = 0 To iFullEDID_Direct.Length - 1
+                        If (i < 128) Then
+                            iBase.Add(iFullEDID_Direct(i))
+                        Else
+                            iExt.Add(iFullEDID_Direct(i))
+                        End If
+                    Next
+
+                    iSplitBase_Direct = iBase.ToArray
+                    iSplitExt_Direct = iExt.ToArray
                 End If
 
                 ' Check if overrides are the same as VDMs EDID overrides. 
-                Dim iOverrideEDID As Byte() = TryCast(mEdidOverride.GetValue("0", Nothing), Byte())
-                If (iOverrideEDID IsNot Nothing) Then
-                    Dim bEqualEDID As Boolean = True
-                    If (iOverrideEDID.Length = iNewEIDI.Length) Then
-                        For i = 0 To iOverrideEDID.Length - 1
-                            If (iOverrideEDID(i) = iNewEIDI(i)) Then
-                                Continue For
-                            End If
-
-                            bEqualEDID = False
-                            Exit For
-                        Next
-                    Else
-                        bEqualEDID = False
-                    End If
-
-                    If (Not bEqualEDID) Then
+                Dim iOverrideBase As Byte() = TryCast(mEdidOverride.GetValue("0", Nothing), Byte())
+                If (iOverrideBase IsNot Nothing) Then
+                    If (Not IsBytesEqual(iOverrideBase, iSplitBase_Multi) AndAlso Not IsBytesEqual(iOverrideBase, iSplitBase_Direct)) Then
                         Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                     End If
                 Else
                     Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                 End If
 
-                If (iNewExtension.Length > 0) Then
-                    Dim iOverrideEXT As Byte() = TryCast(mEdidOverride.GetValue("1", Nothing), Byte())
-                    If (iOverrideEXT IsNot Nothing) Then
-                        Dim bEqualEDID As Boolean = True
-                        If (iOverrideEXT.Length = iNewExtension.Length) Then
-                            For i = 0 To iOverrideEXT.Length - 1
-                                If (iOverrideEXT(i) = iNewExtension(i)) Then
-                                    Continue For
-                                End If
-
-                                bEqualEDID = False
-                                Exit For
-                            Next
-                        Else
-                            bEqualEDID = False
-                        End If
-
-                        If (Not bEqualEDID) Then
-                            Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
-                        End If
-                    Else
+                Dim iOverrideExt As Byte() = TryCast(mEdidOverride.GetValue("1", Nothing), Byte())
+                If (iOverrideExt IsNot Nothing) Then
+                    If (Not IsBytesEqual(iOverrideExt, iSplitExt_Multi) AndAlso Not IsBytesEqual(iOverrideExt, iSplitExt_Direct)) Then
                         Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                     End If
+                Else
+                    Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                 End If
 
                 ' Check if current EDID is equal to patched. If not, then reboot or replug device to update.
                 Dim iCurrentEDID As Byte() = TryCast(mParametersKey.GetValue("EDID", Nothing), Byte())
                 If (iCurrentEDID IsNot Nothing) Then
-                    Dim bEqualEDID As Boolean = True
-                    If (iCurrentEDID.Length = iNewEIDI.Length) Then
-                        For i = 0 To iCurrentEDID.Length - 1
-                            If (iCurrentEDID(i) = iNewEIDI(i)) Then
-                                Continue For
-                            End If
-
-                            bEqualEDID = False
-                            Exit For
-                        Next
-                    Else
-                        bEqualEDID = False
+                    If (IsBytesEqual(iCurrentEDID, iSplitBase_Multi)) Then
+                        Return ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI
                     End If
 
-                    If (Not bEqualEDID) Then
-                        Return ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                    If (IsBytesEqual(iCurrentEDID, iSplitBase_Direct)) Then
+                        Return ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT
                     End If
+
+                    Return ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
                 Else
                     Return ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
                 End If
-
-                Return ENUM_PATCHED_RESGITRY_STATE.PATCHED
             Next
         Next
 
         Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
+    End Function
+
+    Private Function IsBytesEqual(x As Byte(), y As Byte()) As Boolean
+        If (x.Length = y.Length) Then
+            For i = 0 To x.Length - 1
+                If (x(i) = y(i)) Then
+                    Continue For
+                End If
+
+                Return False
+            Next
+        Else
+            Return False
+        End If
+
+        Return True
     End Function
 End Class
