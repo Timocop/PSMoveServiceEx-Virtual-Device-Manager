@@ -293,12 +293,27 @@
                             iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.MIRRROED
 
                         Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
-                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.DISABLED
+                            ' Disabled or Direct-Mode
+
+                            Select Case (mClassMonitor.IsPlaystationVrMonitorPatched())
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT
+
+                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
+
+                                Case Else
+
+                                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.DISABLED
+                            End Select
+
 
                         Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
                             iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED
 
                         Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                            ' Virtual-Mode
+
                             Select Case (mClassMonitor.IsPlaystationVrMonitorPatched())
                                 Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
                                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
@@ -313,14 +328,6 @@
                                         Else
                                             iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI
                                         End If
-                                    End If
-
-                                Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT
-                                    If (mPsvrMonitor.dmDeviceName Is Nothing) Then
-                                        ' Monitor disabled?
-                                        iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
-                                    Else
-                                        iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT
                                     End If
 
                                 Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD

@@ -523,10 +523,10 @@ Partial Class UCPlaystationVR
         Me.LinkLabel_ConfigPSVRDisplay.Location = New System.Drawing.Point(103, 75)
         Me.LinkLabel_ConfigPSVRDisplay.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ConfigPSVRDisplay.Name = "LinkLabel_ConfigPSVRDisplay"
-        Me.LinkLabel_ConfigPSVRDisplay.Size = New System.Drawing.Size(176, 13)
+        Me.LinkLabel_ConfigPSVRDisplay.Size = New System.Drawing.Size(185, 13)
         Me.LinkLabel_ConfigPSVRDisplay.TabIndex = 26
         Me.LinkLabel_ConfigPSVRDisplay.TabStop = True
-        Me.LinkLabel_ConfigPSVRDisplay.Text = "Configure PlayStation VR Display"
+        Me.LinkLabel_ConfigPSVRDisplay.Text = "Configure PlayStation VR Display..."
         Me.LinkLabel_ConfigPSVRDisplay.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_UninstallPSVR

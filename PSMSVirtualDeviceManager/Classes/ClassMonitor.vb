@@ -257,7 +257,7 @@ Public Class ClassMonitor
         End If
     End Function
 
-    Public Sub PatchPlaystationVrMonitor()
+    Public Sub PatchPlaystationVrMonitor(bDirectMode As Boolean)
         Dim mClassMonitor As New ClassMonitor
 
         Dim mDisplayDev As DEVMODE = Nothing
@@ -312,34 +312,44 @@ Public Class ClassMonitor
 
                 Select Case (True)
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
-                        iFullEDID = My.Resources.EDID_PSVR1_MULTI
+                        If (bDirectMode) Then
+                            iFullEDID = My.Resources.EDID_PSVR1_DIRECT
+                        Else
+                            iFullEDID = My.Resources.EDID_PSVR1_MULTI
+                        End If
+
                     Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
-                        iFullEDID = My.Resources.EDID_PSVR2_MULTI
+                        If (bDirectMode) Then
+                            iFullEDID = My.Resources.EDID_PSVR2_DIRECT
+                        Else
+                            iFullEDID = My.Resources.EDID_PSVR2_MULTI
+                        End If
+
                     Case Else
                         Throw New ArgumentException("Unknown PSVR monitor hardware id")
                 End Select
 
-                Dim iNewEIDI As Byte() = New Byte() {}
-                Dim iNewExtension As Byte() = New Byte() {}
+                Dim iSplitBase As Byte() = New Byte() {}
+                Dim iSplitExt As Byte() = New Byte() {}
 
                 If (True) Then
-                    Dim iBaseEDID As New List(Of Byte)
-                    Dim iExtEDID As New List(Of Byte)
+                    Dim iBase As New List(Of Byte)
+                    Dim iExt As New List(Of Byte)
 
                     For i = 0 To iFullEDID.Length - 1
                         If (i < 128) Then
-                            iBaseEDID.Add(iFullEDID(i))
+                            iBase.Add(iFullEDID(i))
                         Else
-                            iExtEDID.Add(iFullEDID(i))
+                            iExt.Add(iFullEDID(i))
                         End If
                     Next
 
-                    iNewEIDI = iBaseEDID.ToArray
-                    iNewExtension = iExtEDID.ToArray
+                    iSplitBase = iBase.ToArray
+                    iSplitExt = iExt.ToArray
                 End If
 
-                mEdidOverride.SetValue("0", iNewEIDI, RegistryValueKind.Binary)
-                mEdidOverride.SetValue("1", iNewExtension, RegistryValueKind.Binary)
+                mEdidOverride.SetValue("0", iSplitBase, RegistryValueKind.Binary)
+                mEdidOverride.SetValue("1", iSplitExt, RegistryValueKind.Binary)
 
                 Exit For
             Next

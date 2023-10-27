@@ -245,6 +245,12 @@
     <Compile Include="UCPlaystationVR\FormDisplayFrequency.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UCPlaystationVR\FormDisplayModeSelection.Designer.vb">
+      <DependentUpon>FormDisplayModeSelection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCPlaystationVR\FormDisplayModeSelection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UCPlaystationVR\UCPlaystationVR.Designer.vb">
       <DependentUpon>UCPlaystationVR.vb</DependentUpon>
     </Compile>
@@ -369,6 +375,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCPlaystationVR\FormDisplayFrequency.resx">
       <DependentUpon>FormDisplayFrequency.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCPlaystationVR\FormDisplayModeSelection.resx">
+      <DependentUpon>FormDisplayModeSelection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCPlaystationVR\UCPlaystationVR.resx">
       <DependentUpon>UCPlaystationVR.vb</DependentUpon>

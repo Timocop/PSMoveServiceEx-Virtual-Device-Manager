@@ -816,18 +816,28 @@ Public Class UCStartPage
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
-                    Select Case (mMonitor.IsPlaystationVrMonitorPatched())
-                        Case ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI,
-                                 ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT,
-                                 ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD
-                            Dim sMessage As New Text.StringBuilder
-                            sMessage.AppendLine("It seems like you already have the PlayStation VR display configured!")
-                            sMessage.AppendLine()
-                            sMessage.AppendLine("Do you want to re-configure the PlayStation VR display?")
-                            If (MessageBox.Show(sMessage.ToString, "Configuration Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
-                                Return
-                            End If
-                    End Select
+                    Dim bUseDirectMode As Boolean = False
+                    Using i As New FormDisplayModeSelection
+                        If (i.ShowDialog = DialogResult.OK) Then
+                            bUseDirectMode = i.m_ResultDirectMode
+                        Else
+                            Return
+                        End If
+                    End Using
+
+                    Dim iMonitorPatch = mMonitor.IsPlaystationVrMonitorPatched()
+
+                    If (iMonitorPatch = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.WAITING_FOR_RELOAD OrElse
+                            (bUseDirectMode AndAlso iMonitorPatch = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) OrElse
+                            (Not bUseDirectMode AndAlso iMonitorPatch = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI)) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("It seems like you already have the PlayStation VR display configured!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to re-configure the PlayStation VR display?")
+                        If (MessageBox.Show(sMessage.ToString, "Configuration Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                            Return
+                        End If
+                    End If
 
                     If (True) Then
                         Dim sMessage As New Text.StringBuilder
@@ -851,7 +861,14 @@ Public Class UCStartPage
                                                    g_mDriverInstallFormLoad.ShowDialog(Me)
                                                End Sub)
 
-                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_PATCH_PSVR_MONITOR, FormMain.COMMANDLINE_VERBOSE})
+                    Dim sMode As String
+                    If (bUseDirectMode) Then
+                        sMode = FormMain.COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT
+                    Else
+                        sMode = FormMain.COMMANDLINE_PATCH_PSVR_MONITOR_MULTI
+                    End If
+
+                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {sMode, FormMain.COMMANDLINE_VERBOSE})
                     If (iExitCode <> 0) Then
                         Throw New ArgumentException("Configuration installation failed")
                     End If

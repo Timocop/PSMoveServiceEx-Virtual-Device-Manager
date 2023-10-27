@@ -14,7 +14,8 @@
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
 
-    Public Const COMMANDLINE_PATCH_PSVR_MONITOR As String = "-patch-psvr-monitor"
+    Public Const COMMANDLINE_PATCH_PSVR_MONITOR_MULTI As String = "-patch-psvr-monitor-multi"
+    Public Const COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT As String = "-patch-psvr-monitor-direct"
     Public Const COMMANDLINE_INSTALL_PSVR_DRIVERS As String = "-install-psvr-drivers"
     Public Const COMMANDLINE_INSTALL_PSEYE_DRIVERS As String = "-install-pseye-drivers"
     Public Const COMMANDLINE_UNINSTALL_PSVR As String = "-uninstall-psvr"
@@ -139,9 +140,10 @@
         Dim bExitOnSuccess As Boolean = False
 
         For Each sCommand As String In sCmdLines
-            While (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
+            While (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
                 ' Patch the PSVR monitor registry to allow 120/90/60 Hz refresh rates
                 bExitOnSuccess = True
+
 
                 Try
                     Dim mClassMonitor As New ClassMonitor
@@ -183,7 +185,8 @@
                         Exit While
                     End If
 
-                    mClassMonitor.PatchPlaystationVrMonitor()
+                    Dim bInstallDirectMode As Boolean = (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT)
+                    mClassMonitor.PatchPlaystationVrMonitor(bInstallDirectMode)
 
                     ' Restart monitors.
                     If (True) Then
