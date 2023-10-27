@@ -116,12 +116,12 @@
 
             Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI
                 Label_DisplayStatus.Text = "Display Working"
-                Label_DisplayStatusText.Text = "Display is currently working in virtual-mode (compatibility mode)."
+                Label_DisplayStatusText.Text = "Display is currently working using virtual-mode (compatibility mode)."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_OK
 
             Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT
                 Label_DisplayStatus.Text = "Display Working"
-                Label_DisplayStatusText.Text = "Display is currently working in direct-mode."
+                Label_DisplayStatusText.Text = "Display is currently working using direct-mode."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_OK
 
             Case ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
