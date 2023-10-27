@@ -41,6 +41,11 @@ Public Class ClassMonitor
     Public Const PSVR_MONITOR_GEN1_NAME As String = "MONITOR\SNYB403"
     Public Const PSVR_MONITOR_GEN2_NAME As String = "MONITOR\SNY6A04"
 
+    Public Const PSVR_MONITOR_GEN1_VID As Integer = &HD94D
+    Public Const PSVR_MONITOR_GEN1_PID As Integer = &HB403
+    Public Const PSVR_MONITOR_GEN2_VID As Integer = &HD94D
+    Public Const PSVR_MONITOR_GEN2_PID As Integer = &H6A04
+
     <Flags>
     Public Enum DISPLAY_DEVICE_STATE As Integer
         DISPLAY_DEVICE_ATTACHED_TO_DESKTOP = &H1

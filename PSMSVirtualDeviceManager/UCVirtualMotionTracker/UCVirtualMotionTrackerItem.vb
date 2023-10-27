@@ -1082,6 +1082,9 @@ Public Class UCVirtualMotionTrackerItem
             Dim iRenderW As Integer = 0
             Dim iRenderH As Integer = 0
             Dim iFrameRate As Integer = 0
+            Dim bDirectMode As Boolean = False
+            Dim iVendorId As Integer = 0
+            Dim iProductId As Integer = 0
             Dim bDisplaySuccess As Boolean = False
             Dim mDisplayNextUpdate As New Stopwatch
             Dim mDisplaySetupUpdate As New Stopwatch
@@ -1225,19 +1228,56 @@ Public Class UCVirtualMotionTrackerItem
 
                                         Dim mClassMonitor As New ClassMonitor
                                         Dim mDevMode As ClassMonitor.DEVMODE = Nothing
-                                        If (mClassMonitor.FindPlaystationVrMonitor(mDevMode, Nothing) = ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
-                                            If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
-                                                iDisplayX = mDevMode.dmPositionX
-                                                iDisplayY = mDevMode.dmPositionY
-                                                iDisplayW = mDevMode.dmPelsWidth
-                                                iDisplayH = mDevMode.dmPelsHeight
-                                                iRenderW = CInt((iDisplayW * iHmdRenderScale))
-                                                iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                iFrameRate = mDevMode.dmDisplayFrequency
+                                        Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
 
-                                                bDisplaySuccess = True
-                                            End If
-                                        End If
+                                        Select Case (mClassMonitor.FindPlaystationVrMonitor(mDevMode, mDisplayInfo))
+                                            Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                                                ' If we found a monitor, its probably in virtual-mode.
+
+                                                If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
+                                                    If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI) Then
+                                                        iDisplayX = mDevMode.dmPositionX
+                                                        iDisplayY = mDevMode.dmPositionY
+                                                        iDisplayW = mDevMode.dmPelsWidth
+                                                        iDisplayH = mDevMode.dmPelsHeight
+                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                        iRenderH = CInt((iDisplayH * iHmdRenderScale))
+                                                        iFrameRate = mDevMode.dmDisplayFrequency
+                                                        bDirectMode = False
+
+                                                        bDisplaySuccess = True
+                                                    End If
+                                                End If
+
+                                            Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
+                                                ' If display is not active, its probably direct-mode
+                                                If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
+                                                    '$TODO: Use settings to adjust properties like framerate.
+                                                    iDisplayX = 0
+                                                    iDisplayY = 0
+                                                    iDisplayW = 1920
+                                                    iDisplayH = 1080
+                                                    iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                    iRenderH = CInt((iDisplayH * iHmdRenderScale))
+                                                    iFrameRate = 90
+                                                    bDirectMode = True
+
+                                                    If (mDisplayInfo.Value.DeviceID.StartsWith(ClassMonitor.PSVR_MONITOR_GEN1_NAME)) Then
+                                                        iVendorId = ClassMonitor.PSVR_MONITOR_GEN1_VID
+                                                        iProductId = ClassMonitor.PSVR_MONITOR_GEN1_PID
+
+                                                        bDisplaySuccess = True
+                                                    End If
+
+                                                    If (mDisplayInfo.Value.DeviceID.StartsWith(ClassMonitor.PSVR_MONITOR_GEN2_NAME)) Then
+                                                        iVendorId = ClassMonitor.PSVR_MONITOR_GEN2_VID
+                                                        iProductId = ClassMonitor.PSVR_MONITOR_GEN2_PID
+
+                                                        bDisplaySuccess = True
+                                                    End If
+
+                                                End If
+                                        End Select
                                     End If
 
                                     If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
@@ -1246,15 +1286,28 @@ Public Class UCVirtualMotionTrackerItem
                                         If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
                                             mDisplaySetupUpdate.Restart()
 
-                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                New OscMessage(
-                                                    "/VMT/HMD/SetupDisplay",
-                                                    iDisplayX, iDisplayY,
-                                                    iDisplayW, iDisplayH,
-                                                    iRenderW, iRenderH,
-                                                    iFrameRate
-                                                ))
-                                            m_FpsOscCounter += 1
+                                            If (bDirectMode) Then
+                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                    New OscMessage(
+                                                        "/VMT/HMD/SetupDisplayDirect",
+                                                        iDisplayX, iDisplayY,
+                                                        iDisplayW, iDisplayH,
+                                                        iRenderW, iRenderH,
+                                                        iFrameRate,
+                                                        iVendorId, iProductId
+                                                    ))
+                                                m_FpsOscCounter += 1
+                                            Else
+                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                    New OscMessage(
+                                                        "/VMT/HMD/SetupDisplay",
+                                                        iDisplayX, iDisplayY,
+                                                        iDisplayW, iDisplayH,
+                                                        iRenderW, iRenderH,
+                                                        iFrameRate
+                                                    ))
+                                                m_FpsOscCounter += 1
+                                            End If
 
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
