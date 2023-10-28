@@ -23,6 +23,7 @@ Public Class UCVirtualMotionTracker
         DEVICE = (1 << 0)
         PLAYSPACE_CALIBRATION = (1 << 1)
         PLAYSPACE = (1 << 2)
+        PLAYSPACE_CALIB_CONTROLLER = (1 << 3)
     End Enum
 
     Structure STRUC_RENDER_RES_ITEM
@@ -431,6 +432,7 @@ Public Class UCVirtualMotionTracker
                 NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
                 NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_HeightOffset)))
                 ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_ForwardMethod))
+                ComboBox_PlayCalibControllerID.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibControllerID.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId))
 
                 g_ClassSettings.SetUnsavedState(False)
             Finally
@@ -451,7 +453,15 @@ Public Class UCVirtualMotionTracker
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
 
+    Private Sub ComboBox_PlayCalibControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PlayCalibControllerID.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId = ComboBox_PlayCalibControllerID.SelectedIndex
+        g_ClassSettings.SaveSettings(ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIB_CONTROLLER)
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
@@ -906,6 +916,7 @@ Public Class UCVirtualMotionTracker
             Public Property m_ForwardOffset As Single
             Public Property m_HeightOffset As Single
             Public Property m_ForwardMethod As ENUM_FORWARD_METHOD
+            Public Property m_CalibrationControllerId As Integer
 
             Public Sub Reset()
                 m_Valid = False
@@ -1375,6 +1386,10 @@ Public Class UCVirtualMotionTracker
                         m_PlayspaceSettings.m_ForwardMethod = CType(tmpSng, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
                     End If
 
+                    If (Integer.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "CalibControllerId", "0"), tmpInt)) Then
+                        m_PlayspaceSettings.m_CalibrationControllerId = tmpInt
+                    End If
+
 
                     ' Playspace Calibration Settings
                     tmpVec3 = New Vector3
@@ -1523,6 +1538,10 @@ Public Class UCVirtualMotionTracker
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardOffset", m_PlayspaceSettings.m_ForwardOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HeightOffset", m_PlayspaceSettings.m_HeightOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardMethod", CStr(CInt(m_PlayspaceSettings.m_ForwardMethod))))
+                    End If
+
+                    If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIB_CONTROLLER) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "CalibControllerId", CStr(m_PlayspaceSettings.m_CalibrationControllerId)))
                     End If
 
                     If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIBRATION) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
