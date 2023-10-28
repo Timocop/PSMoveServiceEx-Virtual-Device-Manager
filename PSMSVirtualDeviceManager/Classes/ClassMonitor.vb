@@ -262,7 +262,7 @@ Public Class ClassMonitor
         End If
     End Function
 
-    Public Sub PatchPlaystationVrMonitor(bDirectMode As Boolean)
+    Public Function PatchPlaystationVrMonitor(bDirectMode As Boolean) As Boolean
         Dim mClassMonitor As New ClassMonitor
 
         'Find the monitors registry key.
@@ -270,6 +270,8 @@ Public Class ClassMonitor
         If (mMonitorsKey Is Nothing) Then
             Throw New ArgumentException("Unable to open registry 'SYSTEM\CurrentControlSet\Enum\DISPLAY'")
         End If
+
+        Dim bSuccess As Boolean = False
 
         For Each sMonitorName As String In mMonitorsKey.GetSubKeyNames()
             Dim mMonitorKey As RegistryKey = mMonitorsKey.OpenSubKey(sMonitorName, True)
@@ -343,10 +345,12 @@ Public Class ClassMonitor
                 mEdidOverride.SetValue("0", iSplitBase, RegistryValueKind.Binary)
                 mEdidOverride.SetValue("1", iSplitExt, RegistryValueKind.Binary)
 
-                Exit For
+                bSuccess = True
             Next
         Next
-    End Sub
+
+        Return bSuccess
+    End Function
 
     Public Function IsPlaystationVrMonitorPatched() As ENUM_PATCHED_RESGITRY_STATE
         Dim mClassMonitor As New ClassMonitor
