@@ -54,6 +54,8 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.LinkLabel_PlayCalibStatus = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_PlayCalibStart = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -163,6 +165,8 @@ Partial Class FormMain
         Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 750)
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel1.Controls.Add(Me.LinkLabel_PlayCalibStatus)
+        Me.Panel1.Controls.Add(Me.LinkLabel_PlayCalibStart)
         Me.Panel1.Controls.Add(Me.Label_PsvrStatus)
         Me.Panel1.Controls.Add(Me.Label_RemoteDeviceStatus)
         Me.Panel1.Controls.Add(Me.Label_ServiceStatus)
@@ -566,6 +570,48 @@ Partial Class FormMain
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Navigation"
         '
+        'LinkLabel_PlayCalibStatus
+        '
+        Me.LinkLabel_PlayCalibStatus.ActiveLinkColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.AutoSize = True
+        Me.LinkLabel_PlayCalibStatus.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PlayCalibStatus.DisabledLinkColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.ForeColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.LinkLabel_PlayCalibStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_PlayCalibStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
+        Me.LinkLabel_PlayCalibStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_PlayCalibStatus.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 553)
+        Me.LinkLabel_PlayCalibStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.LinkLabel_PlayCalibStatus.Name = "LinkLabel_PlayCalibStatus"
+        Me.LinkLabel_PlayCalibStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.LinkLabel_PlayCalibStatus.Size = New System.Drawing.Size(128, 19)
+        Me.LinkLabel_PlayCalibStatus.TabIndex = 36
+        Me.LinkLabel_PlayCalibStatus.Text = "Management Status"
+        Me.LinkLabel_PlayCalibStatus.VisitedLinkColor = System.Drawing.Color.Black
+        '
+        'LinkLabel_PlayCalibStart
+        '
+        Me.LinkLabel_PlayCalibStart.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_PlayCalibStart.AutoSize = True
+        Me.LinkLabel_PlayCalibStart.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PlayCalibStart.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_PlayCalibStart.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PlayCalibStart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.LinkLabel_PlayCalibStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_PlayCalibStart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_PlayCalibStart.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 580)
+        Me.LinkLabel_PlayCalibStart.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
+        Me.LinkLabel_PlayCalibStart.Name = "LinkLabel_PlayCalibStart"
+        Me.LinkLabel_PlayCalibStart.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.LinkLabel_PlayCalibStart.Size = New System.Drawing.Size(109, 19)
+        Me.LinkLabel_PlayCalibStart.TabIndex = 35
+        Me.LinkLabel_PlayCalibStart.TabStop = True
+        Me.LinkLabel_PlayCalibStart.Text = "Start Calibration"
+        Me.LinkLabel_PlayCalibStart.VisitedLinkColor = System.Drawing.Color.Navy
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -611,4 +657,6 @@ Partial Class FormMain
     Friend WithEvents Label_RemoteDeviceStatus As LinkLabel
     Friend WithEvents Label_ServiceStatus As LinkLabel
     Friend WithEvents Label_PsvrStatus As LinkLabel
+    Friend WithEvents LinkLabel_PlayCalibStatus As LinkLabel
+    Friend WithEvents LinkLabel_PlayCalibStart As LinkLabel
 End Class

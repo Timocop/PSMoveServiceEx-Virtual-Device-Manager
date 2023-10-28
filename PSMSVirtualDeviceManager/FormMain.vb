@@ -574,6 +574,16 @@
         g_mUCStartPage.LinkLabel_ConfigToolRun_Click()
     End Sub
 
+    Private Sub LinkLabel_PlayCalibStart_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibStart.LinkClicked
+        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_PlayspaceCalib
+        g_mUCVirtualMotionTracker.Button_PlaySpaceManualCalib_Click()
+    End Sub
+
     Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup
         Try
             If (g_bIgnoreEvents) Then
