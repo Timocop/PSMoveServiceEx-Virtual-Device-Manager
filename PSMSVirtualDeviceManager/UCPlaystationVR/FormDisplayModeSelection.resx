@@ -128,9 +128,9 @@ Please note that this feature is only supported by Windows 10 and higher.
 </value>
   </data>
   <data name="Label3.Text" xml:space="preserve">
-    <value>Virtual Mode, the display functions as an additional desktop for tasks like video playback and image viewing. However, compositors can not directly interact with the display, potentially decreasing performance and causing other issues.
+    <value>Using Virtual Mode, the display functions as an additional desktop for tasks like video playback and image viewing. However, compositors can not directly interact with the display, potentially decreasing performance and causing other issues.
 
-Only use Virtual Mode if Direct Mode isn't functioning properly.
+Only use Virtual Mode if Direct Mode is not functioning properly.
 
 
 

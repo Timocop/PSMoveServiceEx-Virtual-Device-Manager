@@ -57,6 +57,7 @@ Partial Class FormDisplayModeSelection
         '
         Me.Button_Apply.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_Apply.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.Button_Apply.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_Apply.Location = New System.Drawing.Point(363, 13)
         Me.Button_Apply.Name = "Button_Apply"
         Me.Button_Apply.Size = New System.Drawing.Size(86, 23)
@@ -68,6 +69,7 @@ Partial Class FormDisplayModeSelection
         '
         Me.Button_Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.Button_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_Cancel.Location = New System.Drawing.Point(455, 13)
         Me.Button_Cancel.Name = "Button_Cancel"
         Me.Button_Cancel.Size = New System.Drawing.Size(86, 23)
