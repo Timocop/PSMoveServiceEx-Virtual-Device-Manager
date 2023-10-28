@@ -1263,14 +1263,16 @@ Public Class UCVirtualMotionTrackerItem
                                                     iFrameRate = 120
                                                     bDirectMode = True
 
-                                                    If (mDisplayInfo.Value.DeviceID.StartsWith(ClassMonitor.PSVR_MONITOR_GEN1_NAME)) Then
+                                                    Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
+
+                                                    If (ClassMonitor.PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName)) Then
                                                         iVendorId = ClassMonitor.PSVR_MONITOR_GEN1_VID
                                                         iProductId = ClassMonitor.PSVR_MONITOR_GEN1_PID
 
                                                         bDisplaySuccess = True
                                                     End If
 
-                                                    If (mDisplayInfo.Value.DeviceID.StartsWith(ClassMonitor.PSVR_MONITOR_GEN2_NAME)) Then
+                                                    If (ClassMonitor.PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
                                                         iVendorId = ClassMonitor.PSVR_MONITOR_GEN2_VID
                                                         iProductId = ClassMonitor.PSVR_MONITOR_GEN2_PID
 

@@ -481,6 +481,38 @@ Public Class ClassMonitor
         Return ENUM_PATCHED_RESGITRY_STATE.NOT_PATCHED
     End Function
 
+    Public Function GetPlaystationVrInstalledMonitorName() As String
+        Dim mClassMonitor As New ClassMonitor
+
+        'Find the monitors registry key.
+        Dim mMonitorsKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", False)
+        If (mMonitorsKey Is Nothing) Then
+            Throw New ArgumentException("Unable to open registry 'SYSTEM\CurrentControlSet\Enum\DISPLAY'")
+        End If
+
+        For Each sMonitorName As String In mMonitorsKey.GetSubKeyNames()
+            Dim mMonitorKey As RegistryKey = mMonitorsKey.OpenSubKey(sMonitorName, False)
+            If (mMonitorKey Is Nothing) Then
+                Continue For
+            End If
+
+            For Each sId As String In mMonitorKey.GetSubKeyNames()
+                Dim mIdKey As RegistryKey = mMonitorKey.OpenSubKey(sId, False)
+                If (mIdKey Is Nothing) Then
+                    Continue For
+                End If
+
+                If (Not PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName) AndAlso Not PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
+                    Continue For
+                End If
+
+                Return sMonitorName
+            Next
+        Next
+
+        Return ""
+    End Function
+
     Private Function IsBytesEqual(x As Byte(), y As Byte()) As Boolean
         If (x.Length = y.Length) Then
             For i = 0 To x.Length - 1
