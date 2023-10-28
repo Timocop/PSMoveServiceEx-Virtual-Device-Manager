@@ -124,6 +124,9 @@
   <data name="imageres_5353_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5353_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Faultrep_5201_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Faultrep_5201_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Status_GREEN_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Status_GREEN_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -169,14 +172,20 @@
   <data name="imageres_5303_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5303_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="CustomIMU" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CustomIMU.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Connection_HDMI_OK" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Connection_HDMI_OK.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Status_YELLOW_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Status_YELLOW_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mmcshext_128_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mmcshext_128_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EDID_PSVR2_DIRECT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EDID_PSVR2_DIRECT.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Status_WHITE_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Status_WHITE_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="329" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\329.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -187,14 +196,11 @@
   <data name="EDID_PSVR2_MULTI" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EDID_PSVR2_MULTI.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="DevicePairing_6101_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DevicePairing_6101_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="381" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\381.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Connection_HDMI_WARN" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Connection_HDMI_WARN.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="netcenter_7_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\netcenter_7_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="mmcshext_128_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mmcshext_128_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -247,6 +253,9 @@
   <data name="odbcint_1439_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\odbcint_1439_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="imageres_5353_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\imageres_5353_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="374" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\374.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -258,9 +267,6 @@
   </data>
   <data name="HelpControllerAttachments" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HelpControllerAttachments.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="HelpRemoteDevices" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\HelpRemoteDevices.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="HelpVirtualMotionTracker" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HelpVirtualMotionTracker.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -295,26 +301,26 @@
   <data name="imageres_5323_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5323_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="devmgr_201_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\devmgr_201_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="netshell_1607_32x32-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\netshell_1607_32x32-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="HelpVirtualTracker" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HelpVirtualTracker.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="Faultrep_5201_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Faultrep_5201_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="HelpRemoteDevices" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HelpRemoteDevices.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="devmgr_201_48x48-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\devmgr_201_48x48-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="imageres_5353_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\imageres_5353_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="netcenter_7_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\netcenter_7_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="imageres_5337_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\imageres_5337_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EDID_PSVR1_DIRECT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EDID_PSVR1_DIRECT.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="wmploc_474_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\wmploc_474_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -328,8 +334,8 @@
   <data name="Unpin_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Unpin_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DevicePairing_6101_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DevicePairing_6101_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Connection_HDMI_WARN" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection_HDMI_WARN.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="netshell_1608_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\netshell_1608_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -337,8 +343,8 @@
   <data name="Status_RED_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Status_RED_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mmcshext_128_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mmcshext_128_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="devmgr_201_256x256-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\devmgr_201_256x256-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="shell32_16739_16x16-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\shell32_16739_16x16-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -348,6 +354,9 @@
   </data>
   <data name="Exposure_BadDark" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Exposure_BadDark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CustomIMU" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CustomIMU.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Connection_USB_WARN" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Connection_USB_WARN.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -361,13 +370,10 @@
   <data name="HelpTouchpadShortcuts" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HelpTouchpadShortcuts.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="Status_WHITE_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Status_WHITE_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="369" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\369.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="EDID_PSVR1_DIRECT" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EDID_PSVR1_DIRECT.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="EDID_PSVR2_DIRECT" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EDID_PSVR2_DIRECT.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="HelpDirectModeSteamVR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HelpDirectModeSteamVR.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

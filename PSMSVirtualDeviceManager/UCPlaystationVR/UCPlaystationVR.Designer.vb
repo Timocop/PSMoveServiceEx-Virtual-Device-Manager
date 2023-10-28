@@ -51,6 +51,10 @@ Partial Class UCPlaystationVR
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel11 = New System.Windows.Forms.Panel()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.LinkLabel_EnableDirectMode = New System.Windows.Forms.LinkLabel()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -81,6 +85,8 @@ Partial Class UCPlaystationVR
         Me.Panel12.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
+        Me.Panel11.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel10.SuspendLayout()
         CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel7.SuspendLayout()
@@ -377,7 +383,7 @@ Partial Class UCPlaystationVR
         Me.Panel8.Location = New System.Drawing.Point(16, 383)
         Me.Panel8.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(768, 253)
+        Me.Panel8.Size = New System.Drawing.Size(768, 257)
         Me.Panel8.TabIndex = 11
         '
         'TableLayoutPanel2
@@ -385,8 +391,9 @@ Partial Class UCPlaystationVR
         Me.TableLayoutPanel2.ColumnCount = 2
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel2.Controls.Add(Me.Panel11, 1, 1)
         Me.TableLayoutPanel2.Controls.Add(Me.Panel10, 0, 1)
-        Me.TableLayoutPanel2.Controls.Add(Me.Panel7, 0, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.Panel7, 1, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.Panel9, 0, 0)
         Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(0, 42)
@@ -394,8 +401,59 @@ Partial Class UCPlaystationVR
         Me.TableLayoutPanel2.RowCount = 2
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(766, 209)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(766, 213)
         Me.TableLayoutPanel2.TabIndex = 1
+        '
+        'Panel11
+        '
+        Me.Panel11.Controls.Add(Me.Label7)
+        Me.Panel11.Controls.Add(Me.ClassPictureBoxQuality4)
+        Me.Panel11.Controls.Add(Me.LinkLabel_EnableDirectMode)
+        Me.Panel11.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel11.Location = New System.Drawing.Point(383, 113)
+        Me.Panel11.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel11.Name = "Panel11"
+        Me.Panel11.Size = New System.Drawing.Size(383, 100)
+        Me.Panel11.TabIndex = 12
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.ForeColor = System.Drawing.Color.Navy
+        Me.Label7.Location = New System.Drawing.Point(102, 19)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(158, 21)
+        Me.Label7.TabIndex = 23
+        Me.Label7.Text = "Help and Information"
+        '
+        'ClassPictureBoxQuality4
+        '
+        Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._369
+        Me.ClassPictureBoxQuality4.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality4.m_HighQuality = True
+        Me.ClassPictureBoxQuality4.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality4.Name = "ClassPictureBoxQuality4"
+        Me.ClassPictureBoxQuality4.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality4.TabIndex = 19
+        Me.ClassPictureBoxQuality4.TabStop = False
+        '
+        'LinkLabel_EnableDirectMode
+        '
+        Me.LinkLabel_EnableDirectMode.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_EnableDirectMode.AutoSize = True
+        Me.LinkLabel_EnableDirectMode.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_EnableDirectMode.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_EnableDirectMode.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_EnableDirectMode.Location = New System.Drawing.Point(103, 43)
+        Me.LinkLabel_EnableDirectMode.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_EnableDirectMode.Name = "LinkLabel_EnableDirectMode"
+        Me.LinkLabel_EnableDirectMode.Size = New System.Drawing.Size(132, 13)
+        Me.LinkLabel_EnableDirectMode.TabIndex = 22
+        Me.LinkLabel_EnableDirectMode.TabStop = True
+        Me.LinkLabel_EnableDirectMode.Text = "Direct-Mode in SteamVR"
+        Me.LinkLabel_EnableDirectMode.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Panel10
         '
@@ -403,7 +461,7 @@ Partial Class UCPlaystationVR
         Me.Panel10.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Panel10.Controls.Add(Me.LinkLabel_DisplayDistortDebug)
         Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel10.Location = New System.Drawing.Point(0, 109)
+        Me.Panel10.Location = New System.Drawing.Point(0, 113)
         Me.Panel10.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel10.Name = "Panel10"
         Me.Panel10.Size = New System.Drawing.Size(383, 100)
@@ -457,7 +515,7 @@ Partial Class UCPlaystationVR
         Me.Panel7.Location = New System.Drawing.Point(383, 0)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(383, 109)
+        Me.Panel7.Size = New System.Drawing.Size(383, 113)
         Me.Panel7.TabIndex = 4
         '
         'Label3
@@ -510,7 +568,7 @@ Partial Class UCPlaystationVR
         Me.Panel9.Location = New System.Drawing.Point(0, 0)
         Me.Panel9.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel9.Name = "Panel9"
-        Me.Panel9.Size = New System.Drawing.Size(383, 109)
+        Me.Panel9.Size = New System.Drawing.Size(383, 113)
         Me.Panel9.TabIndex = 3
         '
         'LinkLabel_ConfigPSVRDisplay
@@ -520,8 +578,8 @@ Partial Class UCPlaystationVR
         Me.LinkLabel_ConfigPSVRDisplay.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ConfigPSVRDisplay.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ConfigPSVRDisplay.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigPSVRDisplay.Location = New System.Drawing.Point(103, 75)
-        Me.LinkLabel_ConfigPSVRDisplay.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ConfigPSVRDisplay.Location = New System.Drawing.Point(103, 81)
+        Me.LinkLabel_ConfigPSVRDisplay.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_ConfigPSVRDisplay.Name = "LinkLabel_ConfigPSVRDisplay"
         Me.LinkLabel_ConfigPSVRDisplay.Size = New System.Drawing.Size(185, 13)
         Me.LinkLabel_ConfigPSVRDisplay.TabIndex = 26
@@ -645,6 +703,9 @@ Partial Class UCPlaystationVR
         Me.Panel12.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
+        Me.Panel11.ResumeLayout(False)
+        Me.Panel11.PerformLayout()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel10.ResumeLayout(False)
         Me.Panel10.PerformLayout()
         CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
@@ -701,4 +762,8 @@ Partial Class UCPlaystationVR
     Friend WithEvents Label6 As Label
     Friend WithEvents ClassPictureBoxQuality3 As ClassPictureBoxQuality
     Friend WithEvents LinkLabel_DisplayDistortDebug As LinkLabel
+    Friend WithEvents Panel11 As Panel
+    Friend WithEvents Label7 As Label
+    Friend WithEvents ClassPictureBoxQuality4 As ClassPictureBoxQuality
+    Friend WithEvents LinkLabel_EnableDirectMode As LinkLabel
 End Class

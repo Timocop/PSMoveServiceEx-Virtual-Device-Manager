@@ -437,8 +437,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\369.png" />
     <None Include="Resources\EDID_PSVR1_DIRECT.bin" />
     <None Include="Resources\EDID_PSVR2_DIRECT.bin" />
+    <None Include="Resources\HelpDirectModeSteamVR.rtf" />
     <None Include="Resources\Status_WHITE_16.png" />
     <None Include="Resources\Status_YELLOW_16.png" />
     <None Include="Resources\Status_UNKNOWN_16.png" />
@@ -467,7 +469,6 @@
     <None Include="Resources\EDID_PSVR1_MULTI.bin" />
     <None Include="Resources\EDID_PSVR2_MULTI.bin" />
     <None Include="Resources\netshell_1607_32x32-32.png" />
-    <None Include="Resources\user32_101_64x64-32.png" />
     <None Include="Resources\HelpTouchpadShortcuts.rtf" />
     <None Include="Resources\HelpVirtualTracker.rtf" />
     <None Include="Resources\user32_102_16x16-32.png" />

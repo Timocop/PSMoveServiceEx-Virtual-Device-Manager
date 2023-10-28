@@ -123,9 +123,10 @@ Partial Class FormDisplayModeSelection
         '
         Me.RadioButton_ModeDirect.AutoSize = True
         Me.RadioButton_ModeDirect.Checked = True
+        Me.RadioButton_ModeDirect.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton_ModeDirect.Location = New System.Drawing.Point(6, 0)
         Me.RadioButton_ModeDirect.Name = "RadioButton_ModeDirect"
-        Me.RadioButton_ModeDirect.Size = New System.Drawing.Size(174, 17)
+        Me.RadioButton_ModeDirect.Size = New System.Drawing.Size(179, 17)
         Me.RadioButton_ModeDirect.TabIndex = 0
         Me.RadioButton_ModeDirect.TabStop = True
         Me.RadioButton_ModeDirect.Text = "Direct-Mode (Recommended)"
@@ -156,9 +157,10 @@ Partial Class FormDisplayModeSelection
         'RadioButton_ModeVirtual
         '
         Me.RadioButton_ModeVirtual.AutoSize = True
+        Me.RadioButton_ModeVirtual.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton_ModeVirtual.Location = New System.Drawing.Point(6, 0)
         Me.RadioButton_ModeVirtual.Name = "RadioButton_ModeVirtual"
-        Me.RadioButton_ModeVirtual.Size = New System.Drawing.Size(93, 17)
+        Me.RadioButton_ModeVirtual.Size = New System.Drawing.Size(94, 17)
         Me.RadioButton_ModeVirtual.TabIndex = 1
         Me.RadioButton_ModeVirtual.TabStop = True
         Me.RadioButton_ModeVirtual.Text = "Virtual-Mode"

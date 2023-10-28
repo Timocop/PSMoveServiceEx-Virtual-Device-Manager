@@ -443,4 +443,10 @@
             mForm.ShowDialog(Me)
         End Using
     End Sub
+
+    Private Sub LinkLabel_EnableDirectMode_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EnableDirectMode.LinkClicked
+        Dim mMsg As New FormRtfHelp
+        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpDirectModeSteamVR
+        mMsg.ShowDialog(Me)
+    End Sub
 End Class

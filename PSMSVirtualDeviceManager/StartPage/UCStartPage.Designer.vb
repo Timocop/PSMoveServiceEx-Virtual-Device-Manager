@@ -139,7 +139,7 @@ Partial Class UCStartPage
         Me.Panel1.Location = New System.Drawing.Point(16, 19)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(861, 333)
+        Me.Panel1.Size = New System.Drawing.Size(861, 357)
         Me.Panel1.TabIndex = 0
         '
         'TableLayoutPanel1
@@ -155,9 +155,9 @@ Partial Class UCStartPage
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 42)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 47.40485!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52.59515!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 289)
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.36741!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 54.63259!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(859, 313)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'Panel7
@@ -167,10 +167,10 @@ Partial Class UCStartPage
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
         Me.Panel7.Controls.Add(Me.LinkLabel_Github)
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(429, 137)
+        Me.Panel7.Location = New System.Drawing.Point(429, 142)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(430, 152)
+        Me.Panel7.Size = New System.Drawing.Size(430, 171)
         Me.Panel7.TabIndex = 7
         '
         'LinkLabel_Updates
@@ -241,7 +241,7 @@ Partial Class UCStartPage
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(429, 137)
+        Me.Panel4.Size = New System.Drawing.Size(429, 142)
         Me.Panel4.TabIndex = 1
         '
         'LinkLabel_ServiceRunCmd
@@ -268,8 +268,8 @@ Partial Class UCStartPage
         Me.LinkLabel_ServicePath.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServicePath.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServicePath.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 107)
-        Me.LinkLabel_ServicePath.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 113)
+        Me.LinkLabel_ServicePath.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_ServicePath.Name = "LinkLabel_ServicePath"
         Me.LinkLabel_ServicePath.Size = New System.Drawing.Size(96, 13)
         Me.LinkLabel_ServicePath.TabIndex = 19
@@ -363,7 +363,7 @@ Partial Class UCStartPage
         Me.Panel2.Location = New System.Drawing.Point(429, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(430, 137)
+        Me.Panel2.Size = New System.Drawing.Size(430, 142)
         Me.Panel2.TabIndex = 0
         '
         'LinkLabel_ConfigToolRunCmd
@@ -451,10 +451,10 @@ Partial Class UCStartPage
         Me.Panel5.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Panel5.Controls.Add(Me.LinkLabel_InstallPSEyeDrivers)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(0, 137)
+        Me.Panel5.Location = New System.Drawing.Point(0, 142)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(429, 152)
+        Me.Panel5.Size = New System.Drawing.Size(429, 171)
         Me.Panel5.TabIndex = 6
         '
         'LinkLabel_UninstallPSVRDrivers
@@ -464,7 +464,7 @@ Partial Class UCStartPage
         Me.LinkLabel_UninstallPSVRDrivers.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_UninstallPSVRDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_UninstallPSVRDrivers.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_UninstallPSVRDrivers.Location = New System.Drawing.Point(103, 88)
+        Me.LinkLabel_UninstallPSVRDrivers.Location = New System.Drawing.Point(103, 94)
         Me.LinkLabel_UninstallPSVRDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_UninstallPSVRDrivers.Name = "LinkLabel_UninstallPSVRDrivers"
         Me.LinkLabel_UninstallPSVRDrivers.Size = New System.Drawing.Size(168, 13)
@@ -480,8 +480,8 @@ Partial Class UCStartPage
         Me.LinkLabel_UninstallPSEyeDrivers.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_UninstallPSEyeDrivers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_UninstallPSEyeDrivers.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_UninstallPSEyeDrivers.Location = New System.Drawing.Point(103, 72)
-        Me.LinkLabel_UninstallPSEyeDrivers.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_UninstallPSEyeDrivers.Location = New System.Drawing.Point(103, 78)
+        Me.LinkLabel_UninstallPSEyeDrivers.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_UninstallPSEyeDrivers.Name = "LinkLabel_UninstallPSEyeDrivers"
         Me.LinkLabel_UninstallPSEyeDrivers.Size = New System.Drawing.Size(171, 13)
         Me.LinkLabel_UninstallPSEyeDrivers.TabIndex = 30
@@ -496,13 +496,13 @@ Partial Class UCStartPage
         Me.LinkLabel_ConfigPSVRDisplay.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ConfigPSVRDisplay.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ConfigPSVRDisplay.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigPSVRDisplay.Location = New System.Drawing.Point(103, 104)
-        Me.LinkLabel_ConfigPSVRDisplay.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ConfigPSVRDisplay.Location = New System.Drawing.Point(103, 116)
+        Me.LinkLabel_ConfigPSVRDisplay.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_ConfigPSVRDisplay.Name = "LinkLabel_ConfigPSVRDisplay"
-        Me.LinkLabel_ConfigPSVRDisplay.Size = New System.Drawing.Size(176, 13)
+        Me.LinkLabel_ConfigPSVRDisplay.Size = New System.Drawing.Size(185, 13)
         Me.LinkLabel_ConfigPSVRDisplay.TabIndex = 29
         Me.LinkLabel_ConfigPSVRDisplay.TabStop = True
-        Me.LinkLabel_ConfigPSVRDisplay.Text = "Configure PlayStation VR Display"
+        Me.LinkLabel_ConfigPSVRDisplay.Text = "Configure PlayStation VR Display..."
         Me.LinkLabel_ConfigPSVRDisplay.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_InstallPSVRDrivers
@@ -528,8 +528,8 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceFactory.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceFactory.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 120)
-        Me.LinkLabel_ServiceFactory.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 138)
+        Me.LinkLabel_ServiceFactory.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_ServiceFactory.Name = "LinkLabel_ServiceFactory"
         Me.LinkLabel_ServiceFactory.Size = New System.Drawing.Size(153, 13)
         Me.LinkLabel_ServiceFactory.TabIndex = 27
@@ -996,14 +996,14 @@ Partial Class UCStartPage
         Me.Panel20.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel20.Location = New System.Drawing.Point(0, 414)
         Me.Panel20.Name = "Panel20"
-        Me.Panel20.Size = New System.Drawing.Size(893, 368)
+        Me.Panel20.Size = New System.Drawing.Size(893, 392)
         Me.Panel20.TabIndex = 6
         '
         'Panel21
         '
         Me.Panel21.Controls.Add(Me.Panel8)
         Me.Panel21.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel21.Location = New System.Drawing.Point(0, 782)
+        Me.Panel21.Location = New System.Drawing.Point(0, 806)
         Me.Panel21.Name = "Panel21"
         Me.Panel21.Size = New System.Drawing.Size(893, 300)
         Me.Panel21.TabIndex = 7

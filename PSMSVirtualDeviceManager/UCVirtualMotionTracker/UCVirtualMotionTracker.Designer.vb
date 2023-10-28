@@ -347,7 +347,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_AvailableDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableDevices.Controls.Add(Me.ListView_OscDevices)
         Me.Panel_AvailableDevices.Controls.Add(Me.Panel8)
-        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(16, 222)
+        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(16, 226)
         Me.Panel_AvailableDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
         Me.Panel_AvailableDevices.Size = New System.Drawing.Size(728, 250)
@@ -432,7 +432,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_Status.Location = New System.Drawing.Point(16, 16)
         Me.Panel_Status.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_Status.Name = "Panel_Status"
-        Me.Panel_Status.Size = New System.Drawing.Size(728, 174)
+        Me.Panel_Status.Size = New System.Drawing.Size(728, 178)
         Me.Panel_Status.TabIndex = 1
         '
         'TableLayoutPanel1
@@ -447,7 +447,7 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(726, 130)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(726, 134)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'Panel4
@@ -460,7 +460,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(362, 130)
+        Me.Panel4.Size = New System.Drawing.Size(362, 134)
         Me.Panel4.TabIndex = 1
         '
         'Label8
@@ -530,7 +530,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel2.Location = New System.Drawing.Point(362, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(364, 130)
+        Me.Panel2.Size = New System.Drawing.Size(364, 134)
         Me.Panel2.TabIndex = 2
         '
         'LinkLabel_SteamSettings
@@ -540,8 +540,8 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_SteamSettings.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_SteamSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_SteamSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_SteamSettings.Location = New System.Drawing.Point(103, 91)
-        Me.LinkLabel_SteamSettings.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_SteamSettings.Location = New System.Drawing.Point(103, 103)
+        Me.LinkLabel_SteamSettings.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_SteamSettings.Name = "LinkLabel_SteamSettings"
         Me.LinkLabel_SteamSettings.Size = New System.Drawing.Size(111, 13)
         Me.LinkLabel_SteamSettings.TabIndex = 20
@@ -595,8 +595,8 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_DriverInstall.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_DriverInstall.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_DriverInstall.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_DriverInstall.Location = New System.Drawing.Point(103, 59)
-        Me.LinkLabel_DriverInstall.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_DriverInstall.Location = New System.Drawing.Point(103, 65)
+        Me.LinkLabel_DriverInstall.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_DriverInstall.Name = "LinkLabel_DriverInstall"
         Me.LinkLabel_DriverInstall.Size = New System.Drawing.Size(71, 13)
         Me.LinkLabel_DriverInstall.TabIndex = 17
@@ -611,7 +611,7 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_DriverUninstall.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_DriverUninstall.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_DriverUninstall.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_DriverUninstall.Location = New System.Drawing.Point(103, 75)
+        Me.LinkLabel_DriverUninstall.Location = New System.Drawing.Point(103, 81)
         Me.LinkLabel_DriverUninstall.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_DriverUninstall.Name = "LinkLabel_DriverUninstall"
         Me.LinkLabel_DriverUninstall.Size = New System.Drawing.Size(86, 13)
