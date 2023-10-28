@@ -1249,8 +1249,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     End If
                                                 End If
 
-                                            Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
-                                                ' If display is not active, its probably direct-mode
+                                            Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE,
+                                                    ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
+                                                ' If display is not active or not found, its probably direct-mode
                                                 If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
                                                     '$TODO: Use settings to adjust properties like framerate.
                                                     iDisplayX = 0

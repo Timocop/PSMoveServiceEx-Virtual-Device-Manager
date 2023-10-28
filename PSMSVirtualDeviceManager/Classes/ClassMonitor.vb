@@ -265,13 +265,6 @@ Public Class ClassMonitor
     Public Sub PatchPlaystationVrMonitor(bDirectMode As Boolean)
         Dim mClassMonitor As New ClassMonitor
 
-        Dim mDisplayDev As DEVMODE = Nothing
-        Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
-
-        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) = ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND) Then
-            Throw New ArgumentException("Unable to find PSVR monitor")
-        End If
-
         'Find the monitors registry key.
         Dim mMonitorsKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", True)
         If (mMonitorsKey Is Nothing) Then
@@ -290,13 +283,7 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                Dim sDriver As String = TryCast(mIdKey.GetValue("Driver", Nothing), String)
-                If (sDriver Is Nothing) Then
-                    Continue For
-                End If
-
-                ' Check if the driver is correct.
-                If (Not mDisplayInfo.Value.DeviceID.EndsWith(sDriver)) Then
+                If (Not PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName) AndAlso Not PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
                     Continue For
                 End If
 
@@ -316,14 +303,14 @@ Public Class ClassMonitor
                 Dim iFullEDID As Byte() = New Byte() {}
 
                 Select Case (True)
-                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
+                    Case (PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName))
                         If (bDirectMode) Then
                             iFullEDID = My.Resources.EDID_PSVR1_DIRECT
                         Else
                             iFullEDID = My.Resources.EDID_PSVR1_MULTI
                         End If
 
-                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
+                    Case (PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName))
                         If (bDirectMode) Then
                             iFullEDID = My.Resources.EDID_PSVR2_DIRECT
                         Else
@@ -364,13 +351,6 @@ Public Class ClassMonitor
     Public Function IsPlaystationVrMonitorPatched() As ENUM_PATCHED_RESGITRY_STATE
         Dim mClassMonitor As New ClassMonitor
 
-        Dim mDisplayDev As DEVMODE = Nothing
-        Dim mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE) = Nothing
-
-        If (mClassMonitor.FindPlaystationVrMonitor(mDisplayDev, mDisplayInfo) = ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND) Then
-            Throw New ArgumentException("Unable to find PSVR monitor")
-        End If
-
         'Find the monitors registry key.
         Dim mMonitorsKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", False)
         If (mMonitorsKey Is Nothing) Then
@@ -389,13 +369,7 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                Dim sDriver As String = TryCast(mIdKey.GetValue("Driver", Nothing), String)
-                If (sDriver Is Nothing) Then
-                    Continue For
-                End If
-
-                ' Check if the driver is correct.
-                If (Not mDisplayInfo.Value.DeviceID.EndsWith(sDriver)) Then
+                If (Not PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName) AndAlso Not PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
                     Continue For
                 End If
 
@@ -413,11 +387,11 @@ Public Class ClassMonitor
                 Dim iFullEDID_Direct = New Byte() {}
 
                 Select Case (True)
-                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME))
+                    Case (PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName))
                         iFullEDID_Multi = My.Resources.EDID_PSVR1_MULTI
                         iFullEDID_Direct = My.Resources.EDID_PSVR1_DIRECT
 
-                    Case (mDisplayInfo.Value.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME))
+                    Case (PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName))
                         iFullEDID_Multi = My.Resources.EDID_PSVR2_MULTI
                         iFullEDID_Direct = My.Resources.EDID_PSVR2_DIRECT
                     Case Else
