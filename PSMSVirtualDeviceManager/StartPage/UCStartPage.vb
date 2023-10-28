@@ -717,7 +717,7 @@ Public Class UCStartPage
         LinkLabel_InstallPSVRDrivers_LinkClicked(Nothing, Nothing)
     End Sub
 
-    Private Sub LinkLabel_InstallPSVRDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallPSVRDrivers.LinkClicked
+    Private Sub LinkLabel_InstallPSVRDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
         If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
             Return
         End If
@@ -802,7 +802,7 @@ Public Class UCStartPage
         LinkLabel_ConfigPSVRDisplay_LinkClicked(Nothing, Nothing)
     End Sub
 
-    Private Sub LinkLabel_ConfigPSVRDisplay_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigPSVRDisplay.LinkClicked
+    Private Sub LinkLabel_ConfigPSVRDisplay_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
         If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
             Return
         End If
@@ -951,7 +951,7 @@ Public Class UCStartPage
         LinkLabel_UninstallPSVRDrivers_LinkClicked(Nothing, Nothing)
     End Sub
 
-    Private Sub LinkLabel_UninstallPSVRDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallPSVRDrivers.LinkClicked
+    Private Sub LinkLabel_UninstallPSVRDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
         If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
             Return
         End If
@@ -1029,6 +1029,39 @@ Public Class UCStartPage
             End If
 
             MessageBox.Show("All config have been removed!", "Factory Reset", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
+        Try
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (Not mConfig.FileExist()) Then
+                If (mConfig.FindByProcess()) Then
+                    mConfig.SaveConfig()
+                Else
+                    If (mConfig.SearchForService) Then
+                        mConfig.SaveConfig()
+                    Else
+                        Return
+                    End If
+                End If
+            End If
+
+            Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
+            Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
+
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = "notepad.exe"
+                mProcess.StartInfo.Arguments = String.Format("""{0}""", sLogFile)
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.System))
+                mProcess.StartInfo.UseShellExecute = False
+
+                mProcess.Start()
+            End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
