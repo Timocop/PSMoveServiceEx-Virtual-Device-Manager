@@ -1260,7 +1260,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     iDisplayH = 1080
                                                     iRenderW = CInt((iDisplayW * iHmdRenderScale))
                                                     iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                    iFrameRate = 90
+                                                    iFrameRate = 120
                                                     bDirectMode = True
 
                                                     If (mDisplayInfo.Value.DeviceID.StartsWith(ClassMonitor.PSVR_MONITOR_GEN1_NAME)) Then
