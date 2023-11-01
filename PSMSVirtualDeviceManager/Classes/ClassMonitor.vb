@@ -342,8 +342,17 @@ Public Class ClassMonitor
                     iSplitExt = iExt.ToArray
                 End If
 
-                mEdidOverride.SetValue("0", iSplitBase, RegistryValueKind.Binary)
-                mEdidOverride.SetValue("1", iSplitExt, RegistryValueKind.Binary)
+                If (iSplitExt.Length = 0) Then
+                    mEdidOverride.DeleteValue("0")
+                Else
+                    mEdidOverride.SetValue("0", iSplitBase, RegistryValueKind.Binary)
+                End If
+
+                If (iSplitExt.Length = 0) Then
+                    mEdidOverride.DeleteValue("1")
+                Else
+                    mEdidOverride.SetValue("1", iSplitExt, RegistryValueKind.Binary)
+                End If
 
                 bSuccess = True
             Next
@@ -463,11 +472,11 @@ Public Class ClassMonitor
                 ' Check if current EDID is equal to patched. If not, then reboot or replug device to update.
                 Dim iCurrentEDID As Byte() = TryCast(mParametersKey.GetValue("EDID", Nothing), Byte())
                 If (iCurrentEDID IsNot Nothing) Then
-                    If (IsBytesEqual(iCurrentEDID, iSplitBase_Multi)) Then
+                    If (IsBytesEqual(iCurrentEDID, iFullEDID_Multi) OrElse IsBytesEqual(iCurrentEDID, iSplitBase_Multi)) Then
                         Return ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI
                     End If
 
-                    If (IsBytesEqual(iCurrentEDID, iSplitBase_Direct)) Then
+                    If (IsBytesEqual(iCurrentEDID, iFullEDID_Direct) OrElse IsBytesEqual(iCurrentEDID, iSplitBase_Direct)) Then
                         Return ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT
                     End If
 
