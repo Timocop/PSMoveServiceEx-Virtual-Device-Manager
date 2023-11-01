@@ -668,7 +668,7 @@ Public Class UCVirtualMotionTracker
         Public Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
         Public Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
         Public Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
-        Public Const DISPLAY_HFOV As Single = 90.0F
+        Public Const DISPLAY_HFOV As Single = 95.0F
         Public Const DISPLAY_VFOV As Single = 100.0F
 
         Class STRUC_HMD_SETTINGS
