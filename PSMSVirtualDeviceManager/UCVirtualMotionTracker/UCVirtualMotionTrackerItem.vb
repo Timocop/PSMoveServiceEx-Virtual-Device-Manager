@@ -1284,6 +1284,8 @@ Public Class UCVirtualMotionTrackerItem
                                     End If
 
                                     If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
+                                        Dim bSetPack As Boolean = False
+
                                         ' Setup the HMD
                                         ' $TODO Make this less retarded. Get status from the driver if something isnt set up properly.
                                         If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
@@ -1344,6 +1346,11 @@ Public Class UCVirtualMotionTrackerItem
                                                     mOscDataPack.mOrientation.W
                                                 ))
                                             m_FpsOscCounter += 1
+                                            bSetPack = True
+                                        End If
+
+                                        If (bSetPack) Then
+                                            g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
                                         End If
                                     End If
                                 End SyncLock
@@ -1493,6 +1500,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                     Select Case (m_VmtTrackerRole)
                                         Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
+                                            Dim bSetPack As Boolean = False
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
@@ -1509,11 +1517,15 @@ Public Class UCVirtualMotionTrackerItem
                                                         mOscDataPack.mOrientation.W
                                                     ))
                                                 m_FpsOscCounter += 1
+                                                bSetPack = True
                                             End If
 
-                                            g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            If (bSetPack) Then
+                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            End If
 
                                         Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                                            Dim bSetPack As Boolean = False
 
                                             Dim iController As Integer = ENABLE_TRACKER
                                             Select Case (m_VmtTrackerRole)
@@ -1533,6 +1545,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                                         ))
                                                     m_FpsOscCounter += 1
+                                                    bSetPack = True
                                                 Next
 
                                                 For Each mTrigger In mOscDataPack.mTrigger
@@ -1542,6 +1555,7 @@ Public Class UCVirtualMotionTrackerItem
                                                            m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                                        ))
                                                     m_FpsOscCounter += 1
+                                                    bSetPack = True
                                                 Next
 
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1550,6 +1564,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
                                                     ))
                                                 m_FpsOscCounter += 1
+                                                bSetPack = True
 
                                             End If
 
@@ -1568,11 +1583,15 @@ Public Class UCVirtualMotionTrackerItem
                                                         mOscDataPack.mOrientation.W
                                                     ))
                                                 m_FpsOscCounter += 1
+                                                bSetPack = True
                                             End If
 
-                                            g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            If (bSetPack) Then
+                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            End If
 
                                         Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
+                                            Dim bSetPack As Boolean = False
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
@@ -1589,11 +1608,15 @@ Public Class UCVirtualMotionTrackerItem
                                                         mOscDataPack.mOrientation.W
                                                     ))
                                                 m_FpsOscCounter += 1
+                                                bSetPack = True
                                             End If
 
-                                            g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            If (bSetPack) Then
+                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            End If
 
                                         Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                            Dim bSetPack As Boolean = False
 
                                             Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
                                             Select Case (m_VmtTrackerRole)
@@ -1613,6 +1636,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                                         ))
                                                     m_FpsOscCounter += 1
+                                                    bSetPack = True
                                                 Next
 
                                                 For Each mTrigger In mOscDataPack.mTrigger
@@ -1622,6 +1646,7 @@ Public Class UCVirtualMotionTrackerItem
                                                            m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                                        ))
                                                     m_FpsOscCounter += 1
+                                                    bSetPack = True
                                                 Next
 
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1630,6 +1655,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
                                                     ))
                                                 m_FpsOscCounter += 1
+                                                bSetPack = True
                                             End If
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
@@ -1647,9 +1673,12 @@ Public Class UCVirtualMotionTrackerItem
                                                         mOscDataPack.mOrientation.W
                                                     ))
                                                 m_FpsOscCounter += 1
+                                                bSetPack = True
                                             End If
 
-                                            g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            If (bSetPack) Then
+                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            End If
                                     End Select
                                 End SyncLock
                             End If
