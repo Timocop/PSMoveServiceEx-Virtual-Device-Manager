@@ -1115,12 +1115,19 @@ Public Class UCVirtualMotionTrackerItem
                         Throw New ArgumentException("OSC server is suspended")
                     End If
 
+                    Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
+
                     If (Not bFirstEnabled) Then
                         bFirstEnabled = True
 
                         mTrackerDataUpdate.Restart()
                         mLastBatteryReport.Restart()
                         mEnforcePacketUpdate.Restart()
+
+                        'Load recentering
+                        If (Not m_IsHMD) Then
+                            mClassSettings.m_ControllerSettings.m_ControllerRecenter.TryGetValue(g_iIndex, mRecenterQuat)
+                        End If
                     End If
 
                     SyncLock _ThreadLock
@@ -1128,10 +1135,13 @@ Public Class UCVirtualMotionTrackerItem
                             g_mResetRecenter = False
 
                             mRecenterQuat = Quaternion.Identity
+
+                            If (Not m_IsHMD) Then
+                                mClassSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                mClassSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                            End If
                         End If
                     End SyncLock
-
-                    Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
 
                     ' Get controller settings
                     Dim bJoystickShortcutBinding = mClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
@@ -1221,7 +1231,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mCalibratedOrientation,
                                                             mRecenterQuat,
                                                             mUCVirtualMotionTracker,
-                                                            True)
+                                                            True,
+                                                            mClassSettings)
 
                                     If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
                                         mDisplayNextUpdate.Restart()
@@ -1439,7 +1450,8 @@ Public Class UCVirtualMotionTrackerItem
                                                                             mRecenterQuat,
                                                                             mCalibratedPosition,
                                                                             mCalibratedOrientation,
-                                                                            mUCVirtualMotionTracker)
+                                                                            mUCVirtualMotionTracker,
+                                                                            mClassSettings)
 
                                             'Do Hmd/remote recenter
                                             InternalRecenterHmd(bEnableHmdRecenter,
@@ -1453,7 +1465,8 @@ Public Class UCVirtualMotionTrackerItem
                                                                 mCalibratedOrientation,
                                                                 mRecenterQuat,
                                                                 mUCVirtualMotionTracker,
-                                                                False)
+                                                                False,
+                                                                mClassSettings)
 
                                             'Send buttons
                                             InternalButtonsLogic(mOscDataPack,
@@ -1968,7 +1981,8 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef mRecenterQuat As Quaternion,
                                                    ByRef mCalibratedPosition As Vector3,
                                                    ByRef mCalibratedOrientation As Quaternion,
-                                                   ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
+                                                   ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
+                                                   ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
             If (bEnableControllerRecenter AndAlso bHoldingRecenterButtons) Then
                 If (Not mRecenterButtonPressed) Then
                     mRecenterButtonPressed = True
@@ -2008,6 +2022,9 @@ Public Class UCVirtualMotionTrackerItem
 
                                 mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
 
+                                mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+
                                 bDoFactoryRecenter = False
                             End If
                     End Select
@@ -2016,6 +2033,9 @@ Public Class UCVirtualMotionTrackerItem
                         Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
 
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
+
+                        mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                        mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
                     End If
                 End If
             Else
@@ -2036,7 +2056,8 @@ Public Class UCVirtualMotionTrackerItem
                                         ByRef mCalibratedOrientation As Quaternion,
                                         ByRef mRecenterQuat As Quaternion,
                                         ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
-                                        ByRef bIsHmd As Boolean)
+                                        ByRef bIsHmd As Boolean,
+                                        ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
             Dim bOtherControllerRecenterButtonPressed As Boolean = False
             Dim bOtherControllerPos As New Vector3
 
@@ -2117,6 +2138,11 @@ Public Class UCVirtualMotionTrackerItem
 
                                 mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
 
+                                If (Not bIsHmd) Then
+                                    mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                    mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                                End If
+
                                 bDoFactoryRecenter = False
                             Else
                                 bDoFactoryRecenter = False
@@ -2127,6 +2153,11 @@ Public Class UCVirtualMotionTrackerItem
                         Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
 
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
+
+                        If (Not bIsHmd) Then
+                            mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                            mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                        End If
                     End If
                 End If
             Else
