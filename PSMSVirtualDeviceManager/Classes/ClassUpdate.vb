@@ -46,7 +46,7 @@ Public Class ClassUpdate
             IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
             Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\PSMSXUpdaterSFX.exe")
 #Else
-            Dim sDataPath As String = IO.Path.Combine(sPath, "VdmUpdaterSFX.exe")
+            Dim sDataPath As String = IO.Path.Combine(sPath, "PSMSXUpdaterSFX.exe")
 #End If
 
             IO.File.Delete(sDataPath)
@@ -300,7 +300,7 @@ Public Class ClassUpdate
             IO.Directory.CreateDirectory(IO.Path.Combine(sPath, "UpdateTest"))
             Dim sDataPath As String = IO.Path.Combine(sPath, "UpdateTest\VDMUpdaterSFX.exe")
 #Else
-            Dim sDataPath As String = IO.Path.Combine(sPath, "VdmUpdaterSFX.exe")
+            Dim sDataPath As String = IO.Path.Combine(sPath, "VDMUpdaterSFX.exe")
 #End If
 
             IO.File.Delete(sDataPath)
