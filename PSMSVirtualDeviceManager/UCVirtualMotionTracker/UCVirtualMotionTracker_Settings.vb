@@ -482,6 +482,14 @@
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub LinkLabel_PlayCalibShowSettings2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibShowSettings2.LinkClicked
+        TabControl_Vmt.SelectedTab = TabPage_Settings
+        TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPlayspace
+
+        ' Weird focus  
+        CheckBox_PlayCalibEnabled.Focus()
+    End Sub
+
     Private Sub Button_SaveControllerSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveControllerSettings.Click
         Try
             g_ClassSettings.SaveSettings(ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL)

@@ -128,13 +128,6 @@
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>224, 17</value>
   </metadata>
-  <data name="Label17.Text" xml:space="preserve">
-    <value>        Controller recentering is temporary and will reset when the Virtual Device Manager is closed. 
-        For a permanent recentering solution, utilize the "World Orientation Yaw" offset in 
-        the "Controller Settings" when using the Service Config Tool. 
-        However, please note that this permanent method is only recommended for controllers 
-        equipped with magnetometers.</value>
-  </data>
   <data name="Label16.Text" xml:space="preserve">
     <value>        Holding the START button on the PSmove controller will recenter the target trackers orientation. 
         This is useful for trackers without magnetometers which experience yaw drift over time.</value>
