@@ -342,7 +342,7 @@ Public Class ClassMonitor
                     iSplitExt = iExt.ToArray
                 End If
 
-                If (iSplitExt.Length = 0) Then
+                If (iSplitBase.Length = 0) Then
                     mEdidOverride.DeleteValue("0")
                 Else
                     mEdidOverride.SetValue("0", iSplitBase, RegistryValueKind.Binary)
