@@ -1138,7 +1138,7 @@ Public Class UCVirtualMotionTrackerItem
 
                             If (Not m_IsHMD) Then
                                 mClassSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                mClassSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                                mClassSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
                             End If
                         End If
                     End SyncLock
@@ -2023,7 +2023,7 @@ Public Class UCVirtualMotionTrackerItem
                                 mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
 
                                 mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                                mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
 
                                 bDoFactoryRecenter = False
                             End If
@@ -2035,7 +2035,7 @@ Public Class UCVirtualMotionTrackerItem
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
                         mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                        mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                        mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
                     End If
                 End If
             Else
@@ -2140,7 +2140,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                 If (Not bIsHmd) Then
                                     mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                    mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                                    mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
                                 End If
 
                                 bDoFactoryRecenter = False
@@ -2156,7 +2156,7 @@ Public Class UCVirtualMotionTrackerItem
 
                         If (Not bIsHmd) Then
                             mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                            mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE)
+                            mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
                         End If
                     End If
                 End If

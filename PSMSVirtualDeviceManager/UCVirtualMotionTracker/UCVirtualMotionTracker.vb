@@ -21,7 +21,7 @@ Public Class UCVirtualMotionTracker
     Enum ENUM_SETTINGS_SAVE_TYPE_FLAGS
         ALL = -1
         DEVICE = (1 << 0)
-        PER_DEVICE = (1 << 1)
+        DEVICE_RECENTER = (1 << 1)
         PLAYSPACE_CALIBRATION = (1 << 2)
         PLAYSPACE = (1 << 3)
         PLAYSPACE_CALIB_CONTROLLER = (1 << 4)
@@ -1332,16 +1332,16 @@ Public Class UCVirtualMotionTracker
                         ' Per Controller Settings
                         For j = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                             tmpQuat = Quaternion.Identity
-                            If (Single.TryParse(mIni.ReadKeyValue(String.Format("Controller{0}Settings", j), "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                                 tmpQuat.X = tmpSng
                             End If
-                            If (Single.TryParse(mIni.ReadKeyValue(String.Format("Controller{0}Settings", j), "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                                 tmpQuat.Y = tmpSng
                             End If
-                            If (Single.TryParse(mIni.ReadKeyValue(String.Format("Controller{0}Settings", j), "Recenter.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                                 tmpQuat.Z = tmpSng
                             End If
-                            If (Single.TryParse(mIni.ReadKeyValue(String.Format("Controller{0}Settings", j), "Recenter.W", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.W", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                                 tmpQuat.W = tmpSng
                             End If
                             m_ControllerSettings.m_ControllerRecenter(j) = tmpQuat
@@ -1521,12 +1521,12 @@ Public Class UCVirtualMotionTracker
                     Using mIni As New ClassIni(mStream)
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                        If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PER_DEVICE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
+                        If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
                             For Each mItem In m_ControllerSettings.m_ControllerRecenter
-                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(String.Format("Controller{0}Settings", mItem.Key), "Recenter.X", mItem.Value.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(String.Format("Controller{0}Settings", mItem.Key), "Recenter.Y", mItem.Value.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(String.Format("Controller{0}Settings", mItem.Key), "Recenter.Z", mItem.Value.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
-                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(String.Format("Controller{0}Settings", mItem.Key), "Recenter.W", mItem.Value.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(CStr(mItem.Key), "Recenter.X", mItem.Value.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(CStr(mItem.Key), "Recenter.Y", mItem.Value.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(CStr(mItem.Key), "Recenter.Z", mItem.Value.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+                                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(CStr(mItem.Key), "Recenter.W", mItem.Value.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                             Next
                         End If
 
