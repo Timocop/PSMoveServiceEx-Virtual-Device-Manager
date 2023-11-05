@@ -59,6 +59,40 @@
         CheckBox_EnableMirror.Checked = mSteamConfig.m_ClassSettings.m_EnableMirrorView
         CheckBox_EnablePerfGraph.Checked = mSteamConfig.m_ClassSettings.m_EnablePerformanceGraph
 
+        CheckBox_Autostart.Checked = False
+        CheckBox_AutostartService.Checked = False
+
+        ' Manage SteamVR manifests
+        mSteamConfig.m_ClassManifests.LoadConfig()
+        For Each sFile In mSteamConfig.m_ClassManifests.GetManifests()
+            Dim mManifest As New ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT(sFile)
+            If (Not mManifest.m_IsValid) Then
+                Continue For
+            End If
+
+            If (Not mManifest.m_IsCurrentApplicationManifest()) Then
+                Continue For
+            End If
+
+            CheckBox_Autostart.Checked = True
+
+            Dim sArguments As String = mManifest.m_Arguments
+            If (sArguments IsNot Nothing) Then
+                For Each sArg As String In sArguments.Split(" "c)
+                    Select Case (sArg)
+                        Case FormMain.COMMANDLINE_START_SERVICE
+                            CheckBox_AutostartService.Checked = True
+
+                        Case FormMain.COMMANDLINE_START_REMOTEDEVICES
+                            CheckBox_AutostartRemoteDevices.Checked = True
+
+                        Case FormMain.COMMANDLINE_START_OSCSERVER
+                            CheckBox_AutostartOscServer.Checked = True
+                    End Select
+                Next
+            End If
+        Next
+
         g_bSettingsLoaded = True
     End Sub
 
@@ -83,5 +117,44 @@
         mSteamConfig.m_ClassSettings.m_EnablePerformanceGraph = CheckBox_EnablePerfGraph.Checked
 
         mSteamConfig.SaveConfig()
+
+        ' Manage SteamVR manifests for autostart
+        mSteamConfig.m_ClassManifests.LoadConfig()
+        If (CheckBox_Autostart.Checked) Then
+            Dim sManifestFile As String = mSteamConfig.m_ClassManifests.GetLocalApplicationManifestPath()
+
+            mSteamConfig.m_ClassManifests.AddManifest(sManifestFile)
+
+            Dim sArguments As New List(Of String)
+
+            If (CheckBox_AutostartService.Checked) Then
+                sArguments.Add(FormMain.COMMANDLINE_START_SERVICE)
+            End If
+
+            If (CheckBox_AutostartRemoteDevices.Checked) Then
+                sArguments.Add(FormMain.COMMANDLINE_START_REMOTEDEVICES)
+            End If
+
+            If (CheckBox_AutostartOscServer.Checked) Then
+                sArguments.Add(FormMain.COMMANDLINE_START_OSCSERVER)
+            End If
+
+            Dim mManifest As New ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT With {
+                .m_AppKey = "PSMoveServiceEx.VirtualDeviceManager",
+                .m_LaunchType = ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT.ENUM_LAUNCH_TYPE.BINARY,
+                .m_BinaryPathWindows = IO.Path.GetFileName(Application.ExecutablePath),
+                .m_Arguments = String.Join(" "c, sArguments.ToArray),
+                .m_IsDashboardOverlay = True,
+                .m_NameByLang = "Virtual Device Manager",
+                .m_DescriptionByLang = "PSMoveServiceEx - Virtual Device Manager"
+            }
+
+            mManifest.SaveToFile(sManifestFile)
+
+            mSteamConfig.m_ClassManifests.SetAutostartManifest(mManifest, True)
+        Else
+            mSteamConfig.m_ClassManifests.RemoveManifest(mSteamConfig.m_ClassManifests.GetLocalApplicationManifestPath())
+        End If
+        mSteamConfig.m_ClassManifests.SaveConfig()
     End Sub
 End Class

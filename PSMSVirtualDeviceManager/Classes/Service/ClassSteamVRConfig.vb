@@ -6,6 +6,7 @@ Public Class ClassSteamVRConfig
     Private g_ClassOverrides As ClassOverrides
     Private g_ClassTrackerRoles As ClassTrackerRoles
     Private g_ClassSettings As ClassSettings
+    Private g_ClassManifests As ClassManifests
 
     Private g_bConfigLoaded As Boolean = False
     Private g_mConfig As New Dictionary(Of String, Object)
@@ -14,6 +15,7 @@ Public Class ClassSteamVRConfig
         g_ClassOverrides = New ClassOverrides(Me)
         g_ClassTrackerRoles = New ClassTrackerRoles(Me)
         g_ClassSettings = New ClassSettings(Me)
+        g_ClassManifests = New ClassManifests(Me)
     End Sub
 
     ReadOnly Property m_SteamPath As String
@@ -42,6 +44,12 @@ Public Class ClassSteamVRConfig
     ReadOnly Property m_ClassSettings As ClassSettings
         Get
             Return g_ClassSettings
+        End Get
+    End Property
+
+    ReadOnly Property m_ClassManifests As ClassManifests
+        Get
+            Return g_ClassManifests
         End Get
     End Property
 
@@ -525,6 +533,490 @@ Public Class ClassSteamVRConfig
             End Set
         End Property
 
+    End Class
+
+    Class ClassManifests
+        Const MANIFEST_FILE_NAME As String = "manifest.vrmanifest"
+
+        Private g_ClassSteamVRConfig As ClassSteamVRConfig
+
+        Private g_bConfigLoaded As Boolean = False
+        Private g_mConfig As New Dictionary(Of String, Object)
+
+        Class STRUC_BUILDIN_MANIFEST_CONTENT
+            Private g_mManifest As New Dictionary(Of String, Object)
+
+            Private g_sManifestPath As String = ""
+
+            Enum ENUM_LAUNCH_TYPE
+                UNKNOWN = -1
+                BINARY
+                URL
+            End Enum
+
+            Public Sub New()
+                Clear()
+            End Sub
+
+            Public Sub New(sFile As String)
+                Clear()
+                ParseFromFile(sFile)
+            End Sub
+
+            ReadOnly Property m_RawManifest As Dictionary(Of String, Object)
+                Get
+                    Return g_mManifest
+                End Get
+            End Property
+
+            ReadOnly Property m_IsValid As Boolean
+                Get
+                    If (Not g_mManifest.ContainsKey("source")) Then
+                        Return False
+                    End If
+
+                    Return (CStr(g_mManifest("source")) = "builtin")
+                End Get
+            End Property
+
+            Public Sub Clear()
+                g_mManifest = New Dictionary(Of String, Object)
+                g_mManifest("source") = "builtin"
+
+                g_sManifestPath = ""
+            End Sub
+
+            ReadOnly Property m_IsCurrentApplicationManifest As Boolean
+                Get
+                    ' Needs to be build-in manifest
+                    If (Not m_IsValid()) Then
+                        Return False
+                    End If
+
+                    If (String.IsNullOrEmpty(g_sManifestPath)) Then
+                        Return False
+                    End If
+
+                    Dim sApplicationPath As String = IO.Path.Combine(Application.StartupPath, MANIFEST_FILE_NAME)
+
+                    Return (g_sManifestPath.ToLowerInvariant = sApplicationPath.ToLowerInvariant)
+                End Get
+            End Property
+
+            ReadOnly Property m_File As String
+                Get
+                    Return g_sManifestPath
+                End Get
+            End Property
+
+            Property m_AppKey As String
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("app_key")) Then
+                        Return Nothing
+                    End If
+
+                    Return CStr(mApplicationsFirst("app_key"))
+                End Get
+                Set(value As String)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (value Is Nothing) Then
+                        mApplicationsFirst.Remove("app_key")
+                    Else
+                        mApplicationsFirst("app_key") = value
+                    End If
+                End Set
+            End Property
+
+            Property m_LaunchType As ENUM_LAUNCH_TYPE
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("launch_type")) Then
+                        Return Nothing
+                    End If
+
+                    Select Case (CStr(mApplicationsFirst("launch_type")))
+                        Case "binary"
+                            Return ENUM_LAUNCH_TYPE.BINARY
+
+                        Case "url"
+                            Return ENUM_LAUNCH_TYPE.URL
+
+                        Case Else
+                            Return ENUM_LAUNCH_TYPE.UNKNOWN
+                    End Select
+                End Get
+                Set(value As ENUM_LAUNCH_TYPE)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    Select Case (value)
+                        Case ENUM_LAUNCH_TYPE.BINARY
+                            mApplicationsFirst("launch_type") = "binary"
+
+                        Case ENUM_LAUNCH_TYPE.URL
+                            mApplicationsFirst("launch_type") = "url"
+
+                        Case Else
+                            mApplicationsFirst.Remove("launch_type")
+                    End Select
+                End Set
+            End Property
+
+            Property m_BinaryPathWindows As String
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("binary_path_windows")) Then
+                        Return Nothing
+                    End If
+
+                    Return CStr(mApplicationsFirst("binary_path_windows"))
+                End Get
+                Set(value As String)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (value Is Nothing) Then
+                        mApplicationsFirst.Remove("binary_path_windows")
+                    Else
+                        mApplicationsFirst("binary_path_windows") = value
+                    End If
+                End Set
+            End Property
+
+            Property m_WorkingDirectory As String
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("working_directory")) Then
+                        Return Nothing
+                    End If
+
+                    Return CStr(mApplicationsFirst("working_directory"))
+                End Get
+                Set(value As String)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (value Is Nothing) Then
+                        mApplicationsFirst.Remove("working_directory")
+                    Else
+                        mApplicationsFirst("working_directory") = value
+                    End If
+                End Set
+            End Property
+
+            Property m_Arguments As String
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("arguments")) Then
+                        Return Nothing
+                    End If
+
+                    Return CStr(mApplicationsFirst("arguments"))
+                End Get
+                Set(value As String)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (value Is Nothing) Then
+                        mApplicationsFirst.Remove("arguments")
+                    Else
+                        mApplicationsFirst("arguments") = value
+                    End If
+                End Set
+            End Property
+
+            Property m_IsDashboardOverlay As Boolean
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("is_dashboard_overlay")) Then
+                        Return Nothing
+                    End If
+
+                    Return CBool(mApplicationsFirst("is_dashboard_overlay"))
+                End Get
+                Set(value As Boolean)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    mApplicationsFirst("is_dashboard_overlay") = value
+                End Set
+            End Property
+
+            Property m_NameByLang(Optional sLanguage As String = "en_us") As String
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("strings")) Then
+                        Return Nothing
+                    End If
+
+                    Dim mStrings = TryCast(mApplicationsFirst("strings"), Dictionary(Of String, Object))
+                    If (Not mStrings.ContainsKey(sLanguage)) Then
+                        Return Nothing
+                    End If
+
+                    Dim mLanguage = TryCast(mStrings(sLanguage), Dictionary(Of String, Object))
+                    If (Not mLanguage.ContainsKey("name")) Then
+                        Return Nothing
+                    End If
+
+                    Return CStr(mLanguage("name"))
+                End Get
+                Set(value As String)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("strings")) Then
+                        mApplicationsFirst("strings") = New Dictionary(Of String, Object)
+                    End If
+
+                    Dim mStrings = TryCast(mApplicationsFirst("strings"), Dictionary(Of String, Object))
+                    If (Not mStrings.ContainsKey(sLanguage)) Then
+                        mStrings(sLanguage) = New Dictionary(Of String, Object)
+                    End If
+
+                    Dim mLanguage = TryCast(mStrings(sLanguage), Dictionary(Of String, Object))
+
+                    mLanguage("name") = value
+                End Set
+            End Property
+
+            Property m_DescriptionByLang(Optional sLanguage As String = "en_us") As String
+                Get
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("strings")) Then
+                        Return Nothing
+                    End If
+
+                    Dim mStrings = TryCast(mApplicationsFirst("strings"), Dictionary(Of String, Object))
+                    If (Not mStrings.ContainsKey(sLanguage)) Then
+                        Return Nothing
+                    End If
+
+                    Dim mLanguage = TryCast(mStrings(sLanguage), Dictionary(Of String, Object))
+                    If (Not mLanguage.ContainsKey("description")) Then
+                        Return Nothing
+                    End If
+
+                    Return CStr(mLanguage("description"))
+                End Get
+                Set(value As String)
+                    Dim mApplicationsFirst = InternalGetFirstApplication()
+
+                    If (Not mApplicationsFirst.ContainsKey("strings")) Then
+                        mApplicationsFirst("strings") = New Dictionary(Of String, Object)
+                    End If
+
+                    Dim mStrings = TryCast(mApplicationsFirst("strings"), Dictionary(Of String, Object))
+                    If (Not mStrings.ContainsKey(sLanguage)) Then
+                        mStrings(sLanguage) = New Dictionary(Of String, Object)
+                    End If
+
+                    Dim mLanguage = TryCast(mStrings(sLanguage), Dictionary(Of String, Object))
+
+                    mLanguage("description") = value
+                End Set
+            End Property
+
+
+            Private Function InternalGetFirstApplication() As Dictionary(Of String, Object)
+                If (Not m_IsValid()) Then
+                    Throw New ArgumentException("Only build-in manifests are supported")
+                End If
+
+                If (Not g_mManifest.ContainsKey("applications")) Then
+                    g_mManifest("applications") = New ArrayList
+                End If
+
+                Dim mApplications = TryCast(g_mManifest("applications"), ArrayList)
+                If (mApplications.Count = 0) Then
+                    mApplications.Add(New Dictionary(Of String, Object))
+                End If
+
+                Return TryCast(mApplications(0), Dictionary(Of String, Object))
+            End Function
+
+
+
+
+            Public Sub ParseFromFile(sFile As String)
+                Dim sContent As String = IO.File.ReadAllText(sFile)
+
+                g_mManifest = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+
+                g_sManifestPath = sFile
+            End Sub
+
+            Public Sub SaveToFile(sFile As String)
+                Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mManifest))
+
+                IO.File.WriteAllText(sFile, sContent)
+
+                g_sManifestPath = sFile
+            End Sub
+        End Class
+
+        Public Sub New(_ClassSteamVRConfig As ClassSteamVRConfig)
+            g_ClassSteamVRConfig = _ClassSteamVRConfig
+        End Sub
+
+        ReadOnly Property m_AppConfigFile As String
+            Get
+                Return IO.Path.Combine(g_ClassSteamVRConfig.m_SteamPath, "config\appconfig.json")
+            End Get
+        End Property
+
+        ReadOnly Property m_VrAppConfigPath As String
+            Get
+                Return IO.Path.Combine(g_ClassSteamVRConfig.m_SteamPath, "config\vrappconfig")
+            End Get
+        End Property
+
+        Public Function GetLocalApplicationManifestPath() As String
+            Return IO.Path.Combine(Application.StartupPath, MANIFEST_FILE_NAME)
+        End Function
+
+        Public Sub AddManifest(sPath As String)
+            ValidateManifestPaths()
+
+            Dim mManifestPaths = TryCast(g_mConfig("manifest_paths"), ArrayList)
+            If (mManifestPaths Is Nothing) Then
+                Throw New ArgumentException("Could not cast manifest_paths as ArrayList")
+            End If
+
+            For Each sDriverPath As String In mManifestPaths.ToArray
+                If (sDriverPath Is Nothing) Then
+                    Continue For
+                End If
+
+                If (sDriverPath.ToLowerInvariant = sPath.ToLowerInvariant) Then
+                    Return
+                End If
+            Next
+
+            mManifestPaths.Add(sPath)
+        End Sub
+
+        Public Sub RemoveManifest(sPath As String)
+            ValidateManifestPaths()
+
+            Dim mManifestPaths = TryCast(g_mConfig("manifest_paths"), ArrayList)
+            If (mManifestPaths Is Nothing) Then
+                Throw New ArgumentException("Could not cast manifest_paths as ArrayList")
+            End If
+
+            For i = mManifestPaths.Count - 1 To 0 Step -1
+                If (mManifestPaths(i) Is Nothing) Then
+                    Continue For
+                End If
+
+                If (CStr(mManifestPaths(i)).ToLowerInvariant = sPath.ToLowerInvariant) Then
+                    mManifestPaths.RemoveAt(i)
+                End If
+            Next
+        End Sub
+
+        Public Function GetManifests() As String()
+            ValidateManifestPaths()
+
+            Dim mManifestPaths = TryCast(g_mConfig("manifest_paths"), ArrayList)
+            If (mManifestPaths Is Nothing) Then
+                Throw New ArgumentException("Could not cast manifest_paths as ArrayList")
+            End If
+
+            Dim mManifests As New List(Of String)
+            For i = 0 To mManifestPaths.Count - 1
+                If (mManifestPaths(i) Is Nothing) Then
+                    Continue For
+                End If
+
+                mManifests.Add(CStr(mManifestPaths(i)))
+            Next
+
+            Return mManifests.ToArray
+        End Function
+
+        Public Sub SetAutostartManifest(mManifest As STRUC_BUILDIN_MANIFEST_CONTENT, bEnabled As Boolean)
+            If (String.IsNullOrEmpty(mManifest.m_AppKey) OrElse mManifest.m_AppKey.Trim.Length = 0) Then
+                Throw New ArgumentException("App key can not be empty")
+            End If
+
+            Dim sAppConfig As String = IO.Path.Combine(m_VrAppConfigPath, mManifest.m_AppKey & ".vrappconfig")
+
+            Dim mAppConfig As New Dictionary(Of String, Object)
+            mAppConfig("autolaunch") = bEnabled
+            mAppConfig("last_launch_time") = 0
+
+            Dim sContent As String = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(mAppConfig))
+
+            IO.File.WriteAllText(sAppConfig, sContent)
+        End Sub
+
+        Public Function LoadConfig() As Boolean
+            Dim sConfigPath As String = m_AppConfigFile
+            If (sConfigPath Is Nothing OrElse Not IO.File.Exists(sConfigPath)) Then
+                Return False
+            End If
+
+            Dim sContent As String = IO.File.ReadAllText(sConfigPath)
+
+            g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+
+            g_bConfigLoaded = True
+            Return True
+        End Function
+
+        Public Sub SaveConfig()
+            If (Not g_bConfigLoaded) Then
+                Return
+            End If
+
+            Dim sConfigPath As String = m_AppConfigFile
+            If (sConfigPath Is Nothing OrElse Not IO.File.Exists(sConfigPath)) Then
+                Return
+            End If
+
+            ' Remove any invalid entries from the drivers list.
+            RemoveInvalid()
+
+            Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+
+            IO.File.WriteAllText(sConfigPath, sContent)
+        End Sub
+
+        Private Sub RemoveInvalid()
+            ValidateManifestPaths()
+
+            Dim mManifestPaths = TryCast(g_mConfig("manifest_paths"), ArrayList)
+            If (mManifestPaths Is Nothing) Then
+                Throw New ArgumentException("Could not cast manifest_paths as ArrayList")
+            End If
+
+            ' Remove NULL drivers.
+            For i = mManifestPaths.Count - 1 To 0 Step -1
+                If (mManifestPaths(i) Is Nothing) Then
+                    mManifestPaths.RemoveAt(i)
+                End If
+            Next
+
+            ' Just remove the whole section if its empty.
+            If (mManifestPaths.Count = 0) Then
+                g_mConfig.Remove("manifest_paths")
+            End If
+        End Sub
+
+        Private Sub ValidateManifestPaths()
+            If (Not g_mConfig.ContainsKey("manifest_paths")) Then
+                g_mConfig("manifest_paths") = New ArrayList()
+            End If
+
+            If (TypeOf g_mConfig("manifest_paths") IsNot ArrayList) Then
+                g_mConfig("manifest_paths") = New ArrayList()
+            End If
+        End Sub
     End Class
 
     Public Function LoadConfig() As Boolean

@@ -37,6 +37,11 @@ Partial Class FormSteamSettings
         Me.CheckBox_EnablePerfGraph = New System.Windows.Forms.CheckBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.LinkLabel_ResetForcedDrvier = New System.Windows.Forms.LinkLabel()
+        Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.CheckBox_AutostartService = New System.Windows.Forms.CheckBox()
+        Me.CheckBox_AutostartRemoteDevices = New System.Windows.Forms.CheckBox()
+        Me.CheckBox_AutostartOscServer = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -58,7 +63,7 @@ Partial Class FormSteamSettings
         Me.Panel1.Controls.Add(Me.Button1)
         Me.Panel1.Controls.Add(Me.Panel2)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 233)
+        Me.Panel1.Location = New System.Drawing.Point(0, 326)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(464, 48)
         Me.Panel1.TabIndex = 23
@@ -216,12 +221,75 @@ Partial Class FormSteamSettings
         Me.LinkLabel_ResetForcedDrvier.Visible = False
         Me.LinkLabel_ResetForcedDrvier.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
+        'CheckBox_Autostart
+        '
+        Me.CheckBox_Autostart.AutoSize = True
+        Me.CheckBox_Autostart.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_Autostart.Location = New System.Drawing.Point(25, 212)
+        Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
+        Me.CheckBox_Autostart.Size = New System.Drawing.Size(240, 18)
+        Me.CheckBox_Autostart.TabIndex = 32
+        Me.CheckBox_Autostart.Text = "Enable Virtual Device Manager Autostart"
+        Me.CheckBox_Autostart.UseVisualStyleBackColor = True
+        '
+        'Panel3
+        '
+        Me.Panel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.Panel3.Location = New System.Drawing.Point(12, 205)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(440, 1)
+        Me.Panel3.TabIndex = 33
+        '
+        'CheckBox_AutostartService
+        '
+        Me.CheckBox_AutostartService.AutoSize = True
+        Me.CheckBox_AutostartService.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_AutostartService.Location = New System.Drawing.Point(57, 236)
+        Me.CheckBox_AutostartService.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_AutostartService.Name = "CheckBox_AutostartService"
+        Me.CheckBox_AutostartService.Size = New System.Drawing.Size(162, 18)
+        Me.CheckBox_AutostartService.TabIndex = 34
+        Me.CheckBox_AutostartService.Text = "Run Service automatically"
+        Me.CheckBox_AutostartService.UseVisualStyleBackColor = True
+        '
+        'CheckBox_AutostartRemoteDevices
+        '
+        Me.CheckBox_AutostartRemoteDevices.AutoSize = True
+        Me.CheckBox_AutostartRemoteDevices.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_AutostartRemoteDevices.Location = New System.Drawing.Point(57, 260)
+        Me.CheckBox_AutostartRemoteDevices.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_AutostartRemoteDevices.Name = "CheckBox_AutostartRemoteDevices"
+        Me.CheckBox_AutostartRemoteDevices.Size = New System.Drawing.Size(207, 18)
+        Me.CheckBox_AutostartRemoteDevices.TabIndex = 35
+        Me.CheckBox_AutostartRemoteDevices.Text = "Run Remote Devices automatically"
+        Me.CheckBox_AutostartRemoteDevices.UseVisualStyleBackColor = True
+        '
+        'CheckBox_AutostartOscServer
+        '
+        Me.CheckBox_AutostartOscServer.AutoSize = True
+        Me.CheckBox_AutostartOscServer.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_AutostartOscServer.Location = New System.Drawing.Point(57, 284)
+        Me.CheckBox_AutostartOscServer.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_AutostartOscServer.Name = "CheckBox_AutostartOscServer"
+        Me.CheckBox_AutostartOscServer.Size = New System.Drawing.Size(183, 18)
+        Me.CheckBox_AutostartOscServer.TabIndex = 36
+        Me.CheckBox_AutostartOscServer.Text = "Run OSC Server automatically"
+        Me.CheckBox_AutostartOscServer.UseVisualStyleBackColor = True
+        '
         'FormSteamSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(464, 281)
+        Me.ClientSize = New System.Drawing.Size(464, 374)
+        Me.Controls.Add(Me.CheckBox_AutostartOscServer)
+        Me.Controls.Add(Me.CheckBox_AutostartRemoteDevices)
+        Me.Controls.Add(Me.CheckBox_AutostartService)
+        Me.Controls.Add(Me.Panel3)
+        Me.Controls.Add(Me.CheckBox_Autostart)
         Me.Controls.Add(Me.LinkLabel_ResetForcedDrvier)
         Me.Controls.Add(Me.CheckBox_EnablePerfGraph)
         Me.Controls.Add(Me.CheckBox_EnableMirror)
@@ -262,4 +330,9 @@ Partial Class FormSteamSettings
     Friend WithEvents CheckBox_EnablePerfGraph As CheckBox
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents LinkLabel_ResetForcedDrvier As LinkLabel
+    Friend WithEvents CheckBox_Autostart As CheckBox
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents CheckBox_AutostartService As CheckBox
+    Friend WithEvents CheckBox_AutostartRemoteDevices As CheckBox
+    Friend WithEvents CheckBox_AutostartOscServer As CheckBox
 End Class
