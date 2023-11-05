@@ -320,7 +320,7 @@ Public Class ClassMonitor
                         End If
 
                     Case Else
-                        Throw New ArgumentException("Unknown PSVR monitor hardware id")
+                        Throw New ArgumentException("Unknown PlayStation VR monitor hardware id")
                 End Select
 
                 Dim iSplitBase As Byte() = New Byte() {}
@@ -408,7 +408,7 @@ Public Class ClassMonitor
                         iFullEDID_Multi = My.Resources.EDID_PSVR2_MULTI
                         iFullEDID_Direct = My.Resources.EDID_PSVR2_DIRECT
                     Case Else
-                        Throw New ArgumentException("Unknown PSVR monitor hardware id")
+                        Throw New ArgumentException("Unknown PlayStation VR monitor hardware id")
                 End Select
 
                 Dim iSplitBase_Multi = New Byte() {}

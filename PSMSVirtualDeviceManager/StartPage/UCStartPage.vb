@@ -691,11 +691,11 @@ Public Class UCStartPage
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSEYE_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
-                    If (iExitCode <> 0) Then
-                        Throw New ArgumentException("Driver installation failed")
-                    End If
 
-                    MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -776,11 +776,11 @@ Public Class UCStartPage
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSVR_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
-                    If (iExitCode <> 0) Then
-                        Throw New ArgumentException("Driver installation failed")
-                    End If
 
-                    MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -869,11 +869,11 @@ Public Class UCStartPage
                     End If
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {sMode, FormMain.COMMANDLINE_VERBOSE})
-                    If (iExitCode <> 0) Then
-                        Throw New ArgumentException("Configuration installation failed")
-                    End If
 
-                    MessageBox.Show("Configuration installed successfully!", "Configuration Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Configuration installed successfully!", "Configuration Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -925,11 +925,11 @@ Public Class UCStartPage
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PSEYE, FormMain.COMMANDLINE_VERBOSE})
-                    If (iExitCode <> 0) Then
-                        Throw New ArgumentException("Driver uninstallation failed")
-                    End If
 
-                    MessageBox.Show("Drivers unisntalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
@@ -981,11 +981,11 @@ Public Class UCStartPage
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PSVR, FormMain.COMMANDLINE_VERBOSE})
-                    If (iExitCode <> 0) Then
-                        Throw New ArgumentException("Driver uninstallation failed")
-                    End If
 
-                    MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception

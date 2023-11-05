@@ -188,7 +188,7 @@
 
                     Dim bInstallDirectMode As Boolean = (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT)
                     If (Not mClassMonitor.PatchPlaystationVrMonitor(bInstallDirectMode)) Then
-                        Throw New ArgumentException("Patching monitor failed")
+                        Throw New ArgumentException("Unable to find PlayStation VR monitor")
                     End If
 
                     ' Restart monitors.
