@@ -1855,21 +1855,25 @@ Public Class UCVirtualMotionTrackerItem
             If (m_PlayspaceSettings.m_Valid) Then
                 Dim mCalibrationForward As Quaternion
                 Dim mForward As Vector3
+                Dim mSideways As Vector3
                 If (m_PlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
                     mCalibrationForward = ClassQuaternionTools.ExtractYawQuaternion(m_PlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
                     mForward = Vector3.UnitZ * m_PlayspaceSettings.m_ForwardOffset
+                    mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
                 Else
                     mCalibrationForward = ClassQuaternionTools.LookRotation(
                         m_PlayspaceSettings.m_PointHmdEndPos - m_PlayspaceSettings.m_PointHmdBeginPos, Vector3.UnitY)
                     mForward = Vector3.UnitY * m_PlayspaceSettings.m_ForwardOffset
+                    mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
                 End If
 
                 Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationForward, mForward)
+                Dim mOffsetSideways = ClassQuaternionTools.RotateVector(mCalibrationForward, mSideways)
 
                 Dim mPlayspaceCalibPointsRotated = ClassQuaternionTools.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), m_PlayspaceSettings.m_PointControllerBeginPos)
 
-                mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward) - mPlayspaceCalibPointsRotated
+                mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward + mOffsetSideways) - mPlayspaceCalibPointsRotated
 
                 Dim mPlayspaceRotated = ClassQuaternionTools.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition)

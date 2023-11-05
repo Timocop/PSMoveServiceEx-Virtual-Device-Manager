@@ -347,6 +347,15 @@
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub NumericUpDown_PlayCalibSideOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PlayCalibSideOffset.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_PlayspaceSettings.m_SideOffset = NumericUpDown_PlayCalibSideOffset.Value
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub NumericUpDown_PlayCalibHeightOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PlayCalibHeightOffset.ValueChanged
         If (g_bIgnoreEvents) Then
             Return

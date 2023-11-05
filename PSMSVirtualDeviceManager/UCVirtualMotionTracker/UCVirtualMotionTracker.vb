@@ -431,6 +431,7 @@ Public Class UCVirtualMotionTracker
 
                 ' Playspace Settings
                 NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
+                NumericUpDown_PlayCalibSideOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibSideOffset.Minimum, Math.Min(NumericUpDown_PlayCalibSideOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_SideOffset)))
                 NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_HeightOffset)))
                 ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_ForwardMethod))
                 ComboBox_PlayCalibControllerID.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibControllerID.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId))
@@ -915,6 +916,7 @@ Public Class UCVirtualMotionTracker
             Public Property m_Valid As Boolean
 
             Public Property m_ForwardOffset As Single
+            Public Property m_SideOffset As Single
             Public Property m_HeightOffset As Single
             Public Property m_ForwardMethod As ENUM_FORWARD_METHOD
             Public Property m_CalibrationControllerId As Integer
@@ -1400,6 +1402,10 @@ Public Class UCVirtualMotionTracker
                             m_PlayspaceSettings.m_ForwardOffset = tmpSng
                         End If
 
+                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "SideOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            m_PlayspaceSettings.m_SideOffset = tmpSng
+                        End If
+
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HeightOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             m_PlayspaceSettings.m_HeightOffset = tmpSng
                         End If
@@ -1569,6 +1575,7 @@ Public Class UCVirtualMotionTracker
 
                         If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardOffset", m_PlayspaceSettings.m_ForwardOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "SideOffset", m_PlayspaceSettings.m_SideOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HeightOffset", m_PlayspaceSettings.m_HeightOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardMethod", CStr(CInt(m_PlayspaceSettings.m_ForwardMethod))))
                         End If
