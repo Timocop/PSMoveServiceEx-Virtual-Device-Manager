@@ -22,6 +22,9 @@
     Public Const COMMANDLINE_UNINSTALL_PSVR As String = "-uninstall-psvr"
     Public Const COMMANDLINE_UNINSTALL_PSEYE As String = "-uninstall-pseye"
     Public Const COMMANDLINE_VERBOSE As String = "-verbose"
+    Public Const COMMANDLINE_START_SERVICE As String = "-run-service"
+    Public Const COMMANDLINE_START_REMOTEDEVICES As String = "-run-remote-devices"
+    Public Const COMMANDLINE_START_OSCSERVER As String = "-run-osc-server"
 
     Enum ENUM_PAGE
         STARTPAGE
@@ -33,8 +36,11 @@
     End Enum
 
     Public Sub New()
-
-        ProcessCommandline()
+        Try
+            ProcessCommandline(False)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
 
         If (Not IsSingleInstance()) Then
             Environment.Exit(0)
@@ -135,203 +141,249 @@
         Return False
     End Function
 
-    Private Sub ProcessCommandline()
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Try
+            ProcessCommandline(True)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub ProcessCommandline(bLateload As Boolean)
         Dim sCmdLines As String() = Environment.GetCommandLineArgs
 
-        Dim bExitOnSuccess As Boolean = False
-
-        For Each sCommand As String In sCmdLines
-            While (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
-                ' Patch the PSVR monitor registry to allow 120/90/60 Hz refresh rates
-                bExitOnSuccess = True
-
-
-                Try
-                    Dim mClassMonitor As New ClassMonitor
-                    Dim mDriverInstaller As New ClassLibusbDriver
-
-                    Dim sDisplayNames As String() = New String() {
-                            ClassMonitor.PSVR_MONITOR_GEN1_NAME.Replace("MONITOR\", ""),
-                            ClassMonitor.PSVR_MONITOR_GEN2_NAME.Replace("MONITOR\", "")
-                        }
-
-                    ' Remove conflicting drivers (e.g libusb on hid).
-                    If (True) Then
-                        Dim bScanNewDevices As Boolean = False
-                        Dim sDevicesToRemove As New List(Of String)
-                        For Each sMonitorSerial As String In sDisplayNames
-                            For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
-                                ' Dont allow anything else than non-system drivers past here!
-                                If (Not String.IsNullOrEmpty(mDisplayInfo.sDriverInfPath) AndAlso mDisplayInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
-                                    mDriverInstaller.RemoveDriver(mDisplayInfo.sDriverInfPath)
-                                End If
-
-                                sDevicesToRemove.Add(mDisplayInfo.sDeviceID)
-                            Next
-                        Next
-
-                        ' Remove devices after everything is done.
-                        For Each mDeviceID As String In sDevicesToRemove
-                            mDriverInstaller.RemoveDevice(mDeviceID, True)
-                            bScanNewDevices = True
-                        Next
-
-                        If (bScanNewDevices) Then
-                            mDriverInstaller.ScanDevices()
-                        End If
-                    End If
-
-                    ' Just uninstall
-                    If (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
+        If (bLateload) Then
+            For Each sCommand As String In sCmdLines
+                While (sCommand = COMMANDLINE_START_SERVICE)
+                    If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
                         Exit While
                     End If
 
-                    Dim bInstallDirectMode As Boolean = (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT)
-                    If (Not mClassMonitor.PatchPlaystationVrMonitor(bInstallDirectMode)) Then
-                        Throw New ArgumentException("Unable to find PlayStation VR monitor")
+                    ' Run Service
+                    g_mUCStartPage.LinkLabel_ServiceRun_Click()
+
+                    Exit While
+                End While
+
+                While (sCommand = COMMANDLINE_START_REMOTEDEVICES)
+                    If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
+                        Exit While
                     End If
 
-                    ' Restart monitors.
-                    If (True) Then
-                        Dim bScanNewDevices As Boolean = False
-                        For Each sMonitorSerial As String In sDisplayNames
-                            For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
-                                mDriverInstaller.RestartDevice(mDisplayInfo.sDeviceID)
+                    ' Run remote devices and allow new devices
+                    g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket.PerformClick()
+                    g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
+
+                    Exit While
+                End While
+
+                While (sCommand = COMMANDLINE_START_OSCSERVER)
+                    If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
+                        Exit While
+                    End If
+
+                    ' Run OSC server
+                    g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
+
+                    Exit While
+                End While
+            Next
+        Else
+            Dim bExitOnSuccess As Boolean = False
+
+            For Each sCommand As String In sCmdLines
+                While (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
+                    ' Patch the PSVR monitor registry to allow 120/90/60 Hz refresh rates
+                    bExitOnSuccess = True
+
+
+                    Try
+                        Dim mClassMonitor As New ClassMonitor
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        Dim sDisplayNames As String() = New String() {
+                                ClassMonitor.PSVR_MONITOR_GEN1_NAME.Replace("MONITOR\", ""),
+                                ClassMonitor.PSVR_MONITOR_GEN2_NAME.Replace("MONITOR\", "")
+                            }
+
+                        ' Remove conflicting drivers (e.g libusb on hid).
+                        If (True) Then
+                            Dim bScanNewDevices As Boolean = False
+                            Dim sDevicesToRemove As New List(Of String)
+                            For Each sMonitorSerial As String In sDisplayNames
+                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
+                                    ' Dont allow anything else than non-system drivers past here!
+                                    If (Not String.IsNullOrEmpty(mDisplayInfo.sDriverInfPath) AndAlso mDisplayInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
+                                        mDriverInstaller.RemoveDriver(mDisplayInfo.sDriverInfPath)
+                                    End If
+
+                                    sDevicesToRemove.Add(mDisplayInfo.sDeviceID)
+                                Next
+                            Next
+
+                            ' Remove devices after everything is done.
+                            For Each mDeviceID As String In sDevicesToRemove
+                                mDriverInstaller.RemoveDevice(mDeviceID, True)
                                 bScanNewDevices = True
                             Next
-                        Next
 
-                        If (bScanNewDevices) Then
-                            mDriverInstaller.ScanDevices()
+                            If (bScanNewDevices) Then
+                                mDriverInstaller.ScanDevices()
+                            End If
                         End If
-                    End If
 
-
-                Catch ex As Exception
-                    If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
-
-                    Environment.Exit(-1)
-                    End
-                End Try
-
-                Exit While
-            End While
-
-            While (sCommand = COMMANDLINE_INSTALL_PSVR_DRIVERS OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
-                ' Un/Install PSVR libusb drivers.
-                bExitOnSuccess = True
-
-                Try
-                    Dim mDriverInstaller As New ClassLibusbDriver
-
-                    ' Remove old drivers.
-                    mDriverInstaller.UninstallPlaystationVrDriver64()
-
-                    ' Just uninstall
-                    If (sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
-                        Exit While
-                    End If
-
-                    ' Install drivers
-                    If (True) Then
-                        Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationVrDrvier64()
-                        If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                            Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                        ' Just uninstall
+                        If (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
+                            Exit While
                         End If
-                    End If
 
-                    ' Remove conflicting drivers (e.g libusb on hid).
-                    If (True) Then
-                        Dim bScanNewDevices As Boolean = False
-                        Dim sDevicesToRemove As New List(Of String)
-                        For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
-                            For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                                If (mUsbInfo.iConfigFlags <> 0) Then
-                                    Continue For
-                                End If
+                        Dim bInstallDirectMode As Boolean = (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT)
+                        If (Not mClassMonitor.PatchPlaystationVrMonitor(bInstallDirectMode)) Then
+                            Throw New ArgumentException("Unable to find PlayStation VR monitor")
+                        End If
 
-                                If (Not mUsbInfo.HasDriverInstalled()) Then
-                                    Continue For
-                                End If
-
-                                If (mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
-                                    Continue For
-                                End If
-
-                                ' Dont allow anything else than non-system drivers past here!
-                                If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
-                                    Continue For
-                                End If
-
-                                mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
-                                sDevicesToRemove.Add(mUsbInfo.sDeviceID)
+                        ' Restart monitors.
+                        If (True) Then
+                            Dim bScanNewDevices As Boolean = False
+                            For Each sMonitorSerial As String In sDisplayNames
+                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
+                                    mDriverInstaller.RestartDevice(mDisplayInfo.sDeviceID)
+                                    bScanNewDevices = True
+                                Next
                             Next
-                        Next
 
-                        ' Remove devices after everything is done.
-                        For Each mDeviceID As String In sDevicesToRemove
-                            mDriverInstaller.RemoveDevice(mDeviceID, True)
-                            bScanNewDevices = True
-                        Next
-
-                        If (bScanNewDevices) Then
-                            mDriverInstaller.ScanDevices()
+                            If (bScanNewDevices) Then
+                                mDriverInstaller.ScanDevices()
+                            End If
                         End If
-                    End If
 
-                Catch ex As Exception
-                    If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
 
-                    Environment.Exit(-1)
-                    End
-                End Try
-
-                Exit While
-            End While
-
-            While (sCommand = COMMANDLINE_INSTALL_PSEYE_DRIVERS OrElse sCommand = COMMANDLINE_UNINSTALL_PSEYE)
-                ' Un/Install PSEye libusb drivers.
-                bExitOnSuccess = True
-
-                Try
-                    Dim mDriverInstaller As New ClassLibusbDriver
-
-                    ' Remove old drivers.
-                    mDriverInstaller.UninstallPlaystationEyeDriver64()
-
-                    ' Just uninstall
-                    If (sCommand.ToLowerInvariant = COMMANDLINE_UNINSTALL_PSEYE) Then
-                        Exit While
-                    End If
-
-                    ' Install drivers
-                    If (True) Then
-                        Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationEyeDriver64()
-                        If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                            Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End If
-                    End If
 
-                Catch ex As Exception
-                    If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
+                        Environment.Exit(-1)
+                        End
+                    End Try
 
-                    Environment.Exit(-1)
-                    End
-                End Try
+                    Exit While
+                End While
 
-                Exit While
-            End While
-        Next
+                While (sCommand = COMMANDLINE_INSTALL_PSVR_DRIVERS OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
+                    ' Un/Install PSVR libusb drivers.
+                    bExitOnSuccess = True
 
-        If (bExitOnSuccess) Then
-            Environment.Exit(0)
-            End
+                    Try
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        ' Remove old drivers.
+                        mDriverInstaller.UninstallPlaystationVrDriver64()
+
+                        ' Just uninstall
+                        If (sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
+                            Exit While
+                        End If
+
+                        ' Install drivers
+                        If (True) Then
+                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationVrDrvier64()
+                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                            End If
+                        End If
+
+                        ' Remove conflicting drivers (e.g libusb on hid).
+                        If (True) Then
+                            Dim bScanNewDevices As Boolean = False
+                            Dim sDevicesToRemove As New List(Of String)
+                            For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
+                                For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
+                                    If (mUsbInfo.iConfigFlags <> 0) Then
+                                        Continue For
+                                    End If
+
+                                    If (Not mUsbInfo.HasDriverInstalled()) Then
+                                        Continue For
+                                    End If
+
+                                    If (mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
+                                        Continue For
+                                    End If
+
+                                    ' Dont allow anything else than non-system drivers past here!
+                                    If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
+                                        Continue For
+                                    End If
+
+                                    mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
+                                    sDevicesToRemove.Add(mUsbInfo.sDeviceID)
+                                Next
+                            Next
+
+                            ' Remove devices after everything is done.
+                            For Each mDeviceID As String In sDevicesToRemove
+                                mDriverInstaller.RemoveDevice(mDeviceID, True)
+                                bScanNewDevices = True
+                            Next
+
+                            If (bScanNewDevices) Then
+                                mDriverInstaller.ScanDevices()
+                            End If
+                        End If
+
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+
+                        Environment.Exit(-1)
+                        End
+                    End Try
+
+                    Exit While
+                End While
+
+                While (sCommand = COMMANDLINE_INSTALL_PSEYE_DRIVERS OrElse sCommand = COMMANDLINE_UNINSTALL_PSEYE)
+                    ' Un/Install PSEye libusb drivers.
+                    bExitOnSuccess = True
+
+                    Try
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        ' Remove old drivers.
+                        mDriverInstaller.UninstallPlaystationEyeDriver64()
+
+                        ' Just uninstall
+                        If (sCommand.ToLowerInvariant = COMMANDLINE_UNINSTALL_PSEYE) Then
+                            Exit While
+                        End If
+
+                        ' Install drivers
+                        If (True) Then
+                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationEyeDriver64()
+                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                            End If
+                        End If
+
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+
+                        Environment.Exit(-1)
+                        End
+                    End Try
+
+                    Exit While
+                End While
+            Next
+
+            If (bExitOnSuccess) Then
+                Environment.Exit(0)
+                End
+            End If
         End If
     End Sub
 
