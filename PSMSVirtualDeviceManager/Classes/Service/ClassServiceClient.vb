@@ -484,14 +484,26 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
                                                         Single.IsNaN(mData.m_Position.Z)) Then
-                                                    mData.m_Position = New Vector3(0, 0, 0)
+                                                    SyncLock __DataLock
+                                                        If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                                            mData.m_Position = g_mControllerPool(mController.m_Info.m_ControllerId).m_Position
+                                                        Else
+                                                            mData.m_Position = New Vector3(0, 0, 0)
+                                                        End If
+                                                    End SyncLock
                                                 End If
 
                                                 If (Single.IsNaN(mData.m_Orientation.X) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Y) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Z) OrElse
                                                         Single.IsNaN(mData.m_Orientation.W)) Then
-                                                    mData.m_Orientation = Quaternion.Identity
+                                                    SyncLock __DataLock
+                                                        If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                                            mData.m_Orientation = g_mControllerPool(mController.m_Info.m_ControllerId).m_Orientation
+                                                        Else
+                                                            mData.m_Orientation = Quaternion.Identity
+                                                        End If
+                                                    End SyncLock
                                                 End If
 
                                                 SyncLock __DataLock
@@ -574,14 +586,26 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
                                                         Single.IsNaN(mData.m_Position.Z)) Then
-                                                    mData.m_Position = New Vector3(0, 0, 0)
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
+                                                        Else
+                                                            mData.m_Position = New Vector3(0, 0, 0)
+                                                        End If
+                                                    End SyncLock
                                                 End If
 
                                                 If (Single.IsNaN(mData.m_Orientation.X) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Y) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Z) OrElse
                                                         Single.IsNaN(mData.m_Orientation.W)) Then
-                                                    mData.m_Orientation = Quaternion.Identity
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
+                                                        Else
+                                                            mData.m_Orientation = Quaternion.Identity
+                                                        End If
+                                                    End SyncLock
                                                 End If
 
                                                 SyncLock __DataLock
@@ -617,14 +641,26 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
                                                         Single.IsNaN(mData.m_Position.Z)) Then
-                                                    mData.m_Position = New Vector3(0, 0, 0)
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
+                                                        Else
+                                                            mData.m_Position = New Vector3(0, 0, 0)
+                                                        End If
+                                                    End SyncLock
                                                 End If
 
                                                 If (Single.IsNaN(mData.m_Orientation.X) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Y) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Z) OrElse
                                                         Single.IsNaN(mData.m_Orientation.W)) Then
-                                                    mData.m_Orientation = Quaternion.Identity
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
+                                                        Else
+                                                            mData.m_Orientation = Quaternion.Identity
+                                                        End If
+                                                    End SyncLock
                                                 End If
 
                                                 SyncLock __DataLock
