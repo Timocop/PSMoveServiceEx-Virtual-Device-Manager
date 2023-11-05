@@ -231,6 +231,9 @@ Partial Class FormSteamSettings
         Me.CheckBox_Autostart.Size = New System.Drawing.Size(240, 18)
         Me.CheckBox_Autostart.TabIndex = 32
         Me.CheckBox_Autostart.Text = "Enable Virtual Device Manager Autostart"
+        Me.ToolTip1.SetToolTip(Me.CheckBox_Autostart, "If enabled, Virtual Device Manager will automatically run whenever SteamVR is run" &
+        "ning. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Use the following additional settings below to automatically start certa" &
+        "in Virtual Device Manager modules.")
         Me.CheckBox_Autostart.UseVisualStyleBackColor = True
         '
         'Panel3
@@ -250,9 +253,9 @@ Partial Class FormSteamSettings
         Me.CheckBox_AutostartService.Location = New System.Drawing.Point(57, 236)
         Me.CheckBox_AutostartService.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_AutostartService.Name = "CheckBox_AutostartService"
-        Me.CheckBox_AutostartService.Size = New System.Drawing.Size(162, 18)
+        Me.CheckBox_AutostartService.Size = New System.Drawing.Size(165, 18)
         Me.CheckBox_AutostartService.TabIndex = 34
-        Me.CheckBox_AutostartService.Text = "Run Service automatically"
+        Me.CheckBox_AutostartService.Text = "Start Service automatically"
         Me.CheckBox_AutostartService.UseVisualStyleBackColor = True
         '
         'CheckBox_AutostartRemoteDevices
@@ -262,9 +265,9 @@ Partial Class FormSteamSettings
         Me.CheckBox_AutostartRemoteDevices.Location = New System.Drawing.Point(57, 260)
         Me.CheckBox_AutostartRemoteDevices.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_AutostartRemoteDevices.Name = "CheckBox_AutostartRemoteDevices"
-        Me.CheckBox_AutostartRemoteDevices.Size = New System.Drawing.Size(207, 18)
+        Me.CheckBox_AutostartRemoteDevices.Size = New System.Drawing.Size(210, 18)
         Me.CheckBox_AutostartRemoteDevices.TabIndex = 35
-        Me.CheckBox_AutostartRemoteDevices.Text = "Run Remote Devices automatically"
+        Me.CheckBox_AutostartRemoteDevices.Text = "Start Remote Devices automatically"
         Me.CheckBox_AutostartRemoteDevices.UseVisualStyleBackColor = True
         '
         'CheckBox_AutostartOscServer
@@ -274,9 +277,9 @@ Partial Class FormSteamSettings
         Me.CheckBox_AutostartOscServer.Location = New System.Drawing.Point(57, 284)
         Me.CheckBox_AutostartOscServer.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_AutostartOscServer.Name = "CheckBox_AutostartOscServer"
-        Me.CheckBox_AutostartOscServer.Size = New System.Drawing.Size(183, 18)
+        Me.CheckBox_AutostartOscServer.Size = New System.Drawing.Size(186, 18)
         Me.CheckBox_AutostartOscServer.TabIndex = 36
-        Me.CheckBox_AutostartOscServer.Text = "Run OSC Server automatically"
+        Me.CheckBox_AutostartOscServer.Text = "Start OSC Server automatically"
         Me.CheckBox_AutostartOscServer.UseVisualStyleBackColor = True
         '
         'FormSteamSettings
