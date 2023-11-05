@@ -4,6 +4,7 @@ Imports Rug.Osc
 Imports PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants
 
 Public Class UCVirtualMotionTrackerItem
+    Const HMD_DIRECT_MODE_FRAMERATE As Integer = 120
     Const MAX_DRIVER_TIMEOUT As Integer = 5000
     Const MAX_CONTROLLER_TIMEOUT As Integer = 5000
 
@@ -33,6 +34,8 @@ Public Class UCVirtualMotionTrackerItem
     Public g_sDriverVersion As String = ""
     Public g_sDriverPath As String = ""
     Public g_bIsHMD As Boolean = False
+    Public g_bIsHmdDirectMode As Boolean = False
+    Public g_iHmdFramerate As Integer = -1
 
     Public Sub New(iDeviceID As Integer, bIsHMD As Boolean, _UCVirtualMotionTracker As UCVirtualMotionTracker)
         g_mUCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -295,6 +298,22 @@ Public Class UCVirtualMotionTrackerItem
                                                    End Sub)
                     End If
 
+                Case "/VMT/Out/HmdInfo"
+                    If (mMessage.Count < 4) Then
+                        Return
+                    End If
+
+                    Dim iFramerate As Integer = CInt(mMessage(0))
+                    Dim iScreenWdith As Integer = CInt(mMessage(1))
+                    Dim iScreenHeight As Integer = CInt(mMessage(2))
+                    Dim bDirectMode = CBool(mMessage(3))
+
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   g_mDriverLastResponse.Restart()
+
+                                                   g_iHmdFramerate = iFramerate
+                                                   g_bIsHmdDirectMode = bDirectMode
+                                               End Sub)
             End Select
         Catch ex As Exception
             ' Something sussy is going on...
@@ -562,7 +581,7 @@ Public Class UCVirtualMotionTrackerItem
 
                     ' Show user wrong driver version
                     If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> ClassVmtConst.VMT_DRIVER_VERSION_EXPECT) Then
-                        sTitle = "Driver running but might be incompatible"
+                        sTitle = "Driver version incompatible"
 
 
                         Dim sText As New Text.StringBuilder
@@ -577,6 +596,20 @@ Public Class UCVirtualMotionTrackerItem
 
                         sMessage = sText.ToString
                         iStatusType = 1
+
+                        Exit While
+                    End If
+
+                    ' Show HMD bad direct-mode
+                    If (g_bIsHMD AndAlso g_bIsHmdDirectMode AndAlso g_iHmdFramerate <> HMD_DIRECT_MODE_FRAMERATE) Then
+                        sTitle = "Driver is unable to load PlayStation VR display configuration"
+
+
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("Go 'SteamVR > Developer > Developer Settings' then click 'Disable Direct Display Mode', restart SteamVR and then click 'Enable Direct Display Mode' to fix this issue.")
+
+                        sMessage = sText.ToString
+                        iStatusType = 2
 
                         Exit While
                     End If
@@ -1271,7 +1304,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     iDisplayH = 1080
                                                     iRenderW = CInt((iDisplayW * iHmdRenderScale))
                                                     iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                    iFrameRate = 120
+                                                    iFrameRate = HMD_DIRECT_MODE_FRAMERATE
                                                     bDirectMode = True
 
                                                     Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
