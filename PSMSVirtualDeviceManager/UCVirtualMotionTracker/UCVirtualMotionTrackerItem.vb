@@ -1933,7 +1933,8 @@ Public Class UCVirtualMotionTrackerItem
                         End If
                     End If
 
-                    If (Not String.IsNullOrEmpty(mPlayspaceRecenterLastHmdSerial)) Then
+                    ' Do not allow playspace recenter on itself
+                    If (Not String.IsNullOrEmpty(mPlayspaceRecenterLastHmdSerial) AndAlso Not mPlayspaceRecenterLastHmdSerial.StartsWith(ClassVmtConst.VMT_DEVICE_NAME)) Then
                         Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
                         If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(mPlayspaceRecenterLastHmdSerial, mFoundDevice)) Then
                             Dim iMinDistance As Single = 10.0F

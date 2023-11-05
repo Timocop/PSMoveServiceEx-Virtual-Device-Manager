@@ -194,7 +194,7 @@
                                     End Function)
 
             If (mTargetTracker Is Nothing) Then
-                Throw New ArgumentException("Controller is not available!")
+                Throw New ArgumentException("Controller is not available.")
             End If
 
             Try
@@ -202,7 +202,7 @@
                     ' Check if controller even exists
                     Dim mControllerData = g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
                     If (mControllerData Is Nothing) Then
-                        Throw New ArgumentException("Controller is not available!")
+                        Throw New ArgumentException("Controller is not available.")
                     End If
 
                     Select Case (iStep)
@@ -213,7 +213,7 @@
 
                             If (iPercentage >= 100) Then
                                 If (Not mControllerData.m_IsTracking) Then
-                                    Throw New ArgumentException("Controller is not being tracked!")
+                                    Throw New ArgumentException("Controller is not being tracked.")
                                 End If
 
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START
@@ -229,8 +229,14 @@
 
                             If (iPercentage >= 100) Then
                                 If (Not mControllerData.m_IsTracking) Then
-                                    Throw New ArgumentException("Controller is not being tracked!")
+                                    Throw New ArgumentException("Controller is not being tracked.")
                                 End If
+
+                                Select Case (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus)
+                                    Case UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                                        ' Failure. Either no HMD found or PSMS-EX HMD used.
+                                        Throw New ArgumentException("Invalid Head-Mounted Display for playspace calibration.")
+                                End Select
 
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.MOVE_FORWARD
                                 iPercentage = 0
@@ -243,7 +249,7 @@
 
                             If (iPercentage >= 100) Then
                                 If (Not mControllerData.m_IsTracking) Then
-                                    Throw New ArgumentException("Controller is not being tracked!")
+                                    Throw New ArgumentException("Controller is not being tracked.")
                                 End If
 
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
@@ -259,12 +265,21 @@
 
                             If (iPercentage >= 100) Then
                                 If (Not mControllerData.m_IsTracking) Then
-                                    Throw New ArgumentException("Controller is not being tracked!")
+                                    Throw New ArgumentException("Controller is not being tracked.")
                                 End If
 
-                                If (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus <> UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
-                                    Throw New ArgumentException("Controller or head-mounted display have not been moved in time! Aborted.")
-                                End If
+                                Select Case (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus)
+                                    Case UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                        ' All good
+
+                                    Case UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                                        ' Failure. Either no HMD found or PSMS-EX HMD used.
+                                        Throw New ArgumentException("Invalid Head-Mounted Display for playspace calibration.")
+
+                                    Case Else
+                                        ' Has not been moved at all
+                                        Throw New ArgumentException("Controller or Head-Mounted Display have not been moved in time.")
+                                End Select
 
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
                                 iPercentage = 0
