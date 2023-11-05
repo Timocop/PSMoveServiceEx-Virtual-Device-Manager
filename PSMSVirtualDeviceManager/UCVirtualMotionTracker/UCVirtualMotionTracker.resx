@@ -117,6 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1055, 18</value>
+  </metadata>
+  <data name="Label24.Text" xml:space="preserve">
+    <value>The Playspace calibrator synchronizes the PSMoveServiceEx tracking universe with another one.
+If you are using third-party head-mounted displays, this step is required to utilize both tracking methods simultaneously.</value>
+  </data>
   <metadata name="ContextMenuStrip_Trackers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>323, 17</value>
   </metadata>
@@ -125,8 +132,8 @@
         head-mounted display and controller forward, will recenter the playspace to the head-mounted display. 
         Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
   </data>
-  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>224, 17</value>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>943, 21</value>
   </metadata>
   <data name="Label16.Text" xml:space="preserve">
     <value>        Holding the START button on the PSmove controller will recenter the target trackers orientation. 
@@ -136,6 +143,9 @@
     <value>        Holding the SELECT button on the PSmove controller will recenter the controllers orientation. 
         This is useful for controllers without magnetometers which experience yaw drift over time.</value>
   </data>
+  <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1055, 18</value>
+  </metadata>
   <data name="Label64.Text" xml:space="preserve">
     <value>        Only send OSC packets if they are different from the previous send packet.
         This reduces the number of transmission packets.
@@ -151,16 +161,15 @@
         If you are using numerous devices, consider disabling Base Station spawning to free up slots for trackers. 
         It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
   </data>
-  <data name="Label24.Text" xml:space="preserve">
-    <value>The Playspace calibrator synchronizes the PSMoveServiceEx tracking universe with another one.
-If you are using third-party head-mounted displays, this step is required to utilize both tracking methods simultaneously.</value>
-  </data>
   <data name="Label2.Text" xml:space="preserve">
     <value>Choose the trackers with which you want to override position and orientation using PSMoveServiceEx controllers. 
 This is useful if, for example, you are using PhoneVR or any other third-party tracker that you want to enable 6-DoF with PSMoveServiceEx.</value>
   </data>
   <metadata name="ContextMenuStrip_Autostart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>943, 21</value>
   </metadata>
   <metadata name="Timer_VMTTrackers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>524, 17</value>

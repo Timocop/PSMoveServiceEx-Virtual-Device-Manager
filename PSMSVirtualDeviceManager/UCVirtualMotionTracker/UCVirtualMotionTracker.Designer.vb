@@ -221,7 +221,7 @@ Partial Class UCVirtualMotionTracker
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer_VMTTrackers = New System.Windows.Forms.Timer(Me.components)
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -231,6 +231,7 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_AddTracker = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -1291,7 +1292,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_RecenterButtonTime.Name = "NumericUpDown_RecenterButtonTime"
         Me.NumericUpDown_RecenterButtonTime.Size = New System.Drawing.Size(95, 22)
         Me.NumericUpDown_RecenterButtonTime.TabIndex = 61
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_RecenterButtonTime, "Default: 500")
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_RecenterButtonTime, "Default: 500")
         Me.NumericUpDown_RecenterButtonTime.Value = New Decimal(New Integer() {500, 0, 0, 0})
         '
         'Label13
@@ -1315,6 +1316,8 @@ Partial Class UCVirtualMotionTracker
         Me.Button_ResetRecenter.Text = "Reset recenter on all trackers"
         Me.Button_ResetRecenter.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.Button_ResetRecenter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.ToolTip_Info.SetToolTip(Me.Button_ResetRecenter, "This will reset recenter on all active trackers. Inactive trackers will not be re" &
+        "set.")
         Me.Button_ResetRecenter.UseVisualStyleBackColor = True
         '
         'Label20
@@ -1343,7 +1346,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
         Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
-        Me.ToolTip1.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label18
         '
@@ -1415,7 +1418,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
         Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(492, 21)
         Me.ComboBox_RecenterFromDevice.TabIndex = 50
-        Me.ToolTip1.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label15
         '
@@ -1517,7 +1520,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_TouchpadTouchArea.Name = "NumericUpDown_TouchpadTouchArea"
         Me.NumericUpDown_TouchpadTouchArea.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_TouchpadTouchArea.TabIndex = 52
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_TouchpadTouchArea, "Default: 7,50")
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadTouchArea, "Default: 7,50")
         Me.NumericUpDown_TouchpadTouchArea.Value = New Decimal(New Integer() {750, 0, 0, 131072})
         '
         'Label23
@@ -1539,7 +1542,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_TouchpadClickDeadzone.Name = "NumericUpDown_TouchpadClickDeadzone"
         Me.NumericUpDown_TouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_TouchpadClickDeadzone.TabIndex = 50
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_TouchpadClickDeadzone, "Default: 0,25")
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadClickDeadzone, "Default: 0,25")
         Me.NumericUpDown_TouchpadClickDeadzone.Value = New Decimal(New Integer() {25, 0, 0, 131072})
         '
         'Label22
@@ -1758,7 +1761,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibForwardOffset.Name = "NumericUpDown_PlayCalibForwardOffset"
         Me.NumericUpDown_PlayCalibForwardOffset.Size = New System.Drawing.Size(95, 22)
         Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
         Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
         '
         'NumericUpDown_PlayCalibHeightOffset
@@ -1769,7 +1772,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
         Me.NumericUpDown_PlayCalibHeightOffset.Size = New System.Drawing.Size(95, 22)
         Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
         '
         'Label29
         '
@@ -1830,7 +1833,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_OscThreadSleep.Name = "NumericUpDown_OscThreadSleep"
         Me.NumericUpDown_OscThreadSleep.Size = New System.Drawing.Size(91, 22)
         Me.NumericUpDown_OscThreadSleep.TabIndex = 49
-        Me.ToolTip1.SetToolTip(Me.NumericUpDown_OscThreadSleep, "Default: 1")
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscThreadSleep, "Default: 1")
         Me.NumericUpDown_OscThreadSleep.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label21
@@ -1935,6 +1938,7 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibPrepTime.Name = "NumericUpDown_PlayCalibPrepTime"
         Me.NumericUpDown_PlayCalibPrepTime.Size = New System.Drawing.Size(132, 22)
         Me.NumericUpDown_PlayCalibPrepTime.TabIndex = 71
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibPrepTime, "Default: 5")
         Me.NumericUpDown_PlayCalibPrepTime.Value = New Decimal(New Integer() {5, 0, 0, 0})
         '
         'Label41
@@ -2321,7 +2325,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
         Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(132, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 68
-        Me.ToolTip1.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The controller id you want to use for playspace calibration.")
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The controller id you want to use for playspace calibration.")
         '
         'Label28
         '
@@ -2557,14 +2561,14 @@ Partial Class UCVirtualMotionTracker
         Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip_Autostart.Size = New System.Drawing.Size(61, 4)
         '
-        'ToolTip1
+        'ToolTip_Info
         '
-        Me.ToolTip1.AutomaticDelay = 100
-        Me.ToolTip1.AutoPopDelay = 30000
-        Me.ToolTip1.InitialDelay = 100
-        Me.ToolTip1.ReshowDelay = 20
-        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
-        Me.ToolTip1.ToolTipTitle = "Information"
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
         '
         'Timer_VMTTrackers
         '
@@ -2644,6 +2648,13 @@ Partial Class UCVirtualMotionTracker
         Me.ToolStripMenuItem_AddHmd.Name = "ToolStripMenuItem_AddHmd"
         Me.ToolStripMenuItem_AddHmd.Size = New System.Drawing.Size(213, 22)
         Me.ToolStripMenuItem_AddHmd.Text = "By Head-Mounted Display"
+        '
+        'ToolTip_Default
+        '
+        Me.ToolTip_Default.AutomaticDelay = 100
+        Me.ToolTip_Default.AutoPopDelay = 30000
+        Me.ToolTip_Default.InitialDelay = 100
+        Me.ToolTip_Default.ReshowDelay = 20
         '
         'UCVirtualMotionTracker
         '
@@ -2873,7 +2884,7 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel17 As Panel
     Friend WithEvents Panel18 As Panel
     Friend WithEvents Label_ScrollFocus As Label
-    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents NumericUpDown_PlayCalibPrepTime As NumericUpDown
     Friend WithEvents Label41 As Label
     Friend WithEvents TabPage_SettingsPlayspace As TabPage
@@ -2939,4 +2950,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label64 As Label
     Friend WithEvents CheckBox_OptimizePackets As CheckBox
     Friend WithEvents LinkLabel_PlayCalibShowSettings2 As LinkLabel
+    Friend WithEvents ToolTip_Default As ToolTip
 End Class
