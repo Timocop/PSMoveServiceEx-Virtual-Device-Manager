@@ -222,6 +222,10 @@ Public Class UCRemoteDevices
         End SyncLock
     End Sub
 
+    Public Sub Button_StartSocket_Click()
+        Button_StartSocket_Click(Nothing, Nothing)
+    End Sub
+
     Private Sub Button_StartSocket_Click(sender As Object, e As EventArgs) Handles Button_StartSocket.Click
         Try
             g_mClassStrackerSocket.Init()
@@ -410,7 +414,9 @@ Public Class UCRemoteDevices
         End Property
 
         Public Sub Init()
-            g_mSocket.Bind(New IPEndPoint(IPAddress.Any, g_mUCRemoteDevices.m_SocketPort))
+            If (Not g_mSocket.IsBound) Then
+                g_mSocket.Bind(New IPEndPoint(IPAddress.Any, g_mUCRemoteDevices.m_SocketPort))
+            End If
 
             StartSocketListening()
         End Sub

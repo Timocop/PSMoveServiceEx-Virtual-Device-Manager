@@ -171,7 +171,7 @@
                     End If
 
                     ' Run remote devices and allow new devices
-                    g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket.PerformClick()
+                    g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket_Click()
                     g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
 
                     Exit While
@@ -559,7 +559,7 @@
         SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
         g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
 
-        g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket.PerformClick()
+        g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket_Click()
         g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
     End Sub
 
