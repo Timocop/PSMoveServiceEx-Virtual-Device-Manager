@@ -65,6 +65,10 @@
         ' Manage SteamVR manifests
         mSteamConfig.m_ClassManifests.LoadConfig()
         For Each sFile In mSteamConfig.m_ClassManifests.GetManifests()
+            If (Not IO.File.Exists(sFile)) Then
+                Continue For
+            End If
+
             Dim mManifest As New ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT(sFile)
             If (Not mManifest.m_IsValid) Then
                 Continue For
