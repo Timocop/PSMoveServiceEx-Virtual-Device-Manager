@@ -2,6 +2,8 @@
     Private g_bSettingsLoaded As Boolean = False
     Private g_sForcedDriver As String = ""
 
+    Const MANIFEST_PSMSX_VDM_APIKEY As String = "PSMoveServiceEx.VirtualDeviceManager"
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -122,43 +124,79 @@
 
         mSteamConfig.SaveConfig()
 
-        ' Manage SteamVR manifests for autostart
+
         mSteamConfig.m_ClassManifests.LoadConfig()
+
+        ' Add or remove current manifest for autostart
         If (CheckBox_Autostart.Checked) Then
-            Dim sManifestFile As String = mSteamConfig.m_ClassManifests.GetLocalApplicationManifestPath()
+            ' Remove multiple VDM autostart manifests
+            If (True) Then
+                For Each sFile In mSteamConfig.m_ClassManifests.GetManifests()
+                    If (Not IO.File.Exists(sFile)) Then
+                        Continue For
+                    End If
 
-            mSteamConfig.m_ClassManifests.AddManifest(sManifestFile)
+                    Dim mManifest As New ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT(sFile)
+                    If (Not mManifest.m_IsValid) Then
+                        Continue For
+                    End If
 
-            Dim sArguments As New List(Of String)
+                    If (mManifest.m_IsCurrentApplicationManifest()) Then
+                        Continue For
+                    End If
 
-            If (CheckBox_AutostartService.Checked) Then
-                sArguments.Add(FormMain.COMMANDLINE_START_SERVICE)
+                    If (String.IsNullOrEmpty(mManifest.m_AppKey) OrElse mManifest.m_AppKey <> MANIFEST_PSMSX_VDM_APIKEY) Then
+                        Continue For
+                    End If
+
+                    mSteamConfig.m_ClassManifests.RemoveManifest(mManifest.m_File)
+
+                    With New Text.StringBuilder
+                        .AppendLine("Duplicated Virtual Device Manager manifest has been unregistered:")
+                        .AppendLine()
+                        .AppendLine(mManifest.m_File)
+                        MessageBox.Show(.ToString, "Manifest Unregistered", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    End With
+                Next
             End If
 
-            If (CheckBox_AutostartRemoteDevices.Checked) Then
-                sArguments.Add(FormMain.COMMANDLINE_START_REMOTEDEVICES)
+            ' Manage SteamVR manifests for autostart
+            If (True) Then
+                Dim sManifestFile As String = mSteamConfig.m_ClassManifests.GetLocalApplicationManifestPath()
+
+                mSteamConfig.m_ClassManifests.AddManifest(sManifestFile)
+
+                Dim sArguments As New List(Of String)
+
+                If (CheckBox_AutostartService.Checked) Then
+                    sArguments.Add(FormMain.COMMANDLINE_START_SERVICE)
+                End If
+
+                If (CheckBox_AutostartRemoteDevices.Checked) Then
+                    sArguments.Add(FormMain.COMMANDLINE_START_REMOTEDEVICES)
+                End If
+
+                If (CheckBox_AutostartOscServer.Checked) Then
+                    sArguments.Add(FormMain.COMMANDLINE_START_OSCSERVER)
+                End If
+
+                Dim mManifest As New ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT With {
+                        .m_AppKey = MANIFEST_PSMSX_VDM_APIKEY,
+                        .m_LaunchType = ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT.ENUM_LAUNCH_TYPE.BINARY,
+                        .m_BinaryPathWindows = IO.Path.GetFileName(Application.ExecutablePath),
+                        .m_Arguments = String.Join(" "c, sArguments.ToArray),
+                        .m_IsDashboardOverlay = True,
+                        .m_NameByLang = "Virtual Device Manager",
+                        .m_DescriptionByLang = "PSMoveServiceEx - Virtual Device Manager"
+                    }
+
+                mManifest.SaveToFile(sManifestFile)
+
+                mSteamConfig.m_ClassManifests.SetAutostartManifest(mManifest, True)
             End If
-
-            If (CheckBox_AutostartOscServer.Checked) Then
-                sArguments.Add(FormMain.COMMANDLINE_START_OSCSERVER)
-            End If
-
-            Dim mManifest As New ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT With {
-                .m_AppKey = "PSMoveServiceEx.VirtualDeviceManager",
-                .m_LaunchType = ClassSteamVRConfig.ClassManifests.STRUC_BUILDIN_MANIFEST_CONTENT.ENUM_LAUNCH_TYPE.BINARY,
-                .m_BinaryPathWindows = IO.Path.GetFileName(Application.ExecutablePath),
-                .m_Arguments = String.Join(" "c, sArguments.ToArray),
-                .m_IsDashboardOverlay = True,
-                .m_NameByLang = "Virtual Device Manager",
-                .m_DescriptionByLang = "PSMoveServiceEx - Virtual Device Manager"
-            }
-
-            mManifest.SaveToFile(sManifestFile)
-
-            mSteamConfig.m_ClassManifests.SetAutostartManifest(mManifest, True)
         Else
             mSteamConfig.m_ClassManifests.RemoveManifest(mSteamConfig.m_ClassManifests.GetLocalApplicationManifestPath())
-        End If
-        mSteamConfig.m_ClassManifests.SaveConfig()
+            End If
+            mSteamConfig.m_ClassManifests.SaveConfig()
     End Sub
 End Class
