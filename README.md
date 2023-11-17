@@ -20,7 +20,6 @@ With this program you can control any virtual device in PSMoveServiceEx and even
 - Currently only PSmove controllers are supported for ``Virtual Motion Tracker`` trackers.
 *(DualShock4, Navi controllers, gamepads and other third party devices will be added in the future)*
 
-- The Playstation Eye driver installation might trigger sensitive Anti-Virus programs. Please whitelist the ``Virtual Device Manager`` folder.
  
 ## Images
 
