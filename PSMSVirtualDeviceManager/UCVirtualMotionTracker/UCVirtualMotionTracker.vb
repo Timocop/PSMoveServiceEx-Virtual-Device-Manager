@@ -666,7 +666,7 @@ Public Class UCVirtualMotionTracker
 
         Public Const DISPLAY_DISTORTION_K0 As Single = 0.75F
         Public Const DISPLAY_DISTORTION_K1 As Single = 4.0F
-        Public Const DISPLAY_DISTORTION_SCALE As Single = 1.0F
+        Public Const DISPLAY_DISTORTION_SCALE As Single = 0.9F
         Public Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
         Public Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
         Public Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
