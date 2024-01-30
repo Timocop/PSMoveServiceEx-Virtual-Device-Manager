@@ -261,11 +261,26 @@ Public Class ClassServiceClient
                                 bConnected = g_bIsConnected
                                 bDisconnected = False
 
+                                RaiseEvent OnConnectionStatusChanged()
+
                                 bRefreshControllerList = True
                                 bRefreshHmdList = True
                                 bRefreshTrackerList = True
 
-                                RaiseEvent OnConnectionStatusChanged()
+                                For i = 0 To mControllers.Count - 1
+                                    mControllers(i).Dispose()
+                                Next
+                                mControllers.Clear()
+
+                                For i = 0 To mHmds.Count - 1
+                                    mHmds(i).Dispose()
+                                Next
+                                mHmds.Clear()
+
+                                For i = 0 To mTrackers.Count - 1
+                                    mTrackers(i).Dispose()
+                                Next
+                                mTrackers.Clear()
                             End If
 
                             If (Not g_bIsConnected) Then
