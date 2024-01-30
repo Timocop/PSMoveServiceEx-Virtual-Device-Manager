@@ -836,12 +836,16 @@
                     mConfig.LoadConfig()
 
                     If (mConfig.FileExist) Then
-
 #If DEBUG Then
                         ClassUtils.AsyncInvoke(g_mFormMain,
                                                 Sub()
                                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
                                                 End Sub)
+
+                        ClassUtils.AsyncInvoke(g_mFormMain,
+                                                 Sub()
+                                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
+                                                 End Sub)
 #Else
                         If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
                             ClassUtils.AsyncInvoke(g_mFormMain,
@@ -850,6 +854,11 @@
                                                     End Sub)
                         End If
 #End If
+                    Else
+                        ClassUtils.AsyncInvoke(g_mFormMain,
+                                             Sub()
+                                                 g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
+                                             End Sub)
                     End If
                 End If
 

@@ -19,6 +19,18 @@ Public Class UCStartPage
     Private g_bIsServiceConnected As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
 
+    Private ReadOnly g_sServiceProcesses As String() = {
+        "PSMoveService.exe",
+        "PSMoveServiceAdmin.exe",
+        "test_camera.exe",
+        "test_camera_parallel.exe",
+        "test_console_CAPI.exe",
+        "test_ds4_controller.exe",
+        "test_kalman_filter.exe",
+        "test_navi_controller.exe",
+        "test_psmove_controller.exe",
+        "unit_test_suite.exe"}
+
     Enum ENUM_SERVICE_PROCESS_TYPE
         NONE
         NORMAL
@@ -1130,18 +1142,7 @@ Public Class UCStartPage
                                                               Dim sServicePath As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
 
                                                               Dim sEndProcessNames As New List(Of String)
-                                                              sEndProcessNames.Add("PSMoveService.exe")
-                                                              sEndProcessNames.Add("PSMoveServiceAdmin.exe")
-
-                                                              sEndProcessNames.Add("test_camera.exe")
-                                                              sEndProcessNames.Add("test_camera_parallel.exe")
-                                                              sEndProcessNames.Add("test_console_CAPI.exe")
-                                                              sEndProcessNames.Add("test_ds4_controller.exe")
-                                                              sEndProcessNames.Add("test_kalman_filter.exe")
-                                                              sEndProcessNames.Add("test_navi_controller.exe")
-                                                              sEndProcessNames.Add("test_psmove_controller.exe")
-                                                              sEndProcessNames.Add("unit_test_suite.exe")
-
+                                                              sEndProcessNames.AddRange(g_sServiceProcesses)
                                                               sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
                                                               ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
@@ -1181,18 +1182,7 @@ Public Class UCStartPage
                                                                                          End Sub)
 
                                                               Dim sEndProcessNames As New List(Of String)
-                                                              sEndProcessNames.Add("PSMoveService.exe")
-                                                              sEndProcessNames.Add("PSMoveServiceAdmin.exe")
-
-                                                              sEndProcessNames.Add("test_camera.exe")
-                                                              sEndProcessNames.Add("test_camera_parallel.exe")
-                                                              sEndProcessNames.Add("test_console_CAPI.exe")
-                                                              sEndProcessNames.Add("test_ds4_controller.exe")
-                                                              sEndProcessNames.Add("test_kalman_filter.exe")
-                                                              sEndProcessNames.Add("test_navi_controller.exe")
-                                                              sEndProcessNames.Add("test_psmove_controller.exe")
-                                                              sEndProcessNames.Add("unit_test_suite.exe")
-
+                                                              sEndProcessNames.AddRange(g_sServiceProcesses)
                                                               sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
                                                               ClassUpdate.ClassVdm.InstallUpdate(Application.StartupPath, sEndProcessNames.ToArray)
@@ -1234,5 +1224,74 @@ Public Class UCStartPage
     Public Function CheckIfConfigToolRunning() As Boolean
         Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
     End Function
+
+    Private Sub Button_PsmsxInstallDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxInstallDownload.Click
+        If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mUpdateInstallThread = New Threading.Thread(Sub()
+                                                          Try
+                                                              ClassUtils.AsyncInvoke(Me, Sub()
+                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                                                                 g_mUpdateInstallFormLoad.Dispose()
+                                                                                                 g_mUpdateInstallFormLoad = Nothing
+                                                                                             End If
+
+                                                                                             g_mUpdateInstallFormLoad = New FormLoading
+                                                                                             g_mUpdateInstallFormLoad.Text = "Downloading and installing PSMoveServiceEx..."
+                                                                                             g_mUpdateInstallFormLoad.ShowDialog(Me)
+                                                                                         End Sub)
+
+                                                              Dim sServicePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "PSMoveServiceEx")
+                                                              If (Not IO.Directory.Exists(sServicePath)) Then
+                                                                  IO.Directory.CreateDirectory(sServicePath)
+                                                              End If
+
+                                                              Dim mConfig As New ClassServiceInfo
+                                                              mConfig.LoadConfig()
+                                                              mConfig.m_FileName = IO.Path.Combine(sServicePath, "PSMoveService.exe")
+                                                              mConfig.SaveConfig()
+
+                                                              Dim sEndProcessNames As New List(Of String)
+                                                              sEndProcessNames.AddRange(g_sServiceProcesses)
+                                                              sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
+
+                                                              ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
+                                                          Catch ex As Threading.ThreadAbortException
+                                                              Throw
+                                                          Catch ex As Exception
+                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                          Finally
+                                                              ClassUtils.AsyncInvoke(Me, Sub()
+                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                                                                 g_mUpdateInstallFormLoad.Dispose()
+                                                                                                 g_mUpdateInstallFormLoad = Nothing
+                                                                                             End If
+                                                                                         End Sub)
+                                                          End Try
+                                                      End Sub)
+        g_mUpdateInstallThread.IsBackground = True
+        g_mUpdateInstallThread.Start()
+    End Sub
+
+    Private Sub Button_PsmsInstallBrowse_Click(sender As Object, e As EventArgs) Handles Button_PsmsInstallBrowse.Click
+        Try
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (mConfig.SearchForService) Then
+                mConfig.SaveConfig()
+
+                Panel_PsmsxInstall.Visible = False
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub Button_PsmsInstallIgnore_Click(sender As Object, e As EventArgs) Handles Button_PsmsInstallIgnore.Click
+        Panel_PsmsxInstall.Visible = False
+    End Sub
 End Class
 
