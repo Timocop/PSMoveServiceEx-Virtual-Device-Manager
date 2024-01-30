@@ -680,6 +680,7 @@ Partial Class UCPlaystationVR
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoScroll = True
         Me.Controls.Add(Me.Panel8)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
