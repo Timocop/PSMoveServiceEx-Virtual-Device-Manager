@@ -170,24 +170,11 @@ Public Class ClassServiceClient
 
     Public Sub ServiceStart()
         SyncLock __ClientLock
-            ServiceStop()
-
-            g_PSMoveServiceServer = New Service()
-        End SyncLock
-    End Sub
-
-    Public Sub ServiceStop()
-        SyncLock __ClientLock
             If (g_PSMoveServiceServer IsNot Nothing) Then
-                g_PSMoveServiceServer.Dispose()
-                g_PSMoveServiceServer = Nothing
+                Return
             End If
 
-            SyncLock __DataLock
-                g_mControllerPool.Clear()
-                g_mHmdPool.Clear()
-                g_mTrackerPool.Clear()
-            End SyncLock
+            g_PSMoveServiceServer = New Service()
         End SyncLock
     End Sub
 
@@ -720,6 +707,11 @@ Public Class ClassServiceClient
                     mControllers(i).Dispose()
                 Next
                 mControllers.Clear()
+
+                For i = 0 To mHmds.Count - 1
+                    mHmds(i).Dispose()
+                Next
+                mHmds.Clear()
 
                 For i = 0 To mTrackers.Count - 1
                     mTrackers(i).Dispose()

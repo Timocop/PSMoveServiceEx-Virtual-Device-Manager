@@ -55,6 +55,26 @@
 #If DEBUG Then
         Me.Text &= " (DEBUGGING)"
 #End If
+        While True
+            Try
+                If (g_mPSMoveServiceCAPI IsNot Nothing) Then
+                    g_mPSMoveServiceCAPI.Dispose()
+                    g_mPSMoveServiceCAPI = Nothing
+                End If
+
+                g_mPSMoveServiceCAPI = New ClassServiceClient()
+                g_mPSMoveServiceCAPI.ServiceStart()
+                g_mPSMoveServiceCAPI.StartProcessing()
+                Exit While
+            Catch ex As Exception
+                Dim sMsg As New Text.StringBuilder
+                sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error:")
+                sMsg.AppendLine(ex.Message)
+                If (MessageBox.Show(sMsg.ToString, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Cancel) Then
+                    Exit While
+                End If
+            End Try
+        End While
 
         g_mUCStartPage = New UCStartPage(Me)
         g_mUCStartPage.SuspendLayout()
@@ -97,27 +117,6 @@
         g_mUCVirtualMotionTracker.Dock = DockStyle.Fill
         g_mUCVirtualMotionTracker.Visible = False
         g_mUCVirtualMotionTracker.ResumeLayout()
-
-        While True
-            Try
-                If (g_mPSMoveServiceCAPI IsNot Nothing) Then
-                    g_mPSMoveServiceCAPI.Dispose()
-                    g_mPSMoveServiceCAPI = Nothing
-                End If
-
-                g_mPSMoveServiceCAPI = New ClassServiceClient()
-                g_mPSMoveServiceCAPI.ServiceStart()
-                g_mPSMoveServiceCAPI.StartProcessing()
-                Exit While
-            Catch ex As Exception
-                Dim sMsg As New Text.StringBuilder
-                sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error:")
-                sMsg.AppendLine(ex.Message)
-                If (MessageBox.Show(sMsg.ToString, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Cancel) Then
-                    Exit While
-                End If
-            End Try
-        End While
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
 
@@ -664,39 +663,42 @@
     End Sub
 
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If (e.CloseReason <> CloseReason.UserClosing) Then
-            Return
-        End If
+        Try
+            If (e.CloseReason <> CloseReason.UserClosing) Then
+                Return
+            End If
 
-        Dim mProcesses As New List(Of Process)
-        mProcesses.AddRange(Process.GetProcessesByName("PSMoveService"))
-        mProcesses.AddRange(Process.GetProcessesByName("PSMoveConfigTool"))
+            Dim mProcesses As New List(Of Process)
+            mProcesses.AddRange(Process.GetProcessesByName("PSMoveService"))
+            mProcesses.AddRange(Process.GetProcessesByName("PSMoveConfigTool"))
 
+            If (mProcesses.Count > 0) Then
+                Dim sMsg As New Text.StringBuilder
+                sMsg.AppendLine("PSMoveServiceEx is currently running.")
+                sMsg.AppendLine()
+                sMsg.AppendLine("Do you want to close PSMoveServiceEx?")
+                Select Case (MessageBox.Show(sMsg.ToString, "PSMoveServiceEx is still running", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                    Case DialogResult.Cancel
+                        e.Cancel = True
 
-        If (mProcesses.Count > 0) Then
-            Dim sMsg As New Text.StringBuilder
-            sMsg.AppendLine("PSMoveServiceEx is currently running.")
-            sMsg.AppendLine()
-            sMsg.AppendLine("Do you want to close PSMoveServiceEx?")
-            Select Case (MessageBox.Show(sMsg.ToString, "PSMoveServiceEx is still running", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
-                Case DialogResult.Cancel
-                    e.Cancel = True
+                    Case DialogResult.Yes
+                        If (mProcesses.Count > 0) Then
+                            For Each mProcess In mProcesses
+                                If (Not mProcess.CloseMainWindow()) Then
+                                    mProcess.Kill()
+                                End If
 
-                Case DialogResult.Yes
-                    If (mProcesses.Count > 0) Then
-                        For Each mProcess In mProcesses
-                            If (mProcess.CloseMainWindow()) Then
                                 mProcess.WaitForExit(10000)
-                            Else
-                                mProcess.Kill()
-                            End If
-                        Next
-                    End If
+                            Next
+                        End If
 
-                Case DialogResult.No
-                    ' Do nothing
-            End Select
-        End If
+                    Case DialogResult.No
+                        ' Do nothing
+                End Select
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Sub FormMain_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
@@ -741,15 +743,6 @@
             g_mClassUpdateChecker = Nothing
         End If
 
-        Try
-            If (g_mPSMoveServiceCAPI IsNot Nothing) Then
-                g_mPSMoveServiceCAPI.Dispose()
-                g_mPSMoveServiceCAPI = Nothing
-            End If
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-
         If (g_mUCStartPage IsNot Nothing AndAlso Not g_mUCStartPage.IsDisposed) Then
             g_mUCStartPage.Dispose()
             g_mUCStartPage = Nothing
@@ -780,6 +773,14 @@
             g_mUCVirtualMotionTracker = Nothing
         End If
 
+        Try
+            If (g_mPSMoveServiceCAPI IsNot Nothing) Then
+                g_mPSMoveServiceCAPI.Dispose()
+                g_mPSMoveServiceCAPI = Nothing
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Class ClassUpdateChecker
