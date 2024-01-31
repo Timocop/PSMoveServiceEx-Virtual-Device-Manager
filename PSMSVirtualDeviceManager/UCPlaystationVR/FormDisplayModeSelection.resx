@@ -120,12 +120,7 @@
   <data name="Label2.Text" xml:space="preserve">
     <value>Use Direct Mode for the best performance. In this mode, the display is exclusively controlled by the compositor, enabling additional features to enhance your experience. 
 
-Please note that this feature is only supported by Windows 10 and higher.
-
-
-
-
-</value>
+Please note that this feature is currently only supported by AMD and Intel graphics cards.</value>
   </data>
   <data name="Label3.Text" xml:space="preserve">
     <value>Using Virtual Mode, the display functions as an additional desktop for tasks like video playback and image viewing. However, compositors can not directly interact with the display, potentially decreasing performance and causing other issues.

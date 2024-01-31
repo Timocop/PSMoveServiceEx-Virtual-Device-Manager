@@ -27,7 +27,6 @@ Partial Class FormDisplayModeSelection
         Me.Button_Apply = New System.Windows.Forms.Button()
         Me.Button_Cancel = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.RadioButton_ModeDirect = New System.Windows.Forms.RadioButton()
@@ -35,10 +34,11 @@ Partial Class FormDisplayModeSelection
         Me.Label3 = New System.Windows.Forms.Label()
         Me.RadioButton_ModeVirtual = New System.Windows.Forms.RadioButton()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel1.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -85,17 +85,6 @@ Partial Class FormDisplayModeSelection
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(553, 1)
         Me.Panel2.TabIndex = 0
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._441
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(12, 12)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 1
-        Me.ClassPictureBoxQuality1.TabStop = False
         '
         'GroupBox1
         '
@@ -176,6 +165,17 @@ Partial Class FormDisplayModeSelection
         Me.Label1.TabIndex = 4
         Me.Label1.Text = "Select a display mode for the PlayStation VR display."
         '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._441
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(12, 12)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 1
+        Me.ClassPictureBoxQuality1.TabStop = False
+        '
         'FormDisplayModeSelection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -196,11 +196,11 @@ Partial Class FormDisplayModeSelection
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Display Mode Selection"
         Me.Panel1.ResumeLayout(False)
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
