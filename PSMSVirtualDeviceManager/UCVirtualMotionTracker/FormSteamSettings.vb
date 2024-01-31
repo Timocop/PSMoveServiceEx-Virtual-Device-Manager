@@ -168,6 +168,8 @@
 
                 Dim sArguments As New List(Of String)
 
+                sArguments.Add(FormMain.COMMANDLINE_START_STEAMVR)
+
                 If (CheckBox_AutostartService.Checked) Then
                     sArguments.Add(FormMain.COMMANDLINE_START_SERVICE)
                 End If

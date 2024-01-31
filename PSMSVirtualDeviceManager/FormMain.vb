@@ -9,7 +9,10 @@
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
 
+    Private g_mAutoCloseThread As Threading.Thread = Nothing
+
     Private g_bIgnoreEvents As Boolean = False
+    Private g_bAutoClose As Boolean = False
 
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
@@ -22,6 +25,7 @@
     Public Const COMMANDLINE_UNINSTALL_PSVR As String = "-uninstall-psvr"
     Public Const COMMANDLINE_UNINSTALL_PSEYE As String = "-uninstall-pseye"
     Public Const COMMANDLINE_VERBOSE As String = "-verbose"
+    Public Const COMMANDLINE_START_STEAMVR As String = "-steamvr"
     Public Const COMMANDLINE_START_SERVICE As String = "-run-service"
     Public Const COMMANDLINE_START_REMOTEDEVICES As String = "-run-remote-devices"
     Public Const COMMANDLINE_START_OSCSERVER As String = "-run-osc-server"
@@ -153,6 +157,36 @@
 
         If (bLateload) Then
             For Each sCommand As String In sCmdLines
+                While (sCommand = COMMANDLINE_START_STEAMVR)
+                    ' Close with SteamVR
+                    Me.Text &= " (STEAMVR)"
+
+                    g_mAutoCloseThread = New Threading.Thread(
+                        Sub()
+                            Try
+                                Threading.Thread.Sleep(5000)
+
+                                Dim mProcesses As Process() = Process.GetProcessesByName("vrserver")
+                                If (mProcesses.Count > 0) Then
+                                    For Each mProcess As Process In mProcesses
+                                        mProcess.WaitForExit()
+                                    Next
+                                End If
+
+                                ClassUtils.AsyncInvoke(Me, Sub()
+                                                               g_bAutoClose = True
+                                                               Me.Close()
+                                                           End Sub)
+                            Catch ex As Exception
+                                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            End Try
+                        End Sub)
+                    g_mAutoCloseThread.IsBackground = True
+                    g_mAutoCloseThread.Start()
+
+                    Exit While
+                End While
+
                 While (sCommand = COMMANDLINE_START_SERVICE)
                     If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
                         Exit While
@@ -673,28 +707,39 @@
             mProcesses.AddRange(Process.GetProcessesByName("PSMoveConfigTool"))
 
             If (mProcesses.Count > 0) Then
-                Dim sMsg As New Text.StringBuilder
-                sMsg.AppendLine("PSMoveServiceEx is currently running.")
-                sMsg.AppendLine()
-                sMsg.AppendLine("Do you want to close PSMoveServiceEx?")
-                Select Case (MessageBox.Show(sMsg.ToString, "PSMoveServiceEx is still running", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
-                    Case DialogResult.Cancel
-                        e.Cancel = True
+                Dim bCloseService As Boolean = False
 
-                    Case DialogResult.Yes
-                        If (mProcesses.Count > 0) Then
-                            For Each mProcess In mProcesses
-                                If (Not mProcess.CloseMainWindow()) Then
-                                    mProcess.Kill()
-                                End If
+                If (g_bAutoClose) Then
+                    bCloseService = True
+                Else
+                    Dim sMsg As New Text.StringBuilder
+                    sMsg.AppendLine("PSMoveServiceEx is currently running.")
+                    sMsg.AppendLine()
+                    sMsg.AppendLine("Do you want to close PSMoveServiceEx?")
 
-                                mProcess.WaitForExit(10000)
-                            Next
-                        End If
+                    Select Case (MessageBox.Show(sMsg.ToString, "PSMoveServiceEx is still running", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                        Case DialogResult.Cancel
+                            e.Cancel = True
 
-                    Case DialogResult.No
-                        ' Do nothing
-                End Select
+                        Case DialogResult.Yes
+                            bCloseService = True
+
+                        Case DialogResult.No
+                            ' Do nothing
+                    End Select
+                End If
+
+                If (bCloseService) Then
+                    If (mProcesses.Count > 0) Then
+                        For Each mProcess In mProcesses
+                            If (Not mProcess.CloseMainWindow()) Then
+                                mProcess.Kill()
+                            End If
+
+                            mProcess.WaitForExit(10000)
+                        Next
+                    End If
+                End If
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -705,7 +750,7 @@
         Using mCloseForm As New FormLoading
             mCloseForm.Text = "Closing established connections and cleaning up..."
             mCloseForm.ProgressBar1.Style = ProgressBarStyle.Continuous
-            mCloseForm.Show()
+            mCloseForm.Show(Me)
             mCloseForm.Refresh()
 
             CleanUp()
