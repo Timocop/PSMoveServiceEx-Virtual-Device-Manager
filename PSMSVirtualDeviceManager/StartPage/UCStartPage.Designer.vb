@@ -101,6 +101,7 @@ Partial Class UCStartPage
         Me.Timer_RestartPsms = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_PsmsxInstall = New System.Windows.Forms.Panel()
         Me.Panel15 = New System.Windows.Forms.Panel()
+        Me.Button_PsmsInstallIgnore = New System.Windows.Forms.Button()
         Me.Button_PsmsInstallBrowse = New System.Windows.Forms.Button()
         Me.Button_PsmsxInstallDownload = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -108,7 +109,6 @@ Partial Class UCStartPage
         Me.Panel22 = New System.Windows.Forms.Panel()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Panel23 = New System.Windows.Forms.Panel()
-        Me.Button_PsmsInstallIgnore = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
@@ -682,6 +682,7 @@ Partial Class UCStartPage
         Me.ListView_ServiceDevices.Location = New System.Drawing.Point(0, 42)
         Me.ListView_ServiceDevices.Name = "ListView_ServiceDevices"
         Me.ListView_ServiceDevices.Size = New System.Drawing.Size(859, 224)
+        Me.ListView_ServiceDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_ServiceDevices.TabIndex = 1
         Me.ListView_ServiceDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_ServiceDevices.View = System.Windows.Forms.View.Details
@@ -1019,6 +1020,18 @@ Partial Class UCStartPage
         Me.Panel15.Size = New System.Drawing.Size(861, 140)
         Me.Panel15.TabIndex = 3
         '
+        'Button_PsmsInstallIgnore
+        '
+        Me.Button_PsmsInstallIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button_PsmsInstallIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_PsmsInstallIgnore.Location = New System.Drawing.Point(316, 99)
+        Me.Button_PsmsInstallIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_PsmsInstallIgnore.Name = "Button_PsmsInstallIgnore"
+        Me.Button_PsmsInstallIgnore.Size = New System.Drawing.Size(95, 23)
+        Me.Button_PsmsInstallIgnore.TabIndex = 5
+        Me.Button_PsmsInstallIgnore.Text = "Ignore"
+        Me.Button_PsmsInstallIgnore.UseVisualStyleBackColor = True
+        '
         'Button_PsmsInstallBrowse
         '
         Me.Button_PsmsInstallBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -1098,18 +1111,6 @@ Partial Class UCStartPage
         Me.Panel23.Name = "Panel23"
         Me.Panel23.Size = New System.Drawing.Size(859, 1)
         Me.Panel23.TabIndex = 0
-        '
-        'Button_PsmsInstallIgnore
-        '
-        Me.Button_PsmsInstallIgnore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_PsmsInstallIgnore.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_PsmsInstallIgnore.Location = New System.Drawing.Point(316, 99)
-        Me.Button_PsmsInstallIgnore.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
-        Me.Button_PsmsInstallIgnore.Name = "Button_PsmsInstallIgnore"
-        Me.Button_PsmsInstallIgnore.Size = New System.Drawing.Size(95, 23)
-        Me.Button_PsmsInstallIgnore.TabIndex = 5
-        Me.Button_PsmsInstallIgnore.Text = "Ignore"
-        Me.Button_PsmsInstallIgnore.UseVisualStyleBackColor = True
         '
         'UCStartPage
         '

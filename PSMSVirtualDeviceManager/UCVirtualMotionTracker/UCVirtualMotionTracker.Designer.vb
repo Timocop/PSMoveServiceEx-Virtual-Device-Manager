@@ -146,6 +146,8 @@ Partial Class UCVirtualMotionTracker
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_PlayCalibSideOffset = New System.Windows.Forms.NumericUpDown()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
         Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
@@ -232,8 +234,6 @@ Partial Class UCVirtualMotionTracker
         Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.NumericUpDown_PlayCalibSideOffset = New System.Windows.Forms.NumericUpDown()
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -269,6 +269,7 @@ Partial Class UCVirtualMotionTracker
         CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_SettingsPlayspace.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
+        CType(Me.NumericUpDown_PlayCalibSideOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_SettingsOther.SuspendLayout()
@@ -295,7 +296,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.SuspendLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip_AddTracker.SuspendLayout()
-        CType(Me.NumericUpDown_PlayCalibSideOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LinkLabel_ReadMore
@@ -368,6 +368,7 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
         Me.ListView_OscDevices.Name = "ListView_OscDevices"
         Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
+        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_OscDevices.TabIndex = 1
         Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
@@ -695,6 +696,7 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_Trackers.MultiSelect = False
         Me.ListView_Trackers.Name = "ListView_Trackers"
         Me.ListView_Trackers.Size = New System.Drawing.Size(722, 150)
+        Me.ListView_Trackers.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_Trackers.TabIndex = 21
         Me.ListView_Trackers.UseCompatibleStateImageBehavior = False
         Me.ListView_Trackers.View = System.Windows.Forms.View.Details
@@ -1711,6 +1713,26 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Playspace Calibration Settings"
         '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(19, 62)
+        Me.Label17.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(88, 13)
+        Me.Label17.TabIndex = 82
+        Me.Label17.Text = "Side offset (cm):"
+        '
+        'NumericUpDown_PlayCalibSideOffset
+        '
+        Me.NumericUpDown_PlayCalibSideOffset.Location = New System.Drawing.Point(134, 60)
+        Me.NumericUpDown_PlayCalibSideOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        Me.NumericUpDown_PlayCalibSideOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
+        Me.NumericUpDown_PlayCalibSideOffset.Name = "NumericUpDown_PlayCalibSideOffset"
+        Me.NumericUpDown_PlayCalibSideOffset.Size = New System.Drawing.Size(95, 22)
+        Me.NumericUpDown_PlayCalibSideOffset.TabIndex = 83
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibSideOffset, "Default: 0")
+        '
         'Label26
         '
         Me.Label26.AutoSize = True
@@ -2547,6 +2569,7 @@ Partial Class UCVirtualMotionTracker
         Me.ListView_Overrides.Margin = New System.Windows.Forms.Padding(16, 32, 16, 3)
         Me.ListView_Overrides.Name = "ListView_Overrides"
         Me.ListView_Overrides.Size = New System.Drawing.Size(728, 185)
+        Me.ListView_Overrides.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_Overrides.TabIndex = 0
         Me.ListView_Overrides.UseCompatibleStateImageBehavior = False
         Me.ListView_Overrides.View = System.Windows.Forms.View.Details
@@ -2661,26 +2684,6 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(19, 62)
-        Me.Label17.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(88, 13)
-        Me.Label17.TabIndex = 82
-        Me.Label17.Text = "Side offset (cm):"
-        '
-        'NumericUpDown_PlayCalibSideOffset
-        '
-        Me.NumericUpDown_PlayCalibSideOffset.Location = New System.Drawing.Point(134, 60)
-        Me.NumericUpDown_PlayCalibSideOffset.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
-        Me.NumericUpDown_PlayCalibSideOffset.Minimum = New Decimal(New Integer() {10000, 0, 0, -2147483648})
-        Me.NumericUpDown_PlayCalibSideOffset.Name = "NumericUpDown_PlayCalibSideOffset"
-        Me.NumericUpDown_PlayCalibSideOffset.Size = New System.Drawing.Size(95, 22)
-        Me.NumericUpDown_PlayCalibSideOffset.TabIndex = 83
-        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibSideOffset, "Default: 0")
-        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2733,6 +2736,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsPlayspace.ResumeLayout(False)
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
+        CType(Me.NumericUpDown_PlayCalibSideOffset, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_PlayCalibHeightOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_SettingsOther.ResumeLayout(False)
@@ -2768,7 +2772,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.PerformLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip_AddTracker.ResumeLayout(False)
-        CType(Me.NumericUpDown_PlayCalibSideOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
