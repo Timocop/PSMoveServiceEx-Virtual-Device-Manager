@@ -41,9 +41,9 @@ Partial Class UCRemoteDeviceItem
         Me.NumericUpDown_YawOffset = New System.Windows.Forms.NumericUpDown()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New ClassPictureBoxQuality()
         Me.Button_SaveSettings = New System.Windows.Forms.Button()
         Me.Button_Recenter = New System.Windows.Forms.Button()
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -222,6 +222,17 @@ Partial Class UCRemoteDeviceItem
         Me.Panel_Status.Size = New System.Drawing.Size(585, 42)
         Me.Panel_Status.TabIndex = 18
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.m_HighQuality = False
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 2
+        Me.PictureBox1.TabStop = False
+        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -242,16 +253,6 @@ Partial Class UCRemoteDeviceItem
         Me.Label3.Size = New System.Drawing.Size(140, 13)
         Me.Label3.TabIndex = 0
         Me.Label3.Text = "Device is not responding!"
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 2
-        Me.PictureBox1.TabStop = False
         '
         'Button_SaveSettings
         '

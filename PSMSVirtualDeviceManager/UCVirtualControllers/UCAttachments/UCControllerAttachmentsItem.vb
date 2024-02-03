@@ -9,7 +9,6 @@ Public Class UCControllerAttachmentsItem
     Public g_mClassIO As ClassIO
     Public g_mClassConfig As ClassConfig
 
-    Private g_sTrackerName As String = ""
     Private g_sNickname As String = ""
 
     Private g_bIgnoreEvents As Boolean = False
@@ -60,9 +59,33 @@ Public Class UCControllerAttachmentsItem
         g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
         g_mClassIO.Enable()
 
+        SetTrackerNameText()
+
         SetUnsavedState(False)
 
         CreateControl()
+    End Sub
+
+    Property m_Nickname As String
+        Get
+            Return g_sNickname
+        End Get
+        Set(value As String)
+            g_sNickname = value
+            SetTrackerNameText()
+        End Set
+    End Property
+
+    Private Sub SetTrackerNameText()
+        Dim iControllerID As Integer = CInt(ComboBox_ControllerID.SelectedItem)
+
+        TextBox_TrackerName.Text = "Attachment Name: "
+
+        If (iControllerID > -1 AndAlso Not String.IsNullOrEmpty(m_Nickname)) Then
+            TextBox_TrackerName.Text &= m_Nickname
+        Else
+            TextBox_TrackerName.Text &= "Invalid"
+        End If
     End Sub
 
     Private Sub SetUnsavedState(bIsUnsaved As Boolean)
@@ -95,6 +118,8 @@ Public Class UCControllerAttachmentsItem
     End Sub
 
     Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
+        SetTrackerNameText()
+
         If (g_bIgnoreEvents) Then
             Return
         End If
@@ -255,6 +280,22 @@ Public Class UCControllerAttachmentsItem
         End Try
     End Sub
 
+    Private Sub LinkLabel_EditName_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EditName.LinkClicked
+        Dim sName As String = InputBox("Enter a new attachment name:", "New attachment name", m_Nickname)
+
+        If (sName Is Nothing) Then
+            Return
+        End If
+
+        If (sName.Length > 128) Then
+            MessageBox.Show("Name is too long!", "Unable to set name", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            Return
+        End If
+
+        m_Nickname = sName
+        SetUnsavedState(True)
+    End Sub
+
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
         Try
             TimerFPS.Stop()
@@ -269,7 +310,6 @@ Public Class UCControllerAttachmentsItem
             TimerFPS.Start()
         End Try
     End Sub
-
 
     Private Sub CleanUp()
         If (g_mClassIO IsNot Nothing) Then
@@ -595,6 +635,7 @@ Public Class UCControllerAttachmentsItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerYawCorrection)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ParentControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "OnlyJointOffset", If(g_mUCRemoteDeviceItem.g_mClassIO.m_OnlyJointOffset, "True", "False")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
                     End SyncLock
@@ -634,6 +675,8 @@ Public Class UCControllerAttachmentsItem
                     SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
 
                     g_mUCRemoteDeviceItem.CheckBox_JointOnly.Checked = bOnlyJointOffset
+
+                    g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
                 End Using
             End Using
         End Sub

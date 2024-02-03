@@ -17,9 +17,6 @@ Public Class UCVirtualMotionTrackerItem
     Public g_mClassIO As ClassIO
     Public g_mClassConfig As ClassConfig
 
-    Private g_sTrackerName As String = ""
-    Private g_sNickname As String = ""
-
     Private g_bIgnoreEvents As Boolean = False
     Private g_bIgnoreUnsaved As Boolean = False
 

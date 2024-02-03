@@ -69,6 +69,8 @@ Partial Class UCControllerAttachmentsItem
         Me.Label8 = New System.Windows.Forms.Label()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.CheckBox_JointOnly = New System.Windows.Forms.CheckBox()
+        Me.TextBox_TrackerName = New System.Windows.Forms.TextBox()
+        Me.LinkLabel_EditName = New System.Windows.Forms.LinkLabel()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_JointOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -86,7 +88,7 @@ Partial Class UCControllerAttachmentsItem
         Me.ComboBox_ControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_ControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_ControllerID.FormattingEnabled = True
-        Me.ComboBox_ControllerID.Location = New System.Drawing.Point(134, 16)
+        Me.ComboBox_ControllerID.Location = New System.Drawing.Point(134, 44)
         Me.ComboBox_ControllerID.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.ComboBox_ControllerID.Name = "ComboBox_ControllerID"
         Me.ComboBox_ControllerID.Size = New System.Drawing.Size(150, 21)
@@ -95,7 +97,7 @@ Partial Class UCControllerAttachmentsItem
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(16, 19)
+        Me.Label1.Location = New System.Drawing.Point(16, 47)
         Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(76, 13)
@@ -111,7 +113,7 @@ Partial Class UCControllerAttachmentsItem
         '
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 243)
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 271)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(120, 23)
@@ -124,7 +126,7 @@ Partial Class UCControllerAttachmentsItem
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(16, 48)
+        Me.Label3.Location = New System.Drawing.Point(16, 76)
         Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -136,7 +138,7 @@ Partial Class UCControllerAttachmentsItem
         Me.ComboBox_ParentControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_ParentControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_ParentControllerID.FormattingEnabled = True
-        Me.ComboBox_ParentControllerID.Location = New System.Drawing.Point(134, 43)
+        Me.ComboBox_ParentControllerID.Location = New System.Drawing.Point(134, 71)
         Me.ComboBox_ParentControllerID.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
         Me.ComboBox_ParentControllerID.Name = "ComboBox_ParentControllerID"
         Me.ComboBox_ParentControllerID.Size = New System.Drawing.Size(150, 21)
@@ -160,7 +162,7 @@ Partial Class UCControllerAttachmentsItem
         Me.GroupBox1.Controls.Add(Me.Button_JointPosX)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_JointOffsetX)
         Me.GroupBox1.Controls.Add(Me.Label2)
-        Me.GroupBox1.Location = New System.Drawing.Point(16, 83)
+        Me.GroupBox1.Location = New System.Drawing.Point(16, 111)
         Me.GroupBox1.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(268, 147)
@@ -351,7 +353,7 @@ Partial Class UCControllerAttachmentsItem
         Me.GroupBox2.Controls.Add(Me.Button_ControllerPosX)
         Me.GroupBox2.Controls.Add(Me.NumericUpDown_ControllerOffsetX)
         Me.GroupBox2.Controls.Add(Me.Label8)
-        Me.GroupBox2.Location = New System.Drawing.Point(333, 83)
+        Me.GroupBox2.Location = New System.Drawing.Point(333, 111)
         Me.GroupBox2.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(268, 147)
@@ -529,7 +531,7 @@ Partial Class UCControllerAttachmentsItem
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 248)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 276)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -542,12 +544,41 @@ Partial Class UCControllerAttachmentsItem
         Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_JointOnly.AutoSize = True
         Me.CheckBox_JointOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 246)
+        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 274)
         Me.CheckBox_JointOnly.Name = "CheckBox_JointOnly"
         Me.CheckBox_JointOnly.Size = New System.Drawing.Size(115, 18)
         Me.CheckBox_JointOnly.TabIndex = 33
         Me.CheckBox_JointOnly.Text = "Joint offset only"
         Me.CheckBox_JointOnly.UseVisualStyleBackColor = True
+        '
+        'TextBox_TrackerName
+        '
+        Me.TextBox_TrackerName.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBox_TrackerName.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_TrackerName.Cursor = System.Windows.Forms.Cursors.Default
+        Me.TextBox_TrackerName.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox_TrackerName.HideSelection = False
+        Me.TextBox_TrackerName.Location = New System.Drawing.Point(16, 16)
+        Me.TextBox_TrackerName.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.TextBox_TrackerName.Name = "TextBox_TrackerName"
+        Me.TextBox_TrackerName.ReadOnly = True
+        Me.TextBox_TrackerName.Size = New System.Drawing.Size(293, 15)
+        Me.TextBox_TrackerName.TabIndex = 35
+        Me.TextBox_TrackerName.Text = "Tracker Name:  Unknown"
+        Me.TextBox_TrackerName.WordWrap = False
+        '
+        'LinkLabel_EditName
+        '
+        Me.LinkLabel_EditName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LinkLabel_EditName.AutoSize = True
+        Me.LinkLabel_EditName.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_EditName.Location = New System.Drawing.Point(542, 16)
+        Me.LinkLabel_EditName.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
+        Me.LinkLabel_EditName.Name = "LinkLabel_EditName"
+        Me.LinkLabel_EditName.Size = New System.Drawing.Size(59, 13)
+        Me.LinkLabel_EditName.TabIndex = 34
+        Me.LinkLabel_EditName.TabStop = True
+        Me.LinkLabel_EditName.Text = "Edit Name"
         '
         'UCControllerAttachmentsItem
         '
@@ -555,6 +586,8 @@ Partial Class UCControllerAttachmentsItem
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.TextBox_TrackerName)
+        Me.Controls.Add(Me.LinkLabel_EditName)
         Me.Controls.Add(Me.CheckBox_JointOnly)
         Me.Controls.Add(Me.TextBox_Fps)
         Me.Controls.Add(Me.GroupBox2)
@@ -566,7 +599,7 @@ Partial Class UCControllerAttachmentsItem
         Me.Controls.Add(Me.ComboBox_ControllerID)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCControllerAttachmentsItem"
-        Me.Size = New System.Drawing.Size(617, 282)
+        Me.Size = New System.Drawing.Size(617, 310)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -625,4 +658,6 @@ Partial Class UCControllerAttachmentsItem
     Friend WithEvents NumericUpDown_ControllerYawCorrection As NumericUpDown
     Friend WithEvents Label10 As Label
     Friend WithEvents CheckBox_JointOnly As CheckBox
+    Friend WithEvents TextBox_TrackerName As TextBox
+    Friend WithEvents LinkLabel_EditName As LinkLabel
 End Class
