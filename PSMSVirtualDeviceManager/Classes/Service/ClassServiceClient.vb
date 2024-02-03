@@ -248,26 +248,11 @@ Public Class ClassServiceClient
                                 bConnected = g_bIsConnected
                                 bDisconnected = False
 
-                                RaiseEvent OnConnectionStatusChanged()
-
                                 bRefreshControllerList = True
                                 bRefreshHmdList = True
                                 bRefreshTrackerList = True
 
-                                For i = 0 To mControllers.Count - 1
-                                    mControllers(i).Dispose()
-                                Next
-                                mControllers.Clear()
-
-                                For i = 0 To mHmds.Count - 1
-                                    mHmds(i).Dispose()
-                                Next
-                                mHmds.Clear()
-
-                                For i = 0 To mTrackers.Count - 1
-                                    mTrackers(i).Dispose()
-                                Next
-                                mTrackers.Clear()
+                                RaiseEvent OnConnectionStatusChanged()
                             End If
 
                             If (Not g_bIsConnected) Then
@@ -678,21 +663,12 @@ Public Class ClassServiceClient
                                 'Whatever
                             End Try
                         Next
-
-                        ClassPrecisionSleep.Sleep(1)
                     Catch ex As Threading.ThreadAbortException
                         Throw
-                    Catch ex As Exception
-                        SyncLock __ClientLock
-                            ' Check if its disconnected
-                            If (g_PSMoveServiceServer IsNot Nothing) Then
-                                g_bIsConnected = g_PSMoveServiceServer.IsConnected
-                                If (bConnected <> g_bIsConnected) Then
-                                    bDisconnected = True
-                                End If
-                            End If
-                        End SyncLock
+                    Catch ex As ServiceExceptions.ServiceDisconnectedException
+                        bDisconnected = True
 
+                    Catch ex As Exception
                         bExceptionSleep = True
                     End Try
 
@@ -701,6 +677,8 @@ Public Class ClassServiceClient
                         bExceptionSleep = False
                         Threading.Thread.Sleep(5000)
                     End If
+
+                    ClassPrecisionSleep.Sleep(1)
                 End While
             Finally
                 For i = 0 To mControllers.Count - 1
