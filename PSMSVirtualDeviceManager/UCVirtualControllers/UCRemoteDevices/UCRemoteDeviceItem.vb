@@ -287,16 +287,6 @@ Public Class UCRemoteDeviceItem
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_YawOffsetNeg_Click(sender As Object, e As EventArgs) Handles Button_YawOffsetNeg.Click
-        NumericUpDown_YawOffset.Value -= 5
-        SetUnsavedState(True)
-    End Sub
-
-    Private Sub Button_YawOffsetPos_Click(sender As Object, e As EventArgs) Handles Button_YawOffsetPos.Click
-        NumericUpDown_YawOffset.Value += 5
-        SetUnsavedState(True)
-    End Sub
-
     Private Sub CleanUp()
         If (g_mUCRemoteDevices.g_mClassStrackerSocket IsNot Nothing) Then
             RemoveHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerRotation, AddressOf OnTrackerRotation

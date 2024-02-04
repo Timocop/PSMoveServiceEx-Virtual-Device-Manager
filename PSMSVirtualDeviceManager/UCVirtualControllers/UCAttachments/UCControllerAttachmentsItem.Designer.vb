@@ -34,53 +34,53 @@ Partial Class UCControllerAttachmentsItem
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ComboBox_ParentControllerID = New System.Windows.Forms.ComboBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.Button_JointNegYaw = New System.Windows.Forms.Button()
-        Me.Button_JointPosYaw = New System.Windows.Forms.Button()
         Me.NumericUpDown_JointYawCorrection = New System.Windows.Forms.NumericUpDown()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.Button_JointNegZ = New System.Windows.Forms.Button()
-        Me.Button_JointPosZ = New System.Windows.Forms.Button()
         Me.NumericUpDown_JointOffsetZ = New System.Windows.Forms.NumericUpDown()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Button_JointNegY = New System.Windows.Forms.Button()
-        Me.Button_JointPosY = New System.Windows.Forms.Button()
         Me.NumericUpDown_JointOffsetY = New System.Windows.Forms.NumericUpDown()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Button_JointNegX = New System.Windows.Forms.Button()
-        Me.Button_JointPosX = New System.Windows.Forms.Button()
         Me.NumericUpDown_JointOffsetX = New System.Windows.Forms.NumericUpDown()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Button_ControllerNegYaw = New System.Windows.Forms.Button()
-        Me.Button_ControllerNegZ = New System.Windows.Forms.Button()
-        Me.Button_ControllerPosYaw = New System.Windows.Forms.Button()
-        Me.Button_ControllerPosZ = New System.Windows.Forms.Button()
         Me.NumericUpDown_ControllerYawCorrection = New System.Windows.Forms.NumericUpDown()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.NumericUpDown_ControllerOffsetZ = New System.Windows.Forms.NumericUpDown()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.Button_ControllerNegY = New System.Windows.Forms.Button()
-        Me.Button_ControllerPosY = New System.Windows.Forms.Button()
         Me.NumericUpDown_ControllerOffsetY = New System.Windows.Forms.NumericUpDown()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.Button_ControllerNegX = New System.Windows.Forms.Button()
-        Me.Button_ControllerPosX = New System.Windows.Forms.Button()
         Me.NumericUpDown_ControllerOffsetX = New System.Windows.Forms.NumericUpDown()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.CheckBox_JointOnly = New System.Windows.Forms.CheckBox()
         Me.TextBox_TrackerName = New System.Windows.Forms.TextBox()
         Me.LinkLabel_EditName = New System.Windows.Forms.LinkLabel()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig8 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_JointYawCorrection.SuspendLayout()
         CType(Me.NumericUpDown_JointOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_JointOffsetZ.SuspendLayout()
         CType(Me.NumericUpDown_JointOffsetY, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_JointOffsetY.SuspendLayout()
         CType(Me.NumericUpDown_JointOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_JointOffsetX.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.NumericUpDown_ControllerYawCorrection, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_ControllerYawCorrection.SuspendLayout()
         CType(Me.NumericUpDown_ControllerOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_ControllerOffsetZ.SuspendLayout()
         CType(Me.NumericUpDown_ControllerOffsetY, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_ControllerOffsetY.SuspendLayout()
         CType(Me.NumericUpDown_ControllerOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_ControllerOffsetX.SuspendLayout()
         Me.SuspendLayout()
         '
         'ComboBox_ControllerID
@@ -146,20 +146,12 @@ Partial Class UCControllerAttachmentsItem
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.Button_JointNegYaw)
-        Me.GroupBox1.Controls.Add(Me.Button_JointPosYaw)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_JointYawCorrection)
         Me.GroupBox1.Controls.Add(Me.Label9)
-        Me.GroupBox1.Controls.Add(Me.Button_JointNegZ)
-        Me.GroupBox1.Controls.Add(Me.Button_JointPosZ)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_JointOffsetZ)
         Me.GroupBox1.Controls.Add(Me.Label5)
-        Me.GroupBox1.Controls.Add(Me.Button_JointNegY)
-        Me.GroupBox1.Controls.Add(Me.Button_JointPosY)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_JointOffsetY)
         Me.GroupBox1.Controls.Add(Me.Label4)
-        Me.GroupBox1.Controls.Add(Me.Button_JointNegX)
-        Me.GroupBox1.Controls.Add(Me.Button_JointPosX)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_JointOffsetX)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Location = New System.Drawing.Point(16, 111)
@@ -170,35 +162,16 @@ Partial Class UCControllerAttachmentsItem
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Joint Offset"
         '
-        'Button_JointNegYaw
-        '
-        Me.Button_JointNegYaw.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointNegYaw.Location = New System.Drawing.Point(118, 107)
-        Me.Button_JointNegYaw.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_JointNegYaw.Name = "Button_JointNegYaw"
-        Me.Button_JointNegYaw.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointNegYaw.TabIndex = 33
-        Me.Button_JointNegYaw.Text = "<"
-        Me.Button_JointNegYaw.UseVisualStyleBackColor = True
-        '
-        'Button_JointPosYaw
-        '
-        Me.Button_JointPosYaw.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointPosYaw.Location = New System.Drawing.Point(234, 107)
-        Me.Button_JointPosYaw.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_JointPosYaw.Name = "Button_JointPosYaw"
-        Me.Button_JointPosYaw.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointPosYaw.TabIndex = 30
-        Me.Button_JointPosYaw.Text = ">"
-        Me.Button_JointPosYaw.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_JointYawCorrection
         '
-        Me.NumericUpDown_JointYawCorrection.Location = New System.Drawing.Point(147, 108)
+        Me.NumericUpDown_JointYawCorrection.Controls.Add(Me.UcNumericUpDownBig8)
+        Me.NumericUpDown_JointYawCorrection.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_JointYawCorrection.Location = New System.Drawing.Point(116, 108)
+        Me.NumericUpDown_JointYawCorrection.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_JointYawCorrection.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_JointYawCorrection.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_JointYawCorrection.Name = "NumericUpDown_JointYawCorrection"
-        Me.NumericUpDown_JointYawCorrection.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_JointYawCorrection.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_JointYawCorrection.TabIndex = 31
         '
         'Label9
@@ -211,35 +184,16 @@ Partial Class UCControllerAttachmentsItem
         Me.Label9.TabIndex = 32
         Me.Label9.Text = "Yaw Correction:"
         '
-        'Button_JointNegZ
-        '
-        Me.Button_JointNegZ.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointNegZ.Location = New System.Drawing.Point(118, 79)
-        Me.Button_JointNegZ.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_JointNegZ.Name = "Button_JointNegZ"
-        Me.Button_JointNegZ.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointNegZ.TabIndex = 29
-        Me.Button_JointNegZ.Text = "<"
-        Me.Button_JointNegZ.UseVisualStyleBackColor = True
-        '
-        'Button_JointPosZ
-        '
-        Me.Button_JointPosZ.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointPosZ.Location = New System.Drawing.Point(234, 79)
-        Me.Button_JointPosZ.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_JointPosZ.Name = "Button_JointPosZ"
-        Me.Button_JointPosZ.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointPosZ.TabIndex = 26
-        Me.Button_JointPosZ.Text = ">"
-        Me.Button_JointPosZ.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_JointOffsetZ
         '
-        Me.NumericUpDown_JointOffsetZ.Location = New System.Drawing.Point(147, 80)
+        Me.NumericUpDown_JointOffsetZ.Controls.Add(Me.UcNumericUpDownBig7)
+        Me.NumericUpDown_JointOffsetZ.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_JointOffsetZ.Location = New System.Drawing.Point(116, 80)
+        Me.NumericUpDown_JointOffsetZ.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_JointOffsetZ.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_JointOffsetZ.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_JointOffsetZ.Name = "NumericUpDown_JointOffsetZ"
-        Me.NumericUpDown_JointOffsetZ.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_JointOffsetZ.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_JointOffsetZ.TabIndex = 27
         '
         'Label5
@@ -252,35 +206,16 @@ Partial Class UCControllerAttachmentsItem
         Me.Label5.TabIndex = 28
         Me.Label5.Text = "Z:"
         '
-        'Button_JointNegY
-        '
-        Me.Button_JointNegY.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointNegY.Location = New System.Drawing.Point(118, 51)
-        Me.Button_JointNegY.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_JointNegY.Name = "Button_JointNegY"
-        Me.Button_JointNegY.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointNegY.TabIndex = 25
-        Me.Button_JointNegY.Text = "<"
-        Me.Button_JointNegY.UseVisualStyleBackColor = True
-        '
-        'Button_JointPosY
-        '
-        Me.Button_JointPosY.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointPosY.Location = New System.Drawing.Point(234, 51)
-        Me.Button_JointPosY.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_JointPosY.Name = "Button_JointPosY"
-        Me.Button_JointPosY.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointPosY.TabIndex = 22
-        Me.Button_JointPosY.Text = ">"
-        Me.Button_JointPosY.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_JointOffsetY
         '
-        Me.NumericUpDown_JointOffsetY.Location = New System.Drawing.Point(147, 52)
+        Me.NumericUpDown_JointOffsetY.Controls.Add(Me.UcNumericUpDownBig6)
+        Me.NumericUpDown_JointOffsetY.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_JointOffsetY.Location = New System.Drawing.Point(116, 52)
+        Me.NumericUpDown_JointOffsetY.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_JointOffsetY.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_JointOffsetY.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_JointOffsetY.Name = "NumericUpDown_JointOffsetY"
-        Me.NumericUpDown_JointOffsetY.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_JointOffsetY.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_JointOffsetY.TabIndex = 23
         '
         'Label4
@@ -293,35 +228,16 @@ Partial Class UCControllerAttachmentsItem
         Me.Label4.TabIndex = 24
         Me.Label4.Text = "Y:"
         '
-        'Button_JointNegX
-        '
-        Me.Button_JointNegX.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointNegX.Location = New System.Drawing.Point(118, 23)
-        Me.Button_JointNegX.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_JointNegX.Name = "Button_JointNegX"
-        Me.Button_JointNegX.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointNegX.TabIndex = 21
-        Me.Button_JointNegX.Text = "<"
-        Me.Button_JointNegX.UseVisualStyleBackColor = True
-        '
-        'Button_JointPosX
-        '
-        Me.Button_JointPosX.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_JointPosX.Location = New System.Drawing.Point(234, 23)
-        Me.Button_JointPosX.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_JointPosX.Name = "Button_JointPosX"
-        Me.Button_JointPosX.Size = New System.Drawing.Size(23, 23)
-        Me.Button_JointPosX.TabIndex = 20
-        Me.Button_JointPosX.Text = ">"
-        Me.Button_JointPosX.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_JointOffsetX
         '
-        Me.NumericUpDown_JointOffsetX.Location = New System.Drawing.Point(147, 24)
+        Me.NumericUpDown_JointOffsetX.Controls.Add(Me.UcNumericUpDownBig5)
+        Me.NumericUpDown_JointOffsetX.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_JointOffsetX.Location = New System.Drawing.Point(116, 24)
+        Me.NumericUpDown_JointOffsetX.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_JointOffsetX.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_JointOffsetX.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_JointOffsetX.Name = "NumericUpDown_JointOffsetX"
-        Me.NumericUpDown_JointOffsetX.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_JointOffsetX.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_JointOffsetX.TabIndex = 20
         '
         'Label2
@@ -337,20 +253,12 @@ Partial Class UCControllerAttachmentsItem
         'GroupBox2
         '
         Me.GroupBox2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerNegYaw)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerNegZ)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerPosYaw)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerPosZ)
         Me.GroupBox2.Controls.Add(Me.NumericUpDown_ControllerYawCorrection)
         Me.GroupBox2.Controls.Add(Me.Label10)
         Me.GroupBox2.Controls.Add(Me.NumericUpDown_ControllerOffsetZ)
         Me.GroupBox2.Controls.Add(Me.Label6)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerNegY)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerPosY)
         Me.GroupBox2.Controls.Add(Me.NumericUpDown_ControllerOffsetY)
         Me.GroupBox2.Controls.Add(Me.Label7)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerNegX)
-        Me.GroupBox2.Controls.Add(Me.Button_ControllerPosX)
         Me.GroupBox2.Controls.Add(Me.NumericUpDown_ControllerOffsetX)
         Me.GroupBox2.Controls.Add(Me.Label8)
         Me.GroupBox2.Location = New System.Drawing.Point(333, 111)
@@ -361,57 +269,16 @@ Partial Class UCControllerAttachmentsItem
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Controller Offset"
         '
-        'Button_ControllerNegYaw
-        '
-        Me.Button_ControllerNegYaw.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerNegYaw.Location = New System.Drawing.Point(118, 107)
-        Me.Button_ControllerNegYaw.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_ControllerNegYaw.Name = "Button_ControllerNegYaw"
-        Me.Button_ControllerNegYaw.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerNegYaw.TabIndex = 37
-        Me.Button_ControllerNegYaw.Text = "<"
-        Me.Button_ControllerNegYaw.UseVisualStyleBackColor = True
-        '
-        'Button_ControllerNegZ
-        '
-        Me.Button_ControllerNegZ.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerNegZ.Location = New System.Drawing.Point(118, 79)
-        Me.Button_ControllerNegZ.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_ControllerNegZ.Name = "Button_ControllerNegZ"
-        Me.Button_ControllerNegZ.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerNegZ.TabIndex = 29
-        Me.Button_ControllerNegZ.Text = "<"
-        Me.Button_ControllerNegZ.UseVisualStyleBackColor = True
-        '
-        'Button_ControllerPosYaw
-        '
-        Me.Button_ControllerPosYaw.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerPosYaw.Location = New System.Drawing.Point(234, 107)
-        Me.Button_ControllerPosYaw.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_ControllerPosYaw.Name = "Button_ControllerPosYaw"
-        Me.Button_ControllerPosYaw.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerPosYaw.TabIndex = 34
-        Me.Button_ControllerPosYaw.Text = ">"
-        Me.Button_ControllerPosYaw.UseVisualStyleBackColor = True
-        '
-        'Button_ControllerPosZ
-        '
-        Me.Button_ControllerPosZ.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerPosZ.Location = New System.Drawing.Point(234, 79)
-        Me.Button_ControllerPosZ.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_ControllerPosZ.Name = "Button_ControllerPosZ"
-        Me.Button_ControllerPosZ.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerPosZ.TabIndex = 26
-        Me.Button_ControllerPosZ.Text = ">"
-        Me.Button_ControllerPosZ.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_ControllerYawCorrection
         '
-        Me.NumericUpDown_ControllerYawCorrection.Location = New System.Drawing.Point(147, 108)
+        Me.NumericUpDown_ControllerYawCorrection.Controls.Add(Me.UcNumericUpDownBig4)
+        Me.NumericUpDown_ControllerYawCorrection.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_ControllerYawCorrection.Location = New System.Drawing.Point(116, 108)
+        Me.NumericUpDown_ControllerYawCorrection.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_ControllerYawCorrection.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_ControllerYawCorrection.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_ControllerYawCorrection.Name = "NumericUpDown_ControllerYawCorrection"
-        Me.NumericUpDown_ControllerYawCorrection.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_ControllerYawCorrection.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_ControllerYawCorrection.TabIndex = 35
         '
         'Label10
@@ -426,11 +293,14 @@ Partial Class UCControllerAttachmentsItem
         '
         'NumericUpDown_ControllerOffsetZ
         '
-        Me.NumericUpDown_ControllerOffsetZ.Location = New System.Drawing.Point(147, 80)
+        Me.NumericUpDown_ControllerOffsetZ.Controls.Add(Me.UcNumericUpDownBig3)
+        Me.NumericUpDown_ControllerOffsetZ.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_ControllerOffsetZ.Location = New System.Drawing.Point(116, 80)
+        Me.NumericUpDown_ControllerOffsetZ.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_ControllerOffsetZ.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_ControllerOffsetZ.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_ControllerOffsetZ.Name = "NumericUpDown_ControllerOffsetZ"
-        Me.NumericUpDown_ControllerOffsetZ.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_ControllerOffsetZ.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_ControllerOffsetZ.TabIndex = 27
         '
         'Label6
@@ -443,35 +313,16 @@ Partial Class UCControllerAttachmentsItem
         Me.Label6.TabIndex = 28
         Me.Label6.Text = "Z"
         '
-        'Button_ControllerNegY
-        '
-        Me.Button_ControllerNegY.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerNegY.Location = New System.Drawing.Point(118, 51)
-        Me.Button_ControllerNegY.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_ControllerNegY.Name = "Button_ControllerNegY"
-        Me.Button_ControllerNegY.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerNegY.TabIndex = 25
-        Me.Button_ControllerNegY.Text = "<"
-        Me.Button_ControllerNegY.UseVisualStyleBackColor = True
-        '
-        'Button_ControllerPosY
-        '
-        Me.Button_ControllerPosY.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerPosY.Location = New System.Drawing.Point(234, 51)
-        Me.Button_ControllerPosY.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_ControllerPosY.Name = "Button_ControllerPosY"
-        Me.Button_ControllerPosY.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerPosY.TabIndex = 22
-        Me.Button_ControllerPosY.Text = ">"
-        Me.Button_ControllerPosY.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_ControllerOffsetY
         '
-        Me.NumericUpDown_ControllerOffsetY.Location = New System.Drawing.Point(147, 52)
+        Me.NumericUpDown_ControllerOffsetY.Controls.Add(Me.UcNumericUpDownBig2)
+        Me.NumericUpDown_ControllerOffsetY.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_ControllerOffsetY.Location = New System.Drawing.Point(116, 52)
+        Me.NumericUpDown_ControllerOffsetY.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_ControllerOffsetY.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_ControllerOffsetY.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_ControllerOffsetY.Name = "NumericUpDown_ControllerOffsetY"
-        Me.NumericUpDown_ControllerOffsetY.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_ControllerOffsetY.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_ControllerOffsetY.TabIndex = 23
         '
         'Label7
@@ -484,35 +335,16 @@ Partial Class UCControllerAttachmentsItem
         Me.Label7.TabIndex = 24
         Me.Label7.Text = "Y"
         '
-        'Button_ControllerNegX
-        '
-        Me.Button_ControllerNegX.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerNegX.Location = New System.Drawing.Point(118, 23)
-        Me.Button_ControllerNegX.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.Button_ControllerNegX.Name = "Button_ControllerNegX"
-        Me.Button_ControllerNegX.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerNegX.TabIndex = 21
-        Me.Button_ControllerNegX.Text = "<"
-        Me.Button_ControllerNegX.UseVisualStyleBackColor = True
-        '
-        'Button_ControllerPosX
-        '
-        Me.Button_ControllerPosX.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_ControllerPosX.Location = New System.Drawing.Point(234, 23)
-        Me.Button_ControllerPosX.Margin = New System.Windows.Forms.Padding(3, 3, 8, 3)
-        Me.Button_ControllerPosX.Name = "Button_ControllerPosX"
-        Me.Button_ControllerPosX.Size = New System.Drawing.Size(23, 23)
-        Me.Button_ControllerPosX.TabIndex = 20
-        Me.Button_ControllerPosX.Text = ">"
-        Me.Button_ControllerPosX.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_ControllerOffsetX
         '
-        Me.NumericUpDown_ControllerOffsetX.Location = New System.Drawing.Point(147, 24)
+        Me.NumericUpDown_ControllerOffsetX.Controls.Add(Me.UcNumericUpDownBig1)
+        Me.NumericUpDown_ControllerOffsetX.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_ControllerOffsetX.Location = New System.Drawing.Point(116, 24)
+        Me.NumericUpDown_ControllerOffsetX.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
         Me.NumericUpDown_ControllerOffsetX.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_ControllerOffsetX.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_ControllerOffsetX.Name = "NumericUpDown_ControllerOffsetX"
-        Me.NumericUpDown_ControllerOffsetX.Size = New System.Drawing.Size(81, 22)
+        Me.NumericUpDown_ControllerOffsetX.Size = New System.Drawing.Size(141, 22)
         Me.NumericUpDown_ControllerOffsetX.TabIndex = 20
         '
         'Label8
@@ -580,6 +412,134 @@ Partial Class UCControllerAttachmentsItem
         Me.LinkLabel_EditName.TabStop = True
         Me.LinkLabel_EditName.Text = "Edit Name"
         '
+        'UcNumericUpDownBig1
+        '
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetX
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 36
+        '
+        'UcNumericUpDownBig2
+        '
+        Me.UcNumericUpDownBig2.AutoSize = True
+        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig2.m_bDockOnControl = True
+        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetY
+        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig2.m_ResetVisible = True
+        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
+        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig2.TabIndex = 36
+        '
+        'UcNumericUpDownBig3
+        '
+        Me.UcNumericUpDownBig3.AutoSize = True
+        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig3.m_bDockOnControl = True
+        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetZ
+        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig3.m_ResetVisible = True
+        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
+        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig3.TabIndex = 36
+        '
+        'UcNumericUpDownBig4
+        '
+        Me.UcNumericUpDownBig4.AutoSize = True
+        Me.UcNumericUpDownBig4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig4.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig4.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig4.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig4.m_bDockOnControl = True
+        Me.UcNumericUpDownBig4.m_NumericUpDown = Me.NumericUpDown_ControllerYawCorrection
+        Me.UcNumericUpDownBig4.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig4.m_ResetVisible = True
+        Me.UcNumericUpDownBig4.Name = "UcNumericUpDownBig4"
+        Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig4.TabIndex = 36
+        '
+        'UcNumericUpDownBig5
+        '
+        Me.UcNumericUpDownBig5.AutoSize = True
+        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig5.m_bDockOnControl = True
+        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_JointOffsetX
+        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig5.m_ResetVisible = True
+        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
+        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig5.TabIndex = 36
+        '
+        'UcNumericUpDownBig6
+        '
+        Me.UcNumericUpDownBig6.AutoSize = True
+        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig6.m_bDockOnControl = True
+        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_JointOffsetY
+        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig6.m_ResetVisible = True
+        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
+        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig6.TabIndex = 36
+        '
+        'UcNumericUpDownBig7
+        '
+        Me.UcNumericUpDownBig7.AutoSize = True
+        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig7.m_bDockOnControl = True
+        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_JointOffsetZ
+        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig7.m_ResetVisible = True
+        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
+        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig7.TabIndex = 36
+        '
+        'UcNumericUpDownBig8
+        '
+        Me.UcNumericUpDownBig8.AutoSize = True
+        Me.UcNumericUpDownBig8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig8.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig8.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig8.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig8.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig8.m_bDockOnControl = True
+        Me.UcNumericUpDownBig8.m_NumericUpDown = Me.NumericUpDown_JointYawCorrection
+        Me.UcNumericUpDownBig8.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig8.m_ResetVisible = True
+        Me.UcNumericUpDownBig8.Name = "UcNumericUpDownBig8"
+        Me.UcNumericUpDownBig8.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig8.TabIndex = 36
+        '
         'UCControllerAttachmentsItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -603,15 +563,31 @@ Partial Class UCControllerAttachmentsItem
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_JointYawCorrection.ResumeLayout(False)
+        Me.NumericUpDown_JointYawCorrection.PerformLayout()
         CType(Me.NumericUpDown_JointOffsetZ, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_JointOffsetZ.ResumeLayout(False)
+        Me.NumericUpDown_JointOffsetZ.PerformLayout()
         CType(Me.NumericUpDown_JointOffsetY, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_JointOffsetY.ResumeLayout(False)
+        Me.NumericUpDown_JointOffsetY.PerformLayout()
         CType(Me.NumericUpDown_JointOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_JointOffsetX.ResumeLayout(False)
+        Me.NumericUpDown_JointOffsetX.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.NumericUpDown_ControllerYawCorrection, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_ControllerYawCorrection.ResumeLayout(False)
+        Me.NumericUpDown_ControllerYawCorrection.PerformLayout()
         CType(Me.NumericUpDown_ControllerOffsetZ, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_ControllerOffsetZ.ResumeLayout(False)
+        Me.NumericUpDown_ControllerOffsetZ.PerformLayout()
         CType(Me.NumericUpDown_ControllerOffsetY, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_ControllerOffsetY.ResumeLayout(False)
+        Me.NumericUpDown_ControllerOffsetY.PerformLayout()
         CType(Me.NumericUpDown_ControllerOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_ControllerOffsetX.ResumeLayout(False)
+        Me.NumericUpDown_ControllerOffsetX.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -623,41 +599,33 @@ Partial Class UCControllerAttachmentsItem
     Friend WithEvents Label3 As Label
     Friend WithEvents ComboBox_ParentControllerID As ComboBox
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents Button_JointNegZ As Button
-    Friend WithEvents Button_JointPosZ As Button
     Friend WithEvents NumericUpDown_JointOffsetZ As NumericUpDown
     Friend WithEvents Label5 As Label
-    Friend WithEvents Button_JointNegY As Button
-    Friend WithEvents Button_JointPosY As Button
     Friend WithEvents NumericUpDown_JointOffsetY As NumericUpDown
     Friend WithEvents Label4 As Label
-    Friend WithEvents Button_JointNegX As Button
-    Friend WithEvents Button_JointPosX As Button
     Friend WithEvents NumericUpDown_JointOffsetX As NumericUpDown
     Friend WithEvents Label2 As Label
     Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents Button_ControllerNegZ As Button
-    Friend WithEvents Button_ControllerPosZ As Button
     Friend WithEvents NumericUpDown_ControllerOffsetZ As NumericUpDown
     Friend WithEvents Label6 As Label
-    Friend WithEvents Button_ControllerNegY As Button
-    Friend WithEvents Button_ControllerPosY As Button
     Friend WithEvents NumericUpDown_ControllerOffsetY As NumericUpDown
     Friend WithEvents Label7 As Label
-    Friend WithEvents Button_ControllerNegX As Button
-    Friend WithEvents Button_ControllerPosX As Button
     Friend WithEvents NumericUpDown_ControllerOffsetX As NumericUpDown
     Friend WithEvents Label8 As Label
     Friend WithEvents TextBox_Fps As TextBox
-    Friend WithEvents Button_JointNegYaw As Button
-    Friend WithEvents Button_JointPosYaw As Button
     Friend WithEvents NumericUpDown_JointYawCorrection As NumericUpDown
     Friend WithEvents Label9 As Label
-    Friend WithEvents Button_ControllerNegYaw As Button
-    Friend WithEvents Button_ControllerPosYaw As Button
     Friend WithEvents NumericUpDown_ControllerYawCorrection As NumericUpDown
     Friend WithEvents Label10 As Label
     Friend WithEvents CheckBox_JointOnly As CheckBox
     Friend WithEvents TextBox_TrackerName As TextBox
     Friend WithEvents LinkLabel_EditName As LinkLabel
+    Friend WithEvents UcNumericUpDownBig8 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig7 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig6 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig5 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig4 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig3 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig2 As UCNumericUpDownBig
+    Friend WithEvents UcNumericUpDownBig1 As UCNumericUpDownBig
 End Class

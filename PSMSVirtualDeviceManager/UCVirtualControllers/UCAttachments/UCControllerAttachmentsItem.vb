@@ -186,82 +186,82 @@ Public Class UCControllerAttachmentsItem
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointNegX_Click(sender As Object, e As EventArgs) Handles Button_JointNegX.Click
+    Private Sub Button_JointNegX_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointOffsetX.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointNegY_Click(sender As Object, e As EventArgs) Handles Button_JointNegY.Click
+    Private Sub Button_JointNegY_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointOffsetY.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointNegZ_Click(sender As Object, e As EventArgs) Handles Button_JointNegZ.Click
+    Private Sub Button_JointNegZ_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointOffsetZ.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointPosX_Click(sender As Object, e As EventArgs) Handles Button_JointPosX.Click
+    Private Sub Button_JointPosX_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointOffsetX.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointPosY_Click(sender As Object, e As EventArgs) Handles Button_JointPosY.Click
+    Private Sub Button_JointPosY_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointOffsetY.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointPosZ_Click(sender As Object, e As EventArgs) Handles Button_JointPosZ.Click
+    Private Sub Button_JointPosZ_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointOffsetZ.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerNegX_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegX.Click
+    Private Sub Button_ControllerNegX_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerOffsetX.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerNegY_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegY.Click
+    Private Sub Button_ControllerNegY_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerOffsetY.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerNegZ_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegZ.Click
+    Private Sub Button_ControllerNegZ_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerOffsetZ.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerPosX_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosX.Click
+    Private Sub Button_ControllerPosX_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerOffsetX.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerPosY_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosY.Click
+    Private Sub Button_ControllerPosY_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerOffsetY.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerPosZ_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosZ.Click
+    Private Sub Button_ControllerPosZ_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerOffsetZ.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointNegYaw_Click(sender As Object, e As EventArgs) Handles Button_JointNegYaw.Click
+    Private Sub Button_JointNegYaw_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointYawCorrection.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_JointPosYaw_Click(sender As Object, e As EventArgs) Handles Button_JointPosYaw.Click
+    Private Sub Button_JointPosYaw_Click(sender As Object, e As EventArgs)
         NumericUpDown_JointYawCorrection.Value += 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerNegYaw_Click(sender As Object, e As EventArgs) Handles Button_ControllerNegYaw.Click
+    Private Sub Button_ControllerNegYaw_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerYawCorrection.Value -= 5
         SetUnsavedState(True)
     End Sub
 
-    Private Sub Button_ControllerPosYaw_Click(sender As Object, e As EventArgs) Handles Button_ControllerPosYaw.Click
+    Private Sub Button_ControllerPosYaw_Click(sender As Object, e As EventArgs)
         NumericUpDown_ControllerYawCorrection.Value += 5
         SetUnsavedState(True)
     End Sub

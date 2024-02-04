@@ -199,6 +199,12 @@
     <Compile Include="Classes\Tools\ClassWebClientEx.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\Tools\UCNumericUpDownBig.Designer.vb">
+      <DependentUpon>UCNumericUpDownBig.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Tools\UCNumericUpDownBig.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -354,6 +360,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Classes\Tools\FormLoading.resx">
       <DependentUpon>FormLoading.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Tools\UCNumericUpDownBig.resx">
+      <DependentUpon>UCNumericUpDownBig.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.vb</DependentUpon>

@@ -36,8 +36,6 @@ Partial Class UCRemoteDeviceItem
         Me.TextBox_Battery = New System.Windows.Forms.TextBox()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Button_YawOffsetNeg = New System.Windows.Forms.Button()
-        Me.Button_YawOffsetPos = New System.Windows.Forms.Button()
         Me.NumericUpDown_YawOffset = New System.Windows.Forms.NumericUpDown()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.Panel_Status = New System.Windows.Forms.Panel()
@@ -46,7 +44,9 @@ Partial Class UCRemoteDeviceItem
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Button_SaveSettings = New System.Windows.Forms.Button()
         Me.Button_Recenter = New System.Windows.Forms.Button()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_YawOffset.SuspendLayout()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -162,33 +162,13 @@ Partial Class UCRemoteDeviceItem
         Me.Label2.TabIndex = 14
         Me.Label2.Text = "Yaw Correction:"
         '
-        'Button_YawOffsetNeg
-        '
-        Me.Button_YawOffsetNeg.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_YawOffsetNeg.Location = New System.Drawing.Point(108, 150)
-        Me.Button_YawOffsetNeg.Name = "Button_YawOffsetNeg"
-        Me.Button_YawOffsetNeg.Size = New System.Drawing.Size(23, 23)
-        Me.Button_YawOffsetNeg.TabIndex = 15
-        Me.Button_YawOffsetNeg.Text = "<"
-        Me.Button_YawOffsetNeg.UseVisualStyleBackColor = True
-        '
-        'Button_YawOffsetPos
-        '
-        Me.Button_YawOffsetPos.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_YawOffsetPos.Location = New System.Drawing.Point(235, 150)
-        Me.Button_YawOffsetPos.Name = "Button_YawOffsetPos"
-        Me.Button_YawOffsetPos.Size = New System.Drawing.Size(23, 23)
-        Me.Button_YawOffsetPos.TabIndex = 16
-        Me.Button_YawOffsetPos.Text = ">"
-        Me.Button_YawOffsetPos.UseVisualStyleBackColor = True
-        '
         'NumericUpDown_YawOffset
         '
-        Me.NumericUpDown_YawOffset.Location = New System.Drawing.Point(137, 151)
+        Me.NumericUpDown_YawOffset.Location = New System.Drawing.Point(108, 151)
         Me.NumericUpDown_YawOffset.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_YawOffset.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_YawOffset.Name = "NumericUpDown_YawOffset"
-        Me.NumericUpDown_YawOffset.Size = New System.Drawing.Size(92, 22)
+        Me.NumericUpDown_YawOffset.Size = New System.Drawing.Size(150, 22)
         Me.NumericUpDown_YawOffset.TabIndex = 13
         '
         'TextBox_Gyro
@@ -282,6 +262,22 @@ Partial Class UCRemoteDeviceItem
         Me.Button_Recenter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Recenter.UseVisualStyleBackColor = True
         '
+        'UcNumericUpDownBig1
+        '
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(84, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_YawOffset
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 19
+        '
         'UCRemoteDeviceItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -290,8 +286,6 @@ Partial Class UCRemoteDeviceItem
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Controls.Add(Me.Panel_Status)
         Me.Controls.Add(Me.TextBox_Gyro)
-        Me.Controls.Add(Me.Button_YawOffsetPos)
-        Me.Controls.Add(Me.Button_YawOffsetNeg)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.NumericUpDown_YawOffset)
         Me.Controls.Add(Me.TextBox_Fps)
@@ -307,6 +301,8 @@ Partial Class UCRemoteDeviceItem
         Me.Name = "UCRemoteDeviceItem"
         Me.Size = New System.Drawing.Size(617, 251)
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_YawOffset.ResumeLayout(False)
+        Me.NumericUpDown_YawOffset.PerformLayout()
         Me.Panel_Status.ResumeLayout(False)
         Me.Panel_Status.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -326,12 +322,11 @@ Partial Class UCRemoteDeviceItem
     Friend WithEvents TextBox_Battery As TextBox
     Friend WithEvents TextBox_Fps As TextBox
     Friend WithEvents Label2 As Label
-    Friend WithEvents Button_YawOffsetNeg As Button
-    Friend WithEvents Button_YawOffsetPos As Button
     Friend WithEvents NumericUpDown_YawOffset As NumericUpDown
     Friend WithEvents TextBox_Gyro As TextBox
     Friend WithEvents Panel_Status As Panel
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
+    Friend WithEvents UcNumericUpDownBig1 As UCNumericUpDownBig
 End Class
