@@ -2052,15 +2052,18 @@ Public Class UCVirtualMotionTrackerItem
                                 mControllerPos.Y = 0.0F
                                 mFromDevicePos.Y = 0.0F
 
-                                Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+                                ' Make sure the distance is big enough to get the angle.
+                                If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
+                                    Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
 
-                                mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
+                                    mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
 
-                                mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
+                                    mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                    mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
 
-                                bDoFactoryRecenter = False
+                                    bDoFactoryRecenter = False
+                                End If
                             End If
                     End Select
 
@@ -2168,17 +2171,20 @@ Public Class UCVirtualMotionTrackerItem
                                 mControllerPos.Y = 0.0F
                                 mFromDevicePos.Y = 0.0F
 
-                                Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+                                ' Make sure the distance is big enough to get the angle.
+                                If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
+                                    Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
 
-                                mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
+                                    mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
 
-                                If (Not bIsHmd) Then
-                                    mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                    mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
+                                    If (Not bIsHmd) Then
+                                        mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                        mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
+                                    End If
+
+                                    bDoFactoryRecenter = False
                                 End If
-
-                                bDoFactoryRecenter = False
                             Else
                                 bDoFactoryRecenter = False
                             End If
