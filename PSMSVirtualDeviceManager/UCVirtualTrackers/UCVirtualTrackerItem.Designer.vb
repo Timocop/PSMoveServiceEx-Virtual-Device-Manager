@@ -63,6 +63,8 @@ Partial Class UCVirtualTrackerItem
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.ComboBox_CameraResolution = New System.Windows.Forms.ComboBox()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -351,6 +353,8 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_TrackerProperties
         '
+        Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraResolution)
+        Me.TabPage_TrackerProperties.Controls.Add(Me.Label11)
         Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_DeviceSupersampling)
         Me.TabPage_TrackerProperties.Controls.Add(Me.Label10)
         Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_UseMjpg)
@@ -502,6 +506,31 @@ Partial Class UCVirtualTrackerItem
         Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip_Info.ToolTipTitle = "Information"
         '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(6, 119)
+        Me.Label11.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(66, 13)
+        Me.Label11.TabIndex = 19
+        Me.Label11.Text = "Resolution:"
+        '
+        'ComboBox_CameraResolution
+        '
+        Me.ComboBox_CameraResolution.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_CameraResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_CameraResolution.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_CameraResolution.FormattingEnabled = True
+        Me.ComboBox_CameraResolution.Location = New System.Drawing.Point(168, 116)
+        Me.ComboBox_CameraResolution.Name = "ComboBox_CameraResolution"
+        Me.ComboBox_CameraResolution.Size = New System.Drawing.Size(301, 21)
+        Me.ComboBox_CameraResolution.TabIndex = 20
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_CameraResolution, "The image interpolation method is used when the image is not at the recommended r" &
+        "esolution. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "However, using more advanced interpolation methods can lead to incr" &
+        "eased processing usage.")
+        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -571,4 +600,6 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Label10 As Label
     Friend WithEvents LinkLabel_MiscSettings As LinkLabel
     Friend WithEvents ToolTip_Info As ToolTip
+    Friend WithEvents ComboBox_CameraResolution As ComboBox
+    Friend WithEvents Label11 As Label
 End Class

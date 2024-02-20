@@ -33,7 +33,6 @@ Public Class UCVirtualTrackerItem
         TrackBar_DeviceConstrast.Minimum = Short.MinValue
         TrackBar_DeviceConstrast.Maximum = Short.MaxValue
 
-
         g_mClassCaptureLogic = New ClassCaptureLogic(Me, mDeviceInfo.m_Index, mDeviceInfo.m_Path)
         Label_FriendlyName.Text = mDeviceInfo.m_Name
 
@@ -69,6 +68,19 @@ Public Class UCVirtualTrackerItem
             g_bIgnoreEvents = False
         End Try
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_CameraResolution.Items.Clear()
+            ComboBox_CameraResolution.Items.Add("480p (default)")
+            ComboBox_CameraResolution.Items.Add("1080p")
+            If ([Enum].GetNames(GetType(ClassCaptureLogic.ENUM_RESOLUTION)).Count <> ComboBox_CameraResolution.Items.Count) Then
+                Throw New ArgumentException("Not equal")
+            End If
+            ComboBox_CameraResolution.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
 
         ' Add a "Please wait" UI message while initalizing the video input device
         g_mMessageLabel = New Label()
@@ -274,6 +286,22 @@ Public Class UCVirtualTrackerItem
         SetUnsavedState(True)
     End Sub
 
+    Private Sub ComboBox_CameraResolution_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_CameraResolution.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_CameraResolution = CType(ComboBox_CameraResolution.SelectedIndex, ClassCaptureLogic.ENUM_RESOLUTION)
+        SetUnsavedState(True)
+
+        ' Config is currently loading, dont show messagebox
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    End Sub
+
     Private Sub CheckBox_UseMjpg_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_UseMjpg.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
@@ -378,7 +406,7 @@ Public Class UCVirtualTrackerItem
         Private g_mDeviceWatchdogThread As Threading.Thread
 
         Private g_mCapture As OpenCvSharp.VideoCapture
-        Private g_mCaptureFrame As OpenCvSharp.Mat
+        Private g_mCaptureFrame As OpenCvSharp.Mat = Nothing
         Private g_mPipEvent As New Threading.AutoResetEvent(False)
 
         Private g_mThreadLock As New Object
@@ -402,6 +430,12 @@ Public Class UCVirtualTrackerItem
         End Enum
         Private g_iImageInterpolation As ENUM_INTERPOLATION = ENUM_INTERPOLATION.NEARST_NEIGHBOR
 
+        Enum ENUM_RESOLUTION
+            SD
+            HD
+        End Enum
+        Private g_iCameraResolution As ENUM_RESOLUTION = ENUM_RESOLUTION.SD
+
         Public g_mClassConfig As ClassConfig
 
         Public Sub New(_UCVirtualTrackerItem As UCVirtualTrackerItem, _DeviceIndex As Integer, _DevicePath As String)
@@ -410,8 +444,6 @@ Public Class UCVirtualTrackerItem
             g_sDevicePath = _DevicePath
 
             g_mClassConfig = New ClassConfig(Me)
-
-            g_mCaptureFrame = New OpenCvSharp.Mat(480, 640, OpenCvSharp.MatType.CV_8UC3)
         End Sub
 
         ''' <summary>
@@ -531,6 +563,21 @@ Public Class UCVirtualTrackerItem
             g_mDeviceWatchdogThread.IsBackground = True
             g_mDeviceWatchdogThread.Start()
         End Sub
+
+        ReadOnly Property m_CaptureResolution As ENUM_RESOLUTION
+            Get
+                Select Case (m_CaptureFrame.Rows)
+                    Case 480
+                        Return ENUM_RESOLUTION.SD
+
+                    Case 1080
+                        Return ENUM_RESOLUTION.HD
+
+                End Select
+
+                Return CType(-1, ENUM_RESOLUTION)
+            End Get
+        End Property
 
         Public Property m_Capture As OpenCvSharp.VideoCapture
             Get
@@ -684,6 +731,27 @@ Public Class UCVirtualTrackerItem
             End Set
         End Property
 
+        Public Property m_CameraResolution As ENUM_RESOLUTION
+            Get
+                SyncLock g_mThreadLock
+                    Return g_iCameraResolution
+                End SyncLock
+            End Get
+            Set(value As ENUM_RESOLUTION)
+                If (value < ENUM_RESOLUTION.SD) Then
+                    value = ENUM_RESOLUTION.SD
+                End If
+
+                If (value > [Enum].GetNames(GetType(ENUM_RESOLUTION)).Count - 1) Then
+                    value = ENUM_RESOLUTION.HD
+                End If
+
+                SyncLock g_mThreadLock
+                    g_iCameraResolution = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Function GetImageInterpolation() As OpenCvSharp.InterpolationFlags
             Select Case (m_ImageInterpolation)
                 Case ENUM_INTERPOLATION.NEARST_NEIGHBOR
@@ -758,6 +826,22 @@ Public Class UCVirtualTrackerItem
                     Dim iFrameW As Integer = 640
                     Dim iFrameR As Integer = 30
 
+                    Select Case (m_CameraResolution)
+                        Case ENUM_RESOLUTION.HD
+                            iFrameH = 1080
+                            iFrameW = 1920
+
+                    End Select
+
+                    Dim iUnscaledFrameH = iFrameH
+                    Dim iUnscaledFrameW = iFrameW
+
+                    If (g_mCaptureFrame IsNot Nothing AndAlso Not g_mCaptureFrame.IsDisposed) Then
+                        g_mCaptureFrame.Dispose()
+                        g_mCaptureFrame = Nothing
+                    End If
+                    g_mCaptureFrame = New OpenCvSharp.Mat(iFrameH, iFrameW, OpenCvSharp.MatType.CV_8UC3)
+
                     If (m_Supersampling) Then
                         iFrameH *= 2
                         iFrameW *= 2
@@ -813,8 +897,9 @@ Public Class UCVirtualTrackerItem
                     End If
 
                     Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
-                    If (sCurrentResolution <> "640x480") Then
-                        sCurrentResolution &= " (not recommended resolution, will be scaled to 640x480)"
+                    Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
+                    If (sCurrentResolution <> sUnscaledResolution) Then
+                        sCurrentResolution &= String.Format(" (not recommended resolution, will be scaled to {0})", sUnscaledResolution)
                     End If
 
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
@@ -1058,75 +1143,79 @@ Public Class UCVirtualTrackerItem
             Dim iFpsSec As Integer = 1
             Dim iFpsCount As Integer = 0
 
-            While True
-                Dim bExceptionSleep As Boolean = False
+            Try
+                Using mFrame As New OpenCvSharp.Mat(m_CaptureFrame.Rows, m_CaptureFrame.Cols, OpenCvSharp.MatType.CV_8UC3)
+                    While True
+                        Dim bExceptionSleep As Boolean = False
 
-                Try
-                    Using mFrame As New OpenCvSharp.Mat(480, 640, OpenCvSharp.MatType.CV_8UC3)
-                        If (Not m_Capture.IsOpened) Then
-                            Throw New ArgumentException("Video capture not open.")
-                        End If
-
-                        If (Not m_Capture.Read(mFrame)) Then
-                            Throw New ArgumentException("Unable to read video capture.")
-                        End If
-
-                        If (mFrame.Empty) Then
-                            Throw New ArgumentException("Frame empty.")
-                        End If
-
-                        ' Calculate FPS
-                        If (True) Then
-                            iFPS += CInt(New TimeSpan(0, 0, 1).Ticks / Math.Max(1, mFrameDelay.ElapsedTicks))
-                            iFpsCount += 1
-                            mFrameDelay.Restart()
-
-                            If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
-                                Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1))
-
-                                mFramePrint.Restart()
-                                iFPS = 0
-                                iFpsCount = 0
+                        Try
+                            If (Not m_Capture.IsOpened) Then
+                                Throw New ArgumentException("Video capture not open.")
                             End If
-                        End If
 
-                        ' Sometimes setting resolutions on devices wont work. (e.g. Kinect One)
-                        ' We NEED to resize the image to 640x480 because our buffer is only that size!
-                        Using mNewFrame = mFrame.Resize(New OpenCvSharp.Size(640, 480), 0, 0, GetImageInterpolation())
-                            mNewFrame.CopyTo(mFrame)
-                        End Using
+                            If (Not m_Capture.Read(mFrame)) Then
+                                Throw New ArgumentException("Unable to read video capture.")
+                            End If
 
-                        ' PSEyes have their Y flipped.
-                        ' But some video input devices do Not. So flip them here instead.
-                        If (m_FlipImage) Then
-                            Using mNewMat = mFrame.Flip(OpenCvSharp.FlipMode.Y)
-                                mNewMat.CopyTo(mFrame)
-                            End Using
-                        End If
+                            If (mFrame.Empty) Then
+                                Throw New ArgumentException("Frame empty.")
+                            End If
 
-                        ' Copy to global frame
-                        mFrame.CopyTo(m_CaptureFrame)
+                            ' Calculate FPS
+                            If (True) Then
+                                iFPS += CInt(New TimeSpan(0, 0, 1).Ticks / Math.Max(1, mFrameDelay.ElapsedTicks))
+                                iFpsCount += 1
+                                mFrameDelay.Restart()
 
-                        g_mPipEvent.Set()
+                                If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
+                                    Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
+                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1))
 
-                        ' Preview captured image
-                        ' $TODO: Quite performance heavy, find a better way.
-                        If (mFrameImage.ElapsedMilliseconds > 100) Then
-                            mFrameImage.Restart()
+                                    mFramePrint.Restart()
+                                    iFPS = 0
+                                    iFpsCount = 0
+                                End If
+                            End If
 
-                            If (g_bShowCaptureImage) Then
-                                Dim mBitmap As Bitmap = Nothing
-
-                                Using mStream As New IO.MemoryStream
-                                    Dim iByte As Byte() = mFrame.ImEncode()
-
-                                    mStream.Write(iByte, 0, iByte.Length)
-
-                                    mBitmap = New Bitmap(mStream)
+                            ' Sometimes setting resolutions on devices wont work. (e.g. Kinect One)
+                            ' We NEED to resize the image to 640x480 because our buffer is only that size!
+                            If (mFrame.Cols <> m_CaptureFrame.Cols OrElse mFrame.Rows <> m_CaptureFrame.Rows) Then
+                                Using mNewFrame = mFrame.Resize(New OpenCvSharp.Size(m_CaptureFrame.Cols, m_CaptureFrame.Rows), 0, 0, GetImageInterpolation())
+                                    mNewFrame.CopyTo(mFrame)
                                 End Using
+                            End If
 
-                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem,
+
+                            ' PSEyes have their Y flipped.
+                            ' But some video input devices do Not. So flip them here instead.
+                            If (m_FlipImage) Then
+                                Using mNewMat = mFrame.Flip(OpenCvSharp.FlipMode.Y)
+                                    mNewMat.CopyTo(mFrame)
+                                End Using
+                            End If
+
+                            ' Copy to global frame
+                            mFrame.CopyTo(m_CaptureFrame)
+
+                            g_mPipEvent.Set()
+
+                            ' Preview captured image
+                            ' $TODO: Quite performance heavy, find a better way.
+                            If (mFrameImage.ElapsedMilliseconds > 100) Then
+                                mFrameImage.Restart()
+
+                                If (g_bShowCaptureImage) Then
+                                    Dim mBitmap As Bitmap = Nothing
+
+                                    Using mStream As New IO.MemoryStream
+                                        Dim iByte As Byte() = mFrame.ImEncode()
+
+                                        mStream.Write(iByte, 0, iByte.Length)
+
+                                        mBitmap = New Bitmap(mStream)
+                                    End Using
+
+                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem,
                                                         Sub()
                                                             If (g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image IsNot Nothing) Then
                                                                 g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image.Dispose()
@@ -1135,8 +1224,8 @@ Public Class UCVirtualTrackerItem
 
                                                             g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = mBitmap
                                                         End Sub)
-                            Else
-                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem,
+                                Else
+                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem,
                                                         Sub()
                                                             If (g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image IsNot Nothing) Then
                                                                 g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image.Dispose()
@@ -1145,33 +1234,38 @@ Public Class UCVirtualTrackerItem
 
                                                             g_mUCVirtualTrackerItem.PictureBox_CaptureImage.Image = Nothing
                                                         End Sub)
+                                End If
                             End If
+                        Catch ex As Threading.ThreadAbortException
+                            Throw
+                        Catch ex As Exception
+                            bExceptionSleep = True
+
+                            If (mFramePrint.ElapsedMilliseconds > 1000) Then
+                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
+
+                                mFramePrint.Restart()
+                                iFPS = 0
+                                iFpsCount = 0
+                            End If
+                        End Try
+
+                        ' Thread.Abort will not trigger inside a Try/Catch
+                        If (bExceptionSleep) Then
+                            bExceptionSleep = False
+                            Threading.Thread.Sleep(1000)
                         End If
-                    End Using
-                Catch ex As Threading.ThreadAbortException
-                    Throw
-                Catch ex As Exception
-                    bExceptionSleep = True
-
-                    If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
-
-                        mFramePrint.Restart()
-                        iFPS = 0
-                        iFpsCount = 0
-                    End If
-                End Try
-
-                ' Thread.Abort will not trigger inside a Try/Catch
-                If (bExceptionSleep) Then
-                    bExceptionSleep = False
-                    Threading.Thread.Sleep(1000)
-                End If
-            End While
+                    End While
+                End Using
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+            End Try
         End Sub
 
         Private Sub PipeThread()
             Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame.Height * m_CaptureFrame.Width * 3)
+            Dim iBytes = New Byte(VIRT_BUFFER_SIZE) {}
 
             Dim mFrameDelay As New Stopwatch
             Dim mFrameImage As New Stopwatch
@@ -1194,7 +1288,9 @@ Public Class UCVirtualTrackerItem
                         Throw New ArgumentException("Invalid pipe index.")
                     End If
 
-                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", "PSMoveSerivceEx\VirtPSeyeStream_" & iPipeIndex, IO.Pipes.PipeDirection.Out)
+                    Dim sPipeName As String = String.Format("PSMoveSerivceEx\VirtPSeyeStream{0}_{1}", CInt(m_CaptureResolution), iPipeIndex)
+
+                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", sPipeName, IO.Pipes.PipeDirection.Out)
                         ' The thread when aborting will hang if we dont put a timeout.
                         mPipe.Connect(5000)
 
@@ -1217,7 +1313,6 @@ Public Class UCVirtualTrackerItem
 
                             g_mPipEvent.WaitOne(New TimeSpan(0, 0, 5))
 
-                            Dim iBytes = New Byte(VIRT_BUFFER_SIZE) {}
                             Marshal.Copy(m_CaptureFrame.Data, iBytes, 0, iBytes.Length)
 
                             ' Write to pipe and wait for response.
@@ -1317,6 +1412,7 @@ Public Class UCVirtualTrackerItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ImageInterpolation", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex)))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "UseMJPG", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked, "True", "False")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Supersampling", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked, "True", "False")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Resolution", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraResolution.SelectedIndex)))
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
@@ -1342,6 +1438,7 @@ Public Class UCVirtualTrackerItem
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
                         mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "False") = "True")
                         mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
+                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ClassCaptureLogic.ENUM_RESOLUTION.SD))))
 
                         mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using

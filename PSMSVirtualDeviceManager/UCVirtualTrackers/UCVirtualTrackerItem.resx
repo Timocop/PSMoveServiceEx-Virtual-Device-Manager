@@ -120,6 +120,9 @@
   <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="CheckBox_DeviceSupersampling.ToolTip" xml:space="preserve">
     <value>Supersampling involves capturing higher-resolution images from the video input device and then reducing their size through downscaling to create smoother images. 
 However, this process requires more processing power.</value>
