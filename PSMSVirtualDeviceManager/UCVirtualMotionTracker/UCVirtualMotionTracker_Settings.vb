@@ -316,7 +316,16 @@
             Return
         End If
 
-        g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs = CLng(NumericUpDown_OscThreadSleep.Value)
+        g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs = CInt(NumericUpDown_OscThreadSleep.Value)
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_OscMaxThreadFps_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_OscMaxThreadFps.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_ControllerSettings.m_OscMaxThreadFps = CInt(NumericUpDown_OscMaxThreadFps.Value)
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 

@@ -171,6 +171,9 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
+        Me.NumericUpDown_OscMaxThreadFps = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.Label65 = New System.Windows.Forms.Label()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.CheckBox_OptimizePackets = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
@@ -305,6 +308,8 @@ Partial Class UCVirtualMotionTracker
         CType(Me.NumericUpDown_PlayCalibForwardOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_PlayCalibForwardOffset.SuspendLayout()
         Me.TabPage_SettingsOther.SuspendLayout()
+        CType(Me.NumericUpDown_OscMaxThreadFps, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_OscMaxThreadFps.SuspendLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_OscThreadSleep.SuspendLayout()
         Me.TabPage_PlayspaceCalib.SuspendLayout()
@@ -2103,6 +2108,8 @@ Partial Class UCVirtualMotionTracker
         'TabPage_SettingsOther
         '
         Me.TabPage_SettingsOther.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscMaxThreadFps)
+        Me.TabPage_SettingsOther.Controls.Add(Me.Label65)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label64)
         Me.TabPage_SettingsOther.Controls.Add(Me.CheckBox_OptimizePackets)
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscThreadSleep)
@@ -2117,12 +2124,50 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
         '
+        'NumericUpDown_OscMaxThreadFps
+        '
+        Me.NumericUpDown_OscMaxThreadFps.Controls.Add(Me.UcNumericUpDownBig18)
+        Me.NumericUpDown_OscMaxThreadFps.Location = New System.Drawing.Point(229, 209)
+        Me.NumericUpDown_OscMaxThreadFps.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
+        Me.NumericUpDown_OscMaxThreadFps.Minimum = New Decimal(New Integer() {30, 0, 0, 0})
+        Me.NumericUpDown_OscMaxThreadFps.Name = "NumericUpDown_OscMaxThreadFps"
+        Me.NumericUpDown_OscMaxThreadFps.Size = New System.Drawing.Size(118, 22)
+        Me.NumericUpDown_OscMaxThreadFps.TabIndex = 53
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscMaxThreadFps, "Default: 200")
+        Me.NumericUpDown_OscMaxThreadFps.Value = New Decimal(New Integer() {200, 0, 0, 0})
+        '
+        'UcNumericUpDownBig18
+        '
+        Me.UcNumericUpDownBig18.AutoSize = True
+        Me.UcNumericUpDownBig18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig18.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig18.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig18.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig18.Location = New System.Drawing.Point(52, 0)
+        Me.UcNumericUpDownBig18.m_bDockOnControl = True
+        Me.UcNumericUpDownBig18.m_NumericUpDown = Me.NumericUpDown_OscMaxThreadFps
+        Me.UcNumericUpDownBig18.m_ResetValue = New Decimal(New Integer() {200, 0, 0, 0})
+        Me.UcNumericUpDownBig18.m_ResetVisible = True
+        Me.UcNumericUpDownBig18.Name = "UcNumericUpDownBig18"
+        Me.UcNumericUpDownBig18.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig18.TabIndex = 52
+        '
+        'Label65
+        '
+        Me.Label65.AutoSize = True
+        Me.Label65.Location = New System.Drawing.Point(16, 211)
+        Me.Label65.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label65.Name = "Label65"
+        Me.Label65.Size = New System.Drawing.Size(207, 13)
+        Me.Label65.TabIndex = 52
+        Me.Label65.Text = "Maximum processing thread framerate:"
+        '
         'Label64
         '
         Me.Label64.AutoSize = True
         Me.Label64.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label64.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label64.Location = New System.Drawing.Point(16, 227)
+        Me.Label64.Location = New System.Drawing.Point(16, 261)
         Me.Label64.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
         Me.Label64.Name = "Label64"
         Me.Label64.Padding = New System.Windows.Forms.Padding(3)
@@ -2134,8 +2179,8 @@ Partial Class UCVirtualMotionTracker
         '
         Me.CheckBox_OptimizePackets.AutoSize = True
         Me.CheckBox_OptimizePackets.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_OptimizePackets.Location = New System.Drawing.Point(16, 206)
-        Me.CheckBox_OptimizePackets.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_OptimizePackets.Location = New System.Drawing.Point(16, 240)
+        Me.CheckBox_OptimizePackets.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_OptimizePackets.Name = "CheckBox_OptimizePackets"
         Me.CheckBox_OptimizePackets.Size = New System.Drawing.Size(208, 18)
         Me.CheckBox_OptimizePackets.TabIndex = 50
@@ -2145,7 +2190,7 @@ Partial Class UCVirtualMotionTracker
         'NumericUpDown_OscThreadSleep
         '
         Me.NumericUpDown_OscThreadSleep.Controls.Add(Me.UcNumericUpDownBig4)
-        Me.NumericUpDown_OscThreadSleep.Location = New System.Drawing.Point(177, 178)
+        Me.NumericUpDown_OscThreadSleep.Location = New System.Drawing.Point(229, 178)
         Me.NumericUpDown_OscThreadSleep.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.NumericUpDown_OscThreadSleep.Name = "NumericUpDown_OscThreadSleep"
         Me.NumericUpDown_OscThreadSleep.Size = New System.Drawing.Size(118, 22)
@@ -3094,6 +3139,9 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibForwardOffset.PerformLayout()
         Me.TabPage_SettingsOther.ResumeLayout(False)
         Me.TabPage_SettingsOther.PerformLayout()
+        CType(Me.NumericUpDown_OscMaxThreadFps, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_OscMaxThreadFps.ResumeLayout(False)
+        Me.NumericUpDown_OscMaxThreadFps.PerformLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_OscThreadSleep.ResumeLayout(False)
         Me.NumericUpDown_OscThreadSleep.PerformLayout()
@@ -3356,4 +3404,7 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents UcNumericUpDownBig9 As UCNumericUpDownBig
     Friend WithEvents UcNumericUpDownBig8 As UCNumericUpDownBig
     Friend WithEvents UcNumericUpDownBig17 As UCNumericUpDownBig
+    Friend WithEvents NumericUpDown_OscMaxThreadFps As NumericUpDown
+    Friend WithEvents UcNumericUpDownBig18 As UCNumericUpDownBig
+    Friend WithEvents Label65 As Label
 End Class

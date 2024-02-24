@@ -984,7 +984,8 @@ Public Class UCVirtualMotionTracker
             Private g_iHmdRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
             Private g_sHmdRecenterFromDeviceName As String = ""
             Private g_iRecenterButtonTimeMs As Long = 500
-            Private g_iOscThreadSleepMs As Long = 1
+            Private g_iOscThreadSleepMs As Integer = 1
+            Private g_iOscMaxThreadFps As Integer = 200
             Private g_iTouchpadTouchAreaCm As Single = 7.5F
             Private g_iTouchpadClickDeadzone As Single = 0.25F
             Private g_bEnablePlayspaceRecenter As Boolean
@@ -1131,11 +1132,11 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Property m_OscThreadSleepMs As Long
+            Property m_OscThreadSleepMs As Integer
                 Get
                     Return g_iOscThreadSleepMs
                 End Get
-                Set(value As Long)
+                Set(value As Integer)
                     If (value < 1) Then
                         value = 1
                     End If
@@ -1144,6 +1145,22 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iOscThreadSleepMs = value
+                End Set
+            End Property
+
+            Property m_OscMaxThreadFps As Integer
+                Get
+                    Return g_iOscMaxThreadFps
+                End Get
+                Set(value As Integer)
+                    If (value < 30) Then
+                        value = 30
+                    End If
+                    If (value > Short.MaxValue) Then
+                        value = Short.MaxValue
+                    End If
+
+                    g_iOscMaxThreadFps = value
                 End Set
             End Property
 
@@ -1317,8 +1334,12 @@ Public Class UCVirtualMotionTracker
                             m_ControllerSettings.m_RecenterButtonTimeMs = tmpLng
                         End If
 
-                        If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"), tmpLng)) Then
-                            m_ControllerSettings.m_OscThreadSleepMs = tmpLng
+                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"), tmpInt)) Then
+                            m_ControllerSettings.m_OscThreadSleepMs = tmpInt
+                        End If
+
+                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscMaxThreadFps", "200"), tmpInt)) Then
+                            m_ControllerSettings.m_OscMaxThreadFps = tmpInt
                         End If
 
                         If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadTouchAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1551,6 +1572,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HmdRecenterFromDeviceName", m_ControllerSettings.m_HmdRecenterFromDeviceName))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_ControllerSettings.m_RecenterButtonTimeMs)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_ControllerSettings.m_OscThreadSleepMs)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscMaxThreadFps", CStr(m_ControllerSettings.m_OscMaxThreadFps)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_ControllerSettings.m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_ControllerSettings.m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_ControllerSettings.m_EnablePlayspaceRecenter, "true", "false")))
@@ -1713,35 +1735,41 @@ Public Class UCVirtualMotionTracker
         Private Sub DevicesThread()
             Dim mLastDeviceList As Date = Now
 
+            Dim mClampedExecution As New ClassPrecisionSleep.ClassFrameTimed()
+
             While True
                 Try
-                    If (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
-                        Threading.Thread.Sleep(1000)
-                        Continue While
+                    If (mClampedExecution.CanExecute()) Then
+                        mClampedExecution.m_Framerate = g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscMaxThreadFps
+
+                        If (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                            Threading.Thread.Sleep(1000)
+                            Continue While
+                        End If
+
+                        ' Request Device List
+                        Dim mLastDeviceListTimespan = Now - mLastDeviceList
+
+                        If (mLastDeviceListTimespan.TotalMilliseconds > 1000) Then
+                            mLastDeviceList = Now
+
+                            g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicesList"))
+                        End If
+
+                        ' Request Device Pose 
+                        SyncLock _ThreadLock
+                            For Each mDevice In g_mDevicesDic
+                                g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicePose", New Object() {mDevice.Value.sSerial}))
+                            Next
+                        End SyncLock
                     End If
-
-                    ' Request Device List
-                    Dim mLastDeviceListTimespan = Now - mLastDeviceList
-
-                    If (mLastDeviceListTimespan.TotalMilliseconds > 1000) Then
-                        mLastDeviceList = Now
-
-                        g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicesList"))
-                    End If
-
-                    ' Request Device Pose 
-                    SyncLock _ThreadLock
-                        For Each mDevice In g_mDevicesDic
-                            g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicePose", New Object() {mDevice.Value.sSerial}))
-                        Next
-                    End SyncLock
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
 
                 End Try
 
-                ClassPrecisionSleep.Sleep(CInt(g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
+                ClassPrecisionSleep.Sleep(g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs)
             End While
         End Sub
 
@@ -1915,4 +1943,5 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
+
 End Class

@@ -1127,6 +1127,8 @@ Public Class UCVirtualMotionTrackerItem
 
             Dim mRecenterQuat = Quaternion.Identity
 
+            Dim mClampedExecution As New ClassPrecisionSleep.ClassFrameTimed()
+
             While True
                 Dim bExceptionSleep As Boolean = False
 
@@ -1137,354 +1139,123 @@ Public Class UCVirtualMotionTrackerItem
 
                     Dim mUCVirtualMotionTracker = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker
 
-                    If (Not mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
-                        Throw New ArgumentException("OSC server is not running")
-                    End If
+                    If (mClampedExecution.CanExecute()) Then
+                        mClampedExecution.m_Framerate = mUCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscMaxThreadFps
 
-                    If (mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
-                        Throw New ArgumentException("OSC server is suspended")
-                    End If
-
-                    Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
-
-                    If (Not bFirstEnabled) Then
-                        bFirstEnabled = True
-
-                        mTrackerDataUpdate.Restart()
-                        mLastBatteryReport.Restart()
-                        mEnforcePacketUpdate.Restart()
-
-                        'Load recentering
-                        If (Not m_IsHMD) Then
-                            mClassSettings.m_ControllerSettings.m_ControllerRecenter.TryGetValue(g_iIndex, mRecenterQuat)
+                        If (Not mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                            Throw New ArgumentException("OSC server is not running")
                         End If
-                    End If
 
-                    SyncLock _ThreadLock
-                        If (g_mResetRecenter) Then
-                            g_mResetRecenter = False
+                        If (mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                            Throw New ArgumentException("OSC server is suspended")
+                        End If
 
-                            mRecenterQuat = Quaternion.Identity
+                        Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
 
+                        If (Not bFirstEnabled) Then
+                            bFirstEnabled = True
+
+                            mTrackerDataUpdate.Restart()
+                            mLastBatteryReport.Restart()
+                            mEnforcePacketUpdate.Restart()
+
+                            'Load recentering
                             If (Not m_IsHMD) Then
-                                mClassSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                mClassSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
+                                mClassSettings.m_ControllerSettings.m_ControllerRecenter.TryGetValue(g_iIndex, mRecenterQuat)
                             End If
                         End If
-                    End SyncLock
 
-                    ' Get controller settings
-                    Dim bJoystickShortcutBinding = mClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
-                    Dim bJoystickShortcutTouchpadClick = mClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
-                    Dim iHtcTouchpadEmulationClickMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod
-                    Dim iHtcGripButtonMethod = mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod
-                    Dim bClampTouchpadToBounds = mClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
-                    Dim iHtcTouchpadMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadMethod
-                    Dim bEnableControllerRecenter = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
-                    Dim iRecenterMethod = mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod
-                    Dim sRecenterFromDeviceName = mClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName
-                    Dim bEnableHmdRecenter = mClassSettings.m_ControllerSettings.m_EnableHmdRecenter
-                    Dim iHmdRecenterMethod = mClassSettings.m_ControllerSettings.m_HmdRecenterMethod
-                    Dim sHmdRecenterFromDeviceName = mClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName
-                    Dim iRecenterButtonTimeMs = mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs
-                    Dim iTouchpadTouchAreaCm = mClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm
-                    Dim iTouchpadClickDeadzone = mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone
-                    Dim bEnabledPlayspaceRecenter = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
+                        SyncLock _ThreadLock
+                            If (g_mResetRecenter) Then
+                                g_mResetRecenter = False
 
-                    ' Get HMD settings
-                    Dim bUseCustomDistortion = mClassSettings.m_HmdSettings.m_UseCustomDistortion
-                    Dim iHmdDistortK0 = mClassSettings.m_HmdSettings.m_DistortionK0(bUseCustomDistortion)
-                    Dim iHmdDistortK1 = mClassSettings.m_HmdSettings.m_DistortionK1(bUseCustomDistortion)
-                    Dim iHmdDistortScale = mClassSettings.m_HmdSettings.m_DistortionScale(bUseCustomDistortion)
-                    Dim iHmdDistortRedOffset = mClassSettings.m_HmdSettings.m_DistortionRedOffset(bUseCustomDistortion)
-                    Dim iHmdDistortGreenOffset = mClassSettings.m_HmdSettings.m_DistortionGreenOffset(bUseCustomDistortion)
-                    Dim iHmdDistortBlueOffset = mClassSettings.m_HmdSettings.m_DistortionBlueOffset(bUseCustomDistortion)
-                    Dim iHmdHFov = mClassSettings.m_HmdSettings.m_HFov(bUseCustomDistortion)
-                    Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov(bUseCustomDistortion)
-                    Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
-                    Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
+                                mRecenterQuat = Quaternion.Identity
 
-                    ' Get misc settings
-                    Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
-                    Dim bEnableHepticFeedback As Boolean = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
-                    Dim bOptimizeTransportPackets As Boolean = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
-
-
-                    Dim bEnfocePacketUpdate As Boolean = False
-                    If (mEnforcePacketUpdate.ElapsedMilliseconds > 1000) Then
-                        mEnforcePacketUpdate.Restart()
-
-                        bEnfocePacketUpdate = True
-                    End If
-
-                    Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
-
-
-                    If (m_IsHMD) Then
-                        ' Get hmd data
-                        g_mHmdData = mServiceClient.m_HmdData(m_Index)
-
-                        If (g_mHmdData IsNot Nothing) Then
-                            ' We got any new data?
-                            If (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
-                                iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
-
-                                SyncLock _ThreadLock
-                                    Dim mRawOrientation = g_mHmdData.m_Orientation
-                                    Dim mCalibratedOrientation = mRawOrientation
-
-                                    Dim mRawPosition = g_mHmdData.m_Position
-                                    Dim mCalibratedPosition = mRawPosition
-
-                                    ' Playspace offsets, used for playspace calibration
-                                    If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
-                                    End If
-
-                                    Dim mOrientation = mRecenterQuat * mCalibratedOrientation
-                                    Dim mPosition = mCalibratedPosition
-
-                                    mOscDataPack.mOrientation = mOrientation
-                                    mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
-
-                                    ' $TODO Do something cool?
-
-                                    'Do Hmd/remote recenter
-                                    InternalRecenterHmd(bEnableHmdRecenter,
-                                                            mServiceClient,
-                                                            mHmdRecenterButtonPressed,
-                                                            mLastHmdRecenterTime,
-                                                            iRecenterButtonTimeMs,
-                                                            iHmdRecenterMethod,
-                                                            sHmdRecenterFromDeviceName,
-                                                            mCalibratedPosition,
-                                                            mCalibratedOrientation,
-                                                            mRecenterQuat,
-                                                            mUCVirtualMotionTracker,
-                                                            True,
-                                                            mClassSettings)
-
-                                    If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
-                                        mDisplayNextUpdate.Restart()
-
-                                        Dim mClassMonitor As New ClassMonitor
-                                        Dim mDevMode As ClassMonitor.DEVMODE = Nothing
-                                        Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
-
-                                        Select Case (mClassMonitor.FindPlaystationVrMonitor(mDevMode, mDisplayInfo))
-                                            Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
-                                                ' If we found a monitor, its probably in virtual-mode.
-
-                                                If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
-                                                    If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI) Then
-                                                        iDisplayX = mDevMode.dmPositionX
-                                                        iDisplayY = mDevMode.dmPositionY
-                                                        iDisplayW = mDevMode.dmPelsWidth
-                                                        iDisplayH = mDevMode.dmPelsHeight
-                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale))
-                                                        iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                        iFrameRate = mDevMode.dmDisplayFrequency
-                                                        bDirectMode = False
-
-                                                        bDisplaySuccess = True
-                                                    End If
-                                                End If
-
-                                            Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE,
-                                                    ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
-                                                ' If display is not active or not found, its probably direct-mode
-                                                If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
-                                                    '$TODO: Use settings to adjust properties like framerate.
-                                                    iDisplayX = 0
-                                                    iDisplayY = 0
-                                                    iDisplayW = 1920
-                                                    iDisplayH = 1080
-                                                    iRenderW = CInt((iDisplayW * iHmdRenderScale))
-                                                    iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                    iFrameRate = HMD_DIRECT_MODE_FRAMERATE
-                                                    bDirectMode = True
-
-                                                    Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
-
-                                                    If (ClassMonitor.PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName)) Then
-                                                        iVendorId = ClassMonitor.PSVR_MONITOR_GEN1_VID
-                                                        iProductId = ClassMonitor.PSVR_MONITOR_GEN1_PID
-
-                                                        bDisplaySuccess = True
-                                                    End If
-
-                                                    If (ClassMonitor.PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
-                                                        iVendorId = ClassMonitor.PSVR_MONITOR_GEN2_VID
-                                                        iProductId = ClassMonitor.PSVR_MONITOR_GEN2_PID
-
-                                                        bDisplaySuccess = True
-                                                    End If
-
-                                                End If
-                                        End Select
-                                    End If
-
-                                    If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
-                                        Dim bSetPack As Boolean = False
-
-                                        ' Setup the HMD
-                                        ' $TODO Make this less retarded. Get status from the driver if something isnt set up properly.
-                                        If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
-                                            mDisplaySetupUpdate.Restart()
-
-                                            If (bDirectMode) Then
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/HMD/SetupDisplayDirect",
-                                                        iDisplayX, iDisplayY,
-                                                        iDisplayW, iDisplayH,
-                                                        iRenderW, iRenderH,
-                                                        iFrameRate,
-                                                        iVendorId, iProductId
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                            Else
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/HMD/SetupDisplay",
-                                                        iDisplayX, iDisplayY,
-                                                        iDisplayW, iDisplayH,
-                                                        iRenderW, iRenderH,
-                                                        iFrameRate
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                            End If
-
-                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                New OscMessage(
-                                                    "/VMT/HMD/SetupRender",
-                                                    iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
-                                                    -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
-                                                    iHmdHFov, iHmdVFov
-                                                ))
-                                            m_FpsOscCounter += 1
-
-                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                New OscMessage(
-                                                    "/VMT/HMD/SetIpdMeters",
-                                                    iHmdIPD
-                                                ))
-                                            m_FpsOscCounter += 1
-                                        End If
-
-                                        If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                New OscMessage(
-                                                    "/VMT/HMD/Room/Driver",
-                                                    0.0F,
-                                                    mOscDataPack.mPosition.X,
-                                                    mOscDataPack.mPosition.Y,
-                                                    mOscDataPack.mPosition.Z,
-                                                    mOscDataPack.mOrientation.X,
-                                                    mOscDataPack.mOrientation.Y,
-                                                    mOscDataPack.mOrientation.Z,
-                                                    mOscDataPack.mOrientation.W
-                                                ))
-                                            m_FpsOscCounter += 1
-                                            bSetPack = True
-                                        End If
-
-                                        If (bSetPack) Then
-                                            g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
-                                        End If
-                                    End If
-                                End SyncLock
+                                If (Not m_IsHMD) Then
+                                    mClassSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                    mClassSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
+                                End If
                             End If
+                        End SyncLock
+
+                        ' Get controller settings
+                        Dim bJoystickShortcutBinding = mClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
+                        Dim bJoystickShortcutTouchpadClick = mClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
+                        Dim iHtcTouchpadEmulationClickMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod
+                        Dim iHtcGripButtonMethod = mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod
+                        Dim bClampTouchpadToBounds = mClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
+                        Dim iHtcTouchpadMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadMethod
+                        Dim bEnableControllerRecenter = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
+                        Dim iRecenterMethod = mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod
+                        Dim sRecenterFromDeviceName = mClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName
+                        Dim bEnableHmdRecenter = mClassSettings.m_ControllerSettings.m_EnableHmdRecenter
+                        Dim iHmdRecenterMethod = mClassSettings.m_ControllerSettings.m_HmdRecenterMethod
+                        Dim sHmdRecenterFromDeviceName = mClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName
+                        Dim iRecenterButtonTimeMs = mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs
+                        Dim iTouchpadTouchAreaCm = mClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm
+                        Dim iTouchpadClickDeadzone = mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone
+                        Dim bEnabledPlayspaceRecenter = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
+
+                        ' Get HMD settings
+                        Dim bUseCustomDistortion = mClassSettings.m_HmdSettings.m_UseCustomDistortion
+                        Dim iHmdDistortK0 = mClassSettings.m_HmdSettings.m_DistortionK0(bUseCustomDistortion)
+                        Dim iHmdDistortK1 = mClassSettings.m_HmdSettings.m_DistortionK1(bUseCustomDistortion)
+                        Dim iHmdDistortScale = mClassSettings.m_HmdSettings.m_DistortionScale(bUseCustomDistortion)
+                        Dim iHmdDistortRedOffset = mClassSettings.m_HmdSettings.m_DistortionRedOffset(bUseCustomDistortion)
+                        Dim iHmdDistortGreenOffset = mClassSettings.m_HmdSettings.m_DistortionGreenOffset(bUseCustomDistortion)
+                        Dim iHmdDistortBlueOffset = mClassSettings.m_HmdSettings.m_DistortionBlueOffset(bUseCustomDistortion)
+                        Dim iHmdHFov = mClassSettings.m_HmdSettings.m_HFov(bUseCustomDistortion)
+                        Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov(bUseCustomDistortion)
+                        Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
+                        Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
+
+                        ' Get misc settings
+                        Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
+                        Dim bEnableHepticFeedback As Boolean = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
+                        Dim bOptimizeTransportPackets As Boolean = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
+
+
+                        Dim bEnfocePacketUpdate As Boolean = False
+                        If (mEnforcePacketUpdate.ElapsedMilliseconds > 1000) Then
+                            mEnforcePacketUpdate.Restart()
+
+                            bEnfocePacketUpdate = True
                         End If
-                    Else
-                        ' Get controller data
-                        m_ControllerData = mServiceClient.m_ControllerData(m_Index)
 
-                        If (m_ControllerData IsNot Nothing) Then
-                            ' Set controller rumble
-                            Select Case (True)
-                                Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                    InternalHepticFeedbackLogic(bEnableHepticFeedback,
-                                                            mRumbleLastTimeSendValid,
-                                                            mRumbleLastTimeSend,
-                                                            mServiceClient)
-                            End Select
-
-                            ' We got any new data?
-                            If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
-                                iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
-
-                                Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
-                                Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
+                        Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
 
 
+                        If (m_IsHMD) Then
+                            ' Get hmd data
+                            g_mHmdData = mServiceClient.m_HmdData(m_Index)
 
-                                SyncLock _ThreadLock
-                                    Dim mRawOrientation = m_ControllerData.m_Orientation
-                                    Dim mCalibratedOrientation = mRawOrientation
+                            If (g_mHmdData IsNot Nothing) Then
+                                ' We got any new data?
+                                If (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
+                                    iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
 
-                                    Dim mRawPosition = m_ControllerData.m_Position
-                                    Dim mCalibratedPosition = mRawPosition
+                                    SyncLock _ThreadLock
+                                        Dim mRawOrientation = g_mHmdData.m_Orientation
+                                        Dim mCalibratedOrientation = mRawOrientation
 
-                                    ' Playspace offsets, used for playspace calibration
-                                    If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
-                                    End If
+                                        Dim mRawPosition = g_mHmdData.m_Position
+                                        Dim mCalibratedPosition = mRawPosition
 
-                                    Dim mOrientation = mRecenterQuat * mCalibratedOrientation
-                                    Dim mPosition = mCalibratedPosition
+                                        ' Playspace offsets, used for playspace calibration
+                                        If (Not mPlayspaceRecenterCalibrationRunning) Then
+                                            InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        End If
 
-                                    mOscDataPack.mOrientation = mOrientation
-                                    mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                        Dim mPosition = mCalibratedPosition
 
-                                    Select Case (True)
-                                        Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
-                                            Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                        mOscDataPack.mOrientation = mOrientation
+                                        mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
 
-                                            Dim mButtons As Boolean() = New Boolean() {
-                                                m_PSMoveData.m_MoveButton,
-                                                m_PSMoveData.m_PSButton,
-                                                m_PSMoveData.m_StartButton,
-                                                m_PSMoveData.m_SelectButton,
-                                                m_PSMoveData.m_SquareButton,
-                                                m_PSMoveData.m_CrossButton,
-                                                m_PSMoveData.m_CircleButton,
-                                                m_PSMoveData.m_TriangleButton
-                                            }
+                                        ' $TODO Do something cool?
 
-                                            Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
-
-                                            'Do playspace recenter
-                                            InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
-                                                                            m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton,
-                                                                            mRawPosition,
-                                                                            mPlayspaceRecenterButtonPressed,
-                                                                            mPlayspaceRecenterButtonHolding,
-                                                                            mLastPlayspaceRecenterTime,
-                                                                            iRecenterButtonTimeMs,
-                                                                            mPlayspaceRecenterCalibrationRunning,
-                                                                            mPlayspaceRecenterLastHmdSerial,
-                                                                            mPlayspaceRecenterCalibrationSave,
-                                                                            mClassSettings,
-                                                                            mUCVirtualMotionTracker)
-
-                                            'Do controller recenter
-                                            InternalRecenterControllerLogic(bEnableControllerRecenter,
-                                                                            m_PSMoveData.m_SelectButton AndAlso Not m_PSMoveData.m_StartButton,
-                                                                            mRecenterButtonPressed,
-                                                                            mLastRecenterTime,
-                                                                            iRecenterButtonTimeMs,
-                                                                            iRecenterMethod,
-                                                                            sRecenterFromDeviceName,
-                                                                            mRecenterQuat,
-                                                                            mCalibratedPosition,
-                                                                            mCalibratedOrientation,
-                                                                            mUCVirtualMotionTracker,
-                                                                            mClassSettings)
-
-                                            'Do Hmd/remote recenter
-                                            InternalRecenterHmd(bEnableHmdRecenter,
+                                        'Do Hmd/remote recenter
+                                        InternalRecenterHmd(bEnableHmdRecenter,
                                                                 mServiceClient,
                                                                 mHmdRecenterButtonPressed,
                                                                 mLastHmdRecenterTime,
@@ -1495,284 +1266,518 @@ Public Class UCVirtualMotionTrackerItem
                                                                 mCalibratedOrientation,
                                                                 mRecenterQuat,
                                                                 mUCVirtualMotionTracker,
-                                                                False,
+                                                                True,
                                                                 mClassSettings)
 
-                                            'Send buttons
-                                            InternalButtonsLogic(mOscDataPack,
-                                                                mButtons,
-                                                                m_PSMoveData,
-                                                                bJoystickTrigger,
-                                                                iHtcGripButtonMethod,
-                                                                bGripButtonPressed,
-                                                                bGripToggled,
-                                                                iHtcTouchpadEmulationClickMethod)
+                                        If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
+                                            mDisplayNextUpdate.Restart()
 
-                                            'Joystick emulation
-                                            InternalJoystickEmulationLogic(mOscDataPack,
-                                                                    bJoystickTrigger,
-                                                                    iHtcTouchpadMethod,
-                                                                    bJoystickButtonPressed,
-                                                                    mJoystickButtonPressedTime,
-                                                                    mJoystickPressedLastOrientation,
+                                            Dim mClassMonitor As New ClassMonitor
+                                            Dim mDevMode As ClassMonitor.DEVMODE = Nothing
+                                            Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
+
+                                            Select Case (mClassMonitor.FindPlaystationVrMonitor(mDevMode, mDisplayInfo))
+                                                Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                                                    ' If we found a monitor, its probably in virtual-mode.
+
+                                                    If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
+                                                        If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI) Then
+                                                            iDisplayX = mDevMode.dmPositionX
+                                                            iDisplayY = mDevMode.dmPositionY
+                                                            iDisplayW = mDevMode.dmPelsWidth
+                                                            iDisplayH = mDevMode.dmPelsHeight
+                                                            iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                            iRenderH = CInt((iDisplayH * iHmdRenderScale))
+                                                            iFrameRate = mDevMode.dmDisplayFrequency
+                                                            bDirectMode = False
+
+                                                            bDisplaySuccess = True
+                                                        End If
+                                                    End If
+
+                                                Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE,
+                                                        ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
+                                                    ' If display is not active or not found, its probably direct-mode
+                                                    If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
+                                                        '$TODO: Use settings to adjust properties like framerate.
+                                                        iDisplayX = 0
+                                                        iDisplayY = 0
+                                                        iDisplayW = 1920
+                                                        iDisplayH = 1080
+                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                        iRenderH = CInt((iDisplayH * iHmdRenderScale))
+                                                        iFrameRate = HMD_DIRECT_MODE_FRAMERATE
+                                                        bDirectMode = True
+
+                                                        Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
+
+                                                        If (ClassMonitor.PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName)) Then
+                                                            iVendorId = ClassMonitor.PSVR_MONITOR_GEN1_VID
+                                                            iProductId = ClassMonitor.PSVR_MONITOR_GEN1_PID
+
+                                                            bDisplaySuccess = True
+                                                        End If
+
+                                                        If (ClassMonitor.PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
+                                                            iVendorId = ClassMonitor.PSVR_MONITOR_GEN2_VID
+                                                            iProductId = ClassMonitor.PSVR_MONITOR_GEN2_PID
+
+                                                            bDisplaySuccess = True
+                                                        End If
+
+                                                    End If
+                                            End Select
+                                        End If
+
+                                        If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
+                                            Dim bSetPack As Boolean = False
+
+                                            ' Setup the HMD
+                                            ' $TODO Make this less retarded. Get status from the driver if something isnt set up properly.
+                                            If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
+                                                mDisplaySetupUpdate.Restart()
+
+                                                If (bDirectMode) Then
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/HMD/SetupDisplayDirect",
+                                                            iDisplayX, iDisplayY,
+                                                            iDisplayW, iDisplayH,
+                                                            iRenderW, iRenderH,
+                                                            iFrameRate,
+                                                            iVendorId, iProductId
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                Else
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/HMD/SetupDisplay",
+                                                            iDisplayX, iDisplayY,
+                                                            iDisplayW, iDisplayH,
+                                                            iRenderW, iRenderH,
+                                                            iFrameRate
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                End If
+
+                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                    New OscMessage(
+                                                        "/VMT/HMD/SetupRender",
+                                                        iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
+                                                        -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
+                                                        iHmdHFov, iHmdVFov
+                                                    ))
+                                                m_FpsOscCounter += 1
+
+                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                    New OscMessage(
+                                                        "/VMT/HMD/SetIpdMeters",
+                                                        iHmdIPD
+                                                    ))
+                                                m_FpsOscCounter += 1
+                                            End If
+
+                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                    New OscMessage(
+                                                        "/VMT/HMD/Room/Driver",
+                                                        0.0F,
+                                                        mOscDataPack.mPosition.X,
+                                                        mOscDataPack.mPosition.Y,
+                                                        mOscDataPack.mPosition.Z,
+                                                        mOscDataPack.mOrientation.X,
+                                                        mOscDataPack.mOrientation.Y,
+                                                        mOscDataPack.mOrientation.Z,
+                                                        mOscDataPack.mOrientation.W
+                                                    ))
+                                                m_FpsOscCounter += 1
+                                                bSetPack = True
+                                            End If
+
+                                            If (bSetPack) Then
+                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                            End If
+                                        End If
+                                    End SyncLock
+                                End If
+                            End If
+                        Else
+                            ' Get controller data
+                            m_ControllerData = mServiceClient.m_ControllerData(m_Index)
+
+                            If (m_ControllerData IsNot Nothing) Then
+                                ' Set controller rumble
+                                Select Case (True)
+                                    Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                        InternalHepticFeedbackLogic(bEnableHepticFeedback,
+                                                                mRumbleLastTimeSendValid,
+                                                                mRumbleLastTimeSend,
+                                                                mServiceClient)
+                                End Select
+
+                                ' We got any new data?
+                                If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
+                                    iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
+
+                                    Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
+                                    Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
+
+
+
+                                    SyncLock _ThreadLock
+                                        Dim mRawOrientation = m_ControllerData.m_Orientation
+                                        Dim mCalibratedOrientation = mRawOrientation
+
+                                        Dim mRawPosition = m_ControllerData.m_Position
+                                        Dim mCalibratedPosition = mRawPosition
+
+                                        ' Playspace offsets, used for playspace calibration
+                                        If (Not mPlayspaceRecenterCalibrationRunning) Then
+                                            InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        End If
+
+                                        Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                        Dim mPosition = mCalibratedPosition
+
+                                        mOscDataPack.mOrientation = mOrientation
+                                        mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+
+                                        Select Case (True)
+                                            Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+                                                Dim m_PSMoveData = DirectCast(m_ControllerData, ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
+
+                                                Dim mButtons As Boolean() = New Boolean() {
+                                                    m_PSMoveData.m_MoveButton,
+                                                    m_PSMoveData.m_PSButton,
+                                                    m_PSMoveData.m_StartButton,
+                                                    m_PSMoveData.m_SelectButton,
+                                                    m_PSMoveData.m_SquareButton,
+                                                    m_PSMoveData.m_CrossButton,
+                                                    m_PSMoveData.m_CircleButton,
+                                                    m_PSMoveData.m_TriangleButton
+                                                }
+
+                                                Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
+
+                                                'Do playspace recenter
+                                                InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
+                                                                                m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton,
+                                                                                mRawPosition,
+                                                                                mPlayspaceRecenterButtonPressed,
+                                                                                mPlayspaceRecenterButtonHolding,
+                                                                                mLastPlayspaceRecenterTime,
+                                                                                iRecenterButtonTimeMs,
+                                                                                mPlayspaceRecenterCalibrationRunning,
+                                                                                mPlayspaceRecenterLastHmdSerial,
+                                                                                mPlayspaceRecenterCalibrationSave,
+                                                                                mClassSettings,
+                                                                                mUCVirtualMotionTracker)
+
+                                                'Do controller recenter
+                                                InternalRecenterControllerLogic(bEnableControllerRecenter,
+                                                                                m_PSMoveData.m_SelectButton AndAlso Not m_PSMoveData.m_StartButton,
+                                                                                mRecenterButtonPressed,
+                                                                                mLastRecenterTime,
+                                                                                iRecenterButtonTimeMs,
+                                                                                iRecenterMethod,
+                                                                                sRecenterFromDeviceName,
+                                                                                mRecenterQuat,
+                                                                                mCalibratedPosition,
+                                                                                mCalibratedOrientation,
+                                                                                mUCVirtualMotionTracker,
+                                                                                mClassSettings)
+
+                                                'Do Hmd/remote recenter
+                                                InternalRecenterHmd(bEnableHmdRecenter,
+                                                                    mServiceClient,
+                                                                    mHmdRecenterButtonPressed,
+                                                                    mLastHmdRecenterTime,
+                                                                    iRecenterButtonTimeMs,
+                                                                    iHmdRecenterMethod,
+                                                                    sHmdRecenterFromDeviceName,
+                                                                    mCalibratedPosition,
+                                                                    mCalibratedOrientation,
                                                                     mRecenterQuat,
-                                                                    m_PSMoveData,
-                                                                    mJoystickPressedLastPosition,
-                                                                    bClampTouchpadToBounds,
-                                                                    iTouchpadTouchAreaCm,
-                                                                    iTouchpadClickDeadzone,
-                                                                    iHtcTouchpadEmulationClickMethod,
-                                                                    bJoystickShortcutBinding,
+                                                                    mUCVirtualMotionTracker,
+                                                                    False,
+                                                                    mClassSettings)
+
+                                                'Send buttons
+                                                InternalButtonsLogic(mOscDataPack,
                                                                     mButtons,
-                                                                    mJoystickShortcuts,
-                                                                    bJoystickShortcutTouchpadClick)
-                                    End Select
+                                                                    m_PSMoveData,
+                                                                    bJoystickTrigger,
+                                                                    iHtcGripButtonMethod,
+                                                                    bGripButtonPressed,
+                                                                    bGripToggled,
+                                                                    iHtcTouchpadEmulationClickMethod)
 
-                                    'Send battery level to
-                                    If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
-                                        mLastBatteryReport.Restart()
+                                                'Joystick emulation
+                                                InternalJoystickEmulationLogic(mOscDataPack,
+                                                                        bJoystickTrigger,
+                                                                        iHtcTouchpadMethod,
+                                                                        bJoystickButtonPressed,
+                                                                        mJoystickButtonPressedTime,
+                                                                        mJoystickPressedLastOrientation,
+                                                                        mRecenterQuat,
+                                                                        m_PSMoveData,
+                                                                        mJoystickPressedLastPosition,
+                                                                        bClampTouchpadToBounds,
+                                                                        iTouchpadTouchAreaCm,
+                                                                        iTouchpadClickDeadzone,
+                                                                        iHtcTouchpadEmulationClickMethod,
+                                                                        bJoystickShortcutBinding,
+                                                                        mButtons,
+                                                                        mJoystickShortcuts,
+                                                                        bJoystickShortcutTouchpadClick)
+                                        End Select
 
+                                        'Send battery level to
+                                        If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
+                                            mLastBatteryReport.Restart()
+
+                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                New OscMessage(
+                                                    "/VMT/Property/Battery",
+                                                    m_VmtTracker,
+                                                    iBatteryValue
+                                                ))
+                                            m_FpsOscCounter += 1
+                                        End If
+
+                                        Select Case (m_VmtTrackerRole)
+                                            Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
+                                                Dim bSetPack As Boolean = False
+
+                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                        Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/Room/Driver",
+                                                            m_VmtTracker, ENABLE_TRACKER, 0.0F,
+                                                            mOscDataPack.mPosition.X,
+                                                            mOscDataPack.mPosition.Y,
+                                                            mOscDataPack.mPosition.Z,
+                                                            mOscDataPack.mOrientation.X,
+                                                            mOscDataPack.mOrientation.Y,
+                                                            mOscDataPack.mOrientation.Z,
+                                                            mOscDataPack.mOrientation.W
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                    bSetPack = True
+                                                End If
+
+                                                If (bSetPack) Then
+                                                    g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                                End If
+
+                                            Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                                                Dim bSetPack As Boolean = False
+
+                                                Dim iController As Integer = ENABLE_TRACKER
+                                                Select Case (m_VmtTrackerRole)
+                                                    Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
+                                                        iController = ENABLE_CONTROLLER_L
+
+                                                    Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
+                                                        iController = ENABLE_CONTROLLER_R
+                                                End Select
+
+                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                        Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                                    For Each mButton In mOscDataPack.mButtons
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                            New OscMessage(
+                                                                "/VMT/Input/Button",
+                                                                m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
+                                                            ))
+                                                        m_FpsOscCounter += 1
+                                                        bSetPack = True
+                                                    Next
+
+                                                    For Each mTrigger In mOscDataPack.mTrigger
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                           New OscMessage(
+                                                               "/VMT/Input/Trigger",
+                                                               m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
+                                                           ))
+                                                        m_FpsOscCounter += 1
+                                                        bSetPack = True
+                                                    Next
+
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/Input/Joystick",
+                                                            m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                    bSetPack = True
+
+                                                End If
+
+                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                        Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/Room/Driver",
+                                                            m_VmtTracker, iController, 0.0F,
+                                                            mOscDataPack.mPosition.X,
+                                                            mOscDataPack.mPosition.Y,
+                                                            mOscDataPack.mPosition.Z,
+                                                            mOscDataPack.mOrientation.X,
+                                                            mOscDataPack.mOrientation.Y,
+                                                            mOscDataPack.mOrientation.Z,
+                                                            mOscDataPack.mOrientation.W
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                    bSetPack = True
+                                                End If
+
+                                                If (bSetPack) Then
+                                                    g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                                End If
+
+                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
+                                                Dim bSetPack As Boolean = False
+
+                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                        Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/Room/Driver",
+                                                            m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
+                                                            mOscDataPack.mPosition.X,
+                                                            mOscDataPack.mPosition.Y,
+                                                            mOscDataPack.mPosition.Z,
+                                                            mOscDataPack.mOrientation.X,
+                                                            mOscDataPack.mOrientation.Y,
+                                                            mOscDataPack.mOrientation.Z,
+                                                            mOscDataPack.mOrientation.W
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                    bSetPack = True
+                                                End If
+
+                                                If (bSetPack) Then
+                                                    g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                                End If
+
+                                            Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                                Dim bSetPack As Boolean = False
+
+                                                Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
+                                                Select Case (m_VmtTrackerRole)
+                                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
+                                                        iController = ENABLE_HTC_VIVE_CONTROLLER_L
+
+                                                    Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
+                                                        iController = ENABLE_HTC_VIVE_CONTROLLER_R
+                                                End Select
+
+                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                        Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                                    For Each mButton In mOscDataPack.mButtons
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                            New OscMessage(
+                                                                "/VMT/Input/Button",
+                                                                m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
+                                                            ))
+                                                        m_FpsOscCounter += 1
+                                                        bSetPack = True
+                                                    Next
+
+                                                    For Each mTrigger In mOscDataPack.mTrigger
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                           New OscMessage(
+                                                               "/VMT/Input/Trigger",
+                                                               m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
+                                                           ))
+                                                        m_FpsOscCounter += 1
+                                                        bSetPack = True
+                                                    Next
+
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/Input/Joystick",
+                                                            m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                    bSetPack = True
+                                                End If
+
+                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                        Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
+                                                        New OscMessage(
+                                                            "/VMT/Room/Driver",
+                                                            m_VmtTracker, iController, 0.0F,
+                                                            mOscDataPack.mPosition.X,
+                                                            mOscDataPack.mPosition.Y,
+                                                            mOscDataPack.mPosition.Z,
+                                                            mOscDataPack.mOrientation.X,
+                                                            mOscDataPack.mOrientation.Y,
+                                                            mOscDataPack.mOrientation.Z,
+                                                            mOscDataPack.mOrientation.W
+                                                        ))
+                                                    m_FpsOscCounter += 1
+                                                    bSetPack = True
+                                                End If
+
+                                                If (bSetPack) Then
+                                                    g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
+                                                End If
+                                        End Select
+                                    End SyncLock
+                                End If
+                            End If
+                        End If
+
+                        If (Not bDisableBaseStationSpawning) Then
+                            ' Update tracker references
+                            ' $TODO Add them into their own thread?
+                            If (mTrackerDataUpdate.Elapsed > New TimeSpan(0, 0, 10)) Then
+                                mTrackerDataUpdate.Restart()
+
+                                For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
+                                    m_TrackerData(i) = mServiceClient.m_TrackerData(i)
+
+                                    If (m_TrackerData(i) IsNot Nothing) Then
+                                        Dim mRawOrientation = m_TrackerData(i).m_Orientation
+                                        Dim mCalibratedOrientation = mRawOrientation
+
+                                        Dim mRawPosition = m_TrackerData(i).m_Position
+                                        Dim mCalibratedPosition = mRawPosition
+
+                                        ' Playspace offsets, used for playspace calibration
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+
+                                        Dim mOrientation As Quaternion = mCalibratedOrientation
+                                        Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+
+                                        ' Cameras are flipped, flip them correctly
+                                        Dim mFlippedQ As Quaternion = mOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
+
+                                        'Use Right-Handed space for SteamVR 
                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
-                                                "/VMT/Property/Battery",
-                                                m_VmtTracker,
-                                                iBatteryValue
+                                                "/VMT/Room/Driver",
+                                                VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
+                                                mPosition.X,
+                                                mPosition.Y,
+                                                mPosition.Z,
+                                                mFlippedQ.X,
+                                                mFlippedQ.Y,
+                                                mFlippedQ.Z,
+                                                mFlippedQ.W
                                             ))
-                                        m_FpsOscCounter += 1
                                     End If
-
-                                    Select Case (m_VmtTrackerRole)
-                                        Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
-                                            Dim bSetPack As Boolean = False
-
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/Room/Driver",
-                                                        m_VmtTracker, ENABLE_TRACKER, 0.0F,
-                                                        mOscDataPack.mPosition.X,
-                                                        mOscDataPack.mPosition.Y,
-                                                        mOscDataPack.mPosition.Z,
-                                                        mOscDataPack.mOrientation.X,
-                                                        mOscDataPack.mOrientation.Y,
-                                                        mOscDataPack.mOrientation.Z,
-                                                        mOscDataPack.mOrientation.W
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                                bSetPack = True
-                                            End If
-
-                                            If (bSetPack) Then
-                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
-                                            End If
-
-                                        Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
-                                            Dim bSetPack As Boolean = False
-
-                                            Dim iController As Integer = ENABLE_TRACKER
-                                            Select Case (m_VmtTrackerRole)
-                                                Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER
-                                                    iController = ENABLE_CONTROLLER_L
-
-                                                Case ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
-                                                    iController = ENABLE_CONTROLLER_R
-                                            End Select
-
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                    Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
-                                                For Each mButton In mOscDataPack.mButtons
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Input/Button",
-                                                            m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
-                                                        ))
-                                                    m_FpsOscCounter += 1
-                                                    bSetPack = True
-                                                Next
-
-                                                For Each mTrigger In mOscDataPack.mTrigger
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                       New OscMessage(
-                                                           "/VMT/Input/Trigger",
-                                                           m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
-                                                       ))
-                                                    m_FpsOscCounter += 1
-                                                    bSetPack = True
-                                                Next
-
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/Input/Joystick",
-                                                        m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                                bSetPack = True
-
-                                            End If
-
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/Room/Driver",
-                                                        m_VmtTracker, iController, 0.0F,
-                                                        mOscDataPack.mPosition.X,
-                                                        mOscDataPack.mPosition.Y,
-                                                        mOscDataPack.mPosition.Z,
-                                                        mOscDataPack.mOrientation.X,
-                                                        mOscDataPack.mOrientation.Y,
-                                                        mOscDataPack.mOrientation.Z,
-                                                        mOscDataPack.mOrientation.W
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                                bSetPack = True
-                                            End If
-
-                                            If (bSetPack) Then
-                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
-                                            End If
-
-                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
-                                            Dim bSetPack As Boolean = False
-
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/Room/Driver",
-                                                        m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
-                                                        mOscDataPack.mPosition.X,
-                                                        mOscDataPack.mPosition.Y,
-                                                        mOscDataPack.mPosition.Z,
-                                                        mOscDataPack.mOrientation.X,
-                                                        mOscDataPack.mOrientation.Y,
-                                                        mOscDataPack.mOrientation.Z,
-                                                        mOscDataPack.mOrientation.W
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                                bSetPack = True
-                                            End If
-
-                                            If (bSetPack) Then
-                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
-                                            End If
-
-                                        Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
-                                            Dim bSetPack As Boolean = False
-
-                                            Dim iController As Integer = ENABLE_HTC_VIVE_TRACKER
-                                            Select Case (m_VmtTrackerRole)
-                                                Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER
-                                                    iController = ENABLE_HTC_VIVE_CONTROLLER_L
-
-                                                Case ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
-                                                    iController = ENABLE_HTC_VIVE_CONTROLLER_R
-                                            End Select
-
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                    Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
-                                                For Each mButton In mOscDataPack.mButtons
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Input/Button",
-                                                            m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
-                                                        ))
-                                                    m_FpsOscCounter += 1
-                                                    bSetPack = True
-                                                Next
-
-                                                For Each mTrigger In mOscDataPack.mTrigger
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                       New OscMessage(
-                                                           "/VMT/Input/Trigger",
-                                                           m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
-                                                       ))
-                                                    m_FpsOscCounter += 1
-                                                    bSetPack = True
-                                                Next
-
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/Input/Joystick",
-                                                        m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                                bSetPack = True
-                                            End If
-
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
-                                                    Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/Room/Driver",
-                                                        m_VmtTracker, iController, 0.0F,
-                                                        mOscDataPack.mPosition.X,
-                                                        mOscDataPack.mPosition.Y,
-                                                        mOscDataPack.mPosition.Z,
-                                                        mOscDataPack.mOrientation.X,
-                                                        mOscDataPack.mOrientation.Y,
-                                                        mOscDataPack.mOrientation.Z,
-                                                        mOscDataPack.mOrientation.W
-                                                    ))
-                                                m_FpsOscCounter += 1
-                                                bSetPack = True
-                                            End If
-
-                                            If (bSetPack) Then
-                                                g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
-                                            End If
-                                    End Select
-                                End SyncLock
+                                Next
                             End If
                         End If
                     End If
 
-                    If (Not bDisableBaseStationSpawning) Then
-                        ' Update tracker references
-                        ' $TODO Add them into their own thread?
-                        If (mTrackerDataUpdate.Elapsed > New TimeSpan(0, 0, 10)) Then
-                            mTrackerDataUpdate.Restart()
-
-                            For i = 0 To PSMOVESERVICE_MAX_TRACKER_COUNT - 1
-                                m_TrackerData(i) = mServiceClient.m_TrackerData(i)
-
-                                If (m_TrackerData(i) IsNot Nothing) Then
-                                    Dim mRawOrientation = m_TrackerData(i).m_Orientation
-                                    Dim mCalibratedOrientation = mRawOrientation
-
-                                    Dim mRawPosition = m_TrackerData(i).m_Position
-                                    Dim mCalibratedPosition = mRawPosition
-
-                                    ' Playspace offsets, used for playspace calibration
-                                    InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
-
-                                    Dim mOrientation As Quaternion = mCalibratedOrientation
-                                    Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
-
-                                    ' Cameras are flipped, flip them correctly
-                                    Dim mFlippedQ As Quaternion = mOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
-
-                                    'Use Right-Handed space for SteamVR 
-                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                        New OscMessage(
-                                            "/VMT/Room/Driver",
-                                            VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
-                                            mPosition.X,
-                                            mPosition.Y,
-                                            mPosition.Z,
-                                            mFlippedQ.X,
-                                            mFlippedQ.Y,
-                                            mFlippedQ.Z,
-                                            mFlippedQ.W
-                                        ))
-                                End If
-                            Next
-                        End If
-                    End If
-
-
-                    ClassPrecisionSleep.Sleep(CInt(mUCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
+                    ClassPrecisionSleep.Sleep(mUCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs)
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
