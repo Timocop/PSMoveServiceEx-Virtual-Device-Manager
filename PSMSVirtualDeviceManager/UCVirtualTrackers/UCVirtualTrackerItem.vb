@@ -17,6 +17,8 @@ Public Class UCVirtualTrackerItem
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
 
+    Private g_mCaptureBoxLastRect As New Rectangle
+
     Public Sub New(_UCVirtualTrackers As UCVirtualTrackers, mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         g_mUCVirtualTrackers = _UCVirtualTrackers
 
@@ -26,12 +28,16 @@ Public Class UCVirtualTrackerItem
         ' Add any initialization after the InitializeComponent() call.
         TrackBar_DeviceExposure.Minimum = Short.MinValue
         TrackBar_DeviceExposure.Maximum = Short.MaxValue
+        TrackBar_DeviceExposure.Tag = False
         TrackBar_DeviceGain.Minimum = Short.MinValue
         TrackBar_DeviceGain.Maximum = Short.MaxValue
+        TrackBar_DeviceGain.Tag = False
         TrackBar_DeviceGamma.Minimum = Short.MinValue
         TrackBar_DeviceGamma.Maximum = Short.MaxValue
+        TrackBar_DeviceGamma.Tag = False
         TrackBar_DeviceConstrast.Minimum = Short.MinValue
         TrackBar_DeviceConstrast.Maximum = Short.MaxValue
+        TrackBar_DeviceConstrast.Tag = False
 
         g_mClassCaptureLogic = New ClassCaptureLogic(Me, mDeviceInfo.m_Index, mDeviceInfo.m_Path)
         Label_FriendlyName.Text = mDeviceInfo.m_Name
@@ -95,6 +101,7 @@ Public Class UCVirtualTrackerItem
 
         SetFpsText(0, 0)
         SetUnsavedState(False)
+        SetRequireRestart(False)
 
         CreateControl()
 
@@ -114,6 +121,7 @@ Public Class UCVirtualTrackerItem
             ComboBox_ImageInterpolation_SelectedIndexChanged(Nothing, Nothing)
             CheckBox_UseMjpg_CheckedChanged(Nothing, Nothing)
             CheckBox_DeviceSupersampling_CheckedChanged(Nothing, Nothing)
+            ComboBox_CameraResolution_SelectedIndexChanged(Nothing, Nothing)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
@@ -137,6 +145,20 @@ Public Class UCVirtualTrackerItem
         End If
     End Sub
 
+    Private Sub SetRequireRestart(bRequired As Boolean)
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        If (bRequired) Then
+            Button_RestartDevice.Text = String.Format("Restart device*")
+            Button_RestartDevice.Font = New Font(Button_ConfigSave.Font, FontStyle.Bold)
+        Else
+            Button_RestartDevice.Text = String.Format("Restart device")
+            Button_RestartDevice.Font = New Font(Button_ConfigSave.Font, FontStyle.Regular)
+        End If
+    End Sub
+
     ReadOnly Property m_DevicePath As String
         Get
             If (g_mClassCaptureLogic Is Nothing) Then
@@ -148,7 +170,7 @@ Public Class UCVirtualTrackerItem
     End Property
 
     Private Sub TrackBar_DeviceExposure_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceExposure.ValueChanged
-        If (g_bIgnoreEvents OrElse Not TrackBar_DeviceExposure.Enabled) Then
+        If (g_bIgnoreEvents OrElse Not CBool(TrackBar_DeviceExposure.Tag)) Then
             Return
         End If
 
@@ -161,7 +183,7 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub TrackBar_DeviceGain_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceGain.ValueChanged
-        If (g_bIgnoreEvents OrElse Not TrackBar_DeviceGain.Enabled) Then
+        If (g_bIgnoreEvents OrElse Not CBool(TrackBar_DeviceGain.Tag)) Then
             Return
         End If
 
@@ -174,7 +196,7 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub TrackBar_DeviceGamma_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceGamma.ValueChanged
-        If (g_bIgnoreEvents OrElse Not TrackBar_DeviceGamma.Enabled) Then
+        If (g_bIgnoreEvents OrElse Not CBool(TrackBar_DeviceGamma.Tag)) Then
             Return
         End If
 
@@ -187,7 +209,7 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub TrackBar_DeviceConstrast_ValueChanged(sender As Object, e As EventArgs) Handles TrackBar_DeviceConstrast.ValueChanged
-        If (g_bIgnoreEvents OrElse Not TrackBar_DeviceConstrast.Enabled) Then
+        If (g_bIgnoreEvents OrElse Not CBool(TrackBar_DeviceConstrast.Tag)) Then
             Return
         End If
 
@@ -300,6 +322,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        SetRequireRestart(True)
     End Sub
 
     Private Sub CheckBox_UseMjpg_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_UseMjpg.CheckedChanged
@@ -316,6 +339,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        SetRequireRestart(True)
     End Sub
 
     Private Sub CheckBox_DeviceSupersampling_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_DeviceSupersampling.CheckedChanged
@@ -332,6 +356,7 @@ Public Class UCVirtualTrackerItem
         End If
 
         MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        SetRequireRestart(True)
     End Sub
 
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
@@ -340,6 +365,7 @@ Public Class UCVirtualTrackerItem
 
             ' Restart the init thread to get changed information about the device.
             g_mClassCaptureLogic.StartInitThread(True)
+            SetRequireRestart(False)
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
@@ -788,6 +814,7 @@ Public Class UCVirtualTrackerItem
             Try
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Initializing device...")
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = True)
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.BringToFront())
 
                 SyncLock g_mThreadLock
                     'Remove old capture before we create a new one
@@ -809,9 +836,7 @@ Public Class UCVirtualTrackerItem
                     End If
 
                     ' Try to read the first frame before we change anything. Just in case properties wont apply instandly.
-                    Using mMat As New OpenCvSharp.Mat
-                        m_Capture.Read(mMat)
-                    End Using
+                    CapturePoll()
 
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Setting default device properties...")
 
@@ -854,35 +879,49 @@ Public Class UCVirtualTrackerItem
                         m_Capture.FrameWidth = iFrameW
                         m_Capture.Fps = iFrameR
                         m_Capture.FourCC = "mjpg"
+                        CapturePoll()
 
                         If (m_Capture.FourCC <> "mjpg") Then
                             m_Capture.FrameHeight = iFrameH
                             m_Capture.FrameWidth = iFrameW
                             m_Capture.Fps = iFrameR
                             m_Capture.FourCC = "MJPG"
+                            CapturePoll()
                         End If
 
-                        ' MJPG failed fall back to last codec
+                        ' Failed fall back to last codec
                         If (m_Capture.FourCC <> "MJPG") Then
                             m_Capture.FrameHeight = iFrameH
                             m_Capture.FrameWidth = iFrameW
                             m_Capture.Fps = iFrameR
                             m_Capture.FourCC = sLastCodec
+                            CapturePoll()
                         End If
                     Else
                         Dim sLastCodec As String = m_Capture.FourCC
 
-                        ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to b
+                        ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set
                         m_Capture.FrameHeight = iFrameH
                         m_Capture.FrameWidth = iFrameW
                         m_Capture.Fps = iFrameR
-                        m_Capture.FourCC = "YUY2"
+                        m_Capture.FourCC = "yuy2"
+                        CapturePoll()
 
+                        If (m_Capture.FourCC <> "yuy2") Then
+                            m_Capture.FrameHeight = iFrameH
+                            m_Capture.FrameWidth = iFrameW
+                            m_Capture.Fps = iFrameR
+                            m_Capture.FourCC = "YUY2"
+                            CapturePoll()
+                        End If
+
+                        ' Failed fall back to last codec
                         If (m_Capture.FourCC <> "YUY2") Then
                             m_Capture.FrameHeight = iFrameH
                             m_Capture.FrameWidth = iFrameW
                             m_Capture.Fps = iFrameR
                             m_Capture.FourCC = sLastCodec
+                            CapturePoll()
                         End If
                     End If
 
@@ -915,9 +954,13 @@ Public Class UCVirtualTrackerItem
 
                 If (True) Then
                     For j = 0 To 1
+                        m_Capture.Exposure = 0
+
                         For i = 1 To 255
                             If (j = 0) Then
                                 m_Capture.Exposure = (i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Exposure = iExposureMax) Then
                                     iExposureMax = m_Capture.Exposure
                                     Exit For
@@ -926,6 +969,8 @@ Public Class UCVirtualTrackerItem
                                 iExposureMax = m_Capture.Exposure
                             Else
                                 m_Capture.Exposure = -(i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Exposure = iExposureMin) Then
                                     iExposureMin = m_Capture.Exposure
                                     Exit For
@@ -946,9 +991,13 @@ Public Class UCVirtualTrackerItem
 
                 If (True) Then
                     For j = 0 To 1
+                        m_Capture.Gain = 0
+
                         For i = 1 To 255
                             If (j = 0) Then
                                 m_Capture.Gain = (i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Gain = iGainMax) Then
                                     iGainMax = m_Capture.Gain
                                     Exit For
@@ -957,6 +1006,8 @@ Public Class UCVirtualTrackerItem
                                 iGainMax = m_Capture.Gain
                             Else
                                 m_Capture.Gain = -(i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Gain = iGainMin) Then
                                     iGainMin = m_Capture.Gain
                                     Exit For
@@ -977,9 +1028,13 @@ Public Class UCVirtualTrackerItem
 
                 If (True) Then
                     For j = 0 To 1
+                        m_Capture.Gamma = 0
+
                         For i = 1 To 255
                             If (j = 0) Then
                                 m_Capture.Gamma = (i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Gamma = iGammaMax) Then
                                     iGammaMax = m_Capture.Gamma
                                     Exit For
@@ -988,6 +1043,8 @@ Public Class UCVirtualTrackerItem
                                 iGammaMax = m_Capture.Gamma
                             Else
                                 m_Capture.Gamma = -(i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Gamma = iGammaMin) Then
                                     iGammaMin = m_Capture.Gamma
                                     Exit For
@@ -1008,9 +1065,13 @@ Public Class UCVirtualTrackerItem
 
                 If (True) Then
                     For j = 0 To 1
+                        m_Capture.Contrast = 0
+
                         For i = 1 To 255
                             If (j = 0) Then
                                 m_Capture.Contrast = (i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Contrast = iContrastMax) Then
                                     iContrastMax = m_Capture.Contrast
                                     Exit For
@@ -1019,6 +1080,8 @@ Public Class UCVirtualTrackerItem
                                 iContrastMax = m_Capture.Contrast
                             Else
                                 m_Capture.Contrast = -(i * PROBE_MULTIPLY)
+                                CapturePoll()
+
                                 If (m_Capture.Contrast = iContrastMin) Then
                                     iContrastMin = m_Capture.Contrast
                                     Exit For
@@ -1045,11 +1108,20 @@ Public Class UCVirtualTrackerItem
 
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Minimum = CInt(iExposureMin)
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Maximum = CInt(iExposureMax)
-                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Max(iExposureMin, Math.Min(iExposureMax, iExposureDefault)))
+
+                                                                       ' Has a value been set?
+                                                                       If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Tag)) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Max(iExposureMin, Math.Min(iExposureMax, iExposureDefault)))
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Tag = True
+                                                                       End If
+
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Enabled = True
                                                                    Finally
-                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
+
+                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceExposure_ValueChanged(Nothing, Nothing)
                                                                End Sub)
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1065,11 +1137,19 @@ Public Class UCVirtualTrackerItem
 
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Minimum = CInt(iGainMin)
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Maximum = CInt(iGainMax)
-                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Max(iGainMin, Math.Min(iGainMax, iGainDefault)))
+
+                                                                       If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Tag)) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Max(iGainMin, Math.Min(iGainMax, iGainDefault)))
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Tag = True
+                                                                       End If
+
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Enabled = True
                                                                    Finally
-                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
+
+                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceGain_ValueChanged(Nothing, Nothing)
                                                                End Sub)
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1085,11 +1165,19 @@ Public Class UCVirtualTrackerItem
 
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Minimum = CInt(iGammaMin)
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Maximum = CInt(iGammaMax)
-                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value = CInt(Math.Max(iGammaMin, Math.Min(iGammaMax, iGammaDefault)))
+
+                                                                       If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Tag)) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value = CInt(Math.Max(iGammaMin, Math.Min(iGammaMax, iGammaDefault)))
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Tag = True
+                                                                       End If
+
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Enabled = True
                                                                    Finally
-                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
+
+                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceGamma_ValueChanged(Nothing, Nothing)
                                                                End Sub)
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1105,11 +1193,19 @@ Public Class UCVirtualTrackerItem
 
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Minimum = CInt(iContrastMin)
                                                                        g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Maximum = CInt(iContrastMax)
-                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value = CInt(Math.Max(iContrastMin, Math.Min(iContrastMax, iContrastDefault)))
+
+                                                                       If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Tag)) Then
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value = CInt(Math.Max(iContrastMin, Math.Min(iContrastMax, iContrastDefault)))
+                                                                           g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Tag = True
+                                                                       End If
+
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Enabled = True
                                                                    Finally
-                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
+
+                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast_ValueChanged(Nothing, Nothing)
                                                                End Sub)
 
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
@@ -1129,6 +1225,12 @@ Public Class UCVirtualTrackerItem
 
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Dispose())
             End Try
+        End Sub
+
+        Private Sub CapturePoll()
+            Using mMat As New OpenCvSharp.Mat
+                m_Capture.Read(mMat)
+            End Using
         End Sub
 
         Private Sub CaptureThread()
@@ -1428,10 +1530,10 @@ Public Class UCVirtualTrackerItem
 
                 Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceExposure", "0")))
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceGain", "0")))
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceGamma", "0")))
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, CInt(mIni.ReadKeyValue(sDevicePath, "DeviceContrast", "0")))
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True)
 
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
                         mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
@@ -1447,8 +1549,14 @@ Public Class UCVirtualTrackerItem
                 g_bConfigLoaded = True
             End Sub
 
-            Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As Integer)
-                mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue))
+            Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As String, bTagFalseIfNothing As Boolean)
+                If (bTagFalseIfNothing AndAlso iValue Is Nothing) Then
+                    mControl.Tag = False
+                    Return
+                End If
+
+                mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, CInt(iValue)))
+                mControl.Tag = True
             End Sub
 
             Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
@@ -1544,5 +1652,22 @@ Public Class UCVirtualTrackerItem
 
         g_mClassCaptureLogic.m_Capture.Settings = 0
         g_mClassCaptureLogic.m_Capture.Settings = 1
+    End Sub
+
+    Private Sub PictureBox_CaptureImage_Click(sender As Object, e As EventArgs) Handles PictureBox_CaptureImage.Click
+        If (PictureBox_CaptureImage.Dock <> DockStyle.Fill) Then
+            If (g_mCaptureBoxLastRect.X = 0 AndAlso g_mCaptureBoxLastRect.Y = 0) Then
+                g_mCaptureBoxLastRect = New Rectangle(PictureBox_CaptureImage.Location.X, PictureBox_CaptureImage.Location.Y, PictureBox_CaptureImage.Size.Width, PictureBox_CaptureImage.Size.Height)
+            End If
+
+            PictureBox_CaptureImage.Dock = DockStyle.Fill
+            PictureBox_CaptureImage.BringToFront()
+        Else
+            PictureBox_CaptureImage.Dock = DockStyle.None
+            PictureBox_CaptureImage.Location = New Point(g_mCaptureBoxLastRect.X, g_mCaptureBoxLastRect.Y)
+            PictureBox_CaptureImage.Size = New Size(g_mCaptureBoxLastRect.Width, g_mCaptureBoxLastRect.Height)
+            PictureBox_CaptureImage.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+            PictureBox_CaptureImage.BringToFront()
+        End If
     End Sub
 End Class
