@@ -6,11 +6,6 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
-        Me.AutoSize = True
-        Me.AutoSizeMode = AutoSizeMode.GrowOnly
-
-        Panel_Devices.AutoSize = True
-        Panel_Devices.AutoSizeMode = AutoSizeMode.GrowOnly
 
         Try
             g_bIgnoreEvents = True

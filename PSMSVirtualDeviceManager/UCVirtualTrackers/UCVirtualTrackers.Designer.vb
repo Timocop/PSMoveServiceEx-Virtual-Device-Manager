@@ -117,13 +117,15 @@ Partial Class UCVirtualTrackers
         '
         'Panel_Devices
         '
-        Me.Panel_Devices.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_Devices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_Devices.AutoScroll = True
         Me.Panel_Devices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_Devices.Location = New System.Drawing.Point(32, 169)
         Me.Panel_Devices.Margin = New System.Windows.Forms.Padding(32)
         Me.Panel_Devices.Name = "Panel_Devices"
-        Me.Panel_Devices.Size = New System.Drawing.Size(736, 43)
+        Me.Panel_Devices.Size = New System.Drawing.Size(736, 384)
         Me.Panel_Devices.TabIndex = 4
         '
         'Label5
@@ -176,7 +178,7 @@ Partial Class UCVirtualTrackers
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackers"
-        Me.Size = New System.Drawing.Size(800, 249)
+        Me.Size = New System.Drawing.Size(800, 585)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()

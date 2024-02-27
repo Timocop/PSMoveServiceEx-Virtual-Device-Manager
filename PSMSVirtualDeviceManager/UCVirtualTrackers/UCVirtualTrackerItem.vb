@@ -26,17 +26,17 @@ Public Class UCVirtualTrackerItem
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        TrackBar_DeviceExposure.Minimum = Short.MinValue
-        TrackBar_DeviceExposure.Maximum = Short.MaxValue
+        TrackBar_DeviceExposure.Minimum = -1
+        TrackBar_DeviceExposure.Maximum = 1
         TrackBar_DeviceExposure.Tag = False
-        TrackBar_DeviceGain.Minimum = Short.MinValue
-        TrackBar_DeviceGain.Maximum = Short.MaxValue
+        TrackBar_DeviceGain.Minimum = -1
+        TrackBar_DeviceGain.Maximum = 1
         TrackBar_DeviceGain.Tag = False
-        TrackBar_DeviceGamma.Minimum = Short.MinValue
-        TrackBar_DeviceGamma.Maximum = Short.MaxValue
+        TrackBar_DeviceGamma.Minimum = -1
+        TrackBar_DeviceGamma.Maximum = 1
         TrackBar_DeviceGamma.Tag = False
-        TrackBar_DeviceConstrast.Minimum = Short.MinValue
-        TrackBar_DeviceConstrast.Maximum = Short.MaxValue
+        TrackBar_DeviceConstrast.Minimum = -1
+        TrackBar_DeviceConstrast.Maximum = 1
         TrackBar_DeviceConstrast.Tag = False
 
         g_mClassCaptureLogic = New ClassCaptureLogic(Me, mDeviceInfo.m_Index, mDeviceInfo.m_Path)
@@ -1550,10 +1550,10 @@ Public Class UCVirtualTrackerItem
 
                 Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True, True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True, True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True, True)
+                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True, True)
 
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
                         mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
@@ -1569,13 +1569,23 @@ Public Class UCVirtualTrackerItem
                 g_bConfigLoaded = True
             End Sub
 
-            Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As String, bTagFalseIfNothing As Boolean)
+            Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As String, bTagFalseIfNothing As Boolean, bAdjustRange As Boolean)
                 If (bTagFalseIfNothing AndAlso iValue Is Nothing) Then
                     mControl.Tag = False
                     Return
                 End If
 
-                mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, CInt(iValue)))
+                If (bAdjustRange) Then
+                    If (CInt(iValue) < mControl.Minimum) Then
+                        mControl.Minimum = CInt(iValue)
+                    End If
+
+                    If (CInt(iValue) > mControl.Maximum) Then
+                        mControl.Maximum = CInt(iValue)
+                    End If
+                End If
+
+                    mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, CInt(iValue)))
                 mControl.Tag = True
             End Sub
 
