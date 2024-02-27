@@ -152,10 +152,10 @@ Public Class UCVirtualTrackerItem
 
         If (bRequired) Then
             Button_RestartDevice.Text = String.Format("Restart device*")
-            Button_RestartDevice.Font = New Font(Button_ConfigSave.Font, FontStyle.Bold)
+            Button_RestartDevice.Font = New Font(Button_RestartDevice.Font, FontStyle.Bold)
         Else
             Button_RestartDevice.Text = String.Format("Restart device")
-            Button_RestartDevice.Font = New Font(Button_ConfigSave.Font, FontStyle.Regular)
+            Button_RestartDevice.Font = New Font(Button_RestartDevice.Font, FontStyle.Regular)
         End If
     End Sub
 
@@ -1121,7 +1121,12 @@ Public Class UCVirtualTrackerItem
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
 
-                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceExposure_ValueChanged(Nothing, Nothing)
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceExposure_ValueChanged(Nothing, Nothing)
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
                                                                End Sub)
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1149,7 +1154,12 @@ Public Class UCVirtualTrackerItem
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
 
-                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceGain_ValueChanged(Nothing, Nothing)
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGain_ValueChanged(Nothing, Nothing)
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
                                                                End Sub)
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1177,7 +1187,12 @@ Public Class UCVirtualTrackerItem
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
 
-                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceGamma_ValueChanged(Nothing, Nothing)
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceGamma_ValueChanged(Nothing, Nothing)
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
                                                                End Sub)
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1205,7 +1220,12 @@ Public Class UCVirtualTrackerItem
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = False
                                                                    End Try
 
-                                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast_ValueChanged(Nothing, Nothing)
+                                                                   Try
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                                                                       g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast_ValueChanged(Nothing, Nothing)
+                                                                   Finally
+                                                                       g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                   End Try
                                                                End Sub)
 
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
