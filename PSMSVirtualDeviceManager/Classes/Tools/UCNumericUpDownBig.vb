@@ -135,6 +135,10 @@
     End Sub
 
     Private Sub UCNumericUpDownBig_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged
+        If (Me.Disposing OrElse Me.IsDisposed) Then
+            Return
+        End If
+
         UpdateResetButton()
         UpdateDocking()
     End Sub
