@@ -71,6 +71,12 @@
         End Sub
 
         Public Sub UpdateItem()
+
+            Const LISTVIEW_SUBITEM_ID As Integer = 0
+            Const LISTVIEW_SUBITEM_TRACKERID As Integer = 1
+            Const LISTVIEW_SUBITEM_NAME As Integer = 2
+            Const LISTVIEW_SUBITEM_PATH As Integer = 3
+
             'Is there any error?
             If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed) Then
                 Me.BackColor = Color.FromArgb(255, 192, 192)
@@ -86,10 +92,10 @@
                 Return
             End If
 
-            Me.SubItems(0).Text = CStr(g_mClassDeviceInfo.m_Index)
-            Me.SubItems(1).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipeIndex)
-            Me.SubItems(2).Text = CStr(g_mClassDeviceInfo.m_Name)
-            Me.SubItems(3).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
+            Me.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(g_mClassDeviceInfo.m_Index)
+            Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipeIndex)
+            Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = CStr(g_mClassDeviceInfo.m_Name)
+            Me.SubItems(LISTVIEW_SUBITEM_PATH).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
         End Sub
 
         ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualTrackerItem

@@ -56,6 +56,11 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Public Sub UpdateItem()
+            Const LISTVIEW_SUBITEM_TYPE As Integer = 0
+            Const LISTVIEW_SUBITEM_INDEX As Integer = 1
+            Const LISTVIEW_SUBITEM_VMTID As Integer = 2
+            Const LISTVIEW_SUBITEM_ROLE As Integer = 3
+
             If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
                 Return
             End If
@@ -65,21 +70,21 @@ Public Class UCVirtualMotionTracker
             End If
 
             If (g_UCVirtualMotionTrackerItem.g_mClassIO.m_IsHMD) Then
-                Me.SubItems(0).Text = "HMD"
+                Me.SubItems(LISTVIEW_SUBITEM_TYPE).Text = "HMD"
             Else
-                Me.SubItems(0).Text = "Controller"
+                Me.SubItems(LISTVIEW_SUBITEM_TYPE).Text = "Controller"
             End If
 
-            Me.SubItems(1).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_Index)
-            Me.SubItems(2).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_VmtTracker)
+            Me.SubItems(LISTVIEW_SUBITEM_INDEX).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_Index)
+            Me.SubItems(LISTVIEW_SUBITEM_VMTID).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_VmtTracker)
 
             If (g_UCVirtualMotionTrackerItem.g_mClassIO.m_IsHMD) Then
-                Me.SubItems(3).Text = "Head-Mounted Display"
+                Me.SubItems(LISTVIEW_SUBITEM_ROLE).Text = "Head-Mounted Display"
             Else
                 If (g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem IsNot Nothing AndAlso g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem IsNot Nothing) Then
-                    Me.SubItems(3).Text = String.Format("{0} ({1})", CStr(g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem), CStr(g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem))
+                    Me.SubItems(LISTVIEW_SUBITEM_ROLE).Text = String.Format("{0} ({1})", CStr(g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem), CStr(g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem))
                 Else
-                    Me.SubItems(3).Text = ""
+                    Me.SubItems(LISTVIEW_SUBITEM_ROLE).Text = ""
                 End If
             End If
 

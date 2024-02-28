@@ -23,6 +23,9 @@ Public Class UCControllerAttachments
         End Sub
 
         Public Sub UpdateItem()
+            Const LISTVIEW_SUBITEM_INDEX As Integer = 0
+            Const LISTVIEW_SUBITEM_PARENTID As Integer = 1
+
             If (g_UCControllerAttachmentsItem Is Nothing OrElse g_UCControllerAttachmentsItem.IsDisposed) Then
                 Return
             End If
@@ -31,8 +34,8 @@ Public Class UCControllerAttachments
                 Return
             End If
 
-            Me.SubItems(0).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_Index)
-            Me.SubItems(1).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_ParentController)
+            Me.SubItems(LISTVIEW_SUBITEM_INDEX).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_Index)
+            Me.SubItems(LISTVIEW_SUBITEM_PARENTID).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_ParentController)
         End Sub
 
         Property m_Visible As Boolean

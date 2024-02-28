@@ -35,6 +35,8 @@ Public Class UCRemoteDevices
         End Sub
 
         Public Sub UpdateItem()
+            Const LISTVIEW_SUBITEM_NAME As Integer = 0
+
             If (g_UCRemoteDeviceItem Is Nothing OrElse g_UCRemoteDeviceItem.IsDisposed) Then
                 Return
             End If
@@ -48,7 +50,7 @@ Public Class UCRemoteDevices
                 sTrackerName &= String.Format(" ({0})", g_UCRemoteDeviceItem.m_Nickname)
             End If
 
-            Me.SubItems(0).Text = sTrackerName
+            Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = sTrackerName
 
             'Is there any error?
             If (g_UCRemoteDeviceItem.Panel_Status.Visible) Then
