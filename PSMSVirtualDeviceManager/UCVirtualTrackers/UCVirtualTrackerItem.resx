@@ -121,7 +121,8 @@
     <value>17, 17</value>
   </metadata>
   <data name="ComboBox_CameraResolution.ToolTip" xml:space="preserve">
-    <value>You can operate your video input device at different resolutions. Using 480p is recommended as it offers a good balance between quality and performance. 480p should be used for multi-camera setups and 1080p for single-camera setups.
+    <value>You can operate your video input device at different resolutions. 
+It's recommended to use 480p for multi-camera setups and 1080p for single-camera setups.
 Keep in mind that higher resolutions can impose much more system demands and does not always improve the quality of your tracking!</value>
   </data>
   <data name="CheckBox_DeviceSupersampling.ToolTip" xml:space="preserve">
