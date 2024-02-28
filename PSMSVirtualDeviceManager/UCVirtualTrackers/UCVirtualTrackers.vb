@@ -54,11 +54,17 @@
 
         Private g_UCVirtualTrackerItem As UCVirtualTrackerItem
         Private g_UCVirtualTrackers As UCVirtualTrackers
+        Private g_mClassDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo
 
         Public Sub New(_UCVirtualMotionTracker As UCVirtualTrackers, _DeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
             MyBase.New(New String() {"", "", "", ""})
 
             g_UCVirtualTrackers = _UCVirtualMotionTracker
+            g_mClassDeviceInfo = New ClassVideoInputDevices.ClassDeviceInfo(
+                _DeviceInfo.m_Index,
+                _DeviceInfo.m_Name,
+                _DeviceInfo.m_Path,
+                _DeviceInfo.m_CLSID)
             g_UCVirtualTrackerItem = New UCVirtualTrackerItem(_UCVirtualMotionTracker, _DeviceInfo)
 
             UpdateItem()
@@ -76,14 +82,20 @@
                 Return
             End If
 
-            Me.SubItems(0).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_DeviceIndex)
-            Me.SubItems(1).Text = CStr(g_UCVirtualTrackerItem.Label_FriendlyName.Text)
-            Me.SubItems(2).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_DevicePath.ToUpperInvariant)
+            Me.SubItems(0).Text = CStr(g_mClassDeviceInfo.m_Index)
+            Me.SubItems(1).Text = CStr(g_mClassDeviceInfo.m_Name)
+            Me.SubItems(2).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
         End Sub
 
         ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualTrackerItem
             Get
                 Return g_UCVirtualTrackerItem
+            End Get
+        End Property
+
+        ReadOnly Property m_ClassDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo
+            Get
+                Return g_mClassDeviceInfo
             End Get
         End Property
 
@@ -235,6 +247,36 @@
         End Try
     End Sub
 
+    Private Sub ToolStripMenuItem_VideoReconnect_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_VideoReconnect.Click
+        Try
+            If (ListView_VideoDevices.SelectedItems.Count < 1) Then
+                Return
+            End If
+
+            Dim mAttachmentItem = DirectCast(ListView_VideoDevices.SelectedItems(0), ClassVideoInputDevicesListViewItem)
+            If (mAttachmentItem Is Nothing) Then
+                Return
+            End If
+
+            mAttachmentItem.m_UCVirtualMotionTrackerItem.Dispose()
+
+            ' Copy and get the new index. Should fail if -1
+            Dim mNewDeviceInfo As New ClassVideoInputDevices.ClassDeviceInfo(
+                mAttachmentItem.m_ClassDeviceInfo.GetIndexByPath(),
+                mAttachmentItem.m_ClassDeviceInfo.m_Name,
+                mAttachmentItem.m_ClassDeviceInfo.m_Path,
+                mAttachmentItem.m_ClassDeviceInfo.m_CLSID)
+
+            If (mNewDeviceInfo.m_Index < 0) Then
+                Throw New ArgumentException("Could not find video input device.")
+            End If
+
+            AddNewDevice(mNewDeviceInfo)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Unable to add to list", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Public Sub AddNewDevice(mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         Dim mUCVirtualTrackerItem As UCVirtualTrackerItem
 
@@ -247,6 +289,10 @@
         ' Remove disposed devices
         For i = ListView_VideoDevices.Items.Count - 1 To 0 Step -1
             Dim mTrackerItem = DirectCast(ListView_VideoDevices.Items(i), ClassVideoInputDevicesListViewItem)
+            If (mTrackerItem.m_ClassDeviceInfo.m_Path <> mDeviceInfo.m_Path) Then
+                Continue For
+            End If
+
             If (mTrackerItem.m_UCVirtualMotionTrackerItem Is Nothing OrElse mTrackerItem.m_UCVirtualMotionTrackerItem.IsDisposed) Then
                 ListView_VideoDevices.Items.RemoveAt(i)
             End If
@@ -301,7 +347,7 @@
         Next
     End Sub
 
-    Private Sub ToolStripMenuItem_TrackerRemove_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRemove.Click
+    Private Sub ToolStripMenuItem_VideoRemove_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_VideoRemove.Click
         If (ListView_VideoDevices.SelectedItems.Count < 1) Then
             Return
         End If
