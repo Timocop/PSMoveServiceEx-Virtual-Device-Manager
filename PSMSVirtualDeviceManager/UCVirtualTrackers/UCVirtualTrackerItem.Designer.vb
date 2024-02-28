@@ -63,6 +63,7 @@ Partial Class UCVirtualTrackerItem
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Panel_Preview = New System.Windows.Forms.Panel()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -71,17 +72,17 @@ Partial Class UCVirtualTrackerItem
         Me.TabControl1.SuspendLayout()
         Me.TabPage_DeviceProperties.SuspendLayout()
         Me.TabPage_TrackerProperties.SuspendLayout()
+        Me.Panel_Preview.SuspendLayout()
         Me.SuspendLayout()
         '
         'PictureBox_CaptureImage
         '
-        Me.PictureBox_CaptureImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox_CaptureImage.BackColor = System.Drawing.Color.Black
-        Me.PictureBox_CaptureImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(503, 74)
-        Me.PictureBox_CaptureImage.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
+        Me.PictureBox_CaptureImage.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.PictureBox_CaptureImage.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox_CaptureImage.Name = "PictureBox_CaptureImage"
-        Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(279, 214)
+        Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(277, 215)
         Me.PictureBox_CaptureImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox_CaptureImage.TabIndex = 0
         Me.PictureBox_CaptureImage.TabStop = False
@@ -500,6 +501,17 @@ Partial Class UCVirtualTrackerItem
         Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip_Info.ToolTipTitle = "Information"
         '
+        'Panel_Preview
+        '
+        Me.Panel_Preview.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_Preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_Preview.Controls.Add(Me.PictureBox_CaptureImage)
+        Me.Panel_Preview.Location = New System.Drawing.Point(503, 73)
+        Me.Panel_Preview.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
+        Me.Panel_Preview.Name = "Panel_Preview"
+        Me.Panel_Preview.Size = New System.Drawing.Size(279, 217)
+        Me.Panel_Preview.TabIndex = 24
+        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -513,8 +525,8 @@ Partial Class UCVirtualTrackerItem
         Me.Controls.Add(Me.Button_ConfigSave)
         Me.Controls.Add(Me.Button_RestartDevice)
         Me.Controls.Add(Me.Label_FriendlyName)
-        Me.Controls.Add(Me.PictureBox_CaptureImage)
         Me.Controls.Add(Me.CheckBox_ShowCaptureImage)
+        Me.Controls.Add(Me.Panel_Preview)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackerItem"
         Me.Size = New System.Drawing.Size(798, 361)
@@ -528,6 +540,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.PerformLayout()
         Me.TabPage_TrackerProperties.ResumeLayout(False)
         Me.TabPage_TrackerProperties.PerformLayout()
+        Me.Panel_Preview.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -568,4 +581,5 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents ComboBox_CameraResolution As ComboBox
     Friend WithEvents Label11 As Label
+    Friend WithEvents Panel_Preview As Panel
 End Class

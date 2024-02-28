@@ -18,8 +18,6 @@ Public Class UCVirtualTrackerItem
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
 
-    Private g_mCaptureBoxLastRect As New Rectangle
-
     Public Sub New(_UCVirtualTrackers As UCVirtualTrackers, mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         g_mUCVirtualTrackers = _UCVirtualTrackers
 
@@ -159,6 +157,24 @@ Public Class UCVirtualTrackerItem
             Button_RestartDevice.Font = New Font(Button_RestartDevice.Font, FontStyle.Regular)
         End If
     End Sub
+
+    Private Sub SetPreviewFullscreen(bFullscreen As Boolean)
+        If (IsPreviewFullscreen()) Then
+            If (Not bFullscreen) Then
+                PictureBox_CaptureImage.Parent = Panel_Preview
+                PictureBox_CaptureImage.BringToFront()
+            End If
+        Else
+            If (bFullscreen) Then
+                PictureBox_CaptureImage.Parent = Me
+                PictureBox_CaptureImage.BringToFront()
+            End If
+        End If
+    End Sub
+
+    Private Function IsPreviewFullscreen() As Boolean
+        Return (PictureBox_CaptureImage.Parent IsNot Panel_Preview)
+    End Function
 
     ReadOnly Property m_DevicePath As String
         Get
@@ -1682,27 +1698,19 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub PictureBox_CaptureImage_Click(sender As Object, e As EventArgs) Handles PictureBox_CaptureImage.Click
-        If (PictureBox_CaptureImage.Dock <> DockStyle.Fill) Then
-            If (g_mCaptureBoxLastRect.X = 0 AndAlso g_mCaptureBoxLastRect.Y = 0) Then
-                g_mCaptureBoxLastRect = New Rectangle(PictureBox_CaptureImage.Location.X, PictureBox_CaptureImage.Location.Y, PictureBox_CaptureImage.Size.Width, PictureBox_CaptureImage.Size.Height)
-            End If
-
-            PictureBox_CaptureImage.Dock = DockStyle.Fill
-            PictureBox_CaptureImage.BringToFront()
-        Else
-            PictureBox_CaptureImage.Dock = DockStyle.None
-            PictureBox_CaptureImage.Location = New Point(g_mCaptureBoxLastRect.X, g_mCaptureBoxLastRect.Y)
-            PictureBox_CaptureImage.Size = New Size(g_mCaptureBoxLastRect.Width, g_mCaptureBoxLastRect.Height)
-            PictureBox_CaptureImage.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-            PictureBox_CaptureImage.BringToFront()
-        End If
+        SetPreviewFullscreen(Not IsPreviewFullscreen())
     End Sub
 
     Private Sub UCVirtualTrackerItem_VisibleChanged(sender As Object, e As EventArgs) Handles MyBase.VisibleChanged
+        If (Me.Disposing OrElse Me.IsDisposed) Then
+            Return
+        End If
+
         If (Me.Visible) Then
             Return
         End If
 
         CheckBox_ShowCaptureImage.Checked = False
+        SetPreviewFullscreen(False)
     End Sub
 End Class
