@@ -82,9 +82,14 @@
                 Return
             End If
 
+            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic Is Nothing) Then
+                Return
+            End If
+
             Me.SubItems(0).Text = CStr(g_mClassDeviceInfo.m_Index)
-            Me.SubItems(1).Text = CStr(g_mClassDeviceInfo.m_Name)
-            Me.SubItems(2).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
+            Me.SubItems(1).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipeIndex)
+            Me.SubItems(2).Text = CStr(g_mClassDeviceInfo.m_Name)
+            Me.SubItems(3).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
         End Sub
 
         ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualTrackerItem

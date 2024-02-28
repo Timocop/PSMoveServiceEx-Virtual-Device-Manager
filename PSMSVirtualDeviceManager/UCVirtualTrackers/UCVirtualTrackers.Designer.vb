@@ -44,12 +44,13 @@ Partial Class UCVirtualTrackers
         Me.ColumnHeader_Name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_HardwareId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_VideoInputDevice = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_VideoReconnect = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_VideoRemove = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Timer_VideoInputDevices = New System.Windows.Forms.Timer(Me.components)
-        Me.ToolStripMenuItem_VideoReconnect = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ColumnHeader_TrackerId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -200,7 +201,7 @@ Partial Class UCVirtualTrackers
         '
         Me.ListView_VideoDevices.BackColor = System.Drawing.Color.White
         Me.ListView_VideoDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_VideoDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Id, Me.ColumnHeader_Name, Me.ColumnHeader_HardwareId})
+        Me.ListView_VideoDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Id, Me.ColumnHeader_TrackerId, Me.ColumnHeader_Name, Me.ColumnHeader_HardwareId})
         Me.ListView_VideoDevices.ContextMenuStrip = Me.ContextMenuStrip_VideoInputDevice
         Me.ListView_VideoDevices.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_VideoDevices.FullRowSelect = True
@@ -227,19 +228,26 @@ Partial Class UCVirtualTrackers
         'ColumnHeader_HardwareId
         '
         Me.ColumnHeader_HardwareId.Text = "Hardware ID"
-        Me.ColumnHeader_HardwareId.Width = 350
+        Me.ColumnHeader_HardwareId.Width = 300
         '
         'ContextMenuStrip_VideoInputDevice
         '
         Me.ContextMenuStrip_VideoInputDevice.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_VideoReconnect, Me.ToolStripMenuItem_VideoRemove})
         Me.ContextMenuStrip_VideoInputDevice.Name = "ContextMenuStrip_Trackers"
-        Me.ContextMenuStrip_VideoInputDevice.Size = New System.Drawing.Size(181, 70)
+        Me.ContextMenuStrip_VideoInputDevice.Size = New System.Drawing.Size(131, 48)
+        '
+        'ToolStripMenuItem_VideoReconnect
+        '
+        Me.ToolStripMenuItem_VideoReconnect.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_16x16_32
+        Me.ToolStripMenuItem_VideoReconnect.Name = "ToolStripMenuItem_VideoReconnect"
+        Me.ToolStripMenuItem_VideoReconnect.Size = New System.Drawing.Size(130, 22)
+        Me.ToolStripMenuItem_VideoReconnect.Text = "Reconnect"
         '
         'ToolStripMenuItem_VideoRemove
         '
         Me.ToolStripMenuItem_VideoRemove.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
         Me.ToolStripMenuItem_VideoRemove.Name = "ToolStripMenuItem_VideoRemove"
-        Me.ToolStripMenuItem_VideoRemove.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem_VideoRemove.Size = New System.Drawing.Size(130, 22)
         Me.ToolStripMenuItem_VideoRemove.Text = "Remove"
         '
         'Panel8
@@ -281,12 +289,10 @@ Partial Class UCVirtualTrackers
         Me.Timer_VideoInputDevices.Enabled = True
         Me.Timer_VideoInputDevices.Interval = 500
         '
-        'ToolStripMenuItem_VideoReconnect
+        'ColumnHeader_TrackerId
         '
-        Me.ToolStripMenuItem_VideoReconnect.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_16x16_32
-        Me.ToolStripMenuItem_VideoReconnect.Name = "ToolStripMenuItem_VideoReconnect"
-        Me.ToolStripMenuItem_VideoReconnect.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem_VideoReconnect.Text = "Reconnect"
+        Me.ColumnHeader_TrackerId.Text = "Tracker ID"
+        Me.ColumnHeader_TrackerId.Width = 100
         '
         'UCVirtualTrackers
         '
@@ -338,4 +344,5 @@ Partial Class UCVirtualTrackers
     Friend WithEvents ContextMenuStrip_VideoInputDevice As ContextMenuStrip
     Friend WithEvents ToolStripMenuItem_VideoRemove As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem_VideoReconnect As ToolStripMenuItem
+    Friend WithEvents ColumnHeader_TrackerId As ColumnHeader
 End Class
