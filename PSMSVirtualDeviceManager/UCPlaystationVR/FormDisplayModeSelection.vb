@@ -19,10 +19,10 @@ Public Class FormDisplayModeSelection
         ' Add any initialization after the InitializeComponent() call.
 
         Try
-            ' Only enable Direct-Mode for AMD and Intel GPUs
+            ' Disable Direct-Mode for Nvidia GPUs
             ' $TODO Try to enable Direct-Mode for Nvidia using OSVR.
             Dim iGpuVendors As ENUM_GPU_VENDOR_FLAGS = GetGraphicsCardVendor()
-            If ((iGpuVendors And ENUM_GPU_VENDOR_FLAGS.AMD) = 0 AndAlso (iGpuVendors And ENUM_GPU_VENDOR_FLAGS.INTEL) = 0) Then
+            If ((iGpuVendors And ENUM_GPU_VENDOR_FLAGS.NVIDIA) <> 0) Then
                 RadioButton_ModeDirect.Enabled = False
                 RadioButton_ModeVirtual.Checked = True
             End If
