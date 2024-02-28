@@ -6,6 +6,10 @@ Partial Class UCVirtualTrackers
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
+            If (disposing) Then
+                CleanUp()
+            End If
+
             If disposing AndAlso components IsNot Nothing Then
                 components.Dispose()
             End If
@@ -22,6 +26,7 @@ Partial Class UCVirtualTrackers
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -33,8 +38,22 @@ Partial Class UCVirtualTrackers
         Me.Label5 = New System.Windows.Forms.Label()
         Me.ComboBox_VirtualTrackerCount = New System.Windows.Forms.ComboBox()
         Me.Button_DeviceAdd = New System.Windows.Forms.Button()
+        Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
+        Me.ListView_VideoDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader_Id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_HardwareId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.Panel8 = New System.Windows.Forms.Panel()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.Timer_VideoInputDevices = New System.Windows.Forms.Timer(Me.components)
+        Me.ContextMenuStrip_VideoInputDevice = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_TrackerRemove = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel_AvailableDevices.SuspendLayout()
+        Me.Panel8.SuspendLayout()
+        Me.ContextMenuStrip_VideoInputDevice.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -121,11 +140,10 @@ Partial Class UCVirtualTrackers
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_Devices.AutoScroll = True
-        Me.Panel_Devices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel_Devices.Location = New System.Drawing.Point(32, 169)
-        Me.Panel_Devices.Margin = New System.Windows.Forms.Padding(32)
+        Me.Panel_Devices.Location = New System.Drawing.Point(32, 334)
+        Me.Panel_Devices.Margin = New System.Windows.Forms.Padding(32, 16, 32, 32)
         Me.Panel_Devices.Name = "Panel_Devices"
-        Me.Panel_Devices.Size = New System.Drawing.Size(736, 384)
+        Me.Panel_Devices.Size = New System.Drawing.Size(736, 569)
         Me.Panel_Devices.TabIndex = 4
         '
         'Label5
@@ -164,11 +182,110 @@ Partial Class UCVirtualTrackers
         Me.Button_DeviceAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_DeviceAdd.UseVisualStyleBackColor = True
         '
+        'Panel_AvailableDevices
+        '
+        Me.Panel_AvailableDevices.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_AvailableDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_AvailableDevices.Controls.Add(Me.ListView_VideoDevices)
+        Me.Panel_AvailableDevices.Controls.Add(Me.Panel8)
+        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(36, 167)
+        Me.Panel_AvailableDevices.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
+        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(728, 135)
+        Me.Panel_AvailableDevices.TabIndex = 7
+        '
+        'ListView_VideoDevices
+        '
+        Me.ListView_VideoDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_VideoDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_VideoDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Id, Me.ColumnHeader_Name, Me.ColumnHeader_HardwareId})
+        Me.ListView_VideoDevices.ContextMenuStrip = Me.ContextMenuStrip_VideoInputDevice
+        Me.ListView_VideoDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_VideoDevices.FullRowSelect = True
+        Me.ListView_VideoDevices.HideSelection = False
+        Me.ListView_VideoDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_VideoDevices.MultiSelect = False
+        Me.ListView_VideoDevices.Name = "ListView_VideoDevices"
+        Me.ListView_VideoDevices.Size = New System.Drawing.Size(726, 91)
+        Me.ListView_VideoDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_VideoDevices.TabIndex = 1
+        Me.ListView_VideoDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_VideoDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Id
+        '
+        Me.ColumnHeader_Id.Text = "ID"
+        Me.ColumnHeader_Id.Width = 50
+        '
+        'ColumnHeader_Name
+        '
+        Me.ColumnHeader_Name.Text = "Name"
+        Me.ColumnHeader_Name.Width = 250
+        '
+        'ColumnHeader_HardwareId
+        '
+        Me.ColumnHeader_HardwareId.Text = "Hardware ID"
+        Me.ColumnHeader_HardwareId.Width = 350
+        '
+        'Panel8
+        '
+        Me.Panel8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel8.Controls.Add(Me.Label12)
+        Me.Panel8.Controls.Add(Me.Panel10)
+        Me.Panel8.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel8.Location = New System.Drawing.Point(0, 0)
+        Me.Panel8.Name = "Panel8"
+        Me.Panel8.Size = New System.Drawing.Size(726, 42)
+        Me.Panel8.TabIndex = 0
+        '
+        'Label12
+        '
+        Me.Label12.BackColor = System.Drawing.Color.Transparent
+        Me.Label12.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.Navy
+        Me.Label12.Location = New System.Drawing.Point(0, 0)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label12.Size = New System.Drawing.Size(726, 41)
+        Me.Label12.TabIndex = 1
+        Me.Label12.Text = "Available Video Input Devices"
+        Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel10
+        '
+        Me.Panel10.BackColor = System.Drawing.Color.Gray
+        Me.Panel10.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel10.Location = New System.Drawing.Point(0, 41)
+        Me.Panel10.Name = "Panel10"
+        Me.Panel10.Size = New System.Drawing.Size(726, 1)
+        Me.Panel10.TabIndex = 0
+        '
+        'Timer_VideoInputDevices
+        '
+        Me.Timer_VideoInputDevices.Enabled = True
+        Me.Timer_VideoInputDevices.Interval = 500
+        '
+        'ContextMenuStrip_VideoInputDevice
+        '
+        Me.ContextMenuStrip_VideoInputDevice.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_TrackerRemove})
+        Me.ContextMenuStrip_VideoInputDevice.Name = "ContextMenuStrip_Trackers"
+        Me.ContextMenuStrip_VideoInputDevice.Size = New System.Drawing.Size(118, 26)
+        '
+        'ToolStripMenuItem_TrackerRemove
+        '
+        Me.ToolStripMenuItem_TrackerRemove.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.ToolStripMenuItem_TrackerRemove.Name = "ToolStripMenuItem_TrackerRemove"
+        Me.ToolStripMenuItem_TrackerRemove.Size = New System.Drawing.Size(117, 22)
+        Me.ToolStripMenuItem_TrackerRemove.Text = "Remove"
+        '
         'UCVirtualTrackers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.Panel_AvailableDevices)
         Me.Controls.Add(Me.ComboBox_VirtualTrackerCount)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Panel_Devices)
@@ -178,10 +295,13 @@ Partial Class UCVirtualTrackers
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackers"
-        Me.Size = New System.Drawing.Size(800, 585)
+        Me.Size = New System.Drawing.Size(800, 935)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel_AvailableDevices.ResumeLayout(False)
+        Me.Panel8.ResumeLayout(False)
+        Me.ContextMenuStrip_VideoInputDevice.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -198,4 +318,15 @@ Partial Class UCVirtualTrackers
     Friend WithEvents Label5 As Label
     Friend WithEvents ComboBox_VirtualTrackerCount As ComboBox
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
+    Friend WithEvents Panel_AvailableDevices As Panel
+    Friend WithEvents ListView_VideoDevices As ClassListViewEx
+    Friend WithEvents ColumnHeader_Id As ColumnHeader
+    Friend WithEvents ColumnHeader_Name As ColumnHeader
+    Friend WithEvents Panel8 As Panel
+    Friend WithEvents Label12 As Label
+    Friend WithEvents Panel10 As Panel
+    Friend WithEvents ColumnHeader_HardwareId As ColumnHeader
+    Friend WithEvents Timer_VideoInputDevices As Timer
+    Friend WithEvents ContextMenuStrip_VideoInputDevice As ContextMenuStrip
+    Friend WithEvents ToolStripMenuItem_TrackerRemove As ToolStripMenuItem
 End Class

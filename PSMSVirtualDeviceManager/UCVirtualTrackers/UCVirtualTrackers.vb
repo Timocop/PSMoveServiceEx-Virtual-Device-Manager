@@ -48,6 +48,104 @@
         CreateControl()
     End Sub
 
+    Class ClassVideoInputDevicesListViewItem
+        Inherits ListViewItem
+        Implements IDisposable
+
+        Private g_UCVirtualTrackerItem As UCVirtualTrackerItem
+        Private g_UCVirtualTrackers As UCVirtualTrackers
+
+        Public Sub New(_UCVirtualMotionTracker As UCVirtualTrackers, _DeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
+            MyBase.New(New String() {"", "", "", ""})
+
+            g_UCVirtualTrackers = _UCVirtualMotionTracker
+            g_UCVirtualTrackerItem = New UCVirtualTrackerItem(_UCVirtualMotionTracker, _DeviceInfo)
+
+            UpdateItem()
+        End Sub
+
+        Public Sub UpdateItem()
+            'Is there any error?
+            If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed) Then
+                Me.BackColor = Color.FromArgb(255, 192, 192)
+            Else
+                Me.BackColor = Color.FromArgb(255, 255, 255)
+            End If
+
+            If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed) Then
+                Return
+            End If
+
+            Me.SubItems(0).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_DeviceIndex)
+            Me.SubItems(1).Text = CStr(g_UCVirtualTrackerItem.Label_FriendlyName.Text)
+            Me.SubItems(2).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_DevicePath.ToUpperInvariant)
+        End Sub
+
+        ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualTrackerItem
+            Get
+                Return g_UCVirtualTrackerItem
+            End Get
+        End Property
+
+        Property m_Visible As Boolean
+            Get
+                If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed) Then
+                    Return False
+                End If
+
+                Return (g_UCVirtualTrackerItem.Parent Is g_UCVirtualTrackers.Panel_Devices)
+            End Get
+            Set(value As Boolean)
+                If (value) Then
+                    If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed) Then
+                        Return
+                    End If
+
+                    g_UCVirtualTrackerItem.Parent = g_UCVirtualTrackers.Panel_Devices
+                    g_UCVirtualTrackerItem.Dock = DockStyle.Top
+                Else
+                    g_UCVirtualTrackerItem.Parent = Nothing
+                End If
+            End Set
+        End Property
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_UCVirtualTrackerItem IsNot Nothing AndAlso Not g_UCVirtualTrackerItem.IsDisposed) Then
+                        g_UCVirtualTrackerItem.Dispose()
+                        g_UCVirtualTrackerItem = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
+
     Private Sub ComboBox_VirtualTrackerCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualTrackerCount.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
@@ -146,25 +244,73 @@
             End If
         Next
 
-        mUCVirtualTrackerItem = New UCVirtualTrackerItem(Me, mDeviceInfo)
-        mUCVirtualTrackerItem.Parent = Panel_Devices
-        mUCVirtualTrackerItem.Dock = DockStyle.Top
+        ' Remove disposed devices
+        For i = ListView_VideoDevices.Items.Count - 1 To 0 Step -1
+            Dim mTrackerItem = DirectCast(ListView_VideoDevices.Items(i), ClassVideoInputDevicesListViewItem)
+            If (mTrackerItem.m_UCVirtualMotionTrackerItem Is Nothing OrElse mTrackerItem.m_UCVirtualMotionTrackerItem.IsDisposed) Then
+                ListView_VideoDevices.Items.RemoveAt(i)
+            End If
+        Next
+
+        Dim mItem = New ClassVideoInputDevicesListViewItem(Me, mDeviceInfo)
+        ListView_VideoDevices.Items.Add(mItem)
+        mItem.Selected = True
     End Sub
 
     Public Function GetAllDevices() As UCVirtualTrackerItem()
-        Dim mUCVirtualTrackers As New List(Of UCVirtualTrackerItem)
+        Dim mTrackerList As New List(Of UCVirtualTrackerItem)
 
-        For Each mControl As Control In Panel_Devices.Controls
-            Dim mUCVirtualTrackerItem = TryCast(mControl, UCVirtualTrackerItem)
-            If (mUCVirtualTrackerItem Is Nothing) Then
+        For Each mItem As ListViewItem In ListView_VideoDevices.Items
+            Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)
+            If (mTrackerItem.m_UCVirtualMotionTrackerItem Is Nothing OrElse mTrackerItem.m_UCVirtualMotionTrackerItem.IsDisposed) Then
                 Continue For
             End If
 
-            mUCVirtualTrackers.Add(mUCVirtualTrackerItem)
+            mTrackerList.Add(mTrackerItem.m_UCVirtualMotionTrackerItem)
         Next
 
-        Return mUCVirtualTrackers.ToArray
+        Return mTrackerList.ToArray
     End Function
+
+    Private Sub Timer_VideoInputDevices_Tick(sender As Object, e As EventArgs) Handles Timer_VideoInputDevices.Tick
+        Try
+            Timer_VideoInputDevices.Stop()
+
+            For Each mItem As ListViewItem In ListView_VideoDevices.Items
+                Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)
+                mTrackerItem.UpdateItem()
+            Next
+        Catch ex As Exception
+        Finally
+            Timer_VideoInputDevices.Start()
+        End Try
+    End Sub
+
+    Private Sub ListView_VideoDevices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_VideoDevices.SelectedIndexChanged
+        For Each mItem As ListViewItem In ListView_VideoDevices.Items
+            Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)
+            If (mTrackerItem.Selected) Then
+                If (Not mTrackerItem.m_Visible) Then
+                    mTrackerItem.m_Visible = True
+                End If
+            Else
+                If (mTrackerItem.m_Visible) Then
+                    mTrackerItem.m_Visible = False
+                End If
+            End If
+        Next
+    End Sub
+
+    Private Sub ToolStripMenuItem_TrackerRemove_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRemove.Click
+        If (ListView_VideoDevices.SelectedItems.Count < 1) Then
+            Return
+        End If
+
+        Dim mAttachmentItem = DirectCast(ListView_VideoDevices.SelectedItems(0), ClassVideoInputDevicesListViewItem)
+        ListView_VideoDevices.Items.Remove(mAttachmentItem)
+
+        mAttachmentItem.Dispose()
+    End Sub
 
     Class ClassComboBoxDeviceInfoItem
         Inherits ClassVideoInputDevices.ClassDeviceInfo
@@ -177,4 +323,13 @@
             Return String.Format("ID: {0}, Name: {1}", m_Index, m_Name)
         End Function
     End Class
+
+    Private Sub CleanUp()
+        For Each mItem As ListViewItem In ListView_VideoDevices.Items
+            Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)
+
+            mTrackerItem.Dispose()
+        Next
+        ListView_VideoDevices.Items.Clear()
+    End Sub
 End Class

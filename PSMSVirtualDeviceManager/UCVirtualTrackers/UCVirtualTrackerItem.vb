@@ -4,11 +4,12 @@ Public Class UCVirtualTrackerItem
     Const MAX_PSMOVESERIVCE_TRACKERS = 8
     Const PROBE_MULTIPLY = 64
 
+    Public g_mClassCaptureLogic As ClassCaptureLogic
+
     Public g_mUCVirtualTrackers As UCVirtualTrackers
 
     Private g_mMessageLabel As Label
 
-    Private g_mClassCaptureLogic As ClassCaptureLogic
     Private g_iPreviousTrackerIdSelectedIndex As Integer = -1
 
     Public g_bIgnoreEvents As Boolean = False
@@ -388,10 +389,6 @@ Public Class UCVirtualTrackerItem
         End If
 
         SetUnsavedState(True)
-    End Sub
-
-    Private Sub Button_Close_Click(sender As Object, e As EventArgs) Handles Button_Close.Click
-        Me.Dispose()
     End Sub
 
     Public Sub SetFpsText(iCaptureFps As Integer, iPipeFps As Integer)
@@ -1699,5 +1696,13 @@ Public Class UCVirtualTrackerItem
             PictureBox_CaptureImage.Anchor = AnchorStyles.Top Or AnchorStyles.Right
             PictureBox_CaptureImage.BringToFront()
         End If
+    End Sub
+
+    Private Sub UCVirtualTrackerItem_VisibleChanged(sender As Object, e As EventArgs) Handles MyBase.VisibleChanged
+        If (Me.Visible) Then
+            Return
+        End If
+
+        CheckBox_ShowCaptureImage.Checked = False
     End Sub
 End Class

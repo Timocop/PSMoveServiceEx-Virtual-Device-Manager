@@ -1943,5 +1943,4 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
-
 End Class

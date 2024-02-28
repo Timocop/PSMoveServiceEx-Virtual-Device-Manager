@@ -174,7 +174,6 @@ Partial Public Class UCVirtualMotionTracker
         mAttachmentItem.Dispose()
     End Sub
 
-
     Private Sub Timer_VMTTrackers_Tick(sender As Object, e As EventArgs) Handles Timer_VMTTrackers.Tick
         Try
             Timer_VMTTrackers.Stop()

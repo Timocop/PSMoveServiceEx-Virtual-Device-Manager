@@ -29,7 +29,6 @@ Partial Class UCVirtualTrackerItem
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVirtualTrackerItem))
         Me.PictureBox_CaptureImage = New System.Windows.Forms.PictureBox()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_FriendlyName = New System.Windows.Forms.Label()
         Me.ComboBox_DeviceTrackerId = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -37,7 +36,6 @@ Partial Class UCVirtualTrackerItem
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TrackBar_DeviceGain = New System.Windows.Forms.TrackBar()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.Button_Close = New System.Windows.Forms.Label()
         Me.CheckBox_ShowCaptureImage = New System.Windows.Forms.CheckBox()
         Me.TrackBar_DeviceGamma = New System.Windows.Forms.TrackBar()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -80,23 +78,13 @@ Partial Class UCVirtualTrackerItem
         Me.PictureBox_CaptureImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox_CaptureImage.BackColor = System.Drawing.Color.Black
         Me.PictureBox_CaptureImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox_CaptureImage.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(505, 74)
+        Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(503, 74)
         Me.PictureBox_CaptureImage.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.PictureBox_CaptureImage.Name = "PictureBox_CaptureImage"
         Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(279, 214)
         Me.PictureBox_CaptureImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox_CaptureImage.TabIndex = 0
         Me.PictureBox_CaptureImage.TabStop = False
-        '
-        'Label1
-        '
-        Me.Label1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Label1.Location = New System.Drawing.Point(0, 408)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(800, 1)
-        Me.Label1.TabIndex = 1
         '
         'Label_FriendlyName
         '
@@ -140,7 +128,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceExposure.LargeChange = 1
         Me.TrackBar_DeviceExposure.Location = New System.Drawing.Point(123, 9)
         Me.TrackBar_DeviceExposure.Name = "TrackBar_DeviceExposure"
-        Me.TrackBar_DeviceExposure.Size = New System.Drawing.Size(346, 16)
+        Me.TrackBar_DeviceExposure.Size = New System.Drawing.Size(344, 16)
         Me.TrackBar_DeviceExposure.TabIndex = 6
         '
         'Label4
@@ -161,7 +149,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceGain.LargeChange = 1
         Me.TrackBar_DeviceGain.Location = New System.Drawing.Point(123, 31)
         Me.TrackBar_DeviceGain.Name = "TrackBar_DeviceGain"
-        Me.TrackBar_DeviceGain.Size = New System.Drawing.Size(346, 16)
+        Me.TrackBar_DeviceGain.Size = New System.Drawing.Size(344, 16)
         Me.TrackBar_DeviceGain.TabIndex = 8
         '
         'Label6
@@ -174,25 +162,11 @@ Partial Class UCVirtualTrackerItem
         Me.Label6.TabIndex = 10
         Me.Label6.Text = "Tracker Id:"
         '
-        'Button_Close
-        '
-        Me.Button_Close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Close.AutoSize = True
-        Me.Button_Close.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Button_Close.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.Button_Close.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button_Close.ForeColor = System.Drawing.Color.White
-        Me.Button_Close.Location = New System.Drawing.Point(774, 0)
-        Me.Button_Close.Name = "Button_Close"
-        Me.Button_Close.Size = New System.Drawing.Size(26, 13)
-        Me.Button_Close.TabIndex = 11
-        Me.Button_Close.Text = "  X  "
-        '
         'CheckBox_ShowCaptureImage
         '
         Me.CheckBox_ShowCaptureImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_ShowCaptureImage.AutoSize = True
-        Me.CheckBox_ShowCaptureImage.Location = New System.Drawing.Point(720, 51)
+        Me.CheckBox_ShowCaptureImage.Location = New System.Drawing.Point(718, 51)
         Me.CheckBox_ShowCaptureImage.Name = "CheckBox_ShowCaptureImage"
         Me.CheckBox_ShowCaptureImage.Size = New System.Drawing.Size(65, 17)
         Me.CheckBox_ShowCaptureImage.TabIndex = 13
@@ -207,7 +181,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceGamma.LargeChange = 1
         Me.TrackBar_DeviceGamma.Location = New System.Drawing.Point(123, 53)
         Me.TrackBar_DeviceGamma.Name = "TrackBar_DeviceGamma"
-        Me.TrackBar_DeviceGamma.Size = New System.Drawing.Size(346, 16)
+        Me.TrackBar_DeviceGamma.Size = New System.Drawing.Size(344, 16)
         Me.TrackBar_DeviceGamma.TabIndex = 15
         '
         'Label7
@@ -224,7 +198,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Button_RestartDevice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Button_RestartDevice.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
-        Me.Button_RestartDevice.Location = New System.Drawing.Point(3, 370)
+        Me.Button_RestartDevice.Location = New System.Drawing.Point(3, 322)
         Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
         Me.Button_RestartDevice.Name = "Button_RestartDevice"
         Me.Button_RestartDevice.Size = New System.Drawing.Size(116, 23)
@@ -242,7 +216,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceConstrast.LargeChange = 1
         Me.TrackBar_DeviceConstrast.Location = New System.Drawing.Point(124, 75)
         Me.TrackBar_DeviceConstrast.Name = "TrackBar_DeviceConstrast"
-        Me.TrackBar_DeviceConstrast.Size = New System.Drawing.Size(345, 16)
+        Me.TrackBar_DeviceConstrast.Size = New System.Drawing.Size(343, 16)
         Me.TrackBar_DeviceConstrast.TabIndex = 18
         '
         'Label8
@@ -259,7 +233,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Button_ConfigSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_ConfigSave.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_ConfigSave.Location = New System.Drawing.Point(365, 370)
+        Me.Button_ConfigSave.Location = New System.Drawing.Point(363, 322)
         Me.Button_ConfigSave.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
         Me.Button_ConfigSave.Name = "Button_ConfigSave"
         Me.Button_ConfigSave.Size = New System.Drawing.Size(120, 23)
@@ -273,7 +247,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_Autostart.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_Autostart.AutoSize = True
-        Me.CheckBox_Autostart.Location = New System.Drawing.Point(6, 347)
+        Me.CheckBox_Autostart.Location = New System.Drawing.Point(6, 299)
         Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
         Me.CheckBox_Autostart.Size = New System.Drawing.Size(338, 17)
@@ -291,7 +265,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabControl1.Location = New System.Drawing.Point(3, 52)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(483, 286)
+        Me.TabControl1.Size = New System.Drawing.Size(481, 238)
         Me.TabControl1.TabIndex = 21
         '
         'TabPage_DeviceProperties
@@ -310,7 +284,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_DeviceProperties.Name = "TabPage_DeviceProperties"
         Me.TabPage_DeviceProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(475, 260)
+        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(473, 212)
         Me.TabPage_DeviceProperties.TabIndex = 0
         Me.TabPage_DeviceProperties.Text = "Device Properties"
         Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
@@ -323,7 +297,7 @@ Partial Class UCVirtualTrackerItem
         Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(394, 244)
+        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(392, 196)
         Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
         Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
         Me.LinkLabel_MiscSettings.TabIndex = 21
@@ -368,7 +342,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_TrackerProperties.Name = "TabPage_TrackerProperties"
         Me.TabPage_TrackerProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(475, 260)
+        Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(473, 212)
         Me.TabPage_TrackerProperties.TabIndex = 1
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
         Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
@@ -495,7 +469,7 @@ Partial Class UCVirtualTrackerItem
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Button1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Button1.Location = New System.Drawing.Point(242, 370)
+        Me.Button1.Location = New System.Drawing.Point(240, 322)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(117, 23)
         Me.Button1.TabIndex = 22
@@ -509,8 +483,7 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.TextBox_Fps.Location = New System.Drawing.Point(505, 52)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(503, 52)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
         Me.TextBox_Fps.Size = New System.Drawing.Size(209, 15)
@@ -532,20 +505,19 @@ Partial Class UCVirtualTrackerItem
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Controls.Add(Me.TextBox_Fps)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.CheckBox_Autostart)
         Me.Controls.Add(Me.Button_ConfigSave)
         Me.Controls.Add(Me.Button_RestartDevice)
-        Me.Controls.Add(Me.Button_Close)
         Me.Controls.Add(Me.Label_FriendlyName)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox_CaptureImage)
         Me.Controls.Add(Me.CheckBox_ShowCaptureImage)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackerItem"
-        Me.Size = New System.Drawing.Size(800, 409)
+        Me.Size = New System.Drawing.Size(798, 361)
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).EndInit()
@@ -562,7 +534,6 @@ Partial Class UCVirtualTrackerItem
     End Sub
 
     Friend WithEvents PictureBox_CaptureImage As PictureBox
-    Friend WithEvents Label1 As Label
     Friend WithEvents Label_FriendlyName As Label
     Friend WithEvents ComboBox_DeviceTrackerId As ComboBox
     Friend WithEvents Label3 As Label
@@ -570,7 +541,6 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Label4 As Label
     Friend WithEvents TrackBar_DeviceGain As TrackBar
     Friend WithEvents Label6 As Label
-    Friend WithEvents Button_Close As Label
     Friend WithEvents CheckBox_ShowCaptureImage As CheckBox
     Friend WithEvents TrackBar_DeviceGamma As TrackBar
     Friend WithEvents Label7 As Label
