@@ -25,8 +25,6 @@ With this program you can control any virtual device in PSMoveServiceEx and even
 
 ![](https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/assets/22834512/c6bfcddd-7cda-477f-87cd-fb48e9b1d9ee)
 
-![](https://user-images.githubusercontent.com/22834512/206194150-d2a91e31-abe8-47cb-9783-3f32ee74fa6e.png)
-
  ## Demo Video
  
 [](https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/assets/22834512/e664c4d5-7dd6-4955-bbc7-20a91b2a3503)
