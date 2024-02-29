@@ -7,7 +7,7 @@
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera (Composite Device)", "05A9", "0580", "05A9", "058B")
     }
 
-    Private g_ClassUsbNotify As ClassDevicesNotify
+    Private g_ClassUsbNotify As ClassDevicesNotify = Nothing
 
     Private g_mHardwareChangeStatusThread As Threading.Thread = Nothing
     Private g_bHardwareChangeStatusUpdatenNow As Boolean = False
@@ -108,7 +108,13 @@
                     If (g_bHardwareChangeStatusUpdatenNow) Then
                         g_bHardwareChangeStatusUpdatenNow = False
 
-                        UploadFirmware()
+                        Try
+                            UploadFirmware()
+                        Catch ex As Threading.ThreadAbortException
+                            Throw
+                        Catch ex As Exception
+                            ' Whatever happens to the uploader
+                        End Try
                     End If
                 End SyncLock
 
@@ -123,29 +129,23 @@
     Public Sub UploadFirmware()
         SyncLock _ThreadLock
             For Each mDevice In FIRM_PS4CAM_VIDEO
-                Try
-                    Dim mLibUsbDriver As New ClassLibusbDriver
-                    If (mLibUsbDriver.VerifyPlaystation4CamDriver64() AndAlso
-                            mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID, mDevice.PID, Nothing, Nothing))) Then
-                        mDevice.RunFirmwareUploader()
+                Dim mLibUsbDriver As New ClassLibusbDriver
+                If (mLibUsbDriver.VerifyPlaystation4CamDriver64() AndAlso
+                        mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID, mDevice.PID, Nothing, Nothing))) Then
+                    mDevice.RunFirmwareUploader()
 
-                        ' Wait till the device arrives
-                        Dim mTimer As New Stopwatch()
-                        mTimer.Start()
+                    ' Wait till the device arrives
+                    Dim mTimer As New Stopwatch()
+                    mTimer.Start()
 
-                        While (Not mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID_V, mDevice.PID_V, Nothing, Nothing)))
-                            If (mTimer.ElapsedMilliseconds > 10000) Then
-                                Throw New ArgumentException("Unable to upload firmware")
-                            End If
+                    While (Not mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID_V, mDevice.PID_V, Nothing, Nothing)))
+                        If (mTimer.ElapsedMilliseconds > 10000) Then
+                            Throw New ArgumentException("Unable to upload firmware")
+                        End If
 
-                            Threading.Thread.Sleep(100)
-                        End While
-                    End If
-                Catch ex As Threading.ThreadAbortException
-                    Throw
-                Catch ex As Exception
-                    ' Whatever happens to the uploader
-                End Try
+                        Threading.Thread.Sleep(100)
+                    End While
+                End If
             Next
         End SyncLock
     End Sub
