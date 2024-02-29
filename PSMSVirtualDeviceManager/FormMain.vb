@@ -22,8 +22,10 @@
     Public Const COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE As String = "-patch-psvr-monitor-remove"
     Public Const COMMANDLINE_INSTALL_PSVR_DRIVERS As String = "-install-psvr-drivers"
     Public Const COMMANDLINE_INSTALL_PSEYE_DRIVERS As String = "-install-pseye-drivers"
+    Public Const COMMANDLINE_INSTALL_PS4CAM_DRIVERS As String = "-install-ps4cam-drivers"
     Public Const COMMANDLINE_UNINSTALL_PSVR As String = "-uninstall-psvr"
     Public Const COMMANDLINE_UNINSTALL_PSEYE As String = "-uninstall-pseye"
+    Public Const COMMANDLINE_UNINSTALL_PS4CAM As String = "-uninstall-ps4cam"
     Public Const COMMANDLINE_VERBOSE As String = "-verbose"
     Public Const COMMANDLINE_START_STEAMVR As String = "-steamvr"
     Public Const COMMANDLINE_START_SERVICE As String = "-run-service"
@@ -399,6 +401,44 @@
                                 Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
                             End If
                         End If
+
+                    Catch ex As Exception
+                        If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+
+                        Environment.Exit(-1)
+                        End
+                    End Try
+
+                    Exit While
+                End While
+
+                While (sCommand = COMMANDLINE_INSTALL_PS4CAM_DRIVERS OrElse sCommand = COMMANDLINE_UNINSTALL_PS4CAM)
+                    ' Un/Install PSEye libusb drivers.
+                    bExitOnSuccess = True
+
+                    Try
+                        Dim mDriverInstaller As New ClassLibusbDriver
+
+                        ' Remove old drivers.
+                        mDriverInstaller.UninstallPlaystation4CamDriver64()
+
+                        ' Just uninstall
+                        If (sCommand.ToLowerInvariant = COMMANDLINE_UNINSTALL_PS4CAM) Then
+                            Exit While
+                        End If
+
+                        ' Install drivers
+                        If (True) Then
+                            mDriverInstaller.InstallPlaystation4CamDriver64()
+
+                            If (Not mDriverInstaller.VerifyPlaystation4CamDriver64()) Then
+                                Throw New ArgumentException(String.Format("Driver installation failed"))
+                            End If
+                        End If
+
+                        mDriverInstaller.ScanDevices()
 
                     Catch ex As Exception
                         If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then

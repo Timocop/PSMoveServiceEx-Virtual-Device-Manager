@@ -810,6 +810,148 @@ Public Class UCStartPage
         g_mDriverInstallThread.Start()
     End Sub
 
+
+    Public Sub LinkLabel_InstallPS4CamDrivers_Click()
+        LinkLabel_InstallPS4CamDrivers_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub LinkLabel_InstallPS4CamDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_InstallPS4CamDrivers.LinkClicked
+        If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mDriverInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    Dim mDriverInstaller As New ClassLibusbDriver
+
+                    If (CheckIfServiceRunning() > 0) Then
+                        Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+                    End If
+
+                    If (mDriverInstaller.VerifyPlaystation4CamDriver64()) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("It seems like you already have all the necessary WinUSB drivers for PlayStation Stereo Cameras installed!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to reinstall all drivers for those devices?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                            Return
+                        End If
+                    End If
+
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("You are about to install WinUSB drivers for Playstation Stereo Cameras.")
+                        sMessage.AppendLine("Already existing Playstation Stereo Cameras drivers will be replaced!")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
+
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("WARNING!")
+                        sMessage.AppendLine("The Playstation Stereo Camera driver installation might trigger sensitive Anti-Virus programs!")
+                        sMessage.AppendLine("It's recommended to whitelist the Virtual Device Manager folder before starting the installation to avoid any issues.")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
+
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+
+                                                   g_mDriverInstallFormLoad = New FormLoading
+                                                   g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                               End Sub)
+
+                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PS4CAM_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
+
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Drivers installed successfully!", "Driver Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+                                               End Sub)
+                End Try
+            End Sub)
+        g_mDriverInstallThread.IsBackground = True
+        g_mDriverInstallThread.Start()
+    End Sub
+
+    Public Sub LinkLabel_UninstallPS4CamDrivers_Click()
+        LinkLabel_UninstallPS4CamDrivers_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub LinkLabel_UninstallPS4CamDrivers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_UninstallPS4CamDrivers.LinkClicked
+        If (g_mDriverInstallThread IsNot Nothing AndAlso g_mDriverInstallThread.IsAlive) Then
+            Return
+        End If
+
+        g_mDriverInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    If (True) Then
+                        Dim sMessage As New Text.StringBuilder
+                        sMessage.AppendLine("You are about to uninstall PlayStation Stereo Camera drivers.")
+                        sMessage.AppendLine()
+                        sMessage.AppendLine("Do you want to continue?")
+                        If (MessageBox.Show(sMessage.ToString, "Driver Uninstallation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                            Return
+                        End If
+                    End If
+
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+
+                                                   g_mDriverInstallFormLoad = New FormLoading
+                                                   g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
+                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                               End Sub)
+
+                    Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PS4CAM, FormMain.COMMANDLINE_VERBOSE})
+
+                    ' Verbose already shows errors messages
+                    If (iExitCode = 0) Then
+                        MessageBox.Show("Drivers uninstalled successfully!", "Driver Uninstallation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                       g_mDriverInstallFormLoad.Dispose()
+                                                       g_mDriverInstallFormLoad = Nothing
+                                                   End If
+                                               End Sub)
+                End Try
+            End Sub)
+        g_mDriverInstallThread.IsBackground = True
+        g_mDriverInstallThread.Start()
+    End Sub
+
     Public Sub LinkLabel_ConfigPSVRDisplay_Click()
         LinkLabel_ConfigPSVRDisplay_LinkClicked(Nothing, Nothing)
     End Sub

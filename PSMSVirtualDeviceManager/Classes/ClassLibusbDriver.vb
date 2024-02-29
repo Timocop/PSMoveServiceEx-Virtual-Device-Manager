@@ -33,37 +33,50 @@ Public Class ClassLibusbDriver
     End Class
 
     Public Const LIBUSB_SERVICE_NAME As String = "libusb0"
+    Public Const WINUSB_SERVICE_NAME As String = "WinUSB"
     Public Const HID_SERVICE_NAME As String = "HidUsb"
+    Public Const USBCTRL_SERVICE_NAME As String = "usbccgp"
+    Public Const USBVIDEO_SERVICE_NAME As String = "usbvideo"
 
-    Public Const DRV_ROOT_NAME As String = "libusb_driver"
-    Public Const DRV_INSTALLER_NAME As String = "wdi-simple.exe"
+    Public Const DRV_WDI_ROOT_NAME As String = "libusb_driver"
+    Public Const DRV_WDI_INSTALLER_NAME As String = "wdi-simple.exe"
+    Public Const DRV_PS4CAM_ROOT_NAME As String = "ps4cam_driver"
+    Public Const DRV_PS4CAM_INSTALLER_NAME As String = "InstallDriver.exe"
+    Public ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera WinSUB (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME)
+    }
+    Public ReadOnly DRV_PS4CAM_VIDEO_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
+    }
+
     Public ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01")
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01", LIBUSB_SERVICE_NAME)
     }
     Public ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME)
     }
 
     Public ReadOnly DRV_PSVR_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR (Composite Device)", "Sony Corp.", "054C", "09AF", Nothing),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Audio Device", "Sony Corp.", "054C", "09AF", "01"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Input Device", "Sony Corp.", "054C", "09AF", "08")
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR (Composite Device)", "Sony Corp.", "054C", "09AF", Nothing, LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio (Interface 0)", "Sony Corp.", "054C", "09AF", "00", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Audio Device (Interface 1)", "Sony Corp.", "054C", "09AF", "01", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04", HID_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264 (Interface 6)", "Sony Corp.", "054C", "09AF", "06", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn (Interface 7)", "Sony Corp.", "054C", "09AF", "07", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Input Device (Interface 8)", "Sony Corp.", "054C", "09AF", "08", LIBUSB_SERVICE_NAME)
     }
     Public ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00"), ' Just add a driver so it does not show as hardware issue.
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control", "Sony Corp.", "054C", "09AF", "05"),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06"), ' Just add a driver so it does not show as hardware issue.
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07") ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00", LIBUSB_SERVICE_NAME), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control", "Sony Corp.", "054C", "09AF", "05", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06", LIBUSB_SERVICE_NAME), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07", LIBUSB_SERVICE_NAME) ' Just add a driver so it does not show as hardware issue.
     }
     Public ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-      New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor", "Sony Corp.", "054C", "09AF", "04")
+      New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor", "Sony Corp.", "054C", "09AF", "04", HID_SERVICE_NAME)
     }
 
     Enum ENUM_WDI_DRIVERTYPE
@@ -168,22 +181,25 @@ Public Class ClassLibusbDriver
         Dim PID As String
         Dim MM As String
         Dim iDriver As ENUM_WDI_DRIVERTYPE
+        Dim sService As String
 
-        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String)
+        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String, _Service As String)
             sName = _Name
             sManufacture = _Manufacture
             VID = _VID
             PID = _PID
             MM = _MM
+            sService = _Service
             iDriver = ENUM_WDI_DRIVERTYPE.LIBUSB
         End Sub
 
-        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String, _Driver As ENUM_WDI_DRIVERTYPE)
+        Public Sub New(_Name As String, _Manufacture As String, _VID As String, _PID As String, _MM As String, _Service As String, _Driver As ENUM_WDI_DRIVERTYPE)
             sName = _Name
             sManufacture = _Manufacture
             VID = _VID
             PID = _PID
             MM = _MM
+            sService = _Service
             iDriver = _Driver
         End Sub
 
@@ -203,9 +219,32 @@ Public Class ClassLibusbDriver
 
             Return String.Join(" ", sCmd.ToArray)
         End Function
+
     End Structure
 
     Public Sub New()
+    End Sub
+
+    Public Sub InstallPlaystation4CamDriver64()
+        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_PS4CAM_ROOT_NAME)
+        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_PS4CAM_INSTALLER_NAME)
+
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = sInstallerPath
+            mProcess.StartInfo.Arguments = ""
+            mProcess.StartInfo.WorkingDirectory = sRootFolder
+            mProcess.StartInfo.CreateNoWindow = False
+            mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal
+
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
+
+            mProcess.Start()
+
+            mProcess.WaitForExit()
+        End Using
     End Sub
 
     Public Function InstallPlaystationEyeDriver64() As ENUM_WDI_ERROR
@@ -229,6 +268,44 @@ Public Class ClassLibusbDriver
 
         Return ENUM_WDI_ERROR.WDI_SUCCESS
     End Function
+
+    Public Sub UninstallPlaystation4CamDriver64()
+        Dim bScanNewDevices As Boolean = False
+
+        Dim sDevicesToRemove As New List(Of String)
+
+        For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                ' Dont allow anything else than non-system drivers past here!
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
+                    RemoveDriver(mUsbInfo.sDriverInfPath)
+                End If
+
+                sDevicesToRemove.Add(mUsbInfo.sDeviceID)
+            Next
+        Next
+
+        For Each mInfo In DRV_PS4CAM_VIDEO_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                ' Dont allow anything else than non-system drivers past here!
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
+                    RemoveDriver(mUsbInfo.sDriverInfPath)
+                End If
+
+                sDevicesToRemove.Add(mUsbInfo.sDeviceID)
+            Next
+        Next
+
+        ' Remove devices after everything is done.
+        For Each mDeviceID As String In sDevicesToRemove
+            RemoveDevice(mDeviceID, True)
+            bScanNewDevices = True
+        Next
+
+        If (bScanNewDevices) Then
+            ScanDevices()
+        End If
+    End Sub
 
     Public Sub UninstallPlaystationEyeDriver64()
         Dim bScanNewDevices As Boolean = False
@@ -283,6 +360,82 @@ Public Class ClassLibusbDriver
         End If
     End Sub
 
+    Public Function VerifyPlaystation4CamDriver64() As Boolean
+        Dim bDriversInstalled As Boolean = True
+
+        For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
+            Dim bDeviceRegistered As Boolean = False
+
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                bDeviceRegistered = True
+
+                If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
+                    If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
+                        Continue For
+                    End If
+                Else
+                    If (mUsbInfo.iConfigFlags <> 0) Then
+                        Continue For
+                    End If
+                End If
+
+                If (Not mUsbInfo.HasDriverInstalled()) Then
+                    bDriversInstalled = False
+                Else
+                    If (mUsbInfo.sService = mInfo.sService) Then
+                        Continue For
+                    End If
+
+                    bDriversInstalled = False
+                End If
+            Next
+
+            If (Not bDeviceRegistered) Then
+                bDriversInstalled = False
+            End If
+        Next
+
+        Return bDriversInstalled
+    End Function
+
+    Public Function VerifyPlaystation4CamVideoDriver64() As Boolean
+        Dim bDriversInstalled As Boolean = True
+
+        For Each mInfo In DRV_PS4CAM_VIDEO_CONFIGS
+            Dim bDeviceRegistered As Boolean = False
+
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                bDeviceRegistered = True
+
+                If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_FAILEDINSTALL) <> 0) Then
+                    If ((mUsbInfo.iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REINSTALL) <> 0) Then
+                        Continue For
+                    End If
+                Else
+                    If (mUsbInfo.iConfigFlags <> 0) Then
+                        Continue For
+                    End If
+                End If
+
+                If (Not mUsbInfo.HasDriverInstalled()) Then
+                    bDriversInstalled = False
+                Else
+                    If (mUsbInfo.sService = mInfo.sService) Then
+                        Continue For
+                    End If
+
+                    bDriversInstalled = False
+                End If
+            Next
+
+            If (Not bDeviceRegistered) Then
+                bDriversInstalled = False
+            End If
+        Next
+
+        Return bDriversInstalled
+    End Function
+
     Public Function VerifyPlaystationEyeDriver64() As Boolean
         Dim bDriversInstalled As Boolean = True
 
@@ -305,7 +458,7 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
-                    If (mUsbInfo.sService = LIBUSB_SERVICE_NAME) Then
+                    If (mUsbInfo.sService = mInfo.sService) Then
                         Continue For
                     End If
 
@@ -344,7 +497,7 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
-                    If (mUsbInfo.sService = LIBUSB_SERVICE_NAME) Then
+                    If (mUsbInfo.sService = mInfo.sService) Then
                         Continue For
                     End If
 
@@ -376,7 +529,7 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bHidInstalled = False
                 Else
-                    If (mUsbInfo.sService = HID_SERVICE_NAME) Then
+                    If (mUsbInfo.sService = mInfo.sService) Then
                         Continue For
                     End If
 
@@ -392,8 +545,8 @@ Public Class ClassLibusbDriver
     End Function
 
     Private Function InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO) As ENUM_WDI_ERROR
-        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_ROOT_NAME)
-        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_INSTALLER_NAME)
+        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_WDI_ROOT_NAME)
+        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_WDI_INSTALLER_NAME)
 
         Using mProcess As New Process
             mProcess.StartInfo.FileName = sInstallerPath
