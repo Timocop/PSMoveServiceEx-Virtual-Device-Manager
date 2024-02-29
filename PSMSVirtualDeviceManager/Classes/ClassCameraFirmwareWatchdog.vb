@@ -32,9 +32,10 @@
         Public Sub RunFirmwareUploader()
             Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassLibusbDriver.DRV_PS4CAM_ROOT_NAME)
             Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, ClassLibusbDriver.DRV_PS4CAM_FIRMWARE_NAME)
+            Dim sFirmwarePath As String = IO.Path.Combine(sRootFolder, ClassLibusbDriver.DRV_PS4CAM_FIRMWARE_BIN_NAME)
 
-            If (Not IO.File.Exists(sInstallerPath)) Then
-                Throw New ArgumentException("File does not exist")
+            If (Not IO.File.Exists(sFirmwarePath)) Then
+                Throw New ArgumentException("Firmware file does not exist")
             End If
 
             Using mProcess As New Process
