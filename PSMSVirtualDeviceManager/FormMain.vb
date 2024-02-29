@@ -1,4 +1,7 @@
 ﻿Public Class FormMain
+
+#Const ALWAYS_SHOW_UPDATE = False
+
     Public g_mUCStartPage As UCStartPage
     Public g_mUCPlaystationVR As UCPlaystationVR
     Public g_mUCVirtualControllers As UCVirtualControllers
@@ -8,6 +11,7 @@
 
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
+    Public g_mClassCameraFirmwareWatchdog As ClassCameraFirmwareWatchdog
 
     Private g_mAutoCloseThread As Threading.Thread = Nothing
 
@@ -75,6 +79,27 @@
             Catch ex As Exception
                 Dim sMsg As New Text.StringBuilder
                 sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error:")
+                sMsg.AppendLine(ex.Message)
+                If (MessageBox.Show(sMsg.ToString, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Cancel) Then
+                    Exit While
+                End If
+            End Try
+        End While
+
+        While True
+            Try
+                If (g_mClassCameraFirmwareWatchdog IsNot Nothing) Then
+                    g_mClassCameraFirmwareWatchdog.Dispose()
+                    g_mClassCameraFirmwareWatchdog = Nothing
+                End If
+
+                g_mClassCameraFirmwareWatchdog = New ClassCameraFirmwareWatchdog
+                g_mClassCameraFirmwareWatchdog.Init()
+                g_mClassCameraFirmwareWatchdog.UploadFirmware()
+                Exit While
+            Catch ex As Exception
+                Dim sMsg As New Text.StringBuilder
+                sMsg.AppendLine("Unable to create camera firmware watchdog with the following error:")
                 sMsg.AppendLine(ex.Message)
                 If (MessageBox.Show(sMsg.ToString, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Cancel) Then
                     Exit While
@@ -433,10 +458,17 @@
                         If (True) Then
                             mDriverInstaller.InstallPlaystation4CamDriver64()
 
+                            mDriverInstaller.ScanDevices()
+
                             If (Not mDriverInstaller.VerifyPlaystation4CamDriver64()) Then
                                 Throw New ArgumentException(String.Format("Driver installation failed"))
                             End If
                         End If
+
+                        ' Upload firmware
+                        Using mCameraFirmware As New ClassCameraFirmwareWatchdog
+                            mCameraFirmware.UploadFirmware()
+                        End Using
 
                         mDriverInstaller.ScanDevices()
 
@@ -896,7 +928,7 @@
                 Dim sLocationInfo As String = ""
 
                 If (True) Then
-#If DEBUG Then
+#If DEBUG AndAlso ALWAYS_SHOW_UPDATE Then
                     ClassUtils.AsyncInvoke(g_mFormMain,
                                             Sub()
                                                 g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
@@ -922,7 +954,7 @@
                     mConfig.LoadConfig()
 
                     If (mConfig.FileExist) Then
-#If DEBUG Then
+#If DEBUG AndAlso ALWAYS_SHOW_UPDATE Then
                         ClassUtils.AsyncInvoke(g_mFormMain,
                                                 Sub()
                                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True

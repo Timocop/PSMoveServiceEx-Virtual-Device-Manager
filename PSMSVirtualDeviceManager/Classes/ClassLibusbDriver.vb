@@ -42,6 +42,7 @@ Public Class ClassLibusbDriver
     Public Const DRV_WDI_INSTALLER_NAME As String = "wdi-simple.exe"
     Public Const DRV_PS4CAM_ROOT_NAME As String = "ps4cam_driver"
     Public Const DRV_PS4CAM_INSTALLER_NAME As String = "InstallDriver.exe"
+    Public Const DRV_PS4CAM_FIRMWARE_NAME As String = "FirmwareLoader.exe"
     Public ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera WinSUB (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME)
     }
