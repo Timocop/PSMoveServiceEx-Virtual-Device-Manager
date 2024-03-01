@@ -1404,7 +1404,7 @@ Public Class UCVirtualTrackerItem
             Dim iFpsCount As Integer = 0
 
             Try
-                Using mFrame As New OpenCvSharp.Mat(m_CaptureFrame(0).Rows, m_CaptureFrame(0).Cols, OpenCvSharp.MatType.CV_8UC3)
+                Using mFrame As New OpenCvSharp.Mat()
                     While True
                         Dim bExceptionSleep As Boolean = False
 
