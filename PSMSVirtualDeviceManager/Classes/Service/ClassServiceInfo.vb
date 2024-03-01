@@ -4,6 +4,12 @@
 
     Private g_bConfigsLoaded As Boolean = False
 
+    Enum ENUM_SERVICE_PROCESS_TYPE
+        NONE
+        NORMAL
+        ADMIN
+    End Enum
+
     Public Sub New()
     End Sub
 
@@ -54,6 +60,23 @@
             Return False
         End Using
     End Function
+
+    Public Function IsServiceRunning() As ENUM_SERVICE_PROCESS_TYPE
+        If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
+            Return ENUM_SERVICE_PROCESS_TYPE.NORMAL
+
+        ElseIf (Process.GetProcessesByName("PSMoveServiceAdmin").Count > 0) Then
+            Return ENUM_SERVICE_PROCESS_TYPE.ADMIN
+
+        Else
+            Return ENUM_SERVICE_PROCESS_TYPE.NONE
+        End If
+    End Function
+
+    Public Function IsConfigToolRunning() As Boolean
+        Return (Process.GetProcessesByName("PSMoveConfigTool").Count > 0)
+    End Function
+
 
     Public Sub SaveConfig()
         If (Not g_bConfigsLoaded) Then

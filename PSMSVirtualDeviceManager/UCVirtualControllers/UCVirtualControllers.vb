@@ -57,7 +57,7 @@
             mConfig.SaveConfig()
 
             If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -137,7 +137,7 @@
                 mConfig.SaveConfig()
 
                 If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                    MessageBox.Show("Restart PSMoveServiceEx to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
