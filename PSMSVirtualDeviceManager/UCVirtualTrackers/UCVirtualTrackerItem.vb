@@ -40,6 +40,22 @@ Public Class UCVirtualTrackerItem
         End Function
     End Structure
 
+    Structure STRUC_CAMERA_DISTORTION_ITEM
+        Dim mDistort As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
+
+        Public Sub New(_Distort As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM)
+            mDistort = _Distort
+        End Sub
+
+        Public Overrides Function ToString() As String
+            If (String.IsNullOrEmpty(mDistort.sName)) Then
+                Return "Unknown"
+            End If
+
+            Return mDistort.sName
+        End Function
+    End Structure
+
     Public Sub New(_UCVirtualTrackers As UCVirtualTrackers, mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         g_mUCVirtualTrackers = _UCVirtualTrackers
 
@@ -75,6 +91,21 @@ Public Class UCVirtualTrackerItem
 
         ' Keep the UI disabled until we are finished
         Me.Enabled = False
+
+        Try
+            g_bIgnoreEvents = True
+
+            ' Add all possible trackers. Where as -1 means disabled.
+            ComboBox_CameraLensDistortion.Items.Clear()
+            ComboBox_CameraLensDistortion.Items.Add("Select distortion preset...")
+            For Each mDistort In ClassSerivceConst.ClassCameraDistortion.PSMOVESERVICE_KNOWN_DISTORTION
+                ComboBox_CameraLensDistortion.Items.Add(New STRUC_CAMERA_DISTORTION_ITEM(mDistort))
+            Next
+
+            ComboBox_CameraLensDistortion.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
 
         Try
             g_bIgnoreEvents = True
@@ -331,20 +362,20 @@ Public Class UCVirtualTrackerItem
                     Continue For
                 End If
 
-                If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex < 0) Then
+                If (mDeviceItem.g_mClassCaptureLogic.m_PipePrimaryIndex < 0) Then
                     Continue For
                 End If
 
                 If (mDeviceItem.g_mClassCaptureLogic.m_IsPlayStationCamera) Then
-                    If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex + 1 = iSelectedTrackerId_2 OrElse
-                        mDeviceItem.g_mClassCaptureLogic.m_PipeIndex + 1 = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_2) Then
+                    If (mDeviceItem.g_mClassCaptureLogic.m_PipePrimaryIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeSecondaryIndex = iSelectedTrackerId_2 OrElse
+                        mDeviceItem.g_mClassCaptureLogic.m_PipeSecondaryIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipePrimaryIndex = iSelectedTrackerId_2) Then
                         MessageBox.Show("This tracker id is already being in use!", "Unable to set tracker id", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
                         ComboBox_DeviceTrackerId.SelectedIndex = 0
                         Return
                     End If
                 Else
-                    If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_2) Then
+                    If (mDeviceItem.g_mClassCaptureLogic.m_PipePrimaryIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipePrimaryIndex = iSelectedTrackerId_2) Then
                         MessageBox.Show("This tracker id is already being in use!", "Unable to set tracker id", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
                         ComboBox_DeviceTrackerId.SelectedIndex = 0
@@ -368,7 +399,7 @@ Public Class UCVirtualTrackerItem
             End If
         End If
 
-        g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1
+        g_mClassCaptureLogic.m_PipePrimaryIndex = iSelectedTrackerId_1
         g_iPreviousTrackerIdSelectedIndex = ComboBox_DeviceTrackerId.SelectedIndex
         SetUnsavedState(True)
     End Sub
@@ -440,6 +471,54 @@ Public Class UCVirtualTrackerItem
 
         MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         SetRequireRestart(True)
+    End Sub
+
+    Private Sub ComboBox_CameraLesnDistortion_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_CameraLensDistortion.SelectedIndexChanged
+        Try
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            If (TypeOf ComboBox_CameraLensDistortion.SelectedItem IsNot STRUC_CAMERA_DISTORTION_ITEM) Then
+                ComboBox_CameraLensDistortion.SelectedIndex = 0
+                Return
+            End If
+
+            Dim mDistort As STRUC_CAMERA_DISTORTION_ITEM = DirectCast(ComboBox_CameraLensDistortion.SelectedItem, STRUC_CAMERA_DISTORTION_ITEM)
+
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("You are about to re-configure this trackers distortion calibration using preset:")
+            sMessage.AppendLine(mDistort.ToString)
+            sMessage.AppendLine()
+            sMessage.AppendLine("Do you want to continue?")
+            If (MessageBox.Show(sMessage.ToString, "Override Tracker Distortion?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No) Then
+                ComboBox_CameraLensDistortion.SelectedIndex = 0
+                Return
+            End If
+
+            Dim mIds As New List(Of Integer)
+            If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                mIds.Add(g_mClassCaptureLogic.m_PipePrimaryIndex)
+                mIds.Add(g_mClassCaptureLogic.m_PipeSecondaryIndex)
+            Else
+                mIds.Add(g_mClassCaptureLogic.m_PipePrimaryIndex)
+            End If
+
+            For Each iTrackerID As Integer In mIds
+                If (iTrackerID < 0) Then
+                    Throw New ArgumentException("Tracker id is invalid.")
+                End If
+
+                Dim sConfigFile As String = IO.Path.Combine(ClassServiceConfig.GetConfigPath(), String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
+
+                mDistort.mDistort.SaveToConfig(sConfigFile)
+            Next
+
+            ComboBox_CameraLensDistortion.SelectedIndex = 0
+            MessageBox.Show("Tracker distortion preset has been applied! PSMoveServiceEx needs to be restarted in order for changes to take effect!", "PSMoveServiceEx restart required", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Sub Button_RestartDevice_Click(sender As Object, e As EventArgs) Handles Button_RestartDevice.Click
@@ -762,7 +841,7 @@ Public Class UCVirtualTrackerItem
             End Set
         End Property
 
-        Public Property m_PipeIndex As Integer
+        Public Property m_PipePrimaryIndex As Integer
             Get
                 SyncLock g_mThreadLock
                     Return g_iPipeIndex
@@ -787,6 +866,12 @@ Public Class UCVirtualTrackerItem
                     StartPipeThread(True)
                 End If
             End Set
+        End Property
+
+        Public ReadOnly Property m_PipeSecondaryIndex As Integer
+            Get
+                Return m_PipePrimaryIndex + 1
+            End Get
         End Property
 
         Public Property m_DeviceIndex As Integer
@@ -1566,7 +1651,7 @@ Public Class UCVirtualTrackerItem
                 Dim bExceptionSleep As Boolean = False
 
                 Try
-                    Dim iPipeIndex As Integer = m_PipeIndex
+                    Dim iPipeIndex As Integer = m_PipePrimaryIndex
 
                     If (iPipeIndex < 0) Then
                         Throw New ArgumentException("Invalid pipe index.")

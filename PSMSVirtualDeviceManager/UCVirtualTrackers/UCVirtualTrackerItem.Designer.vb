@@ -64,6 +64,8 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Preview = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ComboBox_CameraLensDistortion = New System.Windows.Forms.ComboBox()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -105,9 +107,9 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_DeviceTrackerId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_DeviceTrackerId.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_DeviceTrackerId.FormattingEnabled = True
-        Me.ComboBox_DeviceTrackerId.Location = New System.Drawing.Point(168, 6)
+        Me.ComboBox_DeviceTrackerId.Location = New System.Drawing.Point(208, 6)
         Me.ComboBox_DeviceTrackerId.Name = "ComboBox_DeviceTrackerId"
-        Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(301, 21)
+        Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(261, 21)
         Me.ComboBox_DeviceTrackerId.TabIndex = 3
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_DeviceTrackerId, "The tracker id corresponding to the virtual tracker ids in PSMoveServiceEx.")
         '
@@ -328,6 +330,8 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_TrackerProperties
         '
+        Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraLensDistortion)
+        Me.TabPage_TrackerProperties.Controls.Add(Me.Label1)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraResolution)
         Me.TabPage_TrackerProperties.Controls.Add(Me.Label11)
         Me.TabPage_TrackerProperties.Controls.Add(Me.CheckBox_DeviceSupersampling)
@@ -355,9 +359,9 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_CameraResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_CameraResolution.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_CameraResolution.FormattingEnabled = True
-        Me.ComboBox_CameraResolution.Location = New System.Drawing.Point(168, 116)
+        Me.ComboBox_CameraResolution.Location = New System.Drawing.Point(208, 116)
         Me.ComboBox_CameraResolution.Name = "ComboBox_CameraResolution"
-        Me.ComboBox_CameraResolution.Size = New System.Drawing.Size(301, 21)
+        Me.ComboBox_CameraResolution.Size = New System.Drawing.Size(261, 21)
         Me.ComboBox_CameraResolution.TabIndex = 20
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_CameraResolution, resources.GetString("ComboBox_CameraResolution.ToolTip"))
         '
@@ -376,7 +380,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_DeviceSupersampling.AutoSize = True
         Me.CheckBox_DeviceSupersampling.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.CheckBox_DeviceSupersampling.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox_DeviceSupersampling.Location = New System.Drawing.Point(168, 95)
+        Me.CheckBox_DeviceSupersampling.Location = New System.Drawing.Point(208, 95)
         Me.CheckBox_DeviceSupersampling.Margin = New System.Windows.Forms.Padding(0)
         Me.CheckBox_DeviceSupersampling.Name = "CheckBox_DeviceSupersampling"
         Me.CheckBox_DeviceSupersampling.Size = New System.Drawing.Size(35, 18)
@@ -400,7 +404,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_UseMjpg.AutoSize = True
         Me.CheckBox_UseMjpg.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.CheckBox_UseMjpg.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox_UseMjpg.Location = New System.Drawing.Point(168, 73)
+        Me.CheckBox_UseMjpg.Location = New System.Drawing.Point(208, 73)
         Me.CheckBox_UseMjpg.Margin = New System.Windows.Forms.Padding(0)
         Me.CheckBox_UseMjpg.Name = "CheckBox_UseMjpg"
         Me.CheckBox_UseMjpg.Size = New System.Drawing.Size(35, 18)
@@ -426,9 +430,9 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_ImageInterpolation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_ImageInterpolation.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_ImageInterpolation.FormattingEnabled = True
-        Me.ComboBox_ImageInterpolation.Location = New System.Drawing.Point(168, 50)
+        Me.ComboBox_ImageInterpolation.Location = New System.Drawing.Point(208, 50)
         Me.ComboBox_ImageInterpolation.Name = "ComboBox_ImageInterpolation"
-        Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(301, 21)
+        Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(261, 21)
         Me.ComboBox_ImageInterpolation.TabIndex = 14
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_ImageInterpolation, resources.GetString("ComboBox_ImageInterpolation.ToolTip"))
         '
@@ -446,7 +450,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_FlipHorizontal.AutoSize = True
         Me.CheckBox_FlipHorizontal.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_FlipHorizontal.Location = New System.Drawing.Point(168, 29)
+        Me.CheckBox_FlipHorizontal.Location = New System.Drawing.Point(208, 29)
         Me.CheckBox_FlipHorizontal.Margin = New System.Windows.Forms.Padding(0)
         Me.CheckBox_FlipHorizontal.Name = "CheckBox_FlipHorizontal"
         Me.CheckBox_FlipHorizontal.Size = New System.Drawing.Size(35, 18)
@@ -511,6 +515,29 @@ Partial Class UCVirtualTrackerItem
         Me.Panel_Preview.Name = "Panel_Preview"
         Me.Panel_Preview.Size = New System.Drawing.Size(279, 217)
         Me.Panel_Preview.TabIndex = 24
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(6, 146)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(142, 13)
+        Me.Label1.TabIndex = 21
+        Me.Label1.Text = "Tracker Distortion Profiles:"
+        '
+        'ComboBox_CameraLensDistortion
+        '
+        Me.ComboBox_CameraLensDistortion.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_CameraLensDistortion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_CameraLensDistortion.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_CameraLensDistortion.FormattingEnabled = True
+        Me.ComboBox_CameraLensDistortion.Location = New System.Drawing.Point(208, 143)
+        Me.ComboBox_CameraLensDistortion.Name = "ComboBox_CameraLensDistortion"
+        Me.ComboBox_CameraLensDistortion.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_CameraLensDistortion.TabIndex = 22
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_CameraLensDistortion, resources.GetString("ComboBox_CameraLensDistortion.ToolTip"))
         '
         'UCVirtualTrackerItem
         '
@@ -582,4 +609,6 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents ComboBox_CameraResolution As ComboBox
     Friend WithEvents Label11 As Label
     Friend WithEvents Panel_Preview As Panel
+    Friend WithEvents Label1 As Label
+    Friend WithEvents ComboBox_CameraLensDistortion As ComboBox
 End Class

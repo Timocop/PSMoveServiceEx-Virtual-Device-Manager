@@ -93,7 +93,14 @@
             End If
 
             Me.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(g_mClassDeviceInfo.m_Index)
-            Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipeIndex)
+
+            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex > -1) Then
+                Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = String.Format("{0} & {1}",
+                                                                             g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex,
+                                                                             g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipeSecondaryIndex)
+            Else
+                Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex)
+            End If
             Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = CStr(g_mClassDeviceInfo.m_Name)
             Me.SubItems(LISTVIEW_SUBITEM_PATH).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
         End Sub

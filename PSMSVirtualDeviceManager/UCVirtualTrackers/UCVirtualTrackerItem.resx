@@ -123,6 +123,11 @@
   <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="ComboBox_CameraLensDistortion.ToolTip" xml:space="preserve">
+    <value>You can operate your video input device at different resolutions. 
+It's recommended to use 480p for multi-camera setups and 1080p for single-camera setups.
+Keep in mind that higher resolutions can impose much more system demands and does not always improve the quality of your tracking!</value>
+  </data>
   <data name="ComboBox_CameraResolution.ToolTip" xml:space="preserve">
     <value>You can operate your video input device at different resolutions. 
 It's recommended to use 480p for multi-camera setups and 1080p for single-camera setups.

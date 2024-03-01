@@ -7,9 +7,11 @@
         Enum ENUM_CAMERA_DISTORTION_TYPE
             PSEYE
             PS4CAM
+            GENERIC
         End Enum
 
         Structure STRUC_CAMERA_DISTORTION_ITEM
+            Dim sName As String
             Dim iType As ENUM_CAMERA_DISTORTION_TYPE
             Dim iFocalLengthX As Double
             Dim iFocalLengthY As Double
@@ -21,7 +23,8 @@
             Dim iDistortionP1 As Double
             Dim iDistortionP2 As Double
 
-            Public Sub New(_Type As ENUM_CAMERA_DISTORTION_TYPE, _FocalLengthX As Double, _FocalLengthY As Double, _PrincipalX As Double, _PrincipalY As Double, _DistortionK1 As Double, _DistortionK2 As Double, _DistortionK3 As Double, _DistortionP1 As Double, _DistortionP2 As Double)
+            Public Sub New(_Name As String, _Type As ENUM_CAMERA_DISTORTION_TYPE, _FocalLengthX As Double, _FocalLengthY As Double, _PrincipalX As Double, _PrincipalY As Double, _DistortionK1 As Double, _DistortionK2 As Double, _DistortionK3 As Double, _DistortionP1 As Double, _DistortionP2 As Double)
+                sName = _Name
                 iType = _Type
                 iFocalLengthX = _FocalLengthX
                 iFocalLengthY = _FocalLengthY
@@ -50,7 +53,7 @@
 
                 mConfig.SaveConfig()
             End Sub
-            Public Sub LOadFromConfig(sFile As String)
+            Public Sub LoadFromConfig(sFile As String)
                 Dim mConfig As New ClassServiceConfig(sFile)
                 mConfig.LoadConfig()
 
@@ -67,8 +70,8 @@
         End Structure
 
         Public Shared ReadOnly PSMOVESERVICE_KNOWN_DISTORTION As STRUC_CAMERA_DISTORTION_ITEM() = {
-            New STRUC_CAMERA_DISTORTION_ITEM(ENUM_CAMERA_DISTORTION_TYPE.PSEYE, 554.2563, 554.2563, 320, 240, -0.10771770030260086, 0.1213262677192688, 0.04875476285815239, 0.000917330733500421, 0.00010589254816295579),
-            New STRUC_CAMERA_DISTORTION_ITEM(ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, 424.84967041015625, 515.53033447265625, 308.64697265625, 248.89617919921875, -0.021186288446187973, 0.049334883689880371, -0.062413521111011505, -0.00082370272139087319, 0.0016732711810618639)
+            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation Eye", ENUM_CAMERA_DISTORTION_TYPE.PSEYE, 554.2563, 554.2563, 320, 240, -0.10771770030260086, 0.1213262677192688, 0.04875476285815239, 0.000917330733500421, 0.00010589254816295579), 'Error: Unknown
+            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation 4 Stereo Camera", ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, 424.84967041015625, 515.53033447265625, 308.64697265625, 248.89617919921875, -0.021186288446187973, 0.049334883689880371, -0.062413521111011505, -0.00082370272139087319, 0.0016732711810618639) 'Error: 0.152170
         }
 
         Public Shared Function GetKnownDistortionByType(i As ENUM_CAMERA_DISTORTION_TYPE, ByRef mReturnDistortion As STRUC_CAMERA_DISTORTION_ITEM) As Boolean
