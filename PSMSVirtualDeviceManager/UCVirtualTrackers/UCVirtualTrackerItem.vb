@@ -162,6 +162,17 @@ Public Class UCVirtualTrackerItem
             g_bIgnoreEvents = False
         End Try
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_CameraFramerate.Items.Clear()
+            ComboBox_CameraFramerate.Items.Add("30")
+            ComboBox_CameraFramerate.Items.Add("60")
+            ComboBox_CameraFramerate.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
         If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
             CheckBox_FlipHorizontal.Enabled = False
             ComboBox_ImageInterpolation.Enabled = False
@@ -439,6 +450,23 @@ Public Class UCVirtualTrackerItem
         SetRequireRestart(True)
     End Sub
 
+    Private Sub ComboBox_CameraFramerate_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_CameraFramerate.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_CameraFramerate = CInt(ComboBox_CameraFramerate.SelectedItem)
+        SetUnsavedState(True)
+
+        ' Config is currently loading, dont show messagebox
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        SetRequireRestart(True)
+    End Sub
+
     Private Sub CheckBox_UseMjpg_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_UseMjpg.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
@@ -606,6 +634,7 @@ Public Class UCVirtualTrackerItem
         Private g_bFlipImage As Boolean = False
         Private g_bUseMJPG As Boolean = False
         Private g_bSupersampling As Boolean = False
+        Private g_iCameraFramerate As Integer = 30
 
         Enum ENUM_INTERPOLATION
             NEARST_NEIGHBOR
@@ -993,6 +1022,27 @@ Public Class UCVirtualTrackerItem
             Return New Size(640, 480)
         End Function
 
+        Public Property m_CameraFramerate As Integer
+            Get
+                SyncLock g_mThreadLock
+                    Return g_iCameraFramerate
+                End SyncLock
+            End Get
+            Set(value As Integer)
+                If (value < 30) Then
+                    value = 30
+                End If
+
+                If (value > 60) Then
+                    value = 60
+                End If
+
+                SyncLock g_mThreadLock
+                    g_iCameraFramerate = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Function GetImageInterpolation() As OpenCvSharp.InterpolationFlags
             Select Case (m_ImageInterpolation)
                 Case ENUM_INTERPOLATION.NEARST_NEIGHBOR
@@ -1095,6 +1145,8 @@ Public Class UCVirtualTrackerItem
                         End If
                     End If
 
+                    iFrameR = m_CameraFramerate
+
                     If (m_UseMJPG AndAlso Not m_IsPlayStationCamera) Then
                         Dim sLastCodec As String = m_Capture.FourCC
 
@@ -1158,6 +1210,7 @@ Public Class UCVirtualTrackerItem
                         sCurrentCodec &= " (compressed)"
                     End If
 
+                    Dim sCurrentFramerate As String = CStr(CInt(m_Capture.Fps))
                     Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
                     Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
                     If (Not m_IsPlayStationCamera AndAlso sCurrentResolution <> sUnscaledResolution) Then
@@ -1165,7 +1218,7 @@ Public Class UCVirtualTrackerItem
                     End If
 
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
-                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}", sCurrentResolution))
+                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}@{1}Hz", sCurrentResolution, sCurrentFramerate))
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
 
@@ -1790,6 +1843,7 @@ Public Class UCVirtualTrackerItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "UseMJPG", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked, "True", "False")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Supersampling", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked, "True", "False")))
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Resolution", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraResolution.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Framerate", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraFramerate.SelectedIndex)))
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
@@ -1812,10 +1866,11 @@ Public Class UCVirtualTrackerItem
 
                         SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
                         mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
-                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ClassCaptureLogic.ENUM_INTERPOLATION.BILINEAR))))
+                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ENUM_INTERPOLATION.BILINEAR))))
                         mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "False") = "True")
                         mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
-                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ClassCaptureLogic.ENUM_RESOLUTION.SD))))
+                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ENUM_RESOLUTION.SD))))
+                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraFramerate, CInt(mIni.ReadKeyValue(sDevicePath, "Framerate", "0")))
 
                         mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using

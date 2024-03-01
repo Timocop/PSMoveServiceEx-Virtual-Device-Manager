@@ -50,6 +50,10 @@ Partial Class UCVirtualTrackerItem
         Me.Label_DeviceResolution = New System.Windows.Forms.Label()
         Me.Label_DeviceCodec = New System.Windows.Forms.Label()
         Me.TabPage_TrackerProperties = New System.Windows.Forms.TabPage()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.ComboBox_CameraFramerate = New System.Windows.Forms.ComboBox()
+        Me.ComboBox_CameraLensDistortion = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox_CameraResolution = New System.Windows.Forms.ComboBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.CheckBox_DeviceSupersampling = New System.Windows.Forms.CheckBox()
@@ -64,8 +68,6 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Preview = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.ComboBox_CameraLensDistortion = New System.Windows.Forms.ComboBox()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -330,6 +332,8 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_TrackerProperties
         '
+        Me.TabPage_TrackerProperties.Controls.Add(Me.Label12)
+        Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraFramerate)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraLensDistortion)
         Me.TabPage_TrackerProperties.Controls.Add(Me.Label1)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraResolution)
@@ -351,6 +355,50 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.TabIndex = 1
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
         Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(6, 144)
+        Me.Label12.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(61, 13)
+        Me.Label12.TabIndex = 24
+        Me.Label12.Text = "Framerate:"
+        '
+        'ComboBox_CameraFramerate
+        '
+        Me.ComboBox_CameraFramerate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_CameraFramerate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_CameraFramerate.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_CameraFramerate.FormattingEnabled = True
+        Me.ComboBox_CameraFramerate.Location = New System.Drawing.Point(208, 141)
+        Me.ComboBox_CameraFramerate.Name = "ComboBox_CameraFramerate"
+        Me.ComboBox_CameraFramerate.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_CameraFramerate.TabIndex = 23
+        '
+        'ComboBox_CameraLensDistortion
+        '
+        Me.ComboBox_CameraLensDistortion.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_CameraLensDistortion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_CameraLensDistortion.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_CameraLensDistortion.FormattingEnabled = True
+        Me.ComboBox_CameraLensDistortion.Location = New System.Drawing.Point(208, 168)
+        Me.ComboBox_CameraLensDistortion.Name = "ComboBox_CameraLensDistortion"
+        Me.ComboBox_CameraLensDistortion.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_CameraLensDistortion.TabIndex = 22
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(4, 171)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(142, 13)
+        Me.Label1.TabIndex = 21
+        Me.Label1.Text = "Tracker Distortion Profiles:"
         '
         'ComboBox_CameraResolution
         '
@@ -516,29 +564,6 @@ Partial Class UCVirtualTrackerItem
         Me.Panel_Preview.Size = New System.Drawing.Size(279, 217)
         Me.Panel_Preview.TabIndex = 24
         '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 146)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(142, 13)
-        Me.Label1.TabIndex = 21
-        Me.Label1.Text = "Tracker Distortion Profiles:"
-        '
-        'ComboBox_CameraLensDistortion
-        '
-        Me.ComboBox_CameraLensDistortion.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_CameraLensDistortion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_CameraLensDistortion.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_CameraLensDistortion.FormattingEnabled = True
-        Me.ComboBox_CameraLensDistortion.Location = New System.Drawing.Point(208, 143)
-        Me.ComboBox_CameraLensDistortion.Name = "ComboBox_CameraLensDistortion"
-        Me.ComboBox_CameraLensDistortion.Size = New System.Drawing.Size(261, 21)
-        Me.ComboBox_CameraLensDistortion.TabIndex = 22
-        Me.ToolTip_Info.SetToolTip(Me.ComboBox_CameraLensDistortion, resources.GetString("ComboBox_CameraLensDistortion.ToolTip"))
-        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -611,4 +636,6 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Panel_Preview As Panel
     Friend WithEvents Label1 As Label
     Friend WithEvents ComboBox_CameraLensDistortion As ComboBox
+    Friend WithEvents Label12 As Label
+    Friend WithEvents ComboBox_CameraFramerate As ComboBox
 End Class
