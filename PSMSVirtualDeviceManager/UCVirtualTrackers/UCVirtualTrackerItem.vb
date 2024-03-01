@@ -335,11 +335,21 @@ Public Class UCVirtualTrackerItem
                     Continue For
                 End If
 
-                If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_2) Then
-                    MessageBox.Show("This tracker id is already being in use!", "Unable to set tracker id", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If (mDeviceItem.g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                    If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex + 1 = iSelectedTrackerId_2 OrElse
+                        mDeviceItem.g_mClassCaptureLogic.m_PipeIndex + 1 = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_2) Then
+                        MessageBox.Show("This tracker id is already being in use!", "Unable to set tracker id", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
-                    ComboBox_DeviceTrackerId.SelectedIndex = 0
-                    Return
+                        ComboBox_DeviceTrackerId.SelectedIndex = 0
+                        Return
+                    End If
+                Else
+                    If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_2) Then
+                        MessageBox.Show("This tracker id is already being in use!", "Unable to set tracker id", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+                        ComboBox_DeviceTrackerId.SelectedIndex = 0
+                        Return
+                    End If
                 End If
             Next
         End If
