@@ -4,6 +4,10 @@ Public Class UCVirtualTrackerItem
     Const MAX_PSMOVESERIVCE_TRACKERS = 8
     Const PROBE_MULTIPLY = 64
 
+    Const PS4CAM_EYE_STARTPADDING As Integer = 48
+    Const PS4CAM_EYE_HEIGHT_PADDING As Integer = 8
+    Const PS4CAM_EYE_WDITH As Integer = 1280
+
     Public g_mClassCaptureLogic As ClassCaptureLogic
 
     Public g_mUCVirtualTrackers As UCVirtualTrackers
@@ -18,13 +22,31 @@ Public Class UCVirtualTrackerItem
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
 
+    Structure STRUC_CAMERA_TRACKER_ID_ITEM
+        Dim iTrackerId_1 As Integer
+        Dim iTrackerId_2 As Integer
+
+        Public Sub New(_TrackerId_1 As Integer, _TrackerId_2 As Integer)
+            iTrackerId_1 = _TrackerId_1
+            iTrackerId_2 = _TrackerId_2
+        End Sub
+
+        Public Overrides Function ToString() As String
+            If (iTrackerId_2 > -1) Then
+                Return String.Format("{0} & {1}", CStr(iTrackerId_1), CStr(iTrackerId_2))
+            Else
+                Return CStr(iTrackerId_1)
+            End If
+        End Function
+    End Structure
+
     Public Sub New(_UCVirtualTrackers As UCVirtualTrackers, mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
         g_mUCVirtualTrackers = _UCVirtualTrackers
 
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        ' Add any initialization after the InitializeComponent() call. 
         TrackBar_DeviceExposure.Minimum = -1
         TrackBar_DeviceExposure.Maximum = 1
         TrackBar_DeviceExposure.Tag = False
@@ -41,6 +63,16 @@ Public Class UCVirtualTrackerItem
         g_mClassCaptureLogic = New ClassCaptureLogic(Me, mDeviceInfo.m_Index, mDeviceInfo.m_Path)
         Label_FriendlyName.Text = mDeviceInfo.m_Name
 
+        Dim mLibUsb As New ClassLibusbDriver
+        For Each mDevice In mLibUsb.DRV_PS4CAM_VIDEO_CONFIGS
+            Dim sHardwareId As String = String.Format("\USB#VID_{0}&PID_{1}", mDevice.VID, mDevice.PID)
+
+            If (mDeviceInfo.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLower)) Then
+                g_mClassCaptureLogic.m_IsPlayStationCamera = True
+                Exit For
+            End If
+        Next
+
         ' Keep the UI disabled until we are finished
         Me.Enabled = False
 
@@ -49,9 +81,21 @@ Public Class UCVirtualTrackerItem
 
             ' Add all possible trackers. Where as -1 means disabled.
             ComboBox_DeviceTrackerId.Items.Clear()
-            For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1
-                ComboBox_DeviceTrackerId.Items.Add(CStr(i))
-            Next
+
+            If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 2
+                    If (i < 0) Then
+                        ComboBox_DeviceTrackerId.Items.Add(New STRUC_CAMERA_TRACKER_ID_ITEM(i, -1))
+                    Else
+                        ComboBox_DeviceTrackerId.Items.Add(New STRUC_CAMERA_TRACKER_ID_ITEM(i, i + 1))
+                    End If
+                Next
+            Else
+                For i = -1 To ClassSerivceConst.PSMOVESERVICE_MAX_TRACKER_COUNT - 1
+                    ComboBox_DeviceTrackerId.Items.Add(New STRUC_CAMERA_TRACKER_ID_ITEM(i, -1))
+                Next
+            End If
+
             ComboBox_DeviceTrackerId.SelectedIndex = 0
         Finally
             g_bIgnoreEvents = False
@@ -86,6 +130,13 @@ Public Class UCVirtualTrackerItem
         Finally
             g_bIgnoreEvents = False
         End Try
+
+        If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+            CheckBox_FlipHorizontal.Enabled = False
+            ComboBox_ImageInterpolation.Enabled = False
+            CheckBox_UseMjpg.Enabled = False
+            CheckBox_DeviceSupersampling.Enabled = False
+        End If
 
         ' Add a "Please wait" UI message while initalizing the video input device
         g_mMessageLabel = New Label()
@@ -262,10 +313,15 @@ Public Class UCVirtualTrackerItem
             Return
         End If
 
-        Dim iSelectedTrackerId As Integer = CInt(ComboBox_DeviceTrackerId.SelectedItem)
+        If (TypeOf ComboBox_DeviceTrackerId.SelectedItem IsNot STRUC_CAMERA_TRACKER_ID_ITEM) Then
+            Return
+        End If
+
+        Dim iSelectedTrackerId_1 As Integer = DirectCast(ComboBox_DeviceTrackerId.SelectedItem, STRUC_CAMERA_TRACKER_ID_ITEM).iTrackerId_1
+        Dim iSelectedTrackerId_2 As Integer = DirectCast(ComboBox_DeviceTrackerId.SelectedItem, STRUC_CAMERA_TRACKER_ID_ITEM).iTrackerId_2
 
         ' Check if the pipe index already has been used so we dont write to the same pipe.
-        If (iSelectedTrackerId > -1) Then
+        If (iSelectedTrackerId_1 > -1 OrElse iSelectedTrackerId_2 > -1) Then
             For Each mDeviceItem In g_mUCVirtualTrackers.GetAllDevices()
                 If (mDeviceItem Is Me) Then
                     Continue For
@@ -279,7 +335,7 @@ Public Class UCVirtualTrackerItem
                     Continue For
                 End If
 
-                If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId) Then
+                If (mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1 OrElse mDeviceItem.g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_2) Then
                     MessageBox.Show("This tracker id is already being in use!", "Unable to set tracker id", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
                     ComboBox_DeviceTrackerId.SelectedIndex = 0
@@ -288,7 +344,7 @@ Public Class UCVirtualTrackerItem
             Next
         End If
 
-        If (iSelectedTrackerId > -1 AndAlso g_iPreviousTrackerIdSelectedIndex > 0 AndAlso ComboBox_DeviceTrackerId.SelectedIndex <> g_iPreviousTrackerIdSelectedIndex) Then
+        If (iSelectedTrackerId_1 > -1 AndAlso g_iPreviousTrackerIdSelectedIndex > 0 AndAlso ComboBox_DeviceTrackerId.SelectedIndex <> g_iPreviousTrackerIdSelectedIndex) Then
             Dim sMessage As New Text.StringBuilder
             sMessage.AppendLine("You are about to change the tracker id associated with this video input device.")
             sMessage.AppendLine("PSMoveServiceEx saves its virtual tracker settings using their tracker id and you will lose all settings configured for this device if you change the tracker id!")
@@ -302,7 +358,7 @@ Public Class UCVirtualTrackerItem
             End If
         End If
 
-        g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId
+        g_mClassCaptureLogic.m_PipeIndex = iSelectedTrackerId_1
         g_iPreviousTrackerIdSelectedIndex = ComboBox_DeviceTrackerId.SelectedIndex
         SetUnsavedState(True)
     End Sub
@@ -439,19 +495,20 @@ Public Class UCVirtualTrackerItem
 
         Private g_bInitalized As Boolean = False
 
-        Private g_mInitThread As Threading.Thread
-        Private g_mCaptureThread As Threading.Thread
-        Private g_mPipeThread As Threading.Thread
+        Private g_mInitThread As Threading.Thread = Nothing
+        Private g_mCaptureThread As Threading.Thread = Nothing
+        Private g_mPipeThread() As Threading.Thread = {Nothing, Nothing}
         Private g_mDeviceWatchdogThread As Threading.Thread
 
-        Private g_mCapture As OpenCvSharp.VideoCapture
-        Private g_mCaptureFrame As OpenCvSharp.Mat = Nothing
-        Private g_mPipEvent As New Threading.AutoResetEvent(False)
+        Private g_mCapture As OpenCvSharp.VideoCapture = Nothing
+        Private g_mCaptureFrame As OpenCvSharp.Mat() = {Nothing, Nothing}
+        Private g_mPipEvent As Threading.AutoResetEvent() = {Nothing, Nothing}
 
         Private g_mThreadLock As New Object
 
         Private g_mUCVirtualTrackerItem As UCVirtualTrackerItem
 
+        Private g_bIsPlayStationCamera As Boolean = False
         Private g_bShowCaptureImage As Boolean = False
         Private g_iPipeIndex As Integer = -1
 
@@ -482,6 +539,10 @@ Public Class UCVirtualTrackerItem
             g_iDeviceIndex = _DeviceIndex
             g_sDevicePath = _DevicePath
 
+            For i = 0 To g_mPipEvent.Length - 1
+                g_mPipEvent(i) = New Threading.AutoResetEvent(False)
+            Next
+
             g_mClassConfig = New ClassConfig(Me)
         End Sub
 
@@ -507,11 +568,13 @@ Public Class UCVirtualTrackerItem
                 g_mCaptureThread = Nothing
             End If
 
-            If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
-                g_mPipeThread.Abort()
-                g_mPipeThread.Join()
-                g_mPipeThread = Nothing
-            End If
+            For i = 0 To g_mPipeThread.Length - 1
+                If (g_mPipeThread(i) IsNot Nothing AndAlso g_mPipeThread(i).IsAlive) Then
+                    g_mPipeThread(i).Abort()
+                    g_mPipeThread(i).Join()
+                    g_mPipeThread(i) = Nothing
+                End If
+            Next
 
             If (g_mDeviceWatchdogThread IsNot Nothing AndAlso g_mDeviceWatchdogThread.IsAlive) Then
                 g_mDeviceWatchdogThread.Abort()
@@ -561,19 +624,32 @@ Public Class UCVirtualTrackerItem
                 Return
             End If
 
-            If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
-                If (bRestart) Then
-                    g_mPipeThread.Abort()
-                    g_mPipeThread.Join()
-                    g_mPipeThread = Nothing
-                Else
-                    Return
+            For i = 0 To g_mPipeThread.Length - 1
+                If (g_mPipeThread(i) IsNot Nothing AndAlso g_mPipeThread(i).IsAlive) Then
+                    If (bRestart) Then
+                        g_mPipeThread(i).Abort()
+                        g_mPipeThread(i).Join()
+                        g_mPipeThread(i) = Nothing
+                    Else
+                        Continue For
+                    End If
                 End If
-            End If
 
-            g_mPipeThread = New Threading.Thread(AddressOf PipeThread)
-            g_mPipeThread.IsBackground = True
-            g_mPipeThread.Start()
+                Select Case (i)
+                    Case 0
+                        g_mPipeThread(i) = New Threading.Thread(AddressOf PipeThreadPrimary)
+                        g_mPipeThread(i).IsBackground = True
+                        g_mPipeThread(i).Start()
+                    Case 1
+                        If (Not m_IsPlayStationCamera) Then
+                            Continue For
+                        End If
+
+                        g_mPipeThread(i) = New Threading.Thread(AddressOf PipeThreadSecondary)
+                        g_mPipeThread(i).IsBackground = True
+                        g_mPipeThread(i).Start()
+                End Select
+            Next
         End Sub
 
         ''' <summary>
@@ -603,9 +679,22 @@ Public Class UCVirtualTrackerItem
             g_mDeviceWatchdogThread.Start()
         End Sub
 
-        ReadOnly Property m_CaptureResolution As ENUM_RESOLUTION
+        Public Property m_IsPlayStationCamera As Boolean
             Get
-                Select Case (m_CaptureFrame.Rows)
+                SyncLock g_mThreadLock
+                    Return g_bIsPlayStationCamera
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock g_mThreadLock
+                    g_bIsPlayStationCamera = value
+                End SyncLock
+            End Set
+        End Property
+
+        ReadOnly Property m_CaptureResolution(iPipeID As Integer) As ENUM_RESOLUTION
+            Get
+                Select Case (m_CaptureFrame(iPipeID).Rows)
                     Case 480
                         Return ENUM_RESOLUTION.SD
 
@@ -631,17 +720,23 @@ Public Class UCVirtualTrackerItem
             End Set
         End Property
 
-        Public Property m_CaptureFrame As OpenCvSharp.Mat
+        Public Property m_CaptureFrame(iPipeID As Integer) As OpenCvSharp.Mat
             Get
                 SyncLock g_mThreadLock
-                    Return g_mCaptureFrame
+                    Return g_mCaptureFrame(iPipeID)
                 End SyncLock
             End Get
             Set(value As OpenCvSharp.Mat)
                 SyncLock g_mThreadLock
-                    g_mCaptureFrame = value
+                    g_mCaptureFrame(iPipeID) = value
                 End SyncLock
             End Set
+        End Property
+
+        Public ReadOnly Property m_CaptureFrameLength As Integer
+            Get
+                Return g_mCaptureFrame.Length
+            End Get
         End Property
 
         Public Property m_ShowCaptureImage As Boolean
@@ -791,6 +886,18 @@ Public Class UCVirtualTrackerItem
             End Set
         End Property
 
+        Public Function GetCameraResolutionSize() As Size
+            Select Case (m_CameraResolution)
+                Case ENUM_RESOLUTION.SD
+                    Return New Size(640, 480)
+
+                Case ENUM_RESOLUTION.HD
+                    Return New Size(1920, 1080)
+            End Select
+
+            Return New Size(640, 480)
+        End Function
+
         Public Function GetImageInterpolation() As OpenCvSharp.InterpolationFlags
             Select Case (m_ImageInterpolation)
                 Case ENUM_INTERPOLATION.NEARST_NEIGHBOR
@@ -874,18 +981,26 @@ Public Class UCVirtualTrackerItem
                     Dim iUnscaledFrameH = iFrameH
                     Dim iUnscaledFrameW = iFrameW
 
-                    If (g_mCaptureFrame IsNot Nothing AndAlso Not g_mCaptureFrame.IsDisposed) Then
-                        g_mCaptureFrame.Dispose()
-                        g_mCaptureFrame = Nothing
-                    End If
-                    g_mCaptureFrame = New OpenCvSharp.Mat(iFrameH, iFrameW, OpenCvSharp.MatType.CV_8UC3)
+                    For i = 0 To g_mCaptureFrame.Length - 1
+                        If (g_mCaptureFrame(i) IsNot Nothing AndAlso Not g_mCaptureFrame(i).IsDisposed) Then
+                            g_mCaptureFrame(i).Dispose()
+                            g_mCaptureFrame(i) = Nothing
+                        End If
+                        g_mCaptureFrame(i) = New OpenCvSharp.Mat(iFrameH, iFrameW, OpenCvSharp.MatType.CV_8UC3)
+                    Next
 
-                    If (m_Supersampling) Then
-                        iFrameH *= 2
-                        iFrameW *= 2
+
+                    If (m_IsPlayStationCamera) Then
+                        iFrameH = 800
+                        iFrameW = 1280 * 2
+                    Else
+                        If (m_Supersampling) Then
+                            iFrameH *= 2
+                            iFrameW *= 2
+                        End If
                     End If
 
-                    If (m_UseMJPG) Then
+                    If (m_UseMJPG AndAlso Not m_IsPlayStationCamera) Then
                         Dim sLastCodec As String = m_Capture.FourCC
 
                         m_Capture.FrameHeight = iFrameH
@@ -950,7 +1065,7 @@ Public Class UCVirtualTrackerItem
 
                     Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
                     Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
-                    If (sCurrentResolution <> sUnscaledResolution) Then
+                    If (Not m_IsPlayStationCamera AndAlso sCurrentResolution <> sUnscaledResolution) Then
                         sCurrentResolution &= String.Format(" (not recommended resolution, will be scaled to {0})", sUnscaledResolution)
                     End If
 
@@ -1279,7 +1394,7 @@ Public Class UCVirtualTrackerItem
             Dim iFpsCount As Integer = 0
 
             Try
-                Using mFrame As New OpenCvSharp.Mat(m_CaptureFrame.Rows, m_CaptureFrame.Cols, OpenCvSharp.MatType.CV_8UC3)
+                Using mFrame As New OpenCvSharp.Mat(m_CaptureFrame(0).Rows, m_CaptureFrame(0).Cols, OpenCvSharp.MatType.CV_8UC3)
                     While True
                         Dim bExceptionSleep As Boolean = False
 
@@ -1312,27 +1427,43 @@ Public Class UCVirtualTrackerItem
                                 End If
                             End If
 
-                            ' Sometimes setting resolutions on devices wont work. (e.g. Kinect One)
-                            ' We NEED to resize the image to 640x480 because our buffer is only that size!
-                            If (mFrame.Cols <> m_CaptureFrame.Cols OrElse mFrame.Rows <> m_CaptureFrame.Rows) Then
-                                Using mNewFrame = mFrame.Resize(New OpenCvSharp.Size(m_CaptureFrame.Cols, m_CaptureFrame.Rows), 0, 0, GetImageInterpolation())
-                                    mNewFrame.CopyTo(mFrame)
-                                End Using
-                            End If
-
-
-                            ' PSEyes have their Y flipped.
-                            ' But some video input devices do Not. So flip them here instead.
-                            If (m_FlipImage) Then
-                                Using mNewMat = mFrame.Flip(OpenCvSharp.FlipMode.Y)
-                                    mNewMat.CopyTo(mFrame)
-                                End Using
-                            End If
-
                             ' Copy to global frame
-                            mFrame.CopyTo(m_CaptureFrame)
+                            If (m_IsPlayStationCamera) Then
+                                For i = 0 To m_CaptureFrameLength - 1
+                                    Using mNewFrame = mFrame(PS4CAM_EYE_HEIGHT_PADDING, mFrame.Rows - PS4CAM_EYE_HEIGHT_PADDING, 0 + PS4CAM_EYE_STARTPADDING + (PS4CAM_EYE_WDITH * i), PS4CAM_EYE_STARTPADDING + PS4CAM_EYE_WDITH + (PS4CAM_EYE_WDITH * i))
+                                        Using mNewFrame2 = mNewFrame.Resize(New OpenCvSharp.Size(m_CaptureFrame(i).Cols, m_CaptureFrame(i).Rows), 0, 0, OpenCvSharp.InterpolationFlags.Linear)
+                                            Using mNewFrame3 = mNewFrame2.Flip(OpenCvSharp.FlipMode.Y)
+                                                mNewFrame3.CopyTo(m_CaptureFrame(i))
+                                            End Using
+                                        End Using
+                                    End Using
+                                Next
+                            Else
+                                ' Sometimes setting resolutions on devices wont work. (e.g. Kinect One)
+                                ' We NEED to resize the image to 640x480 because our buffer is only that size!
+                                If (mFrame.Cols <> m_CaptureFrame(0).Cols OrElse mFrame.Rows <> m_CaptureFrame(0).Rows) Then
+                                    Dim mInterpolation As OpenCvSharp.InterpolationFlags = GetImageInterpolation()
 
-                            g_mPipEvent.Set()
+                                    Using mNewFrame = mFrame.Resize(New OpenCvSharp.Size(m_CaptureFrame(0).Cols, m_CaptureFrame(0).Rows), 0, 0, mInterpolation)
+                                        mNewFrame.CopyTo(mFrame)
+                                    End Using
+                                End If
+
+
+                                ' PSEyes have their Y flipped.
+                                ' But some video input devices do Not. So flip them here instead.
+                                If (m_FlipImage) Then
+                                    Using mNewMat = mFrame.Flip(OpenCvSharp.FlipMode.Y)
+                                        mNewMat.CopyTo(mFrame)
+                                    End Using
+                                End If
+
+                                mFrame.CopyTo(m_CaptureFrame(0))
+                            End If
+
+                            For i = 0 To g_mPipEvent.Length - 1
+                                g_mPipEvent(i).Set()
+                            Next
 
                             ' Preview captured image
                             ' $TODO: Quite performance heavy, find a better way.
@@ -1398,8 +1529,16 @@ Public Class UCVirtualTrackerItem
             End Try
         End Sub
 
-        Private Sub PipeThread()
-            Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame.Height * m_CaptureFrame.Width * 3)
+        Private Sub PipeThreadPrimary()
+            DoPipeLogic(0)
+        End Sub
+
+        Private Sub PipeThreadSecondary()
+            DoPipeLogic(1)
+        End Sub
+
+        Private Sub DoPipeLogic(iPipeID As Integer)
+            Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame(iPipeID).Height * m_CaptureFrame(iPipeID).Width * 3)
             Dim iBytes = New Byte(VIRT_BUFFER_SIZE) {}
 
             Dim mFrameDelay As New Stopwatch
@@ -1423,7 +1562,7 @@ Public Class UCVirtualTrackerItem
                         Throw New ArgumentException("Invalid pipe index.")
                     End If
 
-                    Dim sPipeName As String = String.Format("PSMoveSerivceEx\VirtPSeyeStream{0}_{1}", CInt(m_CaptureResolution), iPipeIndex)
+                    Dim sPipeName As String = String.Format("PSMoveSerivceEx\VirtPSeyeStream{0}_{1}", CInt(m_CaptureResolution(iPipeID)), iPipeIndex + iPipeID)
 
                     Using mPipe As New IO.Pipes.NamedPipeClientStream(".", sPipeName, IO.Pipes.PipeDirection.Out)
                         ' The thread when aborting will hang if we dont put a timeout.
@@ -1438,7 +1577,11 @@ Public Class UCVirtualTrackerItem
 
                                 If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
                                     Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iPrintFPS))
+
+                                    ' $TODO Add for each pipe
+                                    If (iPipeID = 0) Then
+                                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iPrintFPS))
+                                    End If
 
                                     mFramePrint.Restart()
                                     iFPS = 0
@@ -1446,9 +1589,9 @@ Public Class UCVirtualTrackerItem
                                 End If
                             End If
 
-                            g_mPipEvent.WaitOne(New TimeSpan(0, 0, 5))
+                            g_mPipEvent(iPipeID).WaitOne(New TimeSpan(0, 0, 5))
 
-                            Marshal.Copy(m_CaptureFrame.Data, iBytes, 0, iBytes.Length)
+                            Marshal.Copy(m_CaptureFrame(iPipeID).Data, iBytes, 0, iBytes.Length)
 
                             ' Write to pipe and wait for response.
                             ' $TODO Latency is quite ok but somewhat noticeable
@@ -1462,7 +1605,11 @@ Public Class UCVirtualTrackerItem
                     bExceptionSleep = True
 
                     If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
+
+                        ' $TODO Add for each pipe
+                        If (iPipeID = 0) Then
+                            ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
+                        End If
 
                         mFramePrint.Restart()
                         iFPS = 0
@@ -1631,11 +1778,13 @@ Public Class UCVirtualTrackerItem
                         g_mCaptureThread = Nothing
                     End If
 
-                    If (g_mPipeThread IsNot Nothing AndAlso g_mPipeThread.IsAlive) Then
-                        g_mPipeThread.Abort()
-                        g_mPipeThread.Join()
-                        g_mPipeThread = Nothing
-                    End If
+                    For i = 0 To g_mPipeThread.Length - 1
+                        If (g_mPipeThread(i) IsNot Nothing AndAlso g_mPipeThread(i).IsAlive) Then
+                            g_mPipeThread(i).Abort()
+                            g_mPipeThread(i).Join()
+                            g_mPipeThread(i) = Nothing
+                        End If
+                    Next
 
                     If (g_mDeviceWatchdogThread IsNot Nothing AndAlso g_mDeviceWatchdogThread.IsAlive) Then
                         g_mDeviceWatchdogThread.Abort()
@@ -1648,10 +1797,12 @@ Public Class UCVirtualTrackerItem
                         g_mCapture = Nothing
                     End If
 
-                    If (g_mCaptureFrame IsNot Nothing AndAlso Not g_mCaptureFrame.IsDisposed) Then
-                        g_mCaptureFrame.Dispose()
-                        g_mCaptureFrame = Nothing
-                    End If
+                    For i = 0 To g_mCaptureFrame.Length - 1
+                        If (g_mCaptureFrame(i) IsNot Nothing AndAlso Not g_mCaptureFrame(i).IsDisposed) Then
+                            g_mCaptureFrame(i).Dispose()
+                            g_mCaptureFrame(i) = Nothing
+                        End If
+                    Next
                 End If
 
                 ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
