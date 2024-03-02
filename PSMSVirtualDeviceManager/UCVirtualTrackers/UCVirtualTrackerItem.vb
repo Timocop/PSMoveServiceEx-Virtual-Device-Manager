@@ -272,15 +272,15 @@ Public Class UCVirtualTrackerItem
                             g_mClassCaptureLogic.m_PipeSecondaryIndex
                         }
 
-                        Dim sConfigFolder As String = ClassServiceConfig.GetConfigPath()
-                        If (Not String.IsNullOrEmpty(sConfigFolder)) Then
+                        Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+                        If (Not String.IsNullOrEmpty(sConfigPath)) Then
                             Dim sConfigFiles As New List(Of String)
 
                             If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
-                                sConfigFiles.Add(IO.Path.Combine(sConfigFolder, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
-                                sConfigFiles.Add(IO.Path.Combine(sConfigFolder, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(1))))
+                                sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
+                                sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(1))))
                             Else
-                                sConfigFiles.Add(IO.Path.Combine(sConfigFolder, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
+                                sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
                             End If
 
                             For Each sConfigFile As String In sConfigFiles
@@ -741,10 +741,15 @@ Public Class UCVirtualTrackerItem
 
             For Each iTrackerID As Integer In mIds
                 If (iTrackerID < 0) Then
-                    Throw New ArgumentException("Tracker id is invalid.")
+                    Throw New ArgumentException("Tracker id is invalid")
                 End If
 
-                Dim sConfigFile As String = IO.Path.Combine(ClassServiceConfig.GetConfigPath(), String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
+                Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+                If (String.IsNullOrEmpty(sConfigPath)) Then
+                    Throw New ArgumentException("Config path does not exist")
+                End If
+
+                Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
 
                 mDistort.mDistort.SaveToConfig(sConfigFile)
             Next
