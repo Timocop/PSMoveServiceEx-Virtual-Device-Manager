@@ -996,7 +996,7 @@ Public Class UCVirtualTrackerItem
             g_mInitThread.Start()
         End Sub
 
-        Public ReadOnly Property m_Initalized As Boolean
+        Public ReadOnly Property m_Initialized As Boolean
             Get
                 SyncLock g_mThreadInitLock
                     Return g_bInitalized
@@ -1010,7 +1010,7 @@ Public Class UCVirtualTrackerItem
         ''' </summary>
         ''' <param name="bRestart"></param>
         Private Sub StartCaptureThread(bRestart As Boolean)
-            If (Not m_Initalized) Then
+            If (Not m_Initialized) Then
                 Return
             End If
 
@@ -1035,7 +1035,7 @@ Public Class UCVirtualTrackerItem
         ''' </summary>
         ''' <param name="bRestart"></param>
         Private Sub StartPipeThread(bRestart As Boolean)
-            If (Not m_Initalized) Then
+            If (Not m_Initialized) Then
                 Return
             End If
 
@@ -1075,7 +1075,7 @@ Public Class UCVirtualTrackerItem
         ''' </summary>
         ''' <param name="bRestart"></param>
         Private Sub StartDeviceWatchodogThread(bRestart As Boolean)
-            If (Not m_Initalized) Then
+            If (Not m_Initialized) Then
                 Return
             End If
 
@@ -1385,56 +1385,66 @@ Public Class UCVirtualTrackerItem
         End Function
 
         Private Sub InitThread()
+            Dim mCapture As OpenCvSharp.VideoCapture = Nothing
+
             Try
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Initializing device...")
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = True)
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.BringToFront())
 
+                Dim bIsPlayStationCamera As Boolean = m_IsPlayStationCamera
+                Dim iCameraResolution As ENUM_RESOLUTION = m_CameraResolution
+                Dim bSupersampling As Boolean = m_Supersampling
+                Dim iCameraFramerate As Integer = m_CameraFramerate
+                Dim bUseMJPG As Boolean = m_UseMJPG
+
+                'Remove old capture before we create a new one
                 SyncLock g_mThreadLock
-                    'Remove old capture before we create a new one
                     If (m_Capture IsNot Nothing AndAlso Not m_Capture.IsDisposed) Then
                         m_Capture.Dispose()
                         m_Capture = Nothing
                     End If
+                End SyncLock
 
-                    Dim iRealIndex As Integer = GetDeviceIndexByPath()
-                    If (iRealIndex < 0) Then
-                        Throw New ArgumentException("Unable to open video input device. Device can not be found.")
-                    End If
+                Dim iRealIndex As Integer = GetDeviceIndexByPath()
+                If (iRealIndex < 0) Then
+                    Throw New ArgumentException("Unable to open video input device. Device can not be found.")
+                End If
 
-                    ' Replace the old index with the new one if it changed by any way.
-                    m_DeviceIndex = iRealIndex
-                    m_Capture = New OpenCvSharp.VideoCapture(iRealIndex, OpenCvSharp.VideoCaptureAPIs.DSHOW)
-                    If (Not m_Capture.IsOpened) Then
-                        Throw New ArgumentException("Unable to open video input device.")
-                    End If
+                ' Replace the old index with the new one if it changed by any way.
+                m_DeviceIndex = iRealIndex
+                mCapture = New OpenCvSharp.VideoCapture(iRealIndex, OpenCvSharp.VideoCaptureAPIs.DSHOW)
+                If (Not mCapture.IsOpened) Then
+                    Throw New ArgumentException("Unable to open video input device.")
+                End If
 
-                    ' Try to read the first frame before we change anything. Just in case properties wont apply instandly.
-                    CapturePoll()
+                ' Try to read the first frame before we change anything. Just in case properties wont apply instandly.
+                CapturePoll(mCapture)
 
-                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Setting default device properties...")
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Setting default device properties...")
 
-                    ' Disable any unneeded stuff. Tho, some things wont work still...
-                    m_Capture.AutoExposure = -1
-                    m_Capture.AutoFocus = False
-                    m_Capture.WhiteBalanceBlueU = -1
-                    m_Capture.WhiteBalanceRedV = -1
+                ' Disable any unneeded stuff. Tho, some things wont work still...
+                mCapture.AutoExposure = -1
+                mCapture.AutoFocus = False
+                mCapture.WhiteBalanceBlueU = -1
+                mCapture.WhiteBalanceRedV = -1
 
-                    ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set first everytime
-                    Dim iFrameH As Integer = 480
-                    Dim iFrameW As Integer = 640
-                    Dim iFrameR As Integer = 30
+                ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set first everytime
+                Dim iFrameH As Integer = 480
+                Dim iFrameW As Integer = 640
+                Dim iFrameR As Integer = 30
 
-                    Select Case (m_CameraResolution)
-                        Case ENUM_RESOLUTION.HD
-                            iFrameH = 1080
-                            iFrameW = 1920
+                Select Case (iCameraResolution)
+                    Case ENUM_RESOLUTION.HD
+                        iFrameH = 1080
+                        iFrameW = 1920
 
-                    End Select
+                End Select
 
-                    Dim iUnscaledFrameH = iFrameH
-                    Dim iUnscaledFrameW = iFrameW
+                Dim iUnscaledFrameH = iFrameH
+                Dim iUnscaledFrameW = iFrameW
 
+                SyncLock g_mThreadLock
                     For i = 0 To g_mCaptureFrame.Length - 1
                         If (g_mCaptureFrame(i) IsNot Nothing AndAlso Not g_mCaptureFrame(i).IsDisposed) Then
                             g_mCaptureFrame(i).Dispose()
@@ -1442,244 +1452,242 @@ Public Class UCVirtualTrackerItem
                         End If
                         g_mCaptureFrame(i) = New OpenCvSharp.Mat(iFrameH, iFrameW, OpenCvSharp.MatType.CV_8UC3)
                     Next
-
-
-                    If (m_IsPlayStationCamera) Then
-                        iFrameH = 800
-                        iFrameW = 1280 * 2
-                    Else
-                        If (m_Supersampling) Then
-                            iFrameH *= 2
-                            iFrameW *= 2
-                        End If
-                    End If
-
-                    iFrameR = m_CameraFramerate
-
-                    If (m_UseMJPG AndAlso Not m_IsPlayStationCamera) Then
-                        Dim sLastCodec As String = m_Capture.FourCC
-
-                        m_Capture.FrameHeight = iFrameH
-                        m_Capture.FrameWidth = iFrameW
-                        m_Capture.Fps = iFrameR
-                        m_Capture.FourCC = "mjpg"
-                        CapturePoll()
-
-                        If (m_Capture.FourCC <> "mjpg") Then
-                            m_Capture.FrameHeight = iFrameH
-                            m_Capture.FrameWidth = iFrameW
-                            m_Capture.Fps = iFrameR
-                            m_Capture.FourCC = "MJPG"
-                            CapturePoll()
-                        End If
-
-                        ' Failed fall back to last codec
-                        If (m_Capture.FourCC <> "MJPG") Then
-                            m_Capture.FrameHeight = iFrameH
-                            m_Capture.FrameWidth = iFrameW
-                            m_Capture.Fps = iFrameR
-                            m_Capture.FourCC = sLastCodec
-                            CapturePoll()
-                        End If
-                    Else
-                        Dim sLastCodec As String = m_Capture.FourCC
-
-                        ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set
-                        m_Capture.FrameHeight = iFrameH
-                        m_Capture.FrameWidth = iFrameW
-                        m_Capture.Fps = iFrameR
-                        m_Capture.FourCC = "yuy2"
-                        CapturePoll()
-
-                        If (m_Capture.FourCC <> "yuy2") Then
-                            m_Capture.FrameHeight = iFrameH
-                            m_Capture.FrameWidth = iFrameW
-                            m_Capture.Fps = iFrameR
-                            m_Capture.FourCC = "YUY2"
-                            CapturePoll()
-                        End If
-
-                        ' Failed fall back to last codec
-                        If (m_Capture.FourCC <> "YUY2") Then
-                            m_Capture.FrameHeight = iFrameH
-                            m_Capture.FrameWidth = iFrameW
-                            m_Capture.Fps = iFrameR
-                            m_Capture.FourCC = sLastCodec
-                            CapturePoll()
-                        End If
-                    End If
-
-                    CapturePoll()
-
-                    Dim sCurrentCodec As String = m_Capture.FourCC
-                    If (sCurrentCodec.Trim(vbNullChar(0)).Length = 0) Then
-                        sCurrentCodec = "UNKNOWN"
-                    End If
-
-                    If (sCurrentCodec = "MJPG") Then
-                        sCurrentCodec &= " (compressed)"
-                    End If
-
-                    Dim sCurrentFramerate As String = CStr(CInt(m_Capture.Fps))
-                    Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
-                    Dim sScalingWarning As String = ""
-                    Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
-                    If (Not m_IsPlayStationCamera AndAlso sCurrentResolution <> sUnscaledResolution) Then
-                        sScalingWarning &= String.Format(" (scaled to {0})", sUnscaledResolution)
-                    End If
-
-                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
-                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}@{1}Hz{2}", sCurrentResolution, sCurrentFramerate, sScalingWarning))
-                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
+
+
+                If (bIsPlayStationCamera) Then
+                    iFrameH = 800
+                    iFrameW = 1280 * 2
+                Else
+                    If (bSupersampling) Then
+                        iFrameH *= 2
+                        iFrameW *= 2
+                    End If
+                End If
+
+                iFrameR = iCameraFramerate
+
+                If (bUseMJPG AndAlso Not bIsPlayStationCamera) Then
+                    Dim sLastCodec As String = mCapture.FourCC
+
+                    mCapture.FrameHeight = iFrameH
+                    mCapture.FrameWidth = iFrameW
+                    mCapture.Fps = iFrameR
+                    mCapture.FourCC = "mjpg"
+                    CapturePoll(mCapture)
+
+                    If (mCapture.FourCC <> "mjpg") Then
+                        mCapture.FrameHeight = iFrameH
+                        mCapture.FrameWidth = iFrameW
+                        mCapture.Fps = iFrameR
+                        mCapture.FourCC = "MJPG"
+                        CapturePoll(mCapture)
+                    End If
+
+                    ' Failed fall back to last codec
+                    If (mCapture.FourCC <> "MJPG") Then
+                        mCapture.FrameHeight = iFrameH
+                        mCapture.FrameWidth = iFrameW
+                        mCapture.Fps = iFrameR
+                        mCapture.FourCC = sLastCodec
+                        CapturePoll(mCapture)
+                    End If
+                Else
+                    Dim sLastCodec As String = mCapture.FourCC
+
+                    ' $TODO: For some reason, changing FourCC requires FrameH/FrameW to be set
+                    mCapture.FrameHeight = iFrameH
+                    mCapture.FrameWidth = iFrameW
+                    mCapture.Fps = iFrameR
+                    mCapture.FourCC = "yuy2"
+                    CapturePoll(mCapture)
+
+                    If (mCapture.FourCC <> "yuy2") Then
+                        mCapture.FrameHeight = iFrameH
+                        mCapture.FrameWidth = iFrameW
+                        mCapture.Fps = iFrameR
+                        mCapture.FourCC = "YUY2"
+                        CapturePoll(mCapture)
+                    End If
+
+                    ' Failed fall back to last codec
+                    If (mCapture.FourCC <> "YUY2") Then
+                        mCapture.FrameHeight = iFrameH
+                        mCapture.FrameWidth = iFrameW
+                        mCapture.Fps = iFrameR
+                        mCapture.FourCC = sLastCodec
+                        CapturePoll(mCapture)
+                    End If
+                End If
+
+                Dim sCurrentCodec As String = mCapture.FourCC
+                If (sCurrentCodec.Trim(vbNullChar(0)).Length = 0) Then
+                    sCurrentCodec = "UNKNOWN"
+                End If
+
+                If (sCurrentCodec = "MJPG") Then
+                    sCurrentCodec &= " (compressed)"
+                End If
+
+                Dim sCurrentFramerate As String = CStr(CInt(mCapture.Fps))
+                Dim sCurrentResolution As String = String.Format("{0}x{1}", mCapture.FrameWidth, mCapture.FrameHeight)
+                Dim sScalingWarning As String = ""
+                Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
+                If (Not bIsPlayStationCamera AndAlso sCurrentResolution <> sUnscaledResolution) Then
+                    sScalingWarning &= String.Format(" (scaled to {0})", sUnscaledResolution)
+                End If
+
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}@{1}Hz{2}", sCurrentResolution, sCurrentFramerate, sScalingWarning))
+                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
 
                 ' $TODO: Minimize copy paste code. This looks like ass.
                 ' Probing exposure
-                Dim iExposureDefault As Double = m_Capture.Exposure
+                Dim iExposureDefault As Double = mCapture.Exposure
                 Dim iExposureMin As Double = 0
                 Dim iExposureMax As Double = 0
 
                 If (True) Then
                     For j = 0 To 1
-                        m_Capture.Exposure = 0
+                        mCapture.Exposure = 0
 
                         For i = 1 To 255
                             If (j = 0) Then
-                                m_Capture.Exposure = (i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Exposure = (i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Exposure = iExposureMax) Then
-                                    iExposureMax = m_Capture.Exposure
+                                If (mCapture.Exposure = iExposureMax) Then
+                                    iExposureMax = mCapture.Exposure
                                     Exit For
                                 End If
 
-                                iExposureMax = m_Capture.Exposure
+                                iExposureMax = mCapture.Exposure
                             Else
-                                m_Capture.Exposure = -(i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Exposure = -(i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Exposure = iExposureMin) Then
-                                    iExposureMin = m_Capture.Exposure
+                                If (mCapture.Exposure = iExposureMin) Then
+                                    iExposureMin = mCapture.Exposure
                                     Exit For
                                 End If
 
-                                iExposureMin = m_Capture.Exposure
+                                iExposureMin = mCapture.Exposure
                             End If
                         Next
                     Next
 
-                    m_Capture.Exposure = iExposureDefault
+                    mCapture.Exposure = iExposureDefault
                 End If
 
                 ' Probing gain
-                Dim iGainDefault As Double = m_Capture.Gain
+                Dim iGainDefault As Double = mCapture.Gain
                 Dim iGainMin As Double = 0
                 Dim iGainMax As Double = 0
 
                 If (True) Then
                     For j = 0 To 1
-                        m_Capture.Gain = 0
+                        mCapture.Gain = 0
 
                         For i = 1 To 255
                             If (j = 0) Then
-                                m_Capture.Gain = (i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Gain = (i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Gain = iGainMax) Then
-                                    iGainMax = m_Capture.Gain
+                                If (mCapture.Gain = iGainMax) Then
+                                    iGainMax = mCapture.Gain
                                     Exit For
                                 End If
 
-                                iGainMax = m_Capture.Gain
+                                iGainMax = mCapture.Gain
                             Else
-                                m_Capture.Gain = -(i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Gain = -(i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Gain = iGainMin) Then
-                                    iGainMin = m_Capture.Gain
+                                If (mCapture.Gain = iGainMin) Then
+                                    iGainMin = mCapture.Gain
                                     Exit For
                                 End If
 
-                                iGainMin = m_Capture.Gain
+                                iGainMin = mCapture.Gain
                             End If
                         Next
                     Next
 
-                    m_Capture.Gain = iGainDefault
+                    mCapture.Gain = iGainDefault
                 End If
 
                 ' Probing gamma
-                Dim iGammaDefault As Double = m_Capture.Gamma
+                Dim iGammaDefault As Double = mCapture.Gamma
                 Dim iGammaMin As Double = 0
                 Dim iGammaMax As Double = 0
 
                 If (True) Then
                     For j = 0 To 1
-                        m_Capture.Gamma = 0
+                        mCapture.Gamma = 0
 
                         For i = 1 To 255
                             If (j = 0) Then
-                                m_Capture.Gamma = (i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Gamma = (i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Gamma = iGammaMax) Then
-                                    iGammaMax = m_Capture.Gamma
+                                If (mCapture.Gamma = iGammaMax) Then
+                                    iGammaMax = mCapture.Gamma
                                     Exit For
                                 End If
 
-                                iGammaMax = m_Capture.Gamma
+                                iGammaMax = mCapture.Gamma
                             Else
-                                m_Capture.Gamma = -(i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Gamma = -(i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Gamma = iGammaMin) Then
-                                    iGammaMin = m_Capture.Gamma
+                                If (mCapture.Gamma = iGammaMin) Then
+                                    iGammaMin = mCapture.Gamma
                                     Exit For
                                 End If
 
-                                iGammaMin = m_Capture.Gamma
+                                iGammaMin = mCapture.Gamma
                             End If
                         Next
                     Next
 
-                    m_Capture.Gamma = iGammaDefault
+                    mCapture.Gamma = iGammaDefault
                 End If
 
                 ' Probing constrast
-                Dim iContrastDefault As Double = m_Capture.Contrast
+                Dim iContrastDefault As Double = mCapture.Contrast
                 Dim iContrastMin As Double = 0
                 Dim iContrastMax As Double = 0
 
                 If (True) Then
                     For j = 0 To 1
-                        m_Capture.Contrast = 0
+                        mCapture.Contrast = 0
 
                         For i = 1 To 255
                             If (j = 0) Then
-                                m_Capture.Contrast = (i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Contrast = (i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Contrast = iContrastMax) Then
-                                    iContrastMax = m_Capture.Contrast
+                                If (mCapture.Contrast = iContrastMax) Then
+                                    iContrastMax = mCapture.Contrast
                                     Exit For
                                 End If
 
-                                iContrastMax = m_Capture.Contrast
+                                iContrastMax = mCapture.Contrast
                             Else
-                                m_Capture.Contrast = -(i * PROBE_MULTIPLY)
-                                CapturePoll()
+                                mCapture.Contrast = -(i * PROBE_MULTIPLY)
+                                CapturePoll(mCapture)
 
-                                If (m_Capture.Contrast = iContrastMin) Then
-                                    iContrastMin = m_Capture.Contrast
+                                If (mCapture.Contrast = iContrastMin) Then
+                                    iContrastMin = mCapture.Contrast
                                     Exit For
                                 End If
 
-                                iContrastMin = m_Capture.Contrast
+                                iContrastMin = mCapture.Contrast
                             End If
                         Next
                     Next
 
-                    m_Capture.Contrast = iContrastDefault
+                    mCapture.Contrast = iContrastDefault
                 End If
 
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
@@ -1818,6 +1826,9 @@ Public Class UCVirtualTrackerItem
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Enabled = True)
 
+                m_Capture = mCapture
+                mCapture = Nothing
+
                 SyncLock g_mThreadInitLock
                     g_bInitalized = True
                 End SyncLock
@@ -1833,12 +1844,20 @@ Public Class UCVirtualTrackerItem
                 MessageBox.Show(ex.Message, "Unable to initalize video device", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Dispose())
+            Finally
+                Try
+                    If (mCapture IsNot Nothing AndAlso Not mCapture.IsDisposed) Then
+                        mCapture.Dispose()
+                        mCapture = Nothing
+                    End If
+                Catch ex As Exception
+                End Try
             End Try
         End Sub
 
-        Private Sub CapturePoll()
+        Private Sub CapturePoll(mCapture As OpenCvSharp.VideoCapture)
             Using mMat As New OpenCvSharp.Mat
-                m_Capture.Read(mMat)
+                mCapture.Read(mMat)
             End Using
         End Sub
 
@@ -1856,6 +1875,10 @@ Public Class UCVirtualTrackerItem
                         Dim bExceptionSleep As Boolean = False
 
                         Try
+                            If (m_Capture Is Nothing) Then
+                                Throw New ArgumentException("Video capture is NULL.")
+                            End If
+
                             If (Not m_Capture.IsOpened) Then
                                 Throw New ArgumentException("Video capture not open.")
                             End If
@@ -1991,90 +2014,99 @@ Public Class UCVirtualTrackerItem
         End Sub
 
         Private Sub DoPipeLogic(iPipeID As Integer)
-            Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame(iPipeID).Height * m_CaptureFrame(iPipeID).Width * 3)
-            Dim iBytes = New Byte(VIRT_BUFFER_SIZE) {}
+            Try
+                Dim iBytes = New Byte() {}
 
-            Dim mFrameImage As New Stopwatch
-            Dim mFramePrint As New Stopwatch
-            mFrameImage.Start()
-            mFramePrint.Start()
+                Dim mFrameImage As New Stopwatch
+                Dim mFramePrint As New Stopwatch
+                mFrameImage.Start()
+                mFramePrint.Start()
 
-            Dim iFpsCount As Integer = 0
+                Dim iFpsCount As Integer = 0
 
-            While True
-                Dim bExceptionSleep As Boolean = False
+                While True
+                    Dim bExceptionSleep As Boolean = False
 
-                Try
-                    Dim iPipeIndex As Integer = m_PipePrimaryIndex
+                    Try
+                        Dim iPipeIndex As Integer = m_PipePrimaryIndex
 
-                    If (iPipeIndex < 0) Then
-                        Throw New ArgumentException("Invalid pipe index.")
-                    End If
-
-                    Dim sPipeName As String = String.Format("PSMoveSerivceEx\VirtPSeyeStream{0}_{1}", CInt(m_CaptureResolution(iPipeID)), iPipeIndex + iPipeID)
-
-                    Using mPipe As New IO.Pipes.NamedPipeClientStream(".", sPipeName, IO.Pipes.PipeDirection.Out)
-                        ' The thread when aborting will hang if we dont put a timeout.
-                        mPipe.Connect(5000)
-
-                        While True
-                            ' Calculate FPS
-                            If (True) Then
-                                iFpsCount += 1
-
-                                If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                                    ' $TODO Add for each pipe
-                                    If (iPipeID = 0) Then
-                                        Dim iNewFpsCount As Integer = iFpsCount
-
-                                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iNewFpsCount))
-                                    End If
-
-                                    mFramePrint.Restart()
-                                    iFpsCount = 0
-                                End If
-                            End If
-
-                            g_mPipEvent(iPipeID).WaitOne(New TimeSpan(0, 0, 5))
-
-                            Marshal.Copy(m_CaptureFrame(iPipeID).Data, iBytes, 0, iBytes.Length)
-
-                            ' Write to pipe and wait for response.
-                            ' $TODO Latency is quite ok but somewhat noticeable
-                            mPipe.Write(iBytes, 0, iBytes.Length)
-                            mPipe.WaitForPipeDrain()
-
-                            SyncLock g_mThreadLock
-                                g_bPipeConnected(iPipeID) = True
-                            End SyncLock
-                        End While
-                    End Using
-                Catch ex As Threading.ThreadAbortException
-                    Throw
-                Catch ex As Exception
-                    bExceptionSleep = True
-
-                    SyncLock g_mThreadLock
-                        g_bPipeConnected(iPipeID) = False
-                    End SyncLock
-
-                    If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                        ' $TODO Add for each pipe
-                        If (iPipeID = 0) Then
-                            ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
+                        If (iPipeIndex < 0) Then
+                            Throw New ArgumentException("Invalid pipe index.")
                         End If
 
-                        mFramePrint.Restart()
-                        iFpsCount = 0
-                    End If
-                End Try
+                        Dim sPipeName As String = String.Format("PSMoveSerivceEx\VirtPSeyeStream{0}_{1}", CInt(m_CaptureResolution(iPipeID)), iPipeIndex + iPipeID)
 
-                ' Thread.Abort will not trigger inside a Try/Catch
-                If (bExceptionSleep) Then
-                    bExceptionSleep = False
-                    Threading.Thread.Sleep(1000)
-                End If
-            End While
+                        Using mPipe As New IO.Pipes.NamedPipeClientStream(".", sPipeName, IO.Pipes.PipeDirection.Out)
+                            ' The thread when aborting will hang if we dont put a timeout.
+                            mPipe.Connect(5000)
+
+                            While True
+                                ' Calculate FPS
+                                If (True) Then
+                                    iFpsCount += 1
+
+                                    If (mFramePrint.ElapsedMilliseconds > 1000) Then
+                                        ' $TODO Add for each pipe
+                                        If (iPipeID = 0) Then
+                                            Dim iNewFpsCount As Integer = iFpsCount
+
+                                            ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iNewFpsCount))
+                                        End If
+
+                                        mFramePrint.Restart()
+                                        iFpsCount = 0
+                                    End If
+                                End If
+
+                                g_mPipEvent(iPipeID).WaitOne(New TimeSpan(0, 0, 5))
+
+                                Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame(iPipeID).Height * m_CaptureFrame(iPipeID).Width * 3)
+                                If (iBytes.Length - 1 <> VIRT_BUFFER_SIZE) Then
+                                    iBytes = New Byte(VIRT_BUFFER_SIZE) {}
+                                End If
+
+                                Marshal.Copy(m_CaptureFrame(iPipeID).Data, iBytes, 0, iBytes.Length)
+
+                                ' Write to pipe and wait for response.
+                                ' $TODO Latency is quite ok but somewhat noticeable
+                                mPipe.Write(iBytes, 0, iBytes.Length)
+                                mPipe.WaitForPipeDrain()
+
+                                SyncLock g_mThreadLock
+                                    g_bPipeConnected(iPipeID) = True
+                                End SyncLock
+                            End While
+                        End Using
+                    Catch ex As Threading.ThreadAbortException
+                        Throw
+                    Catch ex As Exception
+                        bExceptionSleep = True
+
+                        SyncLock g_mThreadLock
+                            g_bPipeConnected(iPipeID) = False
+                        End SyncLock
+
+                        If (mFramePrint.ElapsedMilliseconds > 1000) Then
+                            ' $TODO Add for each pipe
+                            If (iPipeID = 0) Then
+                                ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
+                            End If
+
+                            mFramePrint.Restart()
+                            iFpsCount = 0
+                        End If
+                    End Try
+
+                    ' Thread.Abort will not trigger inside a Try/Catch
+                    If (bExceptionSleep) Then
+                        bExceptionSleep = False
+                        Threading.Thread.Sleep(1000)
+                    End If
+                End While
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+            End Try
         End Sub
 
         Private Sub DeviceWatchdogThread()

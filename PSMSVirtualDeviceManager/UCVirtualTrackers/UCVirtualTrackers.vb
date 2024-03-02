@@ -114,7 +114,7 @@
 
             Me.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(iIndex)
 
-            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic IsNot Nothing AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_Initalized) Then
+            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic IsNot Nothing AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_Initialized) Then
                 If (g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex > -1) Then
                     Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = String.Format("{0} & {1}",
                                                                              g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex,
@@ -303,6 +303,11 @@
                 Return
             End If
 
+            If (mAttachmentItem.m_UCVirtualMotionTrackerItem.g_mClassCaptureLogic IsNot Nothing AndAlso
+                    Not mAttachmentItem.m_UCVirtualMotionTrackerItem.g_mClassCaptureLogic.m_Initialized) Then
+                Throw New ArgumentException("Please wait until video input device is initialized.")
+            End If
+
             mAttachmentItem.m_UCVirtualMotionTrackerItem.Dispose()
 
             ' Copy and get the new index. Should fail if -1
@@ -396,14 +401,23 @@
     End Sub
 
     Private Sub ToolStripMenuItem_VideoRemove_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_VideoRemove.Click
-        If (ListView_VideoDevices.SelectedItems.Count < 1) Then
-            Return
-        End If
+        Try
+            If (ListView_VideoDevices.SelectedItems.Count < 1) Then
+                Return
+            End If
 
-        Dim mAttachmentItem = DirectCast(ListView_VideoDevices.SelectedItems(0), ClassVideoInputDevicesListViewItem)
-        ListView_VideoDevices.Items.Remove(mAttachmentItem)
+            Dim mAttachmentItem = DirectCast(ListView_VideoDevices.SelectedItems(0), ClassVideoInputDevicesListViewItem)
 
-        mAttachmentItem.Dispose()
+            If (mAttachmentItem.m_UCVirtualMotionTrackerItem.g_mClassCaptureLogic IsNot Nothing AndAlso
+                    Not mAttachmentItem.m_UCVirtualMotionTrackerItem.g_mClassCaptureLogic.m_Initialized) Then
+                Throw New ArgumentException("Please wait until video input device is initialized.")
+            End If
+
+            ListView_VideoDevices.Items.Remove(mAttachmentItem)
+            mAttachmentItem.Dispose()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Class ClassComboBoxDeviceInfoItem
