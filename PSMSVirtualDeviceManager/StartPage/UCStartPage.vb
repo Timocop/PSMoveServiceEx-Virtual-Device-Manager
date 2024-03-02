@@ -197,20 +197,23 @@ Public Class UCStartPage
 
                                                        ' Change info about device 
                                                        ListView_ServiceDevices.BeginUpdate()
-                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                       Try
+                                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
-                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
+                                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                               bFound = True
-                                                           End If
-                                                       Next
-                                                       ListView_ServiceDevices.EndUpdate()
+                                                                   bFound = True
+                                                               End If
+                                                           Next
+                                                       Finally
+                                                           ListView_ServiceDevices.EndUpdate()
+                                                       End Try
 
                                                        ' Added device when not found
                                                        If (Not bFound) Then
@@ -258,20 +261,23 @@ Public Class UCStartPage
 
                                                        ' Change info about device 
                                                        ListView_ServiceDevices.BeginUpdate()
-                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                       Try
+                                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
-                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                               bFound = True
-                                                           End If
-                                                       Next
-                                                       ListView_ServiceDevices.EndUpdate()
+                                                                   bFound = True
+                                                               End If
+                                                           Next
+                                                       Finally
+                                                           ListView_ServiceDevices.EndUpdate()
+                                                       End Try
 
                                                        ' Added device when not found
                                                        If (Not bFound) Then
@@ -326,20 +332,23 @@ Public Class UCStartPage
 
                                                        ' Change info about device 
                                                        ListView_ServiceDevices.BeginUpdate()
-                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                       Try
+                                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
-                                                               mListVIewItem.Tag = New Object() {Now}
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                                   mListVIewItem.Tag = New Object() {Now}
 
-                                                               bFound = True
-                                                           End If
-                                                       Next
-                                                       ListView_ServiceDevices.EndUpdate()
+                                                                   bFound = True
+                                                               End If
+                                                           Next
+                                                       Finally
+                                                           ListView_ServiceDevices.EndUpdate()
+                                                       End Try
 
                                                        ' Added device when not found
                                                        If (Not bFound) Then
@@ -367,16 +376,19 @@ Public Class UCStartPage
                                                End If
 
                                                ListView_ServiceDevices.BeginUpdate()
-                                               For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                               Try
+                                                   For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                                   Else
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                                   End If
-                                               Next
-                                               ListView_ServiceDevices.EndUpdate()
+                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                       Else
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       End If
+                                                   Next
+                                               Finally
+                                                   ListView_ServiceDevices.EndUpdate()
+                                               End Try
                                            End Sub)
 
             Catch ex As Threading.ThreadAbortException

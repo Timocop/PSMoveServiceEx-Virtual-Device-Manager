@@ -248,17 +248,20 @@ Partial Public Class UCVirtualMotionTracker
 
                                                    ' Change info about device
                                                    ListView_OscDevices.BeginUpdate()
-                                                   For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                                       If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
+                                                   Try
+                                                       For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
 
-                                                           mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                           mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                           mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
 
-                                                           bFound = True
-                                                       End If
-                                                   Next
-                                                   ListView_OscDevices.EndUpdate()
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                   Finally
+                                                       ListView_OscDevices.EndUpdate()
+                                                   End Try
 
                                                    ' Added device when not found
                                                    If (Not bFound) Then
@@ -282,16 +285,19 @@ Partial Public Class UCVirtualMotionTracker
                                                End If
 
                                                ListView_OscDevices.BeginUpdate()
-                                               For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                               Try
+                                                   For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                                   Else
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                                   End If
-                                               Next
-                                               ListView_OscDevices.EndUpdate()
+                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                       Else
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       End If
+                                                   Next
+                                               Finally
+                                                   ListView_OscDevices.EndUpdate()
+                                               End Try
                                            End Sub)
 
             Catch ex As Threading.ThreadAbortException

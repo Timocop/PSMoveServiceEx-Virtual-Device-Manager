@@ -184,10 +184,13 @@
             Next
 
             ComboBox_RecenterFromDevice.BeginUpdate()
-            ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
-            ComboBox_RecenterFromDevice.Items.AddRange(mDevices.ToArray)
-            ComboBox_RecenterFromDevice.EndUpdate()
+            Try
+                ComboBox_RecenterFromDevice.Items.Clear()
+                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
+                ComboBox_RecenterFromDevice.Items.AddRange(mDevices.ToArray)
+            Finally
+                ComboBox_RecenterFromDevice.EndUpdate()
+            End Try
 
             Dim bLastFound As Boolean = True
             For Each mItem In ComboBox_RecenterFromDevice.Items
@@ -262,10 +265,13 @@
             Next
 
             ComboBox_HmdRecenterFromDevice.BeginUpdate()
-            ComboBox_HmdRecenterFromDevice.Items.Clear()
-            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
-            ComboBox_HmdRecenterFromDevice.Items.AddRange(mDevices.ToArray)
-            ComboBox_HmdRecenterFromDevice.EndUpdate()
+            Try
+                ComboBox_HmdRecenterFromDevice.Items.Clear()
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
+                ComboBox_HmdRecenterFromDevice.Items.AddRange(mDevices.ToArray)
+            Finally
+                ComboBox_HmdRecenterFromDevice.EndUpdate()
+            End Try
 
             Dim bLastFound As Boolean = True
             For Each mItem In ComboBox_HmdRecenterFromDevice.Items
