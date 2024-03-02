@@ -20,4 +20,5 @@ xcopy /S /I /Y ".\bin\x64\Release\*" ".\updater\PSMSVirtualDeviceManager"
 :: Remove temp folder
 rmdir /S /Q ".\updater\PSMSVirtualDeviceManager"
 
+echo Done.
 pause
