@@ -15,6 +15,7 @@ Public Class UCVirtualTrackerItem
     Public g_mUCVirtualTrackers As UCVirtualTrackers
 
     Private g_mStatusThread As Threading.Thread = Nothing
+    Private g_iStatisLastTrackerId As Integer = -1
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
     Private g_mStatusConfigDate As New Dictionary(Of String, Date)
@@ -255,9 +256,14 @@ Public Class UCVirtualTrackerItem
                 Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
 
                 While True
+                    Dim iPipeIndexes As Integer() = New Integer() {
+                        g_mClassCaptureLogic.m_PipePrimaryIndex,
+                        g_mClassCaptureLogic.m_PipeSecondaryIndex
+                    }
+
                     ' Check if disabled
                     If (True) Then
-                        If (g_mClassCaptureLogic.m_PipePrimaryIndex < 0) Then
+                        If (iPipeIndexes(0) < 0) Then
                             sTitle = "Virtual Tracker is disabled"
 
                             Dim sText As New Text.StringBuilder
@@ -269,12 +275,15 @@ Public Class UCVirtualTrackerItem
                         End If
                     End If
 
+                    Dim bTrackerIdChanged As Boolean = False
+                    If (g_iStatisLastTrackerId <> iPipeIndexes(0)) Then
+                        g_iStatisLastTrackerId = iPipeIndexes(0)
+                        bTrackerIdChanged = True
+                    End If
+
                     ' Check configs
                     If (True) Then
-                        Dim iPipeIndexes As Integer() = New Integer() {
-                            g_mClassCaptureLogic.m_PipePrimaryIndex,
-                            g_mClassCaptureLogic.m_PipeSecondaryIndex
-                        }
+
 
                         Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
                         If (Not String.IsNullOrEmpty(sConfigPath)) Then
@@ -298,10 +307,12 @@ Public Class UCVirtualTrackerItem
                                         Continue For
                                     End If
 
-                                    ' Only check if the file changed since last time
-                                    If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
-                                        If (mLastWriteTime <= g_mStatusConfigDate(sConfigFile.ToLowerInvariant)) Then
-                                            Continue For
+                                    ' Only check if the file changed since last time 
+                                    If (Not bTrackerIdChanged) Then
+                                        If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
+                                            If (mLastWriteTime <= g_mStatusConfigDate(sConfigFile.ToLowerInvariant)) Then
+                                                Continue For
+                                            End If
                                         End If
                                     End If
 
@@ -380,7 +391,9 @@ Public Class UCVirtualTrackerItem
 
                                             Dim iAngleDiff = ClassQuaternionTools.CalculateAngleDegreesDifference(mPose1, mPose2)
 
-                                            If (iAngleDiff > PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION) Then
+                                            If (iAngleDiff > PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION OrElse
+                                                mPose1 = Quaternion.Identity OrElse
+                                                mPose2 = Quaternion.Identity) Then
                                                 g_bStatusBadPoseError = True
                                             Else
                                                 g_bStatusBadPoseError = False
@@ -393,7 +406,7 @@ Public Class UCVirtualTrackerItem
                             End If
                         End If
 
-                            If (g_bStatusDistortionError) Then
+                        If (g_bStatusDistortionError) Then
                             sTitle = "Incorrect distortion values"
 
                             Dim sText As New Text.StringBuilder

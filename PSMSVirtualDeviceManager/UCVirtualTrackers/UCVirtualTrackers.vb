@@ -71,7 +71,6 @@
         End Sub
 
         Public Sub UpdateItem()
-
             Const LISTVIEW_SUBITEM_ID As Integer = 0
             Const LISTVIEW_SUBITEM_TRACKERID As Integer = 1
             Const LISTVIEW_SUBITEM_NAME As Integer = 2

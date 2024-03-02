@@ -309,7 +309,7 @@ Partial Class UCVirtualTrackerItem
         Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(379, 198)
+        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(379, 184)
         Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
         Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
         Me.LinkLabel_MiscSettings.TabIndex = 21
