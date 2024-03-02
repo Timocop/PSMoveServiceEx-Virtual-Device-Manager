@@ -155,4 +155,26 @@ Public Class ClassQuaternionTools
 
         Return New Quaternion(0F, CSng(Math.Sin(angle / 2)), 0F, CSng(Math.Cos(angle / 2)))
     End Function
+
+    Public Shared Function CalculateAngleDegreesDifference(quaternion1 As Quaternion, quaternion2 As Quaternion) As Single
+        ' Convert both quaternions to unit quaternions
+        quaternion1 = Quaternion.Normalize(quaternion1)
+        quaternion2 = Quaternion.Normalize(quaternion2)
+
+        ' Calculate the dot product between the two quaternions
+        Dim dotProduct As Single = Quaternion.Dot(quaternion1, quaternion2)
+
+        ' Clamp the dot product to the range [-1, 1] to avoid numerical errors
+        If (dotProduct < -1.0F) Then
+            dotProduct = -1.0F
+        End If
+        If (dotProduct > 1.0F) Then
+            dotProduct = 1.0F
+        End If
+
+        ' Calculate the angle between the two quaternions
+        Dim angle As Single = CSng(Math.Acos(dotProduct))
+
+        Return CSng(angle * (180.0F / Math.PI))
+    End Function
 End Class

@@ -69,10 +69,10 @@ Partial Class UCVirtualTrackerItem
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Preview = New System.Windows.Forms.Panel()
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -210,7 +210,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Button_RestartDevice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Button_RestartDevice.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
-        Me.Button_RestartDevice.Location = New System.Drawing.Point(16, 341)
+        Me.Button_RestartDevice.Location = New System.Drawing.Point(16, 352)
         Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(16, 3, 3, 16)
         Me.Button_RestartDevice.Name = "Button_RestartDevice"
         Me.Button_RestartDevice.Size = New System.Drawing.Size(116, 23)
@@ -245,7 +245,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Button_ConfigSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_ConfigSave.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_ConfigSave.Location = New System.Drawing.Point(662, 341)
+        Me.Button_ConfigSave.Location = New System.Drawing.Point(662, 352)
         Me.Button_ConfigSave.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
         Me.Button_ConfigSave.Name = "Button_ConfigSave"
         Me.Button_ConfigSave.Size = New System.Drawing.Size(120, 23)
@@ -259,7 +259,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_Autostart.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_Autostart.AutoSize = True
-        Me.CheckBox_Autostart.Location = New System.Drawing.Point(16, 318)
+        Me.CheckBox_Autostart.Location = New System.Drawing.Point(16, 329)
         Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(16, 6, 3, 3)
         Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
         Me.CheckBox_Autostart.Size = New System.Drawing.Size(338, 17)
@@ -529,7 +529,7 @@ Partial Class UCVirtualTrackerItem
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Button1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Button1.Location = New System.Drawing.Point(539, 341)
+        Me.Button1.Location = New System.Drawing.Point(539, 352)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(117, 23)
         Me.Button1.TabIndex = 22
@@ -580,22 +580,11 @@ Partial Class UCVirtualTrackerItem
         Me.Panel_Status.Controls.Add(Me.PictureBox_StatusImage)
         Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
         Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
-        Me.Panel_Status.Location = New System.Drawing.Point(16, 265)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 261)
         Me.Panel_Status.Margin = New System.Windows.Forms.Padding(16, 6, 16, 16)
         Me.Panel_Status.Name = "Panel_Status"
-        Me.Panel_Status.Size = New System.Drawing.Size(767, 44)
+        Me.Panel_Status.Size = New System.Drawing.Size(767, 59)
         Me.Panel_Status.TabIndex = 37
-        '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
         '
         'Label_StatusMessage
         '
@@ -604,7 +593,7 @@ Partial Class UCVirtualTrackerItem
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label_StatusMessage.Location = New System.Drawing.Point(25, 19)
         Me.Label_StatusMessage.Name = "Label_StatusMessage"
-        Me.Label_StatusMessage.Size = New System.Drawing.Size(737, 23)
+        Me.Label_StatusMessage.Size = New System.Drawing.Size(737, 38)
         Me.Label_StatusMessage.TabIndex = 1
         Me.Label_StatusMessage.Text = "Message"
         '
@@ -624,6 +613,17 @@ Partial Class UCVirtualTrackerItem
         Me.Timer_Status.Enabled = True
         Me.Timer_Status.Interval = 1000
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -642,7 +642,7 @@ Partial Class UCVirtualTrackerItem
         Me.Controls.Add(Me.Panel_Preview)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackerItem"
-        Me.Size = New System.Drawing.Size(798, 380)
+        Me.Size = New System.Drawing.Size(798, 391)
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).EndInit()

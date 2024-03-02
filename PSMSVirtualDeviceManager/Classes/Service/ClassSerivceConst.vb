@@ -1,7 +1,54 @@
-﻿Public Class ClassSerivceConst
+﻿Imports System.Numerics
+
+Public Class ClassSerivceConst
     Public Const PSMOVESERVICE_MAX_TRACKER_COUNT As Integer = 8
     Public Const PSMOVESERVICE_MAX_CONTROLLER_COUNT As Integer = 10
     Public Const PSMOVESERVICE_MAX_HMD_COUNT As Integer = 4
+
+    Class ClassCameraPose
+        Structure STRUC_CAMERA_POSE_ITEM
+            Dim sName As String
+            Dim mOrientation As Quaternion
+            Dim mPosition As Vector3
+
+            Public Sub New(_Name As String)
+                Me.New(_Name, Quaternion.Identity, Vector3.Zero)
+            End Sub
+
+            Public Sub New(_Name As String, _Orientation As Quaternion, _Position As Vector3)
+                sName = _Name
+            End Sub
+
+            Public Sub SaveToConfig(sFile As String)
+                Dim mConfig As New ClassServiceConfig(sFile)
+                mConfig.LoadConfig()
+
+                mConfig.SetValue(Of String)("pose\orientation", "x", mOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture))
+                mConfig.SetValue(Of String)("pose\orientation", "y", mOrientation.Y.ToString(Globalization.CultureInfo.InvariantCulture))
+                mConfig.SetValue(Of String)("pose\orientation", "z", mOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture))
+                mConfig.SetValue(Of String)("pose\orientation", "w", mOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture))
+
+                mConfig.SetValue(Of String)("pose\position", "x", mPosition.X.ToString(Globalization.CultureInfo.InvariantCulture))
+                mConfig.SetValue(Of String)("pose\position", "y", mPosition.Y.ToString(Globalization.CultureInfo.InvariantCulture))
+                mConfig.SetValue(Of String)("pose\position", "z", mPosition.Z.ToString(Globalization.CultureInfo.InvariantCulture))
+
+                mConfig.SaveConfig()
+            End Sub
+            Public Sub LoadFromConfig(sFile As String)
+                Dim mConfig As New ClassServiceConfig(sFile)
+                mConfig.LoadConfig()
+
+                mOrientation.X = Single.Parse(mConfig.GetValue(Of String)("pose\orientation", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mOrientation.Y = Single.Parse(mConfig.GetValue(Of String)("pose\orientation", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mOrientation.Z = Single.Parse(mConfig.GetValue(Of String)("pose\orientation", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mOrientation.W = Single.Parse(mConfig.GetValue(Of String)("pose\orientation", "w", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+                mPosition.X = Single.Parse(mConfig.GetValue(Of String)("pose\position", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mPosition.Y = Single.Parse(mConfig.GetValue(Of String)("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mPosition.Z = Single.Parse(mConfig.GetValue(Of String)("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            End Sub
+        End Structure
+    End Class
 
     Class ClassCameraDistortion
         Enum ENUM_CAMERA_DISTORTION_TYPE
