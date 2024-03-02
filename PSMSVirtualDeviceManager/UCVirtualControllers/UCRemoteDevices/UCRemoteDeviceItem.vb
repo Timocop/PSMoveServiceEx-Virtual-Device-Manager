@@ -132,14 +132,22 @@ Public Class UCRemoteDeviceItem
     End Sub
 
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
+        TimerFPS.Stop()
+
         Try
-            TimerFPS.Stop()
+            Dim iFpsPacketCounter As Integer
+            Dim iFpsOrientationCounter As Integer
+            Dim iFpssPipeCounter As Integer
 
             SyncLock _ThreadLock
-                If (g_iFpsOrientationCounter > 0) Then
-                    g_mLastDeviceResponse.Restart()
-                End If
+                iFpsPacketCounter = g_iFpsPacketCounter
+                iFpsOrientationCounter = g_iFpsOrientationCounter
+                iFpssPipeCounter = g_mClassIO.m_FpsPipeCounter
             End SyncLock
+
+            If (iFpsOrientationCounter > 0) Then
+                g_mLastDeviceResponse.Restart()
+            End If
 
             If (Me.Visible) Then
                 If (g_mLastDeviceResponse.ElapsedMilliseconds > MAX_DEVICE_TIMEOUT) Then
@@ -160,7 +168,7 @@ Public Class UCRemoteDeviceItem
                     End If
                 End If
 
-                TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
+                TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", iFpsPacketCounter, iFpsOrientationCounter, iFpssPipeCounter)
             End If
 
             SyncLock _ThreadLock
@@ -169,9 +177,9 @@ Public Class UCRemoteDeviceItem
                 g_mClassIO.m_FpsPipeCounter = 0
             End SyncLock
         Catch ex As Exception
-        Finally
-            TimerFPS.Start()
         End Try
+
+        TimerFPS.Start()
     End Sub
 
     Private Sub OnTrackerRotation(mTracker As ClassTracker, iX As Single, iY As Single, iZ As Single, iW As Single)

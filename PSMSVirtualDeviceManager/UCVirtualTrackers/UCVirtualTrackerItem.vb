@@ -909,6 +909,7 @@ Public Class UCVirtualTrackerItem
         Private g_mPipEvent As Threading.AutoResetEvent() = {Nothing, Nothing}
 
         Private g_mThreadLock As New Object
+        Private g_mThreadInitLock As New Object
 
         Private g_mUCVirtualTrackerItem As UCVirtualTrackerItem
 
@@ -995,13 +996,21 @@ Public Class UCVirtualTrackerItem
             g_mInitThread.Start()
         End Sub
 
+        Public ReadOnly Property m_Initalized As Boolean
+            Get
+                SyncLock g_mThreadInitLock
+                    Return g_bInitalized
+                End SyncLock
+            End Get
+        End Property
+
         ''' <summary>
         ''' Start or restart the capture thread.
         ''' The capture thread will read and cache the devices frames.
         ''' </summary>
         ''' <param name="bRestart"></param>
         Private Sub StartCaptureThread(bRestart As Boolean)
-            If (Not g_bInitalized) Then
+            If (Not m_Initalized) Then
                 Return
             End If
 
@@ -1026,7 +1035,7 @@ Public Class UCVirtualTrackerItem
         ''' </summary>
         ''' <param name="bRestart"></param>
         Private Sub StartPipeThread(bRestart As Boolean)
-            If (Not g_bInitalized) Then
+            If (Not m_Initalized) Then
                 Return
             End If
 
@@ -1066,7 +1075,7 @@ Public Class UCVirtualTrackerItem
         ''' </summary>
         ''' <param name="bRestart"></param>
         Private Sub StartDeviceWatchodogThread(bRestart As Boolean)
-            If (Not g_bInitalized) Then
+            If (Not m_Initalized) Then
                 Return
             End If
 
@@ -1517,8 +1526,6 @@ Public Class UCVirtualTrackerItem
                     Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
                     If (Not m_IsPlayStationCamera AndAlso sCurrentResolution <> sUnscaledResolution) Then
                         sScalingWarning &= String.Format(" (scaled to {0})", sUnscaledResolution)
-                    Else
-
                     End If
 
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
@@ -1811,7 +1818,9 @@ Public Class UCVirtualTrackerItem
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Enabled = True)
 
-                g_bInitalized = True
+                SyncLock g_mThreadInitLock
+                    g_bInitalized = True
+                End SyncLock
 
                 ' Start all needed threads
                 StartCaptureThread(False)

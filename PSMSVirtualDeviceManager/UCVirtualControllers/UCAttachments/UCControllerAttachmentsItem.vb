@@ -297,18 +297,20 @@ Public Class UCControllerAttachmentsItem
     End Sub
 
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
+        TimerFPS.Stop()
+
         Try
-            TimerFPS.Stop()
+            Dim iFpsPipeCounter As Integer = g_mClassIO.m_FpsPipeCounter
 
-            SyncLock _ThreadLock
-                TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", g_mClassIO.m_FpsPipeCounter)
+            If (Me.Visible) Then
+                TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", iFpsPipeCounter)
+            End If
 
-                g_mClassIO.m_FpsPipeCounter = 0
-            End SyncLock
+            g_mClassIO.m_FpsPipeCounter = 0
         Catch ex As Exception
-        Finally
-            TimerFPS.Start()
         End Try
+
+        TimerFPS.Start()
     End Sub
 
     Private Sub CleanUp()

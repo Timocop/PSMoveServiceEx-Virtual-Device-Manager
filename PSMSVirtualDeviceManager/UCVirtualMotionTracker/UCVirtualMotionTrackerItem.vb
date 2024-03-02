@@ -464,72 +464,70 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub TimerFPS_Tick(sender As Object, e As EventArgs) Handles TimerFPS.Tick
+        TimerFPS.Stop()
+
         Try
-            TimerFPS.Stop()
+            Dim iFpsCoutner As Integer = g_mClassIO.m_FpsOscCounter
+            If (iFpsCoutner > 0) Then
+                g_mControllerLastResponse.Restart()
+            End If
 
-            SyncLock _ThreadLock
-                TextBox_Fps.Text = String.Format("OSC IO: {0}/s", g_mClassIO.m_FpsOscCounter)
+            If (Me.Visible) Then
+                TextBox_Fps.Text = String.Format("OSC IO: {0}/s", iFpsCoutner)
+            End If
 
-                If (g_mClassIO.m_FpsOscCounter > 0) Then
-                    g_mControllerLastResponse.Restart()
-                End If
-
-                g_mClassIO.m_FpsOscCounter = 0
-            End SyncLock
+            g_mClassIO.m_FpsOscCounter = 0
         Catch ex As Exception
-        Finally
-            TimerFPS.Start()
         End Try
+
+        TimerFPS.Start()
     End Sub
 
     Private Sub TimerPose_Tick(sender As Object, e As EventArgs) Handles TimerPose.Tick
         Try
             TimerPose.Stop()
 
-            SyncLock _ThreadLock
-                Dim mPosition As New Vector3(0, 0, 0)
-                Dim mOrientation As Quaternion = Quaternion.Identity
-                Dim bValid As Boolean = False
+            Dim mPosition As New Vector3(0, 0, 0)
+            Dim mOrientation As Quaternion = Quaternion.Identity
+            Dim bValid As Boolean = False
 
-                Select Case (True)
-                    Case (g_mClassIO.m_ControllerData IsNot Nothing)
-                        mPosition = g_mClassIO.m_ControllerData.m_Position
-                        mOrientation = g_mClassIO.m_ControllerData.m_Orientation
-                        bValid = True
+            Select Case (True)
+                Case (g_mClassIO.m_ControllerData IsNot Nothing)
+                    mPosition = g_mClassIO.m_ControllerData.m_Position
+                    mOrientation = g_mClassIO.m_ControllerData.m_Orientation
+                    bValid = True
 
-                    Case (g_mClassIO.m_HmdData IsNot Nothing)
-                        mPosition = g_mClassIO.m_HmdData.m_Position
-                        mOrientation = g_mClassIO.m_HmdData.m_Orientation
-                        bValid = True
+                Case (g_mClassIO.m_HmdData IsNot Nothing)
+                    mPosition = g_mClassIO.m_HmdData.m_Position
+                    mOrientation = g_mClassIO.m_HmdData.m_Orientation
+                    bValid = True
 
-                End Select
+            End Select
 
-                If (bValid) Then
-                    If (Me.Visible) Then
-                        TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(mPosition.X), Math.Floor(mPosition.Y), Math.Floor(mPosition.Z), Environment.NewLine)
+            If (bValid) Then
+                If (Me.Visible) Then
+                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(mPosition.X), Math.Floor(mPosition.Y), Math.Floor(mPosition.Z), Environment.NewLine)
 
-                        Dim iAng = ClassQuaternionTools.FromQ(mOrientation)
-                        TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
-                    End If
-                Else
-                    If (Me.Visible) Then
-                        TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
-                        TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
-                    End If
+                    Dim iAng = ClassQuaternionTools.FromQ(mOrientation)
+                    TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
                 End If
-
-            End SyncLock
+            Else
+                If (Me.Visible) Then
+                    TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                    TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
+                End If
+            End If
         Catch ex As Exception
-        Finally
-            TimerPose.Start()
         End Try
+
+        TimerPose.Start()
     End Sub
 
 
     Private Sub Timer_Status_Tick(sender As Object, e As EventArgs) Handles Timer_Status.Tick
-        Try
-            Timer_Status.Stop()
+        Timer_Status.Stop()
 
+        Try
             If (Me.Visible) Then
                 Dim sTitle As String = ""
                 Dim sMessage As String = ""
@@ -653,9 +651,9 @@ Public Class UCVirtualMotionTrackerItem
                 End If
             End If
         Catch ex As Exception
-        Finally
-            Timer_Status.Start()
         End Try
+
+        Timer_Status.Start()
     End Sub
 
     Private Sub CleanUp()

@@ -67,10 +67,18 @@
                 _DeviceInfo.m_CLSID)
             g_UCVirtualTrackerItem = New UCVirtualTrackerItem(_UCVirtualMotionTracker, _DeviceInfo)
 
-            UpdateItem()
+            UpdateItem(New ClassVideoInputDevices.ClassDeviceInfo(
+                _DeviceInfo.m_Index,
+                _DeviceInfo.m_Name,
+                _DeviceInfo.m_Path,
+                _DeviceInfo.m_CLSID))
         End Sub
 
         Public Sub UpdateItem()
+            UpdateItem(Nothing)
+        End Sub
+
+        Public Sub UpdateItem(mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
             Const LISTVIEW_SUBITEM_ID As Integer = 0
             Const LISTVIEW_SUBITEM_TRACKERID As Integer = 1
             Const LISTVIEW_SUBITEM_NAME As Integer = 2
@@ -87,21 +95,39 @@
                 Return
             End If
 
-            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic Is Nothing) Then
-                Return
+            Dim iIndex As Integer = -1
+            Dim sName As String = ""
+            Dim sPath As String = ""
+            Dim sCLSID As String = ""
+
+            If (mDeviceInfo Is Nothing) Then
+                iIndex = g_mClassDeviceInfo.m_Index
+                sName = g_mClassDeviceInfo.m_Name
+                sPath = g_mClassDeviceInfo.m_Path.ToUpperInvariant
+                sCLSID = g_mClassDeviceInfo.m_CLSID
+            Else
+                iIndex = mDeviceInfo.m_Index
+                sName = mDeviceInfo.m_Name
+                sPath = mDeviceInfo.m_Path.ToUpperInvariant
+                sCLSID = mDeviceInfo.m_CLSID
             End If
 
-            Me.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(g_mClassDeviceInfo.m_Index)
+            Me.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(iIndex)
 
-            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex > -1) Then
-                Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = String.Format("{0} & {1}",
+            If (g_UCVirtualTrackerItem.g_mClassCaptureLogic IsNot Nothing AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_Initalized) Then
+                If (g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex > -1) Then
+                    Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = String.Format("{0} & {1}",
                                                                              g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex,
                                                                              g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipeSecondaryIndex)
+                Else
+                    Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex)
+                End If
             Else
-                Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = CStr(g_UCVirtualTrackerItem.g_mClassCaptureLogic.m_PipePrimaryIndex)
+                Me.SubItems(LISTVIEW_SUBITEM_TRACKERID).Text = "-1"
             End If
-            Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = CStr(g_mClassDeviceInfo.m_Name)
-            Me.SubItems(LISTVIEW_SUBITEM_PATH).Text = CStr(g_mClassDeviceInfo.m_Path.ToUpperInvariant)
+
+            Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = sName
+            Me.SubItems(LISTVIEW_SUBITEM_PATH).Text = sPath
         End Sub
 
         ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualTrackerItem
@@ -338,17 +364,20 @@
     End Function
 
     Private Sub Timer_VideoInputDevices_Tick(sender As Object, e As EventArgs) Handles Timer_VideoInputDevices.Tick
-        Try
-            Timer_VideoInputDevices.Stop()
+        Timer_VideoInputDevices.Stop()
 
-            For Each mItem As ListViewItem In ListView_VideoDevices.Items
-                Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)
-                mTrackerItem.UpdateItem()
-            Next
+        Try
+
+            If (Me.Visible) Then
+                For Each mItem As ListViewItem In ListView_VideoDevices.Items
+                    Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)
+                    mTrackerItem.UpdateItem()
+                Next
+            End If
         Catch ex As Exception
-        Finally
-            Timer_VideoInputDevices.Start()
         End Try
+
+        Timer_VideoInputDevices.Start()
     End Sub
 
     Private Sub ListView_VideoDevices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_VideoDevices.SelectedIndexChanged

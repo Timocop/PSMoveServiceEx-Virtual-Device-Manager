@@ -255,16 +255,18 @@ Public Class UCControllerAttachments
     End Sub
 
     Private Sub Timer_Attachment_Tick(sender As Object, e As EventArgs) Handles Timer_Attachment.Tick
-        Try
-            Timer_Attachment.Stop()
+        Timer_Attachment.Stop()
 
-            For Each mItem As ListViewItem In ListView_Attachments.Items
-                Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
-                mAttachmentItem.UpdateItem()
-            Next
+        Try
+            If (Me.Visible) Then
+                For Each mItem As ListViewItem In ListView_Attachments.Items
+                    Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
+                    mAttachmentItem.UpdateItem()
+                Next
+            End If
         Catch ex As Exception
-        Finally
-            Timer_Attachment.Start()
         End Try
+
+        Timer_Attachment.Start()
     End Sub
 End Class

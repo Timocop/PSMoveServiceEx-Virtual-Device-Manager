@@ -175,16 +175,18 @@ Partial Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub Timer_VMTTrackers_Tick(sender As Object, e As EventArgs) Handles Timer_VMTTrackers.Tick
-        Try
-            Timer_VMTTrackers.Stop()
+        Timer_VMTTrackers.Stop()
 
-            For Each mItem As ListViewItem In ListView_Trackers.Items
-                Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
-                mTrackerItem.UpdateItem()
-            Next
+        Try
+            If (Me.Visible) Then
+                For Each mItem As ListViewItem In ListView_Trackers.Items
+                    Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
+                    mTrackerItem.UpdateItem()
+                Next
+            End If
         Catch ex As Exception
-        Finally
-            Timer_VMTTrackers.Start()
         End Try
+
+        Timer_VMTTrackers.Start()
     End Sub
 End Class

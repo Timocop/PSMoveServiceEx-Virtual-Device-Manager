@@ -284,14 +284,16 @@ Public Class UCRemoteDevices
     End Sub
 
     Private Sub Timer_SocketCheck_Tick(sender As Object, e As EventArgs) Handles Timer_SocketCheck.Tick
-        Try
-            Timer_SocketCheck.Stop()
+        Timer_SocketCheck.Stop()
 
-            Button_StartSocket.Enabled = (Not g_mClassStrackerSocket.IsListening)
+        Try
+            If (Me.Visible) Then
+                Button_StartSocket.Enabled = (Not g_mClassStrackerSocket.IsListening)
+            End If
         Catch ex As Exception
-        Finally
-            Timer_SocketCheck.Start()
         End Try
+
+        Timer_SocketCheck.Start()
     End Sub
 
     Private Sub LinkLabel_EditPort_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EditPort.LinkClicked
@@ -963,16 +965,18 @@ Public Class UCRemoteDevices
     End Sub
 
     Private Sub Timer_RemoteDevices_Tick(sender As Object, e As EventArgs) Handles Timer_RemoteDevices.Tick
-        Try
-            Timer_RemoteDevices.Stop()
+        Timer_RemoteDevices.Stop()
 
-            For Each mItem As ListViewItem In ListView_RemoteDevices.Items
-                Dim mAttachmentItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
-                mAttachmentItem.UpdateItem()
-            Next
+        Try
+            If (Me.Visible) Then
+                For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+                    Dim mAttachmentItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+                    mAttachmentItem.UpdateItem()
+                Next
+            End If
         Catch ex As Exception
-        Finally
-            Timer_RemoteDevices.Start()
         End Try
+
+        Timer_RemoteDevices.Start()
     End Sub
 End Class
