@@ -254,7 +254,7 @@ Public Class UCVirtualTrackerItem
                     ' Check if disabled
                     If (True) Then
                         If (g_mClassCaptureLogic.m_PipePrimaryIndex < 0) Then
-                            sTitle = "Virtual Tracker not connected"
+                            sTitle = "Virtual Tracker is disabled"
 
                             Dim sText As New Text.StringBuilder
                             sText.AppendLine("The tracker id is not set or video input device is disabled.")
@@ -265,7 +265,7 @@ Public Class UCVirtualTrackerItem
                         End If
                     End If
 
-                    ' Check if PS4 Camera has correct distortion values
+                    ' Check for distortion values
                     If (True) Then
                         Dim iPipeIndexes As Integer() = New Integer() {
                             g_mClassCaptureLogic.m_PipePrimaryIndex,
@@ -304,6 +304,7 @@ Public Class UCVirtualTrackerItem
                                     Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
                                     mConfigCameraDistortion.LoadFromConfig(sConfigFile)
 
+                                    ' The PS4 Cam requires precomputed distortion.
                                     Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
                                     If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
                                         If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, mConstCameraDistortion)) Then
@@ -325,6 +326,7 @@ Public Class UCVirtualTrackerItem
                                             End If
                                         End If
                                     Else
+                                        ' Check for general cameras if they have been calibrated or not
                                         If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE, mConstCameraDistortion)) Then
                                             Dim bCorrectDistort As Boolean = (
                                                 CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
