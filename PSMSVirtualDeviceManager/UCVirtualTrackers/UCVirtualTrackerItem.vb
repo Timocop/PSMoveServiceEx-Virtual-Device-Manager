@@ -12,6 +12,13 @@ Public Class UCVirtualTrackerItem
 
     Public g_mUCVirtualTrackers As UCVirtualTrackers
 
+    Private g_mStatusThread As Threading.Thread = Nothing
+    Private g_iStatusHideHeight As Integer = 0
+    Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
+    Private g_mStatusConfigDate As New Dictionary(Of String, Date)
+    Private g_bStatusDistortionError As Boolean = False
+    Private g_bStatusDistortionWarning As Boolean = False
+
     Private g_mMessageLabel As Label
 
     Private g_iPreviousTrackerIdSelectedIndex As Integer = -1
@@ -62,7 +69,7 @@ Public Class UCVirtualTrackerItem
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call. 
+        ' Add any initialization after the InitializeComponent() call.  
         TrackBar_DeviceExposure.Minimum = -1
         TrackBar_DeviceExposure.Maximum = 1
         TrackBar_DeviceExposure.Tag = False
@@ -221,7 +228,205 @@ Public Class UCVirtualTrackerItem
         End Try
 
         g_mClassCaptureLogic.StartInitThread(False)
+
+        g_mStatusThread = New Threading.Thread(AddressOf StatusThread)
+        g_mStatusThread.IsBackground = True
+        g_mStatusThread.Start()
+
+        ' Hide timeout error
+        Panel_Status.Visible = False
+        g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
+        g_iStatusShowHeight = Me.Height
+        Me.Height = g_iStatusHideHeight
     End Sub
+
+
+    Private Sub Timer_Status_Tick(sender As Object, e As EventArgs) Handles Timer_Status.Tick
+        Timer_Status.Stop()
+
+        Try
+            If (Me.Visible) Then
+                Dim sTitle As String = ""
+                Dim sMessage As String = ""
+                Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
+
+                While True
+                    ' Check if disabled
+                    If (True) Then
+                        If (g_mClassCaptureLogic.m_PipePrimaryIndex < 0) Then
+                            sTitle = "Virtual Tracker not connected"
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("The tracker id is not set or video input device is disabled.")
+                            sMessage = sText.ToString
+
+                            iStatusType = 2
+                            Exit While
+                        End If
+                    End If
+
+                    ' Check if PS4 Camera has correct distortion values
+                    If (True) Then
+                        Dim iPipeIndexes As Integer() = New Integer() {
+                            g_mClassCaptureLogic.m_PipePrimaryIndex,
+                            g_mClassCaptureLogic.m_PipeSecondaryIndex
+                        }
+
+                        Dim sConfigFolder As String = ClassServiceConfig.GetConfigPath()
+                        If (Not String.IsNullOrEmpty(sConfigFolder)) Then
+                            Dim sConfigFiles As New List(Of String)
+
+                            If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                                sConfigFiles.Add(IO.Path.Combine(sConfigFolder, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
+                                sConfigFiles.Add(IO.Path.Combine(sConfigFolder, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(1))))
+                            Else
+                                sConfigFiles.Add(IO.Path.Combine(sConfigFolder, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
+                            End If
+
+                            For Each sConfigFile As String In sConfigFiles
+                                If (IO.File.Exists(sConfigFile)) Then
+                                    Dim mLastWriteTime = IO.File.GetLastWriteTime(sConfigFile)
+
+                                    ' Dont instantly access the file
+                                    If (mLastWriteTime + New TimeSpan(0, 0, 1) > Date.Now) Then
+                                        Continue For
+                                    End If
+
+                                    ' Only check if the file changed since last time
+                                    If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
+                                        If (mLastWriteTime <= g_mStatusConfigDate(sConfigFile.ToLowerInvariant)) Then
+                                            Continue For
+                                        End If
+                                    End If
+
+                                    g_mStatusConfigDate(sConfigFile.ToLowerInvariant) = mLastWriteTime
+
+                                    Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
+                                    mConfigCameraDistortion.LoadFromConfig(sConfigFile)
+
+                                    Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
+                                    If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                                        If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, mConstCameraDistortion)) Then
+                                            Dim bCorrectDistort As Boolean = (
+                                                CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
+                                                CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
+
+                                            If (Not bCorrectDistort) Then
+                                                g_bStatusDistortionError = True
+                                            Else
+                                                g_bStatusDistortionError = False
+                                            End If
+                                        End If
+                                    Else
+                                        If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE, mConstCameraDistortion)) Then
+                                            Dim bCorrectDistort As Boolean = (
+                                                CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
+                                                CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
+
+                                            If (bCorrectDistort) Then
+                                                g_bStatusDistortionWarning = True
+                                            Else
+                                                g_bStatusDistortionWarning = False
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+
+                        If (g_bStatusDistortionError) Then
+                            sTitle = "Incorrect distortion values"
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("The current distortion values for this virtual tracker are incorrect. Distortion preset 'PlayStation 4 Stereo Camera' is required.")
+                            sMessage = sText.ToString
+
+                            iStatusType = 2
+                            Exit While
+                        End If
+                    End If
+
+                    ' Check if connected to PSMS-EX
+                    If (True) Then
+                        If (Not g_mClassCaptureLogic.m_PipeConnected) Then
+                            sTitle = "Virtual Tracker not connected"
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("Unable to connect to the virtual tracker in PSMoveServiceEx that corresponds to the tracker id.")
+                            sMessage = sText.ToString
+
+                            iStatusType = 2
+                            Exit While
+                        End If
+                    End If
+
+                    If (True) Then
+                        If (g_bStatusDistortionWarning) Then
+                            sTitle = "Uncalibrated distortion values"
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("The current distortion values for this virtual tracker are uncalibrated and will cause tracking issues. Please calibrate tracker distortion.")
+                            sMessage = sText.ToString
+
+                            iStatusType = 2
+                            Exit While
+                        End If
+                    End If
+
+                    Exit While
+                End While
+
+                If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
+                    Label_StatusTitle.Text = sTitle
+                    Label_StatusMessage.Text = sMessage
+                End If
+
+                If (iStatusType < 0) Then
+                    If (Panel_Status.Visible) Then
+                        Panel_Status.Visible = False
+
+                        If (Me.Height <> g_iStatusHideHeight) Then
+                            Me.Height = g_iStatusHideHeight
+                        End If
+                    End If
+                Else
+                    If (Not Panel_Status.Visible) Then
+                        Panel_Status.Visible = True
+
+                        If (Me.Height <> g_iStatusShowHeight) Then
+                            Me.Height = g_iStatusShowHeight
+                        End If
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+        End Try
+
+        Timer_Status.Start()
+    End Sub
+
+    Private Sub StatusThread()
+        While True
+
+
+            Threading.Thread.Sleep(1000)
+        End While
+    End Sub
+
 
     Private Sub SetUnsavedState(bIsUnsaved As Boolean)
         If (g_bIgnoreUnsaved) Then
@@ -601,6 +806,12 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub CleanUp()
+        If (g_mStatusThread IsNot Nothing AndAlso g_mStatusThread.IsAlive) Then
+            g_mStatusThread.Abort()
+            g_mStatusThread.Join()
+            g_mStatusThread = Nothing
+        End If
+
         If (g_mClassCaptureLogic IsNot Nothing) Then
             g_mClassCaptureLogic.Dispose()
             g_mClassCaptureLogic = Nothing
@@ -628,6 +839,7 @@ Public Class UCVirtualTrackerItem
         Private g_bIsPlayStationCamera As Boolean = False
         Private g_bShowCaptureImage As Boolean = False
         Private g_iPipeIndex As Integer = -1
+        Private g_bPipeConnected As Boolean = False
 
         Private g_iDeviceIndex As Integer = -1
         Private g_sDevicePath As String = ""
@@ -895,6 +1107,14 @@ Public Class UCVirtualTrackerItem
                     StartPipeThread(True)
                 End If
             End Set
+        End Property
+
+        Public ReadOnly Property m_PipeConnected As Boolean
+            Get
+                SyncLock g_mThreadLock
+                    Return g_bPipeConnected
+                End SyncLock
+            End Get
         End Property
 
         Public ReadOnly Property m_PipeSecondaryIndex As Integer
@@ -1200,6 +1420,7 @@ Public Class UCVirtualTrackerItem
                         End If
                     End If
 
+                    CapturePoll()
 
                     Dim sCurrentCodec As String = m_Capture.FourCC
                     If (sCurrentCodec.Trim(vbNullChar(0)).Length = 0) Then
@@ -1212,13 +1433,16 @@ Public Class UCVirtualTrackerItem
 
                     Dim sCurrentFramerate As String = CStr(CInt(m_Capture.Fps))
                     Dim sCurrentResolution As String = String.Format("{0}x{1}", m_Capture.FrameWidth, m_Capture.FrameHeight)
+                    Dim sScalingWarning As String = ""
                     Dim sUnscaledResolution As String = String.Format("{0}x{1}", iUnscaledFrameW, iUnscaledFrameH)
                     If (Not m_IsPlayStationCamera AndAlso sCurrentResolution <> sUnscaledResolution) Then
-                        sCurrentResolution &= String.Format(" (not recommended resolution, will be scaled to {0})", sUnscaledResolution)
+                        sScalingWarning &= String.Format(" (scaled to {0})", sUnscaledResolution)
+                    Else
+
                     End If
 
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceCodec.Text = String.Format("Codec: {0}", sCurrentCodec))
-                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}@{1}Hz", sCurrentResolution, sCurrentFramerate))
+                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Label_DeviceResolution.Text = String.Format("Resolution: {0}@{1}Hz{2}", sCurrentResolution, sCurrentFramerate, sScalingWarning))
                     ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Text = "Probing device properties...")
                 End SyncLock
 
@@ -1745,6 +1969,13 @@ Public Class UCVirtualTrackerItem
                             ' $TODO Latency is quite ok but somewhat noticeable
                             mPipe.Write(iBytes, 0, iBytes.Length)
                             mPipe.WaitForPipeDrain()
+
+                            ' $TODO Add for each pipe
+                            If (iPipeID = 0) Then
+                                SyncLock g_mThreadLock
+                                    g_bPipeConnected = True
+                                End SyncLock
+                            End If
                         End While
                     End Using
                 Catch ex As Threading.ThreadAbortException
@@ -1752,8 +1983,14 @@ Public Class UCVirtualTrackerItem
                 Catch ex As Exception
                     bExceptionSleep = True
 
-                    If (mFramePrint.ElapsedMilliseconds > 1000) Then
+                    ' $TODO Add for each pipe
+                    If (iPipeID = 0) Then
+                        SyncLock g_mThreadLock
+                            g_bPipeConnected = False
+                        End SyncLock
+                    End If
 
+                    If (mFramePrint.ElapsedMilliseconds > 1000) Then
                         ' $TODO Add for each pipe
                         If (iPipeID = 0) Then
                             ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))

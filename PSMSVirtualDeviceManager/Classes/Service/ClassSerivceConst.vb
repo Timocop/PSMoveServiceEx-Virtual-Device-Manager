@@ -57,15 +57,15 @@
                 Dim mConfig As New ClassServiceConfig(sFile)
                 mConfig.LoadConfig()
 
-                iFocalLengthX = Double.Parse(mConfig.GetValue(Of String)("", "focalLengthX", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iFocalLengthY = Double.Parse(mConfig.GetValue(Of String)("", "focalLengthY", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iPrincipalX = Double.Parse(mConfig.GetValue(Of String)("", "principalX", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iPrincipalY = Double.Parse(mConfig.GetValue(Of String)("", "principalY", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iDistortionK1 = Double.Parse(mConfig.GetValue(Of String)("", "distortionK1", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iDistortionK2 = Double.Parse(mConfig.GetValue(Of String)("", "distortionK2", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iDistortionK3 = Double.Parse(mConfig.GetValue(Of String)("", "distortionK3", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iDistortionP1 = Double.Parse(mConfig.GetValue(Of String)("", "distortionP1", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                iDistortionP2 = Double.Parse(mConfig.GetValue(Of String)("", "distortionP2", Nothing), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iFocalLengthX = Double.Parse(mConfig.GetValue(Of String)("", "focalLengthX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iFocalLengthY = Double.Parse(mConfig.GetValue(Of String)("", "focalLengthY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iPrincipalX = Double.Parse(mConfig.GetValue(Of String)("", "principalX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iPrincipalY = Double.Parse(mConfig.GetValue(Of String)("", "principalY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iDistortionK1 = Double.Parse(mConfig.GetValue(Of String)("", "distortionK1", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iDistortionK2 = Double.Parse(mConfig.GetValue(Of String)("", "distortionK2", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iDistortionK3 = Double.Parse(mConfig.GetValue(Of String)("", "distortionK3", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iDistortionP1 = Double.Parse(mConfig.GetValue(Of String)("", "distortionP1", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                iDistortionP2 = Double.Parse(mConfig.GetValue(Of String)("", "distortionP2", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
             End Sub
         End Structure
 

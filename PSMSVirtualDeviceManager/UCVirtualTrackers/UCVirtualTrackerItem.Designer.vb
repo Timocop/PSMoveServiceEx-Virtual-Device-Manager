@@ -68,6 +68,11 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Preview = New System.Windows.Forms.Panel()
+        Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Label_StatusMessage = New System.Windows.Forms.Label()
+        Me.Label_StatusTitle = New System.Windows.Forms.Label()
+        Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -77,6 +82,8 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.SuspendLayout()
         Me.TabPage_TrackerProperties.SuspendLayout()
         Me.Panel_Preview.SuspendLayout()
+        Me.Panel_Status.SuspendLayout()
+        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PictureBox_CaptureImage
@@ -86,7 +93,7 @@ Partial Class UCVirtualTrackerItem
         Me.PictureBox_CaptureImage.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PictureBox_CaptureImage.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox_CaptureImage.Name = "PictureBox_CaptureImage"
-        Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(277, 215)
+        Me.PictureBox_CaptureImage.Size = New System.Drawing.Size(277, 201)
         Me.PictureBox_CaptureImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox_CaptureImage.TabIndex = 0
         Me.PictureBox_CaptureImage.TabStop = False
@@ -111,7 +118,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_DeviceTrackerId.FormattingEnabled = True
         Me.ComboBox_DeviceTrackerId.Location = New System.Drawing.Point(208, 6)
         Me.ComboBox_DeviceTrackerId.Name = "ComboBox_DeviceTrackerId"
-        Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_DeviceTrackerId.Size = New System.Drawing.Size(246, 21)
         Me.ComboBox_DeviceTrackerId.TabIndex = 3
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_DeviceTrackerId, "The tracker id corresponding to the virtual tracker ids in PSMoveServiceEx.")
         '
@@ -133,7 +140,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceExposure.LargeChange = 1
         Me.TrackBar_DeviceExposure.Location = New System.Drawing.Point(123, 9)
         Me.TrackBar_DeviceExposure.Name = "TrackBar_DeviceExposure"
-        Me.TrackBar_DeviceExposure.Size = New System.Drawing.Size(344, 16)
+        Me.TrackBar_DeviceExposure.Size = New System.Drawing.Size(331, 16)
         Me.TrackBar_DeviceExposure.TabIndex = 6
         '
         'Label4
@@ -154,7 +161,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceGain.LargeChange = 1
         Me.TrackBar_DeviceGain.Location = New System.Drawing.Point(123, 31)
         Me.TrackBar_DeviceGain.Name = "TrackBar_DeviceGain"
-        Me.TrackBar_DeviceGain.Size = New System.Drawing.Size(344, 16)
+        Me.TrackBar_DeviceGain.Size = New System.Drawing.Size(331, 16)
         Me.TrackBar_DeviceGain.TabIndex = 8
         '
         'Label6
@@ -171,7 +178,7 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_ShowCaptureImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_ShowCaptureImage.AutoSize = True
-        Me.CheckBox_ShowCaptureImage.Location = New System.Drawing.Point(718, 51)
+        Me.CheckBox_ShowCaptureImage.Location = New System.Drawing.Point(718, 29)
         Me.CheckBox_ShowCaptureImage.Name = "CheckBox_ShowCaptureImage"
         Me.CheckBox_ShowCaptureImage.Size = New System.Drawing.Size(65, 17)
         Me.CheckBox_ShowCaptureImage.TabIndex = 13
@@ -186,7 +193,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceGamma.LargeChange = 1
         Me.TrackBar_DeviceGamma.Location = New System.Drawing.Point(123, 53)
         Me.TrackBar_DeviceGamma.Name = "TrackBar_DeviceGamma"
-        Me.TrackBar_DeviceGamma.Size = New System.Drawing.Size(344, 16)
+        Me.TrackBar_DeviceGamma.Size = New System.Drawing.Size(331, 16)
         Me.TrackBar_DeviceGamma.TabIndex = 15
         '
         'Label7
@@ -203,8 +210,8 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Button_RestartDevice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Button_RestartDevice.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
-        Me.Button_RestartDevice.Location = New System.Drawing.Point(3, 322)
-        Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(3, 3, 3, 16)
+        Me.Button_RestartDevice.Location = New System.Drawing.Point(16, 341)
+        Me.Button_RestartDevice.Margin = New System.Windows.Forms.Padding(16, 3, 3, 16)
         Me.Button_RestartDevice.Name = "Button_RestartDevice"
         Me.Button_RestartDevice.Size = New System.Drawing.Size(116, 23)
         Me.Button_RestartDevice.TabIndex = 16
@@ -221,7 +228,7 @@ Partial Class UCVirtualTrackerItem
         Me.TrackBar_DeviceConstrast.LargeChange = 1
         Me.TrackBar_DeviceConstrast.Location = New System.Drawing.Point(124, 75)
         Me.TrackBar_DeviceConstrast.Name = "TrackBar_DeviceConstrast"
-        Me.TrackBar_DeviceConstrast.Size = New System.Drawing.Size(343, 16)
+        Me.TrackBar_DeviceConstrast.Size = New System.Drawing.Size(330, 16)
         Me.TrackBar_DeviceConstrast.TabIndex = 18
         '
         'Label8
@@ -238,8 +245,8 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Button_ConfigSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_ConfigSave.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_ConfigSave.Location = New System.Drawing.Point(363, 322)
-        Me.Button_ConfigSave.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
+        Me.Button_ConfigSave.Location = New System.Drawing.Point(662, 341)
+        Me.Button_ConfigSave.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
         Me.Button_ConfigSave.Name = "Button_ConfigSave"
         Me.Button_ConfigSave.Size = New System.Drawing.Size(120, 23)
         Me.Button_ConfigSave.TabIndex = 19
@@ -252,8 +259,8 @@ Partial Class UCVirtualTrackerItem
         '
         Me.CheckBox_Autostart.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_Autostart.AutoSize = True
-        Me.CheckBox_Autostart.Location = New System.Drawing.Point(6, 299)
-        Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
+        Me.CheckBox_Autostart.Location = New System.Drawing.Point(16, 318)
+        Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(16, 6, 3, 3)
         Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
         Me.CheckBox_Autostart.Size = New System.Drawing.Size(338, 17)
         Me.CheckBox_Autostart.TabIndex = 20
@@ -262,15 +269,15 @@ Partial Class UCVirtualTrackerItem
         '
         'TabControl1
         '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.TabControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPage_DeviceProperties)
         Me.TabControl1.Controls.Add(Me.TabPage_TrackerProperties)
-        Me.TabControl1.Location = New System.Drawing.Point(3, 52)
+        Me.TabControl1.Location = New System.Drawing.Point(16, 30)
+        Me.TabControl1.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(481, 238)
+        Me.TabControl1.Size = New System.Drawing.Size(468, 226)
         Me.TabControl1.TabIndex = 21
         '
         'TabPage_DeviceProperties
@@ -289,7 +296,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_DeviceProperties.Name = "TabPage_DeviceProperties"
         Me.TabPage_DeviceProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(473, 212)
+        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(460, 200)
         Me.TabPage_DeviceProperties.TabIndex = 0
         Me.TabPage_DeviceProperties.Text = "Device Properties"
         Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
@@ -302,7 +309,7 @@ Partial Class UCVirtualTrackerItem
         Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(392, 196)
+        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(379, 198)
         Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
         Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
         Me.LinkLabel_MiscSettings.TabIndex = 21
@@ -351,7 +358,7 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_TrackerProperties.Name = "TabPage_TrackerProperties"
         Me.TabPage_TrackerProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(473, 212)
+        Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(460, 200)
         Me.TabPage_TrackerProperties.TabIndex = 1
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
         Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
@@ -375,7 +382,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_CameraFramerate.FormattingEnabled = True
         Me.ComboBox_CameraFramerate.Location = New System.Drawing.Point(208, 141)
         Me.ComboBox_CameraFramerate.Name = "ComboBox_CameraFramerate"
-        Me.ComboBox_CameraFramerate.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_CameraFramerate.Size = New System.Drawing.Size(246, 21)
         Me.ComboBox_CameraFramerate.TabIndex = 23
         '
         'ComboBox_CameraLensDistortion
@@ -387,7 +394,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_CameraLensDistortion.FormattingEnabled = True
         Me.ComboBox_CameraLensDistortion.Location = New System.Drawing.Point(208, 168)
         Me.ComboBox_CameraLensDistortion.Name = "ComboBox_CameraLensDistortion"
-        Me.ComboBox_CameraLensDistortion.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_CameraLensDistortion.Size = New System.Drawing.Size(246, 21)
         Me.ComboBox_CameraLensDistortion.TabIndex = 22
         '
         'Label1
@@ -398,7 +405,7 @@ Partial Class UCVirtualTrackerItem
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(142, 13)
         Me.Label1.TabIndex = 21
-        Me.Label1.Text = "Tracker Distortion Profiles:"
+        Me.Label1.Text = "Tracker distortion profiles:"
         '
         'ComboBox_CameraResolution
         '
@@ -409,7 +416,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_CameraResolution.FormattingEnabled = True
         Me.ComboBox_CameraResolution.Location = New System.Drawing.Point(208, 116)
         Me.ComboBox_CameraResolution.Name = "ComboBox_CameraResolution"
-        Me.ComboBox_CameraResolution.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_CameraResolution.Size = New System.Drawing.Size(246, 21)
         Me.ComboBox_CameraResolution.TabIndex = 20
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_CameraResolution, resources.GetString("ComboBox_CameraResolution.ToolTip"))
         '
@@ -480,7 +487,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_ImageInterpolation.FormattingEnabled = True
         Me.ComboBox_ImageInterpolation.Location = New System.Drawing.Point(208, 50)
         Me.ComboBox_ImageInterpolation.Name = "ComboBox_ImageInterpolation"
-        Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(261, 21)
+        Me.ComboBox_ImageInterpolation.Size = New System.Drawing.Size(246, 21)
         Me.ComboBox_ImageInterpolation.TabIndex = 14
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_ImageInterpolation, resources.GetString("ComboBox_ImageInterpolation.ToolTip"))
         '
@@ -522,7 +529,7 @@ Partial Class UCVirtualTrackerItem
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Button1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Button1.Location = New System.Drawing.Point(240, 322)
+        Me.Button1.Location = New System.Drawing.Point(539, 341)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(117, 23)
         Me.Button1.TabIndex = 22
@@ -536,7 +543,7 @@ Partial Class UCVirtualTrackerItem
         Me.TextBox_Fps.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBox_Fps.Location = New System.Drawing.Point(503, 52)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(503, 30)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
         Me.TextBox_Fps.Size = New System.Drawing.Size(209, 15)
@@ -558,11 +565,64 @@ Partial Class UCVirtualTrackerItem
         Me.Panel_Preview.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_Preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_Preview.Controls.Add(Me.PictureBox_CaptureImage)
-        Me.Panel_Preview.Location = New System.Drawing.Point(503, 73)
+        Me.Panel_Preview.Location = New System.Drawing.Point(503, 51)
         Me.Panel_Preview.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.Panel_Preview.Name = "Panel_Preview"
-        Me.Panel_Preview.Size = New System.Drawing.Size(279, 217)
+        Me.Panel_Preview.Size = New System.Drawing.Size(279, 203)
         Me.Panel_Preview.TabIndex = 24
+        '
+        'Panel_Status
+        '
+        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_Status.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_Status.Controls.Add(Me.PictureBox_StatusImage)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 265)
+        Me.Panel_Status.Margin = New System.Windows.Forms.Padding(16, 6, 16, 16)
+        Me.Panel_Status.Name = "Panel_Status"
+        Me.Panel_Status.Size = New System.Drawing.Size(767, 44)
+        Me.Panel_Status.TabIndex = 37
+        '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
+        'Label_StatusMessage
+        '
+        Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label_StatusMessage.Location = New System.Drawing.Point(25, 19)
+        Me.Label_StatusMessage.Name = "Label_StatusMessage"
+        Me.Label_StatusMessage.Size = New System.Drawing.Size(737, 23)
+        Me.Label_StatusMessage.TabIndex = 1
+        Me.Label_StatusMessage.Text = "Message"
+        '
+        'Label_StatusTitle
+        '
+        Me.Label_StatusTitle.AutoSize = True
+        Me.Label_StatusTitle.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_StatusTitle.Location = New System.Drawing.Point(25, 3)
+        Me.Label_StatusTitle.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label_StatusTitle.Name = "Label_StatusTitle"
+        Me.Label_StatusTitle.Size = New System.Drawing.Size(29, 13)
+        Me.Label_StatusTitle.TabIndex = 0
+        Me.Label_StatusTitle.Text = "Title"
+        '
+        'Timer_Status
+        '
+        Me.Timer_Status.Enabled = True
+        Me.Timer_Status.Interval = 1000
         '
         'UCVirtualTrackerItem
         '
@@ -570,6 +630,7 @@ Partial Class UCVirtualTrackerItem
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.Panel_Status)
         Me.Controls.Add(Me.TextBox_Fps)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TabControl1)
@@ -581,7 +642,7 @@ Partial Class UCVirtualTrackerItem
         Me.Controls.Add(Me.Panel_Preview)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackerItem"
-        Me.Size = New System.Drawing.Size(798, 361)
+        Me.Size = New System.Drawing.Size(798, 380)
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).EndInit()
@@ -593,6 +654,9 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.ResumeLayout(False)
         Me.TabPage_TrackerProperties.PerformLayout()
         Me.Panel_Preview.ResumeLayout(False)
+        Me.Panel_Status.ResumeLayout(False)
+        Me.Panel_Status.PerformLayout()
+        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -638,4 +702,9 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents ComboBox_CameraLensDistortion As ComboBox
     Friend WithEvents Label12 As Label
     Friend WithEvents ComboBox_CameraFramerate As ComboBox
+    Friend WithEvents Panel_Status As Panel
+    Friend WithEvents PictureBox_StatusImage As ClassPictureBoxQuality
+    Friend WithEvents Label_StatusMessage As Label
+    Friend WithEvents Label_StatusTitle As Label
+    Friend WithEvents Timer_Status As Timer
 End Class

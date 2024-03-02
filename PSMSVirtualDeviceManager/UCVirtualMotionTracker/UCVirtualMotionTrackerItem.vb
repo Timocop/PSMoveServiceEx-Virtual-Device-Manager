@@ -530,123 +530,125 @@ Public Class UCVirtualMotionTrackerItem
         Try
             Timer_Status.Stop()
 
-            Dim sTitle As String = ""
-            Dim sMessage As String = ""
-            Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
+            If (Me.Visible) Then
+                Dim sTitle As String = ""
+                Dim sMessage As String = ""
+                Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
 
-            While True
-                If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
-                    ' Show driver timeouts
-                    If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
-                        sTitle = "Driver not is responding!"
+                While True
+                    If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                        ' Show driver timeouts
+                        If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
+                            sTitle = "Driver not is responding!"
 
-                        Dim sText As New Text.StringBuilder
-                        sText.AppendLine("The driver is not responding! Make sure the OSC server is running and the driver installed correctly.")
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("The driver is not responding! Make sure the OSC server is running and the driver installed correctly.")
 
-                        If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
-                            sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                            If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                                sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                            End If
+                            If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                                sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                            End If
+
+                            sMessage = sText.ToString
+                            iStatusType = 2
+
+                            Exit While
                         End If
-                        If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
-                            sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+
+
+                        If (g_sDriverLastResponseCode <> 0) Then
+                            sTitle = String.Format("Driver responded with an error (Code: {0})!", g_sDriverLastResponseCode)
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine(g_sDriverLastResponseMessage)
+
+                            If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                                sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                            End If
+                            If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                                sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                            End If
+
+                            sMessage = sText.ToString
+                            iStatusType = 2
+
+                            Exit While
                         End If
 
-                        sMessage = sText.ToString
-                        iStatusType = 2
+                        ' Show user wrong driver version
+                        If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> ClassVmtConst.VMT_DRIVER_VERSION_EXPECT) Then
+                            sTitle = "Driver version incompatible"
 
-                        Exit While
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, ClassVmtConst.VMT_DRIVER_VERSION_EXPECT).AppendLine()
+
+                            If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
+                                sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
+                            End If
+                            If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
+                                sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
+                            End If
+
+                            sMessage = sText.ToString
+                            iStatusType = 1
+
+                            Exit While
+                        End If
+
+                        ' Show HMD bad direct-mode
+                        If (g_bIsHMD AndAlso g_bIsHmdDirectMode AndAlso g_iHmdFramerate <> HMD_DIRECT_MODE_FRAMERATE) Then
+                            sTitle = "Driver is unable to load PlayStation VR display configuration"
+
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("Go 'SteamVR > Developer > Developer Settings' then click 'Disable Direct Display Mode', restart SteamVR and then click 'Enable Direct Display Mode' to fix this issue.")
+
+                            sMessage = sText.ToString
+                            iStatusType = 2
+
+                            Exit While
+                        End If
+
+                        ' Show tracker not working
+                        If (g_mControllerLastResponse.ElapsedMilliseconds > MAX_CONTROLLER_TIMEOUT) Then
+                            sTitle = "Device is not responding!"
+
+                            Dim sText As New Text.StringBuilder
+                            sText.AppendLine("There are no new incoming pose data. Make sure PSMoveServiceEx is running.")
+
+                            sMessage = sText.ToString
+                            iStatusType = 2
+
+                            Exit While
+                        End If
                     End If
 
+                    Exit While
+                End While
 
-                    If (g_sDriverLastResponseCode <> 0) Then
-                        sTitle = String.Format("Driver responded with an error (Code: {0})!", g_sDriverLastResponseCode)
-
-                        Dim sText As New Text.StringBuilder
-                        sText.AppendLine(g_sDriverLastResponseMessage)
-
-                        If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
-                            sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
-                        End If
-                        If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
-                            sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
-                        End If
-
-                        sMessage = sText.ToString
-                        iStatusType = 2
-
-                        Exit While
-                    End If
-
-                    ' Show user wrong driver version
-                    If (Not String.IsNullOrEmpty(g_sDriverVersion) AndAlso g_sDriverVersion <> ClassVmtConst.VMT_DRIVER_VERSION_EXPECT) Then
-                        sTitle = "Driver version incompatible"
-
-
-                        Dim sText As New Text.StringBuilder
-                        sText.AppendFormat("The driver reported version '{0}' but required is {1}! This may cause problems.", g_sDriverVersion, ClassVmtConst.VMT_DRIVER_VERSION_EXPECT).AppendLine()
-
-                        If (Not String.IsNullOrEmpty(g_sDriverVersion)) Then
-                            sText.AppendFormat("VMT driver version: {0}", g_sDriverVersion).AppendLine()
-                        End If
-                        If (Not String.IsNullOrEmpty(g_sDriverPath)) Then
-                            sText.AppendFormat("VMT driver path: {0}", g_sDriverPath).AppendLine()
-                        End If
-
-                        sMessage = sText.ToString
-                        iStatusType = 1
-
-                        Exit While
-                    End If
-
-                    ' Show HMD bad direct-mode
-                    If (g_bIsHMD AndAlso g_bIsHmdDirectMode AndAlso g_iHmdFramerate <> HMD_DIRECT_MODE_FRAMERATE) Then
-                        sTitle = "Driver is unable to load PlayStation VR display configuration"
-
-
-                        Dim sText As New Text.StringBuilder
-                        sText.AppendLine("Go 'SteamVR > Developer > Developer Settings' then click 'Disable Direct Display Mode', restart SteamVR and then click 'Enable Direct Display Mode' to fix this issue.")
-
-                        sMessage = sText.ToString
-                        iStatusType = 2
-
-                        Exit While
-                    End If
-
-                    ' Show tracker not working
-                    If (g_mControllerLastResponse.ElapsedMilliseconds > MAX_CONTROLLER_TIMEOUT) Then
-                        sTitle = "Controller is not responding!"
-
-                        Dim sText As New Text.StringBuilder
-                        sText.AppendLine("There are no new incoming pose data. Make sure PSMoveServiceEx is running.")
-
-                        sMessage = sText.ToString
-                        iStatusType = 2
-
-                        Exit While
-                    End If
+                If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
+                    Label_StatusTitle.Text = sTitle
+                    Label_StatusMessage.Text = sMessage
                 End If
 
-                Exit While
-            End While
+                If (iStatusType < 0) Then
+                    If (Panel_Status.Visible) Then
+                        Panel_Status.Visible = False
 
-            If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
-                Label_StatusTitle.Text = sTitle
-                Label_StatusMessage.Text = sMessage
-            End If
-
-            If (iStatusType < 0) Then
-                If (Panel_Status.Visible) Then
-                    Panel_Status.Visible = False
-
-                    If (Me.Height <> g_iStatusHideHeight) Then
-                        Me.Height = g_iStatusHideHeight
+                        If (Me.Height <> g_iStatusHideHeight) Then
+                            Me.Height = g_iStatusHideHeight
+                        End If
                     End If
-                End If
-            Else
-                If (Not Panel_Status.Visible) Then
-                    Panel_Status.Visible = True
+                Else
+                    If (Not Panel_Status.Visible) Then
+                        Panel_Status.Visible = True
 
-                    If (Me.Height <> g_iStatusShowHeight) Then
-                        Me.Height = g_iStatusShowHeight
+                        If (Me.Height <> g_iStatusShowHeight) Then
+                            Me.Height = g_iStatusShowHeight
+                        End If
                     End If
                 End If
             End If

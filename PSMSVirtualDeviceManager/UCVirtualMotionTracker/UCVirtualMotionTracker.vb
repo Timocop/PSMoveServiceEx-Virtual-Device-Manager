@@ -118,8 +118,10 @@ Public Class UCVirtualMotionTracker
 
                     g_UCVirtualMotionTrackerItem.Parent = g_UCVirtualMotionTracker.Panel_VMTTrackers
                     g_UCVirtualMotionTrackerItem.Dock = DockStyle.Top
+                    g_UCVirtualMotionTrackerItem.Visible = True
                 Else
                     g_UCVirtualMotionTrackerItem.Parent = Nothing
+                    g_UCVirtualMotionTrackerItem.Visible = False
                 End If
             End Set
         End Property

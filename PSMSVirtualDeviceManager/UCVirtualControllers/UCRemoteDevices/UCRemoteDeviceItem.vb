@@ -139,7 +139,9 @@ Public Class UCRemoteDeviceItem
                 If (g_iFpsOrientationCounter > 0) Then
                     g_mLastDeviceResponse.Restart()
                 End If
+            End SyncLock
 
+            If (Me.Visible) Then
                 If (g_mLastDeviceResponse.ElapsedMilliseconds > MAX_DEVICE_TIMEOUT) Then
                     If (Not Panel_Status.Visible) Then
                         Panel_Status.Visible = True
@@ -155,14 +157,13 @@ Public Class UCRemoteDeviceItem
                         If (Me.Height <> g_iStatusHideHeight) Then
                             Me.Height = g_iStatusHideHeight
                         End If
-
                     End If
                 End If
 
-                If (Me.Visible) Then
-                    TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
-                End If
+                TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", g_iFpsPacketCounter, g_iFpsOrientationCounter, g_mClassIO.m_FpsPipeCounter)
+            End If
 
+            SyncLock _ThreadLock
                 g_iFpsPacketCounter = 0
                 g_iFpsOrientationCounter = 0
                 g_mClassIO.m_FpsPipeCounter = 0

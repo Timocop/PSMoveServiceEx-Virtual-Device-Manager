@@ -54,8 +54,10 @@ Public Class UCControllerAttachments
                 If (value) Then
                     g_UCControllerAttachmentsItem.Parent = g_UCControllerAttachments.Panel_Attachments
                     g_UCControllerAttachmentsItem.Dock = DockStyle.Top
+                    g_UCControllerAttachmentsItem.Visible = True
                 Else
                     g_UCControllerAttachmentsItem.Parent = Nothing
+                    g_UCControllerAttachmentsItem.Visible = False
                 End If
             End Set
         End Property

@@ -86,8 +86,10 @@ Public Class UCRemoteDevices
 
                     g_UCRemoteDeviceItem.Parent = g_UCRemoteDevices.Panel_RemoteDevices
                     g_UCRemoteDeviceItem.Dock = DockStyle.Top
+                    g_UCRemoteDeviceItem.Visible = True
                 Else
                     g_UCRemoteDeviceItem.Parent = Nothing
+                    g_UCRemoteDeviceItem.Visible = False
                 End If
             End Set
         End Property

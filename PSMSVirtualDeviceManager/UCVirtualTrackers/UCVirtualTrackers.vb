@@ -133,8 +133,10 @@
 
                     g_UCVirtualTrackerItem.Parent = g_UCVirtualTrackers.Panel_Devices
                     g_UCVirtualTrackerItem.Dock = DockStyle.Top
+                    g_UCVirtualTrackerItem.Visible = True
                 Else
                     g_UCVirtualTrackerItem.Parent = Nothing
+                    g_UCVirtualTrackerItem.Visible = False
                 End If
             End Set
         End Property
