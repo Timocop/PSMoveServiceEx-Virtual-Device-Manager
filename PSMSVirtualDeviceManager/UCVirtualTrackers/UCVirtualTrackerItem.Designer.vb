@@ -69,10 +69,10 @@ Partial Class UCVirtualTrackerItem
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Preview = New System.Windows.Forms.Panel()
         Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -384,6 +384,7 @@ Partial Class UCVirtualTrackerItem
         Me.ComboBox_CameraFramerate.Name = "ComboBox_CameraFramerate"
         Me.ComboBox_CameraFramerate.Size = New System.Drawing.Size(246, 21)
         Me.ComboBox_CameraFramerate.TabIndex = 23
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_CameraFramerate, resources.GetString("ComboBox_CameraFramerate.ToolTip"))
         '
         'ComboBox_CameraLensDistortion
         '
@@ -586,6 +587,17 @@ Partial Class UCVirtualTrackerItem
         Me.Panel_Status.Size = New System.Drawing.Size(767, 59)
         Me.Panel_Status.TabIndex = 37
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
         'Label_StatusMessage
         '
         Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -612,17 +624,6 @@ Partial Class UCVirtualTrackerItem
         '
         Me.Timer_Status.Enabled = True
         Me.Timer_Status.Interval = 1000
-        '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
         '
         'UCVirtualTrackerItem
         '
