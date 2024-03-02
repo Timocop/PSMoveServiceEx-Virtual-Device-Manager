@@ -841,7 +841,7 @@ Public Class UCVirtualTrackerItem
         Private g_bIsPlayStationCamera As Boolean = False
         Private g_bShowCaptureImage As Boolean = False
         Private g_iPipeIndex As Integer = -1
-        Private g_bPipeConnected As Boolean = False
+        Private g_bPipeConnected As Boolean() = {False, False}
 
         Private g_iDeviceIndex As Integer = -1
         Private g_sDevicePath As String = ""
@@ -1114,7 +1114,11 @@ Public Class UCVirtualTrackerItem
         Public ReadOnly Property m_PipeConnected As Boolean
             Get
                 SyncLock g_mThreadLock
-                    Return g_bPipeConnected
+                    If (m_IsPlayStationCamera) Then
+                        Return (g_bPipeConnected(0) AndAlso g_bPipeConnected(1))
+                    Else
+                        Return g_bPipeConnected(0)
+                    End If
                 End SyncLock
             End Get
         End Property
@@ -1972,12 +1976,9 @@ Public Class UCVirtualTrackerItem
                             mPipe.Write(iBytes, 0, iBytes.Length)
                             mPipe.WaitForPipeDrain()
 
-                            ' $TODO Add for each pipe
-                            If (iPipeID = 0) Then
-                                SyncLock g_mThreadLock
-                                    g_bPipeConnected = True
-                                End SyncLock
-                            End If
+                            SyncLock g_mThreadLock
+                                g_bPipeConnected(iPipeID) = True
+                            End SyncLock
                         End While
                     End Using
                 Catch ex As Threading.ThreadAbortException
@@ -1985,12 +1986,9 @@ Public Class UCVirtualTrackerItem
                 Catch ex As Exception
                     bExceptionSleep = True
 
-                    ' $TODO Add for each pipe
-                    If (iPipeID = 0) Then
-                        SyncLock g_mThreadLock
-                            g_bPipeConnected = False
-                        End SyncLock
-                    End If
+                    SyncLock g_mThreadLock
+                        g_bPipeConnected(iPipeID) = False
+                    End SyncLock
 
                     If (mFramePrint.ElapsedMilliseconds > 1000) Then
                         ' $TODO Add for each pipe
