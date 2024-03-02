@@ -1843,15 +1843,11 @@ Public Class UCVirtualTrackerItem
         End Sub
 
         Private Sub CaptureThread()
-            Dim mFrameDelay As New Stopwatch
             Dim mFrameImage As New Stopwatch
             Dim mFramePrint As New Stopwatch
-            mFrameDelay.Start()
             mFrameImage.Start()
             mFramePrint.Start()
 
-            Dim iFPS As Integer = 0
-            Dim iFpsSec As Integer = 1
             Dim iFpsCount As Integer = 0
 
             Try
@@ -1874,16 +1870,13 @@ Public Class UCVirtualTrackerItem
 
                             ' Calculate FPS
                             If (True) Then
-                                iFPS += CInt(New TimeSpan(0, 0, 1).Ticks / Math.Max(1, mFrameDelay.ElapsedTicks))
                                 iFpsCount += 1
-                                mFrameDelay.Restart()
+                                If (mFramePrint.ElapsedMilliseconds > 1000) Then
+                                    Dim iNewFpsCount As Integer = iFpsCount
 
-                                If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
-                                    Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(iPrintFPS, -1))
+                                    ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(iNewFpsCount, -1))
 
                                     mFramePrint.Restart()
-                                    iFPS = 0
                                     iFpsCount = 0
                                 End If
                             End If
@@ -1928,7 +1921,7 @@ Public Class UCVirtualTrackerItem
 
                             ' Preview captured image
                             ' $TODO: Quite performance heavy, find a better way.
-                            If (mFrameImage.ElapsedMilliseconds > 100) Then
+                            If (mFrameImage.ElapsedMilliseconds > (1000 / 30)) Then
                                 mFrameImage.Restart()
 
                                 If (g_bShowCaptureImage) Then
@@ -1972,7 +1965,6 @@ Public Class UCVirtualTrackerItem
                                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
 
                                 mFramePrint.Restart()
-                                iFPS = 0
                                 iFpsCount = 0
                             End If
                         End Try
@@ -2002,15 +1994,11 @@ Public Class UCVirtualTrackerItem
             Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame(iPipeID).Height * m_CaptureFrame(iPipeID).Width * 3)
             Dim iBytes = New Byte(VIRT_BUFFER_SIZE) {}
 
-            Dim mFrameDelay As New Stopwatch
             Dim mFrameImage As New Stopwatch
             Dim mFramePrint As New Stopwatch
-            mFrameDelay.Start()
             mFrameImage.Start()
             mFramePrint.Start()
 
-            Dim iFPS As Integer = 0
-            Dim iFpsSec As Integer = 1
             Dim iFpsCount As Integer = 0
 
             While True
@@ -2032,20 +2020,17 @@ Public Class UCVirtualTrackerItem
                         While True
                             ' Calculate FPS
                             If (True) Then
-                                iFPS += CInt(New TimeSpan(0, 0, 1).Ticks / Math.Max(1, mFrameDelay.ElapsedTicks))
                                 iFpsCount += 1
-                                mFrameDelay.Restart()
 
-                                If ((mFramePrint.ElapsedMilliseconds / 1000) > iFpsSec) Then
-                                    Dim iPrintFPS As Integer = CInt(iFPS / iFpsCount)
-
+                                If (mFramePrint.ElapsedMilliseconds > 1000) Then
                                     ' $TODO Add for each pipe
                                     If (iPipeID = 0) Then
-                                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iPrintFPS))
+                                        Dim iNewFpsCount As Integer = iFpsCount
+
+                                        ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iNewFpsCount))
                                     End If
 
                                     mFramePrint.Restart()
-                                    iFPS = 0
                                     iFpsCount = 0
                                 End If
                             End If
@@ -2080,7 +2065,6 @@ Public Class UCVirtualTrackerItem
                         End If
 
                         mFramePrint.Restart()
-                        iFPS = 0
                         iFpsCount = 0
                     End If
                 End Try
