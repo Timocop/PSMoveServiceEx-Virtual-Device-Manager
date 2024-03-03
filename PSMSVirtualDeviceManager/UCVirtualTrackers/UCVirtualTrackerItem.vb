@@ -1690,6 +1690,13 @@ Public Class UCVirtualTrackerItem
                     mCapture.Contrast = iContrastDefault
                 End If
 
+                m_Capture = mCapture
+                mCapture = Nothing
+
+                SyncLock g_mThreadInitLock
+                    g_bInitalized = True
+                End SyncLock
+
                 ClassUtils.SyncInvoke(g_mUCVirtualTrackerItem, Sub()
                                                                    Try
                                                                        g_mUCVirtualTrackerItem.g_bIgnoreEvents = True
@@ -1825,13 +1832,6 @@ Public Class UCVirtualTrackerItem
 
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.g_mMessageLabel.Visible = False)
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Enabled = True)
-
-                m_Capture = mCapture
-                mCapture = Nothing
-
-                SyncLock g_mThreadInitLock
-                    g_bInitalized = True
-                End SyncLock
 
                 ' Start all needed threads
                 StartCaptureThread(False)
