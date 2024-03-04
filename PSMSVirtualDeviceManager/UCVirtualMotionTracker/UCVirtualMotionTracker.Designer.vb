@@ -254,6 +254,10 @@ Partial Class UCVirtualMotionTracker
         Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Panel_AvailableTrackers = New System.Windows.Forms.Panel()
+        Me.Panel19 = New System.Windows.Forms.Panel()
+        Me.Label66 = New System.Windows.Forms.Label()
+        Me.Panel20 = New System.Windows.Forms.Panel()
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -335,6 +339,8 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.SuspendLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip_AddTracker.SuspendLayout()
+        Me.Panel_AvailableTrackers.SuspendLayout()
+        Me.Panel19.SuspendLayout()
         Me.SuspendLayout()
         '
         'LinkLabel_ReadMore
@@ -711,7 +717,7 @@ Partial Class UCVirtualMotionTracker
         'TabPage_Trackers
         '
         Me.TabPage_Trackers.BackColor = System.Drawing.Color.White
-        Me.TabPage_Trackers.Controls.Add(Me.ListView_Trackers)
+        Me.TabPage_Trackers.Controls.Add(Me.Panel_AvailableTrackers)
         Me.TabPage_Trackers.Controls.Add(Me.Panel_VMTTrackers)
         Me.TabPage_Trackers.Controls.Add(Me.Button_VMTControllers)
         Me.TabPage_Trackers.Controls.Add(Me.Button_AddVMTController)
@@ -724,17 +730,17 @@ Partial Class UCVirtualMotionTracker
         '
         'ListView_Trackers
         '
-        Me.ListView_Trackers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView_Trackers.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ListView_Trackers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader6, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5})
         Me.ListView_Trackers.ContextMenuStrip = Me.ContextMenuStrip_Trackers
+        Me.ListView_Trackers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_Trackers.FullRowSelect = True
         Me.ListView_Trackers.HideSelection = False
-        Me.ListView_Trackers.Location = New System.Drawing.Point(19, 58)
+        Me.ListView_Trackers.Location = New System.Drawing.Point(0, 42)
         Me.ListView_Trackers.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_Trackers.MultiSelect = False
         Me.ListView_Trackers.Name = "ListView_Trackers"
-        Me.ListView_Trackers.Size = New System.Drawing.Size(722, 150)
+        Me.ListView_Trackers.Size = New System.Drawing.Size(720, 148)
         Me.ListView_Trackers.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_Trackers.TabIndex = 21
         Me.ListView_Trackers.UseCompatibleStateImageBehavior = False
@@ -779,10 +785,10 @@ Partial Class UCVirtualMotionTracker
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_VMTTrackers.AutoScroll = True
-        Me.Panel_VMTTrackers.Location = New System.Drawing.Point(19, 240)
+        Me.Panel_VMTTrackers.Location = New System.Drawing.Point(19, 281)
         Me.Panel_VMTTrackers.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
-        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 966)
+        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(722, 925)
         Me.Panel_VMTTrackers.TabIndex = 15
         '
         'Button_VMTControllers
@@ -3052,6 +3058,53 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
+        'Panel_AvailableTrackers
+        '
+        Me.Panel_AvailableTrackers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_AvailableTrackers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_AvailableTrackers.Controls.Add(Me.ListView_Trackers)
+        Me.Panel_AvailableTrackers.Controls.Add(Me.Panel19)
+        Me.Panel_AvailableTrackers.Location = New System.Drawing.Point(19, 58)
+        Me.Panel_AvailableTrackers.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_AvailableTrackers.Name = "Panel_AvailableTrackers"
+        Me.Panel_AvailableTrackers.Size = New System.Drawing.Size(722, 192)
+        Me.Panel_AvailableTrackers.TabIndex = 22
+        '
+        'Panel19
+        '
+        Me.Panel19.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel19.Controls.Add(Me.Label66)
+        Me.Panel19.Controls.Add(Me.Panel20)
+        Me.Panel19.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel19.Location = New System.Drawing.Point(0, 0)
+        Me.Panel19.Name = "Panel19"
+        Me.Panel19.Size = New System.Drawing.Size(720, 42)
+        Me.Panel19.TabIndex = 0
+        '
+        'Label66
+        '
+        Me.Label66.BackColor = System.Drawing.Color.Transparent
+        Me.Label66.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label66.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label66.ForeColor = System.Drawing.Color.Navy
+        Me.Label66.Location = New System.Drawing.Point(0, 0)
+        Me.Label66.Name = "Label66"
+        Me.Label66.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label66.Size = New System.Drawing.Size(720, 41)
+        Me.Label66.TabIndex = 1
+        Me.Label66.Text = "Available Remote Devices"
+        Me.Label66.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel20
+        '
+        Me.Panel20.BackColor = System.Drawing.Color.Gray
+        Me.Panel20.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel20.Location = New System.Drawing.Point(0, 41)
+        Me.Panel20.Name = "Panel20"
+        Me.Panel20.Size = New System.Drawing.Size(720, 1)
+        Me.Panel20.TabIndex = 0
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -3177,6 +3230,8 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.PerformLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip_AddTracker.ResumeLayout(False)
+        Me.Panel_AvailableTrackers.ResumeLayout(False)
+        Me.Panel19.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -3407,4 +3462,8 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents NumericUpDown_OscMaxThreadFps As NumericUpDown
     Friend WithEvents UcNumericUpDownBig18 As UCNumericUpDownBig
     Friend WithEvents Label65 As Label
+    Friend WithEvents Panel_AvailableTrackers As Panel
+    Friend WithEvents Panel19 As Panel
+    Friend WithEvents Label66 As Label
+    Friend WithEvents Panel20 As Panel
 End Class
