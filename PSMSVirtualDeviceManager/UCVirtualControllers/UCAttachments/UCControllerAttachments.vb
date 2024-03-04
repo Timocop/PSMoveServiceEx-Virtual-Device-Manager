@@ -36,6 +36,13 @@ Public Class UCControllerAttachments
 
             Me.SubItems(LISTVIEW_SUBITEM_INDEX).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_Index)
             Me.SubItems(LISTVIEW_SUBITEM_PARENTID).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_ParentController)
+
+            'Is there any error?
+            If (g_UCControllerAttachmentsItem.m_HasStatusError) Then
+                Me.BackColor = Color.FromArgb(255, 192, 192)
+            Else
+                Me.BackColor = Color.FromArgb(255, 255, 255)
+            End If
         End Sub
 
         Property m_Visible As Boolean

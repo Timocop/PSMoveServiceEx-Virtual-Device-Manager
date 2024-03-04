@@ -89,7 +89,7 @@ Public Class UCVirtualMotionTracker
             End If
 
             'Is there any error?
-            If (g_UCVirtualMotionTrackerItem.Panel_Status.Visible) Then
+            If (g_UCVirtualMotionTrackerItem.m_HasStatusError) Then
                 Me.BackColor = Color.FromArgb(255, 192, 192)
             Else
                 Me.BackColor = Color.FromArgb(255, 255, 255)

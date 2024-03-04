@@ -85,7 +85,7 @@
             Const LISTVIEW_SUBITEM_PATH As Integer = 3
 
             'Is there any error?
-            If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed) Then
+            If (g_UCVirtualTrackerItem Is Nothing OrElse g_UCVirtualTrackerItem.IsDisposed OrElse g_UCVirtualTrackerItem.m_HasStatusError) Then
                 Me.BackColor = Color.FromArgb(255, 192, 192)
             Else
                 Me.BackColor = Color.FromArgb(255, 255, 255)
@@ -372,7 +372,6 @@
         Timer_VideoInputDevices.Stop()
 
         Try
-
             If (Me.Visible) Then
                 For Each mItem As ListViewItem In ListView_VideoDevices.Items
                     Dim mTrackerItem = DirectCast(mItem, ClassVideoInputDevicesListViewItem)

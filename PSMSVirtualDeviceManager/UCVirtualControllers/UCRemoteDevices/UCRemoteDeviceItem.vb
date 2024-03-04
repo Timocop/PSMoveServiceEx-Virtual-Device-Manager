@@ -26,6 +26,9 @@ Public Class UCRemoteDeviceItem
 
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
+    Private g_iStatusDeviceResponseMS As Long = 0
+    Private g_iStatusPipeFps As Integer = 0
+    Private g_bHasStatusError As Boolean = False
     Private g_mLastDeviceResponse As New Stopwatch
 
     Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
@@ -149,8 +152,85 @@ Public Class UCRemoteDeviceItem
                 g_mLastDeviceResponse.Restart()
             End If
 
+            g_iStatusDeviceResponseMS = g_mLastDeviceResponse.ElapsedMilliseconds
+            g_iStatusPipeFps = iFpssPipeCounter
+
             If (Me.Visible) Then
-                If (g_mLastDeviceResponse.ElapsedMilliseconds > MAX_DEVICE_TIMEOUT) Then
+                TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", iFpsPacketCounter, iFpsOrientationCounter, iFpssPipeCounter)
+            End If
+
+            SyncLock _ThreadLock
+                g_iFpsPacketCounter = 0
+                g_iFpsOrientationCounter = 0
+                g_mClassIO.m_FpsPipeCounter = 0
+            End SyncLock
+        Catch ex As Exception
+        End Try
+
+        TimerFPS.Start()
+    End Sub
+
+
+    Private Sub Timer_Status_Tick(sender As Object, e As EventArgs) Handles Timer_Status.Tick
+        Timer_Status.Stop()
+
+        Try
+            Dim sTitle As String = ""
+            Dim sMessage As String = ""
+            Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
+
+            While True
+                ' Check if data
+                If (g_iStatusDeviceResponseMS > MAX_DEVICE_TIMEOUT) Then
+                    sTitle = "Remote device is not responding"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("This device is not sending any sensor data. It either lost connection, encountered an error or is currently in calibration mode.")
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                ' Check if index valid
+                If (g_mClassIO IsNot Nothing AndAlso g_mClassIO.m_Index < 0) Then
+                    sTitle = "Remote device is disabled"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("The controller id has not been set.")
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                ' Check if connected
+                If (g_iStatusPipeFps < 1) Then
+                    sTitle = "Remote device is not connected to PSMoveServiceEx"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("The remote device is currently not connected. Please select a controller id that has external orientation enabled using the 'OrientationExternal' filter or PSMoveServiceEx is not running.")
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                Exit While
+            End While
+
+            g_bHasStatusError = (iStatusType > -1)
+
+            If (Me.Visible) Then
+                If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
+                    Label_StatusTitle.Text = sTitle
+                    Label_StatusMessage.Text = sMessage
+                End If
+
+                If (g_bHasStatusError) Then
                     If (Not Panel_Status.Visible) Then
                         Panel_Status.Visible = True
 
@@ -167,20 +247,18 @@ Public Class UCRemoteDeviceItem
                         End If
                     End If
                 End If
-
-                TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", iFpsPacketCounter, iFpsOrientationCounter, iFpssPipeCounter)
             End If
-
-            SyncLock _ThreadLock
-                g_iFpsPacketCounter = 0
-                g_iFpsOrientationCounter = 0
-                g_mClassIO.m_FpsPipeCounter = 0
-            End SyncLock
         Catch ex As Exception
         End Try
 
-        TimerFPS.Start()
+        Timer_Status.Start()
     End Sub
+
+    ReadOnly Property m_HasStatusError As Boolean
+        Get
+            Return g_bHasStatusError
+        End Get
+    End Property
 
     Private Sub OnTrackerRotation(mTracker As ClassTracker, iX As Single, iY As Single, iZ As Single, iW As Single)
         If (mTracker.m_Name <> m_TrackerName) Then

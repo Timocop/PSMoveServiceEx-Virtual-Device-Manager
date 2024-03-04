@@ -4,7 +4,7 @@ Imports System.Runtime.InteropServices
 Public Class UCVirtualTrackerItem
     Const MAX_PSMOVESERIVCE_TRACKERS = 8
     Const PROBE_MULTIPLY = 64
-    Const PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION = 0.25F
+    Const PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION = 0.5F
 
     Const PS4CAM_EYE_STARTPADDING As Integer = 48
     Const PS4CAM_EYE_HEIGHT_PADDING As Integer = 8
@@ -18,8 +18,10 @@ Public Class UCVirtualTrackerItem
     Private g_iStatisLastTrackerId As Integer = -1
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
+    Private g_bHasStatusError As Boolean = False
     Private g_mStatusConfigDate As New Dictionary(Of String, Date)
     Private g_bStatusDistortionError As Boolean = False
+    Private g_bStatusDistortionAngle As Single = 0.0F
     Private g_bStatusDistortionWarning As Boolean = False
     Private g_bStatusBadPoseError As Boolean = False
     Private g_mStatusBadPoseQuatentions As New Dictionary(Of String, Quaternion)
@@ -250,231 +252,225 @@ Public Class UCVirtualTrackerItem
         Timer_Status.Stop()
 
         Try
-            If (Me.Visible) Then
-                Dim sTitle As String = ""
-                Dim sMessage As String = ""
-                Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
+            Dim sTitle As String = ""
+            Dim sMessage As String = ""
+            Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
 
-                While True
-                    Dim iPipeIndexes As Integer() = New Integer() {
-                        g_mClassCaptureLogic.m_PipePrimaryIndex,
-                        g_mClassCaptureLogic.m_PipeSecondaryIndex
-                    }
+            While True
+                Dim iPipeIndexes As Integer() = New Integer() {
+                    g_mClassCaptureLogic.m_PipePrimaryIndex,
+                    g_mClassCaptureLogic.m_PipeSecondaryIndex
+                }
 
-                    ' Check if disabled
-                    If (True) Then
-                        If (iPipeIndexes(0) < 0) Then
-                            sTitle = "Virtual Tracker is disabled"
+                ' Check if disabled
+                If (True) Then
+                    If (iPipeIndexes(0) < 0) Then
+                        sTitle = "Virtual Tracker is disabled"
 
-                            Dim sText As New Text.StringBuilder
-                            sText.AppendLine("The tracker id is not set or video input device is disabled.")
-                            sMessage = sText.ToString
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("The tracker id is not set or video input device is disabled.")
+                        sMessage = sText.ToString
 
-                            iStatusType = 2
-                            Exit While
+                        iStatusType = 2
+                        Exit While
+                    End If
+                End If
+
+                Dim bTrackerIdChanged As Boolean = False
+                If (g_iStatisLastTrackerId <> iPipeIndexes(0)) Then
+                    g_iStatisLastTrackerId = iPipeIndexes(0)
+                    bTrackerIdChanged = True
+                End If
+
+                ' Check configs
+                If (True) Then
+                    Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+                    If (Not String.IsNullOrEmpty(sConfigPath)) Then
+                        Dim sConfigFiles As New List(Of String)
+
+                        If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                            sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
+                            sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(1))))
+                        Else
+                            sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
                         End If
-                    End If
 
-                    Dim bTrackerIdChanged As Boolean = False
-                    If (g_iStatisLastTrackerId <> iPipeIndexes(0)) Then
-                        g_iStatisLastTrackerId = iPipeIndexes(0)
-                        bTrackerIdChanged = True
-                    End If
+                        Dim bConfigUpdated As Boolean = False
 
-                    ' Check configs
-                    If (True) Then
+                        For Each sConfigFile As String In sConfigFiles
+                            If (IO.File.Exists(sConfigFile)) Then
+                                Dim mLastWriteTime = IO.File.GetLastWriteTime(sConfigFile)
 
+                                ' Dont instantly access the file
+                                If (mLastWriteTime + New TimeSpan(0, 0, 1) > Date.Now) Then
+                                    Continue For
+                                End If
 
-                        Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
-                        If (Not String.IsNullOrEmpty(sConfigPath)) Then
-                            Dim sConfigFiles As New List(Of String)
-
-                            If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
-                                sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
-                                sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(1))))
-                            Else
-                                sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
-                            End If
-
-                            Dim bConfigUpdated As Boolean = False
-
-                            For Each sConfigFile As String In sConfigFiles
-                                If (IO.File.Exists(sConfigFile)) Then
-                                    Dim mLastWriteTime = IO.File.GetLastWriteTime(sConfigFile)
-
-                                    ' Dont instantly access the file
-                                    If (mLastWriteTime + New TimeSpan(0, 0, 1) > Date.Now) Then
-                                        Continue For
-                                    End If
-
-                                    ' Only check if the file changed since last time 
-                                    If (Not bTrackerIdChanged) Then
-                                        If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
-                                            If (mLastWriteTime <= g_mStatusConfigDate(sConfigFile.ToLowerInvariant)) Then
-                                                Continue For
-                                            End If
+                                ' Only check if the file changed since last time 
+                                If (Not bTrackerIdChanged) Then
+                                    If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
+                                        If (mLastWriteTime <= g_mStatusConfigDate(sConfigFile.ToLowerInvariant)) Then
+                                            Continue For
                                         End If
                                     End If
+                                End If
 
-                                    g_mStatusConfigDate(sConfigFile.ToLowerInvariant) = mLastWriteTime
-                                    bConfigUpdated = True
+                                g_mStatusConfigDate(sConfigFile.ToLowerInvariant) = mLastWriteTime
+                                bConfigUpdated = True
 
-                                    ' Get camera calibrated pose
-                                    If (True) Then
-                                        Dim mConfigPose As New ClassSerivceConst.ClassCameraPose.STRUC_CAMERA_POSE_ITEM
-                                        mConfigPose.LoadFromConfig(sConfigFile)
-                                        g_mStatusBadPoseQuatentions(sConfigFile.ToLowerInvariant) = mConfigPose.mOrientation
-                                    End If
+                                ' Get camera calibrated pose
+                                If (True) Then
+                                    Dim mConfigPose As New ClassSerivceConst.ClassCameraPose.STRUC_CAMERA_POSE_ITEM
+                                    mConfigPose.LoadFromConfig(sConfigFile)
+                                    g_mStatusBadPoseQuatentions(sConfigFile.ToLowerInvariant) = mConfigPose.mOrientation
+                                End If
 
-                                    ' Check camera distortion values
-                                    If (True) Then
-                                        Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
-                                        mConfigCameraDistortion.LoadFromConfig(sConfigFile)
+                                ' Check camera distortion values
+                                If (True) Then
+                                    Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
+                                    mConfigCameraDistortion.LoadFromConfig(sConfigFile)
 
-                                        ' The PS4 Cam requires precomputed distortion.
-                                        Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
-                                        If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
-                                            If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, mConstCameraDistortion)) Then
-                                                Dim bCorrectDistort As Boolean = (
-                                                    CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
-                                                    CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
-                                                    CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
-                                                    CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
+                                    ' The PS4 Cam requires precomputed distortion.
+                                    Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
+                                    If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                                        If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, mConstCameraDistortion)) Then
+                                            Dim bCorrectDistort As Boolean = (
+                                                CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
+                                                CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
 
-                                                If (Not bCorrectDistort) Then
-                                                    g_bStatusDistortionError = True
-                                                Else
-                                                    g_bStatusDistortionError = False
-                                                End If
+                                            If (Not bCorrectDistort) Then
+                                                g_bStatusDistortionError = True
                                             Else
                                                 g_bStatusDistortionError = False
                                             End If
                                         Else
-                                            ' Check for general cameras if they have been calibrated or not
-                                            If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE, mConstCameraDistortion)) Then
-                                                Dim bCorrectDistort As Boolean = (
-                                                    CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
-                                                    CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
-                                                    CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
-                                                    CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
+                                            g_bStatusDistortionError = False
+                                        End If
+                                    Else
+                                        ' Check for general cameras if they have been calibrated or not
+                                        If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE, mConstCameraDistortion)) Then
+                                            Dim bCorrectDistort As Boolean = (
+                                                CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
+                                                CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
+                                                CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
+                                                CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
 
-                                                If (bCorrectDistort) Then
-                                                    g_bStatusDistortionWarning = True
-                                                Else
-                                                    g_bStatusDistortionWarning = False
-                                                End If
+                                            If (bCorrectDistort) Then
+                                                g_bStatusDistortionWarning = True
                                             Else
                                                 g_bStatusDistortionWarning = False
                                             End If
-                                        End If
-                                    End If
-                                End If
-                            Next
-
-                            ' Check for bad PS4 cam pose calibration
-                            If (True) Then
-                                If (bConfigUpdated) Then
-                                    If (g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso sConfigFiles.Count = 2) Then
-                                        If (g_mStatusBadPoseQuatentions.ContainsKey(sConfigFiles(0).ToLowerInvariant) AndAlso g_mStatusBadPoseQuatentions.ContainsKey(sConfigFiles(1).ToLowerInvariant)) Then
-                                            Dim mPose1 = g_mStatusBadPoseQuatentions(sConfigFiles(0).ToLowerInvariant)
-                                            Dim mPose2 = g_mStatusBadPoseQuatentions(sConfigFiles(1).ToLowerInvariant)
-
-                                            Dim iAngleDiff = ClassQuaternionTools.CalculateAngleDegreesDifference(mPose1, mPose2)
-
-                                            If (iAngleDiff > PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION OrElse
-                                                mPose1 = Quaternion.Identity OrElse
-                                                mPose2 = Quaternion.Identity) Then
-                                                g_bStatusBadPoseError = True
-                                            Else
-                                                g_bStatusBadPoseError = False
-                                            End If
                                         Else
-                                            g_bStatusBadPoseError = False
+                                            g_bStatusDistortionWarning = False
                                         End If
                                     End If
                                 End If
                             End If
-                        End If
+                        Next
 
-                        If (g_bStatusDistortionError) Then
-                            sTitle = "Incorrect distortion values"
+                        ' Check for bad PS4 cam pose calibration
+                        If (True) Then
+                            If (bConfigUpdated) Then
+                                If (g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso sConfigFiles.Count = 2) Then
+                                    If (g_mStatusBadPoseQuatentions.ContainsKey(sConfigFiles(0).ToLowerInvariant) AndAlso g_mStatusBadPoseQuatentions.ContainsKey(sConfigFiles(1).ToLowerInvariant)) Then
+                                        Dim mPose1 = g_mStatusBadPoseQuatentions(sConfigFiles(0).ToLowerInvariant)
+                                        Dim mPose2 = g_mStatusBadPoseQuatentions(sConfigFiles(1).ToLowerInvariant)
 
-                            Dim sText As New Text.StringBuilder
-                            sText.AppendLine("The current distortion values for this virtual tracker are incorrect. Distortion preset 'PlayStation 4 Stereo Camera' is required!")
-                            sMessage = sText.ToString
+                                        Dim iAngleDiff = ClassQuaternionTools.CalculateAngleDegreesDifference(mPose1, mPose2)
 
-                            iStatusType = 2
-                            Exit While
-                        End If
-                    End If
-
-                    ' Check if connected to PSMS-EX
-                    If (True) Then
-                        If (Not g_mClassCaptureLogic.m_PipeConnected) Then
-                            sTitle = "Virtual Tracker not connected"
-
-                            Dim sText As New Text.StringBuilder
-                            sText.AppendLine("Unable to connect to the virtual tracker in PSMoveServiceEx that corresponds to the tracker id.")
-                            sMessage = sText.ToString
-
-                            iStatusType = 2
-                            Exit While
-                        End If
-                    End If
-
-                    If (True) Then
-                        If (g_bStatusDistortionWarning) Then
-                            sTitle = "Uncalibrated distortion values"
-
-                            Dim sText As New Text.StringBuilder
-                            sText.AppendLine("The current distortion values for this virtual tracker are uncalibrated and will cause tracking issues. Please calibrate tracker distortion!")
-                            sMessage = sText.ToString
-
-                            iStatusType = 2
-                            Exit While
+                                        If (iAngleDiff > PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION OrElse
+                                            (mPose1 = Quaternion.Identity OrElse mPose2 = Quaternion.Identity)) Then
+                                            g_bStatusDistortionAngle = iAngleDiff
+                                            g_bStatusBadPoseError = True
+                                        Else
+                                            g_bStatusBadPoseError = False
+                                        End If
+                                    Else
+                                        g_bStatusBadPoseError = False
+                                    End If
+                                End If
+                            End If
                         End If
                     End If
 
-                    If (True) Then
-                        If (g_bStatusBadPoseError) Then
-                            sTitle = "Bad pose calibration"
+                    If (g_bStatusDistortionError) Then
+                        sTitle = "Incorrect distortion values"
 
-                            Dim sText As New Text.StringBuilder
-                            sText.AppendLine("The calibrated pose angle difference between the virtual trackers are too big. Please re-calibrate pose!")
-                            sMessage = sText.ToString
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("The current distortion values for this virtual tracker are incorrect. Distortion preset 'PlayStation 4 Stereo Camera' is required!")
+                        sMessage = sText.ToString
 
-                            iStatusType = 2
-                            Exit While
-                        End If
+                        iStatusType = 2
+                        Exit While
                     End If
+                End If
 
-                    Exit While
-                End While
+                ' Check if connected to PSMS-EX
+                If (True) Then
+                    If (Not g_mClassCaptureLogic.m_PipeConnected) Then
+                        sTitle = "Virtual tracker not connected to PSMoveServiceEx"
 
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("Unable to connect to the virtual tracker in PSMoveServiceEx that corresponds to the tracker id.")
+                        sMessage = sText.ToString
+
+                        iStatusType = 2
+                        Exit While
+                    End If
+                End If
+
+                If (True) Then
+                    If (g_bStatusDistortionWarning) Then
+                        sTitle = "Uncalibrated distortion values"
+
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("The current distortion values for this virtual tracker are uncalibrated and will cause tracking issues. Please calibrate tracker distortion!")
+                        sMessage = sText.ToString
+
+                        iStatusType = 2
+                        Exit While
+                    End If
+                End If
+
+                If (True) Then
+                    If (g_bStatusBadPoseError) Then
+                        sTitle = "Bad pose calibration"
+
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendFormat(
+                            "The calibrated pose angle difference between the virtual trackers are too big (Angle: {0}). Please re-calibrate pose!",
+                            g_bStatusDistortionAngle.ToString("F2", Globalization.CultureInfo.InvariantCulture)).AppendLine()
+                        sMessage = sText.ToString
+
+                        iStatusType = 2
+                        Exit While
+                    End If
+                End If
+
+                Exit While
+            End While
+
+            g_bHasStatusError = (iStatusType > -1)
+
+            If (Me.Visible) Then
                 If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
                     Label_StatusTitle.Text = sTitle
                     Label_StatusMessage.Text = sMessage
                 End If
 
-                If (iStatusType < 0) Then
-                    If (Panel_Status.Visible) Then
-                        Panel_Status.Visible = False
-
-                        If (Me.Height <> g_iStatusHideHeight) Then
-                            Me.Height = g_iStatusHideHeight
-                        End If
-                    End If
-                Else
+                If (g_bHasStatusError) Then
                     If (Not Panel_Status.Visible) Then
                         Panel_Status.Visible = True
 
@@ -482,13 +478,29 @@ Public Class UCVirtualTrackerItem
                             Me.Height = g_iStatusShowHeight
                         End If
                     End If
+                Else
+                    If (Panel_Status.Visible) Then
+                        Panel_Status.Visible = False
+
+                        If (Me.Height <> g_iStatusHideHeight) Then
+                            Me.Height = g_iStatusHideHeight
+                        End If
+                    End If
                 End If
+
             End If
         Catch ex As Exception
         End Try
 
         Timer_Status.Start()
     End Sub
+
+    ReadOnly Property m_HasStatusError As Boolean
+        Get
+            Return g_bHasStatusError
+        End Get
+    End Property
+
 
     Private Sub StatusThread()
         While True

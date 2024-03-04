@@ -55,14 +55,19 @@ Partial Class UCControllerAttachmentsItem
         Me.CheckBox_JointOnly = New System.Windows.Forms.CheckBox()
         Me.TextBox_TrackerName = New System.Windows.Forms.TextBox()
         Me.LinkLabel_EditName = New System.Windows.Forms.LinkLabel()
-        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
-        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
-        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
+        Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.Label_StatusMessage = New System.Windows.Forms.Label()
+        Me.Label_StatusTitle = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
-        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
-        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
-        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig8 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_JointYawCorrection.SuspendLayout()
@@ -81,6 +86,8 @@ Partial Class UCControllerAttachmentsItem
         Me.NumericUpDown_ControllerOffsetY.SuspendLayout()
         CType(Me.NumericUpDown_ControllerOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_ControllerOffsetX.SuspendLayout()
+        Me.Panel_Status.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ComboBox_ControllerID
@@ -113,7 +120,7 @@ Partial Class UCControllerAttachmentsItem
         '
         Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 271)
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 325)
         Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(120, 23)
@@ -363,7 +370,7 @@ Partial Class UCControllerAttachmentsItem
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 276)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 330)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -376,7 +383,7 @@ Partial Class UCControllerAttachmentsItem
         Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_JointOnly.AutoSize = True
         Me.CheckBox_JointOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 274)
+        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 328)
         Me.CheckBox_JointOnly.Name = "CheckBox_JointOnly"
         Me.CheckBox_JointOnly.Size = New System.Drawing.Size(115, 18)
         Me.CheckBox_JointOnly.TabIndex = 33
@@ -412,53 +419,59 @@ Partial Class UCControllerAttachmentsItem
         Me.LinkLabel_EditName.TabStop = True
         Me.LinkLabel_EditName.Text = "Edit Name"
         '
-        'UcNumericUpDownBig1
+        'Timer_Status
         '
-        Me.UcNumericUpDownBig1.AutoSize = True
-        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(75, 0)
-        Me.UcNumericUpDownBig1.m_bDockOnControl = True
-        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetX
-        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig1.m_ResetVisible = True
-        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
-        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig1.TabIndex = 36
+        Me.Timer_Status.Enabled = True
+        Me.Timer_Status.Interval = 2500
         '
-        'UcNumericUpDownBig2
+        'Panel_Status
         '
-        Me.UcNumericUpDownBig2.AutoSize = True
-        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(75, 0)
-        Me.UcNumericUpDownBig2.m_bDockOnControl = True
-        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetY
-        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig2.m_ResetVisible = True
-        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
-        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig2.TabIndex = 36
+        Me.Panel_Status.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel_Status.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel_Status.Controls.Add(Me.PictureBox1)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 267)
+        Me.Panel_Status.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
+        Me.Panel_Status.Name = "Panel_Status"
+        Me.Panel_Status.Size = New System.Drawing.Size(585, 54)
+        Me.Panel_Status.TabIndex = 36
         '
-        'UcNumericUpDownBig3
+        'Label_StatusMessage
         '
-        Me.UcNumericUpDownBig3.AutoSize = True
-        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(75, 0)
-        Me.UcNumericUpDownBig3.m_bDockOnControl = True
-        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetZ
-        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig3.m_ResetVisible = True
-        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
-        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig3.TabIndex = 36
+        Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label_StatusMessage.Location = New System.Drawing.Point(25, 19)
+        Me.Label_StatusMessage.Name = "Label_StatusMessage"
+        Me.Label_StatusMessage.Size = New System.Drawing.Size(555, 32)
+        Me.Label_StatusMessage.TabIndex = 1
+        Me.Label_StatusMessage.Text = "Message"
+        '
+        'Label_StatusTitle
+        '
+        Me.Label_StatusTitle.AutoSize = True
+        Me.Label_StatusTitle.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_StatusTitle.Location = New System.Drawing.Point(25, 3)
+        Me.Label_StatusTitle.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label_StatusTitle.Name = "Label_StatusTitle"
+        Me.Label_StatusTitle.Size = New System.Drawing.Size(29, 13)
+        Me.Label_StatusTitle.TabIndex = 0
+        Me.Label_StatusTitle.Text = "Title"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.m_HighQuality = False
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 2
+        Me.PictureBox1.TabStop = False
         '
         'UcNumericUpDownBig4
         '
@@ -476,53 +489,53 @@ Partial Class UCControllerAttachmentsItem
         Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
         Me.UcNumericUpDownBig4.TabIndex = 36
         '
-        'UcNumericUpDownBig5
+        'UcNumericUpDownBig3
         '
-        Me.UcNumericUpDownBig5.AutoSize = True
-        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(75, 0)
-        Me.UcNumericUpDownBig5.m_bDockOnControl = True
-        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_JointOffsetX
-        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig5.m_ResetVisible = True
-        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
-        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig5.TabIndex = 36
+        Me.UcNumericUpDownBig3.AutoSize = True
+        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig3.m_bDockOnControl = True
+        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetZ
+        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig3.m_ResetVisible = True
+        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
+        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig3.TabIndex = 36
         '
-        'UcNumericUpDownBig6
+        'UcNumericUpDownBig2
         '
-        Me.UcNumericUpDownBig6.AutoSize = True
-        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(75, 0)
-        Me.UcNumericUpDownBig6.m_bDockOnControl = True
-        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_JointOffsetY
-        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig6.m_ResetVisible = True
-        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
-        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig6.TabIndex = 36
+        Me.UcNumericUpDownBig2.AutoSize = True
+        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig2.m_bDockOnControl = True
+        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetY
+        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig2.m_ResetVisible = True
+        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
+        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig2.TabIndex = 36
         '
-        'UcNumericUpDownBig7
+        'UcNumericUpDownBig1
         '
-        Me.UcNumericUpDownBig7.AutoSize = True
-        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(75, 0)
-        Me.UcNumericUpDownBig7.m_bDockOnControl = True
-        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_JointOffsetZ
-        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig7.m_ResetVisible = True
-        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
-        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig7.TabIndex = 36
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_ControllerOffsetX
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 36
         '
         'UcNumericUpDownBig8
         '
@@ -540,12 +553,61 @@ Partial Class UCControllerAttachmentsItem
         Me.UcNumericUpDownBig8.Size = New System.Drawing.Size(66, 22)
         Me.UcNumericUpDownBig8.TabIndex = 36
         '
+        'UcNumericUpDownBig7
+        '
+        Me.UcNumericUpDownBig7.AutoSize = True
+        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig7.m_bDockOnControl = True
+        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_JointOffsetZ
+        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig7.m_ResetVisible = True
+        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
+        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig7.TabIndex = 36
+        '
+        'UcNumericUpDownBig6
+        '
+        Me.UcNumericUpDownBig6.AutoSize = True
+        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig6.m_bDockOnControl = True
+        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_JointOffsetY
+        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig6.m_ResetVisible = True
+        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
+        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig6.TabIndex = 36
+        '
+        'UcNumericUpDownBig5
+        '
+        Me.UcNumericUpDownBig5.AutoSize = True
+        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(75, 0)
+        Me.UcNumericUpDownBig5.m_bDockOnControl = True
+        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_JointOffsetX
+        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig5.m_ResetVisible = True
+        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
+        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig5.TabIndex = 36
+        '
         'UCControllerAttachmentsItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.Panel_Status)
         Me.Controls.Add(Me.TextBox_TrackerName)
         Me.Controls.Add(Me.LinkLabel_EditName)
         Me.Controls.Add(Me.CheckBox_JointOnly)
@@ -559,7 +621,7 @@ Partial Class UCControllerAttachmentsItem
         Me.Controls.Add(Me.ComboBox_ControllerID)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCControllerAttachmentsItem"
-        Me.Size = New System.Drawing.Size(617, 310)
+        Me.Size = New System.Drawing.Size(617, 364)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.NumericUpDown_JointYawCorrection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -588,6 +650,9 @@ Partial Class UCControllerAttachmentsItem
         CType(Me.NumericUpDown_ControllerOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_ControllerOffsetX.ResumeLayout(False)
         Me.NumericUpDown_ControllerOffsetX.PerformLayout()
+        Me.Panel_Status.ResumeLayout(False)
+        Me.Panel_Status.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -628,4 +693,9 @@ Partial Class UCControllerAttachmentsItem
     Friend WithEvents UcNumericUpDownBig3 As UCNumericUpDownBig
     Friend WithEvents UcNumericUpDownBig2 As UCNumericUpDownBig
     Friend WithEvents UcNumericUpDownBig1 As UCNumericUpDownBig
+    Friend WithEvents Timer_Status As Timer
+    Friend WithEvents Panel_Status As Panel
+    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
+    Friend WithEvents Label_StatusMessage As Label
+    Friend WithEvents Label_StatusTitle As Label
 End Class

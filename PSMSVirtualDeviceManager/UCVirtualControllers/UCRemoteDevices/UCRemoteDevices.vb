@@ -53,7 +53,7 @@ Public Class UCRemoteDevices
             Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = sTrackerName
 
             'Is there any error?
-            If (g_UCRemoteDeviceItem.Panel_Status.Visible) Then
+            If (g_UCRemoteDeviceItem.m_HasStatusError) Then
                 Me.BackColor = Color.FromArgb(255, 192, 192)
             Else
                 Me.BackColor = Color.FromArgb(255, 255, 255)
@@ -287,9 +287,7 @@ Public Class UCRemoteDevices
         Timer_SocketCheck.Stop()
 
         Try
-            If (Me.Visible) Then
-                Button_StartSocket.Enabled = (Not g_mClassStrackerSocket.IsListening)
-            End If
+            Button_StartSocket.Enabled = (Not g_mClassStrackerSocket.IsListening)
         Catch ex As Exception
         End Try
 

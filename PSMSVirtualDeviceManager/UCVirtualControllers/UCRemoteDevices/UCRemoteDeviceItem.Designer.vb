@@ -37,14 +37,15 @@ Partial Class UCRemoteDeviceItem
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.NumericUpDown_YawOffset = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TextBox_Gyro = New System.Windows.Forms.TextBox()
         Me.Panel_Status = New System.Windows.Forms.Panel()
         Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label_StatusMessage = New System.Windows.Forms.Label()
+        Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Button_SaveSettings = New System.Windows.Forms.Button()
         Me.Button_Recenter = New System.Windows.Forms.Button()
-        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_YawOffset.SuspendLayout()
         Me.Panel_Status.SuspendLayout()
@@ -164,12 +165,29 @@ Partial Class UCRemoteDeviceItem
         '
         'NumericUpDown_YawOffset
         '
+        Me.NumericUpDown_YawOffset.Controls.Add(Me.UcNumericUpDownBig1)
         Me.NumericUpDown_YawOffset.Location = New System.Drawing.Point(108, 151)
         Me.NumericUpDown_YawOffset.Maximum = New Decimal(New Integer() {99999999, 0, 0, 0})
         Me.NumericUpDown_YawOffset.Minimum = New Decimal(New Integer() {99999999, 0, 0, -2147483648})
         Me.NumericUpDown_YawOffset.Name = "NumericUpDown_YawOffset"
         Me.NumericUpDown_YawOffset.Size = New System.Drawing.Size(150, 22)
         Me.NumericUpDown_YawOffset.TabIndex = 13
+        '
+        'UcNumericUpDownBig1
+        '
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(84, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_YawOffset
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 19
         '
         'TextBox_Gyro
         '
@@ -189,17 +207,18 @@ Partial Class UCRemoteDeviceItem
         '
         'Panel_Status
         '
-        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_Status.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_Status.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_Status.Controls.Add(Me.PictureBox1)
-        Me.Panel_Status.Controls.Add(Me.Label4)
-        Me.Panel_Status.Controls.Add(Me.Label3)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
+        Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
         Me.Panel_Status.Location = New System.Drawing.Point(16, 195)
         Me.Panel_Status.Margin = New System.Windows.Forms.Padding(3, 6, 3, 16)
         Me.Panel_Status.Name = "Panel_Status"
-        Me.Panel_Status.Size = New System.Drawing.Size(585, 42)
+        Me.Panel_Status.Size = New System.Drawing.Size(585, 69)
         Me.Panel_Status.TabIndex = 18
         '
         'PictureBox1
@@ -213,26 +232,27 @@ Partial Class UCRemoteDeviceItem
         Me.PictureBox1.TabIndex = 2
         Me.PictureBox1.TabStop = False
         '
-        'Label4
+        'Label_StatusMessage
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(25, 19)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(549, 13)
-        Me.Label4.TabIndex = 1
-        Me.Label4.Text = "This device is not sending any IMU data. It either encountered an error or is cur" &
-    "rently in calibration mode."
+        Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label_StatusMessage.Location = New System.Drawing.Point(25, 19)
+        Me.Label_StatusMessage.Name = "Label_StatusMessage"
+        Me.Label_StatusMessage.Size = New System.Drawing.Size(555, 48)
+        Me.Label_StatusMessage.TabIndex = 1
+        Me.Label_StatusMessage.Text = "Message"
         '
-        'Label3
+        'Label_StatusTitle
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(25, 3)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(3)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(140, 13)
-        Me.Label3.TabIndex = 0
-        Me.Label3.Text = "Device is not responding!"
+        Me.Label_StatusTitle.AutoSize = True
+        Me.Label_StatusTitle.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_StatusTitle.Location = New System.Drawing.Point(25, 3)
+        Me.Label_StatusTitle.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label_StatusTitle.Name = "Label_StatusTitle"
+        Me.Label_StatusTitle.Size = New System.Drawing.Size(29, 13)
+        Me.Label_StatusTitle.TabIndex = 0
+        Me.Label_StatusTitle.Text = "Title"
         '
         'Button_SaveSettings
         '
@@ -262,21 +282,10 @@ Partial Class UCRemoteDeviceItem
         Me.Button_Recenter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Recenter.UseVisualStyleBackColor = True
         '
-        'UcNumericUpDownBig1
+        'Timer_Status
         '
-        Me.UcNumericUpDownBig1.AutoSize = True
-        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(84, 0)
-        Me.UcNumericUpDownBig1.m_bDockOnControl = True
-        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_YawOffset
-        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig1.m_ResetVisible = True
-        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
-        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig1.TabIndex = 19
+        Me.Timer_Status.Enabled = True
+        Me.Timer_Status.Interval = 2500
         '
         'UCRemoteDeviceItem
         '
@@ -299,7 +308,7 @@ Partial Class UCRemoteDeviceItem
         Me.Controls.Add(Me.Button_Recenter)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCRemoteDeviceItem"
-        Me.Size = New System.Drawing.Size(617, 251)
+        Me.Size = New System.Drawing.Size(617, 278)
         CType(Me.NumericUpDown_YawOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_YawOffset.ResumeLayout(False)
         Me.NumericUpDown_YawOffset.PerformLayout()
@@ -326,7 +335,8 @@ Partial Class UCRemoteDeviceItem
     Friend WithEvents TextBox_Gyro As TextBox
     Friend WithEvents Panel_Status As Panel
     Friend WithEvents PictureBox1 As ClassPictureBoxQuality
-    Friend WithEvents Label4 As Label
-    Friend WithEvents Label3 As Label
+    Friend WithEvents Label_StatusMessage As Label
+    Friend WithEvents Label_StatusTitle As Label
     Friend WithEvents UcNumericUpDownBig1 As UCNumericUpDownBig
+    Friend WithEvents Timer_Status As Timer
 End Class

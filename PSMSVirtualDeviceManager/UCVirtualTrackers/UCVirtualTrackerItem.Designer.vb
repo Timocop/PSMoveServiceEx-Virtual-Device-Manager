@@ -623,7 +623,7 @@ Partial Class UCVirtualTrackerItem
         'Timer_Status
         '
         Me.Timer_Status.Enabled = True
-        Me.Timer_Status.Interval = 1000
+        Me.Timer_Status.Interval = 2500
         '
         'UCVirtualTrackerItem
         '

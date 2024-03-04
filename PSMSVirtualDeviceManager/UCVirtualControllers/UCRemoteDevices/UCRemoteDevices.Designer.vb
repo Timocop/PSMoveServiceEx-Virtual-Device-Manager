@@ -56,10 +56,10 @@ Partial Class UCRemoteDevices
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_RemoteDevices.AutoScroll = True
-        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(16, 305)
+        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(16, 266)
         Me.Panel_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_RemoteDevices.Name = "Panel_RemoteDevices"
-        Me.Panel_RemoteDevices.Size = New System.Drawing.Size(768, 279)
+        Me.Panel_RemoteDevices.Size = New System.Drawing.Size(768, 318)
         Me.Panel_RemoteDevices.TabIndex = 1
         '
         'Button_StartSocket
@@ -158,7 +158,7 @@ Partial Class UCRemoteDevices
         Me.ListView_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_RemoteDevices.MultiSelect = False
         Me.ListView_RemoteDevices.Name = "ListView_RemoteDevices"
-        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(768, 150)
+        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(768, 111)
         Me.ListView_RemoteDevices.TabIndex = 20
         Me.ListView_RemoteDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_RemoteDevices.View = System.Windows.Forms.View.Details

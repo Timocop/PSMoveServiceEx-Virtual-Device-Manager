@@ -14,6 +14,11 @@ Public Class UCControllerAttachmentsItem
     Private g_bIgnoreEvents As Boolean = False
     Private g_bIgnoreUnsaved As Boolean = False
 
+    Private g_iStatusHideHeight As Integer = 0
+    Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
+    Private g_iStatusPipeFps As Integer = 0
+    Private g_bHasStatusError As Boolean = False
+
     Public Sub New(iControllerID As Integer, _UCControllerAttachments As UCControllerAttachments)
         g_mUCControllerAttachments = _UCControllerAttachments
 
@@ -64,6 +69,12 @@ Public Class UCControllerAttachmentsItem
         SetUnsavedState(False)
 
         CreateControl()
+
+        ' Hide timeout error
+        Panel_Status.Visible = False
+        g_iStatusHideHeight = (Me.Height - Panel_Status.Height)
+        g_iStatusShowHeight = Me.Height
+        Me.Height = g_iStatusHideHeight
     End Sub
 
     Property m_Nickname As String
@@ -302,6 +313,8 @@ Public Class UCControllerAttachmentsItem
         Try
             Dim iFpsPipeCounter As Integer = g_mClassIO.m_FpsPipeCounter
 
+            g_iStatusPipeFps = iFpsPipeCounter
+
             If (Me.Visible) Then
                 TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", iFpsPipeCounter)
             End If
@@ -312,6 +325,83 @@ Public Class UCControllerAttachmentsItem
 
         TimerFPS.Start()
     End Sub
+
+    Private Sub Timer_Status_Tick(sender As Object, e As EventArgs) Handles Timer_Status.Tick
+        Timer_Status.Stop()
+
+        Try
+            Dim sTitle As String = ""
+            Dim sMessage As String = ""
+            Dim iStatusType As Integer = -1 ' -1 Hide, 0 Info, 1 Warn, 2 Error
+
+            While True
+                ' Check if index valid
+                If (g_mClassIO IsNot Nothing AndAlso g_mClassIO.m_Index < 0) Then
+                    sTitle = "Controller attachment is disabled"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("The controller id has not been set.")
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                ' Check if connected
+                If (g_iStatusPipeFps < 1) Then
+                    sTitle = "Controller attachment is not connected to PSMoveServiceEx"
+
+                    Dim sText As New Text.StringBuilder
+                    sText.AppendLine("The controller attachment is currently not connected. Please select a controller id that has attachments enabled using the 'PositionExternalAttachment' filter or PSMoveServiceEx is not running.")
+
+                    sMessage = sText.ToString
+                    iStatusType = 2
+
+                    Exit While
+                End If
+
+                Exit While
+            End While
+
+            g_bHasStatusError = (iStatusType > -1)
+
+            If (Me.Visible) Then
+                If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
+                    Label_StatusTitle.Text = sTitle
+                    Label_StatusMessage.Text = sMessage
+                End If
+
+                If (g_bHasStatusError) Then
+                    If (Not Panel_Status.Visible) Then
+                        Panel_Status.Visible = True
+
+                        If (Me.Height <> g_iStatusShowHeight) Then
+                            Me.Height = g_iStatusShowHeight
+                        End If
+                    End If
+                Else
+                    If (Panel_Status.Visible) Then
+                        Panel_Status.Visible = False
+
+                        If (Me.Height <> g_iStatusHideHeight) Then
+                            Me.Height = g_iStatusHideHeight
+                        End If
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+        End Try
+
+        Timer_Status.Start()
+    End Sub
+
+    ReadOnly Property m_HasStatusError As Boolean
+        Get
+            Return g_bHasStatusError
+        End Get
+    End Property
+
 
     Private Sub CleanUp()
         If (g_mClassIO IsNot Nothing) Then
