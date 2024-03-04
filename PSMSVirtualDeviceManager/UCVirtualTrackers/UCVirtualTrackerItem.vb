@@ -838,6 +838,7 @@ Public Class UCVirtualTrackerItem
             ComboBox_CameraLensDistortion.SelectedIndex = 0
             MessageBox.Show("Tracker distortion preset has been applied! PSMoveServiceEx needs to be restarted in order for changes to take effect!", "PSMoveServiceEx restart required", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
+            ComboBox_CameraLensDistortion.SelectedIndex = 0
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
