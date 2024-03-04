@@ -33,7 +33,7 @@ Partial Public Class UCVirtualMotionTracker
             Try
                 AddVmtTracker(mAutostartControllerIndexes(i), False)
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try
         Next
 
@@ -41,7 +41,7 @@ Partial Public Class UCVirtualMotionTracker
             Try
                 AddVmtTracker(mAutostartHmdIndexes(i), True)
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try
         Next
     End Sub
@@ -136,7 +136,7 @@ Partial Public Class UCVirtualMotionTracker
         Try
             AddVmtTracker(-1, False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -144,7 +144,7 @@ Partial Public Class UCVirtualMotionTracker
         Try
             AddVmtTracker(-1, True)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -185,6 +185,7 @@ Partial Public Class UCVirtualMotionTracker
                 Next
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_VMTTrackers.Start()

@@ -503,7 +503,7 @@ Public Class ClassServiceClient
 
                                 End SyncLock
                             Catch ex As Exception
-                                'Whatever
+                                ClassAdvancedExceptionLogging.WriteToLog(ex)
                             End Try
                         Next
 
@@ -660,7 +660,7 @@ Public Class ClassServiceClient
 
                                 End SyncLock
                             Catch ex As Exception
-                                'Whatever
+                                ClassAdvancedExceptionLogging.WriteToLog(ex)
                             End Try
                         Next
                     Catch ex As Threading.ThreadAbortException
@@ -670,6 +670,7 @@ Public Class ClassServiceClient
 
                     Catch ex As Exception
                         bExceptionSleep = True
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
                     End Try
 
                     ' Thread.Abort will not trigger inside a Try/Catch
@@ -700,6 +701,7 @@ Public Class ClassServiceClient
         Catch ex As Threading.ThreadAbortException
             Throw
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 

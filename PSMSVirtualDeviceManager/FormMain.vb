@@ -49,7 +49,7 @@
         Try
             ProcessCommandline(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         If (Not IsSingleInstance()) Then
@@ -65,6 +65,14 @@
 #If DEBUG Then
         Me.Text &= " (DEBUGGING)"
 #End If
+
+        Try
+            ClassAdvancedExceptionLogging.m_EnableLogging = True
+            ClassAdvancedExceptionLogging.m_AutoFlushToFile = True
+        Catch ex As Exception
+            ' Do nothing
+        End Try
+
         While True
             Try
                 If (g_mPSMoveServiceCAPI IsNot Nothing) Then
@@ -77,6 +85,8 @@
                 g_mPSMoveServiceCAPI.StartProcessing()
                 Exit While
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
+
                 Dim sMsg As New Text.StringBuilder
                 sMsg.AppendLine("Unable to create the PSMoveServiceEx client with the following error:")
                 sMsg.AppendLine(ex.Message)
@@ -98,6 +108,8 @@
                 g_mClassCameraFirmwareWatchdog.UploadFirmware()
                 Exit While
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
+
                 Dim sMsg As New Text.StringBuilder
                 sMsg.AppendLine("Unable to create camera firmware watchdog with the following error:")
                 sMsg.AppendLine(ex.Message)
@@ -175,7 +187,7 @@
         Try
             ProcessCommandline(True)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -205,7 +217,7 @@
                                                                Me.Close()
                                                            End Sub)
                             Catch ex As Exception
-                                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                             End Try
                         End Sub)
                     g_mAutoCloseThread.IsBackground = True
@@ -319,8 +331,10 @@
 
 
                     Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
+
                         If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                         End If
 
                         Environment.Exit(-1)
@@ -393,8 +407,10 @@
                         End If
 
                     Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
+
                         If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                         End If
 
                         Environment.Exit(-1)
@@ -428,8 +444,10 @@
                         End If
 
                     Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
+
                         If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                         End If
 
                         Environment.Exit(-1)
@@ -473,8 +491,10 @@
                         mDriverInstaller.ScanDevices()
 
                     Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
+
                         If (sCmdLines.Contains(COMMANDLINE_VERBOSE)) Then
-                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                         End If
 
                         Environment.Exit(-1)
@@ -600,7 +620,7 @@
         Catch ex As Threading.ThreadAbortException
             Throw
         Catch ex As Exception
-
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -764,16 +784,16 @@
 
             End Try
         Catch ex As Exception
-
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        Try
-            If (e.CloseReason <> CloseReason.UserClosing) Then
-                Return
-            End If
+        If (e.CloseReason <> CloseReason.UserClosing) Then
+            Return
+        End If
 
+        Try
             Dim mProcesses As New List(Of Process)
             mProcesses.AddRange(Process.GetProcessesByName("PSMoveService"))
             mProcesses.AddRange(Process.GetProcessesByName("PSMoveConfigTool"))
@@ -814,7 +834,13 @@
                 End If
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+
+        Try
+            ClassAdvancedExceptionLogging.m_AutoFlushToFile = False
+        Catch ex As Exception
+            ' Do nothing
         End Try
     End Sub
 
@@ -833,6 +859,7 @@
         Try
             Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -840,6 +867,7 @@
         Try
             Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -847,6 +875,7 @@
         Try
             Process.Start("steam://rungameid/250820")
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -896,7 +925,13 @@
                 g_mPSMoveServiceCAPI = Nothing
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+
+        Try
+            ClassAdvancedExceptionLogging.m_AutoFlushToFile = False
+        Catch ex As Exception
+            ' DO nothing
         End Try
     End Sub
 
@@ -983,7 +1018,7 @@
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
         End Sub
 

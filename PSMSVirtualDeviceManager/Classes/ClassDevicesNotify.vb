@@ -128,6 +128,7 @@ Public Class ClassDevicesNotify
                 End Select
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         MyBase.WndProc(m)

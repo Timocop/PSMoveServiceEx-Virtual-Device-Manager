@@ -23,7 +23,7 @@
 
             LoadSettings()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -46,7 +46,7 @@
                 MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 

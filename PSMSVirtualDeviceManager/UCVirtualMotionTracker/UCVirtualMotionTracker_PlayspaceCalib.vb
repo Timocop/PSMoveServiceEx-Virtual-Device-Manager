@@ -300,7 +300,7 @@
             Throw
         Catch ex As Exception
             ClassUtils.AsyncInvoke(Me, Sub() SetPlayspaceCalibrationStatus(iStep, -1))
-            MessageBox.Show(ex.Message, "Playspace Calibration Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
             ClassUtils.AsyncInvoke(Me, Sub() Button_PlaySpaceManualCalib.Enabled = True)
         End Try

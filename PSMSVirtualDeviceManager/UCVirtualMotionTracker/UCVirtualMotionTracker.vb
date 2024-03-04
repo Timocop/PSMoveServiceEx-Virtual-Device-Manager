@@ -448,19 +448,19 @@ Public Class UCVirtualMotionTracker
                 g_bIgnoreEvents = False
             End Try
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         Try
             AutostartLoad()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         Try
             RefreshOverrides()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -1773,7 +1773,7 @@ Public Class UCVirtualMotionTracker
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 ClassPrecisionSleep.Sleep(g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs)
@@ -1883,7 +1883,7 @@ Public Class UCVirtualMotionTracker
                         End SyncLock
                 End Select
             Catch ex As Exception
-                ' Something sussy is going on...
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
         End Sub
 

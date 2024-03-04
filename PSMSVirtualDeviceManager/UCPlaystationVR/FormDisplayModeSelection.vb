@@ -27,7 +27,7 @@ Public Class FormDisplayModeSelection
                 RadioButton_ModeVirtual.Checked = True
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 

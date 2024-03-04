@@ -229,7 +229,7 @@ Public Class UCVirtualTrackerItem
             CheckBox_DeviceSupersampling_CheckedChanged(Nothing, Nothing)
             ComboBox_CameraResolution_SelectedIndexChanged(Nothing, Nothing)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
             g_bIgnoreUnsaved = False
         End Try
@@ -490,6 +490,7 @@ Public Class UCVirtualTrackerItem
 
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_Status.Start()
@@ -839,7 +840,7 @@ Public Class UCVirtualTrackerItem
             MessageBox.Show("Tracker distortion preset has been applied! PSMoveServiceEx needs to be restarted in order for changes to take effect!", "PSMoveServiceEx restart required", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             ComboBox_CameraLensDistortion.SelectedIndex = 0
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -851,7 +852,7 @@ Public Class UCVirtualTrackerItem
             g_mClassCaptureLogic.StartInitThread(True)
             SetRequireRestart(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
 
             Me.Dispose()
         End Try
@@ -862,7 +863,7 @@ Public Class UCVirtualTrackerItem
             g_mClassCaptureLogic.g_mClassConfig.SaveConfig()
             SetUnsavedState(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -1854,7 +1855,7 @@ Public Class UCVirtualTrackerItem
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "Unable to initalize video device", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
 
                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.Dispose())
             Finally
@@ -1864,6 +1865,7 @@ Public Class UCVirtualTrackerItem
                         mCapture = Nothing
                     End If
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             End Try
         End Sub
@@ -1996,6 +1998,7 @@ Public Class UCVirtualTrackerItem
                             Throw
                         Catch ex As Exception
                             bExceptionSleep = True
+                            ClassAdvancedExceptionLogging.WriteToLog(ex)
 
                             If (mFramePrint.ElapsedMilliseconds > 1000) Then
                                 ClassUtils.AsyncInvoke(g_mUCVirtualTrackerItem, Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
@@ -2015,6 +2018,7 @@ Public Class UCVirtualTrackerItem
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
         End Sub
 
@@ -2094,6 +2098,7 @@ Public Class UCVirtualTrackerItem
                         Throw
                     Catch ex As Exception
                         bExceptionSleep = True
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
 
                         SyncLock g_mThreadLock
                             g_bPipeConnected(iPipeID) = False
@@ -2119,6 +2124,7 @@ Public Class UCVirtualTrackerItem
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
         End Sub
 
@@ -2139,6 +2145,7 @@ Public Class UCVirtualTrackerItem
                     Throw
                 Catch ex As Exception
                     bExceptionSleep = True
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 ' Thread.Abort will not trigger inside a Try/Catch

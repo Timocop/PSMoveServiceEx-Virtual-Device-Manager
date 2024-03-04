@@ -43,6 +43,7 @@
     </NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -57,6 +58,7 @@
     </NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -171,6 +173,7 @@
     <Compile Include="Classes\ClassDevicesNotify.vb" />
     <Compile Include="Classes\ClassMonitor.vb" />
     <Compile Include="Classes\ClassVideoInputDevices.vb" />
+    <Compile Include="Classes\Service\ClassAdvancedExceptionLogging.vb" />
     <Compile Include="Classes\Tools\ClassIni.vb" />
     <Compile Include="Classes\ClassLibusbDriver.vb" />
     <Compile Include="Classes\Tools\ClassListViewEx.vb">

@@ -48,14 +48,14 @@
             g_ClassUsbNotify = New ClassDevicesNotify()
             g_ClassUsbNotify.RegisterDeviceChange(ClassDevicesNotify.ENUM_DEVICE_TYPE.GUID_DEVINTERFACE_USB_DEVICE)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         Try
             g_ClassDisplayNotify = New ClassDevicesNotify()
             g_ClassDisplayNotify.RegisterDeviceChange(ClassDevicesNotify.ENUM_DEVICE_TYPE.GUID_DEVINTERFACE_MONITOR)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         AddHandler g_ClassUsbNotify.OnDeviceConnectionChanged, AddressOf OnDeviceChanged
@@ -282,6 +282,7 @@
                     Throw
                 Catch ex As Exception
                     iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.GENERAL_ISSUE
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
 
@@ -302,6 +303,7 @@
                     Throw
                 Catch ex As Exception
                     iUsbStatus = ENUM_DEVICE_USB_STATUS.GENERAL_ISSUE
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 ' Check Display configuration.
@@ -372,6 +374,7 @@
                     Throw
                 Catch ex As Exception
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 ClassUtils.AsyncInvoke(Me, Sub() SetPlaystationVRStatus(iHdmiStatus, iUsbStatus, iDisplayStatus))
@@ -379,7 +382,7 @@
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             For i = 0 To 10

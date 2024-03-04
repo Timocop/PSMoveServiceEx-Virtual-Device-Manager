@@ -32,7 +32,7 @@
                 Next
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         Try
@@ -40,7 +40,7 @@
 
             LoadSettings()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -218,7 +218,7 @@
                 MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -275,7 +275,7 @@
                 ComboBox_Devices.SelectedIndex = Math.Max(0, Math.Min(ComboBox_Devices.Items.Count - 1, iPrevIndex))
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -288,7 +288,7 @@
 
             AddNewDevice(mSelectedItem)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Unable to add to list", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -323,7 +323,7 @@
 
             AddNewDevice(mNewDeviceInfo)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Unable to add to list", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -379,6 +379,7 @@
                 Next
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_VideoInputDevices.Start()
@@ -415,7 +416,7 @@
             ListView_VideoDevices.Items.Remove(mAttachmentItem)
             mAttachmentItem.Dispose()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 

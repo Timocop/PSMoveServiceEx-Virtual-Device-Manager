@@ -314,7 +314,7 @@ Public Class UCVirtualMotionTrackerItem
                                                End Sub)
             End Select
         Catch ex As Exception
-            ' Something sussy is going on...
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -356,6 +356,7 @@ Public Class UCVirtualMotionTrackerItem
             End If
         Catch ex As Exception
             ComboBox_SteamTrackerRole.SelectedIndex = 0
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -374,7 +375,7 @@ Public Class UCVirtualMotionTrackerItem
 
             SetUnsavedState(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -460,7 +461,7 @@ Public Class UCVirtualMotionTrackerItem
                 mConfig.SaveConfig()
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -479,6 +480,7 @@ Public Class UCVirtualMotionTrackerItem
 
             g_mClassIO.m_FpsOscCounter = 0
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         TimerFPS.Start()
@@ -517,6 +519,7 @@ Public Class UCVirtualMotionTrackerItem
                 End If
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         TimerPose.Start()
@@ -685,6 +688,7 @@ Public Class UCVirtualMotionTrackerItem
                 End If
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_Status.Start()
@@ -1822,6 +1826,7 @@ Public Class UCVirtualMotionTrackerItem
                     Throw
                 Catch ex As Exception
                     bExceptionSleep = True
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 ' Thread.Abort will not trigger inside a Try/Catch

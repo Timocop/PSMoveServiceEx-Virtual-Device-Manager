@@ -26,13 +26,7 @@ Partial Public Class UCVirtualMotionTracker
 
             g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
         Catch ex As Exception
-            With New Text.StringBuilder
-                .AppendLine("Unable to create OSC Server!")
-                .AppendLine()
-                .AppendLine(ex.Message)
-
-                MessageBox.Show(.ToString)
-            End With
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -46,6 +40,7 @@ Partial Public Class UCVirtualMotionTracker
         Try
             Process.Start("steam://rungameid/250820")
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -114,7 +109,7 @@ Partial Public Class UCVirtualMotionTracker
 
             MessageBox.Show("Driver has been successfully registered!", "Driver added to SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -136,7 +131,7 @@ Partial Public Class UCVirtualMotionTracker
 
             MessageBox.Show("Driver has been successfully unregistered!", "Driver removed from SteamVR", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -146,7 +141,7 @@ Partial Public Class UCVirtualMotionTracker
                 mSettings.ShowDialog(Me)
             End Using
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -215,7 +210,7 @@ Partial Public Class UCVirtualMotionTracker
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             Threading.Thread.Sleep(1000)
@@ -303,7 +298,7 @@ Partial Public Class UCVirtualMotionTracker
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             Threading.Thread.Sleep(500)

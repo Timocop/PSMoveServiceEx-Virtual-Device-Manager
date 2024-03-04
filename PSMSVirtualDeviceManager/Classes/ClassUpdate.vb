@@ -73,6 +73,7 @@ Public Class ClassUpdate
                     bSuccess = True
                     Exit For
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 
@@ -94,6 +95,7 @@ Public Class ClassUpdate
                     pProcess.Kill()
                     pProcess.WaitForExit()
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 #End If
@@ -194,6 +196,7 @@ Public Class ClassUpdate
                         sLocationInfo = mItem.sLocationInfo
                     End Using
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 
@@ -239,6 +242,7 @@ Public Class ClassUpdate
                         sLocationInfo = mItem.sLocationInfo
                     End Using
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 
@@ -327,6 +331,7 @@ Public Class ClassUpdate
                     bSuccess = True
                     Exit For
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 
@@ -348,6 +353,7 @@ Public Class ClassUpdate
                     pProcess.Kill()
                     pProcess.WaitForExit()
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 #End If
@@ -448,6 +454,7 @@ Public Class ClassUpdate
                         sLocationInfo = mItem.sLocationInfo
                     End Using
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 
@@ -492,6 +499,7 @@ Public Class ClassUpdate
                         sLocationInfo = mItem.sLocationInfo
                     End Using
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
             Next
 

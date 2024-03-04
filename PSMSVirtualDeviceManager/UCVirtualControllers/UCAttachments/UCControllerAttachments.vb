@@ -151,7 +151,7 @@ Public Class UCControllerAttachments
             Try
                 AddAttachment(mAutostartIndexes(i))
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try
         Next
     End Sub
@@ -209,7 +209,7 @@ Public Class UCControllerAttachments
         Try
             AddAttachment(-1)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -272,6 +272,7 @@ Public Class UCControllerAttachments
                 Next
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_Attachment.Start()

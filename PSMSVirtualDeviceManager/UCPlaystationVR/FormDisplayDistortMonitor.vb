@@ -118,6 +118,7 @@
                                                                 Catch ex As Threading.ThreadAbortException
                                                                     Throw
                                                                 Catch ex As Exception
+                                                                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                                                                 End Try
                                                             End Sub)
 
@@ -132,6 +133,7 @@
 
                                                     Throw
                                                 Catch ex As Exception
+                                                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                                                 Finally
                                                     For Each mThread As Threading.Thread In mDistortThreads
                                                         mThread.Join()
@@ -174,6 +176,7 @@
 
                         Throw
                     Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
                     Finally
                         For Each mThread As Threading.Thread In mPatternThreads
                             mThread.Join()
@@ -188,6 +191,7 @@
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 Threading.Thread.Sleep(100)

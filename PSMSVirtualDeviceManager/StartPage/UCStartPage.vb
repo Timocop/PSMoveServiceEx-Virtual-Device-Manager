@@ -76,7 +76,7 @@ Public Class UCStartPage
 
             End Try
         Catch ex As Exception
-
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -129,6 +129,7 @@ Public Class UCStartPage
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             Try
@@ -145,6 +146,7 @@ Public Class UCStartPage
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             Threading.Thread.Sleep(1000)
@@ -394,7 +396,7 @@ Public Class UCStartPage
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             Threading.Thread.Sleep(500)
@@ -439,7 +441,7 @@ Public Class UCStartPage
         Try
             RunService(True)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -451,7 +453,7 @@ Public Class UCStartPage
         Try
             RunService(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -459,7 +461,7 @@ Public Class UCStartPage
         Try
             RunServiceConfigTool(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -554,7 +556,7 @@ Public Class UCStartPage
 
             Timer_RestartPsms.Enabled = True
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
     End Sub
@@ -567,7 +569,7 @@ Public Class UCStartPage
 
         g_mFormRestart.ProgressBar1.Value = Math.Min(g_mFormRestart.ProgressBar1.Value + 25, g_mFormRestart.ProgressBar1.Maximum)
 
-        If (g_mFormRestart.ProgressBar1.Value <g_mFormRestart.ProgressBar1.Maximum) Then
+        If (g_mFormRestart.ProgressBar1.Value < g_mFormRestart.ProgressBar1.Maximum) Then
             Return
         End If
 
@@ -579,7 +581,7 @@ Public Class UCStartPage
         Try
             RunService(True)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -595,7 +597,7 @@ Public Class UCStartPage
         Try
             StopService()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -623,7 +625,7 @@ Public Class UCStartPage
         Try
             RunServiceConfigTool(True)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -643,7 +645,7 @@ Public Class UCStartPage
                 mProcess.WaitForExit(10000)
             Next
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -719,7 +721,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -805,7 +807,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -892,7 +894,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -948,7 +950,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -1042,7 +1044,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -1098,7 +1100,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -1154,7 +1156,7 @@ Public Class UCStartPage
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
                     ClassUtils.AsyncInvoke(Me, Sub()
                                                    If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
@@ -1196,7 +1198,7 @@ Public Class UCStartPage
 
             MessageBox.Show("All config have been removed!", "Factory Reset", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -1229,7 +1231,22 @@ Public Class UCStartPage
                 mProcess.Start()
             End Using
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
+
+    Private Sub LinkLabel_ShowAppLogs_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ShowAppLogs.LinkClicked
+        Try
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = "notepad.exe"
+                mProcess.StartInfo.Arguments = String.Format("""{0}""", ClassAdvancedExceptionLogging.g_sLogName)
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.System))
+                mProcess.StartInfo.UseShellExecute = False
+
+                mProcess.Start()
+            End Using
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -1246,7 +1263,7 @@ Public Class UCStartPage
                 mConfig.SaveConfig()
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -1254,6 +1271,7 @@ Public Class UCStartPage
         Try
             Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -1261,6 +1279,7 @@ Public Class UCStartPage
         Try
             Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -1303,7 +1322,7 @@ Public Class UCStartPage
                                                           Catch ex As Threading.ThreadAbortException
                                                               Throw
                                                           Catch ex As Exception
-                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                              ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                                                           Finally
                                                               ClassUtils.AsyncInvoke(Me, Sub()
                                                                                              If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
@@ -1343,7 +1362,7 @@ Public Class UCStartPage
                                                           Catch ex As Threading.ThreadAbortException
                                                               Throw
                                                           Catch ex As Exception
-                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                              ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                                                           Finally
                                                               ClassUtils.AsyncInvoke(Me, Sub()
                                                                                              If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
@@ -1401,7 +1420,7 @@ Public Class UCStartPage
                                                           Catch ex As Threading.ThreadAbortException
                                                               Throw
                                                           Catch ex As Exception
-                                                              MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                              ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                                                           Finally
                                                               ClassUtils.AsyncInvoke(Me, Sub()
                                                                                              If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
@@ -1426,7 +1445,7 @@ Public Class UCStartPage
                 Panel_PsmsxInstall.Visible = False
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 

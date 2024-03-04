@@ -71,6 +71,7 @@ Public Class ClassOSC
         Catch ex As ThreadAbortException
             Throw
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -88,6 +89,7 @@ Public Class ClassOSC
             Catch ex As ThreadAbortException
                 Throw
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
             Return

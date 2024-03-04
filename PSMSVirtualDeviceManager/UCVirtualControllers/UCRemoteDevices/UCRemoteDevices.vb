@@ -183,6 +183,7 @@ Public Class UCRemoteDevices
         Catch ex As Threading.ThreadAbortException
             Throw
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
 
@@ -236,7 +237,7 @@ Public Class UCRemoteDevices
 
             SetStatus(True)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -289,6 +290,7 @@ Public Class UCRemoteDevices
         Try
             Button_StartSocket.Enabled = (Not g_mClassStrackerSocket.IsListening)
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_SocketCheck.Start()
@@ -308,7 +310,7 @@ Public Class UCRemoteDevices
 
             m_SocketPort = iPort
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -655,6 +657,7 @@ Public Class UCRemoteDevices
                         Throw
                     Catch ex As SocketException
                     Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
                     End Try
 
                     If (g_mLastKeepup.ElapsedMilliseconds > 500) Then
@@ -672,6 +675,7 @@ Public Class UCRemoteDevices
                                     Throw
                                 Catch ex As SocketException
                                 Catch ex As Exception
+                                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                                 End Try
                             Next
                         End SyncLock
@@ -680,6 +684,7 @@ Public Class UCRemoteDevices
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
         End Sub
 
@@ -973,6 +978,7 @@ Public Class UCRemoteDevices
                 Next
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_RemoteDevices.Start()

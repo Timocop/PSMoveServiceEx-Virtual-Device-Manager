@@ -124,7 +124,7 @@ Public Class UCControllerAttachmentsItem
 
             SetUnsavedState(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -287,7 +287,7 @@ Public Class UCControllerAttachmentsItem
             g_mClassConfig.SaveConfig()
             SetUnsavedState(False)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -321,6 +321,7 @@ Public Class UCControllerAttachmentsItem
 
             g_mClassIO.m_FpsPipeCounter = 0
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         TimerFPS.Start()
@@ -391,6 +392,7 @@ Public Class UCControllerAttachmentsItem
                 End If
             End If
         Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
         Timer_Status.Start()
@@ -647,6 +649,7 @@ Public Class UCControllerAttachmentsItem
                     Throw
                 Catch ex As Exception
                     bExceptionSleep = True
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
                 ' Thread.Abort will not trigger inside a Try/Catch
