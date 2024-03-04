@@ -6,6 +6,7 @@
     Private Shared g_mLoggingTime As New TimeSpan(0, 1, 0)
     Private Shared g_bHasLoadedFromFile As Boolean = False
     Private Shared g_mExceptionQueue As New Queue(Of ClassIni.STRUC_INI_CONTENT())
+    Private Shared g_mExceptionCounter As New Dictionary(Of Integer, Integer)
     Private Shared g_bEnableLogging As Boolean = False
 
     Public Shared Sub LoadPoolFromFile()
@@ -55,16 +56,28 @@
                 Return
             End If
 
-            Dim sChecksum As Integer = ClassUtils.CreateChecksum(sFullException, 0)
+            Dim iChecksum As Integer = ClassUtils.CreateChecksum(sFullException, 0)
             Dim sMessageSingle As String = sMessage.Replace(vbCrLf, "\n").Replace(vbLf, "\n")
             Dim sStackTraceSingle As String = sStackTrace.Replace(vbCrLf, "\n").Replace(vbLf, "\n")
-
-            Dim mList As New List(Of ClassIni.STRUC_INI_CONTENT)
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(sChecksum), "Message", sMessageSingle))
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(sChecksum), "StackTrace", sStackTraceSingle))
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(sChecksum), "Date", Date.Now.ToString(Globalization.CultureInfo.InvariantCulture)))
+            Dim iExceptionCount As Integer = 0
 
             SyncLock g_mThreadLock
+                If (g_mExceptionCounter.ContainsKey(iChecksum)) Then
+                    iExceptionCount = g_mExceptionCounter(iChecksum)
+                End If
+            End SyncLock
+
+            iExceptionCount += 1
+
+            Dim mList As New List(Of ClassIni.STRUC_INI_CONTENT)
+            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Message", sMessageSingle))
+            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "StackTrace", sStackTraceSingle))
+            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Date", Date.Now.ToString(Globalization.CultureInfo.InvariantCulture)))
+            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Count", CStr(iExceptionCount)))
+            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Version", Application.ProductVersion))
+
+            SyncLock g_mThreadLock
+                g_mExceptionCounter(iChecksum) = iExceptionCount
                 g_mExceptionQueue.Enqueue(mList.ToArray)
             End SyncLock
         Catch what As Exception
