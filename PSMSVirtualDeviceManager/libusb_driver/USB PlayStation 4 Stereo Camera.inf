@@ -1,0 +1,159 @@
+; Copyright (c) 2012 Microsoft
+;
+; Module Name: USB_Boot.inf
+; Description: Installation inf for USB Boot device.
+;
+; THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+; KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+; PURPOSE.
+
+[Strings]
+DeviceName = "USB PlayStation 4 Stereo Camera"
+VendorName = "OmniVision Technologies, Inc."
+SourceName = "USB PlayStation 4 Stereo Camera Install Disk"
+DeviceID   = "VID_05A9&PID_0580"
+DeviceGUID = "{932F61A9-6CF0-6FAF-8861-DA0D8B023C5F}"
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = "USBDevice"
+ClassGuid   = {88bae032-5a81-49f0-bc3d-a4ff138216d6}
+Provider    = "libwdi"
+CatalogFile = USB PlayStation 4 Stereo Camera.cat
+DriverVer   = 06/02/2012, 6.1.7600.16385
+
+[ClassInstall32]
+Addreg = WUsb_Class_AddReg
+
+[WUsb_Class_AddReg]
+HKR,,,0,"Universal Serial Bus devices"
+HKR,,Icon,,-20
+
+; ============== Device section =================
+[Manufacturer]
+%VendorName% = WUsb_DeviceGroup,NTX86,NTAMD64
+
+[WUsb_DeviceGroup.NTX86]
+%DeviceName% = WUsb_Device, USB\%DeviceID%
+
+[WUsb_DeviceGroup.NTAMD64]
+%DeviceName% = WUsb_Device, USB\%DeviceID%
+
+[WUsb_Device.NT.HW]
+AddReg=WUsb_Device_AddReg
+
+[WUsb_Device.NTAMD64.HW]
+AddReg=WUsb_Device_AddReg
+
+[WUsb_Device_AddReg]
+HKR,,DeviceInterfaceGUIDs,0x10000,%DeviceGUID%
+
+; ======= Power policy settings (default) ========
+
+; Indicates whether the device is capable of being powered down when idle 
+; (Selective Suspend). 
+HKR,,DeviceIdleEnabled,0x00010001,1
+
+; Sets the default value of the AUTO_SUSPEND power policy setting. This 
+; registry key is used to enable or disable selective suspend when a 
+; handle is not open to the device. 
+HKR,,DefaultIdleState,0x00010001,0
+
+; Sets the default state of the SUSPEND_DELAY power policy setting. The 
+; value indicates the amount of time in milliseconds to wait before 
+; determining that a device is idle. 
+HKR,,DefaultIdleTimeout,0x00010001,5000
+
+; When set to a nonzero value, it suspends the device even if it does not 
+; support RemoteWake. 
+HKR,,DeviceIdleIgnoreWakeEnable,0x00010001,0
+
+; Indicates whether a check box should be enabled in the device Properties 
+; page that allows a user to override the idle defaults. 
+HKR,,UserSetDeviceIdleEnabled,0x00010001,0
+
+; Indicates whether the device should be allowed to wake the system from a
+; low power state. 
+HKR,,SystemWakeEnabled,0x00010001,0
+
+; ========== Driver/Service setup ==============
+[WUsb_Device.NT.Services]
+Include    = winusb.inf
+AddService = WinUSB,0x00000002,WUsb_AddService
+
+[WUsb_Device.NTAMD64.Services]
+Include    = winusb.inf
+AddService = WinUSB,0x00000002,WUsb_AddService
+
+[WUsb_AddService]
+DisplayName   = "WinUSB - Kernel Driver 02/22/2013 6.1.7600.16385"
+ServiceType   = 1
+StartType     = 3
+ErrorControl  = 1
+ServiceBinary = %12%\WinUSB.sys
+
+; =========== Sources/Destinations ==============
+[SourceDisksNames]
+1 = %SourceName%
+
+[SourceDisksFiles.x86]
+WinUSBCoInstaller2.dll  = 1,x86
+WdfCoInstaller01009.dll = 1,x86
+libusbK_x86.dll = 1,x86
+
+[SourceDisksFiles.amd64]
+WinUSBCoInstaller2.dll  = 1,amd64
+WdfCoInstaller01009.dll = 1,amd64
+libusbK.dll     = 1,amd64
+libusbK_x86.dll = 1,x86
+
+[DestinationDirs]
+CoInstallers_CopyFiles = 11
+libusb_files_dll       = 10,system32
+libusb_files_dll_wow64 = 10,syswow64
+libusb_files_dll_x86   = 10,system32
+
+[libusb_files_dll]
+libusbK.dll
+
+[libusb_files_dll_x86]
+libusbK.dll, libusbK_x86.dll
+
+[libusb_files_dll_wow64]
+libusbK.dll, libusbK_x86.dll
+
+[WUsb_Device.NT]
+Include = winusb.inf
+Needs   = WINUSB.NT
+CopyFiles = libusb_files_dll_x86
+
+[WUsb_Device.NTAMD64]
+Include = winusb.inf
+Needs   = WINUSB.NT
+CopyFiles = libusb_files_dll, libusb_files_dll_wow64
+
+; ========= WDF/CoInstaller section =============
+[WUsb_Device.NT.CoInstallers]
+AddReg    = CoInstallers_AddReg
+CopyFiles = CoInstallers_CopyFiles
+
+[WUsb_Device.NTAMD64.CoInstallers]
+AddReg    = CoInstallers_AddReg
+CopyFiles = CoInstallers_CopyFiles
+
+[CoInstallers_CopyFiles]
+WinUSBCoInstaller2.dll
+WdfCoInstaller01009.dll
+
+[CoInstallers_AddReg]
+HKR,,CoInstallers32,0x00010000,"WdfCoInstaller01009.dll,WdfCoInstaller","WinUSBCoInstaller2.dll"
+
+[WUsb_Device.NT.Wdf]
+KmdfService = WINUSB, WUsb_wdfsect
+
+[WUsb_Device.NTAMD64.Wdf]
+KmdfService = WINUSB, WUsb_wdfsect
+
+[WUsb_wdfsect]
+KmdfLibraryVersion = 1.9

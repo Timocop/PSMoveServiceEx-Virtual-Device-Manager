@@ -474,12 +474,9 @@
 
                         ' Install drivers
                         If (True) Then
-                            mDriverInstaller.InstallPlaystation4CamDriver64()
-
-                            mDriverInstaller.ScanDevices()
-
-                            If (Not mDriverInstaller.VerifyPlaystation4CamDriver64()) Then
-                                Throw New ArgumentException(String.Format("Driver installation failed"))
+                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystation4CamDriver64()
+                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
                             End If
                         End If
 

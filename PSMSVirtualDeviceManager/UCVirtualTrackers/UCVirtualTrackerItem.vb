@@ -94,7 +94,7 @@ Public Class UCVirtualTrackerItem
         Label_FriendlyName.Text = mDeviceInfo.m_Name
 
         Dim mLibUsb As New ClassLibusbDriver
-        For Each mDevice In mLibUsb.DRV_PS4CAM_VIDEO_CONFIGS
+        For Each mDevice In mLibUsb.DRV_PS4CAM_KNOWN_CONFIGS
             Dim sHardwareId As String = String.Format("\USB#VID_{0}&PID_{1}", mDevice.VID, mDevice.PID)
 
             If (mDeviceInfo.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLower)) Then

@@ -4,7 +4,7 @@
     Private g_bInit As Boolean = False
 
     Public ReadOnly FIRM_PS4CAM_VIDEO As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera (Composite Device)", "05A9", "0580", "05A9", "058B")
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera", "05A9", "0580", "05A9", "058B")
     }
 
     Private g_ClassUsbNotify As ClassDevicesNotify = Nothing
@@ -83,7 +83,7 @@
         For Each mDevice In FIRM_PS4CAM_VIDEO
             Dim sHardwareId As String = String.Format("\USB#VID_{0}&PID_{1}", mDevice.VID, mDevice.PID)
 
-            If (sDeviceName.ToLowerInvariant.Contains(sHardwareId.ToLower)) Then
+            If (sDeviceName.ToLowerInvariant.Contains(sHardwareId.ToLowerInvariant)) Then
                 bFound = True
                 Exit For
             End If

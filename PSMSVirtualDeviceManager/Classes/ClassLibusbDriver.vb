@@ -46,12 +46,13 @@ Public Class ClassLibusbDriver
     Public Const DRV_PS4CAM_FIRMWARE_NAME As String = "FirmwareLoader.exe"
     Public Const DRV_PS4CAM_FIRMWARE_BIN_NAME As String = "firmware.bin"
 
-    Public ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera WinSUB (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME)
+    Public ReadOnly DRV_PS4CAM_WINUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.WINUSBK)
     }
-    Public ReadOnly DRV_PS4CAM_VIDEO_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
+    Public ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
     }
 
     Public ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
@@ -60,7 +61,7 @@ Public Class ClassLibusbDriver
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01", LIBUSB_SERVICE_NAME)
     }
     Public ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB)
     }
 
     Public ReadOnly DRV_PSVR_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
@@ -88,7 +89,8 @@ Public Class ClassLibusbDriver
         LIBUSB = 1
         LIBUSBK = 2
         USBSER = 3
-        CUSTOM = 4
+        WINUSBK = 4
+        CUSTOM = 5
     End Enum
 
     Enum ENUM_WDI_ERROR
@@ -221,6 +223,9 @@ Public Class ClassLibusbDriver
 
             sCmd.Add(String.Format("-t ""{0}""", CInt(iDriver)))
 
+            Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_WDI_ROOT_NAME)
+            sCmd.Add(String.Format("-e ""{0}.inf""", IO.Path.Combine(sRootFolder, sName)))
+
             Return String.Join(" ", sCmd.ToArray)
         End Function
 
@@ -229,27 +234,16 @@ Public Class ClassLibusbDriver
     Public Sub New()
     End Sub
 
-    Public Sub InstallPlaystation4CamDriver64()
-        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_PS4CAM_ROOT_NAME)
-        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_PS4CAM_INSTALLER_NAME)
-
-        Using mProcess As New Process
-            mProcess.StartInfo.FileName = sInstallerPath
-            mProcess.StartInfo.Arguments = ""
-            mProcess.StartInfo.WorkingDirectory = sRootFolder
-            mProcess.StartInfo.CreateNoWindow = False
-            mProcess.StartInfo.UseShellExecute = True
-            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal
-
-            If (Environment.OSVersion.Version.Major > 5) Then
-                mProcess.StartInfo.Verb = "runas"
+    Public Function InstallPlaystation4CamDriver64() As ENUM_WDI_ERROR
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_WINUSB_CONFIGS
+            Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
+            If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                Return iExitCode
             End If
+        Next
 
-            mProcess.Start()
-
-            mProcess.WaitForExit()
-        End Using
-    End Sub
+        Return ENUM_WDI_ERROR.WDI_SUCCESS
+    End Function
 
     Public Function InstallPlaystationEyeDriver64() As ENUM_WDI_ERROR
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_LIBUSB_CONFIGS
@@ -278,7 +272,7 @@ Public Class ClassLibusbDriver
 
         Dim sDevicesToRemove As New List(Of String)
 
-        For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
+        For Each mInfo In DRV_PS4CAM_WINUSB_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
                 If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
@@ -289,7 +283,7 @@ Public Class ClassLibusbDriver
             Next
         Next
 
-        For Each mInfo In DRV_PS4CAM_VIDEO_CONFIGS
+        For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
                 If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
@@ -367,7 +361,7 @@ Public Class ClassLibusbDriver
     Public Function VerifyPlaystation4CamDriver64() As Boolean
         Dim bDriversInstalled As Boolean = True
 
-        For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
+        For Each mInfo In DRV_PS4CAM_WINUSB_CONFIGS
             Dim bDeviceRegistered As Boolean = False
 
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
@@ -405,7 +399,7 @@ Public Class ClassLibusbDriver
     Public Function VerifyPlaystation4CamVideoDriver64() As Boolean
         Dim bDriversInstalled As Boolean = True
 
-        For Each mInfo In DRV_PS4CAM_VIDEO_CONFIGS
+        For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
             Dim bDeviceRegistered As Boolean = False
 
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
