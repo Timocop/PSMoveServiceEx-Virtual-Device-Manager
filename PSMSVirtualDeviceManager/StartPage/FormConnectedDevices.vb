@@ -345,10 +345,12 @@
 
             If (True) Then
                 Dim sText As New Text.StringBuilder
-                sText.AppendLine("Do you want to enable device:")
+                sText.AppendLine("Do you want to enable the following device?")
+                sText.AppendLine()
                 sText.AppendLine(mDevice.m_DeviceName)
+                sText.AppendLine(mDevice.m_Device.sDeviceID.ToUpperInvariant)
 
-                If (MessageBox.Show(sText.ToString, "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                If (MessageBox.Show(sText.ToString, "Enable Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                     Return
                 End If
             End If
@@ -381,10 +383,12 @@
 
             If (True) Then
                 Dim sText As New Text.StringBuilder
-                sText.AppendLine("Do you want to disable device:")
+                sText.AppendLine("Do you want to disable the following device?")
+                sText.AppendLine()
                 sText.AppendLine(mDevice.m_DeviceName)
+                sText.AppendLine(mDevice.m_Device.sDeviceID.ToUpperInvariant)
 
-                If (MessageBox.Show(sText.ToString, "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
+                If (MessageBox.Show(sText.ToString, "Disable Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                     Return
                 End If
             End If
@@ -417,8 +421,10 @@
 
             If (True) Then
                 Dim sText As New Text.StringBuilder
-                sText.AppendLine("Do you want to uninstall device:")
+                sText.AppendLine("Do you want to uninstall the following device?")
+                sText.AppendLine()
                 sText.AppendLine(mDevice.m_DeviceName)
+                sText.AppendLine(mDevice.m_Device.sDeviceID.ToUpperInvariant)
 
                 If (MessageBox.Show(sText.ToString, "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                     Return
@@ -431,11 +437,14 @@
             End If
 
             Dim sDeviceDriver As String = mDevice.m_Device.mProvider.sDriverInfPath
-            If (Not String.IsNullOrEmpty(sDeviceDriver) AndAlso MessageBox.Show("Do you want to remove the device driver?", "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
+            If (Not String.IsNullOrEmpty(sDeviceDriver) AndAlso sDeviceDriver.ToLowerInvariant.StartsWith("oem") AndAlso MessageBox.Show("Do you want to remove the device driver?", "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
                 If (mLibUSB.RemoveDriver(sDeviceDriver) <> 0) Then
                     Throw New ArgumentException("Unable to set device state.")
                 End If
             End If
+
+            ' Force update Plug and Play
+            mLibUSB.ScanDevices()
 
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
