@@ -205,6 +205,8 @@
     End Class
 
     Private Sub FormConnectedDevices_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Visible = True
+
         UpdateDevices()
     End Sub
 

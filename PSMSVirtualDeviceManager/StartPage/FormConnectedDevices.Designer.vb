@@ -25,6 +25,13 @@ Partial Class FormConnectedDevices
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormConnectedDevices))
         Me.TreeView_ConnectedDevices = New System.Windows.Forms.TreeView()
+        Me.ContextMenuStrip_Devices = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_DeviceRefresh = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripMenuItem_DeviceEnable = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem_DeviceDisable = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripMenuItem_DeviceUninstall = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImageList_Devices = New System.Windows.Forms.ImageList(Me.components)
         Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.ListView_DeviceInfo = New System.Windows.Forms.ListView()
@@ -32,18 +39,11 @@ Partial Class FormConnectedDevices
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.CheckBox_ShowDisconnectedDevices = New System.Windows.Forms.CheckBox()
-        Me.ContextMenuStrip_Devices = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolStripMenuItem_DeviceEnable = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_DeviceDisable = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_DeviceUninstall = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripMenuItem_DeviceRefresh = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ContextMenuStrip_Devices.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.ContextMenuStrip_Devices.SuspendLayout()
         Me.SuspendLayout()
         '
         'TreeView_ConnectedDevices
@@ -58,6 +58,50 @@ Partial Class FormConnectedDevices
         Me.TreeView_ConnectedDevices.SelectedImageIndex = 0
         Me.TreeView_ConnectedDevices.Size = New System.Drawing.Size(474, 490)
         Me.TreeView_ConnectedDevices.TabIndex = 0
+        '
+        'ContextMenuStrip_Devices
+        '
+        Me.ContextMenuStrip_Devices.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_DeviceRefresh, Me.ToolStripSeparator2, Me.ToolStripMenuItem_DeviceEnable, Me.ToolStripMenuItem_DeviceDisable, Me.ToolStripSeparator1, Me.ToolStripMenuItem_DeviceUninstall})
+        Me.ContextMenuStrip_Devices.Name = "ContextMenuStrip_Devices"
+        Me.ContextMenuStrip_Devices.Size = New System.Drawing.Size(179, 104)
+        '
+        'ToolStripMenuItem_DeviceRefresh
+        '
+        Me.ToolStripMenuItem_DeviceRefresh.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
+        Me.ToolStripMenuItem_DeviceRefresh.Name = "ToolStripMenuItem_DeviceRefresh"
+        Me.ToolStripMenuItem_DeviceRefresh.Size = New System.Drawing.Size(178, 22)
+        Me.ToolStripMenuItem_DeviceRefresh.Text = "Refresh Plug && Play"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(175, 6)
+        '
+        'ToolStripMenuItem_DeviceEnable
+        '
+        Me.ToolStripMenuItem_DeviceEnable.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.ToolStripMenuItem_DeviceEnable.Name = "ToolStripMenuItem_DeviceEnable"
+        Me.ToolStripMenuItem_DeviceEnable.Size = New System.Drawing.Size(178, 22)
+        Me.ToolStripMenuItem_DeviceEnable.Text = "Enable Device"
+        '
+        'ToolStripMenuItem_DeviceDisable
+        '
+        Me.ToolStripMenuItem_DeviceDisable.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Close_16x16_32
+        Me.ToolStripMenuItem_DeviceDisable.Name = "ToolStripMenuItem_DeviceDisable"
+        Me.ToolStripMenuItem_DeviceDisable.Size = New System.Drawing.Size(178, 22)
+        Me.ToolStripMenuItem_DeviceDisable.Text = "Disable Device"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(175, 6)
+        '
+        'ToolStripMenuItem_DeviceUninstall
+        '
+        Me.ToolStripMenuItem_DeviceUninstall.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.ToolStripMenuItem_DeviceUninstall.Name = "ToolStripMenuItem_DeviceUninstall"
+        Me.ToolStripMenuItem_DeviceUninstall.Size = New System.Drawing.Size(178, 22)
+        Me.ToolStripMenuItem_DeviceUninstall.Text = "Uninstall Device"
         '
         'ImageList_Devices
         '
@@ -103,6 +147,7 @@ Partial Class FormConnectedDevices
         Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
         Me.SplitContainer1.Location = New System.Drawing.Point(12, 12)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
@@ -128,50 +173,6 @@ Partial Class FormConnectedDevices
         Me.CheckBox_ShowDisconnectedDevices.Text = "Show disconnected devices"
         Me.CheckBox_ShowDisconnectedDevices.UseVisualStyleBackColor = True
         '
-        'ContextMenuStrip_Devices
-        '
-        Me.ContextMenuStrip_Devices.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_DeviceRefresh, Me.ToolStripSeparator2, Me.ToolStripMenuItem_DeviceEnable, Me.ToolStripMenuItem_DeviceDisable, Me.ToolStripSeparator1, Me.ToolStripMenuItem_DeviceUninstall})
-        Me.ContextMenuStrip_Devices.Name = "ContextMenuStrip_Devices"
-        Me.ContextMenuStrip_Devices.Size = New System.Drawing.Size(181, 126)
-        '
-        'ToolStripMenuItem_DeviceEnable
-        '
-        Me.ToolStripMenuItem_DeviceEnable.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.ToolStripMenuItem_DeviceEnable.Name = "ToolStripMenuItem_DeviceEnable"
-        Me.ToolStripMenuItem_DeviceEnable.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem_DeviceEnable.Text = "Enable Device"
-        '
-        'ToolStripMenuItem_DeviceDisable
-        '
-        Me.ToolStripMenuItem_DeviceDisable.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Close_16x16_32
-        Me.ToolStripMenuItem_DeviceDisable.Name = "ToolStripMenuItem_DeviceDisable"
-        Me.ToolStripMenuItem_DeviceDisable.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem_DeviceDisable.Text = "Disable Device"
-        '
-        'ToolStripMenuItem_DeviceUninstall
-        '
-        Me.ToolStripMenuItem_DeviceUninstall.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.ToolStripMenuItem_DeviceUninstall.Name = "ToolStripMenuItem_DeviceUninstall"
-        Me.ToolStripMenuItem_DeviceUninstall.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem_DeviceUninstall.Text = "Uninstall Device"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
-        '
-        'ToolStripMenuItem_DeviceRefresh
-        '
-        Me.ToolStripMenuItem_DeviceRefresh.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
-        Me.ToolStripMenuItem_DeviceRefresh.Name = "ToolStripMenuItem_DeviceRefresh"
-        Me.ToolStripMenuItem_DeviceRefresh.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem_DeviceRefresh.Text = "Refresh Plug && Play"
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(177, 6)
-        '
         'FormConnectedDevices
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -186,11 +187,11 @@ Partial Class FormConnectedDevices
         Me.Name = "FormConnectedDevices"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Device Manager"
+        Me.ContextMenuStrip_Devices.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
-        Me.ContextMenuStrip_Devices.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
