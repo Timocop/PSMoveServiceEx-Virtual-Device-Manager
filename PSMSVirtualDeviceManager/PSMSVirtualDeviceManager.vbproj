@@ -235,6 +235,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="StartPage\FormConnectedDevices.Designer.vb">
+      <DependentUpon>FormConnectedDevices.vb</DependentUpon>
+    </Compile>
+    <Compile Include="StartPage\FormConnectedDevices.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="StartPage\UCStartPage.Designer.vb">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </Compile>
@@ -381,6 +387,9 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="StartPage\FormConnectedDevices.resx">
+      <DependentUpon>FormConnectedDevices.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="StartPage\UCStartPage.resx">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </EmbeddedResource>
@@ -454,6 +463,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\bthci_201_16x16-32.png" />
+    <None Include="Resources\imageres_34_16x16-32.png" />
+    <None Include="Resources\Dsui_15001_16x16-32.png" />
     <None Include="Resources\369.png" />
     <None Include="Resources\EDID_PSVR1_DIRECT.bin" />
     <None Include="Resources\EDID_PSVR2_DIRECT.bin" />

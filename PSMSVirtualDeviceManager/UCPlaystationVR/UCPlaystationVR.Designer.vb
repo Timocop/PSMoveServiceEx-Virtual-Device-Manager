@@ -423,9 +423,9 @@ Partial Class UCPlaystationVR
         Me.Label7.ForeColor = System.Drawing.Color.Navy
         Me.Label7.Location = New System.Drawing.Point(102, 19)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(158, 21)
+        Me.Label7.Size = New System.Drawing.Size(199, 21)
         Me.Label7.TabIndex = 23
-        Me.Label7.Text = "Help and Information"
+        Me.Label7.Text = "Help and Throubleshooting"
         '
         'ClassPictureBoxQuality4
         '

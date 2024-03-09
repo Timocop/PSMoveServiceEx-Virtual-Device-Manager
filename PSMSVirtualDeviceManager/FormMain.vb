@@ -371,7 +371,7 @@
                         If (True) Then
                             Dim bScanNewDevices As Boolean = False
                             Dim sDevicesToRemove As New List(Of String)
-                            For Each mInfo In mDriverInstaller.DRV_PSVR_HID_CONFIGS
+                            For Each mInfo In ClassLibusbDriver.DRV_PSVR_HID_CONFIGS
                                 For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
                                     If (mUsbInfo.iConfigFlags <> 0) Then
                                         Continue For

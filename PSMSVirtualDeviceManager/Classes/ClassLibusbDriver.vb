@@ -1,4 +1,5 @@
 ﻿Imports System.Runtime.InteropServices
+Imports System.Text
 Imports Microsoft.Win32
 
 Public Class ClassLibusbDriver
@@ -30,58 +31,81 @@ Public Class ClassLibusbDriver
         <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
         Public Shared Function SetupDiGetDeviceRegistryProperty(DeviceInfoSet As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA, Property_ As Integer, ByRef PropertyRegDataType As Integer, PropertyBuffer As IntPtr, PropertyBufferSize As Integer, ByRef RequiredSize As Integer) As Boolean
         End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function SetupDiGetDeviceInstanceId(DeviceInfoSet As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA, DeviceInstanceId As StringBuilder, DeviceInstanceIdSize As Integer, ByRef RequiredSize As Integer) As Boolean
+        End Function
     End Class
 
-    Public Const LIBUSB_SERVICE_NAME As String = "libusb0"
-    Public Const WINUSB_SERVICE_NAME As String = "WinUSB"
-    Public Const HID_SERVICE_NAME As String = "HidUsb"
-    Public Const USBCTRL_SERVICE_NAME As String = "usbccgp"
-    Public Const USBVIDEO_SERVICE_NAME As String = "usbvideo"
+    Public Shared ReadOnly LIBUSB_SERVICE_NAME As String = "libusb0".ToUpperInvariant
+    Public Shared ReadOnly WINUSB_SERVICE_NAME As String = "WinUSB".ToUpperInvariant
+    Public Shared ReadOnly HID_SERVICE_NAME As String = "HidUsb".ToUpperInvariant
+    Public Shared ReadOnly USBCTRL_SERVICE_NAME As String = "usbccgp".ToUpperInvariant
+    Public Shared ReadOnly USBVIDEO_SERVICE_NAME As String = "usbvideo".ToUpperInvariant
+    Public Shared ReadOnly USBAUDIO_SERVICE_NAME As String = "usbaudio".ToUpperInvariant
+    Public Shared ReadOnly BTHUSB_SERVICE_NAME As String = "BTHUSB".ToUpperInvariant
+    Public Shared ReadOnly USBXHCI_SERVICE_NAME As String = "USBXHCI".ToUpperInvariant
+    Public Shared ReadOnly USBEHCI_SERVICE_NAME As String = "USBEHCI".ToUpperInvariant
+    Public Shared ReadOnly USBOHCI_SERVICE_NAME As String = "USBOHCI".ToUpperInvariant
+    Public Shared ReadOnly USBUHCI_SERVICE_NAME As String = "USBUHCI".ToUpperInvariant
 
-    Public Const DRV_WDI_ROOT_NAME As String = "libusb_driver"
-    Public Const DRV_WDI_INSTALLER_NAME As String = "wdi-simple.exe"
-    Public Const DRV_PS4CAM_ROOT_NAME As String = "ps4cam_driver"
+    Public Shared ReadOnly DRV_WDI_ROOT_NAME As String = "libusb_driver"
+    Public Shared ReadOnly DRV_WDI_INSTALLER_NAME As String = "wdi-simple.exe"
+    Public Shared ReadOnly DRV_PS4CAM_ROOT_NAME As String = "ps4cam_driver"
 
-    Public Const DRV_PS4CAM_INSTALLER_NAME As String = "InstallDriver.exe"
-    Public Const DRV_PS4CAM_FIRMWARE_NAME As String = "FirmwareLoader.exe"
-    Public Const DRV_PS4CAM_FIRMWARE_BIN_NAME As String = "firmware.bin"
+    Public Shared ReadOnly DRV_PS4CAM_INSTALLER_NAME As String = "InstallDriver.exe"
+    Public Shared ReadOnly DRV_PS4CAM_FIRMWARE_NAME As String = "FirmwareLoader.exe"
+    Public Shared ReadOnly DRV_PS4CAM_FIRMWARE_BIN_NAME As String = "firmware.bin"
 
-    Public ReadOnly DRV_PS4CAM_WINUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public Shared ReadOnly DRV_PS4CAM_WINUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.WINUSBK)
     }
-    Public ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public Shared ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
     }
 
-    Public ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public Shared ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00", LIBUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01", LIBUSB_SERVICE_NAME)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00", Nothing),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01", USBAUDIO_SERVICE_NAME)
     }
-    Public ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public Shared ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB)
     }
 
-    Public ReadOnly DRV_PSVR_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR (Composite Device)", "Sony Corp.", "054C", "09AF", Nothing, LIBUSB_SERVICE_NAME),
+    Public Shared ReadOnly DRV_PSVR_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR (Composite Device)", "Sony Corp.", "054C", "09AF", Nothing, USBCTRL_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio (Interface 0)", "Sony Corp.", "054C", "09AF", "00", LIBUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Audio Device (Interface 1)", "Sony Corp.", "054C", "09AF", "01", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Audio Device (Interface 1)", "Sony Corp.", "054C", "09AF", "01", USBAUDIO_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor (Interface 4)", "Sony Corp.", "054C", "09AF", "04", HID_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control (Interface 5)", "Sony Corp.", "054C", "09AF", "05", LIBUSB_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264 (Interface 6)", "Sony Corp.", "054C", "09AF", "06", LIBUSB_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn (Interface 7)", "Sony Corp.", "054C", "09AF", "07", LIBUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Input Device (Interface 8)", "Sony Corp.", "054C", "09AF", "08", LIBUSB_SERVICE_NAME)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Input Device (Interface 8)", "Sony Corp.", "054C", "09AF", "08", HID_SERVICE_NAME)
     }
-    Public ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+    Public Shared ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00", LIBUSB_SERVICE_NAME), ' Just add a driver so it does not show as hardware issue.
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control", "Sony Corp.", "054C", "09AF", "05", LIBUSB_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06", LIBUSB_SERVICE_NAME), ' Just add a driver so it does not show as hardware issue.
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07", LIBUSB_SERVICE_NAME) ' Just add a driver so it does not show as hardware issue.
     }
-    Public ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-      New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor", "Sony Corp.", "054C", "09AF", "04", HID_SERVICE_NAME)
+    Public Shared ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor", "Sony Corp.", "054C", "09AF", "04", HID_SERVICE_NAME)
+    }
+
+    Public Shared ReadOnly DRV_PSMOVE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 3 Motion Controller", "Sony Corp.", "054C", "03D5", Nothing, HID_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Motion Controller", "Sony Corp.", "054C", "0C5E", Nothing, HID_SERVICE_NAME)
+    }
+
+    Public Shared ReadOnly DRV_CONTROLLER_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Controller (Composite Device)", "Sony Corp.", "1D6B", "0104", Nothing, USBCTRL_SERVICE_NAME) ' PSNavi / DualShock3 (via RaspberryPi Multifunction Composite Device)
+    }
+
+    Public Shared ReadOnly DRV_DUALSHOCK_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation DualShock 4 Controller", "Sony Corp.", "054C", "05C4", Nothing, HID_SERVICE_NAME)
     }
 
     Enum ENUM_WDI_DRIVERTYPE
@@ -159,11 +183,47 @@ Public Class ClassLibusbDriver
         CONFIGFLAG_RESTART_REQUIRED = &H200000
     End Enum
 
+    Class STRUC_DEVICETREE_ITEM
+        Public sDeviceID As String = Nothing
+        Public sDeviceVID As String = Nothing
+        Public sDevicePID As String = Nothing
+        Public sDeviceMM As String = Nothing
+        Public sDeviceSerial As String = Nothing
+        Public sInterface As String = Nothing
+        Public mProvider As STRUC_DEVICE_PROVIDER
+        Public mParentDevice As STRUC_DEVICETREE_ITEM = Nothing
+
+        Public Sub New(_DeviceID As String, _DeviceVID As String, _DevicePID As String, _DeviceMM As String, _DeviceSerial As String, _Interface As String)
+            sDeviceID = _DeviceID
+            sDeviceVID = _DeviceVID
+            sDevicePID = _DevicePID
+            sDeviceMM = _DeviceMM
+            sDeviceSerial = _DeviceSerial
+            sInterface = _Interface
+
+            mProvider = New STRUC_DEVICE_PROVIDER()
+        End Sub
+
+        Public Sub New(_Item As STRUC_DEVICETREE_ITEM)
+            sDeviceID = _Item.sDeviceID
+            sDeviceVID = _Item.sDeviceVID
+            sDevicePID = _Item.sDevicePID
+            sDeviceSerial = _Item.sDeviceSerial
+
+            mProvider = _Item.mProvider
+
+            If (_Item.mParentDevice IsNot Nothing) Then
+                mParentDevice = New STRUC_DEVICETREE_ITEM(_Item.mParentDevice)
+            End If
+        End Sub
+    End Class
+
     Structure STRUC_DEVICE_PROVIDER
         Dim sDeviceID As String
         Dim iConfigFlags As DEVICE_CONFIG_FLAGS
         Dim sService As String
         Dim sProviderName As String
+        Dim sProviderDescription As String
         Dim sProviderVersion As String
         Dim sDriverInfPath As String
 
@@ -380,8 +440,14 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
-                    If (mUsbInfo.sService = mInfo.sService) Then
+                    If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
                         Continue For
+                    End If
+
+                    If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
+                        If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
+                            Continue For
+                        End If
                     End If
 
                     bDriversInstalled = False
@@ -418,8 +484,14 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
-                    If (mUsbInfo.sService = mInfo.sService) Then
+                    If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
                         Continue For
+                    End If
+
+                    If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
+                        If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
+                            Continue For
+                        End If
                     End If
 
                     bDriversInstalled = False
@@ -456,8 +528,14 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
-                    If (mUsbInfo.sService = mInfo.sService) Then
+                    If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
                         Continue For
+                    End If
+
+                    If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
+                        If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
+                            Continue For
+                        End If
                     End If
 
                     bDriversInstalled = False
@@ -495,8 +573,14 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bDriversInstalled = False
                 Else
-                    If (mUsbInfo.sService = mInfo.sService) Then
+                    If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
                         Continue For
+                    End If
+
+                    If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
+                        If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
+                            Continue For
+                        End If
                     End If
 
                     bDriversInstalled = False
@@ -527,8 +611,14 @@ Public Class ClassLibusbDriver
                 If (Not mUsbInfo.HasDriverInstalled()) Then
                     bHidInstalled = False
                 Else
-                    If (mUsbInfo.sService = mInfo.sService) Then
+                    If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
                         Continue For
+                    End If
+
+                    If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
+                        If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
+                            Continue For
+                        End If
                     End If
 
                     bHidInstalled = False
@@ -564,101 +654,6 @@ Public Class ClassLibusbDriver
 
             Return CType(mProcess.ExitCode, ENUM_WDI_ERROR)
         End Using
-    End Function
-
-    Public Function GetDeviceProviderUSB(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
-        Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "USB")
-    End Function
-
-    Public Function GetDeviceProviderUSB(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
-        Return InternalGetDeviceProvider(sVID, sPID, sMI, "USB")
-    End Function
-
-    Public Function GetDeviceProviderHID(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
-        Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "HID")
-    End Function
-
-    Public Function GetDeviceProviderHID(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
-        Return InternalGetDeviceProvider(sVID, sPID, sMI, "HID")
-    End Function
-
-    Public Function GetDeviceProviderDISPLAY(sSerial As String) As STRUC_DEVICE_PROVIDER()
-        Return InternalGetDeviceProvider(sSerial, Nothing, Nothing, "DISPLAY")
-    End Function
-
-    Private Function InternalGetDeviceProvider(sVID As String, sPID As String, sMI As String, sInterface As String) As STRUC_DEVICE_PROVIDER()
-        Dim mProviderList As New List(Of STRUC_DEVICE_PROVIDER)
-
-        Dim sUseDevice As String = Nothing
-        Select Case (sInterface)
-            Case "DISPLAY"
-                sUseDevice = String.Format("{0}\{1}", sInterface, sVID)
-
-            Case Else
-                If (String.IsNullOrEmpty(sMI)) Then
-                    sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
-                Else
-                    If (sMI.Length = 1) Then
-                        sMI = "0" & sMI
-                    End If
-
-                    sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMI)
-                End If
-        End Select
-
-
-
-        Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sUseDevice))
-        If (mUsbDeviceKey Is Nothing) Then
-            Return mProviderList.ToArray
-        End If
-
-        For Each mDeviceSubKey As String In mUsbDeviceKey.GetSubKeyNames()
-            Dim mDeviceKey As RegistryKey = mUsbDeviceKey.OpenSubKey(mDeviceSubKey)
-            If (mDeviceKey Is Nothing) Then
-                Continue For
-            End If
-
-            Dim sDeviceID As String = String.Format("{0}\{1}", sUseDevice, mDeviceSubKey)
-
-            Dim sDriverLocation As String = TryCast(mDeviceKey.GetValue("Driver"), String)
-            Dim sService As String = TryCast(mDeviceKey.GetValue("Service"), String)
-            Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
-
-            If (sDriverLocation IsNot Nothing) Then
-                Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation)
-                If (mDriverKey Is Nothing) Then
-                    Continue For
-                End If
-
-                Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
-                Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
-                Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
-
-                Dim mInfo As New STRUC_DEVICE_PROVIDER
-                mInfo.sDeviceID = sDeviceID
-                mInfo.iConfigFlags = sConfigFlags
-                mInfo.sService = sService
-                mInfo.sProviderName = sProviderName
-                mInfo.sProviderVersion = sProviderVersion
-                mInfo.sDriverInfPath = sDriverInfPath
-
-                mProviderList.Add(mInfo)
-            Else
-                ' No driver installed
-                Dim mInfo As New STRUC_DEVICE_PROVIDER
-                mInfo.sDeviceID = sDeviceID
-                mInfo.iConfigFlags = sConfigFlags
-                mInfo.sService = sService
-                mInfo.sProviderName = Nothing
-                mInfo.sProviderVersion = Nothing
-                mInfo.sDriverInfPath = Nothing
-
-                mProviderList.Add(mInfo)
-            End If
-        Next
-
-        Return mProviderList.ToArray
     End Function
 
     Public Function ScanDevices() As Integer
@@ -783,6 +778,114 @@ Public Class ClassLibusbDriver
         End Using
     End Function
 
+    Public Function GetDeviceProviderUSB(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "USB", Nothing)
+    End Function
+
+    Public Function GetDeviceProviderUSB(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sVID, sPID, sMI, "USB", Nothing)
+    End Function
+
+    Public Function GetDeviceProviderHID(mInfo As STRUC_DEVICE_DRIVER_INFO) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(mInfo.VID, mInfo.PID, mInfo.MM, "HID", Nothing)
+    End Function
+
+    Public Function GetDeviceProviderHID(sVID As String, sPID As String, sMI As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sVID, sPID, sMI, "HID", Nothing)
+    End Function
+
+    Public Function GetDeviceProviderDISPLAY(sSerial As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sSerial, Nothing, Nothing, "DISPLAY", Nothing)
+    End Function
+
+    Public Function GetDeviceProvider(sVID As String, sPID As String, sMI As String, sInterface As String, sSerial As String) As STRUC_DEVICE_PROVIDER()
+        Return InternalGetDeviceProvider(sVID, sPID, sMI, sInterface, sSerial)
+    End Function
+
+    Private Function InternalGetDeviceProvider(sVID As String, sPID As String, sMI As String, sInterface As String, sSerial As String) As STRUC_DEVICE_PROVIDER()
+        Dim mProviderList As New List(Of STRUC_DEVICE_PROVIDER)
+
+        Dim sUseDevice As String = Nothing
+        Select Case (sInterface)
+            Case "DISPLAY"
+                sUseDevice = String.Format("{0}\{1}", sInterface, sVID)
+
+            Case Else
+                If (String.IsNullOrEmpty(sMI)) Then
+                    sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
+                Else
+                    If (sMI.Length = 1) Then
+                        sMI = "0" & sMI
+                    End If
+
+                    sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMI)
+                End If
+        End Select
+
+
+
+        Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sUseDevice), False)
+        If (mUsbDeviceKey Is Nothing) Then
+            Return mProviderList.ToArray
+        End If
+
+        For Each mDeviceSerialName As String In mUsbDeviceKey.GetSubKeyNames()
+            Dim mDeviceSerialKey As RegistryKey = mUsbDeviceKey.OpenSubKey(mDeviceSerialName)
+            If (mDeviceSerialKey Is Nothing) Then
+                Continue For
+            End If
+
+            If (Not String.IsNullOrEmpty(sSerial)) Then
+                If (Not mDeviceSerialName.ToLowerInvariant.EndsWith(sSerial.ToLowerInvariant)) Then
+                    Continue For
+                End If
+            End If
+
+            Dim sDeviceID As String = String.Format("{0}\{1}", sUseDevice, mDeviceSerialName)
+
+            Dim sDriverLocation As String = TryCast(mDeviceSerialKey.GetValue("Driver"), String)
+            Dim sService As String = TryCast(mDeviceSerialKey.GetValue("Service"), String)
+            Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceSerialKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
+
+            If (sDriverLocation IsNot Nothing) Then
+                Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation, False)
+                If (mDriverKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
+                Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
+                Dim sProviderDescription As String = TryCast(mDriverKey.GetValue("DriverDesc"), String)
+                Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
+
+                Dim mInfo As New STRUC_DEVICE_PROVIDER
+                mInfo.sDeviceID = sDeviceID
+                mInfo.iConfigFlags = sConfigFlags
+                mInfo.sService = sService
+                mInfo.sProviderName = sProviderName
+                mInfo.sProviderVersion = sProviderVersion
+                mInfo.sProviderDescription = sProviderDescription
+                mInfo.sDriverInfPath = sDriverInfPath
+
+                mProviderList.Add(mInfo)
+            Else
+                ' No driver installed
+                Dim mInfo As New STRUC_DEVICE_PROVIDER
+                mInfo.sDeviceID = sDeviceID
+                mInfo.iConfigFlags = sConfigFlags
+                mInfo.sService = sService
+                mInfo.sProviderName = Nothing
+                mInfo.sProviderVersion = Nothing
+                mInfo.sProviderDescription = Nothing
+                mInfo.sDriverInfPath = Nothing
+
+                mProviderList.Add(mInfo)
+            End If
+        Next
+
+        Return mProviderList.ToArray
+    End Function
+
     Public Function IsPlaystationVrUsbDeviceConnected() As Boolean
         For Each mItem In DRV_PSVR_HID_CONFIGS
             Return IsUsbDeviceConnected(mItem)
@@ -800,10 +903,76 @@ Public Class ClassLibusbDriver
     End Function
 
     Public Function IsUsbDeviceConnected(mInfo As STRUC_DEVICE_DRIVER_INFO) As Boolean
-        Return IsUsbDeviceConnected(mInfo.VID, mInfo.PID)
+        Return IsUsbDeviceConnected(mInfo.VID, mInfo.PID, "USB", Nothing)
     End Function
 
-    Public Function IsUsbDeviceConnected(sVID As String, sPID As String) As Boolean
+    Public Function GetAllDevices(sInterface As String) As STRUC_DEVICE_PROVIDER()
+        Dim mProviderList As New List(Of STRUC_DEVICE_PROVIDER)
+
+        Dim mDeviceEnumKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sInterface), False)
+        If (mDeviceEnumKey Is Nothing) Then
+            Return mProviderList.ToArray
+        End If
+
+        For Each sDeviceName As String In mDeviceEnumKey.GetSubKeyNames()
+            Dim mDeviceNameKey As RegistryKey = mDeviceEnumKey.OpenSubKey(sDeviceName, False)
+            If (mDeviceNameKey Is Nothing) Then
+                Continue For
+            End If
+
+            For Each sDeviceSerialName As String In mDeviceNameKey.GetSubKeyNames()
+                Dim mDeviceSerialKey As RegistryKey = mDeviceNameKey.OpenSubKey(sDeviceSerialName, False)
+                If (mDeviceSerialKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sDeviceID As String = String.Format("{0}\{1}", sDeviceName, sDeviceSerialName)
+
+                Dim sDriverLocation As String = TryCast(mDeviceSerialKey.GetValue("Driver"), String)
+                Dim sService As String = TryCast(mDeviceSerialKey.GetValue("Service"), String)
+                Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceSerialKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
+
+                If (sDriverLocation IsNot Nothing) Then
+                    Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation, False)
+                    If (mDriverKey Is Nothing) Then
+                        Continue For
+                    End If
+
+                    Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
+                    Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
+                    Dim sProviderDescription As String = TryCast(mDriverKey.GetValue("DriverDesc"), String)
+                    Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
+
+                    Dim mInfo As New STRUC_DEVICE_PROVIDER
+                    mInfo.sDeviceID = sDeviceID
+                    mInfo.iConfigFlags = sConfigFlags
+                    mInfo.sService = sService
+                    mInfo.sProviderName = sProviderName
+                    mInfo.sProviderVersion = sProviderVersion
+                    mInfo.sProviderDescription = sProviderDescription
+                    mInfo.sDriverInfPath = sDriverInfPath
+
+                    mProviderList.Add(mInfo)
+                Else
+                    ' No driver installed
+                    Dim mInfo As New STRUC_DEVICE_PROVIDER
+                    mInfo.sDeviceID = sDeviceID
+                    mInfo.iConfigFlags = sConfigFlags
+                    mInfo.sService = sService
+                    mInfo.sProviderName = Nothing
+                    mInfo.sProviderVersion = Nothing
+                    mInfo.sProviderDescription = Nothing
+                    mInfo.sDriverInfPath = Nothing
+
+                    mProviderList.Add(mInfo)
+                End If
+            Next
+        Next
+
+        Return mProviderList.ToArray
+    End Function
+
+    Public Function IsUsbDeviceConnected(sVID As String, sPID As String, sInterface As String, sSerial As String) As Boolean
         Dim mDevInfo As IntPtr = ClassWin32.SetupDiGetClassDevs(Guid.Empty, IntPtr.Zero, IntPtr.Zero, ClassWin32.DIGCF_PRESENT Or ClassWin32.DIGCF_ALLCLASSES)
         If (mDevInfo = IntPtr.Zero) Then
             Throw New ArgumentException("SetupDiGetClassDevs failed")
@@ -815,33 +984,58 @@ Public Class ClassLibusbDriver
             mDevInfoData.cbSize = Marshal.SizeOf(mDevInfoData)
 
             While (ClassWin32.SetupDiEnumDeviceInfo(mDevInfo, iDevIndex, mDevInfoData))
-                Dim iRegDataType As Integer = 0
-                Dim iBufferSize As Integer = 0
-
-                ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, IntPtr.Zero, 0, iBufferSize)
-
-                If (iBufferSize > 0) Then
-                    Dim iBuffer As IntPtr = Marshal.AllocHGlobal(iBufferSize)
-                    If (iBuffer = IntPtr.Zero) Then
-                        Throw New ArgumentException("AllocHGlobal failed")
-                    End If
-
-                    Try
-                        If (ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, iBuffer, iBufferSize, iBufferSize)) Then
-                            Dim sDeviceHardwareID As String = Marshal.PtrToStringAuto(iBuffer)
-
-                            If (sDeviceHardwareID.StartsWith(String.Format("USB\VID_{0}&PID_{1}", sVID, sPID))) Then
+                ' Retrieve device instance ID
+                Dim iInstanceLength As Integer = 256
+                Dim mInstanceIdBuilder As New StringBuilder(iInstanceLength)
+                If (ClassWin32.SetupDiGetDeviceInstanceId(mDevInfo, mDevInfoData, mInstanceIdBuilder, iInstanceLength, iInstanceLength)) Then
+                    Dim sInstanceId As String = mInstanceIdBuilder.ToString()
+                    If (sInstanceId.ToLowerInvariant.StartsWith(String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID).ToLowerInvariant)) Then
+                        If (String.IsNullOrEmpty(sSerial)) Then
+                            Return True
+                        Else
+                            If (sInstanceId.ToLowerInvariant.EndsWith(sSerial.ToLowerInvariant)) Then
                                 Return True
                             End If
                         End If
-                    Finally
-                        If (iBuffer <> IntPtr.Zero) Then
-                            Marshal.FreeHGlobal(iBuffer)
-                        End If
-                    End Try
+                    End If
                 End If
 
-                iDevIndex += 1
+                    'Dim iRegDataType As Integer = 0
+                    'Dim iBufferSize As Integer = 0
+
+                    'ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, IntPtr.Zero, 0, iBufferSize)
+
+                    'If (iBufferSize > 0) Then
+                    '    Dim iBuffer As IntPtr = Marshal.AllocHGlobal(iBufferSize)
+                    '    If (iBuffer = IntPtr.Zero) Then
+                    '        Throw New ArgumentException("AllocHGlobal failed")
+                    '    End If
+
+                    '    Try
+                    '        ' Retrieve device instance ID
+                    '        Dim instanceIdSize As Integer = 256
+                    '        Dim instanceIdBuilder As New StringBuilder(instanceIdSize)
+                    '        If ClassWin32.SetupDiGetDeviceInstanceId(mDevInfo, mDevInfoData, instanceIdBuilder, instanceIdSize, instanceIdSize) Then
+                    '            Dim instanceId As String = instanceIdBuilder.ToString()
+
+                    '        End If
+
+
+                    '        If (ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, iBuffer, iBufferSize, iBufferSize)) Then
+                    '            Dim sDeviceHardwareID As String = Marshal.PtrToStringAuto(iBuffer)
+
+                    '            If (sDeviceHardwareID.StartsWith(String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID))) Then
+                    '                Return True
+                    '            End If
+                    '        End If
+                    '    Finally
+                    '        If (iBuffer <> IntPtr.Zero) Then
+                    '            Marshal.FreeHGlobal(iBuffer)
+                    '        End If
+                    '    End Try
+                    'End If
+
+                    iDevIndex += 1
             End While
         Finally
             If (mDevInfo <> IntPtr.Zero) Then
@@ -851,4 +1045,174 @@ Public Class ClassLibusbDriver
 
         Return False ' Device is not connected
     End Function
+
+    Public Function GetDeviceTree(mInfo As STRUC_DEVICE_DRIVER_INFO, sInterface As String) As STRUC_DEVICETREE_ITEM()
+        Return GetDeviceTree(mInfo.VID, mInfo.PID, mInfo.MM, sInterface)
+    End Function
+
+    Public Function GetDeviceTree(sVID As String, sPID As String, sMM As String, sInterface As String) As STRUC_DEVICETREE_ITEM()
+        Dim sFindSerial As String = ""
+
+        Dim sUseDevice As String
+        If (String.IsNullOrEmpty(sMM) OrElse sMM.TrimEnd.Length = 0) Then
+            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
+        Else
+            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMM)
+        End If
+
+        Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sUseDevice), False)
+        If (mUsbDeviceKey Is Nothing) Then
+            Return Nothing
+        End If
+
+        Dim mDevices As New List(Of STRUC_DEVICETREE_ITEM)
+
+        For Each sDeviceSerial As String In mUsbDeviceKey.GetSubKeyNames()
+            If (String.IsNullOrEmpty(sDeviceSerial) OrElse sDeviceSerial.TrimEnd.Length = 0) Then
+                Continue For
+            End If
+
+            Dim sDeviceID As String = String.Format("{0}\{1}", sUseDevice, sDeviceSerial)
+
+            mDevices.Add(New STRUC_DEVICETREE_ITEM(sDeviceID, sVID, sPID, sMM, sDeviceSerial, sInterface))
+        Next
+
+        'Start searching for parents
+        For Each mDevice In mDevices
+            Dim mLastDevice = mDevice
+
+            While True
+                Dim mDeviceEnum As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum", False)
+                If (mDeviceEnum Is Nothing) Then
+                    Continue For
+                End If
+
+                ' Grab information about the device
+                If (True) Then
+                    Dim sDeviceID As String = mLastDevice.sDeviceID
+
+                    If (Not String.IsNullOrEmpty(sDeviceID)) Then
+                        Dim mDeviceKey As RegistryKey = mDeviceEnum.OpenSubKey(sDeviceID, False)
+                        If (mDeviceKey IsNot Nothing) Then
+                            Dim sDriverLocation As String = TryCast(mDeviceKey.GetValue("Driver"), String)
+                            Dim sService As String = TryCast(mDeviceKey.GetValue("Service"), String)
+                            Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
+
+                            If (sDriverLocation IsNot Nothing) Then
+                                Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation, False)
+                                If (mDriverKey Is Nothing) Then
+                                    Continue For
+                                End If
+
+                                Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
+                                Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
+                                Dim sProviderDescription As String = TryCast(mDriverKey.GetValue("DriverDesc"), String)
+                                Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
+
+                                Dim mInfo As New STRUC_DEVICE_PROVIDER
+                                mInfo.sDeviceID = sDeviceID
+                                mInfo.iConfigFlags = sConfigFlags
+                                mInfo.sService = sService
+                                mInfo.sProviderName = sProviderName
+                                mInfo.sProviderVersion = sProviderVersion
+                                mInfo.sProviderDescription = sProviderDescription
+                                mInfo.sDriverInfPath = sDriverInfPath
+                                mLastDevice.mProvider = mInfo
+                            Else
+                                ' No driver installed
+                                Dim mInfo As New STRUC_DEVICE_PROVIDER
+                                mInfo.sDeviceID = sDeviceID
+                                mInfo.iConfigFlags = sConfigFlags
+                                mInfo.sService = sService
+                                mInfo.sProviderName = Nothing
+                                mInfo.sProviderVersion = Nothing
+                                mInfo.sProviderDescription = Nothing
+                                mInfo.sDriverInfPath = Nothing
+
+                                mLastDevice.mProvider = mInfo
+                            End If
+                        End If
+                    End If
+                End If
+
+
+                For Each mDeviceEnumInterfaceName As String In mDeviceEnum.GetSubKeyNames()
+                    Dim mDeviceEnumInterface As RegistryKey = mDeviceEnum.OpenSubKey(mDeviceEnumInterfaceName, False)
+                    If (mDeviceEnumInterface Is Nothing) Then
+                        Continue For
+                    End If
+
+                    For Each mDeviceEnumInterfaceDeviceName As String In mDeviceEnumInterface.GetSubKeyNames()
+                        Dim mDeviceEnumInterfaceDevice As RegistryKey = mDeviceEnumInterface.OpenSubKey(mDeviceEnumInterfaceDeviceName, False)
+                        If (mDeviceEnumInterfaceDevice Is Nothing) Then
+                            Continue For
+                        End If
+
+                        For Each mDeviceEnumInterfaceDeviceSerialName As String In mDeviceEnumInterfaceDevice.GetSubKeyNames()
+                            Dim mDeviceEnumInterfaceDeviceSerial As RegistryKey = mDeviceEnumInterfaceDevice.OpenSubKey(mDeviceEnumInterfaceDeviceSerialName, False)
+                            If (mDeviceEnumInterfaceDeviceSerial Is Nothing) Then
+                                Continue For
+                            End If
+
+                            Dim sParentSerial As String = CStr(mDeviceEnumInterfaceDeviceSerial.GetValue("ParentIdPrefix", Nothing))
+                            If (String.IsNullOrEmpty(sParentSerial) OrElse sParentSerial.TrimEnd.Length = 0) Then
+                                Continue For
+                            End If
+
+                            If (mLastDevice.sDeviceSerial.ToUpperInvariant.IndexOf(sParentSerial.ToUpperInvariant) > -1) Then
+                                Dim sDeviceID As String = String.Format("{0}\{1}\{2}", mDeviceEnumInterfaceName, mDeviceEnumInterfaceDeviceName, mDeviceEnumInterfaceDeviceSerialName)
+
+                                mLastDevice.mParentDevice = New STRUC_DEVICETREE_ITEM(sDeviceID, "", "", "", mDeviceEnumInterfaceDeviceSerialName, mDeviceEnumInterfaceName)
+                                mLastDevice = mLastDevice.mParentDevice
+                                Continue While
+                            End If
+                        Next
+                    Next
+                Next
+
+                Exit While
+            End While
+        Next
+
+        Return mDevices.ToArray
+    End Function
+
+    ''' <summary>
+    ''' Resolves hardware ids such as 'VID_1BCF&PID_28C4&MI_00' or 'USB\VID_1BCF&PID_28C4&MI_00'
+    ''' </summary>
+    ''' <param name="sHardwareId"></param>
+    ''' <param name="sVID"></param>
+    ''' <param name="sPID"></param>
+    ''' <param name="sMM"></param>
+    ''' <returns></returns>
+    Public Function ResolveHardwareID(sHardwareId As String, ByRef sVID As String, ByRef sPID As String, ByRef sMM As String) As Boolean
+        sVID = Nothing
+        sPID = Nothing
+        sMM = Nothing
+
+        Dim sPathSplit As String() = sHardwareId.Split(New Char() {"\"c, "/"c})
+
+        For Each sPath As String In sPathSplit
+            If (sPath.ToUpperInvariant.IndexOf("VID_") > -1 AndAlso sPath.ToUpperInvariant.IndexOf("PID_") > -1) Then
+                Dim sIdSplit As String() = sPath.Split("&"c)
+
+                Select Case (sIdSplit.Length)
+                    Case 2
+                        sVID = sIdSplit(0).Split("_"c)(1)
+                        sPID = sIdSplit(1).Split("_"c)(1)
+
+                        Return True
+                    Case 3
+                        sVID = sIdSplit(0).Split("_"c)(1)
+                        sPID = sIdSplit(1).Split("_"c)(1)
+                        sMM = sIdSplit(2).Split("_"c)(1)
+
+                        Return True
+                End Select
+            End If
+        Next
+
+        Return False
+    End Function
+
 End Class

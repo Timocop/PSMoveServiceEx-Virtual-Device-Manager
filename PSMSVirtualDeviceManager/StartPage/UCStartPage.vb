@@ -1267,19 +1267,13 @@ Public Class UCStartPage
         End Try
     End Sub
 
-    Private Sub LinkLabel_Github_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Github.LinkClicked
+    Private Sub LinkLabel_ManageConnectedDevices_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ManageConnectedDevices.LinkClicked
         Try
-            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
+            Using mForm As New FormConnectedDevices
+                mForm.ShowDialog()
+            End Using
         Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLog(ex)
-        End Try
-    End Sub
-
-    Private Sub LinkLabel_Updates_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Updates.LinkClicked
-        Try
-            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLog(ex)
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
