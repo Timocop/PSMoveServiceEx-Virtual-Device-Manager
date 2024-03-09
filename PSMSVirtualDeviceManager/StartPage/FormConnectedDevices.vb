@@ -18,7 +18,6 @@
         ImageList_Devices.Images.Add("Bluetooth", My.Resources.bthci_201_16x16_32)
 
         g_ClassTreeViewManager = New ClassTreeViewManager(TreeView_ConnectedDevices)
-
     End Sub
 
     Class STRUC_LISTVIEW_NODE_DEVICE_ITEM
@@ -207,8 +206,6 @@
 
     Private Sub FormConnectedDevices_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UpdateDevices()
-
-        ClassUtils.SetControlDoubleBufferingChilds(Me, True)
     End Sub
 
     Private Sub Button_Refresh_Click(sender As Object, e As EventArgs) Handles Button_Refresh.Click
