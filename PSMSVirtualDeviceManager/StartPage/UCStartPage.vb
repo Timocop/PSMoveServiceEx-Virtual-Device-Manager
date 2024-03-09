@@ -154,6 +154,10 @@ Public Class UCStartPage
     End Sub
 
     Private Sub ServiceDeviceStatusThread()
+        Dim mLastSeqNumDic As New Dictionary(Of String, Integer)
+        Dim mFpsWatch As New Stopwatch
+        mFpsWatch.Start()
+
         While True
             Try
                 Const LISTVIEW_SUBITEM_TYPE As Integer = 0
@@ -163,10 +167,11 @@ Public Class UCStartPage
                 Const LISTVIEW_SUBITEM_POSITION As Integer = 4
                 Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 5
                 Const LISTVIEW_SUBITEM_BATTERY As Integer = 6
+                Const LISTVIEW_SUBITEM_FPS As Integer = 7
 
                 ' List Controllers
                 If (True) Then
-                    Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetControllersData
+                    Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetControllersData()
 
                     For i = 0 To mDevices.Length - 1
                         Dim mDevice As ClassServiceClient.IControllerData = mDevices(i)
@@ -177,6 +182,20 @@ Public Class UCStartPage
 
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+                        Dim iSeqNum As Integer = mDevice.m_OutputSeqNum
+                        Dim iFPS As Integer = -1
+
+                        If (True) Then
+                            If (Not mLastSeqNumDic.ContainsKey(mDevice.m_Serial)) Then
+                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                            End If
+
+                            If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
+                                iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                            End If
+
+                            mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                        End If
 
                         ClassUtils.AsyncInvoke(Me, Sub()
                                                        Dim bFound As Boolean = False
@@ -208,6 +227,7 @@ Public Class UCStartPage
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
                                                                    mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
                                                                    bFound = True
@@ -233,7 +253,8 @@ Public Class UCStartPage
                                                                 mDevice.m_Serial,
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
-                                                                "0 %"
+                                                                "0 %",
+                                                                CStr(iFPS)
                                                             })
                                                            mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
                                                            mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
@@ -257,6 +278,20 @@ Public Class UCStartPage
 
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+                        Dim iSeqNum As Integer = mDevice.m_OutputSeqNum
+                        Dim iFPS As Integer = -1
+
+                        If (True) Then
+                            If (Not mLastSeqNumDic.ContainsKey(mDevice.m_Serial)) Then
+                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                            End If
+
+                            If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
+                                iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                            End If
+
+                            mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                        End If
 
                         ClassUtils.AsyncInvoke(Me, Sub()
                                                        Dim bFound As Boolean = False
@@ -272,6 +307,7 @@ Public Class UCStartPage
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
                                                                    mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
                                                                    bFound = True
@@ -299,7 +335,8 @@ Public Class UCStartPage
                                                                 mDevice.m_Serial,
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
-                                                                "N/A"
+                                                                "N/A",
+                                                                CStr(iFPS)
                                                             })
                                                            mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
                                                            mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
@@ -343,6 +380,7 @@ Public Class UCStartPage
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = "N/A"
                                                                    mListVIewItem.Tag = New Object() {Now}
 
                                                                    bFound = True
@@ -361,6 +399,7 @@ Public Class UCStartPage
                                                                 mDevice.m_Path,
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                                "N/A",
                                                                 "N/A"
                                                             })
                                                            mListViewItem.Tag = New Object() {Now}
@@ -399,6 +438,7 @@ Public Class UCStartPage
                 ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
+            mFpsWatch.Restart()
             Threading.Thread.Sleep(500)
         End While
     End Sub
