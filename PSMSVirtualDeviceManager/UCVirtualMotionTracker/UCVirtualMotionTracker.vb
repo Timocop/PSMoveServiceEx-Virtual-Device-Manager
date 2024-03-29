@@ -1836,6 +1836,7 @@ Public Class UCVirtualMotionTracker
                             Next
 
                             ' Remove devices that do not exist anymore
+                            Dim mSerialRemove As New List(Of String)
                             For Each mDevice In g_mDevicesDic
                                 If (mDeviceList.Exists(Function(x As STRUC_DEVICE) x.sSerial = mDevice.Value.sSerial)) Then
                                     Continue For
@@ -1843,7 +1844,11 @@ Public Class UCVirtualMotionTracker
 
                                 RaiseEvent OnDeviceRemoved(mDevice.Value)
 
-                                g_mDevicesDic.Remove(mDevice.Value.sSerial)
+                                mSerialRemove.Add(mDevice.Value.sSerial)
+                            Next
+
+                            For Each sSerial As String In mSerialRemove
+                                g_mDevicesDic.Remove(sSerial)
                             Next
                         End SyncLock
 
