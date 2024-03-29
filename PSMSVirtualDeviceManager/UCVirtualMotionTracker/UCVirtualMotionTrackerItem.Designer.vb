@@ -39,6 +39,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -53,11 +54,12 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ContextMenuStrip_TrackerRecenter = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem_TrackerRecenterNow = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_TrackerRecenterDelayed = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Timer_RecenterTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripMenuItem_TrackerRecenterClear = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel_Status.SuspendLayout()
-        Me.ContextMenuStrip_TrackerRecenter.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ContextMenuStrip_TrackerRecenter.SuspendLayout()
         Me.SuspendLayout()
         '
         'ComboBox_DeviceID
@@ -187,6 +189,17 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Panel_Status.Size = New System.Drawing.Size(585, 75)
         Me.Panel_Status.TabIndex = 36
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
         'Label_StatusMessage
         '
         Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -303,36 +316,37 @@ Partial Class UCVirtualMotionTrackerItem
         '
         'ContextMenuStrip_TrackerRecenter
         '
-        Me.ContextMenuStrip_TrackerRecenter.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_TrackerRecenterNow, Me.ToolStripMenuItem_TrackerRecenterDelayed})
+        Me.ContextMenuStrip_TrackerRecenter.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_TrackerRecenterNow, Me.ToolStripMenuItem_TrackerRecenterDelayed, Me.ToolStripSeparator1, Me.ToolStripMenuItem_TrackerRecenterClear})
         Me.ContextMenuStrip_TrackerRecenter.Name = "ContextMenuStrip_TrackerRecenter"
-        Me.ContextMenuStrip_TrackerRecenter.Size = New System.Drawing.Size(180, 48)
+        Me.ContextMenuStrip_TrackerRecenter.Size = New System.Drawing.Size(181, 98)
         '
         'ToolStripMenuItem_TrackerRecenterNow
         '
         Me.ToolStripMenuItem_TrackerRecenterNow.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5345_16x16_32
         Me.ToolStripMenuItem_TrackerRecenterNow.Name = "ToolStripMenuItem_TrackerRecenterNow"
-        Me.ToolStripMenuItem_TrackerRecenterNow.Size = New System.Drawing.Size(179, 22)
+        Me.ToolStripMenuItem_TrackerRecenterNow.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripMenuItem_TrackerRecenterNow.Text = "Now"
         '
         'ToolStripMenuItem_TrackerRecenterDelayed
         '
         Me.ToolStripMenuItem_TrackerRecenterDelayed.Name = "ToolStripMenuItem_TrackerRecenterDelayed"
-        Me.ToolStripMenuItem_TrackerRecenterDelayed.Size = New System.Drawing.Size(179, 22)
+        Me.ToolStripMenuItem_TrackerRecenterDelayed.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripMenuItem_TrackerRecenterDelayed.Text = "Delayed (5 seconds)"
-        '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
         '
         'Timer_RecenterTimer
         '
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        '
+        'ToolStripMenuItem_TrackerRecenterClear
+        '
+        Me.ToolStripMenuItem_TrackerRecenterClear.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.ToolStripMenuItem_TrackerRecenterClear.Name = "ToolStripMenuItem_TrackerRecenterClear"
+        Me.ToolStripMenuItem_TrackerRecenterClear.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem_TrackerRecenterClear.Text = "Reset"
         '
         'UCVirtualMotionTrackerItem
         '
@@ -360,8 +374,8 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Size = New System.Drawing.Size(617, 295)
         Me.Panel_Status.ResumeLayout(False)
         Me.Panel_Status.PerformLayout()
-        Me.ContextMenuStrip_TrackerRecenter.ResumeLayout(False)
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ContextMenuStrip_TrackerRecenter.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -393,4 +407,6 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents ToolStripMenuItem_TrackerRecenterNow As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem_TrackerRecenterDelayed As ToolStripMenuItem
     Friend WithEvents Timer_RecenterTimer As Timer
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents ToolStripMenuItem_TrackerRecenterClear As ToolStripMenuItem
 End Class

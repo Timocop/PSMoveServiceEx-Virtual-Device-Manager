@@ -1208,7 +1208,7 @@ Public Class UCVirtualMotionTrackerItem
                             Throw New ArgumentException("OSC server is suspended")
                         End If
 
-                        Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
+                        Dim mClassSettings = mUCVirtualMotionTracker.g_ClassSettings
 
                         If (Not bFirstEnabled) Then
                             bFirstEnabled = True
@@ -2729,14 +2729,46 @@ Public Class UCVirtualMotionTrackerItem
     Private Sub Timer_RecenterTimer_Tick(sender As Object, e As EventArgs) Handles Timer_RecenterTimer.Tick
         Timer_RecenterTimer.Stop()
 
-        If (g_mClassIO Is Nothing) Then
-            Return
-        End If
+        Try
+            If (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                Throw New ArgumentException("OSC server is not running")
+            End If
 
-        If (g_mClassIO.m_IsHMD) Then
-            g_mClassIO.StartHmdRecenter()
-        Else
-            g_mClassIO.StartControllerRecenter()
-        End If
+            If (g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                Throw New ArgumentException("OSC server is suspended")
+            End If
+
+            If (g_mClassIO Is Nothing) Then
+                Return
+            End If
+
+            If (g_mClassIO.m_IsHMD) Then
+                g_mClassIO.StartHmdRecenter()
+            Else
+                g_mClassIO.StartControllerRecenter()
+            End If
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
+
+    Private Sub ToolStripMenuItem_TrackerRecenterClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRecenterClear.Click
+        Try
+            If (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                Throw New ArgumentException("OSC server is not running")
+            End If
+
+            If (g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                Throw New ArgumentException("OSC server is suspended")
+            End If
+
+            If (g_mClassIO Is Nothing) Then
+                Return
+            End If
+
+            g_mClassIO.ResetRecenter()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 End Class
