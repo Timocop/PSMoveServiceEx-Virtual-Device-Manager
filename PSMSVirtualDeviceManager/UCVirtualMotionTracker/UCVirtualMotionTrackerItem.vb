@@ -792,6 +792,9 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iPlayCalibStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
         Private g_bPlayCalibAllowSave As Boolean = False
 
+        Private g_bManualControllerRecenter As Boolean = False
+        Private g_bManualHmdRecenter As Boolean = False
+
         Class STRUC_HEPTIC_ITEM
             Const DEFAULT_HAPTIC_FREQUENCY As Single = 200.0F
             Const DEFAULT_HAPTIC_AMPLITUDE As Single = 1.0F
@@ -1092,6 +1095,18 @@ Public Class UCVirtualMotionTrackerItem
             End SyncLock
         End Sub
 
+        Public Sub StartControllerRecenter()
+            SyncLock _ThreadLock
+                g_bManualControllerRecenter = True
+            End SyncLock
+        End Sub
+
+        Public Sub StartHmdRecenter()
+            SyncLock _ThreadLock
+                g_bManualHmdRecenter = True
+            End SyncLock
+        End Sub
+
         Public ReadOnly Property m_ManualPlayspaceCalibrationStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS
             Get
                 SyncLock _ThreadLock
@@ -1146,7 +1161,6 @@ Public Class UCVirtualMotionTrackerItem
             Dim mPlayspaceRecenterButtonPressed As Boolean = False
             Dim mPlayspaceRecenterButtonHolding As Boolean = False
             Dim mPlayspaceRecenterLastHmdSerial As String = ""
-            Dim mPlayspaceRecenterCalibrationRunning As Boolean = False
             Dim mPlayspaceRecenterCalibrationSave As Boolean = False
 
             Dim iDisplayX As Integer = 0
@@ -1286,9 +1300,7 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mCalibratedPosition = mRawPosition
 
                                         ' Playspace offsets, used for playspace calibration
-                                        If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                            InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
-                                        End If
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
 
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPosition = mCalibratedPosition
@@ -1298,20 +1310,20 @@ Public Class UCVirtualMotionTrackerItem
 
                                         ' $TODO Do something cool?
 
-                                        'Do Hmd/remote recenter
+                                        'Do Hmd/remote recenter 
                                         InternalRecenterHmd(bEnableHmdRecenter,
-                                                                mServiceClient,
-                                                                mHmdRecenterButtonPressed,
-                                                                mLastHmdRecenterTime,
-                                                                iRecenterButtonTimeMs,
-                                                                iHmdRecenterMethod,
-                                                                sHmdRecenterFromDeviceName,
-                                                                mCalibratedPosition,
-                                                                mCalibratedOrientation,
-                                                                mRecenterQuat,
-                                                                mUCVirtualMotionTracker,
-                                                                True,
-                                                                mClassSettings)
+                                                            mServiceClient,
+                                                            mHmdRecenterButtonPressed,
+                                                            mLastHmdRecenterTime,
+                                                            iRecenterButtonTimeMs,
+                                                            iHmdRecenterMethod,
+                                                            sHmdRecenterFromDeviceName,
+                                                            mCalibratedPosition,
+                                                            mCalibratedOrientation,
+                                                            mRecenterQuat,
+                                                            mUCVirtualMotionTracker,
+                                                            True,
+                                                            mClassSettings)
 
                                         If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
                                             mDisplayNextUpdate.Restart()
@@ -1477,9 +1489,7 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mCalibratedPosition = mRawPosition
 
                                         ' Playspace offsets, used for playspace calibration
-                                        If (Not mPlayspaceRecenterCalibrationRunning) Then
-                                            InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
-                                        End If
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
 
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPosition = mCalibratedPosition
@@ -1512,7 +1522,6 @@ Public Class UCVirtualMotionTrackerItem
                                                                                 mPlayspaceRecenterButtonHolding,
                                                                                 mLastPlayspaceRecenterTime,
                                                                                 iRecenterButtonTimeMs,
-                                                                                mPlayspaceRecenterCalibrationRunning,
                                                                                 mPlayspaceRecenterLastHmdSerial,
                                                                                 mPlayspaceRecenterCalibrationSave,
                                                                                 mClassSettings,
@@ -1899,6 +1908,12 @@ Public Class UCVirtualMotionTrackerItem
         Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
                                                            ByRef mPosition As Vector3,
                                                            ByRef mOrientation As Quaternion)
+            ' Dont use offsets while we calibrate.
+            If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING OrElse
+                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
+                Return
+            End If
+
             If (m_PlayspaceSettings.m_Valid) Then
                 Dim mCalibrationForward As Quaternion
                 Dim mForward As Vector3
@@ -1939,7 +1954,6 @@ Public Class UCVirtualMotionTrackerItem
                                                   ByRef mPlayspaceRecenterButtonHolding As Boolean,
                                                   ByRef mLastPlayspaceRecenterTime As Stopwatch,
                                                   ByRef iRecenterButtonTimeMs As Long,
-                                                  ByRef mPlayspaceRecenterCalibrationRunning As Boolean,
                                                   ByRef mPlayspaceRecenterLastHmdSerial As String,
                                                   ByRef mPlayspaceRecenterCalibrationSave As Boolean,
                                                   ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings,
@@ -1959,7 +1973,6 @@ Public Class UCVirtualMotionTrackerItem
                         If (g_iPlayCalibStatus <> ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                             g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING
                         End If
-                        mPlayspaceRecenterCalibrationRunning = True
 
                         mClassControllerSettings.m_PlayspaceSettings.Reset()
                         mPlayspaceRecenterLastHmdSerial = ""
@@ -2044,9 +2057,6 @@ Public Class UCVirtualMotionTrackerItem
                 If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
                     g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
                 End If
-                If (mPlayspaceRecenterCalibrationRunning) Then
-                    mPlayspaceRecenterCalibrationRunning = False
-                End If
                 If (mPlayspaceRecenterCalibrationSave) Then
                     mPlayspaceRecenterCalibrationSave = False
 
@@ -2057,27 +2067,29 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Private Sub InternalRecenterControllerLogic(ByRef bEnableControllerRecenter As Boolean,
-                                                   ByRef bHoldingRecenterButtons As Boolean,
-                                                   ByRef mRecenterButtonPressed As Boolean,
-                                                   ByRef mLastRecenterTime As Stopwatch,
-                                                   ByRef iRecenterButtonTimeMs As Long,
-                                                   ByRef iRecenterMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD,
-                                                   ByRef sRecenterFromDeviceName As String,
-                                                   ByRef mRecenterQuat As Quaternion,
-                                                   ByRef mCalibratedPosition As Vector3,
-                                                   ByRef mCalibratedOrientation As Quaternion,
-                                                   ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
-                                                   ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
-            If (bEnableControllerRecenter AndAlso bHoldingRecenterButtons) Then
+                                                    ByRef bHoldingRecenterButtons As Boolean,
+                                                    ByRef mRecenterButtonPressed As Boolean,
+                                                    ByRef mLastRecenterTime As Stopwatch,
+                                                    ByRef iRecenterButtonTimeMs As Long,
+                                                    ByRef iRecenterMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD,
+                                                    ByRef sRecenterFromDeviceName As String,
+                                                    ByRef mRecenterQuat As Quaternion,
+                                                    ByRef mCalibratedPosition As Vector3,
+                                                    ByRef mCalibratedOrientation As Quaternion,
+                                                    ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
+                                                    ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
+            If (bEnableControllerRecenter AndAlso (g_bManualControllerRecenter OrElse bHoldingRecenterButtons)) Then
                 If (Not mRecenterButtonPressed) Then
                     mRecenterButtonPressed = True
 
                     mLastRecenterTime.Restart()
                 End If
 
-                If (mLastRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                If (g_bManualControllerRecenter OrElse mLastRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
                     mLastRecenterTime.Stop()
                     mLastRecenterTime.Reset()
+
+                    g_bManualControllerRecenter = False
 
                     Dim bDoFactoryRecenter As Boolean = True
 
@@ -2177,66 +2189,71 @@ Public Class UCVirtualMotionTrackerItem
                 Next
             End If
 
-            If (bEnableHmdRecenter AndAlso bOtherControllerRecenterButtonPressed) Then
+            If (bEnableHmdRecenter AndAlso (g_bManualHmdRecenter OrElse bOtherControllerRecenterButtonPressed)) Then
                 If (Not mHmdRecenterButtonPressed) Then
                     mHmdRecenterButtonPressed = True
 
                     mLastHmdRecenterTime.Restart()
                 End If
 
-                If (mLastHmdRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                If (g_bManualHmdRecenter OrElse mLastHmdRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
                     mLastHmdRecenterTime.Stop()
                     mLastHmdRecenterTime.Reset()
+
+                    g_bManualHmdRecenter = False
 
                     Dim bDoFactoryRecenter As Boolean = True
 
                     Select Case (iHmdRecenterMethod)
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
-                            Dim sCurrentRecenterDeviceName As String = sHmdRecenterFromDeviceName
+                            ' Make sure the controller is valid for this operation.
+                            If (bOtherControllerRecenterButtonPressed) Then
+                                Dim sCurrentRecenterDeviceName As String = sHmdRecenterFromDeviceName
 
-                            ' If empty, do a autoamtic search and get any available HMD
-                            If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
-                                For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
-                                    If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
-                                        sCurrentRecenterDeviceName = mDevice.sSerial
+                                ' If empty, do a autoamtic search and get any available HMD
+                                If (String.IsNullOrEmpty(sCurrentRecenterDeviceName) OrElse sCurrentRecenterDeviceName.TrimEnd.Length = 0) Then
+                                    For Each mDevice In mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices()
+                                        If (mDevice.iType = UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE.ENUM_DEVICE_TYPE.HMD) Then
+                                            sCurrentRecenterDeviceName = mDevice.sSerial
 
-                                        Exit For
+                                            Exit For
+                                        End If
+                                    Next
+                                End If
+
+                                ' Check if we are the target device.
+                                Dim bIsTarget As Boolean = False
+
+                                If (bIsHmd) Then
+                                    bIsTarget = ((ClassVmtConst.VMT_DEVICE_NAME & "HMD") = sCurrentRecenterDeviceName)
+                                Else
+                                    bIsTarget = ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName)
+                                End If
+
+                                If (bIsTarget) Then
+                                    Dim mControllerPos As Vector3 = bOtherControllerPos
+                                    Dim mFromDevicePos As Vector3 = mCalibratedPosition
+
+                                    mControllerPos.Y = 0.0F
+                                    mFromDevicePos.Y = 0.0F
+
+                                    ' Make sure the distance is big enough to get the angle.
+                                    If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
+                                        Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+
+                                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
+
+                                        If (Not bIsHmd) Then
+                                            mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
+                                            mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
+                                        End If
+
+                                        bDoFactoryRecenter = False
                                     End If
-                                Next
-                            End If
-
-                            ' Check if we are the target device.
-                            Dim bIsTarget As Boolean = False
-
-                            If (bIsHmd) Then
-                                bIsTarget = ((ClassVmtConst.VMT_DEVICE_NAME & "HMD") = sCurrentRecenterDeviceName)
-                            Else
-                                bIsTarget = ((ClassVmtConst.VMT_DEVICE_NAME & m_VmtTracker) = sCurrentRecenterDeviceName)
-                            End If
-
-                            If (bIsTarget) Then
-                                Dim mControllerPos As Vector3 = bOtherControllerPos
-                                Dim mFromDevicePos As Vector3 = mCalibratedPosition
-
-                                mControllerPos.Y = 0.0F
-                                mFromDevicePos.Y = 0.0F
-
-                                ' Make sure the distance is big enough to get the angle.
-                                If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
-                                    Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
-
-                                    mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
-
-                                    If (Not bIsHmd) Then
-                                        mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
-                                        mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
-                                    End If
-
+                                Else
                                     bDoFactoryRecenter = False
                                 End If
-                            Else
-                                bDoFactoryRecenter = False
                             End If
                     End Select
 
@@ -2692,4 +2709,34 @@ Public Class UCVirtualMotionTrackerItem
             mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
         End Sub
     End Class
+
+    Private Sub Button_TrackerRecenter_Click(sender As Object, e As EventArgs) Handles Button_TrackerRecenter.Click
+        ContextMenuStrip_TrackerRecenter.Show(Button_TrackerRecenter, New Point(0, Button_TrackerRecenter.Height))
+    End Sub
+
+    Private Sub ToolStripMenuItem_TrackerRecenterNow_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRecenterNow.Click
+        Timer_RecenterTimer.Stop()
+        Timer_RecenterTimer.Interval = 1
+        Timer_RecenterTimer.Start()
+    End Sub
+
+    Private Sub ToolStripMenuItem_TrackerRecenterDelayed_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRecenterDelayed.Click
+        Timer_RecenterTimer.Stop()
+        Timer_RecenterTimer.Interval = 5000
+        Timer_RecenterTimer.Start()
+    End Sub
+
+    Private Sub Timer_RecenterTimer_Tick(sender As Object, e As EventArgs) Handles Timer_RecenterTimer.Tick
+        Timer_RecenterTimer.Stop()
+
+        If (g_mClassIO Is Nothing) Then
+            Return
+        End If
+
+        If (g_mClassIO.m_IsHMD) Then
+            g_mClassIO.StartHmdRecenter()
+        Else
+            g_mClassIO.StartControllerRecenter()
+        End If
+    End Sub
 End Class

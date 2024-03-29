@@ -123,6 +123,9 @@
   <metadata name="TimerFPS.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>477, 17</value>
+  </metadata>
   <data name="ComboBox_VMTTrackerID.ToolTip" xml:space="preserve">
     <value>The VMT slot in the OSC server.
 Usually this is the same as the controller id but you can use any free slot.
@@ -142,4 +145,10 @@ VMT trackers will be displayed as "PSMS_EX_#" with the VMT tracker id at the end
 For generic OSC clients, use generic controllers and trackers. 
 If you use SteamVR, you might want to use HTC controllers and trackers for better compatibility in games.</value>
   </data>
+  <metadata name="ContextMenuStrip_TrackerRecenter.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>576, 17</value>
+  </metadata>
+  <metadata name="Timer_RecenterTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>803, 17</value>
+  </metadata>
 </root>
