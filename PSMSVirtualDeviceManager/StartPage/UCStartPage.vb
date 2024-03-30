@@ -38,7 +38,12 @@ Public Class UCStartPage
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-
+        ToolStripComboBox_ChartSamples.Items.Clear()
+        ToolStripComboBox_ChartSamples.Items.Add("100")
+        ToolStripComboBox_ChartSamples.Items.Add("250")
+        ToolStripComboBox_ChartSamples.Items.Add("500")
+        ToolStripComboBox_ChartSamples.Items.Add("1000")
+        ToolStripComboBox_ChartSamples.SelectedIndex = 0
 
         SetStatusServiceConnected()
 
@@ -158,6 +163,8 @@ Public Class UCStartPage
         Dim mFpsWatch As New Stopwatch
         mFpsWatch.Start()
 
+        Dim iFrameCount As Integer = 0
+
         While True
             Try
                 Const LISTVIEW_SUBITEM_TYPE As Integer = 0
@@ -208,16 +215,16 @@ Public Class UCStartPage
                         Dim iFPS As Integer = -1
 
                         If (True) Then
-                            If (Not mLastSeqNumDic.ContainsKey(mDevice.m_Serial)) Then
-                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
-                            End If
-
-                            If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
-                                iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
+                                If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
+                                    iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                                End If
                             End If
 
                             mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
                         End If
+
+                        Dim iAxisX As Integer = iFrameCount
 
                         ClassUtils.AsyncInvoke(Me, Sub()
                                                        Dim bFound As Boolean = False
@@ -283,6 +290,13 @@ Public Class UCStartPage
 
                                                            ListView_ServiceDevices.Items.Add(mListViewItem)
                                                        End If
+
+                                                       ' Add to chart
+                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+
+                                                           AddChartValues(mDevice.m_Serial, Math.Max(iFPS, 0), iAxisX, iMaxCount)
+                                                       End If
                                                    End Sub)
                     Next
                 End If
@@ -301,19 +315,19 @@ Public Class UCStartPage
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
                         Dim iSeqNum As Integer = mDevice.m_OutputSeqNum
-                        Dim iFPS As Integer = -1
+                        Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (Not mLastSeqNumDic.ContainsKey(mDevice.m_Serial)) Then
-                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
-                            End If
-
-                            If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
-                                iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
+                                If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
+                                    iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                                End If
                             End If
 
                             mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
                         End If
+
+                        Dim iAxisX As Integer = iFrameCount
 
                         ClassUtils.AsyncInvoke(Me, Sub()
                                                        Dim bFound As Boolean = False
@@ -365,6 +379,13 @@ Public Class UCStartPage
 
                                                            ListView_ServiceDevices.Items.Add(mListViewItem)
                                                        End If
+
+                                                       ' Add to chart
+                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+
+                                                           AddChartValues(mDevice.m_Serial, Math.Max(iFPS, 0), iAxisX, iMaxCount)
+                                                       End If
                                                    End Sub)
                     Next
                 End If
@@ -384,19 +405,19 @@ Public Class UCStartPage
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
                         Dim iSeqNum As Integer = mDevice.m_OutputSeqNum
-                        Dim iFPS As Integer = -1
+                        Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (Not mLastSeqNumDic.ContainsKey(mDevice.m_Path)) Then
-                                mLastSeqNumDic(mDevice.m_Path) = iSeqNum
-                            End If
-
-                            If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
-                                iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Path)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Path) AndAlso mLastSeqNumDic(mDevice.m_Path) <> 0) Then
+                                If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
+                                    iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Path)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                                End If
                             End If
 
                             mLastSeqNumDic(mDevice.m_Path) = iSeqNum
                         End If
+
+                        Dim iAxisX As Integer = iFrameCount
 
                         ClassUtils.AsyncInvoke(Me, Sub()
                                                        If (Not Me.Visible) Then
@@ -443,6 +464,13 @@ Public Class UCStartPage
 
                                                            ListView_ServiceDevices.Items.Add(mListViewItem)
                                                        End If
+
+                                                       ' Add to chart
+                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+
+                                                           AddChartValues(mDevice.m_Path, Math.Max(iFPS, 0), iAxisX, iMaxCount)
+                                                       End If
                                                    End Sub)
                     Next
                 End If
@@ -453,9 +481,56 @@ Public Class UCStartPage
                 ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
+            iFrameCount += 1
+
             mFpsWatch.Restart()
             Threading.Thread.Sleep(500)
         End While
+    End Sub
+
+    Private Sub AddChartValues(sSeriesName As String, iValue As Integer, iCount As Integer, iMaxCount As Integer)
+        If (Not Chart_ServicePerformance.Enabled) Then
+            Return
+        End If
+
+        If (Chart_ServicePerformance.ChartAreas.Count < 1) Then
+            Return
+        End If
+
+        If (Chart_ServicePerformance.Series.IndexOf(sSeriesName) = -1) Then
+            Dim mSeries = Chart_ServicePerformance.Series.Add(sSeriesName)
+
+            mSeries.ChartArea = Chart_ServicePerformance.ChartAreas(0).Name
+            mSeries.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+            mSeries.BorderWidth = 2
+        End If
+
+        Chart_ServicePerformance.Series(sSeriesName).Points.AddXY(iCount, iValue)
+
+        While (Chart_ServicePerformance.Series(sSeriesName).Points.Count > 1 AndAlso
+            Chart_ServicePerformance.Series(sSeriesName).Points(1).XValue < (iCount - iMaxCount))
+            Chart_ServicePerformance.Series(sSeriesName).Points.RemoveAt(0)
+        End While
+
+        ' Adjust bounds
+        Dim mAxisX = Chart_ServicePerformance.ChartAreas(0).AxisX()
+        If (mAxisX.Maximum < iCount) Then
+            mAxisX.Maximum = iCount
+        End If
+        If (mAxisX.Minimum < (iCount - iMaxCount)) Then
+            mAxisX.Minimum = iCount - iMaxCount
+        End If
+
+        Dim mAxisY = Chart_ServicePerformance.ChartAreas(0).AxisY()
+        Dim iValueMax = Math.Ceiling(iValue * 0.1) * 10
+        Dim iValueMin = Math.Floor(iValue * 0.1) * 10
+
+        If (mAxisY.Maximum < iValueMax) Then
+            mAxisY.Maximum = iValueMax
+        End If
+        If (mAxisY.Minimum > iValueMin) Then
+            mAxisY.Minimum = iValueMin
+        End If
     End Sub
 
     Private Sub CleanUp()
@@ -1500,6 +1575,26 @@ Public Class UCStartPage
 
     Private Sub Button_PsmsInstallIgnore_Click(sender As Object, e As EventArgs) Handles Button_PsmsInstallIgnore.Click
         Panel_PsmsxInstall.Visible = False
+    End Sub
+
+    Private Sub Button_ChartSettings_Click(sender As Object, e As EventArgs) Handles Button_ChartSettings.Click
+        ContextMenuStrip_Chart.Show(Button_ChartSettings, New Point(0, Button_ChartSettings.Height))
+    End Sub
+
+    Private Sub ToolStripMenuItem_ChartEnabled_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_ChartEnabled.Click
+        Chart_ServicePerformance.Enabled = ToolStripMenuItem_ChartEnabled.Checked
+    End Sub
+
+    Private Sub ToolStripMenuItem_ChartClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_ChartClear.Click
+        Chart_ServicePerformance.Series.Clear()
+        Chart_ServicePerformance.ChartAreas(0).AxisX.Maximum = 1
+        Chart_ServicePerformance.ChartAreas(0).AxisX.Minimum = 0
+        Chart_ServicePerformance.ChartAreas(0).AxisY.Maximum = 1
+        Chart_ServicePerformance.ChartAreas(0).AxisY.Minimum = 0
+    End Sub
+
+    Private Sub ContextMenuStrip_Chart_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip_Chart.Opening
+        ToolStripMenuItem_ChartEnabled.Checked = Chart_ServicePerformance.Enabled
     End Sub
 End Class
 

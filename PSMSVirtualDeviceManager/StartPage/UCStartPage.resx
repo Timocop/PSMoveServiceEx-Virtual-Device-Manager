@@ -120,9 +120,6 @@
   <metadata name="ToolTip_Service.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="ToolTip_Service.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <data name="Label10.Text" xml:space="preserve">
     <value>A new update for PSMoveServiceEx is now accessible.
 This update includes various improvements, performance enhancements, and additional features. 
@@ -141,4 +138,7 @@ To experience the latest improvements, consider updating your software.</value>
 Click 'Download and Install' to download the newest release of PSMoveServiceEx.
 If you already installed PSMoveServiceEx click 'Browse' and browse for the application.</value>
   </data>
+  <metadata name="ContextMenuStrip_Chart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>307, 17</value>
+  </metadata>
 </root>
