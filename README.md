@@ -8,9 +8,6 @@ With this program you can control any virtual device in PSMoveServiceEx and even
  > **With Virtual Device Manager, you can use your PSMove controller as a controller, HMD 6-DoF replacement, or full-body solution!**
 **In the future more devices will be supported.**
 
- > ### ⚠️ The SteamVR driver is only compatible with [``PSMoveSerivceEx v0.19.1``](https://github.com/Timocop/PSMoveServiceEx/releases) and higher!
- > **Using this version on an older PSMoveServiceEx version can cause tracking problems or some features might not work properly!**
-
  > ### ⚠️ Anti-Virus false positives when installing LibUSB drivers!
  > **Because Playstation Eyes and PlayStation VR need a special driver for Windows, you need to install an open-source unsigned driver called [libusb](https://github.com/pbatard/libwdi). Because the driver is unsigned, some Anti-Virus vendors might see this as a malicious act and flag Virtual Device Manager while installing the driver. This is a false positive! Please whitelist the Virtual Device Manager folder to avoid this problem!**
 
