@@ -420,10 +420,6 @@ Public Class UCStartPage
                         Dim iAxisX As Integer = iFrameCount
 
                         ClassUtils.AsyncInvoke(Me, Sub()
-                                                       If (Not Me.Visible) Then
-                                                           Return
-                                                       End If
-
                                                        Dim bFound As Boolean = False
 
                                                        ' Change info about device 
