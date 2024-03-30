@@ -982,7 +982,7 @@ Public Class UCVirtualMotionTracker
             Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
             Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
             Private g_bHtcClampTouchpadToBounds As Boolean = True
-            Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION
+            Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION
 
             Private g_bEnableControllerRecenter As Boolean = True
             Private g_iControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
@@ -1317,7 +1317,7 @@ Public Class UCVirtualMotionTracker
 
                         m_ControllerSettings.m_HtcClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "HtcClampTouchpadToBounds", "true") = "true")
 
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.USE_POSITION))), tmpInt)) Then
+                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION))), tmpInt)) Then
                             m_ControllerSettings.m_HtcTouchpadMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD)
                         End If
 
