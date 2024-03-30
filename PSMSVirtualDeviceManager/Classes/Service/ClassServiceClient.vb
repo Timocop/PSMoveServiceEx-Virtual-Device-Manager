@@ -72,6 +72,8 @@ Public Class ClassServiceClient
 
         Property m_OutputSeqNum As Integer
 
+        Property m_LastTimeStamp As Date
+
         Function GetOrientationEuler() As Vector3
     End Interface
 
@@ -119,6 +121,8 @@ Public Class ClassServiceClient
         Public Property m_Orientation As Quaternion Implements ITrackerData.m_Orientation
 
         Public Property m_OutputSeqNum As Integer Implements ITrackerData.m_OutputSeqNum
+
+        Public Property m_LastTimeStamp As Date Implements ITrackerData.m_LastTimeStamp
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
             Return ClassQuaternionTools.FromQ(m_Orientation)
@@ -380,6 +384,7 @@ Public Class ClassServiceClient
                                         mData.m_Path = mTracker.m_Info.m_DevicePath
 
                                         mData.m_OutputSeqNum = mTracker.m_Info.m_Stats.m_SequenceNum
+                                        mData.m_LastTimeStamp = Now
 
                                         If (mTracker.m_Info.IsPoseValid) Then
                                             mData.m_Position = New Vector3(

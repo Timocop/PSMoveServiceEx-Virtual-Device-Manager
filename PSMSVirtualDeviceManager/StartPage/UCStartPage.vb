@@ -169,6 +169,28 @@ Public Class UCStartPage
                 Const LISTVIEW_SUBITEM_BATTERY As Integer = 6
                 Const LISTVIEW_SUBITEM_FPS As Integer = 7
 
+                ' Show disconnected devices
+                ClassUtils.AsyncInvoke(Me, Sub()
+                                               If (Not Me.Visible) Then
+                                                   Return
+                                               End If
+
+                                               ListView_ServiceDevices.BeginUpdate()
+                                               Try
+                                                   For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+
+                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                       Else
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       End If
+                                                   Next
+                                               Finally
+                                                   ListView_ServiceDevices.EndUpdate()
+                                               End Try
+                                           End Sub)
+
                 ' List Controllers
                 If (True) Then
                     Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetControllersData()
@@ -361,6 +383,20 @@ Public Class UCStartPage
 
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
+                        Dim iSeqNum As Integer = mDevice.m_OutputSeqNum
+                        Dim iFPS As Integer = -1
+
+                        If (True) Then
+                            If (Not mLastSeqNumDic.ContainsKey(mDevice.m_Path)) Then
+                                mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+                            End If
+
+                            If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
+                                iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Path)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
+                            End If
+
+                            mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+                        End If
 
                         ClassUtils.AsyncInvoke(Me, Sub()
                                                        If (Not Me.Visible) Then
@@ -380,8 +416,8 @@ Public Class UCStartPage
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                    mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = "N/A"
-                                                                   mListVIewItem.Tag = New Object() {Now}
+                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
+                                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
                                                                    bFound = True
                                                                End If
@@ -400,37 +436,16 @@ Public Class UCStartPage
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
                                                                 String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
                                                                 "N/A",
-                                                                "N/A"
+                                                                CStr(iFPS)
                                                             })
-                                                           mListViewItem.Tag = New Object() {Now}
+                                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                           mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
                                                            ListView_ServiceDevices.Items.Add(mListViewItem)
                                                        End If
                                                    End Sub)
                     Next
                 End If
-
-                ' Show disconnected devices
-                ClassUtils.AsyncInvoke(Me, Sub()
-                                               If (Not Me.Visible) Then
-                                                   Return
-                                               End If
-
-                                               ListView_ServiceDevices.BeginUpdate()
-                                               Try
-                                                   For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
-
-                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                                       Else
-                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                                       End If
-                                                   Next
-                                               Finally
-                                                   ListView_ServiceDevices.EndUpdate()
-                                               End Try
-                                           End Sub)
 
             Catch ex As Threading.ThreadAbortException
                 Throw
