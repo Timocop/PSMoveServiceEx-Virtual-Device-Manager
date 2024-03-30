@@ -70,6 +70,8 @@ Public Class ClassServiceClient
         Property m_Position As Vector3
         Property m_Orientation As Quaternion
 
+        Property m_OutputSeqNum As Integer
+
         Function GetOrientationEuler() As Vector3
     End Interface
 
@@ -115,6 +117,8 @@ Public Class ClassServiceClient
 
         Public Property m_Position As Vector3 Implements ITrackerData.m_Position
         Public Property m_Orientation As Quaternion Implements ITrackerData.m_Orientation
+
+        Public Property m_OutputSeqNum As Integer Implements ITrackerData.m_OutputSeqNum
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
             Return ClassQuaternionTools.FromQ(m_Orientation)
@@ -342,31 +346,64 @@ Public Class ClassServiceClient
                                 SyncLock __DataLock
                                     g_mTrackerPool.Clear()
                                 End SyncLock
-
-                                For Each mTracker As Trackers In mTrackers
-                                    Dim mData As New STRUC_TRACKER_DATA
-                                    mData.m_Id = mTracker.m_Info.m_TrackerId
-                                    mData.m_Path = mTracker.m_Info.m_DevicePath
-
-                                    If (mTracker.m_Info.IsPoseValid) Then
-                                        mData.m_Position = New Vector3(
-                                            mTracker.m_Info.m_Pose.m_Position.x,
-                                            mTracker.m_Info.m_Pose.m_Position.y,
-                                            mTracker.m_Info.m_Pose.m_Position.z)
-
-                                        mData.m_Orientation = New Quaternion(
-                                            mTracker.m_Info.m_Pose.m_Orientation.x,
-                                            mTracker.m_Info.m_Pose.m_Orientation.y,
-                                            mTracker.m_Info.m_Pose.m_Orientation.z,
-                                            mTracker.m_Info.m_Pose.m_Orientation.w)
-                                    End If
-
-                                    SyncLock __DataLock
-                                        g_mTrackerPool(mTracker.m_Info.m_TrackerId) = mData
-                                    End SyncLock
-                                Next
                             End If
                         End SyncLock
+
+                        For Each mTracker As Trackers In mTrackers
+                            Try
+                                SyncLock __ClientLock
+                                    If (Not mTracker.m_Listening) Then
+                                        mTracker.m_Listening = True
+                                    End If
+
+                                    If (Not mTracker.m_DataStreamEnabled) Then
+                                        mTracker.m_DataStreamEnabled = True
+                                    End If
+
+                                    mTracker.Refresh(Trackers.Info.RefreshFlags.RefreshType_Stats)
+
+                                    Dim bNewData As Boolean = False
+
+                                    SyncLock __DataLock
+                                        If (g_mTrackerPool.ContainsKey(mTracker.m_Info.m_TrackerId)) Then
+                                            If (mTracker.m_Info.m_Stats.m_SequenceNum <> g_mTrackerPool(mTracker.m_Info.m_TrackerId).m_OutputSeqNum) Then
+                                                bNewData = True
+                                            End If
+                                        Else
+                                            bNewData = True
+                                        End If
+                                    End SyncLock
+
+                                    If (bNewData) Then
+                                        Dim mData As New STRUC_TRACKER_DATA
+                                        mData.m_Id = mTracker.m_Info.m_TrackerId
+                                        mData.m_Path = mTracker.m_Info.m_DevicePath
+
+                                        mData.m_OutputSeqNum = mTracker.m_Info.m_Stats.m_SequenceNum
+
+                                        If (mTracker.m_Info.IsPoseValid) Then
+                                            mData.m_Position = New Vector3(
+                                                        mTracker.m_Info.m_Pose.m_Position.x,
+                                                        mTracker.m_Info.m_Pose.m_Position.y,
+                                                        mTracker.m_Info.m_Pose.m_Position.z)
+
+                                            mData.m_Orientation = New Quaternion(
+                                                        mTracker.m_Info.m_Pose.m_Orientation.x,
+                                                        mTracker.m_Info.m_Pose.m_Orientation.y,
+                                                        mTracker.m_Info.m_Pose.m_Orientation.z,
+                                                        mTracker.m_Info.m_Pose.m_Orientation.w)
+                                        End If
+
+                                        SyncLock __DataLock
+                                            g_mTrackerPool(mTracker.m_Info.m_TrackerId) = mData
+                                        End SyncLock
+                                    End If
+                                End SyncLock
+
+                            Catch ex As Exception
+                                ClassAdvancedExceptionLogging.WriteToLog(ex)
+                            End Try
+                        Next
 
                         For Each mController As Controllers In mControllers
                             Try
