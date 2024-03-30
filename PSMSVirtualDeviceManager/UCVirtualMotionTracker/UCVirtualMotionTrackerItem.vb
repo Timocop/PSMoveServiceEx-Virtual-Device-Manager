@@ -2078,7 +2078,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     ByRef mCalibratedOrientation As Quaternion,
                                                     ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
                                                     ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
-            If (bEnableControllerRecenter AndAlso (g_bManualControllerRecenter OrElse bHoldingRecenterButtons)) Then
+            If ((bEnableControllerRecenter AndAlso bHoldingRecenterButtons) OrElse g_bManualControllerRecenter) Then
                 If (Not mRecenterButtonPressed) Then
                     mRecenterButtonPressed = True
 
@@ -2189,7 +2189,7 @@ Public Class UCVirtualMotionTrackerItem
                 Next
             End If
 
-            If (bEnableHmdRecenter AndAlso (g_bManualHmdRecenter OrElse bOtherControllerRecenterButtonPressed)) Then
+            If ((bEnableHmdRecenter AndAlso bOtherControllerRecenterButtonPressed) OrElse g_bManualHmdRecenter) Then
                 If (Not mHmdRecenterButtonPressed) Then
                     mHmdRecenterButtonPressed = True
 
