@@ -96,7 +96,7 @@ Public Class UCVirtualTrackerItem
         For Each mDevice In ClassLibusbDriver.DRV_PS4CAM_KNOWN_CONFIGS
             Dim sHardwareId As String = String.Format("\USB#VID_{0}&PID_{1}", mDevice.VID, mDevice.PID)
 
-            If (mDeviceInfo.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLower)) Then
+            If (mDeviceInfo.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLowerInvariant)) Then
                 g_mClassCaptureLogic.m_IsPlayStationCamera = True
                 Exit For
             End If
