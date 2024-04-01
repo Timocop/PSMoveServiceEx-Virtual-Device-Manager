@@ -1438,6 +1438,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_PsvrRenderResolution.Name = "ComboBox_PsvrRenderResolution"
         Me.ComboBox_PsvrRenderResolution.Size = New System.Drawing.Size(186, 21)
         Me.ComboBox_PsvrRenderResolution.TabIndex = 1
+        Me.ToolTip_Default.SetToolTip(Me.ComboBox_PsvrRenderResolution, "Default: 130%")
         '
         'TabPage_SettingsPSmove
         '

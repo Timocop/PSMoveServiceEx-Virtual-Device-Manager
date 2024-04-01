@@ -349,6 +349,7 @@ Public Class UCVirtualMotionTracker
             ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.75F))
             ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.0F))
             ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.25F))
+            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.3F))
             ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.5F))
             ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.75F))
             ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(2.0F))
@@ -361,7 +362,7 @@ Public Class UCVirtualMotionTracker
 
             ComboBox_PsvrRenderResolution.SelectedIndex = 0
 
-            ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(1.0F)
+            ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(1.3F)
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -673,12 +674,12 @@ Public Class UCVirtualMotionTracker
 
         Public Const DISPLAY_DISTORTION_K0 As Single = 0.75F
         Public Const DISPLAY_DISTORTION_K1 As Single = 4.0F
-        Public Const DISPLAY_DISTORTION_SCALE As Single = 0.9F
+        Public Const DISPLAY_DISTORTION_SCALE As Single = 0.7F
         Public Const DISPLAY_DISTORTION_RED_OFFSET As Single = 0.0F
-        Public Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.009F
-        Public Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.019F
-        Public Const DISPLAY_HFOV As Single = 95.0F
-        Public Const DISPLAY_VFOV As Single = 100.0F
+        Public Const DISPLAY_DISTORTION_GREEN_OFFSET As Single = 0.006F
+        Public Const DISPLAY_DISTORTION_BLUE_OFFSET As Single = 0.012F
+        Public Const DISPLAY_HFOV As Single = 105.0F
+        Public Const DISPLAY_VFOV As Single = 110.0F
 
         Class STRUC_HMD_SETTINGS
             Private g_bUseCustomDistortion As Boolean = False
@@ -691,7 +692,7 @@ Public Class UCVirtualMotionTracker
             Private g_iHFov As Single = DISPLAY_HFOV
             Private g_iVFov As Single = DISPLAY_VFOV
             Private g_iIPD As Single = 67.0F
-            Private g_iRenderScale As Single = 1.0F
+            Private g_iRenderScale As Single = 1.3F '130% for 0.7 distortion scale compensation
 
             Public Property m_UseCustomDistortion As Boolean
                 Get
@@ -1416,7 +1417,7 @@ Public Class UCVirtualMotionTracker
                             m_HmdSettings.m_IPD = tmpSng
                         End If
 
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "RenderScale", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "RenderScale", "1.3"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             m_HmdSettings.m_RenderScale = tmpSng
                         End If
 
