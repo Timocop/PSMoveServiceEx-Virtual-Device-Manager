@@ -162,6 +162,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox_PlayCalibAutoscale = New System.Windows.Forms.CheckBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibSideOffset = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
@@ -1993,6 +1994,7 @@ Partial Class UCVirtualMotionTracker
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.CheckBox_PlayCalibAutoscale)
         Me.GroupBox3.Controls.Add(Me.Label17)
         Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibSideOffset)
         Me.GroupBox3.Controls.Add(Me.Label26)
@@ -2005,15 +2007,28 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox3.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(734, 252)
+        Me.GroupBox3.Size = New System.Drawing.Size(734, 221)
         Me.GroupBox3.TabIndex = 82
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Playspace Calibration Settings"
         '
+        'CheckBox_PlayCalibAutoscale
+        '
+        Me.CheckBox_PlayCalibAutoscale.AutoSize = True
+        Me.CheckBox_PlayCalibAutoscale.Enabled = False
+        Me.CheckBox_PlayCalibAutoscale.Location = New System.Drawing.Point(19, 148)
+        Me.CheckBox_PlayCalibAutoscale.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.CheckBox_PlayCalibAutoscale.Name = "CheckBox_PlayCalibAutoscale"
+        Me.CheckBox_PlayCalibAutoscale.Size = New System.Drawing.Size(151, 17)
+        Me.CheckBox_PlayCalibAutoscale.TabIndex = 84
+        Me.CheckBox_PlayCalibAutoscale.Text = "Adjust playspace scaling"
+        Me.CheckBox_PlayCalibAutoscale.UseVisualStyleBackColor = True
+        Me.CheckBox_PlayCalibAutoscale.Visible = False
+        '
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(19, 62)
+        Me.Label17.Location = New System.Drawing.Point(16, 62)
         Me.Label17.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(88, 13)
@@ -2050,7 +2065,7 @@ Partial Class UCVirtualMotionTracker
         'Label26
         '
         Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(19, 34)
+        Me.Label26.Location = New System.Drawing.Point(16, 34)
         Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(109, 13)
@@ -2073,7 +2088,7 @@ Partial Class UCVirtualMotionTracker
         'Button_PlayCalibReset
         '
         Me.Button_PlayCalibReset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 156)
+        Me.Button_PlayCalibReset.Location = New System.Drawing.Point(19, 181)
         Me.Button_PlayCalibReset.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Button_PlayCalibReset.Name = "Button_PlayCalibReset"
         Me.Button_PlayCalibReset.Size = New System.Drawing.Size(214, 23)
@@ -2086,7 +2101,7 @@ Partial Class UCVirtualMotionTracker
         'Label40
         '
         Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(19, 119)
+        Me.Label40.Location = New System.Drawing.Point(16, 119)
         Me.Label40.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
         Me.Label40.Name = "Label40"
         Me.Label40.Size = New System.Drawing.Size(96, 13)
@@ -2123,7 +2138,7 @@ Partial Class UCVirtualMotionTracker
         'Label29
         '
         Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(19, 90)
+        Me.Label29.Location = New System.Drawing.Point(16, 90)
         Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(101, 13)
@@ -3467,4 +3482,5 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Panel19 As Panel
     Friend WithEvents Label66 As Label
     Friend WithEvents Panel20 As Panel
+    Friend WithEvents CheckBox_PlayCalibAutoscale As CheckBox
 End Class

@@ -443,6 +443,7 @@ Public Class UCVirtualMotionTracker
                 NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_HeightOffset)))
                 ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_ForwardMethod))
                 ComboBox_PlayCalibControllerID.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibControllerID.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId))
+                CheckBox_PlayCalibAutoscale.Checked = g_ClassSettings.m_PlayspaceSettings.m_AutoScale
 
                 g_ClassSettings.SetUnsavedState(False)
             Finally
@@ -915,6 +916,7 @@ Public Class UCVirtualMotionTracker
             Public Property m_PosOffset As Vector3
             Public Property m_AngOffset As Quaternion
             Public Property m_HmdAngOffset As Quaternion
+            Public Property m_ScaleOffset As Single
 
             Public Property m_PointControllerBeginPos As Vector3
             Public Property m_PointControllerEndPos As Vector3
@@ -928,6 +930,7 @@ Public Class UCVirtualMotionTracker
             Public Property m_HeightOffset As Single
             Public Property m_ForwardMethod As ENUM_FORWARD_METHOD
             Public Property m_CalibrationControllerId As Integer
+            Public Property m_AutoScale As Boolean
 
             Public Sub Reset()
                 m_Valid = False
@@ -935,6 +938,7 @@ Public Class UCVirtualMotionTracker
                 m_PosOffset = New Vector3
                 m_AngOffset = Quaternion.Identity
                 m_HmdAngOffset = Quaternion.Identity
+                m_ScaleOffset = 1.0F
 
                 m_PointControllerBeginPos = New Vector3
                 m_PointControllerEndPos = New Vector3
@@ -1447,6 +1451,9 @@ Public Class UCVirtualMotionTracker
                             m_PlayspaceSettings.m_CalibrationControllerId = tmpInt
                         End If
 
+                        m_PlayspaceSettings.m_AutoScale = (mIni.ReadKeyValue("PlayspaceSettings", "AutoScale", "true") = "true")
+
+
 
                         ' Playspace Calibration Settings
                         tmpVec3 = New Vector3
@@ -1539,6 +1546,10 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_HmdAngOffset = tmpQuat
 
+                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "ScaleOffset", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            m_PlayspaceSettings.m_ScaleOffset = tmpSng
+                        End If
+
                         m_PlayspaceSettings.m_Valid = (mIni.ReadKeyValue("PlayspaceCalibrationSettings", "Valid", "false") = "true")
 
                     End Using
@@ -1608,6 +1619,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "SideOffset", m_PlayspaceSettings.m_SideOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "HeightOffset", m_PlayspaceSettings.m_HeightOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "ForwardMethod", CStr(CInt(m_PlayspaceSettings.m_ForwardMethod))))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceSettings", "AutoScale", If(m_PlayspaceSettings.m_AutoScale, "true", "false")))
                         End If
 
                         If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIB_CONTROLLER) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
@@ -1644,6 +1656,8 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetY", m_PlayspaceSettings.m_HmdAngOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetZ", m_PlayspaceSettings.m_HmdAngOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "HmdAngOffsetW", m_PlayspaceSettings.m_HmdAngOffset.W.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "ScaleOffset", m_PlayspaceSettings.m_ScaleOffset.ToString(Globalization.CultureInfo.InvariantCulture)))
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("PlayspaceCalibrationSettings", "Valid", If(m_PlayspaceSettings.m_Valid, "true", "false")))
                         End If
@@ -1956,4 +1970,5 @@ Public Class UCVirtualMotionTracker
         End Sub
 #End Region
     End Class
+
 End Class

@@ -62,8 +62,10 @@ Public Class ClassLibusbDriver
     }
     Public Shared ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 1) Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058A", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 1) Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058A", "00", USBVIDEO_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 2) Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 2) Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
     }
 
     Public Shared ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {

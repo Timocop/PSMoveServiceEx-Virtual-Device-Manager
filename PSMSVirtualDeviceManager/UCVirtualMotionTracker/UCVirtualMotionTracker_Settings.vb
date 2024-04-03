@@ -389,6 +389,15 @@
         g_ClassSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub CheckBox_PlayCalibAutoscale_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_PlayCalibAutoscale.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_ClassSettings.m_PlayspaceSettings.m_AutoScale = CheckBox_PlayCalibAutoscale.Checked
+        g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub ComboBox_PsvrRenderResolution_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PsvrRenderResolution.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return

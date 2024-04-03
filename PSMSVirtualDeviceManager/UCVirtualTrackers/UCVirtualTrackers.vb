@@ -425,6 +425,27 @@
 
         Public Sub New(mDeviceItem As ClassVideoInputDevices.ClassDeviceInfo)
             MyBase.New(mDeviceItem.m_Index, mDeviceItem.m_Name, mDeviceItem.m_Path, mDeviceItem.m_CLSID)
+
+            Dim iIndex As Integer = mDeviceItem.m_Index
+            Dim sName As String = mDeviceItem.m_Name
+            Dim sPath As String = mDeviceItem.m_Path
+            Dim sCLSID As String = mDeviceItem.m_CLSID
+
+            Dim sNameOverride As String = ""
+            For Each mDevice In ClassLibusbDriver.DRV_PS4CAM_KNOWN_CONFIGS
+                Dim sHardwareId As String = String.Format("\USB#VID_{0}&PID_{1}", mDevice.VID, mDevice.PID)
+
+                If (mDeviceItem.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLowerInvariant)) Then
+                    sNameOverride = mDevice.sName
+                    Exit For
+                End If
+            Next
+
+            If (Not String.IsNullOrEmpty(sNameOverride)) Then
+                sName = sNameOverride
+            End If
+
+            m_Name = sName
         End Sub
 
         Public Overrides Function ToString() As String
