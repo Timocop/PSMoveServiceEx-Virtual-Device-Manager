@@ -131,23 +131,19 @@
     Public Sub UploadFirmware()
         SyncLock _ThreadLock
             For Each mDevice In FIRM_PS4CAM_VIDEO
+                Dim iTries As Integer = 10
+
                 Dim mLibUsbDriver As New ClassLibusbDriver
-                If (mLibUsbDriver.VerifyPlaystation4CamDriver64() AndAlso
-                        mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID, mDevice.PID, Nothing, Nothing))) Then
+                While (mLibUsbDriver.VerifyPlaystation4CamDriver64() AndAlso
+                        mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID, mDevice.PID, Nothing, Nothing)))
                     mDevice.RunFirmwareUploader()
 
-                    ' Wait till the device arrives
-                    Dim mTimer As New Stopwatch()
-                    mTimer.Start()
+                    iTries -= 1
 
-                    While (Not mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID_V, mDevice.PID_V, Nothing, Nothing)))
-                        If (mTimer.ElapsedMilliseconds > 10000) Then
-                            Throw New ArgumentException("Unable to upload firmware")
-                        End If
-
-                        Threading.Thread.Sleep(100)
-                    End While
-                End If
+                    If (iTries < 1) Then
+                        Throw New ArgumentException("Unable to upload firmware")
+                    End If
+                End While
             Next
         End SyncLock
     End Sub
