@@ -4,7 +4,8 @@
     Private g_bInit As Boolean = False
 
     Public ReadOnly FIRM_PS4CAM_VIDEO As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera", "05A9", "0580", "05A9", "058B")
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Gen 1 Stereo Camera", "05A9", "0580", "05A9", "058A"),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Gen 2 Stereo Camera", "05A9", "0580", "05A9", "058B")
     }
 
     Private g_ClassUsbNotify As ClassDevicesNotify = Nothing
