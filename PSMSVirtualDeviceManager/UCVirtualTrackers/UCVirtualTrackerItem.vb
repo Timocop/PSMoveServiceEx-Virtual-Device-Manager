@@ -4,7 +4,7 @@ Imports System.Runtime.InteropServices
 Public Class UCVirtualTrackerItem
     Const MAX_PSMOVESERIVCE_TRACKERS = 8
     Const PROBE_MULTIPLY = 64
-    Const PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION = 0.5F
+    Const PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION = 0.75F
 
     Const PS4CAM_EYE_STARTPADDING As Integer = 48
     Const PS4CAM_EYE_HEIGHT_PADDING As Integer = 8
