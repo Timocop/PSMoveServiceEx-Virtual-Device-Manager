@@ -18,6 +18,7 @@
     Enum ENUM_DEVICE_USB_STATUS
         NOT_CONNECTED
         CONNECTED
+        CONNECTED_NO_DATA
         DRIVER_ISSUE
         GENERAL_ISSUE
     End Enum
@@ -103,6 +104,11 @@
                 Label_USBStatusText.Text = "USB cable is connected."
                 ClassPictureBox_USBStatus.Image = My.Resources.Connection_USB_OK
 
+            Case ENUM_DEVICE_USB_STATUS.CONNECTED_NO_DATA
+                Label_USBStatus.Text = "USB not receiving data"
+                Label_USBStatusText.Text = "USB cable is connected but does not receive any data. Make sure PSMoveServiceEx is running or check for connection problems."
+                ClassPictureBox_USBStatus.Image = My.Resources.Connection_USB_WARN
+
             Case ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE
                 Label_USBStatus.Text = "USB Driver Issue"
                 Label_USBStatusText.Text = "USB drivers are not properly installed. Please install the USB drivers correctly."
@@ -133,7 +139,7 @@
 
             Case ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
                 Label_DisplayStatus.Text = "Display not configured"
-                Label_DisplayStatusText.Text = "Display has not been configured correctly. Please setup the display correctly."
+                Label_DisplayStatusText.Text = "Display has not been configured correctly. Please set up the display configuration correctly."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
 
             Case ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
@@ -192,6 +198,7 @@
                 g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_WHITE_16
 
             Case (iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED OrElse
+                    iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED_NO_DATA OrElse
                     iUsbStatus = ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE OrElse
                     iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED OrElse
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED OrElse
@@ -292,7 +299,33 @@
 
                     If (mClassLibusbDriver.IsPlaystationVrUsbDeviceConnected()) Then
                         If (mClassLibusbDriver.VerifyPlaystationVrDriver64()) Then
-                            iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED
+                            Dim bHmdFound As Boolean = False
+
+                            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                                Dim mHmd = g_FormMain.g_mPSMoveServiceCAPI.m_HmdData(i)
+                                If (mHmd Is Nothing) Then
+                                    Continue For
+                                End If
+
+                                ' We only check for PSVR HMD
+                                If (TypeOf mHmd IsNot ClassServiceClient.STRUC_MORPHEUS_HMD_DATA) Then
+                                    Continue For
+                                End If
+
+                                ' HMD timeout
+                                If (Now - mHmd.m_LastTimeStamp > New TimeSpan(0, 0, 3)) Then
+                                    Continue For
+                                End If
+
+                                bHmdFound = True
+                            Next
+
+                            If (bHmdFound) Then
+                                iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED
+                            Else
+                                ' We are connected but no data?
+                                iUsbStatus = ENUM_DEVICE_USB_STATUS.CONNECTED_NO_DATA
+                            End If
                         Else
                             iUsbStatus = ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE
                         End If
