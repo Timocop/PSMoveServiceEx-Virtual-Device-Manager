@@ -32,11 +32,6 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl_Vmt = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
-        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
@@ -44,14 +39,12 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_OscRun = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_OscPause = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamSettings = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_SteamRun = New System.Windows.Forms.LinkLabel()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_DriverInstall = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_DriverUninstall = New System.Windows.Forms.LinkLabel()
         Me.Panel12 = New System.Windows.Forms.Panel()
@@ -60,11 +53,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.TabPage_Trackers = New System.Windows.Forms.TabPage()
         Me.Panel_AvailableTrackers = New System.Windows.Forms.Panel()
-        Me.ListView_Trackers = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Trackers = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem_TrackerRemove = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel19 = New System.Windows.Forms.Panel()
@@ -87,50 +75,40 @@ Partial Class UCVirtualMotionTracker
         Me.Label55 = New System.Windows.Forms.Label()
         Me.LinkLabel_PsvrDistReset = New System.Windows.Forms.LinkLabel()
         Me.NumericUpDown_PsvrVFov = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig14 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label53 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrHFov = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig13 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label52 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistBlueOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig16 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label51 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistGreenOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig15 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label50 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistRedOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig11 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label49 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistScale = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig12 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistK1 = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig10 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label47 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistK0 = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig9 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label46 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label63 = New System.Windows.Forms.Label()
         Me.Label54 = New System.Windows.Forms.Label()
         Me.CheckBox_ShowDistSettings = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_PsvrIPD = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig8 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox_PsvrRenderResolution = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsPSmove = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.LinkLabel_HmdRecenterFromOverride = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_PlayCalibShowSettings2 = New System.Windows.Forms.LinkLabel()
         Me.Label_ScrollFocus = New System.Windows.Forms.Label()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.CheckBox_PlayCalibEnabled = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_RecenterButtonTime = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Button_ResetRecenter = New System.Windows.Forms.Button()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.ComboBox_HmdRecenterFromDevice = New System.Windows.Forms.ComboBox()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.ComboBox_HmdRecenterMethod = New System.Windows.Forms.ComboBox()
         Me.Label19 = New System.Windows.Forms.Label()
@@ -145,10 +123,8 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.Label_TouchpadTouchAreaDeg = New System.Windows.Forms.Label()
         Me.NumericUpDown_TouchpadTouchArea = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.NumericUpDown_TouchpadClickDeadzone = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.LinkLabel_TouchpadShortcutHelp = New System.Windows.Forms.LinkLabel()
         Me.ComboBox_TouchpadMethod = New System.Windows.Forms.ComboBox()
@@ -165,24 +141,19 @@ Partial Class UCVirtualMotionTracker
         Me.CheckBox_PlayCalibAutoscale = New System.Windows.Forms.CheckBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibSideOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
         Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
         Me.NumericUpDown_OscMaxThreadFps = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label65 = New System.Windows.Forms.Label()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.CheckBox_OptimizePackets = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CheckBox_EnableHeptics = New System.Windows.Forms.CheckBox()
@@ -191,37 +162,31 @@ Partial Class UCVirtualMotionTracker
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.TabPage_PlayspaceCalib = New System.Windows.Forms.TabPage()
         Me.NumericUpDown_PlayCalibPrepTime = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig17 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Panel_PlayCalibSteps = New System.Windows.Forms.Panel()
         Me.Panel16 = New System.Windows.Forms.Panel()
         Me.Panel15 = New System.Windows.Forms.Panel()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality_CalibStep5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep5 = New System.Windows.Forms.ProgressBar()
         Me.Panel14 = New System.Windows.Forms.Panel()
         Me.Label36 = New System.Windows.Forms.Label()
         Me.Label37 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality_CalibStep4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep4 = New System.Windows.Forms.ProgressBar()
         Me.Panel17 = New System.Windows.Forms.Panel()
         Me.Panel13 = New System.Windows.Forms.Panel()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality_CalibStep3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep3 = New System.Windows.Forms.ProgressBar()
         Me.Panel18 = New System.Windows.Forms.Panel()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality_CalibStep2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep2 = New System.Windows.Forms.ProgressBar()
         Me.Panel9 = New System.Windows.Forms.Panel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality_CalibStep1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ProgressBar_PlayCalibStep1 = New System.Windows.Forms.ProgressBar()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label_PlayCalibTitle = New System.Windows.Forms.Label()
@@ -233,25 +198,18 @@ Partial Class UCVirtualMotionTracker
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Button_PlaySpaceManualCalib = New System.Windows.Forms.Button()
         Me.Label24 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.TabPage_Overrides = New System.Windows.Forms.TabPage()
         Me.Panel_SteamVRRestart = New System.Windows.Forms.Panel()
         Me.LinkLabel_SteamVRRestartOff = New System.Windows.Forms.LinkLabel()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button_Refresh = New System.Windows.Forms.Button()
         Me.Button_Remove = New System.Windows.Forms.Button()
         Me.Button_Add = New System.Windows.Forms.Button()
-        Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer_VMTTrackers = New System.Windows.Forms.Timer(Me.components)
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label42 = New System.Windows.Forms.Label()
         Me.Label43 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
@@ -259,6 +217,49 @@ Partial Class UCVirtualMotionTracker
         Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ComboBox_HmdRecenterFromDevice = New System.Windows.Forms.ComboBox()
+        Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ListView_Trackers = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.UcNumericUpDownBig14 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig13 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig16 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig15 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig11 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig12 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig10 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig9 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig8 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig17 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.ClassPictureBoxQuality_CalibStep5 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality_CalibStep4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality_CalibStep3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality_CalibStep2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality_CalibStep1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.PictureBox2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl_Vmt.SuspendLayout()
         Me.TabPage_Management.SuspendLayout()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -266,9 +267,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_Status.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
         Me.TabPage_Trackers.SuspendLayout()
         Me.Panel_AvailableTrackers.SuspendLayout()
@@ -324,24 +323,26 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibPrepTime.SuspendLayout()
         Me.Panel_PlayCalibSteps.SuspendLayout()
         Me.Panel15.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel14.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel13.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel11.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel7.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage_Overrides.SuspendLayout()
         Me.Panel_SteamVRRestart.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.ContextMenuStrip_AddTracker.SuspendLayout()
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel1.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ContextMenuStrip_AddTracker.SuspendLayout()
         Me.SuspendLayout()
         '
         'LinkLabel_ReadMore
@@ -402,42 +403,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
         Me.Panel_AvailableDevices.Size = New System.Drawing.Size(728, 250)
         Me.Panel_AvailableDevices.TabIndex = 2
-        '
-        'ListView_OscDevices
-        '
-        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
-        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_OscDevices.FullRowSelect = True
-        Me.ListView_OscDevices.HideSelection = False
-        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
-        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.ListView_OscDevices.TabIndex = 1
-        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Type
-        '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 100
-        '
-        'ColumnHeader_Serial
-        '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
-        '
-        'ColumnHeader_Position
-        '
-        Me.ColumnHeader_Position.Text = "Position"
-        Me.ColumnHeader_Position.Width = 150
-        '
-        'ColumnHeader_Orientation
-        '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 150
         '
         'Panel8
         '
@@ -524,18 +489,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label8.Size = New System.Drawing.Size(111, 21)
         Me.Label8.TabIndex = 18
         Me.Label8.Text = "Server Control"
-        '
-        'ClassPictureBoxQuality1
-        '
-        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
-        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality1.m_HighQuality = True
-        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
-        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality1.TabIndex = 10
-        Me.ClassPictureBoxQuality1.TabStop = False
         '
         'LinkLabel_OscRun
         '
@@ -626,18 +579,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label9.Size = New System.Drawing.Size(133, 21)
         Me.Label9.TabIndex = 18
         Me.Label9.Text = "SteamVR Support"
-        '
-        'ClassPictureBoxQuality2
-        '
-        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
-        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
-        Me.ClassPictureBoxQuality2.m_HighQuality = True
-        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
-        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
-        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
-        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality2.TabIndex = 10
-        Me.ClassPictureBoxQuality2.TabStop = False
         '
         'LinkLabel_DriverInstall
         '
@@ -741,44 +682,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_AvailableTrackers.Name = "Panel_AvailableTrackers"
         Me.Panel_AvailableTrackers.Size = New System.Drawing.Size(722, 192)
         Me.Panel_AvailableTrackers.TabIndex = 22
-        '
-        'ListView_Trackers
-        '
-        Me.ListView_Trackers.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_Trackers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader6, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5})
-        Me.ListView_Trackers.ContextMenuStrip = Me.ContextMenuStrip_Trackers
-        Me.ListView_Trackers.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_Trackers.FullRowSelect = True
-        Me.ListView_Trackers.HideSelection = False
-        Me.ListView_Trackers.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_Trackers.Margin = New System.Windows.Forms.Padding(16)
-        Me.ListView_Trackers.MultiSelect = False
-        Me.ListView_Trackers.Name = "ListView_Trackers"
-        Me.ListView_Trackers.Size = New System.Drawing.Size(720, 148)
-        Me.ListView_Trackers.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.ListView_Trackers.TabIndex = 21
-        Me.ListView_Trackers.UseCompatibleStateImageBehavior = False
-        Me.ListView_Trackers.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader6
-        '
-        Me.ColumnHeader6.Text = "Type"
-        Me.ColumnHeader6.Width = 100
-        '
-        'ColumnHeader3
-        '
-        Me.ColumnHeader3.Text = "ID"
-        Me.ColumnHeader3.Width = 75
-        '
-        'ColumnHeader4
-        '
-        Me.ColumnHeader4.Text = "VMT ID"
-        Me.ColumnHeader4.Width = 75
-        '
-        'ColumnHeader5
-        '
-        Me.ColumnHeader5.Text = "Tracker Role"
-        Me.ColumnHeader5.Width = 400
         '
         'ContextMenuStrip_Trackers
         '
@@ -1053,22 +956,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrVFov.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrVFov.TabIndex = 18
         '
-        'UcNumericUpDownBig14
-        '
-        Me.UcNumericUpDownBig14.AutoSize = True
-        Me.UcNumericUpDownBig14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig14.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig14.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig14.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig14.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig14.m_bDockOnControl = True
-        Me.UcNumericUpDownBig14.m_NumericUpDown = Me.NumericUpDown_PsvrVFov
-        Me.UcNumericUpDownBig14.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig14.m_ResetVisible = False
-        Me.UcNumericUpDownBig14.Name = "UcNumericUpDownBig14"
-        Me.UcNumericUpDownBig14.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig14.TabIndex = 27
-        '
         'Label53
         '
         Me.Label53.AutoSize = True
@@ -1087,22 +974,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrHFov.Name = "NumericUpDown_PsvrHFov"
         Me.NumericUpDown_PsvrHFov.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrHFov.TabIndex = 16
-        '
-        'UcNumericUpDownBig13
-        '
-        Me.UcNumericUpDownBig13.AutoSize = True
-        Me.UcNumericUpDownBig13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig13.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig13.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig13.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig13.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig13.m_bDockOnControl = True
-        Me.UcNumericUpDownBig13.m_NumericUpDown = Me.NumericUpDown_PsvrHFov
-        Me.UcNumericUpDownBig13.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig13.m_ResetVisible = False
-        Me.UcNumericUpDownBig13.Name = "UcNumericUpDownBig13"
-        Me.UcNumericUpDownBig13.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig13.TabIndex = 27
         '
         'Label52
         '
@@ -1125,22 +996,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrDistBlueOffset.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistBlueOffset.TabIndex = 14
         '
-        'UcNumericUpDownBig16
-        '
-        Me.UcNumericUpDownBig16.AutoSize = True
-        Me.UcNumericUpDownBig16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig16.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig16.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig16.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig16.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig16.m_bDockOnControl = True
-        Me.UcNumericUpDownBig16.m_NumericUpDown = Me.NumericUpDown_PsvrDistBlueOffset
-        Me.UcNumericUpDownBig16.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig16.m_ResetVisible = False
-        Me.UcNumericUpDownBig16.Name = "UcNumericUpDownBig16"
-        Me.UcNumericUpDownBig16.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig16.TabIndex = 27
-        '
         'Label51
         '
         Me.Label51.AutoSize = True
@@ -1161,22 +1016,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrDistGreenOffset.Name = "NumericUpDown_PsvrDistGreenOffset"
         Me.NumericUpDown_PsvrDistGreenOffset.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistGreenOffset.TabIndex = 12
-        '
-        'UcNumericUpDownBig15
-        '
-        Me.UcNumericUpDownBig15.AutoSize = True
-        Me.UcNumericUpDownBig15.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig15.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig15.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig15.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig15.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig15.m_bDockOnControl = True
-        Me.UcNumericUpDownBig15.m_NumericUpDown = Me.NumericUpDown_PsvrDistGreenOffset
-        Me.UcNumericUpDownBig15.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig15.m_ResetVisible = False
-        Me.UcNumericUpDownBig15.Name = "UcNumericUpDownBig15"
-        Me.UcNumericUpDownBig15.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig15.TabIndex = 27
         '
         'Label50
         '
@@ -1199,22 +1038,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrDistRedOffset.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistRedOffset.TabIndex = 10
         '
-        'UcNumericUpDownBig11
-        '
-        Me.UcNumericUpDownBig11.AutoSize = True
-        Me.UcNumericUpDownBig11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig11.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig11.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig11.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig11.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig11.m_bDockOnControl = True
-        Me.UcNumericUpDownBig11.m_NumericUpDown = Me.NumericUpDown_PsvrDistRedOffset
-        Me.UcNumericUpDownBig11.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig11.m_ResetVisible = False
-        Me.UcNumericUpDownBig11.Name = "UcNumericUpDownBig11"
-        Me.UcNumericUpDownBig11.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig11.TabIndex = 27
-        '
         'Label49
         '
         Me.Label49.AutoSize = True
@@ -1235,22 +1058,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrDistScale.Name = "NumericUpDown_PsvrDistScale"
         Me.NumericUpDown_PsvrDistScale.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistScale.TabIndex = 7
-        '
-        'UcNumericUpDownBig12
-        '
-        Me.UcNumericUpDownBig12.AutoSize = True
-        Me.UcNumericUpDownBig12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig12.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig12.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig12.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig12.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig12.m_bDockOnControl = True
-        Me.UcNumericUpDownBig12.m_NumericUpDown = Me.NumericUpDown_PsvrDistScale
-        Me.UcNumericUpDownBig12.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig12.m_ResetVisible = False
-        Me.UcNumericUpDownBig12.Name = "UcNumericUpDownBig12"
-        Me.UcNumericUpDownBig12.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig12.TabIndex = 27
         '
         'Label48
         '
@@ -1273,22 +1080,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrDistK1.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistK1.TabIndex = 5
         '
-        'UcNumericUpDownBig10
-        '
-        Me.UcNumericUpDownBig10.AutoSize = True
-        Me.UcNumericUpDownBig10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig10.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig10.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig10.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig10.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig10.m_bDockOnControl = True
-        Me.UcNumericUpDownBig10.m_NumericUpDown = Me.NumericUpDown_PsvrDistK1
-        Me.UcNumericUpDownBig10.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig10.m_ResetVisible = False
-        Me.UcNumericUpDownBig10.Name = "UcNumericUpDownBig10"
-        Me.UcNumericUpDownBig10.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig10.TabIndex = 27
-        '
         'Label47
         '
         Me.Label47.AutoSize = True
@@ -1309,22 +1100,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrDistK0.Name = "NumericUpDown_PsvrDistK0"
         Me.NumericUpDown_PsvrDistK0.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistK0.TabIndex = 3
-        '
-        'UcNumericUpDownBig9
-        '
-        Me.UcNumericUpDownBig9.AutoSize = True
-        Me.UcNumericUpDownBig9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig9.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig9.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig9.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig9.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig9.m_bDockOnControl = True
-        Me.UcNumericUpDownBig9.m_NumericUpDown = Me.NumericUpDown_PsvrDistK0
-        Me.UcNumericUpDownBig9.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig9.m_ResetVisible = False
-        Me.UcNumericUpDownBig9.Name = "UcNumericUpDownBig9"
-        Me.UcNumericUpDownBig9.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig9.TabIndex = 27
         '
         'Label46
         '
@@ -1394,22 +1169,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PsvrIPD.TabIndex = 3
         Me.NumericUpDown_PsvrIPD.Value = New Decimal(New Integer() {67, 0, 0, 0})
         '
-        'UcNumericUpDownBig8
-        '
-        Me.UcNumericUpDownBig8.AutoSize = True
-        Me.UcNumericUpDownBig8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig8.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig8.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig8.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig8.Location = New System.Drawing.Point(120, 0)
-        Me.UcNumericUpDownBig8.m_bDockOnControl = True
-        Me.UcNumericUpDownBig8.m_NumericUpDown = Me.NumericUpDown_PsvrIPD
-        Me.UcNumericUpDownBig8.m_ResetValue = New Decimal(New Integer() {67, 0, 0, 0})
-        Me.UcNumericUpDownBig8.m_ResetVisible = True
-        Me.UcNumericUpDownBig8.Name = "UcNumericUpDownBig8"
-        Me.UcNumericUpDownBig8.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig8.TabIndex = 7
-        '
         'Label45
         '
         Me.Label45.AutoSize = True
@@ -1456,6 +1215,7 @@ Partial Class UCVirtualMotionTracker
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.LinkLabel_HmdRecenterFromOverride)
         Me.GroupBox1.Controls.Add(Me.LinkLabel_PlayCalibShowSettings2)
         Me.GroupBox1.Controls.Add(Me.Label_ScrollFocus)
         Me.GroupBox1.Controls.Add(Me.Label25)
@@ -1479,10 +1239,25 @@ Partial Class UCVirtualMotionTracker
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox1.Location = New System.Drawing.Point(3, 241)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(734, 518)
+        Me.GroupBox1.Size = New System.Drawing.Size(734, 707)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
+        '
+        'LinkLabel_HmdRecenterFromOverride
+        '
+        Me.LinkLabel_HmdRecenterFromOverride.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_HmdRecenterFromOverride.AutoSize = True
+        Me.LinkLabel_HmdRecenterFromOverride.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_HmdRecenterFromOverride.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_HmdRecenterFromOverride.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_HmdRecenterFromOverride.Location = New System.Drawing.Point(188, 312)
+        Me.LinkLabel_HmdRecenterFromOverride.Name = "LinkLabel_HmdRecenterFromOverride"
+        Me.LinkLabel_HmdRecenterFromOverride.Size = New System.Drawing.Size(307, 13)
+        Me.LinkLabel_HmdRecenterFromOverride.TabIndex = 72
+        Me.LinkLabel_HmdRecenterFromOverride.TabStop = True
+        Me.LinkLabel_HmdRecenterFromOverride.Text = "Set from Head-mounted Display SteamVR tracker overrides"
+        Me.LinkLabel_HmdRecenterFromOverride.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'LinkLabel_PlayCalibShowSettings2
         '
@@ -1491,7 +1266,7 @@ Partial Class UCVirtualMotionTracker
         Me.LinkLabel_PlayCalibShowSettings2.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_PlayCalibShowSettings2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_PlayCalibShowSettings2.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_PlayCalibShowSettings2.Location = New System.Drawing.Point(51, 444)
+        Me.LinkLabel_PlayCalibShowSettings2.Location = New System.Drawing.Point(51, 457)
         Me.LinkLabel_PlayCalibShowSettings2.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.LinkLabel_PlayCalibShowSettings2.Name = "LinkLabel_PlayCalibShowSettings2"
         Me.LinkLabel_PlayCalibShowSettings2.Size = New System.Drawing.Size(191, 13)
@@ -1504,7 +1279,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.Label_ScrollFocus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label_ScrollFocus.AutoSize = True
-        Me.Label_ScrollFocus.Location = New System.Drawing.Point(636, 502)
+        Me.Label_ScrollFocus.Location = New System.Drawing.Point(636, 691)
         Me.Label_ScrollFocus.Name = "Label_ScrollFocus"
         Me.Label_ScrollFocus.Size = New System.Drawing.Size(92, 13)
         Me.Label_ScrollFocus.TabIndex = 70
@@ -1515,7 +1290,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label25.AutoSize = True
         Me.Label25.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label25.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label25.Location = New System.Drawing.Point(51, 393)
+        Me.Label25.Location = New System.Drawing.Point(51, 406)
         Me.Label25.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label25.Name = "Label25"
         Me.Label25.Padding = New System.Windows.Forms.Padding(3)
@@ -1527,7 +1302,7 @@ Partial Class UCVirtualMotionTracker
         '
         Me.CheckBox_PlayCalibEnabled.AutoSize = True
         Me.CheckBox_PlayCalibEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(19, 370)
+        Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(19, 383)
         Me.CheckBox_PlayCalibEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_PlayCalibEnabled.Name = "CheckBox_PlayCalibEnabled"
         Me.CheckBox_PlayCalibEnabled.Size = New System.Drawing.Size(228, 18)
@@ -1538,7 +1313,7 @@ Partial Class UCVirtualMotionTracker
         'NumericUpDown_RecenterButtonTime
         '
         Me.NumericUpDown_RecenterButtonTime.Controls.Add(Me.UcNumericUpDownBig7)
-        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 471)
+        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 484)
         Me.NumericUpDown_RecenterButtonTime.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_RecenterButtonTime.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_RecenterButtonTime.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
@@ -1548,26 +1323,10 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_RecenterButtonTime, "Default: 500")
         Me.NumericUpDown_RecenterButtonTime.Value = New Decimal(New Integer() {500, 0, 0, 0})
         '
-        'UcNumericUpDownBig7
-        '
-        Me.UcNumericUpDownBig7.AutoSize = True
-        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(48, 0)
-        Me.UcNumericUpDownBig7.m_bDockOnControl = True
-        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_RecenterButtonTime
-        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {500, 0, 0, 0})
-        Me.UcNumericUpDownBig7.m_ResetVisible = True
-        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
-        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig7.TabIndex = 72
-        '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(19, 473)
+        Me.Label13.Location = New System.Drawing.Point(19, 486)
         Me.Label13.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(172, 13)
@@ -1577,7 +1336,7 @@ Partial Class UCVirtualMotionTracker
         'Button_ResetRecenter
         '
         Me.Button_ResetRecenter.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_ResetRecenter.Location = New System.Drawing.Point(19, 328)
+        Me.Button_ResetRecenter.Location = New System.Drawing.Point(19, 341)
         Me.Button_ResetRecenter.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Button_ResetRecenter.Name = "Button_ResetRecenter"
         Me.Button_ResetRecenter.Size = New System.Drawing.Size(214, 23)
@@ -1595,7 +1354,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.Label20.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
         Me.Label20.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label20.Location = New System.Drawing.Point(51, 290)
+        Me.Label20.Location = New System.Drawing.Point(51, 223)
         Me.Label20.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label20.Name = "Label20"
         Me.Label20.Padding = New System.Windows.Forms.Padding(3)
@@ -1603,24 +1362,10 @@ Partial Class UCVirtualMotionTracker
         Me.Label20.TabIndex = 58
         Me.Label20.Text = "        Only PSMoveServiceEx supported trackers can be recentered!"
         '
-        'ComboBox_HmdRecenterFromDevice
-        '
-        Me.ComboBox_HmdRecenterFromDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_HmdRecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_HmdRecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_HmdRecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(191, 263)
-        Me.ComboBox_HmdRecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
-        Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
-        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
-        Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
-        Me.ToolTip_Info.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
-        '
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(51, 266)
+        Me.Label18.Location = New System.Drawing.Point(51, 291)
         Me.Label18.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(81, 13)
@@ -1634,7 +1379,7 @@ Partial Class UCVirtualMotionTracker
         Me.ComboBox_HmdRecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterMethod.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(191, 236)
+        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(191, 261)
         Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_HmdRecenterMethod.Name = "ComboBox_HmdRecenterMethod"
         Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(492, 21)
@@ -1643,7 +1388,7 @@ Partial Class UCVirtualMotionTracker
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(51, 239)
+        Me.Label19.Location = New System.Drawing.Point(51, 264)
         Me.Label19.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(98, 13)
@@ -1793,22 +1538,6 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadTouchArea, "Default: 7,50")
         Me.NumericUpDown_TouchpadTouchArea.Value = New Decimal(New Integer() {750, 0, 0, 131072})
         '
-        'UcNumericUpDownBig5
-        '
-        Me.UcNumericUpDownBig5.AutoSize = True
-        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(54, 0)
-        Me.UcNumericUpDownBig5.m_bDockOnControl = True
-        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_TouchpadTouchArea
-        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {750, 0, 0, 131072})
-        Me.UcNumericUpDownBig5.m_ResetVisible = True
-        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
-        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig5.TabIndex = 54
-        '
         'Label23
         '
         Me.Label23.AutoSize = True
@@ -1831,22 +1560,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_TouchpadClickDeadzone.TabIndex = 50
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadClickDeadzone, "Default: 0,25")
         Me.NumericUpDown_TouchpadClickDeadzone.Value = New Decimal(New Integer() {25, 0, 0, 131072})
-        '
-        'UcNumericUpDownBig6
-        '
-        Me.UcNumericUpDownBig6.AutoSize = True
-        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(54, 0)
-        Me.UcNumericUpDownBig6.m_bDockOnControl = True
-        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_TouchpadClickDeadzone
-        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {25, 0, 0, 131072})
-        Me.UcNumericUpDownBig6.m_ResetVisible = True
-        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
-        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig6.TabIndex = 54
         '
         'Label22
         '
@@ -2046,22 +1759,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibSideOffset.TabIndex = 83
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibSideOffset, "Default: 0")
         '
-        'UcNumericUpDownBig3
-        '
-        Me.UcNumericUpDownBig3.AutoSize = True
-        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig3.m_bDockOnControl = True
-        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_PlayCalibSideOffset
-        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig3.m_ResetVisible = True
-        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
-        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig3.TabIndex = 85
-        '
         'Label26
         '
         Me.Label26.AutoSize = True
@@ -2119,22 +1816,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
         '
-        'UcNumericUpDownBig2
-        '
-        Me.UcNumericUpDownBig2.AutoSize = True
-        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig2.m_bDockOnControl = True
-        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_PlayCalibHeightOffset
-        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig2.m_ResetVisible = True
-        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
-        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig2.TabIndex = 84
-        '
         'Label29
         '
         Me.Label29.AutoSize = True
@@ -2157,22 +1838,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
         Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
-        '
-        'UcNumericUpDownBig1
-        '
-        Me.UcNumericUpDownBig1.AutoSize = True
-        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig1.m_bDockOnControl = True
-        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_PlayCalibForwardOffset
-        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.UcNumericUpDownBig1.m_ResetVisible = True
-        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
-        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig1.TabIndex = 84
         '
         'TabPage_SettingsOther
         '
@@ -2204,22 +1869,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_OscMaxThreadFps.TabIndex = 53
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscMaxThreadFps, "Default: 200")
         Me.NumericUpDown_OscMaxThreadFps.Value = New Decimal(New Integer() {200, 0, 0, 0})
-        '
-        'UcNumericUpDownBig18
-        '
-        Me.UcNumericUpDownBig18.AutoSize = True
-        Me.UcNumericUpDownBig18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig18.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig18.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig18.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig18.Location = New System.Drawing.Point(52, 0)
-        Me.UcNumericUpDownBig18.m_bDockOnControl = True
-        Me.UcNumericUpDownBig18.m_NumericUpDown = Me.NumericUpDown_OscMaxThreadFps
-        Me.UcNumericUpDownBig18.m_ResetValue = New Decimal(New Integer() {200, 0, 0, 0})
-        Me.UcNumericUpDownBig18.m_ResetVisible = True
-        Me.UcNumericUpDownBig18.Name = "UcNumericUpDownBig18"
-        Me.UcNumericUpDownBig18.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig18.TabIndex = 52
         '
         'Label65
         '
@@ -2266,22 +1915,6 @@ Partial Class UCVirtualMotionTracker
         Me.NumericUpDown_OscThreadSleep.TabIndex = 49
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscThreadSleep, "Default: 1")
         Me.NumericUpDown_OscThreadSleep.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'UcNumericUpDownBig4
-        '
-        Me.UcNumericUpDownBig4.AutoSize = True
-        Me.UcNumericUpDownBig4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig4.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig4.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig4.Location = New System.Drawing.Point(52, 0)
-        Me.UcNumericUpDownBig4.m_bDockOnControl = True
-        Me.UcNumericUpDownBig4.m_NumericUpDown = Me.NumericUpDown_OscThreadSleep
-        Me.UcNumericUpDownBig4.m_ResetValue = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.UcNumericUpDownBig4.m_ResetVisible = True
-        Me.UcNumericUpDownBig4.Name = "UcNumericUpDownBig4"
-        Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig4.TabIndex = 52
         '
         'Label21
         '
@@ -2389,22 +2022,6 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibPrepTime, "Default: 5")
         Me.NumericUpDown_PlayCalibPrepTime.Value = New Decimal(New Integer() {5, 0, 0, 0})
         '
-        'UcNumericUpDownBig17
-        '
-        Me.UcNumericUpDownBig17.AutoSize = True
-        Me.UcNumericUpDownBig17.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig17.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig17.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig17.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig17.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig17.m_bDockOnControl = True
-        Me.UcNumericUpDownBig17.m_NumericUpDown = Me.NumericUpDown_PlayCalibPrepTime
-        Me.UcNumericUpDownBig17.m_ResetValue = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.UcNumericUpDownBig17.m_ResetVisible = True
-        Me.UcNumericUpDownBig17.Name = "UcNumericUpDownBig17"
-        Me.UcNumericUpDownBig17.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig17.TabIndex = 72
-        '
         'Label41
         '
         Me.Label41.AutoSize = True
@@ -2478,18 +2095,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label39.TabIndex = 1
         Me.Label39.Text = "Step 5: Calibration Completed"
         '
-        'ClassPictureBoxQuality_CalibStep5
-        '
-        Me.ClassPictureBoxQuality_CalibStep5.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep5.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep5.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep5.Name = "ClassPictureBoxQuality_CalibStep5"
-        Me.ClassPictureBoxQuality_CalibStep5.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep5.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep5.TabStop = False
-        '
         'ProgressBar_PlayCalibStep5
         '
         Me.ProgressBar_PlayCalibStep5.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -2529,18 +2134,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label37.Size = New System.Drawing.Size(148, 13)
         Me.Label37.TabIndex = 1
         Me.Label37.Text = "Step 4: Sampling End Point"
-        '
-        'ClassPictureBoxQuality_CalibStep4
-        '
-        Me.ClassPictureBoxQuality_CalibStep4.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep4.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep4.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep4.Name = "ClassPictureBoxQuality_CalibStep4"
-        Me.ClassPictureBoxQuality_CalibStep4.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep4.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep4.TabStop = False
         '
         'ProgressBar_PlayCalibStep4
         '
@@ -2591,18 +2184,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label32.TabIndex = 1
         Me.Label32.Text = "Step 3: Move Forward"
         '
-        'ClassPictureBoxQuality_CalibStep3
-        '
-        Me.ClassPictureBoxQuality_CalibStep3.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep3.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep3.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep3.Name = "ClassPictureBoxQuality_CalibStep3"
-        Me.ClassPictureBoxQuality_CalibStep3.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep3.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep3.TabStop = False
-        '
         'ProgressBar_PlayCalibStep3
         '
         Me.ProgressBar_PlayCalibStep3.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -2651,18 +2232,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label33.Size = New System.Drawing.Size(152, 13)
         Me.Label33.TabIndex = 1
         Me.Label33.Text = "Step 2: Sampling Start Point"
-        '
-        'ClassPictureBoxQuality_CalibStep2
-        '
-        Me.ClassPictureBoxQuality_CalibStep2.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep2.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep2.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep2.Name = "ClassPictureBoxQuality_CalibStep2"
-        Me.ClassPictureBoxQuality_CalibStep2.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep2.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep2.TabStop = False
         '
         'ProgressBar_PlayCalibStep2
         '
@@ -2714,18 +2283,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label30.Size = New System.Drawing.Size(106, 13)
         Me.Label30.TabIndex = 1
         Me.Label30.Text = "Step 1: Preparation"
-        '
-        'ClassPictureBoxQuality_CalibStep1
-        '
-        Me.ClassPictureBoxQuality_CalibStep1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ClassPictureBoxQuality_CalibStep1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
-        Me.ClassPictureBoxQuality_CalibStep1.Location = New System.Drawing.Point(0, 0)
-        Me.ClassPictureBoxQuality_CalibStep1.m_HighQuality = True
-        Me.ClassPictureBoxQuality_CalibStep1.Name = "ClassPictureBoxQuality_CalibStep1"
-        Me.ClassPictureBoxQuality_CalibStep1.Size = New System.Drawing.Size(53, 54)
-        Me.ClassPictureBoxQuality_CalibStep1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.ClassPictureBoxQuality_CalibStep1.TabIndex = 0
-        Me.ClassPictureBoxQuality_CalibStep1.TabStop = False
         '
         'ProgressBar_PlayCalibStep1
         '
@@ -2855,18 +2412,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label24.TabIndex = 27
         Me.Label24.Text = resources.GetString("Label24.Text")
         '
-        'ClassPictureBoxQuality3
-        '
-        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(16, 16)
-        Me.ClassPictureBoxQuality3.m_HighQuality = False
-        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
-        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(16, 16)
-        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality3.TabIndex = 26
-        Me.ClassPictureBoxQuality3.TabStop = False
-        '
         'TabPage_Overrides
         '
         Me.TabPage_Overrides.BackColor = System.Drawing.Color.White
@@ -2921,19 +2466,6 @@ Partial Class UCVirtualMotionTracker
         Me.Label3.Text = "SteamVR needs to be restarted for changes to take effect."
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'PictureBox3
-        '
-        Me.PictureBox3.Dock = System.Windows.Forms.DockStyle.Left
-        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
-        Me.PictureBox3.Location = New System.Drawing.Point(0, 0)
-        Me.PictureBox3.m_HighQuality = False
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(42, 40)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.PictureBox3.TabIndex = 26
-        Me.PictureBox3.TabStop = False
-        '
         'Label2
         '
         Me.Label2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -2983,44 +2515,6 @@ Partial Class UCVirtualMotionTracker
         Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_Add.UseVisualStyleBackColor = True
         '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox2.Location = New System.Drawing.Point(16, 16)
-        Me.PictureBox2.m_HighQuality = False
-        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox2.TabIndex = 24
-        Me.PictureBox2.TabStop = False
-        '
-        'ListView_Overrides
-        '
-        Me.ListView_Overrides.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ListView_Overrides.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
-        Me.ListView_Overrides.FullRowSelect = True
-        Me.ListView_Overrides.HideSelection = False
-        Me.ListView_Overrides.Location = New System.Drawing.Point(16, 81)
-        Me.ListView_Overrides.Margin = New System.Windows.Forms.Padding(16, 32, 16, 3)
-        Me.ListView_Overrides.Name = "ListView_Overrides"
-        Me.ListView_Overrides.Size = New System.Drawing.Size(728, 185)
-        Me.ListView_Overrides.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.ListView_Overrides.TabIndex = 0
-        Me.ListView_Overrides.UseCompatibleStateImageBehavior = False
-        Me.ListView_Overrides.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader1
-        '
-        Me.ColumnHeader1.Text = "Tracker"
-        Me.ColumnHeader1.Width = 300
-        '
-        'ColumnHeader2
-        '
-        Me.ColumnHeader2.Text = "Override"
-        Me.ColumnHeader2.Width = 300
-        '
         'ContextMenuStrip_Autostart
         '
         Me.ContextMenuStrip_Autostart.Name = "ContextMenuStrip1"
@@ -3052,17 +2546,6 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(800, 85)
         Me.Panel1.TabIndex = 23
-        '
-        'ClassPictureBoxQuality4
-        '
-        Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._374
-        Me.ClassPictureBoxQuality4.Location = New System.Drawing.Point(3, 3)
-        Me.ClassPictureBoxQuality4.m_HighQuality = True
-        Me.ClassPictureBoxQuality4.Name = "ClassPictureBoxQuality4"
-        Me.ClassPictureBoxQuality4.Size = New System.Drawing.Size(57, 57)
-        Me.ClassPictureBoxQuality4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality4.TabIndex = 16
-        Me.ClassPictureBoxQuality4.TabStop = False
         '
         'Label42
         '
@@ -3121,6 +2604,540 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
+        'ComboBox_HmdRecenterFromDevice
+        '
+        Me.ComboBox_HmdRecenterFromDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_HmdRecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdRecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdRecenterFromDevice.FormattingEnabled = True
+        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(191, 288)
+        Me.ComboBox_HmdRecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
+        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(492, 21)
+        Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
+        '
+        'ClassPictureBoxQuality4
+        '
+        Me.ClassPictureBoxQuality4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources._374
+        Me.ClassPictureBoxQuality4.Location = New System.Drawing.Point(3, 3)
+        Me.ClassPictureBoxQuality4.m_HighQuality = True
+        Me.ClassPictureBoxQuality4.Name = "ClassPictureBoxQuality4"
+        Me.ClassPictureBoxQuality4.Size = New System.Drawing.Size(57, 57)
+        Me.ClassPictureBoxQuality4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality4.TabIndex = 16
+        Me.ClassPictureBoxQuality4.TabStop = False
+        '
+        'ListView_OscDevices
+        '
+        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
+        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_OscDevices.FullRowSelect = True
+        Me.ListView_OscDevices.HideSelection = False
+        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_OscDevices.Name = "ListView_OscDevices"
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(726, 206)
+        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_OscDevices.TabIndex = 1
+        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 100
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Position
+        '
+        Me.ColumnHeader_Position.Text = "Position"
+        Me.ColumnHeader_Position.Width = 150
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 150
+        '
+        'ClassPictureBoxQuality1
+        '
+        Me.ClassPictureBoxQuality1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.devmgr_201_256x256_32
+        Me.ClassPictureBoxQuality1.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality1.m_HighQuality = True
+        Me.ClassPictureBoxQuality1.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality1.Name = "ClassPictureBoxQuality1"
+        Me.ClassPictureBoxQuality1.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality1.TabIndex = 10
+        Me.ClassPictureBoxQuality1.TabStop = False
+        '
+        'ClassPictureBoxQuality2
+        '
+        Me.ClassPictureBoxQuality2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_256x256_32
+        Me.ClassPictureBoxQuality2.Location = New System.Drawing.Point(32, 19)
+        Me.ClassPictureBoxQuality2.m_HighQuality = True
+        Me.ClassPictureBoxQuality2.Margin = New System.Windows.Forms.Padding(32, 16, 3, 3)
+        Me.ClassPictureBoxQuality2.Name = "ClassPictureBoxQuality2"
+        Me.ClassPictureBoxQuality2.Size = New System.Drawing.Size(64, 64)
+        Me.ClassPictureBoxQuality2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality2.TabIndex = 10
+        Me.ClassPictureBoxQuality2.TabStop = False
+        '
+        'ListView_Trackers
+        '
+        Me.ListView_Trackers.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_Trackers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader6, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5})
+        Me.ListView_Trackers.ContextMenuStrip = Me.ContextMenuStrip_Trackers
+        Me.ListView_Trackers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_Trackers.FullRowSelect = True
+        Me.ListView_Trackers.HideSelection = False
+        Me.ListView_Trackers.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_Trackers.Margin = New System.Windows.Forms.Padding(16)
+        Me.ListView_Trackers.MultiSelect = False
+        Me.ListView_Trackers.Name = "ListView_Trackers"
+        Me.ListView_Trackers.Size = New System.Drawing.Size(720, 148)
+        Me.ListView_Trackers.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_Trackers.TabIndex = 21
+        Me.ListView_Trackers.UseCompatibleStateImageBehavior = False
+        Me.ListView_Trackers.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader6
+        '
+        Me.ColumnHeader6.Text = "Type"
+        Me.ColumnHeader6.Width = 100
+        '
+        'ColumnHeader3
+        '
+        Me.ColumnHeader3.Text = "ID"
+        Me.ColumnHeader3.Width = 75
+        '
+        'ColumnHeader4
+        '
+        Me.ColumnHeader4.Text = "VMT ID"
+        Me.ColumnHeader4.Width = 75
+        '
+        'ColumnHeader5
+        '
+        Me.ColumnHeader5.Text = "Tracker Role"
+        Me.ColumnHeader5.Width = 400
+        '
+        'UcNumericUpDownBig14
+        '
+        Me.UcNumericUpDownBig14.AutoSize = True
+        Me.UcNumericUpDownBig14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig14.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig14.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig14.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig14.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig14.m_bDockOnControl = True
+        Me.UcNumericUpDownBig14.m_NumericUpDown = Me.NumericUpDown_PsvrVFov
+        Me.UcNumericUpDownBig14.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig14.m_ResetVisible = False
+        Me.UcNumericUpDownBig14.Name = "UcNumericUpDownBig14"
+        Me.UcNumericUpDownBig14.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig14.TabIndex = 27
+        '
+        'UcNumericUpDownBig13
+        '
+        Me.UcNumericUpDownBig13.AutoSize = True
+        Me.UcNumericUpDownBig13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig13.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig13.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig13.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig13.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig13.m_bDockOnControl = True
+        Me.UcNumericUpDownBig13.m_NumericUpDown = Me.NumericUpDown_PsvrHFov
+        Me.UcNumericUpDownBig13.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig13.m_ResetVisible = False
+        Me.UcNumericUpDownBig13.Name = "UcNumericUpDownBig13"
+        Me.UcNumericUpDownBig13.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig13.TabIndex = 27
+        '
+        'UcNumericUpDownBig16
+        '
+        Me.UcNumericUpDownBig16.AutoSize = True
+        Me.UcNumericUpDownBig16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig16.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig16.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig16.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig16.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig16.m_bDockOnControl = True
+        Me.UcNumericUpDownBig16.m_NumericUpDown = Me.NumericUpDown_PsvrDistBlueOffset
+        Me.UcNumericUpDownBig16.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig16.m_ResetVisible = False
+        Me.UcNumericUpDownBig16.Name = "UcNumericUpDownBig16"
+        Me.UcNumericUpDownBig16.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig16.TabIndex = 27
+        '
+        'UcNumericUpDownBig15
+        '
+        Me.UcNumericUpDownBig15.AutoSize = True
+        Me.UcNumericUpDownBig15.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig15.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig15.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig15.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig15.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig15.m_bDockOnControl = True
+        Me.UcNumericUpDownBig15.m_NumericUpDown = Me.NumericUpDown_PsvrDistGreenOffset
+        Me.UcNumericUpDownBig15.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig15.m_ResetVisible = False
+        Me.UcNumericUpDownBig15.Name = "UcNumericUpDownBig15"
+        Me.UcNumericUpDownBig15.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig15.TabIndex = 27
+        '
+        'UcNumericUpDownBig11
+        '
+        Me.UcNumericUpDownBig11.AutoSize = True
+        Me.UcNumericUpDownBig11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig11.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig11.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig11.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig11.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig11.m_bDockOnControl = True
+        Me.UcNumericUpDownBig11.m_NumericUpDown = Me.NumericUpDown_PsvrDistRedOffset
+        Me.UcNumericUpDownBig11.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig11.m_ResetVisible = False
+        Me.UcNumericUpDownBig11.Name = "UcNumericUpDownBig11"
+        Me.UcNumericUpDownBig11.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig11.TabIndex = 27
+        '
+        'UcNumericUpDownBig12
+        '
+        Me.UcNumericUpDownBig12.AutoSize = True
+        Me.UcNumericUpDownBig12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig12.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig12.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig12.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig12.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig12.m_bDockOnControl = True
+        Me.UcNumericUpDownBig12.m_NumericUpDown = Me.NumericUpDown_PsvrDistScale
+        Me.UcNumericUpDownBig12.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig12.m_ResetVisible = False
+        Me.UcNumericUpDownBig12.Name = "UcNumericUpDownBig12"
+        Me.UcNumericUpDownBig12.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig12.TabIndex = 27
+        '
+        'UcNumericUpDownBig10
+        '
+        Me.UcNumericUpDownBig10.AutoSize = True
+        Me.UcNumericUpDownBig10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig10.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig10.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig10.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig10.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig10.m_bDockOnControl = True
+        Me.UcNumericUpDownBig10.m_NumericUpDown = Me.NumericUpDown_PsvrDistK1
+        Me.UcNumericUpDownBig10.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig10.m_ResetVisible = False
+        Me.UcNumericUpDownBig10.Name = "UcNumericUpDownBig10"
+        Me.UcNumericUpDownBig10.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig10.TabIndex = 27
+        '
+        'UcNumericUpDownBig9
+        '
+        Me.UcNumericUpDownBig9.AutoSize = True
+        Me.UcNumericUpDownBig9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig9.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig9.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig9.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig9.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig9.m_bDockOnControl = True
+        Me.UcNumericUpDownBig9.m_NumericUpDown = Me.NumericUpDown_PsvrDistK0
+        Me.UcNumericUpDownBig9.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig9.m_ResetVisible = False
+        Me.UcNumericUpDownBig9.Name = "UcNumericUpDownBig9"
+        Me.UcNumericUpDownBig9.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig9.TabIndex = 27
+        '
+        'UcNumericUpDownBig8
+        '
+        Me.UcNumericUpDownBig8.AutoSize = True
+        Me.UcNumericUpDownBig8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig8.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig8.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig8.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig8.Location = New System.Drawing.Point(120, 0)
+        Me.UcNumericUpDownBig8.m_bDockOnControl = True
+        Me.UcNumericUpDownBig8.m_NumericUpDown = Me.NumericUpDown_PsvrIPD
+        Me.UcNumericUpDownBig8.m_ResetValue = New Decimal(New Integer() {67, 0, 0, 0})
+        Me.UcNumericUpDownBig8.m_ResetVisible = True
+        Me.UcNumericUpDownBig8.Name = "UcNumericUpDownBig8"
+        Me.UcNumericUpDownBig8.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig8.TabIndex = 7
+        '
+        'UcNumericUpDownBig7
+        '
+        Me.UcNumericUpDownBig7.AutoSize = True
+        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(48, 0)
+        Me.UcNumericUpDownBig7.m_bDockOnControl = True
+        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_RecenterButtonTime
+        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {500, 0, 0, 0})
+        Me.UcNumericUpDownBig7.m_ResetVisible = True
+        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
+        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig7.TabIndex = 72
+        '
+        'UcNumericUpDownBig5
+        '
+        Me.UcNumericUpDownBig5.AutoSize = True
+        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(54, 0)
+        Me.UcNumericUpDownBig5.m_bDockOnControl = True
+        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_TouchpadTouchArea
+        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {750, 0, 0, 131072})
+        Me.UcNumericUpDownBig5.m_ResetVisible = True
+        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
+        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig5.TabIndex = 54
+        '
+        'UcNumericUpDownBig6
+        '
+        Me.UcNumericUpDownBig6.AutoSize = True
+        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(54, 0)
+        Me.UcNumericUpDownBig6.m_bDockOnControl = True
+        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_TouchpadClickDeadzone
+        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {25, 0, 0, 131072})
+        Me.UcNumericUpDownBig6.m_ResetVisible = True
+        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
+        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig6.TabIndex = 54
+        '
+        'UcNumericUpDownBig3
+        '
+        Me.UcNumericUpDownBig3.AutoSize = True
+        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig3.m_bDockOnControl = True
+        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_PlayCalibSideOffset
+        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig3.m_ResetVisible = True
+        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
+        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig3.TabIndex = 85
+        '
+        'UcNumericUpDownBig2
+        '
+        Me.UcNumericUpDownBig2.AutoSize = True
+        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig2.m_bDockOnControl = True
+        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_PlayCalibHeightOffset
+        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig2.m_ResetVisible = True
+        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
+        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig2.TabIndex = 84
+        '
+        'UcNumericUpDownBig1
+        '
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_PlayCalibForwardOffset
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 84
+        '
+        'UcNumericUpDownBig18
+        '
+        Me.UcNumericUpDownBig18.AutoSize = True
+        Me.UcNumericUpDownBig18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig18.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig18.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig18.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig18.Location = New System.Drawing.Point(52, 0)
+        Me.UcNumericUpDownBig18.m_bDockOnControl = True
+        Me.UcNumericUpDownBig18.m_NumericUpDown = Me.NumericUpDown_OscMaxThreadFps
+        Me.UcNumericUpDownBig18.m_ResetValue = New Decimal(New Integer() {200, 0, 0, 0})
+        Me.UcNumericUpDownBig18.m_ResetVisible = True
+        Me.UcNumericUpDownBig18.Name = "UcNumericUpDownBig18"
+        Me.UcNumericUpDownBig18.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig18.TabIndex = 52
+        '
+        'UcNumericUpDownBig4
+        '
+        Me.UcNumericUpDownBig4.AutoSize = True
+        Me.UcNumericUpDownBig4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig4.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig4.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig4.Location = New System.Drawing.Point(52, 0)
+        Me.UcNumericUpDownBig4.m_bDockOnControl = True
+        Me.UcNumericUpDownBig4.m_NumericUpDown = Me.NumericUpDown_OscThreadSleep
+        Me.UcNumericUpDownBig4.m_ResetValue = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.UcNumericUpDownBig4.m_ResetVisible = True
+        Me.UcNumericUpDownBig4.Name = "UcNumericUpDownBig4"
+        Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig4.TabIndex = 52
+        '
+        'UcNumericUpDownBig17
+        '
+        Me.UcNumericUpDownBig17.AutoSize = True
+        Me.UcNumericUpDownBig17.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig17.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig17.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig17.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig17.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig17.m_bDockOnControl = True
+        Me.UcNumericUpDownBig17.m_NumericUpDown = Me.NumericUpDown_PlayCalibPrepTime
+        Me.UcNumericUpDownBig17.m_ResetValue = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.UcNumericUpDownBig17.m_ResetVisible = True
+        Me.UcNumericUpDownBig17.Name = "UcNumericUpDownBig17"
+        Me.UcNumericUpDownBig17.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig17.TabIndex = 72
+        '
+        'ClassPictureBoxQuality_CalibStep5
+        '
+        Me.ClassPictureBoxQuality_CalibStep5.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep5.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep5.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep5.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep5.Name = "ClassPictureBoxQuality_CalibStep5"
+        Me.ClassPictureBoxQuality_CalibStep5.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep5.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep5.TabStop = False
+        '
+        'ClassPictureBoxQuality_CalibStep4
+        '
+        Me.ClassPictureBoxQuality_CalibStep4.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep4.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep4.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep4.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep4.Name = "ClassPictureBoxQuality_CalibStep4"
+        Me.ClassPictureBoxQuality_CalibStep4.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep4.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep4.TabStop = False
+        '
+        'ClassPictureBoxQuality_CalibStep3
+        '
+        Me.ClassPictureBoxQuality_CalibStep3.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep3.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep3.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep3.Name = "ClassPictureBoxQuality_CalibStep3"
+        Me.ClassPictureBoxQuality_CalibStep3.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep3.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep3.TabStop = False
+        '
+        'ClassPictureBoxQuality_CalibStep2
+        '
+        Me.ClassPictureBoxQuality_CalibStep2.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep2.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep2.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep2.Name = "ClassPictureBoxQuality_CalibStep2"
+        Me.ClassPictureBoxQuality_CalibStep2.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep2.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep2.TabStop = False
+        '
+        'ClassPictureBoxQuality_CalibStep1
+        '
+        Me.ClassPictureBoxQuality_CalibStep1.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ClassPictureBoxQuality_CalibStep1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_32x32_32
+        Me.ClassPictureBoxQuality_CalibStep1.Location = New System.Drawing.Point(0, 0)
+        Me.ClassPictureBoxQuality_CalibStep1.m_HighQuality = True
+        Me.ClassPictureBoxQuality_CalibStep1.Name = "ClassPictureBoxQuality_CalibStep1"
+        Me.ClassPictureBoxQuality_CalibStep1.Size = New System.Drawing.Size(53, 54)
+        Me.ClassPictureBoxQuality_CalibStep1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.ClassPictureBoxQuality_CalibStep1.TabIndex = 0
+        Me.ClassPictureBoxQuality_CalibStep1.TabStop = False
+        '
+        'ClassPictureBoxQuality3
+        '
+        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(16, 16)
+        Me.ClassPictureBoxQuality3.m_HighQuality = False
+        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
+        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(16, 16)
+        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.ClassPictureBoxQuality3.TabIndex = 26
+        Me.ClassPictureBoxQuality3.TabStop = False
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Dock = System.Windows.Forms.DockStyle.Left
+        Me.PictureBox3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
+        Me.PictureBox3.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox3.m_HighQuality = False
+        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(42, 40)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.PictureBox3.TabIndex = 26
+        Me.PictureBox3.TabStop = False
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.PictureBox2.Location = New System.Drawing.Point(16, 16)
+        Me.PictureBox2.m_HighQuality = False
+        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox2.TabIndex = 24
+        Me.PictureBox2.TabStop = False
+        '
+        'ListView_Overrides
+        '
+        Me.ListView_Overrides.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView_Overrides.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
+        Me.ListView_Overrides.FullRowSelect = True
+        Me.ListView_Overrides.HideSelection = False
+        Me.ListView_Overrides.Location = New System.Drawing.Point(16, 81)
+        Me.ListView_Overrides.Margin = New System.Windows.Forms.Padding(16, 32, 16, 3)
+        Me.ListView_Overrides.Name = "ListView_Overrides"
+        Me.ListView_Overrides.Size = New System.Drawing.Size(728, 185)
+        Me.ListView_Overrides.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_Overrides.TabIndex = 0
+        Me.ListView_Overrides.UseCompatibleStateImageBehavior = False
+        Me.ListView_Overrides.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Tracker"
+        Me.ColumnHeader1.Width = 300
+        '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Override"
+        Me.ColumnHeader2.Width = 300
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -3139,10 +3156,8 @@ Partial Class UCVirtualMotionTracker
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
-        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
         Me.TabPage_Trackers.ResumeLayout(False)
         Me.Panel_AvailableTrackers.ResumeLayout(False)
@@ -3224,30 +3239,32 @@ Partial Class UCVirtualMotionTracker
         Me.Panel_PlayCalibSteps.ResumeLayout(False)
         Me.Panel15.ResumeLayout(False)
         Me.Panel15.PerformLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel14.ResumeLayout(False)
         Me.Panel14.PerformLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel13.ResumeLayout(False)
         Me.Panel13.PerformLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel11.ResumeLayout(False)
         Me.Panel11.PerformLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel7.ResumeLayout(False)
         Me.Panel7.PerformLayout()
-        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel5.ResumeLayout(False)
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage_Overrides.ResumeLayout(False)
         Me.Panel_SteamVRRestart.ResumeLayout(False)
         Me.Panel_SteamVRRestart.PerformLayout()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip_AddTracker.ResumeLayout(False)
+        CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep5, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -3325,7 +3342,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents ComboBox_RecenterFromDevice As ComboBox
     Friend WithEvents Label15 As Label
     Friend WithEvents ComboBox_TouchpadMethod As ComboBox
-    Friend WithEvents ComboBox_HmdRecenterFromDevice As ComboBox
     Friend WithEvents Label18 As Label
     Friend WithEvents ComboBox_HmdRecenterMethod As ComboBox
     Friend WithEvents Label19 As Label
@@ -3483,4 +3499,6 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents Label66 As Label
     Friend WithEvents Panel20 As Panel
     Friend WithEvents CheckBox_PlayCalibAutoscale As CheckBox
+    Friend WithEvents LinkLabel_HmdRecenterFromOverride As LinkLabel
+    Friend WithEvents ComboBox_HmdRecenterFromDevice As ComboBox
 End Class

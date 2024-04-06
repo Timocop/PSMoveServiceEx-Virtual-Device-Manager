@@ -531,4 +531,37 @@
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
+
+    Private Sub LinkLabel_HmdRecenterFromOverride_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HmdRecenterFromOverride.LinkClicked
+        Try
+            Dim mConfig As New ClassSteamVRConfig
+            mConfig.LoadConfig()
+
+            For Each mOverride In mConfig.m_ClassOverrides.GetOverrides()
+                If (mConfig.m_ClassOverrides.GetOverrideTypeFromName(mOverride.Value) <> ClassSteamVRConfig.ClassOverrides.ENUM_OVERRIDE_TYPE.HEAD) Then
+                    Continue For
+                End If
+
+                Dim sPaths As String() = mOverride.Key.Split("/"c)
+                If (sPaths.Count < 1) Then
+                    Continue For
+                End If
+
+                Dim sTrackerName As String = sPaths(sPaths.Count - 1)
+                If (String.IsNullOrEmpty(sTrackerName) OrElse Not sTrackerName.ToLowerInvariant.StartsWith(ClassVmtConst.VMT_DEVICE_NAME.ToLowerInvariant)) Then
+                    Continue For
+                End If
+
+                ComboBox_HmdRecenterFromDevice.Items.Clear()
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(sTrackerName, "Any Head-Mounted Display"))
+                ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
+
+                Return
+            Next
+
+            MessageBox.Show("Cound not find any Head-mounted Display SteamVR tracker overrides.", "Could not find override", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
 End Class
