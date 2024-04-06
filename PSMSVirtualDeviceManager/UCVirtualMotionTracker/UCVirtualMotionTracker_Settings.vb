@@ -5,15 +5,11 @@
         Private g_sDisplayName As String = ""
 
         Public Sub New(_Name As String)
-            Me.New(_Name, _Name)
-        End Sub
-
-        Public Sub New(_Name As String, _DisplayNameIfEEmpty As String)
             g_sName = _Name
             g_sDisplayName = _Name
 
             If (String.IsNullOrEmpty(g_sName) OrElse g_sName.TrimEnd.Length = 0) Then
-                g_sDisplayName = _DisplayNameIfEEmpty
+                g_sDisplayName = "Any Head-Mounted Display"
             End If
         End Sub
 
@@ -178,15 +174,13 @@
 
             Dim mDevices As New List(Of ClassRecenterDeviceItem)
             For Each mItem In g_ClassOscDevices.GetDevices
-                Dim sDisplayName As String = String.Format("{0}, {1}", mItem.iType.ToString, mItem.sSerial)
-
-                mDevices.Add(New ClassRecenterDeviceItem(mItem.sSerial, sDisplayName))
+                mDevices.Add(New ClassRecenterDeviceItem(mItem.sSerial))
             Next
 
             ComboBox_RecenterFromDevice.BeginUpdate()
             Try
                 ComboBox_RecenterFromDevice.Items.Clear()
-                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
+                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
                 ComboBox_RecenterFromDevice.Items.AddRange(mDevices.ToArray)
             Finally
                 ComboBox_RecenterFromDevice.EndUpdate()
@@ -204,7 +198,7 @@
 
             If (bLastFound) Then
                 ' Create new one if its not in the list
-                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName, "Any Head-Mounted Display")
+                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName)
 
                 ComboBox_RecenterFromDevice.Items.Add(mSelectedItem)
                 ComboBox_RecenterFromDevice.SelectedItem = mSelectedItem
@@ -259,15 +253,13 @@
 
             Dim mDevices As New List(Of ClassRecenterDeviceItem)
             For Each mItem In g_ClassOscDevices.GetDevices
-                Dim sDisplayName As String = String.Format("{0}, {1}", mItem.iType.ToString, mItem.sSerial)
-
-                mDevices.Add(New ClassRecenterDeviceItem(mItem.sSerial, sDisplayName))
+                mDevices.Add(New ClassRecenterDeviceItem(mItem.sSerial))
             Next
 
             ComboBox_HmdRecenterFromDevice.BeginUpdate()
             Try
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
-                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
                 ComboBox_HmdRecenterFromDevice.Items.AddRange(mDevices.ToArray)
             Finally
                 ComboBox_HmdRecenterFromDevice.EndUpdate()
@@ -285,7 +277,7 @@
 
             If (bLastFound) Then
                 ' Create new one if its not in the list
-                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName, "Any Head-Mounted Display")
+                Dim mSelectedItem = New ClassRecenterDeviceItem(sSelectedName)
 
                 ComboBox_HmdRecenterFromDevice.Items.Add(mSelectedItem)
                 ComboBox_HmdRecenterFromDevice.SelectedItem = mSelectedItem
@@ -553,7 +545,7 @@
                 End If
 
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
-                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(sTrackerName, "Any Head-Mounted Display"))
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(sTrackerName))
                 ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
 
                 Return

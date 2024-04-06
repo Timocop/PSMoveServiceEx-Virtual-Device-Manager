@@ -253,7 +253,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
+            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
 
             ComboBox_RecenterFromDevice.SelectedIndex = 0
         Finally
@@ -280,7 +280,7 @@ Public Class UCVirtualMotionTracker
             g_bIgnoreEvents = True
 
             ComboBox_HmdRecenterFromDevice.Items.Clear()
-            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem("", "Any Head-Mounted Display"))
+            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
 
             ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
         Finally
@@ -401,14 +401,14 @@ Public Class UCVirtualMotionTracker
                 ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_ControllerRecenterMethod))
 
                 ComboBox_RecenterFromDevice.Items.Clear()
-                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName, "Any Head-Mounted Display"))
+                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName))
                 ComboBox_RecenterFromDevice.SelectedIndex = 0
 
                 CheckBox_HmdRecenterEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnableHmdRecenter
                 ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HmdRecenterMethod))
 
                 ComboBox_HmdRecenterFromDevice.Items.Clear()
-                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName, "Any Head-Mounted Display"))
+                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName))
                 ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
 
                 NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs))
