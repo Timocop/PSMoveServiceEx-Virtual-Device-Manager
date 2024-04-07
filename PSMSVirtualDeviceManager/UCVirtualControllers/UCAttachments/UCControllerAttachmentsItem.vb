@@ -700,8 +700,6 @@ Public Class UCControllerAttachmentsItem
     End Class
 
     Class ClassConfig
-        Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "attach_devices.ini")
-
         Private g_mUCRemoteDeviceItem As UCControllerAttachmentsItem
 
         Public Sub New(_UCRemoteDeviceItem As UCControllerAttachmentsItem)
@@ -715,7 +713,7 @@ Public Class UCControllerAttachmentsItem
 
             Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
 
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
                     SyncLock _ThreadLock
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
@@ -745,7 +743,7 @@ Public Class UCControllerAttachmentsItem
 
             Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
 
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
                     Dim iJointX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iJointY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)

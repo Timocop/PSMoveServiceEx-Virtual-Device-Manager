@@ -1365,7 +1365,7 @@ Public Class UCStartPage
         Try
             Using mProcess As New Process
                 mProcess.StartInfo.FileName = "notepad.exe"
-                mProcess.StartInfo.Arguments = String.Format("""{0}""", ClassAdvancedExceptionLogging.g_sLogName)
+                mProcess.StartInfo.Arguments = String.Format("""{0}""", ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
                 mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.System))
                 mProcess.StartInfo.UseShellExecute = False
 

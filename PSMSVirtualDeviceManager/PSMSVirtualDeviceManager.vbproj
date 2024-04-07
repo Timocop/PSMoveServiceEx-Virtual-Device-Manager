@@ -179,6 +179,7 @@
     <Compile Include="Classes\ClassMonitor.vb" />
     <Compile Include="Classes\ClassVideoInputDevices.vb" />
     <Compile Include="Classes\Service\ClassAdvancedExceptionLogging.vb" />
+    <Compile Include="Classes\Service\ClassConfigConst.vb" />
     <Compile Include="Classes\Tools\ClassIni.vb" />
     <Compile Include="Classes\ClassLibusbDriver.vb" />
     <Compile Include="Classes\Tools\ClassListViewEx.vb">

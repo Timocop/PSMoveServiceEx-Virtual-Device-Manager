@@ -2156,8 +2156,6 @@ Public Class UCVirtualTrackerItem
         End Sub
 
         Class ClassConfig
-            Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "devices.ini")
-
             Private g_mClassCaptureLogic As ClassCaptureLogic
             Private g_bConfigLoaded As Boolean = False
 
@@ -2166,7 +2164,7 @@ Public Class UCVirtualTrackerItem
             End Sub
 
             Public Shared Function CanDeviceAutostart(sDevicePath As String) As Boolean
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.Read)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.Read)
                     Using mIni As New ClassIni(mStream)
                         Return (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                     End Using
@@ -2182,7 +2180,7 @@ Public Class UCVirtualTrackerItem
 
                 Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
@@ -2212,7 +2210,7 @@ Public Class UCVirtualTrackerItem
 
                 Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True, True)
                         SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True, True)

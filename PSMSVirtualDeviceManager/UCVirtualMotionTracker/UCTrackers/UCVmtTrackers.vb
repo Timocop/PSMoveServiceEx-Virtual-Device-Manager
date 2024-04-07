@@ -47,7 +47,7 @@ Public Class UCVmtTrackers
         Dim mAutostartControllerIndexes As New List(Of Integer)
         Dim mAutostartHmdIndexes As New List(Of Integer)
 
-        Using mStream As New IO.FileStream(UCVirtualMotionTracker.g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
@@ -129,7 +129,7 @@ Public Class UCVmtTrackers
         Dim bIsHMD As Boolean = CBool(mTagData(0))
         Dim iIndex As Integer = CInt(mTagData(1))
 
-        Using mStream As New IO.FileStream(UCVirtualMotionTracker.g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 If (bIsHMD) Then
                     Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
@@ -149,7 +149,7 @@ Public Class UCVmtTrackers
     End Sub
 
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
-        Using mStream As New IO.FileStream(UCVirtualMotionTracker.g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then

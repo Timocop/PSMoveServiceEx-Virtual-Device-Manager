@@ -4,7 +4,6 @@ Public Class UCControllerAttachments
     Public g_mUCVirtualControllers As UCVirtualControllers
 
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
-    Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "attach_devices.ini")
 
     Class ClassAttachmentListViewItem
         Inherits ListViewItem
@@ -133,7 +132,7 @@ Public Class UCControllerAttachments
     Private Sub AutostartLoad()
         Dim mAutostartIndexes As New List(Of Integer)
 
-        Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
@@ -180,7 +179,7 @@ Public Class UCControllerAttachments
 
         Dim iIndex As Integer = CInt(mItem.Tag)
 
-        Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
@@ -192,7 +191,7 @@ Public Class UCControllerAttachments
     End Sub
 
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
-        Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                     If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then

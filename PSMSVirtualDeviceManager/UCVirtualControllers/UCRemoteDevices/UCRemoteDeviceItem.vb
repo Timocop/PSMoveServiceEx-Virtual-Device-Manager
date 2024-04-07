@@ -619,7 +619,6 @@ Public Class UCRemoteDeviceItem
     End Class
 
     Class ClassConfig
-        Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "remote_devices.ini")
 
         Private g_mUCRemoteDeviceItem As UCRemoteDeviceItem
 
@@ -630,7 +629,7 @@ Public Class UCRemoteDeviceItem
         Public Sub SaveConfig()
             Dim sDevicePath As String = g_mUCRemoteDeviceItem.m_TrackerName
 
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
                     SyncLock _ThreadLock
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
@@ -652,7 +651,7 @@ Public Class UCRemoteDeviceItem
         Public Sub LoadConfig()
             Dim sDevicePath As String = g_mUCRemoteDeviceItem.m_TrackerName
 
-            Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
                     Dim iX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     Dim iY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)

@@ -1,5 +1,4 @@
 ﻿Public Class ClassAdvancedExceptionLogging
-    Public Shared ReadOnly g_sLogName As String = IO.Path.Combine(Application.StartupPath, "application_error.ini")
     Private Shared g_mLogThread As Threading.Thread = Nothing
     Private Shared g_mLogPool As New ClassIni()
     Private Shared g_mThreadLock As New Object()
@@ -15,8 +14,8 @@
                 Return
             End If
 
-            If (IO.File.Exists(g_sLogName)) Then
-                g_mLogPool.ParseFromFile(g_sLogName)
+            If (IO.File.Exists(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)) Then
+                g_mLogPool.ParseFromFile(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
             End If
 
             g_mExceptionQueue.Clear()
@@ -34,7 +33,7 @@
                 Return
             End If
 
-            g_mLogPool.ExportToFile(g_sLogName)
+            g_mLogPool.ExportToFile(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
         End SyncLock
     End Sub
 

@@ -5,8 +5,6 @@ Imports Rug.Osc
 Public Class UCVirtualMotionTracker
     Public g_mFormMain As FormMain
 
-    Public Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
-
     Public g_ClassOscServer As ClassOscServer
     Public g_ClassSettings As ClassSettings
     Public g_ClassOscDevices As ClassOscDevices
@@ -901,7 +899,7 @@ Public Class UCVirtualMotionTracker
                 Dim tmpVec3 As Vector3
                 Dim tmpQuat As Quaternion
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
 
                         ' Controller Settings
@@ -1159,7 +1157,7 @@ Public Class UCVirtualMotionTracker
                     Return
                 End If
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 

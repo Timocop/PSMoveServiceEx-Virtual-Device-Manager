@@ -2614,8 +2614,6 @@ Public Class UCVirtualMotionTrackerItem
     End Class
 
     Class ClassConfig
-        Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
-
         Private g_mUCRemoteDeviceItem As UCVirtualMotionTrackerItem
 
         Public Sub New(_UCRemoteDeviceItem As UCVirtualMotionTrackerItem)
@@ -2633,7 +2631,7 @@ Public Class UCVirtualMotionTrackerItem
                 ' For HMDs 
                 Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         SyncLock _ThreadLock
                             Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
@@ -2648,7 +2646,7 @@ Public Class UCVirtualMotionTrackerItem
                 ' For Controllers
                 Dim sDevicePath As String = CStr(iDeviceID)
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         SyncLock _ThreadLock
                             Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
@@ -2676,7 +2674,7 @@ Public Class UCVirtualMotionTrackerItem
                 ' For HMDs 
                 Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
 
                         ' Nothing?
@@ -2687,7 +2685,7 @@ Public Class UCVirtualMotionTrackerItem
                 ' For Controllers
                 Dim sDevicePath As String = CStr(iDeviceID)
 
-                Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
                         SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))

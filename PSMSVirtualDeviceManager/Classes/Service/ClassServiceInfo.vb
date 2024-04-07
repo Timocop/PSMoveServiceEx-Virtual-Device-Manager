@@ -1,5 +1,4 @@
 ﻿Public Class ClassServiceInfo
-    Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "settings.ini")
     Private g_sFileName As String = ""
 
     Private g_bConfigsLoaded As Boolean = False
@@ -83,7 +82,7 @@
             Return
         End If
 
-        Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
@@ -95,7 +94,7 @@
     End Sub
 
     Public Sub LoadConfig()
-        Using mStream As New IO.FileStream(g_sConfigPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
             Using mIni As New ClassIni(mStream)
                 m_FileName = mIni.ReadKeyValue("Settings", "PSMoveServiceLocation", "")
             End Using
