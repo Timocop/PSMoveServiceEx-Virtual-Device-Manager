@@ -26,6 +26,7 @@ Partial Class UCVmtManagement
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -53,6 +54,8 @@ Partial Class UCVmtManagement
         Me.Label_OscStatus = New System.Windows.Forms.Label()
         Me.Panel_OscStatus = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_AvailableDevices.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.Panel_Status.SuspendLayout()
@@ -389,7 +392,23 @@ Partial Class UCVmtManagement
         Me.Panel3.Size = New System.Drawing.Size(766, 1)
         Me.Panel3.TabIndex = 0
         '
-        'UCManagement
+        'ToolTip_Info
+        '
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
+        '
+        'ToolTip_Default
+        '
+        Me.ToolTip_Default.AutomaticDelay = 100
+        Me.ToolTip_Default.AutoPopDelay = 30000
+        Me.ToolTip_Default.InitialDelay = 100
+        Me.ToolTip_Default.ReshowDelay = 20
+        '
+        'UCVmtManagement
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
@@ -397,7 +416,7 @@ Partial Class UCVmtManagement
         Me.Controls.Add(Me.Panel_AvailableDevices)
         Me.Controls.Add(Me.Panel_Status)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Name = "UCManagement"
+        Me.Name = "UCVmtManagement"
         Me.Size = New System.Drawing.Size(800, 497)
         Me.Panel_AvailableDevices.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
@@ -441,4 +460,6 @@ Partial Class UCVmtManagement
     Friend WithEvents Label_OscStatus As Label
     Friend WithEvents Panel_OscStatus As Panel
     Friend WithEvents Panel3 As Panel
+    Friend WithEvents ToolTip_Info As ToolTip
+    Friend WithEvents ToolTip_Default As ToolTip
 End Class

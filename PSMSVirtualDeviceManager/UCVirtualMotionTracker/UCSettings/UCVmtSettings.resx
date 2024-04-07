@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>392, 25</value>
+  </metadata>
   <data name="Label25.Text" xml:space="preserve">
     <value>        Holding the SELECT+START button on the PSmove controller while moving both the
         head-mounted display and controller forward, will recenter the playspace to the head-mounted display. 
         Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
   </data>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>273, 25</value>
+  </metadata>
   <data name="Label16.Text" xml:space="preserve">
     <value>        Holding the START button on the PSmove controller will recenter the target trackers orientation. 
         This is useful for trackers without magnetometers which experience yaw drift over time.</value>

@@ -26,6 +26,7 @@ Partial Class UCVmtOverrides
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVmtOverrides))
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button_Refresh = New System.Windows.Forms.Button()
@@ -35,6 +36,8 @@ Partial Class UCVmtOverrides
         Me.ListView_Overrides = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -125,6 +128,22 @@ Partial Class UCVmtOverrides
         Me.ColumnHeader2.Text = "Override"
         Me.ColumnHeader2.Width = 300
         '
+        'ToolTip_Info
+        '
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
+        '
+        'ToolTip_Default
+        '
+        Me.ToolTip_Default.AutomaticDelay = 100
+        Me.ToolTip_Default.AutoPopDelay = 30000
+        Me.ToolTip_Default.InitialDelay = 100
+        Me.ToolTip_Default.ReshowDelay = 20
+        '
         'UCVmtOverrides
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -151,4 +170,6 @@ Partial Class UCVmtOverrides
     Friend WithEvents ListView_Overrides As ClassListViewEx
     Friend WithEvents ColumnHeader1 As ColumnHeader
     Friend WithEvents ColumnHeader2 As ColumnHeader
+    Friend WithEvents ToolTip_Info As ToolTip
+    Friend WithEvents ToolTip_Default As ToolTip
 End Class

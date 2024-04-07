@@ -33,6 +33,8 @@ Partial Class UCVmtTrackers
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ContextMenuStrip_Trackers = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_TrackerRemove = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel19 = New System.Windows.Forms.Panel()
         Me.Label66 = New System.Windows.Forms.Label()
         Me.Panel20 = New System.Windows.Forms.Panel()
@@ -43,13 +45,13 @@ Partial Class UCVmtTrackers
         Me.ContextMenuStrip_AddTracker = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem_AddTracker = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem_AddHmd = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ContextMenuStrip_Trackers = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolStripMenuItem_TrackerRemove = New System.Windows.Forms.ToolStripMenuItem()
         Me.Timer_VMTTrackers = New System.Windows.Forms.Timer(Me.components)
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_AvailableTrackers.SuspendLayout()
+        Me.ContextMenuStrip_Trackers.SuspendLayout()
         Me.Panel19.SuspendLayout()
         Me.ContextMenuStrip_AddTracker.SuspendLayout()
-        Me.ContextMenuStrip_Trackers.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel_AvailableTrackers
@@ -102,6 +104,19 @@ Partial Class UCVmtTrackers
         '
         Me.ColumnHeader5.Text = "Tracker Role"
         Me.ColumnHeader5.Width = 400
+        '
+        'ContextMenuStrip_Trackers
+        '
+        Me.ContextMenuStrip_Trackers.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_TrackerRemove})
+        Me.ContextMenuStrip_Trackers.Name = "ContextMenuStrip_Trackers"
+        Me.ContextMenuStrip_Trackers.Size = New System.Drawing.Size(118, 26)
+        '
+        'ToolStripMenuItem_TrackerRemove
+        '
+        Me.ToolStripMenuItem_TrackerRemove.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.ToolStripMenuItem_TrackerRemove.Name = "ToolStripMenuItem_TrackerRemove"
+        Me.ToolStripMenuItem_TrackerRemove.Size = New System.Drawing.Size(117, 22)
+        Me.ToolStripMenuItem_TrackerRemove.Text = "Remove"
         '
         'Panel19
         '
@@ -199,23 +214,26 @@ Partial Class UCVmtTrackers
         Me.ToolStripMenuItem_AddHmd.Size = New System.Drawing.Size(213, 22)
         Me.ToolStripMenuItem_AddHmd.Text = "By Head-Mounted Display"
         '
-        'ContextMenuStrip_Trackers
-        '
-        Me.ContextMenuStrip_Trackers.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_TrackerRemove})
-        Me.ContextMenuStrip_Trackers.Name = "ContextMenuStrip_Trackers"
-        Me.ContextMenuStrip_Trackers.Size = New System.Drawing.Size(118, 26)
-        '
-        'ToolStripMenuItem_TrackerRemove
-        '
-        Me.ToolStripMenuItem_TrackerRemove.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.ToolStripMenuItem_TrackerRemove.Name = "ToolStripMenuItem_TrackerRemove"
-        Me.ToolStripMenuItem_TrackerRemove.Size = New System.Drawing.Size(117, 22)
-        Me.ToolStripMenuItem_TrackerRemove.Text = "Remove"
-        '
         'Timer_VMTTrackers
         '
         Me.Timer_VMTTrackers.Enabled = True
         Me.Timer_VMTTrackers.Interval = 500
+        '
+        'ToolTip_Info
+        '
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
+        '
+        'ToolTip_Default
+        '
+        Me.ToolTip_Default.AutomaticDelay = 100
+        Me.ToolTip_Default.AutoPopDelay = 30000
+        Me.ToolTip_Default.InitialDelay = 100
+        Me.ToolTip_Default.ReshowDelay = 20
         '
         'UCVmtTrackers
         '
@@ -230,9 +248,9 @@ Partial Class UCVmtTrackers
         Me.Name = "UCVmtTrackers"
         Me.Size = New System.Drawing.Size(800, 600)
         Me.Panel_AvailableTrackers.ResumeLayout(False)
+        Me.ContextMenuStrip_Trackers.ResumeLayout(False)
         Me.Panel19.ResumeLayout(False)
         Me.ContextMenuStrip_AddTracker.ResumeLayout(False)
-        Me.ContextMenuStrip_Trackers.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -256,4 +274,6 @@ Partial Class UCVmtTrackers
     Friend WithEvents ContextMenuStrip_Trackers As ContextMenuStrip
     Friend WithEvents ToolStripMenuItem_TrackerRemove As ToolStripMenuItem
     Friend WithEvents Timer_VMTTrackers As Timer
+    Friend WithEvents ToolTip_Info As ToolTip
+    Friend WithEvents ToolTip_Default As ToolTip
 End Class

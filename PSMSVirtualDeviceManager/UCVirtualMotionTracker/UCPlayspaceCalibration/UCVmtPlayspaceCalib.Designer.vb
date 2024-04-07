@@ -26,8 +26,10 @@ Partial Class UCVmtPlayspaceCalib
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVmtPlayspaceCalib))
         Me.NumericUpDown_PlayCalibPrepTime = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Panel_PlayCalibSteps = New System.Windows.Forms.Panel()
         Me.Panel16 = New System.Windows.Forms.Panel()
@@ -70,7 +72,8 @@ Partial Class UCVmtPlayspaceCalib
         Me.Button_PlaySpaceManualCalib = New System.Windows.Forms.Button()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
-        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_PlayCalibPrepTime.SuspendLayout()
         Me.Panel_PlayCalibSteps.SuspendLayout()
@@ -90,13 +93,31 @@ Partial Class UCVmtPlayspaceCalib
         '
         'NumericUpDown_PlayCalibPrepTime
         '
+        Me.NumericUpDown_PlayCalibPrepTime.Controls.Add(Me.UcNumericUpDownBig1)
         Me.NumericUpDown_PlayCalibPrepTime.Location = New System.Drawing.Point(168, 134)
         Me.NumericUpDown_PlayCalibPrepTime.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
         Me.NumericUpDown_PlayCalibPrepTime.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.NumericUpDown_PlayCalibPrepTime.Name = "NumericUpDown_PlayCalibPrepTime"
         Me.NumericUpDown_PlayCalibPrepTime.Size = New System.Drawing.Size(132, 22)
         Me.NumericUpDown_PlayCalibPrepTime.TabIndex = 81
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibPrepTime, "Default: 5")
         Me.NumericUpDown_PlayCalibPrepTime.Value = New Decimal(New Integer() {5, 0, 0, 0})
+        '
+        'UcNumericUpDownBig1
+        '
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_PlayCalibPrepTime
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 82
         '
         'Label41
         '
@@ -482,6 +503,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
         Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(132, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 78
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The controller id you want to use for playspace calibration.")
         '
         'Label28
         '
@@ -559,21 +581,21 @@ Partial Class UCVmtPlayspaceCalib
         Me.ClassPictureBoxQuality3.TabIndex = 73
         Me.ClassPictureBoxQuality3.TabStop = False
         '
-        'UcNumericUpDownBig1
+        'ToolTip_Info
         '
-        Me.UcNumericUpDownBig1.AutoSize = True
-        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig1.m_bDockOnControl = True
-        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_PlayCalibPrepTime
-        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.UcNumericUpDownBig1.m_ResetVisible = True
-        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
-        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig1.TabIndex = 82
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
+        '
+        'ToolTip_Default
+        '
+        Me.ToolTip_Default.AutomaticDelay = 100
+        Me.ToolTip_Default.AutoPopDelay = 30000
+        Me.ToolTip_Default.InitialDelay = 100
+        Me.ToolTip_Default.ReshowDelay = 20
         '
         'UCVmtPlayspaceCalib
         '
@@ -663,4 +685,6 @@ Partial Class UCVmtPlayspaceCalib
     Friend WithEvents Label24 As Label
     Friend WithEvents ClassPictureBoxQuality3 As ClassPictureBoxQuality
     Friend WithEvents UcNumericUpDownBig1 As UCNumericUpDownBig
+    Friend WithEvents ToolTip_Info As ToolTip
+    Friend WithEvents ToolTip_Default As ToolTip
 End Class

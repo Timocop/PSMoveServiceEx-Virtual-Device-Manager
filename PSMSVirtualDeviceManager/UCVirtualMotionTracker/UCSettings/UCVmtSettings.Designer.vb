@@ -26,6 +26,7 @@ Partial Class UCVmtSettings
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVmtSettings))
         Me.TabControl_SettingsDevices = New System.Windows.Forms.TabControl()
         Me.TabPage_SettingsPSVR = New System.Windows.Forms.TabPage()
@@ -143,6 +144,8 @@ Partial Class UCVmtSettings
         Me.CheckBox_DisableBasestations = New System.Windows.Forms.CheckBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
+        Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -750,6 +753,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_PsvrRenderResolution.Name = "ComboBox_PsvrRenderResolution"
         Me.ComboBox_PsvrRenderResolution.Size = New System.Drawing.Size(186, 21)
         Me.ComboBox_PsvrRenderResolution.TabIndex = 1
+        Me.ToolTip_Default.SetToolTip(Me.ComboBox_PsvrRenderResolution, "Default: 130%")
         '
         'TabPage_SettingsPSmove
         '
@@ -760,7 +764,7 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsPSmove.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_SettingsPSmove.Name = "TabPage_SettingsPSmove"
         Me.TabPage_SettingsPSmove.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_SettingsPSmove.Size = New System.Drawing.Size(786, 1148)
+        Me.TabPage_SettingsPSmove.Size = New System.Drawing.Size(786, 1093)
         Me.TabPage_SettingsPSmove.TabIndex = 0
         Me.TabPage_SettingsPSmove.Text = "PSMove Controller"
         '
@@ -871,6 +875,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_RecenterButtonTime.Name = "NumericUpDown_RecenterButtonTime"
         Me.NumericUpDown_RecenterButtonTime.Size = New System.Drawing.Size(114, 22)
         Me.NumericUpDown_RecenterButtonTime.TabIndex = 61
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_RecenterButtonTime, "Default: 500")
         Me.NumericUpDown_RecenterButtonTime.Value = New Decimal(New Integer() {500, 0, 0, 0})
         '
         'UcNumericUpDownBig7
@@ -910,6 +915,8 @@ Partial Class UCVmtSettings
         Me.Button_ResetRecenter.Text = "Reset recenter on all trackers"
         Me.Button_ResetRecenter.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.Button_ResetRecenter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.ToolTip_Info.SetToolTip(Me.Button_ResetRecenter, "This will reset recenter on all active trackers. Inactive trackers will not be re" &
+        "set.")
         Me.Button_ResetRecenter.UseVisualStyleBackColor = True
         '
         'Label20
@@ -938,6 +945,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
         Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(538, 21)
         Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label18
         '
@@ -1009,6 +1017,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
         Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(538, 21)
         Me.ComboBox_RecenterFromDevice.TabIndex = 50
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label15
         '
@@ -1111,6 +1120,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_TouchpadTouchArea.Name = "NumericUpDown_TouchpadTouchArea"
         Me.NumericUpDown_TouchpadTouchArea.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_TouchpadTouchArea.TabIndex = 52
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadTouchArea, "Default: 7.50")
         Me.NumericUpDown_TouchpadTouchArea.Value = New Decimal(New Integer() {750, 0, 0, 131072})
         '
         'UcNumericUpDownBig5
@@ -1149,6 +1159,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_TouchpadClickDeadzone.Name = "NumericUpDown_TouchpadClickDeadzone"
         Me.NumericUpDown_TouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_TouchpadClickDeadzone.TabIndex = 50
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadClickDeadzone, "Default: 0.25")
         Me.NumericUpDown_TouchpadClickDeadzone.Value = New Decimal(New Integer() {25, 0, 0, 131072})
         '
         'UcNumericUpDownBig6
@@ -1307,7 +1318,7 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsPlayspace.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_SettingsPlayspace.Name = "TabPage_SettingsPlayspace"
         Me.TabPage_SettingsPlayspace.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_SettingsPlayspace.Size = New System.Drawing.Size(786, 1148)
+        Me.TabPage_SettingsPlayspace.Size = New System.Drawing.Size(786, 1093)
         Me.TabPage_SettingsPlayspace.TabIndex = 2
         Me.TabPage_SettingsPlayspace.Text = "Playspace"
         '
@@ -1363,6 +1374,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibSideOffset.Name = "NumericUpDown_PlayCalibSideOffset"
         Me.NumericUpDown_PlayCalibSideOffset.Size = New System.Drawing.Size(132, 22)
         Me.NumericUpDown_PlayCalibSideOffset.TabIndex = 83
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibSideOffset, "Default: 0")
         '
         'UcNumericUpDownBig3
         '
@@ -1435,6 +1447,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibHeightOffset.Name = "NumericUpDown_PlayCalibHeightOffset"
         Me.NumericUpDown_PlayCalibHeightOffset.Size = New System.Drawing.Size(132, 22)
         Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
         '
         'UcNumericUpDownBig2
         '
@@ -1472,6 +1485,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibForwardOffset.Name = "NumericUpDown_PlayCalibForwardOffset"
         Me.NumericUpDown_PlayCalibForwardOffset.Size = New System.Drawing.Size(132, 22)
         Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
         Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
         '
         'UcNumericUpDownBig1
@@ -1505,7 +1519,7 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsOther.Controls.Add(Me.Label6)
         Me.TabPage_SettingsOther.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_SettingsOther.Name = "TabPage_SettingsOther"
-        Me.TabPage_SettingsOther.Size = New System.Drawing.Size(786, 1148)
+        Me.TabPage_SettingsOther.Size = New System.Drawing.Size(786, 1093)
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
         '
@@ -1518,6 +1532,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_OscMaxThreadFps.Name = "NumericUpDown_OscMaxThreadFps"
         Me.NumericUpDown_OscMaxThreadFps.Size = New System.Drawing.Size(118, 22)
         Me.NumericUpDown_OscMaxThreadFps.TabIndex = 53
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscMaxThreadFps, "Default: 200")
         Me.NumericUpDown_OscMaxThreadFps.Value = New Decimal(New Integer() {200, 0, 0, 0})
         '
         'UcNumericUpDownBig18
@@ -1579,6 +1594,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_OscThreadSleep.Name = "NumericUpDown_OscThreadSleep"
         Me.NumericUpDown_OscThreadSleep.Size = New System.Drawing.Size(118, 22)
         Me.NumericUpDown_OscThreadSleep.TabIndex = 49
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscThreadSleep, "Default: 1")
         Me.NumericUpDown_OscThreadSleep.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'UcNumericUpDownBig4
@@ -1670,6 +1686,22 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.Button_SaveControllerSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_SaveControllerSettings.UseVisualStyleBackColor = True
+        '
+        'ToolTip_Info
+        '
+        Me.ToolTip_Info.AutomaticDelay = 100
+        Me.ToolTip_Info.AutoPopDelay = 30000
+        Me.ToolTip_Info.InitialDelay = 100
+        Me.ToolTip_Info.ReshowDelay = 20
+        Me.ToolTip_Info.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip_Info.ToolTipTitle = "Information"
+        '
+        'ToolTip_Default
+        '
+        Me.ToolTip_Default.AutomaticDelay = 100
+        Me.ToolTip_Default.AutoPopDelay = 30000
+        Me.ToolTip_Default.InitialDelay = 100
+        Me.ToolTip_Default.ReshowDelay = 20
         '
         'UCVmtSettings
         '
@@ -1868,4 +1900,6 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_DisableBasestations As CheckBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Button_SaveControllerSettings As Button
+    Friend WithEvents ToolTip_Info As ToolTip
+    Friend WithEvents ToolTip_Default As ToolTip
 End Class
