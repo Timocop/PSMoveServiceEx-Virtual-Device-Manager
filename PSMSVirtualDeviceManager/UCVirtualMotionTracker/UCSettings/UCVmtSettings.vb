@@ -644,6 +644,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_RenderScale = CType(ComboBox_PsvrRenderResolution.SelectedItem, STRUC_RENDER_RES_ITEM).g_iScale
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrIPD_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrIPD.ValueChanged
@@ -662,6 +664,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_DistortionK0(True) = NumericUpDown_PsvrDistK0.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrDistK1_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistK1.ValueChanged
@@ -671,6 +675,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_DistortionK1(True) = NumericUpDown_PsvrDistK1.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrDistScale_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistScale.ValueChanged
@@ -680,6 +686,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_DistortionScale(True) = NumericUpDown_PsvrDistScale.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrDistRedOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistRedOffset.ValueChanged
@@ -689,6 +697,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_DistortionRedOffset(True) = NumericUpDown_PsvrDistRedOffset.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrDistGreenOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistGreenOffset.ValueChanged
@@ -698,6 +708,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset(True) = NumericUpDown_PsvrDistGreenOffset.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrDistBlueOffset_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrDistBlueOffset.ValueChanged
@@ -707,6 +719,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset(True) = NumericUpDown_PsvrDistBlueOffset.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrHFov_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrHFov.ValueChanged
@@ -716,6 +730,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_HFov(True) = NumericUpDown_PsvrHFov.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub NumericUpDown_PsvrVFov_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_PsvrVFov.ValueChanged
@@ -725,6 +741,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_VFov(True) = NumericUpDown_PsvrVFov.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub CheckBox_ShowDistSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_ShowDistSettings.CheckedChanged
@@ -736,6 +754,8 @@ Public Class UCVmtSettings
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_UseCustomDistortion = CheckBox_ShowDistSettings.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub LinkLabel_PsvrDistReset_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PsvrDistReset.LinkClicked

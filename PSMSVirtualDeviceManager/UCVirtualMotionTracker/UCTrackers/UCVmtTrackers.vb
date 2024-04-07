@@ -214,6 +214,7 @@ Public Class UCVmtTrackers
         ListView_Trackers.Items.Remove(mAttachmentItem)
 
         mAttachmentItem.Dispose()
+        g_UCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub Timer_VMTTrackers_Tick(sender As Object, e As EventArgs) Handles Timer_VMTTrackers.Tick

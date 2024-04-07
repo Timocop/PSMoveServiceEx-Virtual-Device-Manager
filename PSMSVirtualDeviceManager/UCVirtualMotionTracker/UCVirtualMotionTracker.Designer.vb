@@ -43,9 +43,12 @@ Partial Class UCVirtualMotionTracker
         Me.Label43 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel_RestartSteamVR = New System.Windows.Forms.Panel()
         Me.TabControl_Vmt.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'LinkLabel_ReadMore
@@ -67,19 +70,17 @@ Partial Class UCVirtualMotionTracker
         '
         'TabControl_Vmt
         '
-        Me.TabControl_Vmt.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_Management)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_Trackers)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_Settings)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_PlayspaceCalib)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_Overrides)
-        Me.TabControl_Vmt.Location = New System.Drawing.Point(16, 104)
+        Me.TabControl_Vmt.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl_Vmt.Location = New System.Drawing.Point(16, 16)
         Me.TabControl_Vmt.Margin = New System.Windows.Forms.Padding(16)
         Me.TabControl_Vmt.Name = "TabControl_Vmt"
         Me.TabControl_Vmt.SelectedIndex = 0
-        Me.TabControl_Vmt.Size = New System.Drawing.Size(768, 480)
+        Me.TabControl_Vmt.Size = New System.Drawing.Size(768, 435)
         Me.TabControl_Vmt.TabIndex = 22
         '
         'TabPage_Management
@@ -88,7 +89,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Management.BackColor = System.Drawing.Color.White
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
-        Me.TabPage_Management.Size = New System.Drawing.Size(760, 454)
+        Me.TabPage_Management.Size = New System.Drawing.Size(760, 409)
         Me.TabPage_Management.TabIndex = 4
         Me.TabPage_Management.Text = "Management"
         '
@@ -208,13 +209,37 @@ Partial Class UCVirtualMotionTracker
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 1
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.TabControl_Vmt, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel_RestartSteamVR, 0, 1)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 85)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(800, 515)
+        Me.TableLayoutPanel1.TabIndex = 24
+        '
+        'Panel_RestartSteamVR
+        '
+        Me.Panel_RestartSteamVR.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel_RestartSteamVR.Location = New System.Drawing.Point(0, 467)
+        Me.Panel_RestartSteamVR.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel_RestartSteamVR.Name = "Panel_RestartSteamVR"
+        Me.Panel_RestartSteamVR.Size = New System.Drawing.Size(800, 48)
+        Me.Panel_RestartSteamVR.TabIndex = 23
+        '
         'UCVirtualMotionTracker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.TabControl_Vmt)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualMotionTracker"
         Me.Size = New System.Drawing.Size(800, 600)
@@ -222,6 +247,7 @@ Partial Class UCVirtualMotionTracker
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.ClassPictureBoxQuality4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -235,10 +261,12 @@ Partial Class UCVirtualMotionTracker
     Friend WithEvents TabPage_PlayspaceCalib As TabPage
     Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents Timer_VMTTrackers As Timer
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents ClassPictureBoxQuality4 As ClassPictureBoxQuality
     Friend WithEvents Label42 As Label
     Friend WithEvents Label43 As Label
     Friend WithEvents Label44 As Label
     Friend WithEvents ToolTip_Default As ToolTip
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents Panel_RestartSteamVR As Panel
 End Class

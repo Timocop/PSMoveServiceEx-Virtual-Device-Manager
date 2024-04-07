@@ -117,18 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>167, 21</value>
-  </metadata>
-  <metadata name="Timer_VMTTrackers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>18, 18</value>
-  </metadata>
-  <data name="Label42.Text" xml:space="preserve">
-    <value>Virtual Motion Trackers (VMT) enable you to create SteamVR trackers and OSC trackers (if supported).
-It offers a range of tracker roles, including body trackers, controllers, and replacement of head-mounted display 6-DoF pose.
-</value>
-  </data>
-  <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>275, 24</value>
-  </metadata>
 </root>

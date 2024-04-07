@@ -215,6 +215,12 @@
     <Compile Include="Classes\Tools\UCNumericUpDownBig.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCRestartSteamVRWarning.Designer.vb">
+      <DependentUpon>UCRestartSteamVRWarning.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCRestartSteamVRWarning.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -394,6 +400,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Classes\Tools\UCNumericUpDownBig.resx">
       <DependentUpon>UCNumericUpDownBig.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCRestartSteamVRWarning.resx">
+      <DependentUpon>UCRestartSteamVRWarning.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.vb</DependentUpon>

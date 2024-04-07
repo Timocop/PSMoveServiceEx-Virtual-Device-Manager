@@ -397,6 +397,7 @@ Public Class UCVirtualMotionTrackerItem
         g_mClassIO.Enable()
 
         UpdateTrackerRoleComboBox()
+        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
 
         SetUnsavedState(False)
     End Sub
@@ -416,6 +417,7 @@ Public Class UCVirtualMotionTrackerItem
         SetUnsavedState(True)
 
         UpdateTrackerRoleComboBox()
+        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
@@ -431,6 +433,8 @@ Public Class UCVirtualMotionTrackerItem
 
         g_mClassIO.m_VmtTrackerRole = CType(ComboBox_VMTTrackerRole.SelectedIndex, ClassIO.ENUM_TRACKER_ROLE)
         SetUnsavedState(True)
+
+        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub ComboBox_TrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_SteamTrackerRole.SelectedIndexChanged
@@ -441,6 +445,8 @@ Public Class UCVirtualMotionTrackerItem
         End If
 
         SetUnsavedState(True)
+
+        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
     End Sub
 
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click

@@ -8,7 +8,6 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
-        Panel_SteamVRRestart.Visible = False
     End Sub
 
     Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
@@ -56,10 +55,7 @@
 
                     RefreshOverrides()
 
-                    ' Check if SteamVR is running
-                    If (Process.GetProcessesByName("vrserver").Length > 0) Then
-                        Panel_SteamVRRestart.Visible = True
-                    End If
+                    g_UCVirtualMotionTracker.PromptRestartSteamVR()
                 End If
             End Using
         Catch ex As Exception
@@ -95,10 +91,7 @@
 
             RefreshOverrides()
 
-            ' Check if SteamVR is running
-            If (Process.GetProcessesByName("vrserver").Length > 0) Then
-                Panel_SteamVRRestart.Visible = True
-            End If
+            g_UCVirtualMotionTracker.PromptRestartSteamVR()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -122,10 +115,6 @@
                 ListView_Overrides.Items.Add(New ListViewItem(New String() {mOverride.Key, mOverride.Value}))
             Next
         End If
-    End Sub
-
-    Private Sub LinkLabel_SteamVRRestartOff_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamVRRestartOff.LinkClicked
-        Panel_SteamVRRestart.Visible = False
     End Sub
 
     Private Sub CleanUp()
