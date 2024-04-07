@@ -5,18 +5,19 @@ Imports Rug.Osc
 Public Class UCVirtualMotionTracker
     Public g_mFormMain As FormMain
 
-    Private g_mAutostartControllerMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
-    Private g_mAutostartHmdMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
-    Private Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
+    Public Shared ReadOnly g_sConfigPath As String = IO.Path.Combine(Application.StartupPath, "vmt_devices.ini")
 
     Public g_ClassOscServer As ClassOscServer
     Public g_ClassSettings As ClassSettings
     Public g_ClassOscDevices As ClassOscDevices
 
+    Public g_UCVmtManagement As UCVmtManagement
+    Public g_UCVmtTrackers As UCVmtTrackers
+    Public g_UCVmtSettings As UCVmtSettings
+    Public g_UCVmtPlayspaceCalib As UCVmtPlayspaceCalib
+    Public g_UCVmtOverrides As UCVmtOverrides
+
     Private g_bIgnoreEvents As Boolean = True
-    Private g_mOscStatusThread As Threading.Thread = Nothing
-    Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
-    Private g_mPlayspaceCalibrationThread As Threading.Thread = Nothing
 
     Enum ENUM_SETTINGS_SAVE_TYPE_FLAGS
         ALL = -1
@@ -27,142 +28,6 @@ Public Class UCVirtualMotionTracker
         PLAYSPACE_CALIB_CONTROLLER = (1 << 4)
     End Enum
 
-    Structure STRUC_RENDER_RES_ITEM
-        Public g_iScale As Single
-
-        Public Sub New(_Scale As Single)
-            g_iScale = _Scale
-        End Sub
-
-        Public Overrides Function ToString() As String
-            Return String.Format("{0}% - {1}x{2}", CInt(g_iScale * 100), CStr(1920 * g_iScale), CStr(1080 * g_iScale))
-        End Function
-    End Structure
-
-    Class ClassTrackersListViewItem
-        Inherits ListViewItem
-        Implements IDisposable
-
-        Private g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
-        Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
-
-        Public Sub New(iControllerID As Integer, bIsHmd As Boolean, _UCVirtualMotionTracker As UCVirtualMotionTracker)
-            MyBase.New(New String() {"", "", "", ""})
-
-            g_UCVirtualMotionTracker = _UCVirtualMotionTracker
-            g_UCVirtualMotionTrackerItem = New UCVirtualMotionTrackerItem(iControllerID, bIsHmd, _UCVirtualMotionTracker)
-
-            UpdateItem()
-        End Sub
-
-        Public Sub UpdateItem()
-            Const LISTVIEW_SUBITEM_TYPE As Integer = 0
-            Const LISTVIEW_SUBITEM_INDEX As Integer = 1
-            Const LISTVIEW_SUBITEM_VMTID As Integer = 2
-            Const LISTVIEW_SUBITEM_ROLE As Integer = 3
-
-            If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
-                Return
-            End If
-
-            If (g_UCVirtualMotionTrackerItem.g_mClassIO Is Nothing) Then
-                Return
-            End If
-
-            If (g_UCVirtualMotionTrackerItem.g_mClassIO.m_IsHMD) Then
-                Me.SubItems(LISTVIEW_SUBITEM_TYPE).Text = "HMD"
-            Else
-                Me.SubItems(LISTVIEW_SUBITEM_TYPE).Text = "Controller"
-            End If
-
-            Me.SubItems(LISTVIEW_SUBITEM_INDEX).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_Index)
-            Me.SubItems(LISTVIEW_SUBITEM_VMTID).Text = CStr(g_UCVirtualMotionTrackerItem.g_mClassIO.m_VmtTracker)
-
-            If (g_UCVirtualMotionTrackerItem.g_mClassIO.m_IsHMD) Then
-                Me.SubItems(LISTVIEW_SUBITEM_ROLE).Text = "Head-Mounted Display"
-            Else
-                If (g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem IsNot Nothing AndAlso g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem IsNot Nothing) Then
-                    Me.SubItems(LISTVIEW_SUBITEM_ROLE).Text = String.Format("{0} ({1})", CStr(g_UCVirtualMotionTrackerItem.ComboBox_VMTTrackerRole.SelectedItem), CStr(g_UCVirtualMotionTrackerItem.ComboBox_SteamTrackerRole.SelectedItem))
-                Else
-                    Me.SubItems(LISTVIEW_SUBITEM_ROLE).Text = ""
-                End If
-            End If
-
-            'Is there any error?
-            If (g_UCVirtualMotionTrackerItem.m_HasStatusError) Then
-                Me.BackColor = Color.FromArgb(255, 192, 192)
-            Else
-                Me.BackColor = Color.FromArgb(255, 255, 255)
-            End If
-        End Sub
-
-        ReadOnly Property m_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
-            Get
-                Return g_UCVirtualMotionTrackerItem
-            End Get
-        End Property
-
-        Property m_Visible As Boolean
-            Get
-                If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
-                    Return False
-                End If
-
-                Return (g_UCVirtualMotionTrackerItem.Parent Is g_UCVirtualMotionTracker.Panel_VMTTrackers)
-            End Get
-            Set(value As Boolean)
-                If (value) Then
-                    If (g_UCVirtualMotionTrackerItem Is Nothing OrElse g_UCVirtualMotionTrackerItem.IsDisposed) Then
-                        Return
-                    End If
-
-                    g_UCVirtualMotionTrackerItem.Parent = g_UCVirtualMotionTracker.Panel_VMTTrackers
-                    g_UCVirtualMotionTrackerItem.Dock = DockStyle.Top
-                    g_UCVirtualMotionTrackerItem.Visible = True
-                Else
-                    g_UCVirtualMotionTrackerItem.Parent = Nothing
-                    g_UCVirtualMotionTrackerItem.Visible = False
-                End If
-            End Set
-        End Property
-
-#Region "IDisposable Support"
-        Private disposedValue As Boolean ' To detect redundant calls
-
-        ' IDisposable
-        Protected Overridable Sub Dispose(disposing As Boolean)
-            If Not disposedValue Then
-                If disposing Then
-                    ' TODO: dispose managed state (managed objects).
-                    If (g_UCVirtualMotionTrackerItem IsNot Nothing AndAlso Not g_UCVirtualMotionTrackerItem.IsDisposed) Then
-                        g_UCVirtualMotionTrackerItem.Dispose()
-                        g_UCVirtualMotionTrackerItem = Nothing
-                    End If
-                End If
-
-                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                ' TODO: set large fields to null.
-            End If
-            disposedValue = True
-        End Sub
-
-        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
-        'Protected Overrides Sub Finalize()
-        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
-        '    Dispose(False)
-        '    MyBase.Finalize()
-        'End Sub
-
-        ' This code added by Visual Basic to correctly implement the disposable pattern.
-        Public Sub Dispose() Implements IDisposable.Dispose
-            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
-            Dispose(True)
-            ' TODO: uncomment the following line if Finalize() is overridden above.
-            ' GC.SuppressFinalize(Me)
-        End Sub
-#End Region
-    End Class
-
     Public Sub New(_mFormMain As FormMain)
         g_mFormMain = _mFormMain
 
@@ -170,8 +35,6 @@ Public Class UCVirtualMotionTracker
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
-        Label_ScrollFocus.Text = ""
-        GroupBox_Distortion.Visible = False
 
         g_bIgnoreEvents = False
 
@@ -179,300 +42,47 @@ Public Class UCVirtualMotionTracker
         g_ClassSettings = New ClassSettings(Me)
         g_ClassOscDevices = New ClassOscDevices(Me)
 
-        Try
-            g_bIgnoreEvents = True
+        g_UCVmtManagement = New UCVmtManagement(Me)
+        g_UCVmtManagement.Parent = TabPage_Management
+        g_UCVmtManagement.Dock = DockStyle.Top
 
-            ComboBox_TouchpadClickMethod.Items.Clear()
-            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Left Controller: TRIANGLE [▲] / Right Controller: SQUARE [■])")
-            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: SQUARE [■])")
-            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: TRIANGLE [▲])")
-            ComboBox_TouchpadClickMethod.Items.Add("While holding MOVE [~] button")
+        g_UCVmtTrackers = New UCVmtTrackers(Me)
+        g_UCVmtTrackers.Parent = TabPage_Trackers
+        g_UCVmtTrackers.Dock = DockStyle.Fill
 
-            ComboBox_TouchpadClickMethod.SelectedIndex = 0
+        g_UCVmtSettings = New UCVmtSettings(Me)
+        g_UCVmtSettings.Parent = TabPage_Settings
+        g_UCVmtSettings.Dock = DockStyle.Fill
 
-            If (ComboBox_TouchpadClickMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX) Then
-                Throw New ArgumentException("Invalid size")
-            End If
-        Finally
-            g_bIgnoreEvents = False
-        End Try
+        g_UCVmtPlayspaceCalib = New UCVmtPlayspaceCalib(Me)
+        g_UCVmtPlayspaceCalib.Parent = TabPage_PlayspaceCalib
+        g_UCVmtPlayspaceCalib.Dock = DockStyle.Top
 
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_GrabButtonMethod.Items.Clear()
-            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Left Controller: CIRCLE [O] / Right Controller: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Both Controllers: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Both Controllers: CIRCLE [O])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Left Controller: CIRCLE [O] / Right Controller: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Both Controllers: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Both Controllers: CIRCLE [O])")
-
-            ComboBox_GrabButtonMethod.SelectedIndex = 0
-
-            If (ComboBox_GrabButtonMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.__MAX) Then
-                Throw New ArgumentException("Invalid size")
-            End If
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_TouchpadMethod.Items.Clear()
-            ComboBox_TouchpadMethod.Items.Add("Use Controller Position")
-            ComboBox_TouchpadMethod.Items.Add("Use Controller Orientation")
-
-            ComboBox_TouchpadMethod.SelectedIndex = 0
-
-            If (ComboBox_TouchpadMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.__MAX) Then
-                Throw New ArgumentException("Invalid size")
-            End If
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_RecenterMethod.Items.Clear()
-            ComboBox_RecenterMethod.Items.Add("Use Current Controller")
-            ComboBox_RecenterMethod.Items.Add("Use PSMoveServiceEx Playspace Orientation")
-
-            ComboBox_RecenterMethod.SelectedIndex = 0
-
-            If (ComboBox_RecenterMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
-                Throw New ArgumentException("Invalid size")
-            End If
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_RecenterFromDevice.Items.Clear()
-            ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
-
-            ComboBox_RecenterFromDevice.SelectedIndex = 0
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_HmdRecenterMethod.Items.Clear()
-            ComboBox_HmdRecenterMethod.Items.Add("Use Current Controller")
-            ComboBox_HmdRecenterMethod.Items.Add("Use PSMoveServiceEx Playspace Orientation")
-
-            ComboBox_HmdRecenterMethod.SelectedIndex = 0
-
-            If (ComboBox_HmdRecenterMethod.Items.Count <> ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.__MAX) Then
-                Throw New ArgumentException("Invalid size")
-            End If
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_HmdRecenterFromDevice.Items.Clear()
-            ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(""))
-
-            ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_PlayCalibForwardMethod.Items.Clear()
-            ComboBox_PlayCalibForwardMethod.Items.Add("Use Head-Mounted Display Forward")
-            ComboBox_PlayCalibForwardMethod.Items.Add("Use Calibrated Playspace Forward")
-
-            ComboBox_PlayCalibForwardMethod.SelectedIndex = 0
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        If (True) Then
-            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
-
-                g_mAutostartControllerMenuStrips(i) = mItem
-
-                mItem.Tag = New Object() {
-                    False,
-                    i
-                }
-
-                ContextMenuStrip_Autostart.Items.Add(mItem)
-            Next
-
-            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
-                Dim mItem As New ToolStripMenuItem("HMD ID: " & CStr(i))
-
-                g_mAutostartHmdMenuStrips(i) = mItem
-
-                mItem.Tag = New Object() {
-                    True,
-                    i
-                }
-
-                ContextMenuStrip_Autostart.Items.Add(mItem)
-            Next
-        End If
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_PlayCalibControllerID.Items.Clear()
-            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                ComboBox_PlayCalibControllerID.Items.Add(i)
-            Next
-
-            ComboBox_PlayCalibControllerID.SelectedIndex = 0
-        Finally
-            g_bIgnoreEvents = False
-        End Try
-
-        Try
-            g_bIgnoreEvents = True
-
-            ComboBox_PsvrRenderResolution.Items.Clear()
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.25F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.5F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(0.75F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.0F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.25F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.3F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.5F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(1.75F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(2.0F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(2.5F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(3.0F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(3.5F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(4.0F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(4.5F))
-            ComboBox_PsvrRenderResolution.Items.Add(New STRUC_RENDER_RES_ITEM(5.0F))
-
-            ComboBox_PsvrRenderResolution.SelectedIndex = 0
-
-            ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(1.3F)
-        Finally
-            g_bIgnoreEvents = False
-        End Try
+        g_UCVmtOverrides = New UCVmtOverrides(Me)
+        g_UCVmtOverrides.Parent = TabPage_Overrides
+        g_UCVmtOverrides.Dock = DockStyle.Fill
 
         CreateControl()
-
-        Panel_SteamVRRestart.Visible = False
-
-        g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
-        g_mOscStatusThread.IsBackground = True
-        g_mOscStatusThread.Start()
-
-        g_mOscDeviceStatusThread = New Threading.Thread(AddressOf OscDeviceStatusThread)
-        g_mOscDeviceStatusThread.IsBackground = True
-        g_mOscDeviceStatusThread.Start()
-
-        SetPlayspaceCalibrationStatus(ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE, 0)
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
-            g_ClassSettings.LoadSettings()
-
-            Try
-                g_bIgnoreEvents = True
-
-                ' Controller Settings
-                CheckBox_TouchpadShortcuts.Checked = g_ClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
-                CheckBox_TouchpadShortcutClick.Checked = g_ClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
-                ComboBox_TouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadClickMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))
-                ComboBox_GrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_GrabButtonMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcGripButtonMethod))
-                CheckBox_TouchpadClampBounds.Checked = g_ClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
-                ComboBox_TouchpadMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadMethod))
-
-                CheckBox_ControllerRecenterEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnableControllerRecenter
-                ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_ControllerRecenterMethod))
-
-                ComboBox_RecenterFromDevice.Items.Clear()
-                ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName))
-                ComboBox_RecenterFromDevice.SelectedIndex = 0
-
-                CheckBox_HmdRecenterEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnableHmdRecenter
-                ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, g_ClassSettings.m_ControllerSettings.m_HmdRecenterMethod))
-
-                ComboBox_HmdRecenterFromDevice.Items.Clear()
-                ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(g_ClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName))
-                ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
-
-                NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, g_ClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs))
-                NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, g_ClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
-
-                NumericUpDown_TouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_TouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_TouchpadClickDeadzone.Maximum, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone)))
-                NumericUpDown_TouchpadTouchArea.Value = CDec(Math.Max(NumericUpDown_TouchpadTouchArea.Minimum, Math.Min(NumericUpDown_TouchpadTouchArea.Maximum, g_ClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm)))
-
-                CheckBox_PlayCalibEnabled.Checked = g_ClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
-
-                ' Hmd Settings
-                CheckBox_ShowDistSettings.Checked = g_ClassSettings.m_HmdSettings.m_UseCustomDistortion
-                NumericUpDown_PsvrDistK0.Value = CDec(Math.Max(NumericUpDown_PsvrDistK0.Minimum, Math.Min(NumericUpDown_PsvrDistK0.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK0(True))))
-                NumericUpDown_PsvrDistK1.Value = CDec(Math.Max(NumericUpDown_PsvrDistK1.Minimum, Math.Min(NumericUpDown_PsvrDistK1.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionK1(True))))
-                NumericUpDown_PsvrDistScale.Value = CDec(Math.Max(NumericUpDown_PsvrDistScale.Minimum, Math.Min(NumericUpDown_PsvrDistScale.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionScale(True))))
-                NumericUpDown_PsvrDistRedOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistRedOffset.Minimum, Math.Min(NumericUpDown_PsvrDistRedOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionRedOffset(True))))
-                NumericUpDown_PsvrDistGreenOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistGreenOffset.Minimum, Math.Min(NumericUpDown_PsvrDistGreenOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionGreenOffset(True))))
-                NumericUpDown_PsvrDistBlueOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistBlueOffset.Minimum, Math.Min(NumericUpDown_PsvrDistBlueOffset.Maximum, g_ClassSettings.m_HmdSettings.m_DistortionBlueOffset(True))))
-                NumericUpDown_PsvrHFov.Value = CDec(Math.Max(NumericUpDown_PsvrHFov.Minimum, Math.Min(NumericUpDown_PsvrHFov.Maximum, g_ClassSettings.m_HmdSettings.m_HFov(True))))
-                NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, g_ClassSettings.m_HmdSettings.m_VFov(True))))
-                NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, g_ClassSettings.m_HmdSettings.m_IPD)))
-                ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(g_ClassSettings.m_HmdSettings.m_RenderScale)
-
-                'Misc Settings
-                CheckBox_DisableBasestations.Checked = g_ClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
-                CheckBox_EnableHeptics.Checked = g_ClassSettings.m_MiscSettings.m_EnableHepticFeedback
-                CheckBox_OptimizePackets.Checked = g_ClassSettings.m_MiscSettings.m_OptimizeTransportPackets
-
-                ' Playspace Settings
-                NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
-                NumericUpDown_PlayCalibSideOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibSideOffset.Minimum, Math.Min(NumericUpDown_PlayCalibSideOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_SideOffset)))
-                NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, g_ClassSettings.m_PlayspaceSettings.m_HeightOffset)))
-                ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_ForwardMethod))
-                ComboBox_PlayCalibControllerID.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibControllerID.Items.Count - 1, g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId))
-                CheckBox_PlayCalibAutoscale.Checked = g_ClassSettings.m_PlayspaceSettings.m_AutoScale
-
-                g_ClassSettings.SetUnsavedState(False)
-            Finally
-                g_bIgnoreEvents = False
-            End Try
+            g_UCVmtSettings.LoadSettings()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         Try
-            AutostartLoad()
+            g_UCVmtTrackers.AutostartLoad()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
         Try
-            RefreshOverrides()
+            g_UCVmtOverrides.RefreshOverrides()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
-    End Sub
-
-    Private Sub ComboBox_PlayCalibControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PlayCalibControllerID.SelectedIndexChanged
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
-        g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId = ComboBox_PlayCalibControllerID.SelectedIndex
-        g_ClassSettings.SaveSettings(ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIB_CONTROLLER)
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
@@ -482,44 +92,30 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub CleanUp()
-        If (g_mPlayspaceCalibrationThread IsNot Nothing AndAlso g_mPlayspaceCalibrationThread.IsAlive) Then
-            g_mPlayspaceCalibrationThread.Abort()
-            g_mPlayspaceCalibrationThread.Join()
-            g_mPlayspaceCalibrationThread = Nothing
+        If (g_UCVmtManagement IsNot Nothing AndAlso Not g_UCVmtManagement.IsDisposed) Then
+            g_UCVmtManagement.Dispose()
+            g_UCVmtManagement = Nothing
         End If
 
-        If (g_mOscDeviceStatusThread IsNot Nothing AndAlso g_mOscDeviceStatusThread.IsAlive) Then
-            g_mOscDeviceStatusThread.Abort()
-            g_mOscDeviceStatusThread.Join()
-            g_mOscDeviceStatusThread = Nothing
+        If (g_UCVmtTrackers IsNot Nothing AndAlso Not g_UCVmtTrackers.IsDisposed) Then
+            g_UCVmtTrackers.Dispose()
+            g_UCVmtTrackers = Nothing
         End If
 
-        If (g_mOscStatusThread IsNot Nothing AndAlso g_mOscStatusThread.IsAlive) Then
-            g_mOscStatusThread.Abort()
-            g_mOscStatusThread.Join()
-            g_mOscStatusThread = Nothing
+        If (g_UCVmtSettings IsNot Nothing AndAlso Not g_UCVmtSettings.IsDisposed) Then
+            g_UCVmtSettings.Dispose()
+            g_UCVmtSettings = Nothing
         End If
 
-        For Each mItem As ListViewItem In ListView_Trackers.Items
-            Dim mTrackerItem = DirectCast(mItem, ClassTrackersListViewItem)
+        If (g_UCVmtPlayspaceCalib IsNot Nothing AndAlso Not g_UCVmtPlayspaceCalib.IsDisposed) Then
+            g_UCVmtPlayspaceCalib.Dispose()
+            g_UCVmtPlayspaceCalib = Nothing
+        End If
 
-            mTrackerItem.Dispose()
-        Next
-        ListView_Trackers.Items.Clear()
-
-        For Each mItem In g_mAutostartControllerMenuStrips
-            If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
-                mItem.Value.Dispose()
-            End If
-        Next
-        g_mAutostartControllerMenuStrips.Clear()
-
-        For Each mItem In g_mAutostartHmdMenuStrips
-            If (mItem.Value IsNot Nothing AndAlso Not mItem.Value.IsDisposed) Then
-                mItem.Value.Dispose()
-            End If
-        Next
-        g_mAutostartHmdMenuStrips.Clear()
+        If (g_UCVmtOverrides IsNot Nothing AndAlso Not g_UCVmtOverrides.IsDisposed) Then
+            g_UCVmtOverrides.Dispose()
+            g_UCVmtOverrides = Nothing
+        End If
 
         If (g_ClassOscDevices IsNot Nothing) Then
             g_ClassOscDevices.Dispose()
@@ -1670,11 +1266,11 @@ Public Class UCVirtualMotionTracker
 
         Public Sub SetUnsavedState(bIsUnsaved As Boolean)
             If (bIsUnsaved) Then
-                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Text = String.Format("Save Settings*")
-                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font, FontStyle.Bold)
+                g_UCVirtualMotionTracker.g_UCVmtSettings.Button_SaveControllerSettings.Text = String.Format("Save Settings*")
+                g_UCVirtualMotionTracker.g_UCVmtSettings.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.g_UCVmtSettings.Button_SaveControllerSettings.Font, FontStyle.Bold)
             Else
-                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Text = String.Format("Save Settings")
-                g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.Button_SaveControllerSettings.Font, FontStyle.Regular)
+                g_UCVirtualMotionTracker.g_UCVmtSettings.Button_SaveControllerSettings.Text = String.Format("Save Settings")
+                g_UCVirtualMotionTracker.g_UCVmtSettings.Button_SaveControllerSettings.Font = New Font(g_UCVirtualMotionTracker.g_UCVmtSettings.Button_SaveControllerSettings.Font, FontStyle.Regular)
             End If
         End Sub
     End Class

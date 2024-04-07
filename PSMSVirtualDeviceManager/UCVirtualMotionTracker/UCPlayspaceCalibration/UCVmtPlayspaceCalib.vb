@@ -1,4 +1,32 @@
-﻿Partial Class UCVirtualMotionTracker
+﻿Public Class UCVmtPlayspaceCalib
+    Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
+
+    Private g_bIgnoreEvents As Boolean = True
+    Private g_mPlayspaceCalibrationThread As Threading.Thread = Nothing
+
+    Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
+        g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_PlayCalibControllerID.Items.Clear()
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                ComboBox_PlayCalibControllerID.Items.Add(i)
+            Next
+
+            ComboBox_PlayCalibControllerID.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        SetPlayspaceCalibrationStatus(ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE, 0)
+    End Sub
 
     Enum ENUM_PLAYSPACE_CALIBRATION_STATUS
         IDLE
@@ -19,12 +47,21 @@
         Panel_PlayCalibSteps.Focus()
     End Sub
 
+    Private Sub ComboBox_PlayCalibControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_PlayCalibControllerID.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_PlayspaceSettings.m_CalibrationControllerId = ComboBox_PlayCalibControllerID.SelectedIndex
+        g_UCVirtualMotionTracker.g_ClassSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIB_CONTROLLER)
+    End Sub
+
     Private Sub LinkLabel_PlayCalibShowSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibShowSettings.LinkClicked
-        TabControl_Vmt.SelectedTab = TabPage_Settings
-        TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPlayspace
+        g_UCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_UCVirtualMotionTracker.TabPage_Settings
+        g_UCVirtualMotionTracker.g_UCVmtSettings.TabControl_SettingsDevices.SelectedTab = g_UCVirtualMotionTracker.g_UCVmtSettings.TabPage_SettingsPlayspace
 
         ' Weird focus  
-        CheckBox_PlayCalibEnabled.Focus()
+        g_UCVirtualMotionTracker.g_UCVmtSettings.CheckBox_PlayCalibEnabled.Focus()
     End Sub
 
     Public Sub StartPlayspaceCalibration()
@@ -54,16 +91,16 @@
             Label_PlayCalibTitle.Text = "Playspace Calibration Failed"
             Panel_PlayCalibStatus.BackColor = Color.FromArgb(192, 0, 0)
 
-            g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Failed"
-            g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_RED_16
+            g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Failed"
+            g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_RED_16
         Else
             Select Case (iStatus)
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE
                     Label_PlayCalibTitle.Text = "Playspace Calibration Not Started"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(224, 224, 224)
 
-                    g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Idle"
-                    g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_WHITE_16
+                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Idle"
+                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_WHITE_16
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE,
                         ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START,
@@ -72,16 +109,16 @@
                     Label_PlayCalibTitle.Text = "Playspace Calibration Running"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
 
-                    g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Running"
-                    g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_GREEN_16
+                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Running"
+                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_GREEN_16
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
                     Label_PlayCalibTitle.Text = "Playspace Calibration Completed"
                     'Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(224, 224, 224)
 
-                    g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Idle"
-                    g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_WHITE_16
+                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Idle"
+                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_WHITE_16
             End Select
         End If
 
@@ -182,7 +219,7 @@
                                     Function()
                                         Dim bFound As Boolean = False
 
-                                        For Each mTracker In GetVmtTrackers()
+                                        For Each mTracker In g_UCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
                                             If (mTracker.g_mClassIO.m_Index <> iControllerID) Then
                                                 Continue For
                                             End If
@@ -200,7 +237,7 @@
             Try
                 While True
                     ' Check if controller even exists
-                    Dim mControllerData = g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
+                    Dim mControllerData = g_UCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI.m_ControllerData(iControllerID)
                     If (mControllerData Is Nothing) Then
                         Throw New ArgumentException("Controller is not available.")
                     End If
@@ -306,4 +343,11 @@
         End Try
     End Sub
 
+    Private Sub CleanUp()
+        If (g_mPlayspaceCalibrationThread IsNot Nothing AndAlso g_mPlayspaceCalibrationThread.IsAlive) Then
+            g_mPlayspaceCalibrationThread.Abort()
+            g_mPlayspaceCalibrationThread.Join()
+            g_mPlayspaceCalibrationThread = Nothing
+        End If
+    End Sub
 End Class

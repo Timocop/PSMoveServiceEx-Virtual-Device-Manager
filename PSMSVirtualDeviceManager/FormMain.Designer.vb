@@ -35,6 +35,8 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_PlayCalibStatus = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel_PlayCalibStart = New System.Windows.Forms.LinkLabel()
         Me.Label_PsvrStatus = New System.Windows.Forms.LinkLabel()
         Me.Label_RemoteDeviceStatus = New System.Windows.Forms.LinkLabel()
         Me.Label_ServiceStatus = New System.Windows.Forms.LinkLabel()
@@ -54,8 +56,6 @@ Partial Class FormMain
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.LinkLabel_PlayCalibStatus = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_PlayCalibStart = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -196,6 +196,48 @@ Partial Class FormMain
         Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
         '
+        'LinkLabel_PlayCalibStatus
+        '
+        Me.LinkLabel_PlayCalibStatus.ActiveLinkColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.AutoSize = True
+        Me.LinkLabel_PlayCalibStatus.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PlayCalibStatus.DisabledLinkColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.ForeColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.LinkLabel_PlayCalibStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_PlayCalibStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
+        Me.LinkLabel_PlayCalibStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_PlayCalibStatus.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 553)
+        Me.LinkLabel_PlayCalibStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
+        Me.LinkLabel_PlayCalibStatus.Name = "LinkLabel_PlayCalibStatus"
+        Me.LinkLabel_PlayCalibStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.LinkLabel_PlayCalibStatus.Size = New System.Drawing.Size(169, 19)
+        Me.LinkLabel_PlayCalibStatus.TabIndex = 36
+        Me.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Status"
+        Me.LinkLabel_PlayCalibStatus.VisitedLinkColor = System.Drawing.Color.Black
+        '
+        'LinkLabel_PlayCalibStart
+        '
+        Me.LinkLabel_PlayCalibStart.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_PlayCalibStart.AutoSize = True
+        Me.LinkLabel_PlayCalibStart.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PlayCalibStart.DisabledLinkColor = System.Drawing.Color.Gray
+        Me.LinkLabel_PlayCalibStart.ForeColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PlayCalibStart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.LinkLabel_PlayCalibStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LinkLabel_PlayCalibStart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_PlayCalibStart.LinkColor = System.Drawing.Color.Navy
+        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 580)
+        Me.LinkLabel_PlayCalibStart.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
+        Me.LinkLabel_PlayCalibStart.Name = "LinkLabel_PlayCalibStart"
+        Me.LinkLabel_PlayCalibStart.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
+        Me.LinkLabel_PlayCalibStart.Size = New System.Drawing.Size(109, 19)
+        Me.LinkLabel_PlayCalibStart.TabIndex = 35
+        Me.LinkLabel_PlayCalibStart.TabStop = True
+        Me.LinkLabel_PlayCalibStart.Text = "Start Calibration"
+        Me.LinkLabel_PlayCalibStart.VisitedLinkColor = System.Drawing.Color.Navy
+        '
         'Label_PsvrStatus
         '
         Me.Label_PsvrStatus.ActiveLinkColor = System.Drawing.Color.Black
@@ -296,9 +338,9 @@ Partial Class FormMain
         Me.Label_VmtStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.Label_VmtStatus.Name = "Label_VmtStatus"
         Me.Label_VmtStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.Label_VmtStatus.Size = New System.Drawing.Size(128, 19)
+        Me.Label_VmtStatus.Size = New System.Drawing.Size(82, 19)
         Me.Label_VmtStatus.TabIndex = 26
-        Me.Label_VmtStatus.Text = "Management Status"
+        Me.Label_VmtStatus.Text = "OSC Status"
         Me.Label_VmtStatus.VisitedLinkColor = System.Drawing.Color.Black
         '
         'LinkLabel_VMT
@@ -569,48 +611,6 @@ Partial Class FormMain
         Me.Label2.Size = New System.Drawing.Size(65, 13)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Navigation"
-        '
-        'LinkLabel_PlayCalibStatus
-        '
-        Me.LinkLabel_PlayCalibStatus.ActiveLinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.AutoSize = True
-        Me.LinkLabel_PlayCalibStatus.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_PlayCalibStatus.DisabledLinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.ForeColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
-        Me.LinkLabel_PlayCalibStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_PlayCalibStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
-        Me.LinkLabel_PlayCalibStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_PlayCalibStatus.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 553)
-        Me.LinkLabel_PlayCalibStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_PlayCalibStatus.Name = "LinkLabel_PlayCalibStatus"
-        Me.LinkLabel_PlayCalibStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_PlayCalibStatus.Size = New System.Drawing.Size(128, 19)
-        Me.LinkLabel_PlayCalibStatus.TabIndex = 36
-        Me.LinkLabel_PlayCalibStatus.Text = "Management Status"
-        Me.LinkLabel_PlayCalibStatus.VisitedLinkColor = System.Drawing.Color.Black
-        '
-        'LinkLabel_PlayCalibStart
-        '
-        Me.LinkLabel_PlayCalibStart.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_PlayCalibStart.AutoSize = True
-        Me.LinkLabel_PlayCalibStart.BackColor = System.Drawing.Color.Transparent
-        Me.LinkLabel_PlayCalibStart.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_PlayCalibStart.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PlayCalibStart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.LinkLabel_PlayCalibStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_PlayCalibStart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_PlayCalibStart.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 580)
-        Me.LinkLabel_PlayCalibStart.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_PlayCalibStart.Name = "LinkLabel_PlayCalibStart"
-        Me.LinkLabel_PlayCalibStart.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_PlayCalibStart.Size = New System.Drawing.Size(109, 19)
-        Me.LinkLabel_PlayCalibStart.TabIndex = 35
-        Me.LinkLabel_PlayCalibStart.TabStop = True
-        Me.LinkLabel_PlayCalibStart.Text = "Start Calibration"
-        Me.LinkLabel_PlayCalibStart.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'FormMain
         '

@@ -255,7 +255,7 @@
                     End If
 
                     ' Run OSC server
-                    g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
+                    g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscRun_Click()
 
                     Exit While
                 End While
@@ -693,7 +693,7 @@
         SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
         g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
 
-        g_mUCVirtualMotionTracker.LinkLabel_OscRun_Click()
+        g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscRun_Click()
     End Sub
 
     Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
@@ -704,7 +704,7 @@
         SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
         g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
 
-        g_mUCVirtualMotionTracker.LinkLabel_OscPause_Click()
+        g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscPause_Click()
     End Sub
 
     Private Sub LinkLabel_VmtManagement_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Label_VmtStatus.LinkClicked
@@ -755,7 +755,7 @@
 
         SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
         g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_PlayspaceCalib
-        g_mUCVirtualMotionTracker.Button_PlaySpaceManualCalib_Click()
+        g_mUCVirtualMotionTracker.g_UCVmtPlayspaceCalib.Button_PlaySpaceManualCalib_Click()
     End Sub
 
     Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup

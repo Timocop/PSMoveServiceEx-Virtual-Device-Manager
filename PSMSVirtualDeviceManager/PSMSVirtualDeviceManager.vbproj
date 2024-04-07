@@ -308,17 +308,47 @@
     <Compile Include="Classes\Tools\FormRtfHelp.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UCVirtualMotionTracker\FormSteamSettings.Designer.vb">
+    <Compile Include="UCVirtualMotionTracker\UCManagement\FormSteamSettings.Designer.vb">
       <DependentUpon>FormSteamSettings.vb</DependentUpon>
     </Compile>
-    <Compile Include="UCVirtualMotionTracker\FormSteamSettings.vb">
+    <Compile Include="UCVirtualMotionTracker\UCManagement\FormSteamSettings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UCVirtualMotionTracker\FormTrackerOverrideSetup.Designer.vb">
+    <Compile Include="UCVirtualMotionTracker\UCOverrides\FormTrackerOverrideSetup.Designer.vb">
       <DependentUpon>FormTrackerOverrideSetup.vb</DependentUpon>
     </Compile>
-    <Compile Include="UCVirtualMotionTracker\FormTrackerOverrideSetup.vb">
+    <Compile Include="UCVirtualMotionTracker\UCOverrides\FormTrackerOverrideSetup.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCManagement\UCVmtManagement.Designer.vb">
+      <DependentUpon>UCVmtManagement.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCManagement\UCVmtManagement.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCOverrides\UCVmtOverrides.Designer.vb">
+      <DependentUpon>UCVmtOverrides.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCOverrides\UCVmtOverrides.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCPlayspaceCalibration\UCVmtPlayspaceCalib.Designer.vb">
+      <DependentUpon>UCVmtPlayspaceCalib.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCPlayspaceCalibration\UCVmtPlayspaceCalib.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCSettings\UCVmtSettings.Designer.vb">
+      <DependentUpon>UCVmtSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCSettings\UCVmtSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCTrackers\UCVmtTrackers.Designer.vb">
+      <DependentUpon>UCVmtTrackers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualMotionTracker\UCTrackers\UCVmtTrackers.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTrackerItem.Designer.vb">
       <DependentUpon>UCVirtualMotionTrackerItem.vb</DependentUpon>
@@ -330,21 +360,6 @@
       <DependentUpon>UCVirtualMotionTracker.vb</DependentUpon>
     </Compile>
     <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTracker.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTracker_Management.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTracker_Overrides.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTracker_PlayspaceCalib.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTracker_Settings.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UCVirtualMotionTracker\UCVirtualMotionTracker_Trackers.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UCVirtualHMDs\UCVirtualHMDs.Designer.vb">
@@ -424,11 +439,26 @@
     <EmbeddedResource Include="Classes\Tools\FormRtfHelp.resx">
       <DependentUpon>FormRtfHelp.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCVirtualMotionTracker\FormSteamSettings.resx">
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCManagement\FormSteamSettings.resx">
       <DependentUpon>FormSteamSettings.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UCVirtualMotionTracker\FormTrackerOverrideSetup.resx">
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCOverrides\FormTrackerOverrideSetup.resx">
       <DependentUpon>FormTrackerOverrideSetup.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCManagement\UCVmtManagement.resx">
+      <DependentUpon>UCVmtManagement.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCOverrides\UCVmtOverrides.resx">
+      <DependentUpon>UCVmtOverrides.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCPlayspaceCalibration\UCVmtPlayspaceCalib.resx">
+      <DependentUpon>UCVmtPlayspaceCalib.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCSettings\UCVmtSettings.resx">
+      <DependentUpon>UCVmtSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualMotionTracker\UCTrackers\UCVmtTrackers.resx">
+      <DependentUpon>UCVmtTrackers.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualMotionTracker\UCVirtualMotionTrackerItem.resx">
       <DependentUpon>UCVirtualMotionTrackerItem.vb</DependentUpon>

@@ -1,6 +1,27 @@
 ﻿Imports System.Numerics
 
-Partial Public Class UCVirtualMotionTracker
+Public Class UCVmtManagement
+    Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
+
+    Private g_mOscStatusThread As Threading.Thread = Nothing
+    Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
+
+    Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
+        g_UCVirtualMotionTracker = _UCVirtualMotionTracker
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call. 
+        g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
+        g_mOscStatusThread.IsBackground = True
+        g_mOscStatusThread.Start()
+
+        g_mOscDeviceStatusThread = New Threading.Thread(AddressOf OscDeviceStatusThread)
+        g_mOscDeviceStatusThread.IsBackground = True
+        g_mOscDeviceStatusThread.Start()
+    End Sub
+
     Public Sub LinkLabel_OscRun_Click()
         LinkLabel_OscRun_LinkClicked(Nothing, Nothing)
     End Sub
@@ -19,21 +40,21 @@ Partial Public Class UCVirtualMotionTracker
 
     Private Sub LinkLabel_OscRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscRun.LinkClicked
         Try
-            g_ClassOscServer.StartServer()
-            g_ClassOscServer.m_SuspendRequests = False
+            g_UCVirtualMotionTracker.g_ClassOscServer.StartServer()
+            g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests = False
 
-            g_ClassOscDevices.StartThread()
+            g_UCVirtualMotionTracker.g_ClassOscDevices.StartThread()
 
-            g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
+            g_UCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI.RegisterPoseStream("VMT")
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
     Private Sub LinkLabel_OscPause_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscPause.LinkClicked
-        g_ClassOscServer.m_SuspendRequests = True
+        g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests = True
 
-        g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
+        g_UCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI.UnregisterPoseStream("VMT")
     End Sub
 
     Private Sub LinkLabel_SteamRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamRun.LinkClicked
@@ -159,32 +180,32 @@ Partial Public Class UCVirtualMotionTracker
                 Panel_OscStatus.BackColor = Color.FromArgb(224, 224, 224)
 
                 ' Label Status in MainForm
-                g_mFormMain.Label_VmtStatus.Text = "OSC Uninitialized"
-                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_WHITE_16
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Uninitialized"
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_WHITE_16
 
             Case ENUM_OSC_CONNECTION_STATUS.CONNECTED
                 Label_OscStatus.Text = "OSC Connected"
                 Panel_OscStatus.BackColor = Color.FromArgb(0, 192, 0)
 
                 ' Label Status in MainForm
-                g_mFormMain.Label_VmtStatus.Text = "OSC Connected"
-                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_GREEN_16
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Connected"
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_GREEN_16
 
             Case ENUM_OSC_CONNECTION_STATUS.DISCONNETED
                 Label_OscStatus.Text = "OSC Disconnected"
                 Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
 
                 ' Label Status in MainForm
-                g_mFormMain.Label_VmtStatus.Text = "OSC Disconnected"
-                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Disconnected"
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
 
             Case ENUM_OSC_CONNECTION_STATUS.TIMEOUT
                 Label_OscStatus.Text = "OSC Timeout"
                 Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
 
                 ' Label Status in MainForm
-                g_mFormMain.Label_VmtStatus.Text = "OSC Timeout"
-                g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Timeout"
+                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
 
         End Select
     End Sub
@@ -192,13 +213,13 @@ Partial Public Class UCVirtualMotionTracker
     Private Sub OscStatusThread()
         While True
             Try
-                If (g_ClassOscServer Is Nothing OrElse Not g_ClassOscServer.IsRunning()) Then
+                If (g_UCVirtualMotionTracker.g_ClassOscServer Is Nothing OrElse Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning()) Then
                     ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
                 Else
-                    If (g_ClassOscServer.m_SuspendRequests) Then
+                    If (g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                         ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED))
                     Else
-                        Dim mLastResponse As TimeSpan = (Now - g_ClassOscServer.m_LastResponse)
+                        Dim mLastResponse As TimeSpan = (Now - g_UCVirtualMotionTracker.g_ClassOscServer.m_LastResponse)
 
                         If (mLastResponse.TotalMilliseconds > 5000) Then
                             ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.TIMEOUT))
@@ -226,10 +247,10 @@ Partial Public Class UCVirtualMotionTracker
                 Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
                 Const LISTVIEW_SUBITEM_FPS As Integer = 4
 
-                Dim mDevices = g_ClassOscDevices.GetDevices
+                Dim mDevices = g_UCVirtualMotionTracker.g_ClassOscDevices.GetDevices
 
                 For i = 0 To mDevices.Length - 1
-                    Dim mDevice As ClassOscDevices.STRUC_DEVICE = mDevices(i)
+                    Dim mDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = mDevices(i)
 
                     Dim mPos As Vector3 = mDevice.GetPosCm()
                     Dim mAng As Vector3 = mDevice.GetOrientationEuler()
@@ -261,12 +282,12 @@ Partial Public Class UCVirtualMotionTracker
                                                    ' Added device when not found
                                                    If (Not bFound) Then
                                                        Dim mListViewItem = New ListViewItem(New String() {
-                                                mDevice.iType.ToString,
-                                                mDevice.sSerial,
-                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
-                                                String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
-                                                "0"
-                                            })
+                                                            mDevice.iType.ToString,
+                                                            mDevice.sSerial,
+                                                            String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                            String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                            "0"
+                                                        })
                                                        mListViewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
 
                                                        ListView_OscDevices.Items.Add(mListViewItem)
@@ -305,4 +326,17 @@ Partial Public Class UCVirtualMotionTracker
         End While
     End Sub
 
+    Private Sub CleanUp()
+        If (g_mOscDeviceStatusThread IsNot Nothing AndAlso g_mOscDeviceStatusThread.IsAlive) Then
+            g_mOscDeviceStatusThread.Abort()
+            g_mOscDeviceStatusThread.Join()
+            g_mOscDeviceStatusThread = Nothing
+        End If
+
+        If (g_mOscStatusThread IsNot Nothing AndAlso g_mOscStatusThread.IsAlive) Then
+            g_mOscStatusThread.Abort()
+            g_mOscStatusThread.Join()
+            g_mOscStatusThread = Nothing
+        End If
+    End Sub
 End Class
