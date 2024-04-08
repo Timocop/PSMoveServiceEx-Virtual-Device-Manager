@@ -140,7 +140,7 @@ Partial Class UCVmtTrackers
         Me.Label66.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
         Me.Label66.Size = New System.Drawing.Size(766, 41)
         Me.Label66.TabIndex = 1
-        Me.Label66.Text = "Available Remote Devices"
+        Me.Label66.Text = "Available OSC Devices"
         Me.Label66.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Panel20
