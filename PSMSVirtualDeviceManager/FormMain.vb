@@ -9,6 +9,9 @@
     Public g_mUCVirtualTrackers As UCVirtualTrackers
     Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
 
+    Public g_UCRestartPsms As UCRestartProcessWarning
+    Public g_UCRestartSteamVR As UCRestartProcessWarning
+
     Public g_mPSMoveServiceCAPI As ClassServiceClient
     Public g_mClassUpdateChecker As ClassUpdateChecker
     Public g_mClassCameraFirmwareWatchdog As ClassCameraFirmwareWatchdog
@@ -17,6 +20,7 @@
 
     Private g_bIgnoreEvents As Boolean = False
     Private g_bAutoClose As Boolean = False
+    Private g_bAllowRestartPrompt As Boolean = False
 
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
@@ -140,14 +144,14 @@
         g_mUCVirtualControllers.Visible = False
         g_mUCVirtualControllers.ResumeLayout()
 
-        g_mUCVirtualHMDs = New UCVirtualHMDs()
+        g_mUCVirtualHMDs = New UCVirtualHMDs(Me)
         g_mUCVirtualHMDs.SuspendLayout()
         g_mUCVirtualHMDs.Parent = Panel_Pages
         g_mUCVirtualHMDs.Dock = DockStyle.Fill
         g_mUCVirtualHMDs.Visible = False
         g_mUCVirtualHMDs.ResumeLayout()
 
-        g_mUCVirtualTrackers = New UCVirtualTrackers()
+        g_mUCVirtualTrackers = New UCVirtualTrackers(Me)
         g_mUCVirtualTrackers.SuspendLayout()
         g_mUCVirtualTrackers.Parent = Panel_Pages
         g_mUCVirtualTrackers.Dock = DockStyle.Fill
@@ -161,6 +165,26 @@
         g_mUCVirtualMotionTracker.Visible = False
         g_mUCVirtualMotionTracker.ResumeLayout()
 
+        g_UCRestartPsms = New UCRestartProcessWarning
+        g_UCRestartPsms.m_Message = "PSMoveServiceEx needs to be restarted for changes to take effect."
+        g_UCRestartPsms.m_ProcessName = "PSMoveService;PSMoveServiceAdmin"
+
+        g_UCRestartPsms.Parent = Panel_Pages
+        g_UCRestartPsms.Dock = DockStyle.Bottom
+        g_UCRestartPsms.Visible = True
+        g_UCRestartPsms.SendToBack()
+        g_UCRestartPsms.Visible = False
+
+        g_UCRestartSteamVR = New UCRestartProcessWarning
+        g_UCRestartSteamVR.m_Message = "SteamVR needs to be restarted for changes to take effect."
+        g_UCRestartSteamVR.m_ProcessName = "vrserver"
+
+        g_UCRestartSteamVR.Parent = Panel_Pages
+        g_UCRestartSteamVR.Dock = DockStyle.Bottom
+        g_UCRestartSteamVR.Visible = True
+        g_UCRestartSteamVR.SendToBack()
+        g_UCRestartSteamVR.Visible = False
+
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
 
         g_mClassUpdateChecker = New ClassUpdateChecker(Me)
@@ -169,6 +193,22 @@
         SelectPage(ENUM_PAGE.STARTPAGE)
 
         AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
+    End Sub
+
+    Public Sub PromptRestartPSMoveService()
+        If (Not g_bAllowRestartPrompt) Then
+            Return
+        End If
+
+        g_UCRestartPsms.ShowAndWait()
+    End Sub
+
+    Public Sub PromptRestartSteamVR()
+        If (Not g_bAllowRestartPrompt) Then
+            Return
+        End If
+
+        g_UCRestartSteamVR.ShowAndWait()
     End Sub
 
     Private Function IsSingleInstance() As Boolean
@@ -189,6 +229,8 @@
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
+
+        g_bAllowRestartPrompt = True
     End Sub
 
     Private Sub ProcessCommandline(bLateload As Boolean)

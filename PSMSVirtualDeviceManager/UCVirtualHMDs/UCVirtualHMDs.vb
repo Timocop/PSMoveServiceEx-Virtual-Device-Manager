@@ -1,7 +1,11 @@
 ﻿Public Class UCVirtualHMDs
     Private g_bIgnoreEvents As Boolean = False
 
-    Public Sub New()
+    Public g_mFormMain As FormMain
+
+    Public Sub New(_mFormMain As FormMain)
+        g_mFormMain = _mFormMain
+
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -42,9 +46,7 @@
             mTrackerConfig.SetValue("", "virtual_hmd_count", ComboBox_VirtualHMDCount.SelectedIndex)
             mTrackerConfig.SaveConfig()
 
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
+            g_mFormMain.PromptRestartPSMoveService()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try

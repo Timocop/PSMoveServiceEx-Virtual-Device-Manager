@@ -55,7 +55,7 @@
 
                     RefreshOverrides()
 
-                    g_UCVirtualMotionTracker.PromptRestartSteamVR()
+                    g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
                 End If
             End Using
         Catch ex As Exception
@@ -91,7 +91,7 @@
 
             RefreshOverrides()
 
-            g_UCVirtualMotionTracker.PromptRestartSteamVR()
+            g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try

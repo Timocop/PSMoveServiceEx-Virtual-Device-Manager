@@ -12,7 +12,7 @@ Public Class UCVirtualMotionTrackerItem
 
     Shared _ThreadLock As New Object
 
-    Public g_mUCVirtualMotionTracker As UCVirtualMotionTracker
+    Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
 
     Public g_mClassIO As ClassIO
     Public g_mClassConfig As ClassConfig
@@ -36,7 +36,7 @@ Public Class UCVirtualMotionTrackerItem
     Public g_iHmdFramerate As Integer = -1
 
     Public Sub New(iDeviceID As Integer, bIsHMD As Boolean, _UCVirtualMotionTracker As UCVirtualMotionTracker)
-        g_mUCVirtualMotionTracker = _UCVirtualMotionTracker
+        g_UCVirtualMotionTracker = _UCVirtualMotionTracker
 
         g_bIsHMD = bIsHMD
 
@@ -161,8 +161,8 @@ Public Class UCVirtualMotionTrackerItem
 
         SetUnsavedState(False)
 
-        AddHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
-        AddHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
+        AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
+        AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
 
         CreateControl()
 
@@ -199,11 +199,11 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub OnOscSuspendChanged()
-        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
+        If (g_UCVirtualMotionTracker Is Nothing OrElse g_UCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
             Return
         End If
 
-        Dim bEnabled As Boolean = (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests)
+        Dim bEnabled As Boolean = (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests)
 
         ComboBox_DeviceID.Enabled = bEnabled
         ComboBox_VMTTrackerID.Enabled = (bEnabled AndAlso Not g_bIsHMD)
@@ -270,8 +270,8 @@ Public Class UCVirtualMotionTrackerItem
 
                     Select Case (iCode)
                         Case 1 'Room matrix not setup
-                            If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
-                                g_mUCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
+                            If (g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                                g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
                                     "/VMT/SetRoomMatrix", New Object() {
                                         1.0F, 0F, 0F, 0F,
                                         0F, 1.0F, 0F, 0F,
@@ -397,7 +397,7 @@ Public Class UCVirtualMotionTrackerItem
         g_mClassIO.Enable()
 
         UpdateTrackerRoleComboBox()
-        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
+        g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
 
         SetUnsavedState(False)
     End Sub
@@ -417,7 +417,7 @@ Public Class UCVirtualMotionTrackerItem
         SetUnsavedState(True)
 
         UpdateTrackerRoleComboBox()
-        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
+        g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
     End Sub
 
     Private Sub ComboBox_VMTTrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerRole.SelectedIndexChanged
@@ -434,7 +434,7 @@ Public Class UCVirtualMotionTrackerItem
         g_mClassIO.m_VmtTrackerRole = CType(ComboBox_VMTTrackerRole.SelectedIndex, ClassIO.ENUM_TRACKER_ROLE)
         SetUnsavedState(True)
 
-        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
+        g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
     End Sub
 
     Private Sub ComboBox_TrackerRole_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_SteamTrackerRole.SelectedIndexChanged
@@ -446,7 +446,7 @@ Public Class UCVirtualMotionTrackerItem
 
         SetUnsavedState(True)
 
-        g_mUCVirtualMotionTracker.PromptRestartSteamVR()
+        g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
     End Sub
 
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
@@ -576,7 +576,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
 
-                If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                If (g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                     ' Show driver timeouts
                     If (g_mDriverLastResponse.ElapsedMilliseconds > MAX_DRIVER_TIMEOUT) Then
                         sTitle = "Driver not is responding"
@@ -707,12 +707,12 @@ Public Class UCVirtualMotionTrackerItem
     End Property
 
     Private Sub CleanUp()
-        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso g_mUCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
-            RemoveHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
+        If (g_UCVirtualMotionTracker IsNot Nothing AndAlso g_UCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
+            RemoveHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
         End If
 
-        If (g_mUCVirtualMotionTracker IsNot Nothing AndAlso g_mUCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
-            RemoveHandler g_mUCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
+        If (g_UCVirtualMotionTracker IsNot Nothing AndAlso g_UCVirtualMotionTracker.g_ClassOscServer IsNot Nothing) Then
+            RemoveHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
         End If
 
         If (g_mClassIO IsNot Nothing) Then
@@ -1067,7 +1067,7 @@ Public Class UCVirtualMotionTrackerItem
         End Property
 
         Public Sub SetHepticFeedback(fFrequency As Single, fAmplitude As Single, fDuration As Single)
-            Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker.g_ClassSettings
+            Dim mClassSettings = g_UCVirtualMotionTrackerItem.g_UCVirtualMotionTracker.g_ClassSettings
             If (Not mClassSettings.m_MiscSettings.m_EnableHepticFeedback) Then
                 Return
             End If
@@ -1201,7 +1201,7 @@ Public Class UCVirtualMotionTrackerItem
                         Return
                     End If
 
-                    Dim mUCVirtualMotionTracker = g_UCVirtualMotionTrackerItem.g_mUCVirtualMotionTracker
+                    Dim mUCVirtualMotionTracker = g_UCVirtualMotionTrackerItem.g_UCVirtualMotionTracker
 
                     If (mClampedExecution.CanExecute()) Then
                         mClampedExecution.m_Framerate = mUCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscMaxThreadFps
@@ -2734,11 +2734,11 @@ Public Class UCVirtualMotionTrackerItem
         Timer_RecenterTimer.Stop()
 
         Try
-            If (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+            If (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
                 Throw New ArgumentException("OSC server is not running")
             End If
 
-            If (g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+            If (g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                 Throw New ArgumentException("OSC server is suspended")
             End If
 
@@ -2758,11 +2758,11 @@ Public Class UCVirtualMotionTrackerItem
 
     Private Sub ToolStripMenuItem_TrackerRecenterClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_TrackerRecenterClear.Click
         Try
-            If (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+            If (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
                 Throw New ArgumentException("OSC server is not running")
             End If
 
-            If (g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+            If (g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                 Throw New ArgumentException("OSC server is suspended")
             End If
 

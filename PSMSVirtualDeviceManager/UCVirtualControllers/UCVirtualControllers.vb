@@ -56,9 +56,7 @@
             mConfig.SetValue("", "virtual_controller_count", CInt(ComboBox_VirtualControllerCount.SelectedItem))
             mConfig.SaveConfig()
 
-            If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
+            g_mFormMain.PromptRestartPSMoveService()
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -136,9 +134,7 @@
                 mConfig.SetValue(Of Boolean)("", "psmove_emulation", CheckBox_PSmoveEmu.Checked)
                 mConfig.SaveConfig()
 
-                If (Process.GetProcessesByName("PSMoveService").Count > 0) Then
-                    MessageBox.Show("Restart PSMoveServiceEx in order for changes to take effect!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End If
+                g_mFormMain.PromptRestartPSMoveService()
             Catch ex As Exception
                 ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try

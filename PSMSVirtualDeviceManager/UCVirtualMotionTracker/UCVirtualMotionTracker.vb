@@ -15,10 +15,7 @@ Public Class UCVirtualMotionTracker
     Public g_UCVmtPlayspaceCalib As UCVmtPlayspaceCalib
     Public g_UCVmtOverrides As UCVmtOverrides
 
-    Public g_UCRestartSteamVR As UCRestartSteamVRWarning
-
     Private g_bIgnoreEvents As Boolean = True
-    Private g_bAllowRestartPrompt As Boolean = False
 
     Enum ENUM_SETTINGS_SAVE_TYPE_FLAGS
         ALL = -1
@@ -63,24 +60,7 @@ Public Class UCVirtualMotionTracker
         g_UCVmtOverrides.Parent = TabPage_Overrides
         g_UCVmtOverrides.Dock = DockStyle.Fill
 
-        g_UCRestartSteamVR = New UCRestartSteamVRWarning
-        g_UCRestartSteamVR.Parent = Panel_RestartSteamVR
-        g_UCRestartSteamVR.Dock = DockStyle.Top
-        g_UCRestartSteamVR.Visible = True
-        g_UCRestartSteamVR.Visible = False
-
-        Panel_RestartSteamVR.AutoSize = True
-        Panel_RestartSteamVR.AutoSizeMode = AutoSizeMode.GrowAndShrink
-
         CreateControl()
-    End Sub
-
-    Public Sub PromptRestartSteamVR()
-        If (Not g_bAllowRestartPrompt) Then
-            Return
-        End If
-
-        g_UCRestartSteamVR.ShowAndWait()
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -101,8 +81,6 @@ Public Class UCVirtualMotionTracker
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
-
-        g_bAllowRestartPrompt = True
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
