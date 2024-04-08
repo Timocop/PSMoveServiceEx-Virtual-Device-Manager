@@ -222,7 +222,7 @@
 
                 Dim mLibusbDriver As New ClassLibusbDriver
 
-                Dim mTotalDevices As New List(Of ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO)
+                Dim mTotalDevices As New Dictionary(Of String, ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO)
                 For Each mDevice In mLibusbDriver.GetAllDevices("USB")
                     If (String.IsNullOrEmpty(mDevice.sService)) Then
                         Continue For
@@ -245,16 +245,21 @@
 
                             Dim mKnownConfig As New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(mDevice.sProviderDescription, "", sVID, sPID, sMM, mDevice.sService)
 
-                            mTotalDevices.Add(mKnownConfig)
+                            mTotalDevices(String.Format("{0}/{1}/{2}", sVID, sPID, If(sMM, "XX"))) = mKnownConfig
                     End Select
                 Next
-                mTotalDevices.AddRange(ClassLibusbDriver.DRV_PS4CAM_KNOWN_CONFIGS)
-                mTotalDevices.AddRange(ClassLibusbDriver.DRV_PSEYE_KNOWN_CONFIGS)
-                mTotalDevices.AddRange(ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS)
-                mTotalDevices.AddRange(ClassLibusbDriver.DRV_PSMOVE_KNOWN_CONFIGS)
-                mTotalDevices.AddRange(ClassLibusbDriver.DRV_CONTROLLER_KNOWN_CONFIGS)
-                mTotalDevices.AddRange(ClassLibusbDriver.DRV_DUALSHOCK_KNOWN_CONFIGS)
 
+                Dim mTmpList As New List(Of ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO)
+                mTmpList.AddRange(ClassLibusbDriver.DRV_PS4CAM_KNOWN_CONFIGS)
+                mTmpList.AddRange(ClassLibusbDriver.DRV_PSEYE_KNOWN_CONFIGS)
+                mTmpList.AddRange(ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS)
+                mTmpList.AddRange(ClassLibusbDriver.DRV_PSMOVE_KNOWN_CONFIGS)
+                mTmpList.AddRange(ClassLibusbDriver.DRV_CONTROLLER_KNOWN_CONFIGS)
+                mTmpList.AddRange(ClassLibusbDriver.DRV_DUALSHOCK_KNOWN_CONFIGS)
+
+                For Each mDevice In mTmpList
+                    mTotalDevices(String.Format("{0}/{1}/{2}", mDevice.VID, mDevice.PID, If(mDevice.MM, "XX"))) = mDevice
+                Next
 
                 mFormLoading.ProgressBar1.Style = ProgressBarStyle.Blocks
                 mFormLoading.ProgressBar1.Minimum = 0
@@ -263,13 +268,13 @@
                 mFormLoading.Refresh()
 
                 For Each mItem In mTotalDevices
-                    mFormLoading.Text = String.Format("Loading... ({0})", mItem.sName)
+                    mFormLoading.Text = String.Format("Loading... ({0})", mItem.Value.sName)
                     mFormLoading.Refresh()
 
-                    Dim mTree As ClassLibusbDriver.STRUC_DEVICETREE_ITEM() = mLibusbDriver.GetDeviceTree(mItem, "USB")
+                    Dim mTree As ClassLibusbDriver.STRUC_DEVICETREE_ITEM() = mLibusbDriver.GetDeviceTree(mItem.Value, "USB")
                     If (mTree IsNot Nothing) Then
                         For Each mDevice In mTree
-                            g_ClassTreeViewManager.AddDevice(mItem, mDevice, CheckBox_ShowDisconnectedDevices.Checked)
+                            g_ClassTreeViewManager.AddDevice(mItem.Value, mDevice, CheckBox_ShowDisconnectedDevices.Checked)
                         Next
                     End If
 
@@ -432,13 +437,13 @@
 
             Dim mLibUSB As New ClassLibusbDriver
             If (mLibUSB.RemoveDevice(sDeviceId, True) <> 0) Then
-                Throw New ArgumentException("Unable to set device state.")
+                Throw New ArgumentException("Unable to remove device.")
             End If
 
             Dim sDeviceDriver As String = mDevice.m_Device.mProvider.sDriverInfPath
             If (Not String.IsNullOrEmpty(sDeviceDriver) AndAlso sDeviceDriver.ToLowerInvariant.StartsWith("oem") AndAlso MessageBox.Show("Do you want to remove the device driver?", "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
                 If (mLibUSB.RemoveDriver(sDeviceDriver) <> 0) Then
-                    Throw New ArgumentException("Unable to set device state.")
+                    Throw New ArgumentException("Unable to remove device driver.")
                 End If
             End If
 
