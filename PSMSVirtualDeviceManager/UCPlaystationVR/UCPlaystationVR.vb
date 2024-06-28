@@ -33,6 +33,7 @@
         DISABLED
         BAD_FREQUENCY
         DIRECT_MODE
+        UNSUPPORTED
         GENERAL_ISSUE
     End Enum
 
@@ -167,6 +168,11 @@
                 Label_DisplayStatusText.Text = "Display has been disabled. Please enable the display in the Windows display settings."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
 
+            Case ENUM_DEVICE_DISPLAY_STATUS.UNSUPPORTED
+                Label_DisplayStatus.Text = "Display Unsupported"
+                Label_DisplayStatusText.Text = "Display is unsupported. Please contract support."
+                ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
+
             Case Else
                 Label_DisplayStatus.Text = "Display Error"
                 Label_DisplayStatusText.Text = "Display encountered an unknown error."
@@ -207,7 +213,8 @@
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.DISABLED OrElse
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY OrElse
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT OrElse
-                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED OrElse
+                    iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.UNSUPPORTED)
                 ' USB driver or Display configuration iggues.
                 Label_PSVRStatus.Text = "PlayStation VR Issues Detected"
                 Panel_PSVRStatus.BackColor = Color.FromArgb(255, 128, 0)
@@ -261,8 +268,12 @@
                     Dim mClassMonitor As New ClassMonitor
                     Dim mPsvrMonitor As ClassMonitor.DEVMODE = Nothing
                     Select Case (mClassMonitor.FindPlaystationVrMonitor(mPsvrMonitor, Nothing))
-                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS,
-                                ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_MIRRROED
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                            iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED
+
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_MIRRROED,
+                                ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_UNSUPPORTED
+                            ' Connected but bad config or unsupported
                             iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.CONNECTED
 
                         Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE
@@ -282,7 +293,6 @@
                                 Case Else
                                     iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED
                             End Select
-
 
                     End Select
                 Catch ex As Threading.ThreadAbortException
@@ -374,6 +384,10 @@
                                 Case Else
                                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED
                             End Select
+
+                        Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_UNSUPPORTED
+                            ' Unsupported Display? 
+                            iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.UNSUPPORTED
 
                         Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
                             ' Virtual-Mode

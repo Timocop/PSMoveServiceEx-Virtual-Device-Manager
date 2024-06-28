@@ -38,13 +38,51 @@ Public Class ClassMonitor
         Public Const CCHFORMNAME As Integer = 32
     End Class
 
-    Public Const PSVR_MONITOR_GEN1_NAME As String = "MONITOR\SNYB403"
-    Public Const PSVR_MONITOR_GEN2_NAME As String = "MONITOR\SNY6A04"
+    Structure STRUC_MONITOR_IDS
+        Dim sVID As String
+        Dim sPID As String
+        Dim iGen As Integer
+        Dim iEdid As Byte()
+        Dim iEdidDirect As Byte()
 
-    Public Const PSVR_MONITOR_GEN1_VID As Integer = &HD94D
-    Public Const PSVR_MONITOR_GEN1_PID As Integer = &HB403
-    Public Const PSVR_MONITOR_GEN2_VID As Integer = &HD94D
-    Public Const PSVR_MONITOR_GEN2_PID As Integer = &H6A04
+        Sub New(_VID As String, _PID As String, _Gen As Integer, _Edid As Byte(), _EdidDirect As Byte())
+            sVID = _VID
+            sPID = _PID
+            iGen = _Gen
+            iEdid = _Edid
+            iEdidDirect = _EdidDirect
+        End Sub
+
+        Public Function GetMonitorNameLong() As String
+            Return String.Format("MONITOR\{0}{1}", sVID, sPID)
+        End Function
+
+        Public Function GetMonitorNameLongVID() As String
+            Return String.Format("MONITOR\{0}", sVID)
+        End Function
+
+        Public Function GetMonitorName() As String
+            Return String.Format("{0}{1}", sVID, sPID)
+        End Function
+
+        Public Function GetVID() As Integer
+            Return Convert.ToInt32(sVID, 16)
+        End Function
+
+        Public Function GetPID() As Integer
+            Return Convert.ToInt32(sPID, 16)
+        End Function
+
+        Public Function IsEqual(sMonitorName As String) As Boolean
+            Return GetMonitorNameLong().ToUpperInvariant.EndsWith(sMonitorName.ToUpperInvariant)
+        End Function
+    End Structure
+
+    Public Shared ReadOnly PSVR_MONITOR_IDS As STRUC_MONITOR_IDS() = {
+        New STRUC_MONITOR_IDS("SNY", "B403", 1, My.Resources.EDID_PSVR1_B403_MULTI, My.Resources.EDID_PSVR1_B403_DIRECT),
+        New STRUC_MONITOR_IDS("SNY", "5504", 1, My.Resources.EDID_PSVR1_5504_MULTI, My.Resources.EDID_PSVR1_5504_DIRECT),
+        New STRUC_MONITOR_IDS("SNY", "6A04", 2, My.Resources.EDID_PSVR2_6A04_MULTI, My.Resources.EDID_PSVR2_6A04_DIRECT)
+    }
 
     <Flags>
     Public Enum DISPLAY_DEVICE_STATE As Integer
@@ -161,6 +199,7 @@ Public Class ClassMonitor
         ERROR_MIRRROED
         ERROR_NOT_ACTIVE
         ERROR_NOT_FOUND
+        ERROR_UNSUPPORTED
     End Enum
 
     Public Function FindPlaystationVrMonitor(ByRef mResult As DEVMODE, ByRef mDisplayInfo As KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)) As ENUM_PSVR_MONITOR_STATUS
@@ -171,8 +210,20 @@ Public Class ClassMonitor
             End If
 
             For Each mMonitor In mInfo.Value
-                If (mMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN1_NAME) OrElse mMonitor.DeviceID.StartsWith(PSVR_MONITOR_GEN2_NAME)) Then
+                Dim bFoundExact As Boolean = False
+                Dim bFound As Boolean = False
 
+                For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                    If (mMonitor.DeviceID.ToUpperInvariant.StartsWith(PSVR_MONITOR_IDS(i).GetMonitorNameLong().ToUpperInvariant)) Then
+                        bFoundExact = True
+                    End If
+
+                    If (mMonitor.DeviceID.ToUpperInvariant.StartsWith(PSVR_MONITOR_IDS(i).GetMonitorNameLongVID().ToUpperInvariant)) Then
+                        bFound = True
+                    End If
+                Next
+
+                If (bFoundExact) Then
                     mResult = mMonitorInfo
                     mDisplayInfo = New KeyValuePair(Of DISPLAY_DEVICE, MONITOR_DEVICE)(mInfo.Key, mMonitor)
 
@@ -187,6 +238,10 @@ Public Class ClassMonitor
                     End If
 
                     Return ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                End If
+
+                If (bFound) Then
+                    Return ENUM_PSVR_MONITOR_STATUS.ERROR_UNSUPPORTED
                 End If
             Next
         Next
@@ -286,7 +341,18 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                If (Not PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName) AndAlso Not PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
+                Dim bFound As Boolean
+                Dim mPsvrMonitor As New STRUC_MONITOR_IDS
+                For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                    mPsvrMonitor = PSVR_MONITOR_IDS(i)
+
+                    If (mPsvrMonitor.IsEqual(sMonitorName)) Then
+                        bFound = True
+                        Exit For
+                    End If
+                Next
+
+                If (Not bFound) Then
                     Continue For
                 End If
 
@@ -301,28 +367,15 @@ Public Class ClassMonitor
                 End If
 
                 ' Give it a sexy friendly name for the device manager.
-                mIdKey.SetValue("FriendlyName", "PSVR", RegistryValueKind.String)
+                mIdKey.SetValue("FriendlyName", "PlayStation VR Monitor", RegistryValueKind.String)
 
                 Dim iFullEDID As Byte() = New Byte() {}
 
-                Select Case (True)
-                    Case (PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName))
-                        If (bDirectMode) Then
-                            iFullEDID = My.Resources.EDID_PSVR1_DIRECT
-                        Else
-                            iFullEDID = My.Resources.EDID_PSVR1_MULTI
-                        End If
-
-                    Case (PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName))
-                        If (bDirectMode) Then
-                            iFullEDID = My.Resources.EDID_PSVR2_DIRECT
-                        Else
-                            iFullEDID = My.Resources.EDID_PSVR2_MULTI
-                        End If
-
-                    Case Else
-                        Throw New ArgumentException("Unknown PlayStation VR monitor hardware id")
-                End Select
+                If (bDirectMode) Then
+                    iFullEDID = mPsvrMonitor.iEdidDirect
+                Else
+                    iFullEDID = mPsvrMonitor.iEdid
+                End If
 
                 Dim iSplitBase As Byte() = New Byte() {}
                 Dim iSplitExt As Byte() = New Byte() {}
@@ -383,7 +436,18 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                If (Not PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName) AndAlso Not PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
+                Dim bFound As Boolean
+                Dim mPsvrMonitor As New STRUC_MONITOR_IDS
+                For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                    mPsvrMonitor = PSVR_MONITOR_IDS(i)
+
+                    If (mPsvrMonitor.IsEqual(sMonitorName)) Then
+                        bFound = True
+                        Exit For
+                    End If
+                Next
+
+                If (Not bFound) Then
                     Continue For
                 End If
 
@@ -397,20 +461,8 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                Dim iFullEDID_Multi = New Byte() {}
-                Dim iFullEDID_Direct = New Byte() {}
-
-                Select Case (True)
-                    Case (PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName))
-                        iFullEDID_Multi = My.Resources.EDID_PSVR1_MULTI
-                        iFullEDID_Direct = My.Resources.EDID_PSVR1_DIRECT
-
-                    Case (PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName))
-                        iFullEDID_Multi = My.Resources.EDID_PSVR2_MULTI
-                        iFullEDID_Direct = My.Resources.EDID_PSVR2_DIRECT
-                    Case Else
-                        Throw New ArgumentException("Unknown PlayStation VR monitor hardware id")
-                End Select
+                Dim iFullEDID_Multi = mPsvrMonitor.iEdid
+                Dim iFullEDID_Direct = mPsvrMonitor.iEdidDirect
 
                 Dim iSplitBase_Multi = New Byte() {}
                 Dim iSplitExt_Multi = New Byte() {}
@@ -512,7 +564,18 @@ Public Class ClassMonitor
                     Continue For
                 End If
 
-                If (Not PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName) AndAlso Not PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
+                Dim bFound As Boolean
+                Dim mPsvrMonitor As New STRUC_MONITOR_IDS
+                For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                    mPsvrMonitor = PSVR_MONITOR_IDS(i)
+
+                    If (mPsvrMonitor.IsEqual(sMonitorName)) Then
+                        bFound = True
+                        Exit For
+                    End If
+                Next
+
+                If (Not bFound) Then
                     Continue For
                 End If
 

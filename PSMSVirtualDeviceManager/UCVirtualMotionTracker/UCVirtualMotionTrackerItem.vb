@@ -1373,20 +1373,16 @@ Public Class UCVirtualMotionTrackerItem
 
                                                         Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
 
-                                                        If (ClassMonitor.PSVR_MONITOR_GEN1_NAME.EndsWith(sMonitorName)) Then
-                                                            iVendorId = ClassMonitor.PSVR_MONITOR_GEN1_VID
-                                                            iProductId = ClassMonitor.PSVR_MONITOR_GEN1_PID
+                                                        For l = 0 To ClassMonitor.PSVR_MONITOR_IDS.Length - 1
+                                                            Dim mPsvrMonitor = ClassMonitor.PSVR_MONITOR_IDS(l)
 
-                                                            bDisplaySuccess = True
-                                                        End If
+                                                            If (mPsvrMonitor.GetMonitorNameLong().ToUpperInvariant.EndsWith(sMonitorName.ToUpperInvariant)) Then
+                                                                iVendorId = mPsvrMonitor.GetVID()
+                                                                iProductId = mPsvrMonitor.GetPID()
 
-                                                        If (ClassMonitor.PSVR_MONITOR_GEN2_NAME.EndsWith(sMonitorName)) Then
-                                                            iVendorId = ClassMonitor.PSVR_MONITOR_GEN2_VID
-                                                            iProductId = ClassMonitor.PSVR_MONITOR_GEN2_PID
-
-                                                            bDisplaySuccess = True
-                                                        End If
-
+                                                                bDisplaySuccess = True
+                                                            End If
+                                                        Next
                                                     End If
                                             End Select
                                         End If

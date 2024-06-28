@@ -234,8 +234,8 @@
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
@@ -409,9 +409,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="StartPage\FormConnectedDevices.resx">
       <DependentUpon>FormConnectedDevices.vb</DependentUpon>
@@ -504,6 +504,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <None Include="Resources\EDID_PSVR1_5504_DIRECT.bin" />
+    <None Include="Resources\EDID_PSVR1_5504_MULTI.bin" />
+    <None Include="Resources\EDID_PSVR1_B403_DIRECT.bin" />
+    <None Include="Resources\EDID_PSVR1_B403_MULTI.bin" />
+    <None Include="Resources\EDID_PSVR2_6A04_DIRECT.bin" />
+    <None Include="Resources\EDID_PSVR2_6A04_MULTI.bin" />
     <None Include="Resources\imageres_5321_16x16-32.png" />
     <None Include="Resources\bthci_201_16x16-32.png" />
     <None Include="Resources\imageres_34_16x16-32.png" />

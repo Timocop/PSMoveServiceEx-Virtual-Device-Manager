@@ -413,9 +413,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
-        Friend ReadOnly Property EDID_PSVR1_DIRECT() As Byte()
+        Friend ReadOnly Property EDID_PSVR1_5504_DIRECT() As Byte()
             Get
-                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR1_DIRECT", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR1_5504_DIRECT", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property
@@ -423,9 +423,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
-        Friend ReadOnly Property EDID_PSVR1_MULTI() As Byte()
+        Friend ReadOnly Property EDID_PSVR1_5504_MULTI() As Byte()
             Get
-                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR1_MULTI", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR1_5504_MULTI", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property
@@ -433,9 +433,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
-        Friend ReadOnly Property EDID_PSVR2_DIRECT() As Byte()
+        Friend ReadOnly Property EDID_PSVR1_B403_DIRECT() As Byte()
             Get
-                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR2_DIRECT", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR1_B403_DIRECT", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property
@@ -443,9 +443,29 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
-        Friend ReadOnly Property EDID_PSVR2_MULTI() As Byte()
+        Friend ReadOnly Property EDID_PSVR1_B403_MULTI() As Byte()
             Get
-                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR2_MULTI", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR1_B403_MULTI", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property EDID_PSVR2_6A04_DIRECT() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR2_6A04_DIRECT", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property EDID_PSVR2_6A04_MULTI() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("EDID_PSVR2_6A04_MULTI", resourceCulture)
                 Return CType(obj,Byte())
             End Get
         End Property

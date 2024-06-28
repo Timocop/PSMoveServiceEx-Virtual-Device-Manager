@@ -315,17 +315,12 @@
                         Dim mClassMonitor As New ClassMonitor
                         Dim mDriverInstaller As New ClassLibusbDriver
 
-                        Dim sDisplayNames As String() = New String() {
-                                ClassMonitor.PSVR_MONITOR_GEN1_NAME.Replace("MONITOR\", ""),
-                                ClassMonitor.PSVR_MONITOR_GEN2_NAME.Replace("MONITOR\", "")
-                            }
-
                         ' Remove conflicting drivers (e.g libusb on hid).
                         If (True) Then
                             Dim bScanNewDevices As Boolean = False
                             Dim sDevicesToRemove As New List(Of String)
-                            For Each sMonitorSerial As String In sDisplayNames
-                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
+                            For Each mPsvrMonitor In ClassMonitor.PSVR_MONITOR_IDS
+                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(mPsvrMonitor.GetMonitorName())
                                     ' Dont allow anything else than non-system drivers past here!
                                     If (Not String.IsNullOrEmpty(mDisplayInfo.sDriverInfPath) AndAlso mDisplayInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
                                         mDriverInstaller.RemoveDriver(mDisplayInfo.sDriverInfPath)
@@ -359,8 +354,8 @@
                         ' Restart monitors.
                         If (True) Then
                             Dim bScanNewDevices As Boolean = False
-                            For Each sMonitorSerial As String In sDisplayNames
-                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(sMonitorSerial)
+                            For Each mPsvrMonitor In ClassMonitor.PSVR_MONITOR_IDS
+                                For Each mDisplayInfo In mDriverInstaller.GetDeviceProviderDISPLAY(mPsvrMonitor.GetMonitorName)
                                     mDriverInstaller.RestartDevice(mDisplayInfo.sDeviceID)
                                     bScanNewDevices = True
                                 Next
