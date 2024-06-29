@@ -1972,6 +1972,7 @@ Public Class UCVirtualMotionTrackerItem
                     If (Not mPlayspaceRecenterButtonHolding) Then
                         mPlayspaceRecenterButtonHolding = True
 
+                        ' If caibration is not triggered by manual calibration. Change to calibration via button.
                         If (g_iPlayCalibStatus <> ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                             g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING
                         End If
@@ -2036,11 +2037,14 @@ Public Class UCVirtualMotionTrackerItem
                                 'Save settings after calibration is done 
                                 mPlayspaceRecenterCalibrationSave = True
 
-                                g_bPlayCalibAllowSave = False
-                                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                ' Stop when manual calibration when done. PSmove calibration should continue when the button is stopped pressed.
+                                If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                    g_bPlayCalibAllowSave = False
+                                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
 
-                                'Dont triggers this again, we are done here.
-                                mLastPlayspaceRecenterTime.Reset()
+                                    'Dont triggers this again, we are done here.
+                                    mLastPlayspaceRecenterTime.Reset()
+                                End If
                             End If
                         Else
                             g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
