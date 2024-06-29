@@ -1,4 +1,7 @@
-﻿Public Class FormConnectedDevices
+﻿Imports System.Web.Script.Serialization
+Imports System.Xml.Serialization
+
+Public Class FormConnectedDevices
     Private g_ClassTreeViewManager As ClassTreeViewManager
 
     Public Sub New()
@@ -20,27 +23,78 @@
         g_ClassTreeViewManager = New ClassTreeViewManager(TreeView_ConnectedDevices)
     End Sub
 
+    Class TreeViewSerialization
+        <Serializable>
+        Class TreeNodeData
+            Property sText As String
+
+            Property sDeviceID As String
+            Property iConfigFlags As ClassLibusbDriver.DEVICE_CONFIG_FLAGS
+            Property sService As String
+            Property sProviderName As String
+            Property sProviderDescription As String
+            Property sProviderVersion As String
+            Property sDriverInfPath As String
+
+            Property mNodes As New List(Of TreeNodeData)
+        End Class
+
+        Public Function SerializeTreeNodes(mNodes As TreeNodeCollection) As String
+            Dim mSerializer As New JavaScriptSerializer()
+            Dim mNodeList As New List(Of TreeNodeData)
+
+            For Each mNode As TreeNode In mNodes
+                mNodeList.Add(SerializeTreeNode(mNode))
+            Next
+
+            Return mSerializer.Serialize(mNodeList)
+        End Function
+
+        Private Function SerializeTreeNode(mNode As TreeNode) As TreeNodeData
+            Dim mModeData As New TreeNodeData()
+            mModeData.sText = mNode.Text
+
+            If (TypeOf mNode Is STRUC_LISTVIEW_NODE_DEVICE_ITEM) Then
+                Dim mDeviceNode = DirectCast(mNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+                mModeData.sDeviceID = mDeviceNode.m_Device.sDeviceID
+                mModeData.iConfigFlags = mDeviceNode.m_Device.iConfigFlags
+                mModeData.sService = mDeviceNode.m_Device.sService
+                mModeData.sProviderName = mDeviceNode.m_Device.sProviderName
+                mModeData.sProviderDescription = mDeviceNode.m_Device.sProviderDescription
+                mModeData.sProviderVersion = mDeviceNode.m_Device.sProviderVersion
+                mModeData.sDriverInfPath = mDeviceNode.m_Device.sDriverInfPath
+            End If
+
+            For Each mChildNode As TreeNode In mNode.Nodes
+                mModeData.mNodes.Add(SerializeTreeNode(mChildNode))
+            Next
+
+            Return mModeData
+        End Function
+    End Class
+
+
     Class STRUC_LISTVIEW_NODE_DEVICE_ITEM
         Inherits TreeNode
 
         Private g_bReadOnly As Boolean = False
         Private g_sDeviceName As String = ""
-        Private g_mDevice As ClassLibusbDriver.STRUC_DEVICETREE_ITEM = Nothing
+        Private g_mDevice As ClassLibusbDriver.STRUC_DEVICE_PROVIDER = Nothing
 
-        Public Sub New(_Device As ClassLibusbDriver.STRUC_DEVICETREE_ITEM, _ReadOnly As Boolean)
+        Public Sub New(_Device As ClassLibusbDriver.STRUC_DEVICE_PROVIDER, _ReadOnly As Boolean)
             Me.New("", _Device, _ReadOnly)
         End Sub
 
-        Public Sub New(_DeviceName As String, _Device As ClassLibusbDriver.STRUC_DEVICETREE_ITEM, _ReadOnly As Boolean)
+        Public Sub New(_DeviceName As String, _Device As ClassLibusbDriver.STRUC_DEVICE_PROVIDER, _ReadOnly As Boolean)
             g_sDeviceName = _DeviceName
-            g_mDevice = New ClassLibusbDriver.STRUC_DEVICETREE_ITEM(_Device)
+            g_mDevice = _Device
             g_bReadOnly = _ReadOnly
 
             Me.Text = Me.ToString
         End Sub
 
         Public Overrides Function ToString() As String
-            If (String.IsNullOrEmpty(g_mDevice.mProvider.sProviderDescription) OrElse g_mDevice.mProvider.sProviderDescription.TrimEnd.Length = 0) Then
+            If (String.IsNullOrEmpty(g_mDevice.sProviderDescription) OrElse g_mDevice.sProviderDescription.TrimEnd.Length = 0) Then
                 If (String.IsNullOrEmpty(g_sDeviceName) OrElse g_sDeviceName.TrimEnd.Length = 0) Then
                     Return "Unknown"
                 Else
@@ -49,9 +103,9 @@
             End If
 
             If (String.IsNullOrEmpty(g_sDeviceName) OrElse g_sDeviceName.TrimEnd.Length = 0) Then
-                Return g_mDevice.mProvider.sProviderDescription
+                Return g_mDevice.sProviderDescription
             Else
-                Return String.Format("{0} ({1})", g_mDevice.mProvider.sProviderDescription, g_sDeviceName)
+                Return String.Format("{0} ({1})", g_mDevice.sProviderDescription, g_sDeviceName)
             End If
         End Function
 
@@ -75,7 +129,7 @@
             End Set
         End Property
 
-        Public ReadOnly Property m_Device As ClassLibusbDriver.STRUC_DEVICETREE_ITEM
+        Public ReadOnly Property m_Device As ClassLibusbDriver.STRUC_DEVICE_PROVIDER
             Get
                 Return g_mDevice
             End Get
@@ -96,40 +150,15 @@
             End Get
         End Property
 
-        Public Sub AddDevice(_DriverInfo As ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO, _Device As ClassLibusbDriver.STRUC_DEVICETREE_ITEM, bIncludeDisconnected As Boolean)
+        Public Sub AddDevice(_DriverInfo As ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO, _Device As ClassLibusbDriver.STRUC_DEVICETREE_ITEM)
             Dim mLibusbDriver As New ClassLibusbDriver
-
-            Dim bConnected As Boolean = mLibusbDriver.IsUsbDeviceConnected(_DriverInfo.VID, _DriverInfo.PID, _Device.sInterface, _Device.sDeviceSerial)
-
-            If (Not bIncludeDisconnected) Then
-                If (Not bConnected) Then
-                    Return
-                End If
-            End If
 
             Dim mLastTreeNodeCollection As TreeNodeCollection = g_mTreeView.Nodes
 
-            Dim mTotalDevices As ClassLibusbDriver.STRUC_DEVICETREE_ITEM() = Nothing
-
-            If (True) Then
-                Dim mLastDevice = _Device
-                Dim mLastTotalDevice As New List(Of ClassLibusbDriver.STRUC_DEVICETREE_ITEM)
-
-                While True
-                    mLastTotalDevice.Add(New ClassLibusbDriver.STRUC_DEVICETREE_ITEM(mLastDevice))
-
-                    If (mLastDevice.mParentDevice Is Nothing) Then
-                        Exit While
-                    End If
-
-                    mLastDevice = mLastDevice.mParentDevice
-                End While
-
-                mLastTotalDevice.Reverse()
-                mTotalDevices = mLastTotalDevice.ToArray
-            End If
-
             Dim mTreeNode As TreeNode = Nothing
+            Dim mTotalDevices As New List(Of ClassLibusbDriver.STRUC_DEVICE_PROVIDER)
+            mTotalDevices.AddRange(_Device.mParentDevices)
+            mTotalDevices.Reverse()
 
             For Each mDevice In mTotalDevices
                 mTreeNode = Nothing
@@ -143,15 +172,15 @@
 
                     mTreeNode.ImageKey = "Normal"
 
-                    If (Not String.IsNullOrEmpty(mDevice.mProvider.sService)) Then
-                        Select Case (mDevice.mProvider.sService.ToUpperInvariant)
+                    If (Not String.IsNullOrEmpty(mDevice.sService)) Then
+                        Select Case (mDevice.sService.ToUpperInvariant)
                             Case ClassLibusbDriver.USBXHCI_SERVICE_NAME 'USB 3.0
                                 mTreeNode.ImageKey = "USB"
-                            Case ClassLibusbDriver.USBEHCI_SERVICE_NAME  'USB 2.0
+                            Case ClassLibusbDriver.USBEHCI_SERVICE_NAME  'USB 2.0 / Not recommended
                                 mTreeNode.ImageKey = "Error"
-                            Case ClassLibusbDriver.USBOHCI_SERVICE_NAME  'USB 1.1
+                            Case ClassLibusbDriver.USBOHCI_SERVICE_NAME  'USB 1.1 / Not recommended
                                 mTreeNode.ImageKey = "Error"
-                            Case ClassLibusbDriver.USBUHCI_SERVICE_NAME  'USB 1.0
+                            Case ClassLibusbDriver.USBUHCI_SERVICE_NAME  'USB 1.0 / Not recommended
                                 mTreeNode.ImageKey = "Error"
 
                             Case ClassLibusbDriver.BTHUSB_SERVICE_NAME  'Bluetooth
@@ -174,12 +203,31 @@
                 DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_DeviceName = sName
                 DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = False
 
+                Dim bConnected As Boolean = mLibusbDriver.IsUsbDeviceConnected(_DriverInfo.VID, _DriverInfo.PID, _Device.sInterface, _Device.sDeviceSerial)
+
                 If (Not bConnected OrElse Not _Device.mProvider.IsEnabled OrElse _Device.mProvider.IsRemoved) Then
-                    mTreeNode.ImageKey = "Removed"
-                    mTreeNode.SelectedImageKey = mTreeNode.ImageKey
+                    If (Not String.IsNullOrEmpty(_Device.mProvider.sService) AndAlso Not String.IsNullOrEmpty(_DriverInfo.sService)) Then
+                        Select Case (_Device.mProvider.sService.ToUpperInvariant)
+                            Case ClassLibusbDriver.USBHUB3_SERVICE_NAME
+                                ' Just display USB hubs normally
+                                mTreeNode.ImageKey = "Normal"
+                                DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = True
+
+                            Case Else
+                                mTreeNode.ImageKey = "Removed"
+                        End Select
+                    Else
+                        mTreeNode.ImageKey = "Removed"
+                    End If
+
                 Else
                     If (Not String.IsNullOrEmpty(_Device.mProvider.sService) AndAlso Not String.IsNullOrEmpty(_DriverInfo.sService)) Then
                         Select Case (_Device.mProvider.sService.ToUpperInvariant)
+                            Case ClassLibusbDriver.USBHUB3_SERVICE_NAME
+                                ' Just display USB hubs normally
+                                mTreeNode.ImageKey = "Normal"
+                                DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = True
+
                             Case ClassLibusbDriver.BTHUSB_SERVICE_NAME  'Bluetooth
                                 mTreeNode.ImageKey = "Bluetooth"
 
@@ -222,31 +270,47 @@
 
                 Dim mLibusbDriver As New ClassLibusbDriver
 
-                Dim mTotalDevices As New Dictionary(Of String, ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO)
+                Dim mUsbDevices As New Dictionary(Of String, ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO)
                 For Each mDevice In mLibusbDriver.GetAllDevices("USB")
                     If (String.IsNullOrEmpty(mDevice.sService)) Then
                         Continue For
                     End If
 
-                    Select Case (mDevice.sService.ToLowerInvariant)
-                        Case ClassLibusbDriver.USBVIDEO_SERVICE_NAME.ToLowerInvariant,
-                             ClassLibusbDriver.BTHUSB_SERVICE_NAME.ToLowerInvariant
+                    Dim bSuccess As Boolean = False
 
-                            Dim sVID As String = Nothing
-                            Dim sPID As String = Nothing
-                            Dim sMM As String = Nothing
-                            If (Not mLibusbDriver.ResolveHardwareID(mDevice.sDeviceID, sVID, sPID, sMM)) Then
-                                Continue For
-                            End If
+                    If (CheckBox_ShowUsbControllers.Checked) Then
+                        Select Case (mDevice.sService.ToUpperInvariant)
+                            Case ClassLibusbDriver.USBVIDEO_SERVICE_NAME.ToUpperInvariant,
+                                    ClassLibusbDriver.BTHUSB_SERVICE_NAME.ToUpperInvariant,
+                                    ClassLibusbDriver.USBHUB3_SERVICE_NAME.ToUpperInvariant
 
-                            If (String.IsNullOrEmpty(mDevice.sProviderDescription)) Then
-                                Continue For
-                            End If
+                                bSuccess = True
+                        End Select
+                    Else
+                        Select Case (mDevice.sService.ToUpperInvariant)
+                            Case ClassLibusbDriver.USBVIDEO_SERVICE_NAME.ToUpperInvariant,
+                                    ClassLibusbDriver.BTHUSB_SERVICE_NAME.ToUpperInvariant
 
-                            Dim mKnownConfig As New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(mDevice.sProviderDescription, "", sVID, sPID, sMM, mDevice.sService)
+                                bSuccess = True
+                        End Select
+                    End If
 
-                            mTotalDevices(String.Format("{0}/{1}/{2}", sVID, sPID, If(sMM, "XX"))) = mKnownConfig
-                    End Select
+                    If (bSuccess) Then
+                        Dim sVID As String = Nothing
+                        Dim sPID As String = Nothing
+                        Dim sMM As String = Nothing
+                        If (Not mLibusbDriver.ResolveHardwareID(mDevice.sDeviceID, sVID, sPID, sMM)) Then
+                            Continue For
+                        End If
+
+                        If (String.IsNullOrEmpty(mDevice.sProviderDescription)) Then
+                            Continue For
+                        End If
+
+                        Dim mKnownConfig As New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(mDevice.sProviderDescription, "", sVID, sPID, sMM, mDevice.sService)
+
+                        mUsbDevices(String.Format("{0}/{1}/{2}", sVID, sPID, If(sMM, "XX"))) = mKnownConfig
+                    End If
                 Next
 
                 Dim mTmpList As New List(Of ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO)
@@ -258,23 +322,23 @@
                 mTmpList.AddRange(ClassLibusbDriver.DRV_DUALSHOCK_KNOWN_CONFIGS)
 
                 For Each mDevice In mTmpList
-                    mTotalDevices(String.Format("{0}/{1}/{2}", mDevice.VID, mDevice.PID, If(mDevice.MM, "XX"))) = mDevice
+                    mUsbDevices(String.Format("{0}/{1}/{2}", mDevice.VID, mDevice.PID, If(mDevice.MM, "XX"))) = mDevice
                 Next
 
                 mFormLoading.ProgressBar1.Style = ProgressBarStyle.Blocks
                 mFormLoading.ProgressBar1.Minimum = 0
-                mFormLoading.ProgressBar1.Maximum = mTotalDevices.Count
+                mFormLoading.ProgressBar1.Maximum = mUsbDevices.Count
                 mFormLoading.Show()
                 mFormLoading.Refresh()
 
-                For Each mItem In mTotalDevices
+                For Each mItem In mUsbDevices
                     mFormLoading.Text = String.Format("Loading... ({0})", mItem.Value.sName)
                     mFormLoading.Refresh()
 
-                    Dim mTree As ClassLibusbDriver.STRUC_DEVICETREE_ITEM() = mLibusbDriver.GetDeviceTree(mItem.Value, "USB")
+                    Dim mTree As ClassLibusbDriver.STRUC_DEVICETREE_ITEM() = mLibusbDriver.GetDeviceTree(mItem.Value, "USB", Not CheckBox_ShowDisconnectedDevices.Checked)
                     If (mTree IsNot Nothing) Then
                         For Each mDevice In mTree
-                            g_ClassTreeViewManager.AddDevice(mItem.Value, mDevice, CheckBox_ShowDisconnectedDevices.Checked)
+                            g_ClassTreeViewManager.AddDevice(mItem.Value, mDevice)
                         Next
                     End If
 
@@ -312,17 +376,13 @@
                 ListView_DeviceInfo.Items.Clear()
 
                 ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Name", mDevice.m_DeviceName}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"VID", mDevice.m_Device.sDeviceVID}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"PID", mDevice.m_Device.sDevicePID}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"MI", mDevice.m_Device.sDeviceMM}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Serial", mDevice.m_Device.sDeviceSerial}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Hardware ID", If(mDevice.m_Device.mProvider.sDeviceID, "")}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Config Flags", mDevice.m_Device.mProvider.iConfigFlags.ToString}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Driver Inf Path", If(mDevice.m_Device.mProvider.sDriverInfPath, "")}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Service", If(mDevice.m_Device.mProvider.sService, "")}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Provider Name", If(mDevice.m_Device.mProvider.sProviderName, "")}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Provider Version", If(mDevice.m_Device.mProvider.sProviderVersion, "")}))
-                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Provider Description", If(mDevice.m_Device.mProvider.sProviderDescription, "")}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Hardware ID", If(mDevice.m_Device.sDeviceID, "")}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Config Flags", mDevice.m_Device.iConfigFlags.ToString}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Driver Inf Path", If(mDevice.m_Device.sDriverInfPath, "")}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Service", If(mDevice.m_Device.sService, "")}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Provider Name", If(mDevice.m_Device.sProviderName, "")}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Provider Version", If(mDevice.m_Device.sProviderVersion, "")}))
+                ListView_DeviceInfo.Items.Add(New ListViewItem(New String() {"Provider Description", If(mDevice.m_Device.sProviderDescription, "")}))
             Finally
                 ListView_DeviceInfo.EndUpdate()
             End Try
@@ -338,7 +398,7 @@
             End If
 
             Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
-            Dim sDeviceId As String = mDevice.m_Device.mProvider.sDeviceID
+            Dim sDeviceId As String = mDevice.m_Device.sDeviceID
             If (mDevice.m_IsReadOnly) Then
                 Throw New ArgumentException("Device can not be changed.")
             End If
@@ -363,7 +423,6 @@
             If (mLibUSB.DeviceSetState(sDeviceId, True) <> 0) Then
                 Throw New ArgumentException("Unable to set device state.")
             End If
-
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -376,7 +435,7 @@
             End If
 
             Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
-            Dim sDeviceId As String = mDevice.m_Device.mProvider.sDeviceID
+            Dim sDeviceId As String = mDevice.m_Device.sDeviceID
             If (mDevice.m_IsReadOnly) Then
                 Throw New ArgumentException("Device can not be changed.")
             End If
@@ -401,7 +460,6 @@
             If (mLibUSB.DeviceSetState(sDeviceId, False) <> 0) Then
                 Throw New ArgumentException("Unable to set device state.")
             End If
-
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -414,7 +472,7 @@
             End If
 
             Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
-            Dim sDeviceId As String = mDevice.m_Device.mProvider.sDeviceID
+            Dim sDeviceId As String = mDevice.m_Device.sDeviceID
             If (mDevice.m_IsReadOnly) Then
                 Throw New ArgumentException("Device can not be changed.")
             End If
@@ -440,16 +498,12 @@
                 Throw New ArgumentException("Unable to remove device.")
             End If
 
-            Dim sDeviceDriver As String = mDevice.m_Device.mProvider.sDriverInfPath
+            Dim sDeviceDriver As String = mDevice.m_Device.sDriverInfPath
             If (Not String.IsNullOrEmpty(sDeviceDriver) AndAlso sDeviceDriver.ToLowerInvariant.StartsWith("oem") AndAlso MessageBox.Show("Do you want to remove the device driver?", "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes) Then
                 If (mLibUSB.RemoveDriver(sDeviceDriver) <> 0) Then
                     Throw New ArgumentException("Unable to remove device driver.")
                 End If
             End If
-
-            ' Force update Plug and Play
-            mLibUSB.ScanDevices()
-
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -459,6 +513,21 @@
         Try
             Dim mLibUSB As New ClassLibusbDriver
             mLibUSB.ScanDevices()
+
+            UpdateDevices()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
+
+    Private Sub Button_CopyOutput_Click(sender As Object, e As EventArgs) Handles Button_CopyOutput.Click
+        Try
+            Dim mTreeViewSerializer As New TreeViewSerialization
+
+            Dim sSerialized = mTreeViewSerializer.SerializeTreeNodes(TreeView_ConnectedDevices.Nodes)
+            sSerialized = ClassUtils.FormatJsonOutput(sSerialized)
+
+            Clipboard.SetText(sSerialized)
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try

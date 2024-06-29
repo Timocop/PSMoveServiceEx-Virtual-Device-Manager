@@ -112,7 +112,7 @@ Public Class ClassOpenVRConfig
         ' Remove any invalid entries from the drivers list.
         RemoveInvalid()
 
-        Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+        Dim sContent = ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mConfig))
 
         IO.File.WriteAllText(sConfigPath, sContent)
     End Sub

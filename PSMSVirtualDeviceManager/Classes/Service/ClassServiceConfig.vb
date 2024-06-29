@@ -88,7 +88,7 @@ Public Class ClassServiceConfig
             Return
         End If
 
-        Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+        Dim sContent = ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mConfig))
 
         IO.File.WriteAllText(g_sPath, sContent)
     End Sub

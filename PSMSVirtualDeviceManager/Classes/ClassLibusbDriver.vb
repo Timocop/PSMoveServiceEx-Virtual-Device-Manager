@@ -29,11 +29,19 @@ Public Class ClassLibusbDriver
         End Function
 
         <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
-        Public Shared Function SetupDiGetDeviceRegistryProperty(DeviceInfoSet As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA, Property_ As Integer, ByRef PropertyRegDataType As Integer, PropertyBuffer As IntPtr, PropertyBufferSize As Integer, ByRef RequiredSize As Integer) As Boolean
+        Public Shared Function SetupDiGetDeviceRegistryProperty(DeviceInfoSet As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA, Property_ As Integer, ByRef PropertyRegDataType As Integer, PropertyBuffer As StringBuilder, PropertyBufferSize As Integer, ByRef RequiredSize As Integer) As Boolean
         End Function
 
         <DllImport("setupapi.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
         Public Shared Function SetupDiGetDeviceInstanceId(DeviceInfoSet As IntPtr, <MarshalAs(UnmanagedType.LPStruct)> DeviceInfoData As SP_DEVINFO_DATA, DeviceInstanceId As StringBuilder, DeviceInstanceIdSize As Integer, ByRef RequiredSize As Integer) As Boolean
+        End Function
+
+        <DllImport("cfgmgr32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function CM_Get_Parent(ByRef pdnDevInst As Integer, dnDevInst As Integer, ulFlags As Integer) As Integer
+        End Function
+
+        <DllImport("cfgmgr32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+        Public Shared Function CM_Get_Device_ID(dnDevInst As Integer, Buffer As StringBuilder, BufferLen As Integer, ulFlags As Integer) As Integer
         End Function
     End Class
 
@@ -44,6 +52,7 @@ Public Class ClassLibusbDriver
     Public Shared ReadOnly USBVIDEO_SERVICE_NAME As String = "usbvideo".ToUpperInvariant
     Public Shared ReadOnly USBAUDIO_SERVICE_NAME As String = "usbaudio".ToUpperInvariant
     Public Shared ReadOnly BTHUSB_SERVICE_NAME As String = "BTHUSB".ToUpperInvariant
+    Public Shared ReadOnly USBHUB3_SERVICE_NAME As String = "USBHUB3".ToUpperInvariant
     Public Shared ReadOnly USBXHCI_SERVICE_NAME As String = "USBXHCI".ToUpperInvariant
     Public Shared ReadOnly USBEHCI_SERVICE_NAME As String = "USBEHCI".ToUpperInvariant
     Public Shared ReadOnly USBOHCI_SERVICE_NAME As String = "USBOHCI".ToUpperInvariant
@@ -193,7 +202,7 @@ Public Class ClassLibusbDriver
         Public sDeviceSerial As String = Nothing
         Public sInterface As String = Nothing
         Public mProvider As STRUC_DEVICE_PROVIDER
-        Public mParentDevice As STRUC_DEVICETREE_ITEM = Nothing
+        Public mParentDevices As STRUC_DEVICE_PROVIDER()
 
         Public Sub New(_DeviceID As String, _DeviceVID As String, _DevicePID As String, _DeviceMM As String, _DeviceSerial As String, _Interface As String)
             sDeviceID = _DeviceID
@@ -213,10 +222,7 @@ Public Class ClassLibusbDriver
             sDeviceSerial = _Item.sDeviceSerial
 
             mProvider = _Item.mProvider
-
-            If (_Item.mParentDevice IsNot Nothing) Then
-                mParentDevice = New STRUC_DEVICETREE_ITEM(_Item.mParentDevice)
-            End If
+            mParentDevices = _Item.mParentDevices
         End Sub
     End Class
 
@@ -838,7 +844,7 @@ Public Class ClassLibusbDriver
             End If
 
             If (Not String.IsNullOrEmpty(sSerial)) Then
-                If (Not mDeviceSerialName.ToLowerInvariant.EndsWith(sSerial.ToLowerInvariant)) Then
+                If (Not mDeviceSerialName.ToUpperInvariant.EndsWith(sSerial.ToUpperInvariant)) Then
                     Continue For
                 End If
             End If
@@ -986,58 +992,22 @@ Public Class ClassLibusbDriver
             mDevInfoData.cbSize = Marshal.SizeOf(mDevInfoData)
 
             While (ClassWin32.SetupDiEnumDeviceInfo(mDevInfo, iDevIndex, mDevInfoData))
-                ' Retrieve device instance ID
-                Dim iInstanceLength As Integer = 256
-                Dim mInstanceIdBuilder As New StringBuilder(iInstanceLength)
-                If (ClassWin32.SetupDiGetDeviceInstanceId(mDevInfo, mDevInfoData, mInstanceIdBuilder, iInstanceLength, iInstanceLength)) Then
-                    Dim sInstanceId As String = mInstanceIdBuilder.ToString()
-                    If (sInstanceId.ToLowerInvariant.StartsWith(String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID).ToLowerInvariant)) Then
+                iDevIndex += 1
+
+                Dim requiredSize As Integer = 0
+                Dim sInstanceId As New StringBuilder(256)
+                If (ClassWin32.SetupDiGetDeviceInstanceId(mDevInfo, mDevInfoData, sInstanceId, sInstanceId.Capacity, requiredSize)) Then
+                    If (sInstanceId.ToString().ToUpperInvariant.StartsWith(String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID).ToUpperInvariant)) Then
                         If (String.IsNullOrEmpty(sSerial)) Then
                             Return True
                         Else
-                            If (sInstanceId.ToLowerInvariant.EndsWith(sSerial.ToLowerInvariant)) Then
+                            If (sInstanceId.ToString().ToUpperInvariant.EndsWith(sSerial.ToUpperInvariant)) Then
                                 Return True
                             End If
                         End If
                     End If
                 End If
 
-                    'Dim iRegDataType As Integer = 0
-                    'Dim iBufferSize As Integer = 0
-
-                    'ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, IntPtr.Zero, 0, iBufferSize)
-
-                    'If (iBufferSize > 0) Then
-                    '    Dim iBuffer As IntPtr = Marshal.AllocHGlobal(iBufferSize)
-                    '    If (iBuffer = IntPtr.Zero) Then
-                    '        Throw New ArgumentException("AllocHGlobal failed")
-                    '    End If
-
-                    '    Try
-                    '        ' Retrieve device instance ID
-                    '        Dim instanceIdSize As Integer = 256
-                    '        Dim instanceIdBuilder As New StringBuilder(instanceIdSize)
-                    '        If ClassWin32.SetupDiGetDeviceInstanceId(mDevInfo, mDevInfoData, instanceIdBuilder, instanceIdSize, instanceIdSize) Then
-                    '            Dim instanceId As String = instanceIdBuilder.ToString()
-
-                    '        End If
-
-
-                    '        If (ClassWin32.SetupDiGetDeviceRegistryProperty(mDevInfo, mDevInfoData, ClassWin32.SPDRP_HARDWAREID, iRegDataType, iBuffer, iBufferSize, iBufferSize)) Then
-                    '            Dim sDeviceHardwareID As String = Marshal.PtrToStringAuto(iBuffer)
-
-                    '            If (sDeviceHardwareID.StartsWith(String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID))) Then
-                    '                Return True
-                    '            End If
-                    '        End If
-                    '    Finally
-                    '        If (iBuffer <> IntPtr.Zero) Then
-                    '            Marshal.FreeHGlobal(iBuffer)
-                    '        End If
-                    '    End Try
-                    'End If
-
-                    iDevIndex += 1
             End While
         Finally
             If (mDevInfo <> IntPtr.Zero) Then
@@ -1048,132 +1018,159 @@ Public Class ClassLibusbDriver
         Return False ' Device is not connected
     End Function
 
-    Public Function GetDeviceTree(mInfo As STRUC_DEVICE_DRIVER_INFO, sInterface As String) As STRUC_DEVICETREE_ITEM()
-        Return GetDeviceTree(mInfo.VID, mInfo.PID, mInfo.MM, sInterface)
+    Public Function GetDeviceTree(sIstanceId As String, sInterface As String, bConnectedOnly As Boolean) As STRUC_DEVICETREE_ITEM()
+        Return GetDeviceTree(sIstanceId, Nothing, Nothing, Nothing, sInterface, bConnectedOnly)
     End Function
 
-    Public Function GetDeviceTree(sVID As String, sPID As String, sMM As String, sInterface As String) As STRUC_DEVICETREE_ITEM()
-        Dim sFindSerial As String = ""
+    Public Function GetDeviceTree(mInfo As STRUC_DEVICE_DRIVER_INFO, sInterface As String, bConnectedOnly As Boolean) As STRUC_DEVICETREE_ITEM()
+        Return GetDeviceTree(Nothing, mInfo.VID, mInfo.PID, mInfo.MM, sInterface, bConnectedOnly)
+    End Function
 
-        Dim sUseDevice As String
-        If (String.IsNullOrEmpty(sMM) OrElse sMM.TrimEnd.Length = 0) Then
-            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
+    Public Function GetDeviceTree(sVID As String, sPID As String, sMM As String, sInterface As String, bConnectedOnly As Boolean) As STRUC_DEVICETREE_ITEM()
+        Return GetDeviceTree(Nothing, sVID, sPID, sMM, sInterface, bConnectedOnly)
+    End Function
+
+    Public Function GetDeviceTree(sInstanceId As String, sVID As String, sPID As String, sMM As String, sInterface As String, bConnectedOnly As Boolean) As STRUC_DEVICETREE_ITEM()
+        Dim sTargetHardwareId As String
+
+        If (String.IsNullOrEmpty(sInstanceId) OrElse sInstanceId.TrimEnd.Length = 0) Then
+            If (String.IsNullOrEmpty(sMM) OrElse sMM.TrimEnd.Length = 0) Then
+                sTargetHardwareId = String.Format("{0}\VID_{1}&PID_{2}", sInterface, sVID, sPID)
+            Else
+                sTargetHardwareId = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMM)
+            End If
         Else
-            sUseDevice = String.Format("{0}\VID_{1}&PID_{2}&MI_{3}", sInterface, sVID, sPID, sMM)
-        End If
-
-        Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sUseDevice), False)
-        If (mUsbDeviceKey Is Nothing) Then
-            Return Nothing
+            sTargetHardwareId = sInstanceId
         End If
 
         Dim mDevices As New List(Of STRUC_DEVICETREE_ITEM)
+
+        Dim mUsbDeviceKey As RegistryKey = Registry.LocalMachine.OpenSubKey(String.Format("SYSTEM\CurrentControlSet\Enum\{0}", sTargetHardwareId), False)
+        If (mUsbDeviceKey Is Nothing) Then
+            Return mDevices.ToArray
+        End If
 
         For Each sDeviceSerial As String In mUsbDeviceKey.GetSubKeyNames()
             If (String.IsNullOrEmpty(sDeviceSerial) OrElse sDeviceSerial.TrimEnd.Length = 0) Then
                 Continue For
             End If
 
-            Dim sDeviceID As String = String.Format("{0}\{1}", sUseDevice, sDeviceSerial)
+            Dim sDeviceID As String = String.Format("{0}\{1}", sTargetHardwareId, sDeviceSerial)
 
             mDevices.Add(New STRUC_DEVICETREE_ITEM(sDeviceID, sVID, sPID, sMM, sDeviceSerial, sInterface))
         Next
 
-        'Start searching for parents
         For Each mDevice In mDevices
-            Dim mLastDevice = mDevice
+            sTargetHardwareId = mDevice.sDeviceID
 
-            While True
-                Dim mDeviceEnum As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum", False)
-                If (mDeviceEnum Is Nothing) Then
-                    Continue For
-                End If
+            Dim mParentDevices As New List(Of STRUC_DEVICE_PROVIDER)
 
-                ' Grab information about the device
-                If (True) Then
-                    Dim sDeviceID As String = mLastDevice.sDeviceID
+            Dim iFlags As Integer = ClassWin32.DIGCF_ALLCLASSES
+            If (bConnectedOnly) Then
+                iFlags = iFlags Or ClassWin32.DIGCF_PRESENT
+            End If
 
-                    If (Not String.IsNullOrEmpty(sDeviceID)) Then
-                        Dim mDeviceKey As RegistryKey = mDeviceEnum.OpenSubKey(sDeviceID, False)
-                        If (mDeviceKey IsNot Nothing) Then
-                            Dim sDriverLocation As String = TryCast(mDeviceKey.GetValue("Driver"), String)
-                            Dim sService As String = TryCast(mDeviceKey.GetValue("Service"), String)
-                            Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
+            Dim mDeviceInfoSet As IntPtr = ClassWin32.SetupDiGetClassDevs(Guid.Empty, IntPtr.Zero, IntPtr.Zero, iFlags)
+            If (mDeviceInfoSet = IntPtr.Zero) Then
+                Continue For
+            End If
 
-                            If (sDriverLocation IsNot Nothing) Then
-                                Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation, False)
-                                If (mDriverKey Is Nothing) Then
-                                    Continue For
-                                End If
+            Try
+                Dim iIndex As Integer = 0
 
-                                Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
-                                Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
-                                Dim sProviderDescription As String = TryCast(mDriverKey.GetValue("DriverDesc"), String)
-                                Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
+                Dim mDeviceInfoData As New ClassWin32.SP_DEVINFO_DATA
+                mDeviceInfoData.cbSize = Marshal.SizeOf(mDeviceInfoData)
+                While (ClassWin32.SetupDiEnumDeviceInfo(mDeviceInfoSet, iIndex, mDeviceInfoData))
+                    iIndex += 1
 
-                                Dim mInfo As New STRUC_DEVICE_PROVIDER
-                                mInfo.sDeviceID = sDeviceID
-                                mInfo.iConfigFlags = sConfigFlags
-                                mInfo.sService = sService
-                                mInfo.sProviderName = sProviderName
-                                mInfo.sProviderVersion = sProviderVersion
-                                mInfo.sProviderDescription = sProviderDescription
-                                mInfo.sDriverInfPath = sDriverInfPath
-                                mLastDevice.mProvider = mInfo
-                            Else
-                                ' No driver installed
-                                Dim mInfo As New STRUC_DEVICE_PROVIDER
-                                mInfo.sDeviceID = sDeviceID
-                                mInfo.iConfigFlags = sConfigFlags
-                                mInfo.sService = sService
-                                mInfo.sProviderName = Nothing
-                                mInfo.sProviderVersion = Nothing
-                                mInfo.sProviderDescription = Nothing
-                                mInfo.sDriverInfPath = Nothing
+                    'Dim sHardwareId As New StringBuilder(256)
+                    Dim sDeviceId As New StringBuilder(256)
+                    Dim requiredSize As Integer = 0
+                    Dim regType As Integer = 0
 
-                                mLastDevice.mProvider = mInfo
-                            End If
-                        End If
-                    End If
-                End If
+                    'If (Not ClassWin32.SetupDiGetDeviceRegistryProperty(mDeviceInfoSet, mDeviceInfoData, ClassWin32.SPDRP_HARDWAREID, regType, sHardwareId, sHardwareId.Capacity, requiredSize)) Then
+                    '    Continue While
+                    'End If
 
-
-                For Each mDeviceEnumInterfaceName As String In mDeviceEnum.GetSubKeyNames()
-                    Dim mDeviceEnumInterface As RegistryKey = mDeviceEnum.OpenSubKey(mDeviceEnumInterfaceName, False)
-                    If (mDeviceEnumInterface Is Nothing) Then
-                        Continue For
+                    If (Not ClassWin32.SetupDiGetDeviceInstanceId(mDeviceInfoSet, mDeviceInfoData, sDeviceId, sDeviceId.Capacity, requiredSize)) Then
+                        Continue While
                     End If
 
-                    For Each mDeviceEnumInterfaceDeviceName As String In mDeviceEnumInterface.GetSubKeyNames()
-                        Dim mDeviceEnumInterfaceDevice As RegistryKey = mDeviceEnumInterface.OpenSubKey(mDeviceEnumInterfaceDeviceName, False)
-                        If (mDeviceEnumInterfaceDevice Is Nothing) Then
-                            Continue For
+                    If (Not sDeviceId.ToString().ToUpperInvariant.StartsWith(sTargetHardwareId.ToUpperInvariant)) Then
+                        Continue While
+                    End If
+
+                    ' Find information about the device
+                    Dim mDeviceEnum As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum", False)
+                    If (mDeviceEnum Is Nothing) Then
+                        Exit While
+                    End If
+
+                    Dim mDeviceKey As RegistryKey = mDeviceEnum.OpenSubKey(sDeviceId.ToString, False)
+                    If (mDeviceKey IsNot Nothing) Then
+                        Dim sDriverLocation As String = TryCast(mDeviceKey.GetValue("Driver"), String)
+                        Dim sService As String = TryCast(mDeviceKey.GetValue("Service"), String)
+                        Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
+
+                        If (sDriverLocation IsNot Nothing) Then
+                            Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation, False)
+                            If (mDriverKey Is Nothing) Then
+                                Exit While
+                            End If
+
+                            Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
+                            Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
+                            Dim sProviderDescription As String = TryCast(mDriverKey.GetValue("DriverDesc"), String)
+                            Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
+
+                            Dim mInfo As New STRUC_DEVICE_PROVIDER
+                            mInfo.sDeviceID = sDeviceId.ToString
+                            mInfo.iConfigFlags = sConfigFlags
+                            mInfo.sService = sService
+                            mInfo.sProviderName = sProviderName
+                            mInfo.sProviderVersion = sProviderVersion
+                            mInfo.sProviderDescription = sProviderDescription
+                            mInfo.sDriverInfPath = sDriverInfPath
+                            mParentDevices.Add(mInfo)
+
+                            ' Set main provider from first match
+                            mDevice.mProvider = mParentDevices(0)
+                        Else
+                            ' No driver installed
+                            Dim mInfo As New STRUC_DEVICE_PROVIDER
+                            mInfo.sDeviceID = sDeviceId.ToString
+                            mInfo.iConfigFlags = sConfigFlags
+                            mInfo.sService = sService
+                            mInfo.sProviderName = Nothing
+                            mInfo.sProviderVersion = Nothing
+                            mInfo.sProviderDescription = Nothing
+                            mInfo.sDriverInfPath = Nothing
+                            mParentDevices.Add(mInfo)
+
+                            ' Set main provider from first match
+                            mDevice.mProvider = mParentDevices(0)
                         End If
+                    End If
 
-                        For Each mDeviceEnumInterfaceDeviceSerialName As String In mDeviceEnumInterfaceDevice.GetSubKeyNames()
-                            Dim mDeviceEnumInterfaceDeviceSerial As RegistryKey = mDeviceEnumInterfaceDevice.OpenSubKey(mDeviceEnumInterfaceDeviceSerialName, False)
-                            If (mDeviceEnumInterfaceDeviceSerial Is Nothing) Then
-                                Continue For
-                            End If
+                    Dim iParentDevInst As Integer = 0
+                    If (ClassWin32.CM_Get_Parent(iParentDevInst, mDeviceInfoData.DevInst, 0) <> 0) Then
+                        Exit While
+                    End If
 
-                            Dim sParentSerial As String = CStr(mDeviceEnumInterfaceDeviceSerial.GetValue("ParentIdPrefix", Nothing))
-                            If (String.IsNullOrEmpty(sParentSerial) OrElse sParentSerial.TrimEnd.Length = 0) Then
-                                Continue For
-                            End If
+                    Dim sParentHardwareID As New StringBuilder(1024)
+                    If (ClassWin32.CM_Get_Device_ID(iParentDevInst, sParentHardwareID, sParentHardwareID.Capacity, 0) <> 0) Then
+                        Exit While
+                    End If
 
-                            If (mLastDevice.sDeviceSerial.ToUpperInvariant.IndexOf(sParentSerial.ToUpperInvariant) > -1) Then
-                                Dim sDeviceID As String = String.Format("{0}\{1}\{2}", mDeviceEnumInterfaceName, mDeviceEnumInterfaceDeviceName, mDeviceEnumInterfaceDeviceSerialName)
+                    ' Redo the search with the parent hardware id
+                    iIndex = 0
+                    sTargetHardwareId = sParentHardwareID.ToString
+                End While
+            Finally
+                ClassWin32.SetupDiDestroyDeviceInfoList(mDeviceInfoSet)
+            End Try
 
-                                mLastDevice.mParentDevice = New STRUC_DEVICETREE_ITEM(sDeviceID, "", "", "", mDeviceEnumInterfaceDeviceSerialName, mDeviceEnumInterfaceName)
-                                mLastDevice = mLastDevice.mParentDevice
-                                Continue While
-                            End If
-                        Next
-                    Next
-                Next
-
-                Exit While
-            End While
+            mDevice.mParentDevices = mParentDevices.ToArray
         Next
 
         Return mDevices.ToArray

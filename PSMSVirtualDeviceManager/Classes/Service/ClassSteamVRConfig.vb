@@ -851,7 +851,7 @@ Public Class ClassSteamVRConfig
             End Sub
 
             Public Sub SaveToFile(sFile As String)
-                Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mManifest))
+                Dim sContent = ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mManifest))
 
                 IO.File.WriteAllText(sFile, sContent)
 
@@ -950,7 +950,7 @@ Public Class ClassSteamVRConfig
             mAppConfig("autolaunch") = bEnabled
             mAppConfig("last_launch_time") = 0
 
-            Dim sContent As String = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(mAppConfig))
+            Dim sContent As String = ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(mAppConfig))
 
             IO.File.WriteAllText(sAppConfig, sContent)
         End Sub
@@ -982,7 +982,7 @@ Public Class ClassSteamVRConfig
             ' Remove any invalid entries from the drivers list.
             RemoveInvalid()
 
-            Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+            Dim sContent = ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mConfig))
 
             IO.File.WriteAllText(sConfigPath, sContent)
         End Sub
@@ -1054,7 +1054,7 @@ Public Class ClassSteamVRConfig
             Return
         End If
 
-        Dim sContent = ClassUtils.FormatOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+        Dim sContent = ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mConfig))
 
         IO.File.WriteAllText(sConfigPath, sContent)
     End Sub

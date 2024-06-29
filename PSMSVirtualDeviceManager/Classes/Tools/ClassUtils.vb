@@ -51,7 +51,7 @@ Public Class ClassUtils
                              End Sub)
     End Sub
 
-    Public Shared Function FormatOutput(ByVal sContent As String) As String
+    Public Shared Function FormatJsonOutput(ByVal sContent As String) As String
         Dim mText = New Text.StringBuilder()
         Dim bEscape As Boolean = False
         Dim bQuotes As Boolean = False
