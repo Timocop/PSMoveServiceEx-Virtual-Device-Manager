@@ -788,15 +788,73 @@ Public Class UCVirtualMotionTrackerItem
         Private g_mHeptic As New STRUC_HEPTIC_ITEM
         Private g_mResetRecenter As Boolean = False
 
-        Enum ENUM_PLAYSPACE_CALIBRATION_STATUS
-            FAILED = -1
-            INACTIVE
-            PSMOVE_RUNNING
-            MANUAL_RUNNING
-            DONE
-        End Enum
-        Private g_iPlayCalibStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
-        Private g_bPlayCalibAllowSave As Boolean = False
+        Class STURC_PLAYSPACE_CALIBRATION_STATUS
+            Public Enum ENUM_PLAYSPACE_CALIBRATION_STATUS
+                FAILED = -1
+                INACTIVE
+                PSMOVE_RUNNING
+                MANUAL_RUNNING
+                DONE
+            End Enum
+
+            Private g_iStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
+
+            Property m_Status As ENUM_PLAYSPACE_CALIBRATION_STATUS
+                Get
+                    Return g_iStatus
+                End Get
+                Set(value As ENUM_PLAYSPACE_CALIBRATION_STATUS)
+                    g_iStatus = value
+                End Set
+            End Property
+        End Class
+
+        Class STURC_PLAYSPACE_CALIBRATION
+            Private g_mPlayspaceCalibrationState As STURC_PLAYSPACE_CALIBRATION_STATUS
+            Private g_iMinDistance As Single = 10.0F
+            Private g_bFinishCalibration As Boolean = False
+
+            Public Sub New(_PlayspaceCalibrationState As STURC_PLAYSPACE_CALIBRATION_STATUS)
+                g_mPlayspaceCalibrationState = _PlayspaceCalibrationState
+            End Sub
+
+            Public Sub StartCalibration(Optional _MinDistance As Single = 10.0F)
+                g_mPlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING
+                g_bFinishCalibration = False
+                g_iMinDistance = _MinDistance
+            End Sub
+
+            Public Sub StopCalibration()
+                If (g_mPlayspaceCalibrationState.m_Status <> STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
+                    g_mPlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                End If
+                g_bFinishCalibration = False
+            End Sub
+
+            Public Property m_FinishCalibration As Boolean
+                Get
+                    Return g_bFinishCalibration
+                End Get
+                Set(value As Boolean)
+                    g_bFinishCalibration = value
+                End Set
+            End Property
+
+            Public Property m_MinDistance As Single
+                Get
+                    Return g_iMinDistance
+                End Get
+                Set(value As Single)
+                    g_iMinDistance = value
+                End Set
+            End Property
+
+            Public Function GetStatus() As STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS
+                Return g_mPlayspaceCalibrationState.m_Status
+            End Function
+        End Class
+        Private g_mPlayspaceCalibrationState As STURC_PLAYSPACE_CALIBRATION_STATUS = Nothing
+        Private g_mPlayspaceCalibration As STURC_PLAYSPACE_CALIBRATION = Nothing
 
         Private g_bManualControllerRecenter As Boolean = False
         Private g_bManualHmdRecenter As Boolean = False
@@ -940,6 +998,9 @@ Public Class UCVirtualMotionTrackerItem
 
         Public Sub New(_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem)
             g_UCVirtualMotionTrackerItem = _UCVirtualMotionTrackerItem
+
+            g_mPlayspaceCalibrationState = New STURC_PLAYSPACE_CALIBRATION_STATUS
+            g_mPlayspaceCalibration = New STURC_PLAYSPACE_CALIBRATION(g_mPlayspaceCalibrationState)
         End Sub
 
         Property m_Index As Integer
@@ -1085,22 +1146,6 @@ Public Class UCVirtualMotionTrackerItem
             End SyncLock
         End Sub
 
-        Public Sub StartManualPlayspaceCalibration()
-            SyncLock _ThreadLock
-                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING
-                g_bPlayCalibAllowSave = False
-            End SyncLock
-        End Sub
-
-        Public Sub StopManualPlayspaceCalibration()
-            SyncLock _ThreadLock
-                If (g_iPlayCalibStatus <> ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE) Then
-                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
-                End If
-                g_bPlayCalibAllowSave = False
-            End SyncLock
-        End Sub
-
         Public Sub StartControllerRecenter()
             SyncLock _ThreadLock
                 g_bManualControllerRecenter = True
@@ -1113,25 +1158,20 @@ Public Class UCVirtualMotionTrackerItem
             End SyncLock
         End Sub
 
-        Public ReadOnly Property m_ManualPlayspaceCalibrationStatus As ENUM_PLAYSPACE_CALIBRATION_STATUS
+        ReadOnly Property m_PlayspaceCalibration As STURC_PLAYSPACE_CALIBRATION
             Get
                 SyncLock _ThreadLock
-                    Return g_iPlayCalibStatus
+                    Return g_mPlayspaceCalibration
                 End SyncLock
             End Get
         End Property
 
-        Property m_ManualPlayspaceCalibrationAllowSave As Boolean
+        Private ReadOnly Property m_PlayspaceCalibrationState As STURC_PLAYSPACE_CALIBRATION_STATUS
             Get
                 SyncLock _ThreadLock
-                    Return g_bPlayCalibAllowSave
+                    Return g_mPlayspaceCalibrationState
                 End SyncLock
             End Get
-            Set(value As Boolean)
-                SyncLock _ThreadLock
-                    g_bPlayCalibAllowSave = value
-                End SyncLock
-            End Set
         End Property
 
         Public Sub Disable()
@@ -1911,8 +1951,8 @@ Public Class UCVirtualMotionTrackerItem
                                                            ByRef mPosition As Vector3,
                                                            ByRef mOrientation As Quaternion)
             ' Dont use offsets while we calibrate.
-            If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING OrElse
-                g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
+            If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING OrElse
+                m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
                 Return
             End If
 
@@ -1960,7 +2000,8 @@ Public Class UCVirtualMotionTrackerItem
                                                   ByRef mPlayspaceRecenterCalibrationSave As Boolean,
                                                   ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings,
                                                   ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
-            If ((bEnabledPlayspaceRecenter AndAlso bHoldingRecenterButtons) OrElse g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+            If ((bEnabledPlayspaceRecenter AndAlso bHoldingRecenterButtons) OrElse
+                    m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                 If (Not mPlayspaceRecenterButtonPressed) Then
                     mPlayspaceRecenterButtonPressed = True
                     mPlayspaceRecenterButtonHolding = False
@@ -1968,13 +2009,14 @@ Public Class UCVirtualMotionTrackerItem
                     mLastPlayspaceRecenterTime.Restart()
                 End If
 
-                If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs OrElse g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs OrElse
+                        m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
                     If (Not mPlayspaceRecenterButtonHolding) Then
                         mPlayspaceRecenterButtonHolding = True
 
-                        ' If caibration is not triggered by manual calibration. Change to calibration via button.
-                        If (g_iPlayCalibStatus <> ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
-                            g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING
+                        ' If caibration is not triggered by manual calibration. Change to calibration via psmove.
+                        If (m_PlayspaceCalibration.GetStatus() <> STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                            m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING
                         End If
 
                         mClassControllerSettings.m_PlayspaceSettings.Reset()
@@ -2000,21 +2042,21 @@ Public Class UCVirtualMotionTrackerItem
                     If (Not String.IsNullOrEmpty(mPlayspaceRecenterLastHmdSerial) AndAlso Not mPlayspaceRecenterLastHmdSerial.StartsWith(ClassVmtConst.VMT_DEVICE_NAME)) Then
                         Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
                         If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(mPlayspaceRecenterLastHmdSerial, mFoundDevice)) Then
-                            Dim iMinDistance As Single = 10.0F
-
                             Dim mControllerPosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.m_PointControllerBeginPos
                             Dim mControllerPosEnd As Vector3 = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
                             Dim mFromDevicePosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.m_PointHmdBeginPos
                             Dim mFromDevicePosEnd As Vector3 = mFoundDevice.GetPosCm()
                             Dim mFromDeviceOrientation As Quaternion = mFoundDevice.mOrientation
 
-                            Dim bAllowSave As Boolean = True
+                            Dim bAllowFinishCalibration As Boolean = True
+                            Dim iMinDistance As Single = 10.0F
 
-                            If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
-                                bAllowSave = g_bPlayCalibAllowSave
+                            If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                bAllowFinishCalibration = m_PlayspaceCalibration.m_FinishCalibration
+                                iMinDistance = m_PlayspaceCalibration.m_MinDistance
                             End If
 
-                            If (bAllowSave AndAlso
+                            If (bAllowFinishCalibration AndAlso
                                     Math.Abs(Vector3.Distance(mControllerPosBegin, mControllerPosEnd)) > iMinDistance AndAlso
                                     Math.Abs(Vector3.Distance(mFromDevicePosBegin, mFromDevicePosEnd)) > iMinDistance) Then
                                 mControllerPosBegin.Y = 0.0F
@@ -2038,19 +2080,15 @@ Public Class UCVirtualMotionTrackerItem
                                 mPlayspaceRecenterCalibrationSave = True
 
                                 ' Stop when manual calibration when done. PSmove calibration should continue when the button is stopped pressed.
-                                If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
-                                    g_bPlayCalibAllowSave = False
-                                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
-
-                                    'Dont triggers this again, we are done here.
-                                    mLastPlayspaceRecenterTime.Reset()
+                                If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                    m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
                                 End If
                             End If
                         Else
-                            g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                            m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
                         End If
                     Else
-                        g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                        m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
                     End If
                 End If
             Else
@@ -2060,8 +2098,8 @@ Public Class UCVirtualMotionTrackerItem
                 If (mPlayspaceRecenterButtonHolding) Then
                     mPlayspaceRecenterButtonHolding = False
                 End If
-                If (g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
-                    g_iPlayCalibStatus = ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
+                If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
+                    m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
                 End If
                 If (mPlayspaceRecenterCalibrationSave) Then
                     mPlayspaceRecenterCalibrationSave = False

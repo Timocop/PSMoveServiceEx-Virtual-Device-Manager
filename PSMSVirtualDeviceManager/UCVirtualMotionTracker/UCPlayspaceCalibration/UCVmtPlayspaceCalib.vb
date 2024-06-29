@@ -256,7 +256,7 @@
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START
                                 iPercentage = 0
 
-                                mTargetTracker.g_mClassIO.StartManualPlayspaceCalibration()
+                                mTargetTracker.g_mClassIO.m_PlayspaceCalibration.StartCalibration()
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START
@@ -269,8 +269,8 @@
                                     Throw New ArgumentException("Controller is not being tracked.")
                                 End If
 
-                                Select Case (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus)
-                                    Case UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                                Select Case (mTargetTracker.g_mClassIO.m_PlayspaceCalibration.GetStatus)
+                                    Case UCVirtualMotionTrackerItem.ClassIO.STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
                                         ' Failure. Either no HMD found or PSMS-EX HMD used.
                                         Throw New ArgumentException("Invalid Head-Mounted Display for playspace calibration.")
                                 End Select
@@ -291,8 +291,7 @@
 
                                 iStep = ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
                                 iPercentage = 0
-
-                                mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationAllowSave = True
+                                mTargetTracker.g_mClassIO.m_PlayspaceCalibration.m_FinishCalibration = True
                             End If
 
                         Case ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_END
@@ -305,11 +304,11 @@
                                     Throw New ArgumentException("Controller is not being tracked.")
                                 End If
 
-                                Select Case (mTargetTracker.g_mClassIO.m_ManualPlayspaceCalibrationStatus)
-                                    Case UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                Select Case (mTargetTracker.g_mClassIO.m_PlayspaceCalibration.GetStatus)
+                                    Case UCVirtualMotionTrackerItem.ClassIO.STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
                                         ' All good
 
-                                    Case UCVirtualMotionTrackerItem.ClassIO.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
+                                    Case UCVirtualMotionTrackerItem.ClassIO.STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.FAILED
                                         ' Failure. Either no HMD found or PSMS-EX HMD used.
                                         Throw New ArgumentException("Invalid Head-Mounted Display for playspace calibration.")
 
@@ -330,7 +329,7 @@
                     Threading.Thread.Sleep(1000)
                 End While
             Finally
-                mTargetTracker.g_mClassIO.StopManualPlayspaceCalibration()
+                mTargetTracker.g_mClassIO.m_PlayspaceCalibration.StopCalibration()
             End Try
 
         Catch ex As Threading.ThreadAbortException
