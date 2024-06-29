@@ -39,7 +39,6 @@ Partial Class FormConnectedDevices
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.CheckBox_ShowDisconnectedDevices = New System.Windows.Forms.CheckBox()
-        Me.CheckBox_ShowUsbControllers = New System.Windows.Forms.CheckBox()
         Me.Button_CopyOutput = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_Devices.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -58,7 +57,7 @@ Partial Class FormConnectedDevices
         Me.TreeView_ConnectedDevices.Location = New System.Drawing.Point(0, 0)
         Me.TreeView_ConnectedDevices.Name = "TreeView_ConnectedDevices"
         Me.TreeView_ConnectedDevices.SelectedImageIndex = 0
-        Me.TreeView_ConnectedDevices.Size = New System.Drawing.Size(474, 508)
+        Me.TreeView_ConnectedDevices.Size = New System.Drawing.Size(474, 525)
         Me.TreeView_ConnectedDevices.TabIndex = 0
         '
         'ContextMenuStrip_Devices
@@ -129,7 +128,7 @@ Partial Class FormConnectedDevices
         Me.ListView_DeviceInfo.HideSelection = False
         Me.ListView_DeviceInfo.Location = New System.Drawing.Point(0, 0)
         Me.ListView_DeviceInfo.Name = "ListView_DeviceInfo"
-        Me.ListView_DeviceInfo.Size = New System.Drawing.Size(287, 508)
+        Me.ListView_DeviceInfo.Size = New System.Drawing.Size(287, 525)
         Me.ListView_DeviceInfo.TabIndex = 2
         Me.ListView_DeviceInfo.UseCompatibleStateImageBehavior = False
         Me.ListView_DeviceInfo.View = System.Windows.Forms.View.Details
@@ -160,7 +159,7 @@ Partial Class FormConnectedDevices
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.ListView_DeviceInfo)
-        Me.SplitContainer1.Size = New System.Drawing.Size(765, 508)
+        Me.SplitContainer1.Size = New System.Drawing.Size(765, 525)
         Me.SplitContainer1.SplitterDistance = 474
         Me.SplitContainer1.TabIndex = 4
         '
@@ -174,17 +173,6 @@ Partial Class FormConnectedDevices
         Me.CheckBox_ShowDisconnectedDevices.TabIndex = 5
         Me.CheckBox_ShowDisconnectedDevices.Text = "Show disconnected devices"
         Me.CheckBox_ShowDisconnectedDevices.UseVisualStyleBackColor = True
-        '
-        'CheckBox_ShowUsbControllers
-        '
-        Me.CheckBox_ShowUsbControllers.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CheckBox_ShowUsbControllers.AutoSize = True
-        Me.CheckBox_ShowUsbControllers.Location = New System.Drawing.Point(12, 526)
-        Me.CheckBox_ShowUsbControllers.Name = "CheckBox_ShowUsbControllers"
-        Me.CheckBox_ShowUsbControllers.Size = New System.Drawing.Size(177, 17)
-        Me.CheckBox_ShowUsbControllers.TabIndex = 6
-        Me.CheckBox_ShowUsbControllers.Text = "Show all USB host controllers"
-        Me.CheckBox_ShowUsbControllers.UseVisualStyleBackColor = True
         '
         'Button_CopyOutput
         '
@@ -204,7 +192,6 @@ Partial Class FormConnectedDevices
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(789, 578)
         Me.Controls.Add(Me.Button_CopyOutput)
-        Me.Controls.Add(Me.CheckBox_ShowUsbControllers)
         Me.Controls.Add(Me.CheckBox_ShowDisconnectedDevices)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.Button_Refresh)
@@ -238,6 +225,5 @@ Partial Class FormConnectedDevices
     Friend WithEvents ToolStripMenuItem_DeviceUninstall As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem_DeviceRefresh As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents CheckBox_ShowUsbControllers As CheckBox
     Friend WithEvents Button_CopyOutput As Button
 End Class

@@ -206,28 +206,10 @@ Public Class FormConnectedDevices
                 Dim bConnected As Boolean = mLibusbDriver.IsUsbDeviceConnected(_DriverInfo.VID, _DriverInfo.PID, _Device.sInterface, _Device.sDeviceSerial)
 
                 If (Not bConnected OrElse Not _Device.mProvider.IsEnabled OrElse _Device.mProvider.IsRemoved) Then
-                    If (Not String.IsNullOrEmpty(_Device.mProvider.sService) AndAlso Not String.IsNullOrEmpty(_DriverInfo.sService)) Then
-                        Select Case (_Device.mProvider.sService.ToUpperInvariant)
-                            Case ClassLibusbDriver.USBHUB3_SERVICE_NAME
-                                ' Just display USB hubs normally
-                                mTreeNode.ImageKey = "Normal"
-                                DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = True
-
-                            Case Else
-                                mTreeNode.ImageKey = "Removed"
-                        End Select
-                    Else
-                        mTreeNode.ImageKey = "Removed"
-                    End If
-
+                    mTreeNode.ImageKey = "Removed"
                 Else
                     If (Not String.IsNullOrEmpty(_Device.mProvider.sService) AndAlso Not String.IsNullOrEmpty(_DriverInfo.sService)) Then
                         Select Case (_Device.mProvider.sService.ToUpperInvariant)
-                            Case ClassLibusbDriver.USBHUB3_SERVICE_NAME
-                                ' Just display USB hubs normally
-                                mTreeNode.ImageKey = "Normal"
-                                DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = True
-
                             Case ClassLibusbDriver.BTHUSB_SERVICE_NAME  'Bluetooth
                                 mTreeNode.ImageKey = "Bluetooth"
 
@@ -278,22 +260,12 @@ Public Class FormConnectedDevices
 
                     Dim bSuccess As Boolean = False
 
-                    If (CheckBox_ShowUsbControllers.Checked) Then
-                        Select Case (mDevice.sService.ToUpperInvariant)
-                            Case ClassLibusbDriver.USBVIDEO_SERVICE_NAME.ToUpperInvariant,
-                                    ClassLibusbDriver.BTHUSB_SERVICE_NAME.ToUpperInvariant,
-                                    ClassLibusbDriver.USBHUB3_SERVICE_NAME.ToUpperInvariant
-
-                                bSuccess = True
-                        End Select
-                    Else
-                        Select Case (mDevice.sService.ToUpperInvariant)
-                            Case ClassLibusbDriver.USBVIDEO_SERVICE_NAME.ToUpperInvariant,
+                    Select Case (mDevice.sService.ToUpperInvariant)
+                        Case ClassLibusbDriver.USBVIDEO_SERVICE_NAME.ToUpperInvariant,
                                     ClassLibusbDriver.BTHUSB_SERVICE_NAME.ToUpperInvariant
 
-                                bSuccess = True
-                        End Select
-                    End If
+                            bSuccess = True
+                    End Select
 
                     If (bSuccess) Then
                         Dim sVID As String = Nothing
