@@ -41,6 +41,7 @@ Partial Class UCVirtualTrackers
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
         Me.ListView_VideoDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_TrackerId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_Name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_HardwareId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_VideoInputDevice = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -50,7 +51,6 @@ Partial Class UCVirtualTrackers
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Timer_VideoInputDevices = New System.Windows.Forms.Timer(Me.components)
-        Me.ColumnHeader_TrackerId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_AvailableDevices.SuspendLayout()
@@ -91,8 +91,8 @@ Partial Class UCVirtualTrackers
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(731, 30)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Create virtual trackers for PSMoveService using any DirectShow video input device" &
-    " other than playstation eyes."
+        Me.Label4.Text = "Create virtual trackers for optical tracking using any DirectShow-compatible vide" &
+    "o input device." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'Label2
         '
@@ -220,6 +220,11 @@ Partial Class UCVirtualTrackers
         Me.ColumnHeader_Id.Text = "ID"
         Me.ColumnHeader_Id.Width = 50
         '
+        'ColumnHeader_TrackerId
+        '
+        Me.ColumnHeader_TrackerId.Text = "Tracker ID"
+        Me.ColumnHeader_TrackerId.Width = 100
+        '
         'ColumnHeader_Name
         '
         Me.ColumnHeader_Name.Text = "Name"
@@ -288,11 +293,6 @@ Partial Class UCVirtualTrackers
         '
         Me.Timer_VideoInputDevices.Enabled = True
         Me.Timer_VideoInputDevices.Interval = 500
-        '
-        'ColumnHeader_TrackerId
-        '
-        Me.ColumnHeader_TrackerId.Text = "Tracker ID"
-        Me.ColumnHeader_TrackerId.Width = 100
         '
         'UCVirtualTrackers
         '

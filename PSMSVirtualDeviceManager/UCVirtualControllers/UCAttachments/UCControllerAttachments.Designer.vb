@@ -27,6 +27,7 @@ Partial Class UCControllerAttachments
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCControllerAttachments))
         Me.Panel_Attachments = New System.Windows.Forms.Panel()
         Me.ListView_Attachments = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -116,8 +117,7 @@ Partial Class UCControllerAttachments
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(746, 33)
         Me.Label1.TabIndex = 14
-        Me.Label1.Text = "You can attach controllers to each other, creating joint-based trackers which do " &
-    "not require LEDs to track but still can provide enough tracking information."
+        Me.Label1.Text = resources.GetString("Label1.Text")
         '
         'LinkLabel_ReadMore
         '

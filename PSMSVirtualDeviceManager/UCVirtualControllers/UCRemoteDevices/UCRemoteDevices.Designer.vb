@@ -138,9 +138,8 @@ Partial Class UCRemoteDevices
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(746, 33)
         Me.Label1.TabIndex = 17
-        Me.Label1.Text = "With the help of custom remote devices equipped with IMUs, you have the ability t" &
-    "o modify the orientation data of PSmove controllers and Virtual controllers with" &
-    "in PSMoveServiceEx."
+        Me.Label1.Text = "With custom remote devices equipped with IMUs, you can modify the orientation dat" &
+    "a and inputs of controllers." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'Label_ConnectedDevices
         '

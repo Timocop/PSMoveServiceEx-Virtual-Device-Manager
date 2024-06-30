@@ -66,8 +66,8 @@ Partial Class UCVirtualHMDs
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(731, 30)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Create virtual Head-Mounted Devices in PSMoveService and control their orientatio" &
-    "n data and more."
+        Me.Label4.Text = "Create virtual head-mounted devices and control their orientation data and other " &
+    "features." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'Label2
         '
