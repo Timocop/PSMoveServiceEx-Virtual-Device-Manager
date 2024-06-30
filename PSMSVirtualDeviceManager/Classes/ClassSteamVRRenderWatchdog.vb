@@ -63,12 +63,12 @@ Public Class ClassSteamVRRenderWatchdog
                         If (mVRCompositor IsNot Nothing AndAlso mVRCompositor.Count > 0) Then
                             Dim mHeadsetWnd As IntPtr = Win32.FindWindow("Headset Window", "Headset Window")
 
-                            If (mHeadsetWnd <> IntPtr.Zero) Then
+                            If (mHeadsetWnd <> IntPtr.Zero AndAlso Win32.IsWindowVisible(mHeadsetWnd)) Then
                                 ' The proxy needs to be gone, thats how it causes the render glitch.
                                 ' Activate the proxy again by simulating a click onto the "Headset Window".
                                 Dim mProxyWnd As IntPtr = Win32.FindWindow("D3DProxyWindow", "D3DProxyWindow")
 
-                                If (mProxyWnd = IntPtr.Zero) Then
+                                If ((mProxyWnd = IntPtr.Zero) OrElse (mProxyWnd <> IntPtr.Zero AndAlso Not Win32.IsWindowVisible(mProxyWnd))) Then
                                     ' Bring the window to the foreground
                                     'SetForegroundWindow(hWnd)
 
