@@ -14,6 +14,7 @@ Public Class UCVirtualMotionTracker
     Public g_UCVmtSettings As UCVmtSettings
     Public g_UCVmtPlayspaceCalib As UCVmtPlayspaceCalib
     Public g_UCVmtOverrides As UCVmtOverrides
+    Public g_mClassSteamVRRenderWatchdog As ClassSteamVRRenderWatchdog
 
     Private g_bIgnoreEvents As Boolean = True
 
@@ -61,6 +62,9 @@ Public Class UCVirtualMotionTracker
         g_UCVmtOverrides.Dock = DockStyle.Fill
 
         CreateControl()
+
+        g_mClassSteamVRRenderWatchdog = New ClassSteamVRRenderWatchdog(Me)
+        g_mClassSteamVRRenderWatchdog.Init()
     End Sub
 
     Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -90,6 +94,11 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub CleanUp()
+        If (g_mClassSteamVRRenderWatchdog IsNot Nothing) Then
+            g_mClassSteamVRRenderWatchdog.Dispose()
+            g_mClassSteamVRRenderWatchdog = Nothing
+        End If
+
         If (g_UCVmtManagement IsNot Nothing AndAlso Not g_UCVmtManagement.IsDisposed) Then
             g_UCVmtManagement.Dispose()
             g_UCVmtManagement = Nothing
@@ -817,6 +826,7 @@ Public Class UCVirtualMotionTracker
             Private g_bDisableBaseStationSpawning As Boolean = False
             Private g_bEnableHepticFeedback As Boolean = True
             Private g_bOptimizeTransportPackets As Boolean = True
+            Private g_bRenderWindowFix As Boolean = True
 
             Property m_DisableBaseStationSpawning As Boolean
                 Get
@@ -842,6 +852,15 @@ Public Class UCVirtualMotionTracker
                 End Get
                 Set(value As Boolean)
                     g_bOptimizeTransportPackets = value
+                End Set
+            End Property
+
+            Property m_RenderWindowFix As Boolean
+                Get
+                    Return g_bRenderWindowFix
+                End Get
+                Set(value As Boolean)
+                    g_bRenderWindowFix = value
                 End Set
             End Property
         End Class
@@ -1023,6 +1042,7 @@ Public Class UCVirtualMotionTracker
                         g_mMiscSettings.m_DisableBaseStationSpawning = (mIni.ReadKeyValue("MiscSettings", "DisableBaseStationSpawning", "false") = "true")
                         g_mMiscSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("MiscSettings", "EnableHepticFeedback", "true") = "true")
                         g_mMiscSettings.m_OptimizeTransportPackets = (mIni.ReadKeyValue("MiscSettings", "OptimizeTransportPackets", "true") = "true")
+                        g_mMiscSettings.m_RenderWindowFix = (mIni.ReadKeyValue("MiscSettings", "RenderWindowFix", "true") = "true")
 
                         ' Playspace Settings
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1206,6 +1226,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "DisableBaseStationSpawning", If(g_mMiscSettings.m_DisableBaseStationSpawning, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OptimizeTransportPackets", If(g_mMiscSettings.m_OptimizeTransportPackets, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "RenderWindowFix", If(g_mMiscSettings.m_RenderWindowFix, "true", "false")))
                         End If
 
                         If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then

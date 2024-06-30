@@ -232,6 +232,7 @@ Public Class UCVmtSettings
             CheckBox_DisableBasestations.Checked = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
             CheckBox_EnableHeptics.Checked = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
             CheckBox_OptimizePackets.Checked = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
+            CheckBox_RenderFix.Checked = mClassSettings.m_MiscSettings.m_RenderWindowFix
 
             ' Playspace Settings
             NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, mClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
@@ -336,6 +337,15 @@ Public Class UCVmtSettings
         End If
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_OptimizeTransportPackets = CheckBox_OptimizePackets.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_RenderFix_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_RenderFix.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_RenderWindowFix = CheckBox_RenderFix.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 

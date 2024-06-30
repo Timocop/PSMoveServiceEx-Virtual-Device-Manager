@@ -146,6 +146,8 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.CheckBox_RenderFix = New System.Windows.Forms.CheckBox()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -1507,6 +1509,8 @@ Partial Class UCVmtSettings
         'TabPage_SettingsOther
         '
         Me.TabPage_SettingsOther.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsOther.Controls.Add(Me.Label2)
+        Me.TabPage_SettingsOther.Controls.Add(Me.CheckBox_RenderFix)
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscMaxThreadFps)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label65)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label64)
@@ -1702,6 +1706,32 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.AutoPopDelay = 30000
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Label2.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label2.Location = New System.Drawing.Point(16, 343)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label2.Size = New System.Drawing.Size(505, 32)
+        Me.Label2.TabIndex = 55
+        Me.Label2.Text = "        SteamVR has a bug where rendering stops if the Virtual-Mode render window" &
+    " loses focus. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        Enabling this setting can resolve the issue."
+        '
+        'CheckBox_RenderFix
+        '
+        Me.CheckBox_RenderFix.AutoSize = True
+        Me.CheckBox_RenderFix.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_RenderFix.Location = New System.Drawing.Point(16, 322)
+        Me.CheckBox_RenderFix.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.CheckBox_RenderFix.Name = "CheckBox_RenderFix"
+        Me.CheckBox_RenderFix.Size = New System.Drawing.Size(243, 18)
+        Me.CheckBox_RenderFix.TabIndex = 54
+        Me.CheckBox_RenderFix.Text = "Enable Virtual-Mode SteamVR Render Fix"
+        Me.CheckBox_RenderFix.UseVisualStyleBackColor = True
         '
         'UCVmtSettings
         '
@@ -1902,4 +1932,6 @@ Partial Class UCVmtSettings
     Friend WithEvents Button_SaveControllerSettings As Button
     Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents ToolTip_Default As ToolTip
+    Friend WithEvents Label2 As Label
+    Friend WithEvents CheckBox_RenderFix As CheckBox
 End Class
