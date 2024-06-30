@@ -56,25 +56,43 @@ Public Class ClassSteamVRRenderWatchdog
     Private Sub ActivateRenderWindowThread()
         Try
             While True
+                Threading.Thread.Sleep(1000)
+
                 Try
-                    If (g_mUCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_RenderWindowFix) Then
-                        Dim mVRCompositor = Process.GetProcessesByName("vrcompositor")
+                    If (g_mUCVirtualMotionTracker.g_mFormMain Is Nothing OrElse
+                            g_mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI Is Nothing) Then
+                        Continue While
+                    End If
 
-                        If (mVRCompositor IsNot Nothing AndAlso mVRCompositor.Count > 0) Then
-                            Dim mHeadsetWnd As IntPtr = Win32.FindWindow("Headset Window", "Headset Window")
+                    If (Not g_mUCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_RenderWindowFix) Then
+                        Continue While
+                    End If
 
-                            If (mHeadsetWnd <> IntPtr.Zero AndAlso Win32.IsWindowVisible(mHeadsetWnd)) Then
-                                ' The proxy needs to be gone, thats how it causes the render glitch.
-                                ' Activate the proxy again by simulating a click onto the "Headset Window".
-                                Dim mProxyWnd As IntPtr = Win32.FindWindow("D3DProxyWindow", "D3DProxyWindow")
+                    If (Not g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse
+                            g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+                        Continue While
+                    End If
 
-                                If ((mProxyWnd = IntPtr.Zero) OrElse (mProxyWnd <> IntPtr.Zero AndAlso Not Win32.IsWindowVisible(mProxyWnd))) Then
-                                    ' Bring the window to the foreground
-                                    'SetForegroundWindow(hWnd)
+                    If (g_mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI.GetHmdsData().Length < 1) Then
+                        Continue While
+                    End If
 
-                                    Win32.PostMessage(mHeadsetWnd, Win32.WM_LBUTTONDOWN, IntPtr.Zero, IntPtr.Zero)
-                                    Win32.PostMessage(mHeadsetWnd, Win32.WM_LBUTTONUP, IntPtr.Zero, IntPtr.Zero)
-                                End If
+                    Dim mVRCompositor = Process.GetProcessesByName("vrcompositor")
+
+                    If (mVRCompositor IsNot Nothing AndAlso mVRCompositor.Count > 0) Then
+                        Dim mHeadsetWnd As IntPtr = Win32.FindWindow("Headset Window", "Headset Window")
+
+                        If (mHeadsetWnd <> IntPtr.Zero AndAlso Win32.IsWindowVisible(mHeadsetWnd)) Then
+                            ' The proxy needs to be gone, thats how it causes the render glitch.
+                            ' Activate the proxy again by simulating a click onto the "Headset Window".
+                            Dim mProxyWnd As IntPtr = Win32.FindWindow("D3DProxyWindow", "D3DProxyWindow")
+
+                            If ((mProxyWnd = IntPtr.Zero) OrElse (mProxyWnd <> IntPtr.Zero AndAlso Not Win32.IsWindowVisible(mProxyWnd))) Then
+                                ' Bring the window to the foreground
+                                'SetForegroundWindow(hWnd)
+
+                                Win32.PostMessage(mHeadsetWnd, Win32.WM_LBUTTONDOWN, IntPtr.Zero, IntPtr.Zero)
+                                Win32.PostMessage(mHeadsetWnd, Win32.WM_LBUTTONUP, IntPtr.Zero, IntPtr.Zero)
                             End If
                         End If
                     End If
@@ -84,8 +102,6 @@ Public Class ClassSteamVRRenderWatchdog
                 Catch ex As Exception
                     ' Whatever happens 
                 End Try
-
-                Threading.Thread.Sleep(1000)
             End While
         Catch ex As Threading.ThreadAbortException
             Throw
