@@ -346,6 +346,8 @@
                             Exit While
                         End If
 
+                        Threading.Thread.Sleep(5000)
+
                         Dim bInstallDirectMode As Boolean = (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT)
                         If (Not mClassMonitor.PatchPlaystationVrMonitor(bInstallDirectMode)) Then
                             Throw New ArgumentException("Unable to find PlayStation VR monitor")
