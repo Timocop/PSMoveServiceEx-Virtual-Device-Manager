@@ -306,7 +306,8 @@
             Dim bExitOnSuccess As Boolean = False
 
             For Each sCommand As String In sCmdLines
-                While (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
+                While (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse
+                        sCommand = COMMANDLINE_INSTALL_PSVR_DRIVERS OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR)
                     ' Patch the PSVR monitor registry to allow 120/90/60 Hz refresh rates
                     bExitOnSuccess = True
 
@@ -342,7 +343,7 @@
                         End If
 
                         ' Just uninstall
-                        If (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
+                        If (sCommand = COMMANDLINE_INSTALL_PSVR_DRIVERS OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE OrElse sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
                             Exit While
                         End If
 
