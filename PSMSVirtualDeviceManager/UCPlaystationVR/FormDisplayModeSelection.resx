@@ -125,10 +125,6 @@ Please note that this feature is currently only supported by AMD and Intel graph
   <data name="Label3.Text" xml:space="preserve">
     <value>Using Virtual Mode, the display functions as an additional desktop for tasks like video playback and image viewing. However, compositors can not directly interact with the display, potentially decreasing performance and causing other issues.
 
-Only use Virtual Mode if Direct Mode is not functioning properly.
-
-
-
-</value>
+Only use Virtual Mode if Direct Mode is not functioning properly.</value>
   </data>
 </root>

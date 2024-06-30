@@ -79,8 +79,7 @@ Partial Class UCVirtualControllers
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(731, 30)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Create virtual controllers in PSMoveService and control their orientation data an" &
-    "d more."
+        Me.Label4.Text = "Create virtual controllers to control their orientation data, inputs and more."
         '
         'Label2
         '
