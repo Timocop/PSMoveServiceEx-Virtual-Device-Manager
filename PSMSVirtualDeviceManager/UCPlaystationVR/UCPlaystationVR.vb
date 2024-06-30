@@ -84,7 +84,7 @@
 
             Case ENUM_DEVICE_HDMI_STATUS.DIRECT_MODE
                 Label_HDMIStatus.Text = "HDMI Direct-Mode"
-                Label_HDMIStatusText.Text = "Unable to get connection status. Device is working in direct-mode."
+                Label_HDMIStatusText.Text = "Unable to get connection status. Device is working in Direct-Mode."
                 ClassPictureBox_HDMIStatus.Image = My.Resources.Connection_HDMI_OK
 
             Case Else
@@ -130,12 +130,12 @@
 
             Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI
                 Label_DisplayStatus.Text = "Display Working"
-                Label_DisplayStatusText.Text = "Display is currently working using virtual-mode (compatibility mode)."
+                Label_DisplayStatusText.Text = "Display is currently working using Virtual-Mode (Compatibility Mode)."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_OK
 
             Case ENUM_DEVICE_DISPLAY_STATUS.DIRECT_MODE
                 Label_DisplayStatus.Text = "Display Direct-Mode"
-                Label_DisplayStatusText.Text = "Unable to get display status. Display is working in direct-mode."
+                Label_DisplayStatusText.Text = "Unable to get display status. Display is working in Direct-Mode."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_OK
 
             Case ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED
@@ -145,7 +145,7 @@
 
             Case ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD
                 Label_DisplayStatus.Text = "Display waiting for update"
-                Label_DisplayStatusText.Text = "Display has been set up correctly but is waiting to apply the new configuration. Please replug the HDMI cable or reboot your computer."
+                Label_DisplayStatusText.Text = "Display has been set up correctly but is waiting to apply the new configuration. Please reboot your PlayStation VR or replug the HDMI cable."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
 
             Case ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY
@@ -154,12 +154,12 @@
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
 
             Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_DIRECT
-                Label_DisplayStatus.Text = "Display not in direct-mode"
+                Label_DisplayStatus.Text = "Display not in Direct-Mode"
                 Label_DisplayStatusText.Text = "Display has been configured to work with direct-mode but this mode has not been enabled yet."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_WARN
 
             Case ENUM_DEVICE_DISPLAY_STATUS.MIRRROED
-                Label_DisplayStatus.Text = "Display not in extended mode"
+                Label_DisplayStatus.Text = "Display not in Extended Mode"
                 Label_DisplayStatusText.Text = "Display is currently not in extended-mode. Please use extended-mode for the display in the Windows display settings."
                 ClassPictureBox_DisplayStatus.Image = My.Resources.Connection_DISPLAY_FAIL
 
