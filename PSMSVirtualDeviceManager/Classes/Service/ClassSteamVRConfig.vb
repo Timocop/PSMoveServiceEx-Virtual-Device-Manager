@@ -865,12 +865,20 @@ Public Class ClassSteamVRConfig
 
         ReadOnly Property m_AppConfigFile As String
             Get
+                If (g_ClassSteamVRConfig.m_SteamPath Is Nothing) Then
+                    Return Nothing
+                End If
+
                 Return IO.Path.Combine(g_ClassSteamVRConfig.m_SteamPath, "config\appconfig.json")
             End Get
         End Property
 
         ReadOnly Property m_VrAppConfigPath As String
             Get
+                If (g_ClassSteamVRConfig.m_SteamPath Is Nothing) Then
+                    Return Nothing
+                End If
+
                 Return IO.Path.Combine(g_ClassSteamVRConfig.m_SteamPath, "config\vrappconfig")
             End Get
         End Property
@@ -942,6 +950,10 @@ Public Class ClassSteamVRConfig
         Public Sub SetAutostartManifest(mManifest As STRUC_BUILDIN_MANIFEST_CONTENT, bEnabled As Boolean)
             If (String.IsNullOrEmpty(mManifest.m_AppKey) OrElse mManifest.m_AppKey.Trim.Length = 0) Then
                 Throw New ArgumentException("App key can not be empty")
+            End If
+
+            If (m_VrAppConfigPath Is Nothing) Then
+                Throw New ArgumentException("App config path not found")
             End If
 
             Dim sAppConfig As String = IO.Path.Combine(m_VrAppConfigPath, mManifest.m_AppKey & ".vrappconfig")
