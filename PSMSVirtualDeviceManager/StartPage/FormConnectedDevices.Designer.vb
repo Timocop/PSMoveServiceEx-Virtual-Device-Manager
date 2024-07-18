@@ -52,6 +52,7 @@ Partial Class FormConnectedDevices
         Me.TreeView_ConnectedDevices.ContextMenuStrip = Me.ContextMenuStrip_Devices
         Me.TreeView_ConnectedDevices.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TreeView_ConnectedDevices.FullRowSelect = True
+        Me.TreeView_ConnectedDevices.HideSelection = False
         Me.TreeView_ConnectedDevices.ImageIndex = 0
         Me.TreeView_ConnectedDevices.ImageList = Me.ImageList_Devices
         Me.TreeView_ConnectedDevices.Location = New System.Drawing.Point(0, 0)

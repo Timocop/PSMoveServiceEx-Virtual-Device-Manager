@@ -504,4 +504,12 @@ Public Class FormConnectedDevices
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
+
+    Private Sub TreeView_ConnectedDevices_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView_ConnectedDevices.NodeMouseClick
+        If (e.Node Is Nothing) Then
+            Return
+        End If
+
+        TreeView_ConnectedDevices.SelectedNode = e.Node
+    End Sub
 End Class
