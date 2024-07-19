@@ -9,8 +9,8 @@ Public Class UCControllerAttachments
         Inherits ListViewItem
         Implements IDisposable
 
-        Private g_UCControllerAttachmentsItem As UCControllerAttachmentsItem
-        Private g_UCControllerAttachments As UCControllerAttachments
+        Public g_UCControllerAttachmentsItem As UCControllerAttachmentsItem
+        Public g_UCControllerAttachments As UCControllerAttachments
 
         Public Sub New(_Id As Integer, _UCControllerAttachments As UCControllerAttachments)
             MyBase.New(New String() {"", ""})
@@ -164,6 +164,21 @@ Public Class UCControllerAttachments
         ListView_Attachments.Items.Add(mItem)
         mItem.Selected = True
     End Sub
+
+    Public Function GetAttachments() As UCControllerAttachmentsItem()
+        Dim mAttachments As New List(Of UCControllerAttachmentsItem)
+
+        For Each mItem As ListViewItem In ListView_Attachments.Items
+            Dim mAttachmentItem = DirectCast(mItem, ClassAttachmentListViewItem)
+            If (mAttachmentItem.g_UCControllerAttachmentsItem Is Nothing OrElse mAttachmentItem.g_UCControllerAttachmentsItem.IsDisposed) Then
+                Continue For
+            End If
+
+            mAttachments.Add(mAttachmentItem.g_UCControllerAttachmentsItem)
+        Next
+
+        Return mAttachments.ToArray
+    End Function
 
     Private Sub Button_Autostart_Click(sender As Object, e As EventArgs) Handles Button_Autostart.Click
         ContextMenuStrip_Autostart.Show(Button_Autostart, New Point(0, Button_Autostart.Size.Height))

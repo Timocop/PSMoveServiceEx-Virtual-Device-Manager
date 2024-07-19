@@ -22,8 +22,8 @@ Public Class UCRemoteDevices
         Inherits ListViewItem
         Implements IDisposable
 
-        Private g_UCRemoteDeviceItem As UCRemoteDeviceItem
-        Private g_UCRemoteDevices As UCRemoteDevices
+        Public g_UCRemoteDeviceItem As UCRemoteDeviceItem
+        Public g_UCRemoteDevices As UCRemoteDevices
 
         Public Sub New(sTrackerName As String, _UCRemoteDevices As UCRemoteDevices)
             MyBase.New(New String() {""})
@@ -154,6 +154,21 @@ Public Class UCRemoteDevices
         g_mLocalAddressThread.IsBackground = True
         g_mLocalAddressThread.Start()
     End Sub
+
+    Public Function GetRemoteDevices() As UCRemoteDeviceItem()
+        Dim mRemoteDevice As New List(Of UCRemoteDeviceItem)
+
+        For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+            Dim mRemoteDeviceItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+            If (mRemoteDeviceItem.g_UCRemoteDeviceItem Is Nothing OrElse mRemoteDeviceItem.g_UCRemoteDeviceItem.IsDisposed) Then
+                Continue For
+            End If
+
+            mRemoteDevice.Add(mRemoteDeviceItem.g_UCRemoteDeviceItem)
+        Next
+
+        Return mRemoteDevice.ToArray
+    End Function
 
     Private Sub LocalAddressThread()
         Try

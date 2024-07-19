@@ -1546,7 +1546,7 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
-        Using mLogs As New FormTroubleshootLogs
+        Using mLogs As New FormTroubleshootLogs(g_FormMain)
             mLogs.ShowDialog(Me)
         End Using
     End Sub

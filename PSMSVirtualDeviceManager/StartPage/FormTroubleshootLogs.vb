@@ -1,16 +1,45 @@
-﻿Public Class FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager
+
+Public Class FormTroubleshootLogs
     Private g_mThreadLock As New Object
     Private g_mThread As Threading.Thread = Nothing
     Private g_mFileContent As New Dictionary(Of String, String)
     Private g_mProgress As FormLoading = Nothing
 
-    Public Sub New()
+    Private g_mLogJobs As New List(Of ILogAction)
+
+    Private g_mFormMain As FormMain = Nothing
+
+    Private Interface ILogAction
+        Function GetActionTitle() As String
+
+        Sub DoWork(mData As Dictionary(Of String, String))
+    End Interface
+
+
+    Public Sub New(_FormMain As FormMain)
+        g_mFormMain = _FormMain
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-
+        g_mLogJobs.Clear()
+        g_mLogJobs.Add(New ClassLogDxdiag())
+        g_mLogJobs.Add(New ClassLogService())
+        g_mLogJobs.Add(New ClassLogProcesses())
+        g_mLogJobs.Add(New ClassLogManager())
+        g_mLogJobs.Add(New ClassLogManagerVmtTrackers(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManageOscDevices(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManageServiceDevices(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManagerAttachments(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManagerRemoteDevices(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManagerPSVR(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManagerVirtualTrackers(g_mFormMain))
+        g_mLogJobs.Add(New ClassLogManagerSteamVrDrivers())
+        g_mLogJobs.Add(New ClassLogManagerSteamVrManifests())
+        g_mLogJobs.Add(New ClassLogManagerSteamVrOverrides())
+        g_mLogJobs.Add(New ClassLogManagerSteamVrSettings())
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
@@ -61,10 +90,11 @@
 
         For Each mItem In m_FileContent
             sContent.AppendFormat("{0} {1} {2}", New String("#"c, 32), mItem.Key, New String("#"c, 32)).AppendLine()
-            sContent.AppendLine()
+            sContent.AppendLine("{")
 
             sContent.AppendLine(mItem.Value)
 
+            sContent.AppendLine("}")
             sContent.AppendLine()
         Next
 
@@ -94,33 +124,24 @@
 
             m_FileContent.Clear()
 
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Text = "Gathering DxDiag logs..."
-                                           End If
-                                       End Sub)
-            RefreshDxdiagLog()
+            For Each mJob In g_mLogJobs
+                Dim sJobAction As String = String.Format("Gathering {0}...", mJob.GetActionTitle())
 
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Text = "Gathering PSMoveServiceEx logs..."
-                                           End If
-                                       End Sub)
-            RefreshServiceLogs()
+                ClassUtils.AsyncInvoke(Me, Sub()
+                                               If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
+                                                   g_mProgress.Text = sJobAction
+                                               End If
+                                           End Sub)
 
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Text = "Gathering running processes..."
-                                           End If
-                                       End Sub)
-            RefreshProcesses()
-
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Text = "Gathering Virtual Device Manager logs..."
-                                           End If
-                                       End Sub)
-            RefreshManager()
+                Try
+                    mJob.DoWork(m_FileContent)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    m_FileContent(mJob.GetActionTitle()) = String.Format("EXCEPTION: {0}", ex.Message)
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+                End Try
+            Next
 
             ClassUtils.AsyncInvoke(Me, Sub()
                                            For i = TabControl_Logs.TabCount - 1 To 0 Step -1
@@ -134,9 +155,13 @@
                                                Dim mTextBox As New TextBox
                                                mTextBox.SuspendLayout()
                                                mTextBox.Parent = mTab
-                                               mTextBox.Text = mItem.Value
+
                                                mTextBox.Multiline = True
                                                mTextBox.WordWrap = False
+                                               mTextBox.ReadOnly = True
+                                               mTextBox.BackColor = Color.White
+
+                                               mTextBox.Text = mItem.Value
                                                mTextBox.Dock = DockStyle.Fill
                                                mTextBox.BorderStyle = BorderStyle.None
                                                mTextBox.ScrollBars = ScrollBars.Both
@@ -164,107 +189,573 @@
         End Try
     End Sub
 
-    Private Sub RefreshDxdiagLog()
-        Dim sRootFolder As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "dxdiag.exe")
-        Dim sOutputFile As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName)
+    Class ClassLogDxdiag
+        Implements ILogAction
 
-        If (Not IO.File.Exists(sRootFolder)) Then
-            Return
-        End If
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            Dim sRootFolder As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "dxdiag.exe")
+            Dim sOutputFile As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName)
 
-        Using mProcess As New Process
-            mProcess.StartInfo.FileName = sRootFolder
-            mProcess.StartInfo.Arguments = String.Format("/t ""{0}""", sOutputFile)
-            mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sRootFolder)
-            mProcess.StartInfo.CreateNoWindow = True
-            mProcess.StartInfo.UseShellExecute = True
-            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+            If (Not IO.File.Exists(sRootFolder)) Then
+                Return
+            End If
 
-            mProcess.Start()
-            mProcess.WaitForExit()
-        End Using
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = sRootFolder
+                mProcess.StartInfo.Arguments = String.Format("/t ""{0}""", sOutputFile)
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sRootFolder)
+                mProcess.StartInfo.CreateNoWindow = True
+                mProcess.StartInfo.UseShellExecute = True
+                mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
-        If (Not IO.File.Exists(sOutputFile)) Then
-            Throw New ArgumentException("DxDiag output log does not exist")
-        End If
+                mProcess.Start()
+                mProcess.WaitForExit()
+            End Using
 
-        m_FileContent("DxDiag") = IO.File.ReadAllText(sOutputFile)
-    End Sub
+            If (Not IO.File.Exists(sOutputFile)) Then
+                Throw New ArgumentException("DxDiag output log does not exist")
+            End If
 
-    Private Sub RefreshServiceLogs()
-        Dim mConfig As New ClassServiceInfo
-        mConfig.LoadConfig()
+            mData(GetActionTitle()) = IO.File.ReadAllText(sOutputFile)
+        End Sub
 
-        If (Not mConfig.FileExist()) Then
-            If (mConfig.FindByProcess()) Then
-                mConfig.SaveConfig()
-            Else
-                If (mConfig.SearchForService) Then
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "DirectX Diagnostics"
+        End Function
+    End Class
+
+    Class ClassLogService
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            Dim mConfig As New ClassServiceInfo
+            mConfig.LoadConfig()
+
+            If (Not mConfig.FileExist()) Then
+                If (mConfig.FindByProcess()) Then
                     mConfig.SaveConfig()
                 Else
-                    ' Logs does not exist
-                    Return
+                    If (mConfig.SearchForService) Then
+                        mConfig.SaveConfig()
+                    Else
+                        ' Logs does not exist
+                        Return
+                    End If
                 End If
             End If
-        End If
 
-        If (Not mConfig.FileExist) Then
-            Return
-        End If
-
-        Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
-        Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
-
-        If (Not IO.File.Exists(sLogFile)) Then
-            Return
-        End If
-
-        m_FileContent("PSMoveServiceEx") = IO.File.ReadAllText(sLogFile)
-    End Sub
-
-    Private Sub RefreshProcesses()
-        Dim sProcessLog As New Text.StringBuilder
-
-        For Each mProcess In Process.GetProcesses
-            Try
-                sProcessLog.AppendFormat("[{0}]", mProcess.Id).AppendLine()
-                sProcessLog.AppendFormat("ProcessName={0}", mProcess.ProcessName).AppendLine()
-            Catch ex As Threading.ThreadAbortException
-                Throw
-            Catch ex As Exception
-            End Try
-
-            Try
-                sProcessLog.AppendFormat("FileName={0}", mProcess.MainModule.FileName).AppendLine()
-                sProcessLog.AppendFormat("FileDescription={0}", mProcess.MainModule.FileVersionInfo.FileDescription).AppendLine()
-            Catch ex As Threading.ThreadAbortException
-                Throw
-            Catch ex As Exception
-            End Try
-
-            sProcessLog.AppendLine()
-        Next
-
-        m_FileContent("Running Processes") = sProcessLog.ToString
-    End Sub
-
-    Private Sub RefreshManager()
-        Dim mManagerLogs As New Dictionary(Of String, String)
-        mManagerLogs("VDM Application Exceptions") = (ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
-        mManagerLogs("VDM Settings") = (ClassConfigConst.PATH_CONFIG_SETTINGS)
-        mManagerLogs("VDM Attachments") = (ClassConfigConst.PATH_CONFIG_ATTACHMENT)
-        mManagerLogs("VDM Remote Devices") = (ClassConfigConst.PATH_CONFIG_REMOTE)
-        mManagerLogs("VDM Virtual Motion Trackers") = (ClassConfigConst.PATH_CONFIG_VMT)
-        mManagerLogs("VDM Virutal Trackers") = (ClassConfigConst.PATH_CONFIG_DEVICES)
-
-        For Each mItem In mManagerLogs
-            If (Not IO.File.Exists(mItem.Value)) Then
-                Continue For
+            If (Not mConfig.FileExist) Then
+                Return
             End If
 
-            m_FileContent(mItem.Key) = IO.File.ReadAllText(mItem.Value)
-        Next
-    End Sub
+            Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
+            Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
+
+            If (Not IO.File.Exists(sLogFile)) Then
+                Return
+            End If
+
+            Dim sTmp As String = IO.Path.GetTempFileName
+            IO.File.Copy(sLogFile, sTmp, True)
+
+            mData(GetActionTitle()) = IO.File.ReadAllText(sTmp)
+            IO.File.Delete(sTmp)
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "PSMoveServiceEx"
+        End Function
+    End Class
+
+    Class ClassLogProcesses
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            Dim sProcessLog As New Text.StringBuilder
+
+            For Each mProcess In Process.GetProcesses
+                Try
+                    sProcessLog.AppendFormat("[ProcessID_{0}]", mProcess.Id).AppendLine()
+                    sProcessLog.AppendFormat("ProcessName={0}", mProcess.ProcessName).AppendLine()
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                End Try
+
+                Try
+                    sProcessLog.AppendFormat("FileName={0}", mProcess.MainModule.FileName).AppendLine()
+                    sProcessLog.AppendFormat("FileDescription={0}", mProcess.MainModule.FileVersionInfo.FileDescription).AppendLine()
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                End Try
+
+                sProcessLog.AppendLine()
+            Next
+
+            mData(GetActionTitle()) = sProcessLog.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "Running Processes"
+        End Function
+    End Class
+
+    Class ClassLogManager
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            Dim mManagerLogs As New Dictionary(Of String, String)
+            mManagerLogs("VDM INI Application Exceptions") = (ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
+            mManagerLogs("VDM INI Settings") = (ClassConfigConst.PATH_CONFIG_SETTINGS)
+            mManagerLogs("VDM INI Attachments") = (ClassConfigConst.PATH_CONFIG_ATTACHMENT)
+            mManagerLogs("VDM INI Remote Devices") = (ClassConfigConst.PATH_CONFIG_REMOTE)
+            mManagerLogs("VDM INI Virtual Motion Trackers") = (ClassConfigConst.PATH_CONFIG_VMT)
+            mManagerLogs("VDM INI Virutal Trackers") = (ClassConfigConst.PATH_CONFIG_DEVICES)
+
+            For Each mItem In mManagerLogs
+                If (Not IO.File.Exists(mItem.Value)) Then
+                    Continue For
+                End If
+
+
+                Dim sTmp As String = IO.Path.GetTempFileName
+                IO.File.Copy(mItem.Value, sTmp, True)
+
+                mData(mItem.Key) = IO.File.ReadAllText(sTmp)
+                IO.File.Delete(sTmp)
+            Next
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM Configuration"
+        End Function
+    End Class
+
+    Class ClassLogManagerVmtTrackers
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mUCVirtualMotionTracker Is Nothing OrElse g_mFormMain.g_mUCVirtualMotionTracker.g_UCVmtTrackers Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            ' Not thread-safe
+            ClassUtils.SyncInvoke(g_mFormMain, Sub()
+                                                   Dim mVmtTrackers = g_mFormMain.g_mUCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
+                                                   For Each mItem In mVmtTrackers
+                                                       If (mItem.g_mClassIO.m_IsHMD) Then
+                                                           sTrackersList.AppendFormat("[Hmd_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                                       Else
+                                                           sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                                       End If
+                                                       sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                                       sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
+                                                       sTrackersList.AppendFormat("VmtID={0}", mItem.g_mClassIO.m_VmtTracker).AppendLine()
+                                                       sTrackersList.AppendFormat("VmtTrackerRole={0}", mItem.g_mClassIO.m_VmtTrackerRole).AppendLine()
+                                                       sTrackersList.AppendFormat("FpsOscCounter={0}", mItem.g_mClassIO.m_FpsOscCounter).AppendLine()
+
+                                                       sTrackersList.AppendLine()
+                                                   Next
+                                               End Sub)
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM VMT Trackers"
+        End Function
+    End Class
+
+    Class ClassLogManageOscDevices
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mUCVirtualMotionTracker Is Nothing OrElse g_mFormMain.g_mUCVirtualMotionTracker.g_ClassOscDevices Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            Dim mVmtTrackers = g_mFormMain.g_mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices
+            For Each mItem In mVmtTrackers
+                sTrackersList.AppendFormat("[Device_{0}]", mItem.iIndex).AppendLine()
+                sTrackersList.AppendFormat("ID={0}", mItem.iIndex).AppendLine()
+                sTrackersList.AppendFormat("Type={0}", mItem.iType).AppendLine()
+                sTrackersList.AppendFormat("Serial={0}", mItem.sSerial).AppendLine()
+                sTrackersList.AppendFormat("Position={0}", mItem.mPos.ToString).AppendLine()
+                sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+
+                sTrackersList.AppendLine()
+            Next
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM OSC Devices"
+        End Function
+    End Class
+
+    Class ClassLogManageServiceDevices
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mPSMoveServiceCAPI Is Nothing) Then
+                Return
+            End If
+
+            If (Not g_mFormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
+                mData(GetActionTitle()) = "Service not connected!"
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            Dim mControllers = g_mFormMain.g_mPSMoveServiceCAPI.GetControllersData
+            For Each mItem In mControllers
+                sTrackersList.AppendFormat("[Controller_{0}]", mItem.m_Id).AppendLine()
+                sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
+                sTrackersList.AppendFormat("IsConnected={0}", mItem.m_IsConnected).AppendLine()
+                sTrackersList.AppendFormat("IsTracking={0}", mItem.m_IsTracking).AppendLine()
+                sTrackersList.AppendFormat("IsValid={0}", mItem.m_IsValid).AppendLine()
+                sTrackersList.AppendFormat("Serial={0}", mItem.m_Serial).AppendLine()
+                sTrackersList.AppendFormat("TrackingColor={0}", mItem.m_TrackingColor).AppendLine()
+                sTrackersList.AppendFormat("BatteryLevel={0}", mItem.m_BatteryLevel).AppendLine()
+                sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
+                sTrackersList.AppendFormat("Position={0}", mItem.m_Position.ToString).AppendLine()
+                sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+
+                sTrackersList.AppendLine()
+            Next
+
+            Dim mHmds = g_mFormMain.g_mPSMoveServiceCAPI.GetHmdsData
+            For Each mItem In mHmds
+                sTrackersList.AppendFormat("[Hmd_{0}]", mItem.m_Id).AppendLine()
+                sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
+                sTrackersList.AppendFormat("IsConnected={0}", mItem.m_IsConnected).AppendLine()
+                sTrackersList.AppendFormat("IsTracking={0}", mItem.m_IsTracking).AppendLine()
+                sTrackersList.AppendFormat("IsValid={0}", mItem.m_IsValid).AppendLine()
+                sTrackersList.AppendFormat("Serial={0}", mItem.m_Serial).AppendLine()
+                sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
+                sTrackersList.AppendFormat("Position={0}", mItem.m_Position.ToString).AppendLine()
+                sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+
+                sTrackersList.AppendLine()
+            Next
+
+            Dim mTrakcers = g_mFormMain.g_mPSMoveServiceCAPI.GetTrackersData
+            For Each mItem In mTrakcers
+                sTrackersList.AppendFormat("[Tracker_{0}]", mItem.m_Id).AppendLine()
+                sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
+                sTrackersList.AppendFormat("Path={0}", mItem.m_Path).AppendLine()
+                sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
+                sTrackersList.AppendFormat("Position={0}", mItem.m_Position.ToString).AppendLine()
+                sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+
+                sTrackersList.AppendLine()
+            Next
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM Service Devices"
+        End Function
+    End Class
+
+    Class ClassLogManagerAttachments
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mUCVirtualControllers Is Nothing OrElse g_mFormMain.g_mUCVirtualControllers.g_mUCControllerAttachments Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            ' Not thread-safe
+            ClassUtils.SyncInvoke(g_mFormMain, Sub()
+                                                   Dim mAttachments = g_mFormMain.g_mUCVirtualControllers.g_mUCControllerAttachments.GetAttachments()
+                                                   For Each mItem In mAttachments
+                                                       sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                                       sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
+                                                       sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                                       sTrackersList.AppendFormat("ParentControllerID={0}", mItem.g_mClassIO.m_ParentController).AppendLine()
+                                                       sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
+                                                       sTrackersList.AppendFormat("ControllerOffset={0}", mItem.g_mClassIO.m_ControllerOffset.ToString).AppendLine()
+                                                       sTrackersList.AppendFormat("ControllerYawCorrection={0}", mItem.g_mClassIO.m_ControllerYawCorrection).AppendLine()
+                                                       sTrackersList.AppendFormat("JointOffset={0}", mItem.g_mClassIO.m_JointOffset.ToString).AppendLine()
+                                                       sTrackersList.AppendFormat("JointYawCorrection={0}", mItem.g_mClassIO.m_JointYawCorrection).AppendLine()
+                                                       sTrackersList.AppendFormat("OnlyJointOffset={0}", mItem.g_mClassIO.m_OnlyJointOffset).AppendLine()
+
+                                                       sTrackersList.AppendLine()
+                                                   Next
+                                               End Sub)
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM Controller Attachments"
+        End Function
+    End Class
+
+    Class ClassLogManagerRemoteDevices
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mUCVirtualControllers Is Nothing OrElse g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            ' Not thread-safe
+            ClassUtils.SyncInvoke(g_mFormMain, Sub()
+                                                   Dim mRemoteDevices = g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices.GetRemoteDevices()
+                                                   For Each mItem In mRemoteDevices
+                                                       sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                                       sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
+                                                       sTrackersList.AppendFormat("TrackerName={0}", mItem.m_TrackerName).AppendLine()
+                                                       sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                                       sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
+                                                       sTrackersList.AppendFormat("Orientation={0}", ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_Orientation).ToString).AppendLine()
+                                                       sTrackersList.AppendFormat("ResetOrientation={0}", ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_ResetOrientation).ToString).AppendLine()
+                                                       sTrackersList.AppendFormat("YawOrientationOffset={0}", mItem.g_mClassIO.m_YawOrientationOffset).AppendLine()
+
+                                                       sTrackersList.AppendLine()
+                                                   Next
+                                               End Sub)
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM Controller Attachments"
+        End Function
+    End Class
+
+    Class ClassLogManagerPSVR
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mUCPlaystationVR Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            ' Not thread-safe
+            ClassUtils.SyncInvoke(g_mFormMain, Sub()
+                                                   sTrackersList.AppendFormat("[PlayStationVR]").AppendLine()
+                                                   sTrackersList.AppendFormat("Status={0}", g_mFormMain.g_mUCPlaystationVR.Label_PSVRStatus.Text).AppendLine()
+                                                   sTrackersList.AppendLine()
+
+                                                   sTrackersList.AppendFormat("[PlayStationVR HDMI]").AppendLine()
+                                                   sTrackersList.AppendFormat("Status={0}", g_mFormMain.g_mUCPlaystationVR.Label_HDMIStatus.Text).AppendLine()
+                                                   sTrackersList.AppendFormat("Text={0}", g_mFormMain.g_mUCPlaystationVR.Label_HDMIStatusText.Text).AppendLine()
+                                                   sTrackersList.AppendLine()
+
+                                                   sTrackersList.AppendFormat("[PlayStationVR USB]").AppendLine()
+                                                   sTrackersList.AppendFormat("Status={0}", g_mFormMain.g_mUCPlaystationVR.Label_USBStatus.Text).AppendLine()
+                                                   sTrackersList.AppendFormat("Text={0}", g_mFormMain.g_mUCPlaystationVR.Label_USBStatusText.Text).AppendLine()
+                                                   sTrackersList.AppendLine()
+
+                                                   sTrackersList.AppendFormat("[PlayStationVR Display]").AppendLine()
+                                                   sTrackersList.AppendFormat("Status={0}", g_mFormMain.g_mUCPlaystationVR.Label_DisplayStatus.Text).AppendLine()
+                                                   sTrackersList.AppendFormat("Text={0}", g_mFormMain.g_mUCPlaystationVR.Label_DisplayStatusText.Text).AppendLine()
+                                                   sTrackersList.AppendLine()
+                                               End Sub)
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM PlayStation VR"
+        End Function
+    End Class
+
+    Class ClassLogManagerVirtualTrackers
+        Implements ILogAction
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_FormMain As FormMain)
+            g_mFormMain = _FormMain
+        End Sub
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+            If (g_mFormMain.g_mUCVirtualTrackers Is Nothing) Then
+                Return
+            End If
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            ' Not thread-safe
+            ClassUtils.SyncInvoke(g_mFormMain, Sub()
+                                                   Dim mTrackers = g_mFormMain.g_mUCVirtualTrackers.GetAllDevices()
+                                                   For Each mItem In mTrackers
+                                                       sTrackersList.AppendFormat("[{0}]", mItem.m_DevicePath).AppendLine()
+                                                       sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                                       sTrackersList.AppendFormat("CameraFramerate={0}", mItem.g_mClassCaptureLogic.m_CameraFramerate).AppendLine()
+                                                       sTrackersList.AppendFormat("CameraResolution={0}", mItem.g_mClassCaptureLogic.m_CameraResolution).AppendLine()
+                                                       sTrackersList.AppendFormat("DeviceIndex={0}", mItem.g_mClassCaptureLogic.m_DeviceIndex).AppendLine()
+                                                       sTrackersList.AppendFormat("FlipImage={0}", mItem.g_mClassCaptureLogic.m_FlipImage).AppendLine()
+                                                       sTrackersList.AppendFormat("ImageInterpolation={0}", mItem.g_mClassCaptureLogic.m_ImageInterpolation).AppendLine()
+                                                       sTrackersList.AppendFormat("Initialized={0}", mItem.g_mClassCaptureLogic.m_Initialized).AppendLine()
+                                                       sTrackersList.AppendFormat("IsPlayStationCamera={0}", mItem.g_mClassCaptureLogic.m_IsPlayStationCamera).AppendLine()
+                                                       sTrackersList.AppendFormat("PipeConnected={0}", mItem.g_mClassCaptureLogic.m_PipeConnected).AppendLine()
+                                                       sTrackersList.AppendFormat("PipePrimaryIndex={0}", mItem.g_mClassCaptureLogic.m_PipePrimaryIndex).AppendLine()
+                                                       sTrackersList.AppendFormat("PipeSecondaryIndex={0}", mItem.g_mClassCaptureLogic.m_PipeSecondaryIndex).AppendLine()
+                                                       sTrackersList.AppendFormat("ShowCaptureImage={0}", mItem.g_mClassCaptureLogic.m_ShowCaptureImage).AppendLine()
+                                                       sTrackersList.AppendFormat("Supersampling={0}", mItem.g_mClassCaptureLogic.m_Supersampling).AppendLine()
+                                                       sTrackersList.AppendFormat("UseMJPG={0}", mItem.g_mClassCaptureLogic.m_UseMJPG).AppendLine()
+
+                                                       sTrackersList.AppendLine()
+                                                   Next
+                                               End Sub)
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "VDM Virtual Trackers"
+        End Function
+    End Class
+
+    Class ClassLogManagerSteamVrDrivers
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            Dim mConfig As New ClassOpenVRConfig
+            mConfig.LoadConfig()
+
+            For Each sDriver In mConfig.GetDrivers()
+                sTrackersList.AppendFormat("[{0}]", sDriver).AppendLine()
+            Next
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "SteamVR Drivers"
+        End Function
+    End Class
+
+    Class ClassLogManagerSteamVrManifests
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            Dim mConfig As New ClassSteamVRConfig
+            mConfig.LoadConfig()
+
+            mConfig.m_ClassManifests.LoadConfig()
+            For Each sManifest In mConfig.m_ClassManifests.GetManifests
+                sTrackersList.AppendFormat("[{0}]", sManifest).AppendLine()
+            Next
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "SteamVR Manifests"
+        End Function
+    End Class
+
+    Class ClassLogManagerSteamVrOverrides
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            Dim mConfig As New ClassSteamVRConfig
+            mConfig.LoadConfig()
+
+            For Each sOverrides In mConfig.m_ClassOverrides.GetOverrides
+                sTrackersList.AppendFormat("[{0}]", sOverrides.Key).AppendLine()
+                sTrackersList.AppendFormat("Override={0}", sOverrides.Value).AppendLine()
+            Next
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "SteamVR Overrides"
+        End Function
+    End Class
+
+    Class ClassLogManagerSteamVrSettings
+        Implements ILogAction
+
+        Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+
+            Dim sTrackersList As New Text.StringBuilder
+
+            Dim mConfig As New ClassSteamVRConfig
+            mConfig.LoadConfig()
+
+            sTrackersList.AppendFormat("[{0}]", mConfig.m_SteamPath).AppendLine()
+            sTrackersList.AppendFormat("ActivateMultipleDrivers={0}", mConfig.m_ClassSettings.m_ActivateMultipleDrivers).AppendLine()
+            sTrackersList.AppendFormat("EnableHomeApp={0}", mConfig.m_ClassSettings.m_EnableHomeApp).AppendLine()
+            sTrackersList.AppendFormat("EnableMirrorView={0}", mConfig.m_ClassSettings.m_EnableMirrorView).AppendLine()
+            sTrackersList.AppendFormat("EnablePerformanceGraph={0}", mConfig.m_ClassSettings.m_EnablePerformanceGraph).AppendLine()
+            sTrackersList.AppendFormat("ForcedDriver={0}", mConfig.m_ClassSettings.m_ForcedDriver).AppendLine()
+            sTrackersList.AppendFormat("NullHmdEnabled={0}", mConfig.m_ClassSettings.m_NullHmdEnabled).AppendLine()
+            sTrackersList.AppendFormat("RequireHmd={0}", mConfig.m_ClassSettings.m_RequireHmd).AppendLine()
+
+            mData(GetActionTitle()) = sTrackersList.ToString
+        End Sub
+
+        Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+            Return "SteamVR Settings"
+        End Function
+    End Class
 
     Private Sub CleanUp()
         If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
