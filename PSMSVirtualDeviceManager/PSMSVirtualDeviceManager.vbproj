@@ -250,6 +250,12 @@
     <Compile Include="StartPage\FormConnectedDevices.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="StartPage\FormTroubleshootLogs.Designer.vb">
+      <DependentUpon>FormTroubleshootLogs.vb</DependentUpon>
+    </Compile>
+    <Compile Include="StartPage\FormTroubleshootLogs.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="StartPage\UCStartPage.Designer.vb">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </Compile>
@@ -416,6 +422,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StartPage\FormConnectedDevices.resx">
       <DependentUpon>FormConnectedDevices.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StartPage\FormTroubleshootLogs.resx">
+      <DependentUpon>FormTroubleshootLogs.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StartPage\UCStartPage.resx">
       <DependentUpon>UCStartPage.vb</DependentUpon>

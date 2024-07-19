@@ -1328,54 +1328,6 @@ Public Class UCStartPage
         End Try
     End Sub
 
-    Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
-        Try
-            Dim mConfig As New ClassServiceInfo
-            mConfig.LoadConfig()
-
-            If (Not mConfig.FileExist()) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
-                Else
-                    If (mConfig.SearchForService) Then
-                        mConfig.SaveConfig()
-                    Else
-                        Return
-                    End If
-                End If
-            End If
-
-            Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
-            Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
-
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = "notepad.exe"
-                mProcess.StartInfo.Arguments = String.Format("""{0}""", sLogFile)
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.System))
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-            End Using
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-    End Sub
-
-    Private Sub LinkLabel_ShowAppLogs_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ShowAppLogs.LinkClicked
-        Try
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = "notepad.exe"
-                mProcess.StartInfo.Arguments = String.Format("""{0}""", ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.System))
-                mProcess.StartInfo.UseShellExecute = False
-
-                mProcess.Start()
-            End Using
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-    End Sub
-
     Public Sub LinkLabel_ServicePath_Click()
         LinkLabel_ServicePath_LinkClicked(Nothing, Nothing)
     End Sub
@@ -1591,6 +1543,12 @@ Public Class UCStartPage
 
     Private Sub ContextMenuStrip_Chart_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip_Chart.Opening
         ToolStripMenuItem_ChartEnabled.Checked = Chart_ServicePerformance.Enabled
+    End Sub
+
+    Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
+        Using mLogs As New FormTroubleshootLogs
+            mLogs.ShowDialog(Me)
+        End Using
     End Sub
 End Class
 

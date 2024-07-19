@@ -28,12 +28,11 @@ Partial Class UCStartPage
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCStartPage))
-        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_ShowAppLogs = New System.Windows.Forms.LinkLabel()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ServiceLog = New System.Windows.Forms.LinkLabel()
@@ -197,7 +196,6 @@ Partial Class UCStartPage
         '
         'Panel7
         '
-        Me.Panel7.Controls.Add(Me.LinkLabel_ShowAppLogs)
         Me.Panel7.Controls.Add(Me.Label7)
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
         Me.Panel7.Controls.Add(Me.LinkLabel_ServiceLog)
@@ -208,23 +206,6 @@ Partial Class UCStartPage
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(430, 141)
         Me.Panel7.TabIndex = 7
-        '
-        'LinkLabel_ShowAppLogs
-        '
-        Me.LinkLabel_ShowAppLogs.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ShowAppLogs.AutoSize = True
-        Me.LinkLabel_ShowAppLogs.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ShowAppLogs.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ShowAppLogs.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ShowAppLogs.Location = New System.Drawing.Point(103, 57)
-        Me.LinkLabel_ShowAppLogs.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
-        Me.LinkLabel_ShowAppLogs.Name = "LinkLabel_ShowAppLogs"
-        Me.LinkLabel_ShowAppLogs.Size = New System.Drawing.Size(216, 13)
-        Me.LinkLabel_ShowAppLogs.TabIndex = 34
-        Me.LinkLabel_ShowAppLogs.TabStop = True
-        Me.LinkLabel_ShowAppLogs.Text = "Show Virtual Device Manager Exceptions"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ShowAppLogs, "Tooltip")
-        Me.LinkLabel_ShowAppLogs.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Label7
         '
@@ -259,10 +240,10 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceLog.Location = New System.Drawing.Point(103, 40)
         Me.LinkLabel_ServiceLog.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceLog.Name = "LinkLabel_ServiceLog"
-        Me.LinkLabel_ServiceLog.Size = New System.Drawing.Size(101, 13)
+        Me.LinkLabel_ServiceLog.Size = New System.Drawing.Size(117, 13)
         Me.LinkLabel_ServiceLog.TabIndex = 31
         Me.LinkLabel_ServiceLog.TabStop = True
-        Me.LinkLabel_ServiceLog.Text = "Show Service Logs"
+        Me.LinkLabel_ServiceLog.Text = "Logs and Diagnostics"
         Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServiceLog, "Tooltip")
         Me.LinkLabel_ServiceLog.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
@@ -273,7 +254,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceFactory.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceFactory.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceFactory.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 79)
+        Me.LinkLabel_ServiceFactory.Location = New System.Drawing.Point(103, 62)
         Me.LinkLabel_ServiceFactory.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_ServiceFactory.Name = "LinkLabel_ServiceFactory"
         Me.LinkLabel_ServiceFactory.Size = New System.Drawing.Size(153, 13)
@@ -1200,11 +1181,11 @@ Partial Class UCStartPage
         '
         'Chart_ServicePerformance
         '
-        ChartArea1.Name = "ChartArea1"
-        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea1)
+        ChartArea2.Name = "ChartArea1"
+        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea2)
         Me.Chart_ServicePerformance.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend1.Name = "Legend1"
-        Me.Chart_ServicePerformance.Legends.Add(Legend1)
+        Legend2.Name = "Legend1"
+        Me.Chart_ServicePerformance.Legends.Add(Legend2)
         Me.Chart_ServicePerformance.Location = New System.Drawing.Point(0, 42)
         Me.Chart_ServicePerformance.Name = "Chart_ServicePerformance"
         Me.Chart_ServicePerformance.Size = New System.Drawing.Size(859, 320)
@@ -1264,7 +1245,7 @@ Partial Class UCStartPage
         '
         Me.ContextMenuStrip_Chart.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_ChartEnabled, Me.ToolStripMenuItem_ChartClear, Me.ToolStripSeparator1, Me.ToolStripMenuItem1, Me.ToolStripComboBox_ChartSamples})
         Me.ContextMenuStrip_Chart.Name = "ContextMenuStrip_Chart"
-        Me.ContextMenuStrip_Chart.Size = New System.Drawing.Size(182, 125)
+        Me.ContextMenuStrip_Chart.Size = New System.Drawing.Size(182, 103)
         '
         'ToolStripMenuItem_ChartEnabled
         '
@@ -1443,7 +1424,6 @@ Partial Class UCStartPage
     Friend WithEvents Panel23 As Panel
     Friend WithEvents LinkLabel_UninstallPS4CamDrivers As LinkLabel
     Friend WithEvents LinkLabel_InstallPS4CamDrivers As LinkLabel
-    Friend WithEvents LinkLabel_ShowAppLogs As LinkLabel
     Friend WithEvents LinkLabel_ManageConnectedDevices As LinkLabel
     Friend WithEvents ColumnHeader_FPS As ColumnHeader
     Friend WithEvents Panel13 As Panel
