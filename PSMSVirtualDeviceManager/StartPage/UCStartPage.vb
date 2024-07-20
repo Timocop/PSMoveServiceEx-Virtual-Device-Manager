@@ -1378,9 +1378,7 @@ Public Class UCStartPage
 
                                                               If (Not mConfig.FileExist()) Then
                                                                   If (Not mConfig.FindByProcess()) Then
-                                                                      If (Not mConfig.SearchForService()) Then
-                                                                          Throw New ArgumentException("Unable to find PSMoveServiceEx")
-                                                                      End If
+                                                                      Throw New ArgumentException("Unable to find PSMoveServiceEx")
                                                                   End If
                                                               End If
 
