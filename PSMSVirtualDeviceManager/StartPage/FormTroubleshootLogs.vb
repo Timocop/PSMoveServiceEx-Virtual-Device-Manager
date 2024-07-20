@@ -202,11 +202,15 @@ Public Class FormTroubleshootLogs
 
             Using mProcess As New Process
                 mProcess.StartInfo.FileName = sRootFolder
-                mProcess.StartInfo.Arguments = String.Format("/t ""{0}""", sOutputFile)
+                mProcess.StartInfo.Arguments = String.Format("/whql:off /t ""{0}""", sOutputFile)
                 mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sRootFolder)
                 mProcess.StartInfo.CreateNoWindow = True
                 mProcess.StartInfo.UseShellExecute = True
                 mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+
+                If (Environment.OSVersion.Version.Major > 5) Then
+                    mProcess.StartInfo.Verb = "runas"
+                End If
 
                 mProcess.Start()
                 mProcess.WaitForExit()
@@ -232,15 +236,8 @@ Public Class FormTroubleshootLogs
             mConfig.LoadConfig()
 
             If (Not mConfig.FileExist()) Then
-                If (mConfig.FindByProcess()) Then
-                    mConfig.SaveConfig()
-                Else
-                    If (mConfig.SearchForService) Then
-                        mConfig.SaveConfig()
-                    Else
-                        ' Logs does not exist
-                        Return
-                    End If
+                If (Not mConfig.FindByProcess()) Then
+                    Throw New ArgumentException("PSMoveServiceEx not found")
                 End If
             End If
 
