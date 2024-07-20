@@ -91,11 +91,10 @@ Public Class FormTroubleshootLogs
 
         For Each mItem In m_FileContent
             sContent.AppendFormat("{0} {1} {2}", New String("#"c, 32), mItem.Key, New String("#"c, 32)).AppendLine()
-            sContent.AppendLine("{")
+            sContent.AppendLine()
 
             sContent.AppendLine(mItem.Value)
 
-            sContent.AppendLine("}")
             sContent.AppendLine()
         Next
 
@@ -221,7 +220,10 @@ Public Class FormTroubleshootLogs
                 Throw New ArgumentException("DxDiag output log does not exist")
             End If
 
-            mData(GetActionTitle()) = IO.File.ReadAllText(sOutputFile)
+            Dim sContent As New Text.StringBuilder()
+            sContent.AppendLine("[System]")
+            sContent.AppendLine(IO.File.ReadAllText(sOutputFile))
+            mData(GetActionTitle()) = sContent.ToString
         End Sub
 
         Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
