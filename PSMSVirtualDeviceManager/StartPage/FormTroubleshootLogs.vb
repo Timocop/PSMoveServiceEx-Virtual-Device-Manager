@@ -826,11 +826,7 @@ Public Class FormTroubleshootLogs
                     sTrackersList.AppendFormat("[{0}]", mProvider.sDeviceID).AppendLine()
                     sTrackersList.AppendFormat("Name={0}", mDevice.Value.sName).AppendLine()
                     sTrackersList.AppendFormat("Manufacture={0}", mDevice.Value.sManufacture).AppendLine()
-                    sTrackersList.AppendFormat("Service={0}", mDevice.Value.sService).AppendLine()
-                    sTrackersList.AppendFormat("Driver={0}", mDevice.Value.iDriver).AppendLine()
-                    sTrackersList.AppendFormat("PID={0}", mDevice.Value.PID).AppendLine()
-                    sTrackersList.AppendFormat("VID={0}", mDevice.Value.VID).AppendLine()
-                    sTrackersList.AppendFormat("MM={0}", mDevice.Value.MM).AppendLine()
+                    sTrackersList.AppendFormat("ExpectedService={0}", mDevice.Value.sService).AppendLine()
 
                     sTrackersList.AppendFormat("DriverInfPath={0}", mProvider.sDriverInfPath).AppendLine()
                     sTrackersList.AppendFormat("ProviderDescription={0}", mProvider.sProviderDescription).AppendLine()
