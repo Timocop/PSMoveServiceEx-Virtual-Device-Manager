@@ -271,7 +271,8 @@ Public Class FormConnectedDevices
                         Dim sVID As String = Nothing
                         Dim sPID As String = Nothing
                         Dim sMM As String = Nothing
-                        If (Not mLibusbDriver.ResolveHardwareID(mDevice.sDeviceID, sVID, sPID, sMM)) Then
+                        Dim sSerial As String = Nothing
+                        If (Not mLibusbDriver.ResolveHardwareID(mDevice.sDeviceID, sVID, sPID, sMM, sSerial)) Then
                             Continue For
                         End If
 

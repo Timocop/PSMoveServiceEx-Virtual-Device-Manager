@@ -1184,16 +1184,21 @@ Public Class ClassLibusbDriver
     ''' <param name="sPID"></param>
     ''' <param name="sMM"></param>
     ''' <returns></returns>
-    Public Function ResolveHardwareID(sHardwareId As String, ByRef sVID As String, ByRef sPID As String, ByRef sMM As String) As Boolean
+    Public Function ResolveHardwareID(sHardwareId As String, ByRef sVID As String, ByRef sPID As String, ByRef sMM As String, ByRef sSerial As String) As Boolean
         sVID = Nothing
         sPID = Nothing
         sMM = Nothing
+        sSerial = Nothing
 
         Dim sPathSplit As String() = sHardwareId.Split(New Char() {"\"c, "/"c})
 
-        For Each sPath As String In sPathSplit
-            If (sPath.ToUpperInvariant.IndexOf("VID_") > -1 AndAlso sPath.ToUpperInvariant.IndexOf("PID_") > -1) Then
-                Dim sIdSplit As String() = sPath.Split("&"c)
+        For i = 0 To sPathSplit.Length - 1
+            If (sPathSplit(i).ToUpperInvariant.IndexOf("VID_") > -1 AndAlso sPathSplit(i).ToUpperInvariant.IndexOf("PID_") > -1) Then
+                Dim sIdSplit As String() = sPathSplit(i).Split("&"c)
+
+                If (i + 1 < sPathSplit.Length) Then
+                    sSerial = sPathSplit(i + 1)
+                End If
 
                 Select Case (sIdSplit.Length)
                     Case 2
