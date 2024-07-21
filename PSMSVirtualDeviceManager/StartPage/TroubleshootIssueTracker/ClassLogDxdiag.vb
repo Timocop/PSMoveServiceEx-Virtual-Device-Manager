@@ -133,7 +133,7 @@ Public Class ClassLogDxdiag
             mTemplate.bValid = False
             mTemplate.sMessage = "Not enough USB 3.0 Host Controllers"
             mTemplate.sDescription = "This computer does not have enough USB host controllers which limits the amount of devices you can connect to your computer simultaneously."
-            mTemplate.sSolution = "Switch the computer mainboard that has more USB host controllers or get a PCI-Express USB card and attach it to your computer."
+            mTemplate.sSolution = "Switch the computer mainboard that has more USB host controllers or get a PCI-Express USB card and install it in your computer."
             mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
 
             Dim iUsbHostCount As Integer = 0

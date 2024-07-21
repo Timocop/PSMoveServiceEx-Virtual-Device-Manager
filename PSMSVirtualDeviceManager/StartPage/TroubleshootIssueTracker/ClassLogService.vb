@@ -64,6 +64,9 @@ Public Class ClassLogService
             mIssues.AddRange(CheckServiceFps)
             mIssues.AddRange(CheckServiceLegacy)
             mIssues.AddRange(CheckServiceConfigReset)
+            mIssues.AddRange(CheckServiceRadioFail)
+            mIssues.AddRange(CheckServiceRadioAssignFail)
+            mIssues.AddRange(CheckServiceDeviceOpenFail)
             Return mIssues.ToArray
         End Function
 
@@ -92,6 +95,7 @@ Public Class ClassLogService
 
                 If (sLine.Contains("Starting PSMoveServiceEx")) Then
                     Dim mMatch As Match = Regex.Match(sLine, "Starting PSMoveServiceEx v(?<Version>0.27.0.0)", RegexOptions.IgnoreCase)
+
                     If (mMatch.Success AndAlso mMatch.Groups("Version").Success) Then
                         Try
                             Dim sCurrentVersion As String = mMatch.Groups("Version").Value
@@ -107,6 +111,8 @@ Public Class ClassLogService
                                 mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
                                 mNewIssue.sSolution = String.Format(mTemplate.sSolution, New Version(sNextVersion).ToString)
                                 mNewIssue.iType = mTemplate.iType
+
+                                mIssues.Add(mNewIssue)
                             End If
                         Catch ex As Threading.ThreadAbortException
                             Throw
@@ -148,6 +154,7 @@ Public Class ClassLogService
                 If (sLine.Contains("PSMoveServiceEx - Main thread running")) Then
                     Dim mAvgMatch As Match = Regex.Match(sLine, "Main thread running at (?<Average>(\d+)) FPS average", RegexOptions.IgnoreCase)
                     Dim mMiNMatch As Match = Regex.Match(sLine, "Lowest FPS was (?<Minimum>(\d+))", RegexOptions.IgnoreCase)
+
                     If (mAvgMatch.Success AndAlso mMiNMatch.Success AndAlso mAvgMatch.Groups("Average").Success AndAlso mMiNMatch.Groups("Minimum").Success) Then
                         Dim iFpsAvg As Integer = CInt(mAvgMatch.Groups("Average").Value)
                         Dim iFpsMinimum As Integer = CInt(mMiNMatch.Groups("Minimum").Value)
@@ -159,6 +166,8 @@ Public Class ClassLogService
                             mNewIssue.sDescription = String.Format(mTemplate.sDescription, iFpsAvg, iFpsMinimum)
                             mNewIssue.sSolution = mTemplate.sSolution
                             mNewIssue.iType = mTemplate.iType
+
+                            mIssues.Add(mNewIssue)
                         End If
                     End If
 
@@ -200,6 +209,8 @@ Public Class ClassLogService
                     mNewIssue.sSolution = mTemplate.sSolution
                     mNewIssue.iType = mTemplate.iType
 
+                    mIssues.Add(mNewIssue)
+
                     Exit For
                 End If
             Next
@@ -238,7 +249,138 @@ Public Class ClassLogService
                     mNewIssue.sSolution = mTemplate.sSolution
                     mNewIssue.iType = mTemplate.iType
 
+                    mIssues.Add(mNewIssue)
+
                     Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceRadioFail() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Failed to retrieve bluetooth adapter information"
+            mTemplate.sDescription = "PSMoveServiceEx is unable to retrieve any bluetooth adapter information."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Failed to retrieve radio info")) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE
+                    mNewIssue.bValid = True
+                    mNewIssue.sMessage = mTemplate.sMessage
+                    mNewIssue.sDescription = mTemplate.sDescription
+                    mNewIssue.sSolution = mTemplate.sSolution
+                    mNewIssue.iType = mTemplate.iType
+
+                    mIssues.Add(mNewIssue)
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceRadioAssignFail() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Failed to set host address"
+            mTemplate.sDescription = "PSMoveServiceEx failed to asign the host address to the controller id {0}."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Failed to set host address")) Then
+                    Dim mMatch As Match = Regex.Match(sLine, "on controller id (?<ID>(\d+))", RegexOptions.IgnoreCase)
+
+                    If (mMatch.Success AndAlso mMatch.Groups("ID").Success) Then
+                        Dim iControllerID As Integer = CInt(mMatch.Groups("ID").Value)
+
+                        Dim mNewIssue As New STRUC_LOG_ISSUE
+                        mNewIssue.bValid = True
+                        mNewIssue.sMessage = mTemplate.sMessage
+                        mNewIssue.sDescription = String.Format(mTemplate.sDescription, iControllerID)
+                        mNewIssue.sSolution = mTemplate.sSolution
+                        mNewIssue.iType = mTemplate.iType
+
+                        mIssues.Add(mNewIssue)
+                    End If
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceDeviceOpenFail() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Failed to open device"
+            mTemplate.sDescription = "PSMoveServiceEx failed to open device id {0} ({1})."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Device device_id") AndAlso sLine.Contains("failed to open!")) Then
+                    Dim mMatch As Match = Regex.Match(sLine, "Device device_id (?<DeviceID>(\d+)) \(?<Path>(.*?)\) failed to open!", RegexOptions.IgnoreCase)
+
+                    If (mMatch.Success AndAlso mMatch.Groups("DeviceID").Success AndAlso mMatch.Groups("Path").Success) Then
+                        Dim iDeviceID As Integer = CInt(mMatch.Groups("DeviceID").Value)
+                        Dim sPath As String = CStr(mMatch.Groups("Path").Value)
+
+                        Dim mNewIssue As New STRUC_LOG_ISSUE
+                        mNewIssue.bValid = True
+                        mNewIssue.sMessage = mTemplate.sMessage
+                        mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceID, sPath)
+                        mNewIssue.sSolution = mTemplate.sSolution
+                        mNewIssue.iType = mTemplate.iType
+
+                        mIssues.Add(mNewIssue)
+                    End If
                 End If
             Next
 
