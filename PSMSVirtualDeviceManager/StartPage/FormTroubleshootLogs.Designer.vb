@@ -145,6 +145,9 @@ Partial Class FormTroubleshootLogs
         '
         'TabControl_Diagnostic
         '
+        Me.TabControl_Diagnostic.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Logs)
         Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Issues)
         Me.TabControl_Diagnostic.Location = New System.Drawing.Point(12, 12)
@@ -229,6 +232,7 @@ Partial Class FormTroubleshootLogs
         Me.TextBox_IssueInfo.Multiline = True
         Me.TextBox_IssueInfo.Name = "TextBox_IssueInfo"
         Me.TextBox_IssueInfo.ReadOnly = True
+        Me.TextBox_IssueInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.TextBox_IssueInfo.Size = New System.Drawing.Size(752, 147)
         Me.TextBox_IssueInfo.TabIndex = 1
         '

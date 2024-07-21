@@ -67,6 +67,10 @@ Public Class ClassLogService
             mIssues.AddRange(CheckServiceRadioFail)
             mIssues.AddRange(CheckServiceRadioAssignFail)
             mIssues.AddRange(CheckServiceDeviceOpenFail)
+            mIssues.AddRange(CheckServiceDeviceLimit)
+            mIssues.AddRange(CheckServiceMorpheusFail)
+            mIssues.AddRange(CheckServicePairingNotFound)
+            mIssues.AddRange(CheckServicePairingFail)
             Return mIssues.ToArray
         End Function
 
@@ -271,7 +275,7 @@ Public Class ClassLogService
             mTemplate.sMessage = "Failed to retrieve bluetooth adapter information"
             mTemplate.sDescription = "PSMoveServiceEx is unable to retrieve any bluetooth adapter information."
             mTemplate.sSolution = ""
-            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
 
             Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
             For i = 0 To sLines.Length - 1
@@ -311,7 +315,7 @@ Public Class ClassLogService
             mTemplate.sMessage = "Failed to set host address"
             mTemplate.sDescription = "PSMoveServiceEx failed to asign the host address to the controller id {0}."
             mTemplate.sSolution = ""
-            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
 
             Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
             For i = 0 To sLines.Length - 1
@@ -355,7 +359,7 @@ Public Class ClassLogService
             mTemplate.sMessage = "Failed to open device"
             mTemplate.sDescription = "PSMoveServiceEx failed to open device id {0} ({1})."
             mTemplate.sSolution = ""
-            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
 
             Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
             For i = 0 To sLines.Length - 1
@@ -381,6 +385,236 @@ Public Class ClassLogService
 
                         mIssues.Add(mNewIssue)
                     End If
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceDeviceLimit() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Device limit reached"
+            mTemplate.sDescription = "PSMoveServiceEx could not open any more devices due to the device limit being hit."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Can't connect any more new devices. Too many open device")) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE
+                    mNewIssue.bValid = True
+                    mNewIssue.sMessage = mTemplate.sMessage
+                    mNewIssue.sDescription = mTemplate.sDescription
+                    mNewIssue.sSolution = mTemplate.sSolution
+                    mNewIssue.iType = mTemplate.iType
+
+                    mIssues.Add(mNewIssue)
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceMorpheusFail() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Failed to open PlayStation VR Head-mounted Display"
+            mTemplate.sDescription = "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+
+            Dim mDisabledTemplate As New STRUC_LOG_ISSUE
+            mDisabledTemplate.bValid = False
+            mDisabledTemplate.sMessage = "Failed to open PlayStation VR"
+            mDisabledTemplate.sDescription = "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display device (Morpheus) because it has been disabled."
+            mDisabledTemplate.sSolution = ""
+            mDisabledTemplate.iType = ENUM_LOG_ISSUE_TYPE.INFO
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+
+                If (sLine.Contains("Failed to open MorpheusHMD")) Then
+                    If (sLine.Contains("MorpheusHMD is disabled")) Then
+                        Dim mNewIssue As New STRUC_LOG_ISSUE
+                        mNewIssue.bValid = True
+                        mNewIssue.sMessage = mDisabledTemplate.sMessage
+                        mNewIssue.sDescription = mDisabledTemplate.sDescription
+                        mNewIssue.sSolution = mDisabledTemplate.sSolution
+                        mNewIssue.iType = mDisabledTemplate.iType
+
+                        mIssues.Add(mNewIssue)
+                    Else
+                        Dim mNewIssue As New STRUC_LOG_ISSUE
+                        mNewIssue.bValid = True
+                        mNewIssue.sMessage = mTemplate.sMessage
+                        mNewIssue.sDescription = mTemplate.sDescription
+                        mNewIssue.sSolution = mTemplate.sSolution
+                        mNewIssue.iType = mTemplate.iType
+
+                        mIssues.Add(mNewIssue)
+                    End If
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServicePairingNotFound() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mDeviceList As New List(Of String)
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Failed to find bluetooth device"
+            mTemplate.sDescription = "PSMoveServiceEx could not find the target bluetooth device for pairing ({0})."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("No Bluetooth device found matching the given address")) Then
+                    Dim mMatch As Match = Regex.Match(sLine, "No Bluetooth device found matching the given address\: (?<Address>(..\:..\:..\:..\:..\:..))", RegexOptions.IgnoreCase)
+
+                    If (mMatch.Success AndAlso mMatch.Groups("Address").Success) Then
+                        Dim sDeviceAddress As String = mMatch.Groups("Address").Value.Trim.ToUpperInvariant
+
+                        If (Not mDeviceList.Contains(sDeviceAddress)) Then
+                            Dim mNewIssue As New STRUC_LOG_ISSUE
+                            mNewIssue.bValid = True
+                            mNewIssue.sMessage = mTemplate.sMessage
+                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceAddress)
+                            mNewIssue.sSolution = mTemplate.sSolution
+                            mNewIssue.iType = mTemplate.iType
+
+                            mIssues.Add(mNewIssue)
+
+                            mDeviceList.Add(sDeviceAddress)
+                        End If
+                    End If
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServicePairingFail() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Multiple bluetooth pairing issues"
+            mTemplate.sDescription = "PSMoveServiceEx encountered multiple bluetooth pairing issues. See logs for more details."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+
+            Dim sTotalFailures As String() = {
+                "No Bluetooth device found matching the given address",
+                "Failed to get registry value. Error Code",
+                "Failed to set 'VirtuallyCabled'",
+                "Failed to build registry subkey",
+                "Failed to create registry key",
+                "Failed to enumerate installed services",
+                "Failed to count installed services",
+                "Failed to enumerate attached bluetooth devices",
+                "Failed to close bluetooth device enumeration handle",
+                "Failed to read device info",
+                "Bluetooth device matching the given address is not an expected controller type",
+                "BluetoothRegisterForAuthentication failed given address",
+                "Failed to authenticate",
+                "Invalid parameter",
+                "User canceled the authentication",
+                "Failed to reset event",
+                "Failed to set event",
+                "BluetoothSendAuthenticationResponseEx failed",
+                "Not authenticated",
+                "Device not ready",
+                "Failure during authentication",
+                "Bluetooth device denied passkey response",
+                "Failed to enable incoming connections on radio",
+                "Failed to enable radio",
+                "Failed to enable HID service. Error code:"
+            }
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (Not sLine.Contains("Bluetooth")) Then
+                    Continue For
+                End If
+
+                Dim bFailed As Boolean = False
+                For Each sFailure As String In sTotalFailures
+                    If (sLine.Contains(sFailure)) Then
+                        bFailed = True
+                        Exit For
+                    End If
+                Next
+
+
+                If (bFailed) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE
+                    mNewIssue.bValid = True
+                    mNewIssue.sMessage = mTemplate.sMessage
+                    mNewIssue.sDescription = mTemplate.sDescription
+                    mNewIssue.sSolution = mTemplate.sSolution
+                    mNewIssue.iType = mTemplate.iType
+
+                    mIssues.Add(mNewIssue)
+
+                    Exit For
                 End If
             Next
 
