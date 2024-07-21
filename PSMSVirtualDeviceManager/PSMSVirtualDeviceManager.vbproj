@@ -256,6 +256,22 @@
     <Compile Include="StartPage\FormTroubleshootLogs.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogDxdiag.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManageOscDevices.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManager.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerAttachments.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerHardware.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerPSVR.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerRemoteDevices.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerSteamVrDrivers.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerSteamVrManifests.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerSteamVrOverrides.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerSteamVrSettings.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerVirtualTrackers.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManagerVmtTrackers.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManageServiceDevices.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogProcesses.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogService.vb" />
     <Compile Include="StartPage\UCStartPage.Designer.vb">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </Compile>

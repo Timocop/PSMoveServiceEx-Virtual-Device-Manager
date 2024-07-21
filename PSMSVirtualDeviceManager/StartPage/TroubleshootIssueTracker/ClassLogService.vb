@@ -1,0 +1,248 @@
+﻿Imports System.Text.RegularExpressions
+Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+
+Public Class ClassLogService
+    Implements ILogAction
+
+    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+        Dim mConfig As New ClassServiceInfo
+        mConfig.LoadConfig()
+
+        If (Not mConfig.FileExist()) Then
+            If (Not mConfig.FindByProcess()) Then
+                Throw New ArgumentException("PSMoveServiceEx not found")
+            End If
+        End If
+
+        If (Not mConfig.FileExist) Then
+            Return
+        End If
+
+        Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
+        Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
+
+        If (Not IO.File.Exists(sLogFile)) Then
+            Return
+        End If
+
+        Dim sTmp As String = IO.Path.GetTempFileName
+        IO.File.Copy(sLogFile, sTmp, True)
+
+        mData(GetActionTitle()) = IO.File.ReadAllText(sTmp)
+        IO.File.Delete(sTmp)
+    End Sub
+
+    Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
+        Return SECTION_PSMOVESERVICEEX
+    End Function
+
+    Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
+        Dim mTracker As New ClassIssuesTracker(mData)
+        Return mTracker.GetIssues
+    End Function
+
+    Class ClassIssuesTracker
+        Implements IIssuesTracker
+
+        Private g_mData As Dictionary(Of String, String)
+
+        Public Sub New(_Data As Dictionary(Of String, String))
+            g_mData = _Data
+        End Sub
+
+        Public Function GetSectionContent() As String Implements IIssuesTracker.GetSectionContent
+            If (Not g_mData.ContainsKey(SECTION_PSMOVESERVICEEX)) Then
+                Return Nothing
+            End If
+
+            Return g_mData(SECTION_PSMOVESERVICEEX)
+        End Function
+
+        Public Function GetIssues() As STRUC_LOG_ISSUE() Implements IIssuesTracker.GetIssues
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+            mIssues.AddRange(CheckServiceVersion)
+            mIssues.AddRange(CheckServiceFps)
+            mIssues.AddRange(CheckServiceLegacy)
+            mIssues.AddRange(CheckServiceConfigReset)
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceVersion() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Outdated PSMoveServiceEx Version - v{0}"
+            mTemplate.sDescription = "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features."
+            mTemplate.sSolution = "Udpate PSMoveServiceEx to v{0}."
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Starting PSMoveServiceEx")) Then
+                    Dim mMatch As Match = Regex.Match(sLine, "Starting PSMoveServiceEx v(?<Version>0.27.0.0)", RegexOptions.IgnoreCase)
+                    If (mMatch.Success AndAlso mMatch.Groups("Version").Success) Then
+                        Try
+                            Dim sCurrentVersion As String = mMatch.Groups("Version").Value
+                            Dim sNextVersion As String = ClassUpdate.ClassPsms.GetNextVersion(Nothing)
+
+                            sNextVersion = Regex.Match(sNextVersion, "[0-9\.]+").Value
+                            sCurrentVersion = Regex.Match(sCurrentVersion, "[0-9\.]+").Value
+
+                            If (New Version(sNextVersion) > New Version(sCurrentVersion)) Then
+                                Dim mNewIssue As New STRUC_LOG_ISSUE
+                                mNewIssue.bValid = True
+                                mNewIssue.sMessage = String.Format(mTemplate.sMessage, New Version(sCurrentVersion).ToString)
+                                mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
+                                mNewIssue.sSolution = String.Format(mTemplate.sSolution, New Version(sNextVersion).ToString)
+                                mNewIssue.iType = mTemplate.iType
+                            End If
+                        Catch ex As Threading.ThreadAbortException
+                            Throw
+                        Catch ex As Exception
+                            ' Ignore any connection issues
+                        End Try
+                    End If
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceFps() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "PSMoveServiceEx framerate too low"
+            mTemplate.sDescription = "PSMoveServiceEx is running at a very low framerate {0} (minimum {1}) which can cause bad tracking quality."
+            mTemplate.sSolution = "Upgrade your computers CPU."
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("PSMoveServiceEx - Main thread running")) Then
+                    Dim mAvgMatch As Match = Regex.Match(sLine, "Main thread running at (?<Average>(\d+)) FPS average", RegexOptions.IgnoreCase)
+                    Dim mMiNMatch As Match = Regex.Match(sLine, "Lowest FPS was (?<Minimum>(\d+))", RegexOptions.IgnoreCase)
+                    If (mAvgMatch.Success AndAlso mMiNMatch.Success AndAlso mAvgMatch.Groups("Average").Success AndAlso mMiNMatch.Groups("Minimum").Success) Then
+                        Dim iFpsAvg As Integer = CInt(mAvgMatch.Groups("Average").Value)
+                        Dim iFpsMinimum As Integer = CInt(mMiNMatch.Groups("Minimum").Value)
+
+                        If (iFpsAvg < 100 OrElse iFpsMinimum < 100) Then
+                            Dim mNewIssue As New STRUC_LOG_ISSUE
+                            mNewIssue.bValid = True
+                            mNewIssue.sMessage = mTemplate.sMessage
+                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, iFpsAvg, iFpsMinimum)
+                            mNewIssue.sSolution = mTemplate.sSolution
+                            mNewIssue.iType = mTemplate.iType
+                        End If
+                    End If
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceLegacy() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Legacy PSMoveService configuration"
+            mTemplate.sDescription = "Legacy PSMoveService configuration has been found. Using legacy configuration can cause abnormal tracking side effects and bad performance."
+            mTemplate.sSolution = "By default PSMoveServieEx should factory reset all configurations automatically when a legacy configuration has been found. But a full factory reset and uninstalling legacy PSMoveService is recommended."
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Legacy PSMoveService config detected")) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE
+                    mNewIssue.bValid = True
+                    mNewIssue.sMessage = mTemplate.sMessage
+                    mNewIssue.sDescription = mTemplate.sDescription
+                    mNewIssue.sSolution = mTemplate.sSolution
+                    mNewIssue.iType = mTemplate.iType
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceConfigReset() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Some configration have been factory reset"
+            mTemplate.sDescription = "Some configurations have been factory reset due to version mismatch and some devices have to be configured again."
+            mTemplate.sSolution = ""
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Config version") AndAlso sLine.Contains("does not match expected version")) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE
+                    mNewIssue.bValid = True
+                    mNewIssue.sMessage = mTemplate.sMessage
+                    mNewIssue.sDescription = mTemplate.sDescription
+                    mNewIssue.sSolution = mTemplate.sSolution
+                    mNewIssue.iType = mTemplate.iType
+
+                    Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+    End Class
+End Class

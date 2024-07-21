@@ -26,18 +26,38 @@ Partial Class FormTroubleshootLogs
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Button_LogCheckIssues = New System.Windows.Forms.Button()
+        Me.Button_LogLoad = New System.Windows.Forms.Button()
         Me.Button_LogSave = New System.Windows.Forms.Button()
         Me.Button_LogCopy = New System.Windows.Forms.Button()
         Me.Button_LogRefresh = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.TabControl_Logs = New System.Windows.Forms.TabControl()
+        Me.TabControl_Diagnostic = New System.Windows.Forms.TabControl()
+        Me.TabPage_Logs = New System.Windows.Forms.TabPage()
+        Me.TabPage_Issues = New System.Windows.Forms.TabPage()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.ListView_Issues = New System.Windows.Forms.ListView()
+        Me.ColumnHeader_Message = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ImageList_Issues = New System.Windows.Forms.ImageList(Me.components)
+        Me.TextBox_IssueInfo = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
+        Me.TabControl_Diagnostic.SuspendLayout()
+        Me.TabPage_Logs.SuspendLayout()
+        Me.TabPage_Issues.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.SystemColors.Control
+        Me.Panel1.Controls.Add(Me.Button_LogCheckIssues)
+        Me.Panel1.Controls.Add(Me.Button_LogLoad)
         Me.Panel1.Controls.Add(Me.Button_LogSave)
         Me.Panel1.Controls.Add(Me.Button_LogCopy)
         Me.Panel1.Controls.Add(Me.Button_LogRefresh)
@@ -47,6 +67,28 @@ Partial Class FormTroubleshootLogs
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(784, 48)
         Me.Panel1.TabIndex = 0
+        '
+        'Button_LogCheckIssues
+        '
+        Me.Button_LogCheckIssues.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_LogCheckIssues.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_LogCheckIssues.Location = New System.Drawing.Point(472, 13)
+        Me.Button_LogCheckIssues.Name = "Button_LogCheckIssues"
+        Me.Button_LogCheckIssues.Size = New System.Drawing.Size(116, 23)
+        Me.Button_LogCheckIssues.TabIndex = 5
+        Me.Button_LogCheckIssues.Text = "Check for issues"
+        Me.Button_LogCheckIssues.UseVisualStyleBackColor = True
+        '
+        'Button_LogLoad
+        '
+        Me.Button_LogLoad.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_LogLoad.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_LogLoad.Location = New System.Drawing.Point(594, 13)
+        Me.Button_LogLoad.Name = "Button_LogLoad"
+        Me.Button_LogLoad.Size = New System.Drawing.Size(86, 23)
+        Me.Button_LogLoad.TabIndex = 4
+        Me.Button_LogLoad.Text = "Load"
+        Me.Button_LogLoad.UseVisualStyleBackColor = True
         '
         'Button_LogSave
         '
@@ -92,15 +134,103 @@ Partial Class FormTroubleshootLogs
         '
         'TabControl_Logs
         '
-        Me.TabControl_Logs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl_Logs.Location = New System.Drawing.Point(12, 12)
+        Me.TabControl_Logs.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl_Logs.Location = New System.Drawing.Point(0, 0)
         Me.TabControl_Logs.Multiline = True
         Me.TabControl_Logs.Name = "TabControl_Logs"
+        Me.TabControl_Logs.Padding = New System.Drawing.Point(0, 0)
         Me.TabControl_Logs.SelectedIndex = 0
-        Me.TabControl_Logs.Size = New System.Drawing.Size(760, 495)
+        Me.TabControl_Logs.Size = New System.Drawing.Size(752, 469)
         Me.TabControl_Logs.TabIndex = 1
+        '
+        'TabControl_Diagnostic
+        '
+        Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Logs)
+        Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Issues)
+        Me.TabControl_Diagnostic.Location = New System.Drawing.Point(12, 12)
+        Me.TabControl_Diagnostic.Name = "TabControl_Diagnostic"
+        Me.TabControl_Diagnostic.SelectedIndex = 0
+        Me.TabControl_Diagnostic.Size = New System.Drawing.Size(760, 495)
+        Me.TabControl_Diagnostic.TabIndex = 2
+        '
+        'TabPage_Logs
+        '
+        Me.TabPage_Logs.Controls.Add(Me.TabControl_Logs)
+        Me.TabPage_Logs.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_Logs.Name = "TabPage_Logs"
+        Me.TabPage_Logs.Size = New System.Drawing.Size(752, 469)
+        Me.TabPage_Logs.TabIndex = 0
+        Me.TabPage_Logs.Text = "Logs"
+        Me.TabPage_Logs.UseVisualStyleBackColor = True
+        '
+        'TabPage_Issues
+        '
+        Me.TabPage_Issues.Controls.Add(Me.SplitContainer1)
+        Me.TabPage_Issues.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_Issues.Name = "TabPage_Issues"
+        Me.TabPage_Issues.Size = New System.Drawing.Size(752, 469)
+        Me.TabPage_Issues.TabIndex = 1
+        Me.TabPage_Issues.Text = "Diagnostics"
+        Me.TabPage_Issues.UseVisualStyleBackColor = True
+        '
+        'SplitContainer1
+        '
+        Me.SplitContainer1.BackColor = System.Drawing.SystemColors.Control
+        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Name = "SplitContainer1"
+        Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
+        '
+        'SplitContainer1.Panel1
+        '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.ListView_Issues)
+        '
+        'SplitContainer1.Panel2
+        '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.TextBox_IssueInfo)
+        Me.SplitContainer1.Size = New System.Drawing.Size(752, 469)
+        Me.SplitContainer1.SplitterDistance = 318
+        Me.SplitContainer1.TabIndex = 1
+        '
+        'ListView_Issues
+        '
+        Me.ListView_Issues.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_Issues.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Message})
+        Me.ListView_Issues.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_Issues.FullRowSelect = True
+        Me.ListView_Issues.HideSelection = False
+        Me.ListView_Issues.Location = New System.Drawing.Point(0, 0)
+        Me.ListView_Issues.MultiSelect = False
+        Me.ListView_Issues.Name = "ListView_Issues"
+        Me.ListView_Issues.Size = New System.Drawing.Size(752, 318)
+        Me.ListView_Issues.SmallImageList = Me.ImageList_Issues
+        Me.ListView_Issues.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_Issues.TabIndex = 0
+        Me.ListView_Issues.UseCompatibleStateImageBehavior = False
+        Me.ListView_Issues.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Message
+        '
+        Me.ColumnHeader_Message.Text = "Message"
+        Me.ColumnHeader_Message.Width = 721
+        '
+        'ImageList_Issues
+        '
+        Me.ImageList_Issues.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+        Me.ImageList_Issues.ImageSize = New System.Drawing.Size(16, 16)
+        Me.ImageList_Issues.TransparentColor = System.Drawing.Color.Transparent
+        '
+        'TextBox_IssueInfo
+        '
+        Me.TextBox_IssueInfo.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBox_IssueInfo.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_IssueInfo.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TextBox_IssueInfo.Location = New System.Drawing.Point(0, 0)
+        Me.TextBox_IssueInfo.Multiline = True
+        Me.TextBox_IssueInfo.Name = "TextBox_IssueInfo"
+        Me.TextBox_IssueInfo.ReadOnly = True
+        Me.TextBox_IssueInfo.Size = New System.Drawing.Size(752, 147)
+        Me.TextBox_IssueInfo.TabIndex = 1
         '
         'FormTroubleshootLogs
         '
@@ -108,7 +238,7 @@ Partial Class FormTroubleshootLogs
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(784, 561)
-        Me.Controls.Add(Me.TabControl_Logs)
+        Me.Controls.Add(Me.TabControl_Diagnostic)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "FormTroubleshootLogs"
@@ -116,6 +246,14 @@ Partial Class FormTroubleshootLogs
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Logs and Diagnostics"
         Me.Panel1.ResumeLayout(False)
+        Me.TabControl_Diagnostic.ResumeLayout(False)
+        Me.TabPage_Logs.ResumeLayout(False)
+        Me.TabPage_Issues.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.PerformLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -126,4 +264,14 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents Panel2 As Panel
     Friend WithEvents TabControl_Logs As TabControl
     Friend WithEvents Button_LogSave As Button
+    Friend WithEvents Button_LogLoad As Button
+    Friend WithEvents Button_LogCheckIssues As Button
+    Friend WithEvents TabControl_Diagnostic As TabControl
+    Friend WithEvents TabPage_Logs As TabPage
+    Friend WithEvents TabPage_Issues As TabPage
+    Friend WithEvents ListView_Issues As ListView
+    Friend WithEvents ImageList_Issues As ImageList
+    Friend WithEvents ColumnHeader_Message As ColumnHeader
+    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents TextBox_IssueInfo As TextBox
 End Class
