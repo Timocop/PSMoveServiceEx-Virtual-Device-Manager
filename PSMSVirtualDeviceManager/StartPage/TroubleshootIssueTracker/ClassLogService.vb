@@ -71,6 +71,7 @@ Public Class ClassLogService
             mIssues.AddRange(CheckServiceMorpheusFail)
             mIssues.AddRange(CheckServicePairingNotFound)
             mIssues.AddRange(CheckServicePairingFail)
+            mIssues.AddRange(CheckServiceDeviceTimeout)
             Return mIssues.ToArray
         End Function
 
@@ -615,6 +616,56 @@ Public Class ClassLogService
                     mIssues.Add(mNewIssue)
 
                     Exit For
+                End If
+            Next
+
+            Return mIssues.ToArray
+        End Function
+
+        Public Function CheckServiceDeviceTimeout() As STRUC_LOG_ISSUE()
+            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+            Dim sContent As String = GetSectionContent()
+            If (sContent Is Nothing) Then
+                Return mIssues.ToArray
+            End If
+
+            Dim mTimedoutDevices As New List(Of Integer)
+
+            Dim mTemplate As New STRUC_LOG_ISSUE
+            mTemplate.bValid = False
+            mTemplate.sMessage = "Device '{0}' timed out"
+            mTemplate.sDescription = "PSMoveServiceEx had to close a device (ID: {0}) that timed out. This happens when PSMoveServiceEx does not receive any data from the device for example due to connection issues."
+            mTemplate.sSolution = "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too mandy devices and are in range of the bluetooth adapter."
+            mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+
+            Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+            For i = 0 To sLines.Length - 1
+                Dim sLine As String = sLines(i)
+
+                If (Not sLine.StartsWith("[")) Then
+                    Continue For
+                End If
+
+                If (sLine.Contains("Device id") AndAlso sLine.Contains("closing due to no data")) Then
+                    Dim mMatch As Match = Regex.Match(sLine, "Device id (?<ID>\d+) closing due to no data", RegexOptions.IgnoreCase)
+
+                    If (mMatch.Success AndAlso mMatch.Groups("ID").Success) Then
+                        Dim iDeviceId As Integer = CInt(mMatch.Groups("ID").Value)
+
+                        If (Not mTimedoutDevices.Contains(iDeviceId)) Then
+                            Dim mNewIssue As New STRUC_LOG_ISSUE
+                            mNewIssue.bValid = True
+                            mNewIssue.sMessage = String.Format(mTemplate.sMessage, iDeviceId)
+                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceId)
+                            mNewIssue.sSolution = mTemplate.sSolution
+                            mNewIssue.iType = mTemplate.iType
+
+                            mIssues.Add(mNewIssue)
+
+                            mTimedoutDevices.Add(iDeviceId)
+                        End If
+                    End If
                 End If
             Next
 
