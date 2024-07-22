@@ -144,7 +144,7 @@ Public Class FormTroubleshootLogs
                     End If
 
                     SyncLock g_mThreadLock
-                        g_mFileContent = ParseCombinedLogs(IO.File.ReadAllText(mForm.FileName))
+                        g_mFileContent = ParseCombinedLogs(IO.File.ReadAllText(mForm.FileName, System.Text.Encoding.Default))
                     End SyncLock
 
                     RefreshDisplayLogs()

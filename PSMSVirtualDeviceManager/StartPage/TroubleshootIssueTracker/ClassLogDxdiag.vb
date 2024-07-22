@@ -34,7 +34,7 @@ Public Class ClassLogDxdiag
 
         Dim sContent As New Text.StringBuilder()
         sContent.AppendLine("[System]")
-        sContent.AppendLine(IO.File.ReadAllText(sOutputFile))
+        sContent.AppendLine(IO.File.ReadAllText(sOutputFile, System.Text.Encoding.Default))
         mData(GetActionTitle()) = sContent.ToString
     End Sub
 

@@ -21,7 +21,7 @@ Public Class ClassLogManager
             Dim sTmp As String = IO.Path.GetTempFileName
             IO.File.Copy(mItem.Value, sTmp, True)
 
-            mData(mItem.Key) = IO.File.ReadAllText(sTmp)
+            mData(mItem.Key) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
             IO.File.Delete(sTmp)
         Next
     End Sub
