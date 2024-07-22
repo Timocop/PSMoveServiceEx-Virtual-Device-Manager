@@ -1,4 +1,5 @@
-﻿Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports System.Numerics
+Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 
 Public Class ClassLogManageOscDevices
     Implements ILogAction
@@ -18,12 +19,23 @@ Public Class ClassLogManageOscDevices
 
         Dim mVmtTrackers = g_mFormMain.g_mUCVirtualMotionTracker.g_ClassOscDevices.GetDevices
         For Each mItem In mVmtTrackers
+            Dim mPos As Vector3 = mItem.mPos
+            Dim mAng As Vector3 = mItem.GetOrientationEuler()
+
             sTrackersList.AppendFormat("[Device_{0}]", mItem.iIndex).AppendLine()
             sTrackersList.AppendFormat("ID={0}", mItem.iIndex).AppendLine()
             sTrackersList.AppendFormat("Type={0}", mItem.iType).AppendLine()
             sTrackersList.AppendFormat("Serial={0}", mItem.sSerial).AppendLine()
-            sTrackersList.AppendFormat("Position={0}", mItem.mPos.ToString).AppendLine()
-            sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+            sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",
+                                                                            mPos.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mPos.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                        )).AppendLine()
+            sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
+                                                                            mAng.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                        )).AppendLine()
 
             sTrackersList.AppendLine()
         Next

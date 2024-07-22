@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.Numerics
+Imports System.Runtime.InteropServices
 
 Public Class ClassUtils
     Class ClassWin32
@@ -138,6 +139,7 @@ Public Class ClassUtils
             ClassWin32.SetWindowLong(cControl.Handle, ClassWin32.GWL_EXSTYLE, style)
         End If
     End Sub
+
     Public Shared Sub SetControlCompositedChilds(cControl As Control, value As Boolean)
         If (Environment.OSVersion.Version.Major > 5) Then
             SetControlComposited(cControl, value)

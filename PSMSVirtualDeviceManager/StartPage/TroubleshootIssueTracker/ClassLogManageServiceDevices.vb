@@ -1,4 +1,5 @@
-﻿Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports System.Numerics
+Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 
 Public Class ClassLogManageServiceDevices
     Implements ILogAction
@@ -22,6 +23,9 @@ Public Class ClassLogManageServiceDevices
 
         Dim mControllers = g_mFormMain.g_mPSMoveServiceCAPI.GetControllersData
         For Each mItem In mControllers
+            Dim mPos As Vector3 = mItem.m_Position
+            Dim mAng As Vector3 = mItem.GetOrientationEuler()
+
             sTrackersList.AppendFormat("[Controller_{0}]", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("IsConnected={0}", mItem.m_IsConnected).AppendLine()
@@ -31,14 +35,25 @@ Public Class ClassLogManageServiceDevices
             sTrackersList.AppendFormat("TrackingColor={0}", mItem.m_TrackingColor).AppendLine()
             sTrackersList.AppendFormat("BatteryLevel={0}", mItem.m_BatteryLevel).AppendLine()
             sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
-            sTrackersList.AppendFormat("Position={0}", mItem.m_Position.ToString).AppendLine()
-            sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+            sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",
+                                                                        mPos.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                        mPos.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                        mPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                    )).AppendLine()
+            sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
+                                                                            mAng.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                        )).AppendLine()
 
             sTrackersList.AppendLine()
         Next
 
         Dim mHmds = g_mFormMain.g_mPSMoveServiceCAPI.GetHmdsData
         For Each mItem In mHmds
+            Dim mPos As Vector3 = mItem.m_Position
+            Dim mAng As Vector3 = mItem.GetOrientationEuler()
+
             sTrackersList.AppendFormat("[Hmd_{0}]", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("IsConnected={0}", mItem.m_IsConnected).AppendLine()
@@ -46,20 +61,39 @@ Public Class ClassLogManageServiceDevices
             sTrackersList.AppendFormat("IsValid={0}", mItem.m_IsValid).AppendLine()
             sTrackersList.AppendFormat("Serial={0}", mItem.m_Serial).AppendLine()
             sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
-            sTrackersList.AppendFormat("Position={0}", mItem.m_Position.ToString).AppendLine()
-            sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+            sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",
+                                                                        mPos.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                        mPos.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                        mPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                    )).AppendLine()
+            sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
+                                                                            mAng.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                        )).AppendLine()
 
             sTrackersList.AppendLine()
         Next
 
         Dim mTrakcers = g_mFormMain.g_mPSMoveServiceCAPI.GetTrackersData
         For Each mItem In mTrakcers
+            Dim mPos As Vector3 = mItem.m_Position
+            Dim mAng As Vector3 = mItem.GetOrientationEuler()
+
             sTrackersList.AppendFormat("[Tracker_{0}]", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("Path={0}", mItem.m_Path).AppendLine()
             sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
-            sTrackersList.AppendFormat("Position={0}", mItem.m_Position.ToString).AppendLine()
-            sTrackersList.AppendFormat("Orientation={0}", mItem.GetOrientationEuler().ToString).AppendLine()
+            sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",
+                                                                        mPos.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                        mPos.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                        mPos.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                    )).AppendLine()
+            sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
+                                                                            mAng.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                            mAng.Z.ToString(Globalization.CultureInfo.InvariantCulture)
+                                                                        )).AppendLine()
 
             sTrackersList.AppendLine()
         Next
