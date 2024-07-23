@@ -63,17 +63,27 @@
         Public Sub New(_UCVirtualMotionTracker As UCVirtualTrackers, _DeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
             MyBase.New(New String() {"", "", "", ""})
 
+            Dim sName As String = _DeviceInfo.m_Name
+            For Each mDevice In ClassLibusbDriver.DRV_PS4CAM_KNOWN_CONFIGS
+                Dim sHardwareId As String = String.Format("\USB#VID_{0}&PID_{1}", mDevice.VID, mDevice.PID)
+
+                If (_DeviceInfo.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLowerInvariant)) Then
+                    sName = mDevice.sName
+                    Exit For
+                End If
+            Next
+
             g_UCVirtualTrackers = _UCVirtualMotionTracker
             g_mClassDeviceInfo = New ClassVideoInputDevices.ClassDeviceInfo(
                 _DeviceInfo.m_Index,
-                _DeviceInfo.m_Name,
+                sName,
                 _DeviceInfo.m_Path,
                 _DeviceInfo.m_CLSID)
-            g_UCVirtualTrackerItem = New UCVirtualTrackerItem(_UCVirtualMotionTracker, _DeviceInfo)
+            g_UCVirtualTrackerItem = New UCVirtualTrackerItem(g_UCVirtualTrackers, g_mClassDeviceInfo)
 
             UpdateItem(New ClassVideoInputDevices.ClassDeviceInfo(
                 _DeviceInfo.m_Index,
-                _DeviceInfo.m_Name,
+                sName,
                 _DeviceInfo.m_Path,
                 _DeviceInfo.m_CLSID))
         End Sub

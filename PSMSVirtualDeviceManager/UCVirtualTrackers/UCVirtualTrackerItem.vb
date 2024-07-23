@@ -98,6 +98,7 @@ Public Class UCVirtualTrackerItem
 
             If (mDeviceInfo.m_Path.ToLowerInvariant.Contains(sHardwareId.ToLowerInvariant)) Then
                 g_mClassCaptureLogic.m_IsPlayStationCamera = True
+                Label_FriendlyName.Text = mDevice.sName
                 Exit For
             End If
         Next
