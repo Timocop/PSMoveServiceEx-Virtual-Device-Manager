@@ -174,7 +174,7 @@ Public Class ClassLogManageServiceDevices
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
         Dim mNoTrackerTemplate As New STRUC_LOG_ISSUE(
-            "No optical trakcing",
+            "No optical tracking",
             "You have no trackers. You will be unable to track your devices optically.",
             "Add trackers to enable optical tracking. (such as PlayStation Eye, Webcam or PlayStation 4 Stereo Camera)",
             ENUM_LOG_ISSUE_TYPE.ERROR
