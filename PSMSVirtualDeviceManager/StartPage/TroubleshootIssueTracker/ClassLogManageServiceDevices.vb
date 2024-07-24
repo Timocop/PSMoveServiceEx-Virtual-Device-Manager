@@ -131,6 +131,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckEmpty(mData))
         mIssues.AddRange(CheckTrackerCount(mData))
         mIssues.AddRange(CheckVirtualHmdObsolete(mData))
+        mIssues.AddRange(CheckNoDevice(mData))
         Return mIssues.ToArray
     End Function
 
@@ -230,6 +231,51 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
+    Public Function CheckNoDevice(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "No {0} found",
+            "",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim iControllers As Integer = 0
+        Dim iHmds As Integer = 0
+
+        For Each mDevice In GetDevices(mData)
+            Select Case (mDevice.iType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    iControllers += 1
+                Case ENUM_DEVICE_TYPE.HMD
+                    iHmds += 1
+            End Select
+        Next
+
+        If (iControllers = 0) Then
+            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+
+            mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Controllers")
+
+            mIssues.Add(mNewIssue)
+        End If
+
+        If (iHmds = 0) Then
+            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+
+            mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Head-mounted Displays")
+
+            mIssues.Add(mNewIssue)
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
     Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
         Dim sContent As String = GetSectionContent(mData)
         If (sContent Is Nothing) Then
@@ -280,22 +326,37 @@ Public Class ClassLogManageServiceDevices
                     Select Case (True)
                         Case sDeviceKey.StartsWith("Controller_")
                             mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
+
+                            If (mDevoceProp.ContainsKey("Serial")) Then
+                                mNewDevice.sSerial = mDevoceProp("Serial")
+                            Else
+                                Exit While
+                            End If
+
                         Case sDeviceKey.StartsWith("Hmd_")
                             mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
+
+                            If (mDevoceProp.ContainsKey("Serial")) Then
+                                mNewDevice.sSerial = mDevoceProp("Serial")
+                            Else
+                                Exit While
+                            End If
+
                         Case sDeviceKey.StartsWith("Tracker_")
                             mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
+
+                            If (mDevoceProp.ContainsKey("Path")) Then
+                                mNewDevice.sSerial = mDevoceProp("Path")
+                            Else
+                                Exit While
+                            End If
+
                         Case Else
                             Exit While
                     End Select
 
                     If (mDevoceProp.ContainsKey("ID")) Then
                         mNewDevice.iId = CInt(mDevoceProp("ID"))
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("Serial")) Then
-                        mNewDevice.sSerial = mDevoceProp("Serial")
                     Else
                         Exit While
                     End If
