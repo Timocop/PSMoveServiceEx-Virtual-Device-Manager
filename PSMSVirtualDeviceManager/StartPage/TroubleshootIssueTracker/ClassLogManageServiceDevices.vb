@@ -16,6 +16,12 @@ Public Class ClassLogManageServiceDevices
         Dim iType As ENUM_DEVICE_TYPE
         Dim iId As Integer
         Dim sSerial As String
+
+        Dim bPositionValid As Boolean
+        Dim mPosition As Vector3
+
+        Dim bOrientationValid As Boolean
+        Dim mOrientation As Vector3
     End Structure
 
     Private g_mFormMain As FormMain
@@ -148,6 +154,33 @@ Public Class ClassLogManageServiceDevices
                 Dim sDeviceKey As String = sLine.Substring(1, sLine.Length - 2)
 
                 Dim mNewDevice As New STRUC_DEVICE_ITEM
+
+                ' Optional
+                If (mDevoceProp.ContainsKey("Position") AndAlso mDevoceProp("Position").Split(","c).Count = 3) Then
+                    Dim mPos = mDevoceProp("Position").Split(","c)
+                    Dim iPos(3) As Single
+
+                    If (Single.TryParse(mPos(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(0)) AndAlso
+                        Single.TryParse(mPos(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(1)) AndAlso
+                        Single.TryParse(mPos(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(2))) Then
+
+                        mNewDevice.mPosition = New Vector3(iPos(0), iPos(1), iPos(2))
+                        mNewDevice.bPositionValid = True
+                    End If
+                End If
+
+                If (mDevoceProp.ContainsKey("Orientation") AndAlso mDevoceProp("Orientation").Split(","c).Count = 3) Then
+                    Dim mAng = mDevoceProp("Orientation").Split(","c)
+                    Dim iAng(3) As Single
+
+                    If (Single.TryParse(mAng(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(0)) AndAlso
+                        Single.TryParse(mAng(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(1)) AndAlso
+                        Single.TryParse(mAng(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(2))) Then
+
+                        mNewDevice.mOrientation = New Vector3(iAng(0), iAng(1), iAng(2))
+                        mNewDevice.bOrientationValid = True
+                    End If
+                End If
 
                 Select Case (True)
                     Case sDeviceKey.StartsWith("Controller_")
