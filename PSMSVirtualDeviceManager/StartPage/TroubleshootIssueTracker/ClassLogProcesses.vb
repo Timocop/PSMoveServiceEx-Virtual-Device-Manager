@@ -39,6 +39,10 @@ Public Class ClassLogProcesses
     End Function
 
     Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
-        Throw New NotImplementedException()
+        If (Not mData.ContainsKey(GetActionTitle())) Then
+            Return Nothing
+        End If
+
+        Return mData(GetActionTitle())
     End Function
 End Class

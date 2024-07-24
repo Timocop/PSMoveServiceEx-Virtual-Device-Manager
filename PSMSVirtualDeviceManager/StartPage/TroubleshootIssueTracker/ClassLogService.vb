@@ -590,9 +590,6 @@ Public Class ClassLogService
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
         Dim sContent As String = GetSectionContent(mData)
-        If (sContent Is Nothing) Then
-            Return mIssues.ToArray
-        End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "PSMoveServiceEx Log Unavailable",

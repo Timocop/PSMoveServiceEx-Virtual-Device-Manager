@@ -17,7 +17,7 @@ Public Class ClassLogManageServiceDevices
         End If
 
         If (Not g_mFormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
-            Throw New ArgumentException("Service not connected")
+            Return
         End If
 
         Dim sTrackersList As New Text.StringBuilder
@@ -111,6 +111,10 @@ Public Class ClassLogManageServiceDevices
     End Function
 
     Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
-        Throw New NotImplementedException()
+        If (Not mData.ContainsKey(GetActionTitle())) Then
+            Return Nothing
+        End If
+
+        Return mData(GetActionTitle())
     End Function
 End Class

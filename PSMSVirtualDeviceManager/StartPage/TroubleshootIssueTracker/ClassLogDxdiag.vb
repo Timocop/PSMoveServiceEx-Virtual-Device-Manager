@@ -12,30 +12,38 @@ Public Class ClassLogDxdiag
             Return
         End If
 
-        Using mProcess As New Process
-            mProcess.StartInfo.FileName = sRootFolder
-            mProcess.StartInfo.Arguments = String.Format("/whql:off /t ""{0}""", sOutputFile)
-            mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sRootFolder)
-            mProcess.StartInfo.CreateNoWindow = True
-            mProcess.StartInfo.UseShellExecute = True
-            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+        Try
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = sRootFolder
+                mProcess.StartInfo.Arguments = String.Format("/whql:off /t ""{0}""", sOutputFile)
+                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sRootFolder)
+                mProcess.StartInfo.CreateNoWindow = True
+                mProcess.StartInfo.UseShellExecute = True
+                mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
-            If (Environment.OSVersion.Version.Major > 5) Then
-                mProcess.StartInfo.Verb = "runas"
-            End If
+                If (Environment.OSVersion.Version.Major > 5) Then
+                    mProcess.StartInfo.Verb = "runas"
+                End If
 
-            mProcess.Start()
-            mProcess.WaitForExit()
-        End Using
+                mProcess.Start()
+                mProcess.WaitForExit()
+            End Using
+        Catch ex As Threading.ThreadAbortException
+            Throw
+        Catch ex As Exception
+            ' Ignore errors
+        End Try
 
         If (Not IO.File.Exists(sOutputFile)) Then
-            Throw New ArgumentException("DxDiag output log does not exist")
+            Return
         End If
 
-        Dim sContent As New Text.StringBuilder()
-        sContent.AppendLine("[System]")
-        sContent.AppendLine(IO.File.ReadAllText(sOutputFile, System.Text.Encoding.Default))
-        mData(GetActionTitle()) = sContent.ToString
+        Dim sContent As String = IO.File.ReadAllText(sOutputFile, System.Text.Encoding.Default)
+        If (String.IsNullOrEmpty(sContent) OrElse sContent.Trim.Length = 0) Then
+            Return
+        End If
+
+        mData(GetActionTitle()) = "[System]" & Environment.NewLine & sContent
     End Sub
 
     Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
@@ -46,6 +54,7 @@ Public Class ClassLogDxdiag
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckMultipleBluetoothDevices(mData))
         mIssues.AddRange(CheckMultipleUsbControllers(mData))
+        mIssues.AddRange(CheckEmpty(mData))
         Return mIssues.ToArray
     End Function
 
@@ -146,6 +155,25 @@ Public Class ClassLogDxdiag
         Next
 
         If (iUsbHostCount < 2) Then
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent(mData)
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "DxDiag Log Unavailable",
+            "Some diagnostic details are unavailable due to missing log information.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
             mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
 
