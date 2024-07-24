@@ -54,8 +54,6 @@ Public Class ClassLogManagerAttachments
     End Function
 
     Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        GetDevices(mData)
-
         Throw New NotImplementedException()
     End Function
 

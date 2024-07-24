@@ -4,6 +4,15 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerRemoteDevices
     Implements ILogAction
 
+    Structure STRUC_DEVICE_ITEM
+        Dim iId As Integer
+
+        Dim sNickName As String
+        Dim sTrackerName As String
+        Dim bHasError As Boolean
+        Dim iFpsCounter As Integer
+    End Structure
+
     Private g_mFormMain As FormMain
 
     Public Sub New(_FormMain As FormMain)
@@ -22,6 +31,7 @@ Public Class ClassLogManagerRemoteDevices
                                                Dim mRemoteDevices = g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices.GetRemoteDevices()
                                                For Each mItem In mRemoteDevices
                                                    sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                                   sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
                                                    sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
                                                    sTrackersList.AppendFormat("TrackerName={0}", mItem.m_TrackerName).AppendLine()
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
@@ -51,5 +61,61 @@ Public Class ClassLogManagerRemoteDevices
         End If
 
         Return mData(GetActionTitle())
+    End Function
+
+    Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
+        Dim mDevoceProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
+                Dim sDeviceKey As String = sLine.Substring(1, sLine.Length - 2)
+
+                Dim mNewDevice As New STRUC_DEVICE_ITEM
+
+                ' Optional
+                If (mDevoceProp.ContainsKey("NickName")) Then
+                    mNewDevice.sNickName = mDevoceProp("NickName")
+                End If
+
+                If (mDevoceProp.ContainsKey("TrackerName")) Then
+                    mNewDevice.sTrackerName = mDevoceProp("TrackerName")
+                End If
+
+                If (mDevoceProp.ContainsKey("HasStatusError")) Then
+                    mNewDevice.bHasError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
+                End If
+
+                If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
+                    mNewDevice.iFpsCounter = CInt(mDevoceProp("FpsPipeCounter"))
+                End If
+
+                ' Required
+                If (mDevoceProp.ContainsKey("ID")) Then
+                    mNewDevice.iId = CInt(mDevoceProp("ID"))
+
+                    mDeviceList.Add(mNewDevice)
+                End If
+
+                mDevoceProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDevoceProp(sKey) = sValue
+            End If
+        Next
+
+        Return mDeviceList.ToArray
     End Function
 End Class
