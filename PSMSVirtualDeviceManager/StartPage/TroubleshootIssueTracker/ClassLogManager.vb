@@ -4,7 +4,7 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManager
     Implements ILogAction
 
-    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
         Dim mManagerLogs As New Dictionary(Of String, String)
         mManagerLogs("VDM INI Application Exceptions") = (ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
         mManagerLogs("VDM INI Settings") = (ClassConfigConst.PATH_CONFIG_SETTINGS)

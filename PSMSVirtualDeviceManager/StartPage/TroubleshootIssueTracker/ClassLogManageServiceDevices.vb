@@ -11,7 +11,7 @@ Public Class ClassLogManageServiceDevices
         g_mFormMain = _FormMain
     End Sub
 
-    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
         If (g_mFormMain.g_mPSMoveServiceCAPI Is Nothing) Then
             Return
         End If
@@ -116,5 +116,83 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Return mData(GetActionTitle())
+    End Function
+
+    Enum ENUM_DEVICE_TYPE
+        INVALID = 0
+        CONTROLLER
+        HMD
+        TRACKER
+    End Enum
+
+    Structure STRUC_DEVICE_ITEM
+        Dim iType As ENUM_DEVICE_TYPE
+        Dim iId As Integer
+        Dim sSerial As String
+    End Structure
+
+    Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
+        Dim mDevoceProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("["c) AndAlso sLine.EndsWith("]"c)) Then
+                Dim sDeviceKey As String = sLine.Substring(1, sLine.Length - 2)
+
+                Dim mNewDevice As New STRUC_DEVICE_ITEM
+
+                Select Case (True)
+                    Case sDeviceKey.StartsWith("Controller_")
+                        mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
+
+                        If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
+                            mNewDevice.iId = CInt(mDevoceProp("ID"))
+                            mNewDevice.sSerial = mDevoceProp("Serial")
+
+                            mDeviceList.Add(mNewDevice)
+                        End If
+
+                    Case sDeviceKey.StartsWith("Hmd_")
+                        mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
+
+                        If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
+                            mNewDevice.iId = CInt(mDevoceProp("ID"))
+                            mNewDevice.sSerial = mDevoceProp("Serial")
+
+                            mDeviceList.Add(mNewDevice)
+                        End If
+
+                    Case sDeviceKey.StartsWith("Tracker_")
+                        mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
+
+                        If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Path")) Then
+                            mNewDevice.iId = CInt(mDevoceProp("ID"))
+                            mNewDevice.sSerial = mDevoceProp("Path")
+
+                            mDeviceList.Add(mNewDevice)
+                        End If
+
+                End Select
+
+                mDevoceProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDevoceProp(sKey) = sValue
+            End If
+        Next
+
+        Return mDeviceList.ToArray
     End Function
 End Class

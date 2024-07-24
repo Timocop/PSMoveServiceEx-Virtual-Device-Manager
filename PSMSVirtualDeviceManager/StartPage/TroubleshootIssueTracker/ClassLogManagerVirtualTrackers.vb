@@ -10,7 +10,7 @@ Public Class ClassLogManagerVirtualTrackers
         g_mFormMain = _FormMain
     End Sub
 
-    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
         If (g_mFormMain.g_mUCVirtualTrackers Is Nothing) Then
             Return
         End If

@@ -4,7 +4,7 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogService
     Implements ILogAction
 
-    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
         Dim mConfig As New ClassServiceInfo
         mConfig.LoadConfig()
 

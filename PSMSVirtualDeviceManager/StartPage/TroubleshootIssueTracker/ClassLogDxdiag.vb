@@ -4,7 +4,7 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogDxdiag
     Implements ILogAction
 
-    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
         Dim sRootFolder As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "dxdiag.exe")
         Dim sOutputFile As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName)
 

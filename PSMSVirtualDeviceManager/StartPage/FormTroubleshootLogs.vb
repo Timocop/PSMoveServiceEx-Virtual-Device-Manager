@@ -58,7 +58,7 @@ Public Class FormTroubleshootLogs
 
     Public Interface ILogAction
         Function GetActionTitle() As String
-        Sub DoWork(mData As Dictionary(Of String, String))
+        Sub Generate(mData As Dictionary(Of String, String))
         Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
         Function GetSectionContent(mData As Dictionary(Of String, String)) As String
     End Interface
@@ -282,7 +282,7 @@ Public Class FormTroubleshootLogs
                                        End Sub)
 
             Try
-                mJob.DoWork(m_FileContent)
+                mJob.Generate(m_FileContent)
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception

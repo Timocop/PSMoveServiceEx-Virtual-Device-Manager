@@ -4,7 +4,7 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerSteamVrDrivers
     Implements ILogAction
 
-    Public Sub DoWork(mData As Dictionary(Of String, String)) Implements ILogAction.DoWork
+    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
 
         Dim sTrackersList As New Text.StringBuilder
 
