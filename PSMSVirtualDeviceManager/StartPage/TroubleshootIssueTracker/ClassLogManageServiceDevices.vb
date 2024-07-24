@@ -130,6 +130,7 @@ Public Class ClassLogManageServiceDevices
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckEmpty(mData))
         mIssues.AddRange(CheckTrackerCount(mData))
+        mIssues.AddRange(CheckVirtualHmdObsolete(mData))
         Return mIssues.ToArray
     End Function
 
@@ -182,9 +183,11 @@ Public Class ClassLogManageServiceDevices
 
         Dim iTrackerCount As Integer = 0
         For Each mDevice In GetDevices(mData)
-            If (mDevice.iType = ENUM_DEVICE_TYPE.TRACKER) Then
-                iTrackerCount += 1
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                Continue For
             End If
+
+            iTrackerCount += 1
         Next
 
         Select Case (iTrackerCount)
@@ -193,6 +196,36 @@ Public Class ClassLogManageServiceDevices
             Case 1
                 mIssues.Add(New STRUC_LOG_ISSUE(mOneTrackerTemplate))
         End Select
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckVirtualHmdObsolete(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual Head-mounted Displays deprecated",
+            "You are using virtual Head-mounted Displays. Those types of virtual devices are deprecated due to limited functionality and remote protocol compatibility.",
+            "Do not use virtual Head-mounted Displays, use virtual controllers instead to track your Head-mounted Display. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        For Each mDevice In GetDevices(mData)
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.HMD) Then
+                Continue For
+            End If
+
+            If (Not mDevice.sSerial.StartsWith("VirtualHMD")) Then
+                Continue For
+            End If
+
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+            Exit For
+        Next
 
         Return mIssues.ToArray
     End Function
