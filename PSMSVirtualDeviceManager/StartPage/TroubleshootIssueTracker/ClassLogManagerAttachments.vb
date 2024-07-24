@@ -83,26 +83,41 @@ Public Class ClassLogManagerAttachments
 
                 Dim mNewDevice As New STRUC_DEVICE_ITEM
 
-                ' Optional
-                If (mDevoceProp.ContainsKey("NickName")) Then
-                    mNewDevice.sNickName = mDevoceProp("NickName")
-                End If
-
-                If (mDevoceProp.ContainsKey("HasStatusError")) Then
-                    mNewDevice.bHasError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
-                End If
-
-                If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
-                    mNewDevice.iFpsCounter = CInt(mDevoceProp("FpsPipeCounter"))
-                End If
-
                 ' Required
-                If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("ParentControllerID")) Then
-                    mNewDevice.iId = CInt(mDevoceProp("ID"))
-                    mNewDevice.iParentId = CInt(mDevoceProp("ParentControllerID"))
+                While True
+                    If (mDevoceProp.ContainsKey("ID")) Then
+                        mNewDevice.iId = CInt(mDevoceProp("ID"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("ParentControllerID")) Then
+                        mNewDevice.iParentId = CInt(mDevoceProp("ParentControllerID"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("NickName")) Then
+                        mNewDevice.sNickName = mDevoceProp("NickName")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("HasStatusError")) Then
+                        mNewDevice.bHasError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
+                        mNewDevice.iFpsCounter = CInt(mDevoceProp("FpsPipeCounter"))
+                    Else
+                        Exit While
+                    End If
 
                     mDeviceList.Add(mNewDevice)
-                End If
+                    Exit While
+                End While
 
                 mDevoceProp.Clear()
             End If

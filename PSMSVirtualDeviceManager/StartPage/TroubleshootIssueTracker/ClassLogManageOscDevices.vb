@@ -124,40 +124,38 @@ Public Class ClassLogManageOscDevices
                     End If
                 End If
 
-                If (mDevoceProp.ContainsKey("Type")) Then
-                    Select Case (mDevoceProp("Type"))
-                        Case "CONTROLLER"
-                            mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
+                ' Required
+                While True
+                    If (mDevoceProp.ContainsKey("Type")) Then
+                        Select Case (mDevoceProp("Type"))
+                            Case "CONTROLLER"
+                                mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
+                            Case "HMD"
+                                mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
+                            Case "TRACKER"
+                                mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
+                            Case Else
+                                Exit While
+                        End Select
+                    Else
+                        Exit While
+                    End If
 
-                            If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
-                                mNewDevice.iId = CInt(mDevoceProp("ID"))
-                                mNewDevice.sSerial = mDevoceProp("Serial")
+                    If (mDevoceProp.ContainsKey("ID")) Then
+                        mNewDevice.iId = CInt(mDevoceProp("ID"))
+                    Else
+                        Exit While
+                    End If
 
-                                mDeviceList.Add(mNewDevice)
-                            End If
+                    If (mDevoceProp.ContainsKey("Serial")) Then
+                        mNewDevice.sSerial = mDevoceProp("Serial")
+                    Else
+                        Exit While
+                    End If
 
-                        Case "HMD"
-                            mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
-
-                            If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
-                                mNewDevice.iId = CInt(mDevoceProp("ID"))
-                                mNewDevice.sSerial = mDevoceProp("Serial")
-
-                                mDeviceList.Add(mNewDevice)
-                            End If
-
-                        Case "TRACKER"
-                            mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
-
-                            If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
-                                mNewDevice.iId = CInt(mDevoceProp("ID"))
-                                mNewDevice.sSerial = mDevoceProp("Serial")
-
-                                mDeviceList.Add(mNewDevice)
-                            End If
-                    End Select
-
-                End If
+                    mDeviceList.Add(mNewDevice)
+                    Exit While
+                End While
 
                 mDevoceProp.Clear()
             End If
