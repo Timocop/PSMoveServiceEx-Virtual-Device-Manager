@@ -170,7 +170,7 @@ Public Class ClassLogManageServiceDevices
         Dim mOneTrackerTemplate As New STRUC_LOG_ISSUE(
             "Very limited tracking quality",
             "You are using only one tracker for optical tracking. Triangulation is not available for singular trackers and tracking quality is greatly redcued.",
-            "Use more than one tracker. (such an additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera).",
+            "Use more than one tracker. (such as additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera).",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
         Dim mNoTrackerTemplate As New STRUC_LOG_ISSUE(
