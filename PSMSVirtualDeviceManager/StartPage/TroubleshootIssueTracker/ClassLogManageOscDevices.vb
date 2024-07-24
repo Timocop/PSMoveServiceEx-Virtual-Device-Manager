@@ -5,6 +5,25 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManageOscDevices
     Implements ILogAction
 
+    Enum ENUM_DEVICE_TYPE
+        INVALID = 0
+        CONTROLLER
+        HMD
+        TRACKER
+    End Enum
+
+    Structure STRUC_DEVICE_ITEM
+        Dim iType As ENUM_DEVICE_TYPE
+        Dim iId As Integer
+        Dim sSerial As String
+
+        Dim bPositionValid As Boolean
+        Dim mPosition As Vector3
+
+        Dim bOrientationValid As Boolean
+        Dim mOrientation As Vector3
+    End Structure
+
     Private g_mFormMain As FormMain
 
     Public Sub New(_FormMain As FormMain)
@@ -58,5 +77,98 @@ Public Class ClassLogManageOscDevices
         End If
 
         Return mData(GetActionTitle())
+    End Function
+
+    Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
+        Dim mDevoceProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
+                Dim sDeviceKey As String = sLine.Substring(1, sLine.Length - 2)
+
+                Dim mNewDevice As New STRUC_DEVICE_ITEM
+
+                If (sDeviceKey.StartsWith("Device_")) Then
+
+                    ' Optional
+                    If (mDevoceProp.ContainsKey("Position") AndAlso mDevoceProp("Position").Split(","c).Count = 3) Then
+                        Dim mPos = mDevoceProp("Position").Split(","c)
+
+                        mNewDevice.mPosition = New Vector3(
+                            Single.Parse(mPos(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                            Single.Parse(mPos(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                            Single.Parse(mPos(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        )
+                        mNewDevice.bPositionValid = True
+                    End If
+
+                    If (mDevoceProp.ContainsKey("Orientation") AndAlso mDevoceProp("Orientation").Split(","c).Count = 3) Then
+                        Dim mAng = mDevoceProp("Orientation").Split(","c)
+
+                        mNewDevice.mOrientation = New Vector3(
+                            Single.Parse(mAng(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                            Single.Parse(mAng(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                            Single.Parse(mAng(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        )
+                        mNewDevice.bOrientationValid = True
+                    End If
+                     
+                    If (mDevoceProp.ContainsKey("Type")) Then
+                        Select Case (mDevoceProp("Type"))
+                            Case "CONTROLLER"
+                                mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
+
+                                If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
+                                    mNewDevice.iId = CInt(mDevoceProp("ID"))
+                                    mNewDevice.sSerial = mDevoceProp("Serial")
+
+                                    mDeviceList.Add(mNewDevice)
+                                End If
+
+                            Case "HMD"
+                                mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
+
+                                If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
+                                    mNewDevice.iId = CInt(mDevoceProp("ID"))
+                                    mNewDevice.sSerial = mDevoceProp("Serial")
+
+                                    mDeviceList.Add(mNewDevice)
+                                End If
+
+                            Case "TRACKER"
+                                mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
+
+                                If (mDevoceProp.ContainsKey("ID") AndAlso mDevoceProp.ContainsKey("Serial")) Then
+                                    mNewDevice.iId = CInt(mDevoceProp("ID"))
+                                    mNewDevice.sSerial = mDevoceProp("Serial")
+
+                                    mDeviceList.Add(mNewDevice)
+                                End If
+                        End Select
+
+                    End If
+
+                    mDevoceProp.Clear()
+                End If
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDevoceProp(sKey) = sValue
+            End If
+        Next
+
+        Return mDeviceList.ToArray
     End Function
 End Class

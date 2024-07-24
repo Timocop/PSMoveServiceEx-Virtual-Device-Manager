@@ -5,6 +5,19 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManageServiceDevices
     Implements ILogAction
 
+    Enum ENUM_DEVICE_TYPE
+        INVALID = 0
+        CONTROLLER
+        HMD
+        TRACKER
+    End Enum
+
+    Structure STRUC_DEVICE_ITEM
+        Dim iType As ENUM_DEVICE_TYPE
+        Dim iId As Integer
+        Dim sSerial As String
+    End Structure
+
     Private g_mFormMain As FormMain
 
     Public Sub New(_FormMain As FormMain)
@@ -117,19 +130,6 @@ Public Class ClassLogManageServiceDevices
 
         Return mData(GetActionTitle())
     End Function
-
-    Enum ENUM_DEVICE_TYPE
-        INVALID = 0
-        CONTROLLER
-        HMD
-        TRACKER
-    End Enum
-
-    Structure STRUC_DEVICE_ITEM
-        Dim iType As ENUM_DEVICE_TYPE
-        Dim iId As Integer
-        Dim sSerial As String
-    End Structure
 
     Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
         Dim sContent As String = GetSectionContent(mData)
