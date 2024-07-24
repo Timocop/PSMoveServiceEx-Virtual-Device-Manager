@@ -295,7 +295,7 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub ThreadDoDiagnostics()
-        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mIssues As New List(Of KeyValuePair(Of String, STRUC_LOG_ISSUE))
 
         For Each mJob In g_mLogJobs
             Dim sJobAction As String = String.Format("Checking {0}...", mJob.GetActionTitle())
@@ -307,7 +307,9 @@ Public Class FormTroubleshootLogs
                                        End Sub)
 
             Try
-                mIssues.AddRange(mJob.GetIssues(m_FileContent))
+                For Each mIssue In mJob.GetIssues(m_FileContent)
+                    mIssues.Add(New KeyValuePair(Of String, STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mIssue))
+                Next
             Catch ex As NotImplementedException
                 ' Ignore
             Catch ex As Threading.ThreadAbortException
@@ -324,14 +326,15 @@ Public Class FormTroubleshootLogs
                                        Try
                                            For Each mItem In mIssues
                                                Dim mNewItem As New ListViewItem(New String() {
-                                                   mItem.sMessage,
-                                                   mItem.sDescription,
-                                                   mItem.sSolution
+                                                   mItem.Value.sMessage,
+                                                   mItem.Value.sDescription,
+                                                   mItem.Value.sSolution,
+                                                   mItem.Key
                                                })
 
                                                mNewItem.ImageIndex = 0
 
-                                               Select Case (mItem.iType)
+                                               Select Case (mItem.Value.iType)
                                                    Case ENUM_LOG_ISSUE_TYPE.INFO
                                                        mNewItem.ImageKey = "Info"
                                                    Case ENUM_LOG_ISSUE_TYPE.WARNING
@@ -346,6 +349,7 @@ Public Class FormTroubleshootLogs
                                            If (ListView_Issues.Items.Count < 1) Then
                                                Dim mNewItem As New ListViewItem(New String() {
                                                     "No issues have been found",
+                                                    "",
                                                     "",
                                                     ""
                                                 })
@@ -402,7 +406,7 @@ Public Class FormTroubleshootLogs
         Dim mItem As ListViewItem = ListView_Issues.SelectedItems(0)
 
         Dim sInfo As New Text.StringBuilder
-        sInfo.AppendLine("Title:")
+        sInfo.AppendLine("Message:")
         sInfo.AppendLine(mItem.SubItems(0).Text)
         sInfo.AppendLine()
 
@@ -412,6 +416,10 @@ Public Class FormTroubleshootLogs
 
         sInfo.AppendLine("Solution:")
         sInfo.AppendLine(mItem.SubItems(2).Text)
+        sInfo.AppendLine()
+
+        sInfo.AppendLine("Module:")
+        sInfo.AppendLine(mItem.SubItems(3).Text)
         sInfo.AppendLine()
 
         TextBox_IssueInfo.Text = sInfo.ToString

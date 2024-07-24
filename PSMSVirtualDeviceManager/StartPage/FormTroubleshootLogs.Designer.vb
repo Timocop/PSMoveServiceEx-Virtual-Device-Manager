@@ -179,7 +179,7 @@ Partial Class FormTroubleshootLogs
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TextBox_IssueInfo)
         Me.SplitContainer1.Size = New System.Drawing.Size(752, 469)
-        Me.SplitContainer1.SplitterDistance = 318
+        Me.SplitContainer1.SplitterDistance = 250
         Me.SplitContainer1.TabIndex = 1
         '
         'ListView_Issues
@@ -192,7 +192,7 @@ Partial Class FormTroubleshootLogs
         Me.ListView_Issues.Location = New System.Drawing.Point(0, 0)
         Me.ListView_Issues.MultiSelect = False
         Me.ListView_Issues.Name = "ListView_Issues"
-        Me.ListView_Issues.Size = New System.Drawing.Size(752, 318)
+        Me.ListView_Issues.Size = New System.Drawing.Size(752, 250)
         Me.ListView_Issues.SmallImageList = Me.ImageList_Issues
         Me.ListView_Issues.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_Issues.TabIndex = 0
@@ -220,8 +220,9 @@ Partial Class FormTroubleshootLogs
         Me.TextBox_IssueInfo.Name = "TextBox_IssueInfo"
         Me.TextBox_IssueInfo.ReadOnly = True
         Me.TextBox_IssueInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.TextBox_IssueInfo.Size = New System.Drawing.Size(752, 147)
+        Me.TextBox_IssueInfo.Size = New System.Drawing.Size(752, 215)
         Me.TextBox_IssueInfo.TabIndex = 1
+        Me.TextBox_IssueInfo.Text = "Nothing selected."
         '
         'FormTroubleshootLogs
         '
