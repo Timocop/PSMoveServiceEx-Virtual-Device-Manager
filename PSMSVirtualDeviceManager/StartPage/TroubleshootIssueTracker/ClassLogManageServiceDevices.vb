@@ -129,6 +129,7 @@ Public Class ClassLogManageServiceDevices
     Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckEmpty(mData))
+        mIssues.AddRange(CheckTrackerCount(mData))
         Return mIssues.ToArray
     End Function
 
@@ -155,6 +156,43 @@ Public Class ClassLogManageServiceDevices
         If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
             mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckTrackerCount(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mOneTrackerTemplate As New STRUC_LOG_ISSUE(
+            "Very limited tracking quality",
+            "You are using only one tracker for optical tracking. Triangulation is not available for singular trackers and tracking quality is greatly redcued.",
+            "Use more than one tracker. (such an additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera).",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+        Dim mNoTrackerTemplate As New STRUC_LOG_ISSUE(
+            "No optical trakcing",
+            "You have no trackers. You will be unable to track your devices optically.",
+            "Add trackers to enable optical tracking. (such as PlayStation Eye, Webcam or PlayStation 4 Stereo Camera)",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim iTrackerCount As Integer = 0
+        For Each mDevice In GetDevices(mData)
+            If (mDevice.iType = ENUM_DEVICE_TYPE.TRACKER) Then
+                iTrackerCount += 1
+            End If
+        Next
+
+        Select Case (iTrackerCount)
+            Case 0
+                mIssues.Add(New STRUC_LOG_ISSUE(mNoTrackerTemplate))
+            Case 1
+                mIssues.Add(New STRUC_LOG_ISSUE(mOneTrackerTemplate))
+        End Select
 
         Return mIssues.ToArray
     End Function
