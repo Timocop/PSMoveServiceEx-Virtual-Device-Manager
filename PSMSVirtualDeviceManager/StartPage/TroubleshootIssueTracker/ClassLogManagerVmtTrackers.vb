@@ -1,8 +1,25 @@
 ﻿Imports PSMSVirtualDeviceManager
 Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+Imports PSMSVirtualDeviceManager.UCVirtualMotionTrackerItem.ClassIO
 
 Public Class ClassLogManagerVmtTrackers
     Implements ILogAction
+
+    Enum ENUM_DEVICE_TYPE
+        INVALID = 0
+        CONTROLLER
+        HMD
+    End Enum
+
+    Structure STRUC_DEVICE_ITEM
+        Dim iId As Integer
+        Dim iVmtId As Integer
+        Dim iType As ENUM_DEVICE_TYPE
+
+        Dim iVmtTrackerRole As ENUM_TRACKER_ROLE
+        Dim bHasStatusError As Boolean
+        Dim iFpsOscCounter As Integer
+    End Structure
 
     Private g_mFormMain As FormMain
 
@@ -53,5 +70,84 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Return mData(GetActionTitle())
+    End Function
+
+    Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
+        Dim mDevoceProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
+                Dim sDevicePath As String = sLine.Substring(1, sLine.Length - 2)
+
+                Dim mNewDevice As New STRUC_DEVICE_ITEM
+
+                ' Required
+                While True
+                    Select Case (True)
+                        Case sDevicePath.StartsWith("Controller_")
+                            mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
+
+                        Case sDevicePath.StartsWith("Hmd_")
+                            mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
+
+                        Case Else
+                            Exit While
+                    End Select
+
+                    If (mDevoceProp.ContainsKey("ID")) Then
+                        mNewDevice.iId = CInt(mDevoceProp("ID"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("VmtID")) Then
+                        mNewDevice.iVmtId = CInt(mDevoceProp("VmtID"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("VmtTrackerRole")) Then
+                        mNewDevice.iVmtTrackerRole = CType(CInt(mDevoceProp("VmtTrackerRole")), ENUM_TRACKER_ROLE)
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("FpsOscCounter")) Then
+                        mNewDevice.iFpsOscCounter = CInt(mDevoceProp("FpsOscCounter"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("HasStatusError")) Then
+                        mNewDevice.bHasStatusError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    mDeviceList.Add(mNewDevice)
+                    Exit While
+                End While
+
+                mDevoceProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDevoceProp(sKey) = sValue
+            End If
+        Next
+
+        Return mDeviceList.ToArray
     End Function
 End Class
