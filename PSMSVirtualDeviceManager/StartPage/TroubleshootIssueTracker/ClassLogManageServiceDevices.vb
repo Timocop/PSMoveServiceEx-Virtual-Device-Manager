@@ -127,7 +127,9 @@ Public Class ClassLogManageServiceDevices
     End Function
 
     Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckEmpty(mData))
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
@@ -136,6 +138,25 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Return mData(GetActionTitle())
+    End Function
+
+    Public Function CheckEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent(mData)
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            String.Format("{0} log unavailable", GetActionTitle()),
+            "Some diagnostic details are unavailable due to missing log information.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+        End If
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()

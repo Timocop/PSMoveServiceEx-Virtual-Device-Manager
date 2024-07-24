@@ -52,9 +52,9 @@ Public Class ClassLogDxdiag
 
     Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckEmpty(mData))
         mIssues.AddRange(CheckMultipleBluetoothDevices(mData))
         mIssues.AddRange(CheckMultipleUsbControllers(mData))
-        mIssues.AddRange(CheckEmpty(mData))
         Return mIssues.ToArray
     End Function
 
@@ -64,6 +64,25 @@ Public Class ClassLogDxdiag
         End If
 
         Return mData(GetActionTitle)
+    End Function
+
+    Public Function CheckEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent(mData)
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            String.Format("{0} log unavailable", GetActionTitle()),
+            "Some diagnostic details are unavailable due to missing log information.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+        End If
+
+        Return mIssues.ToArray
     End Function
 
     Private Function CheckMultipleBluetoothDevices(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
@@ -155,25 +174,6 @@ Public Class ClassLogDxdiag
         Next
 
         If (iUsbHostCount < 2) Then
-            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
-        End If
-
-        Return mIssues.ToArray
-    End Function
-
-    Public Function CheckEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
-        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
-
-        Dim sContent As String = GetSectionContent(mData)
-
-        Dim mTemplate As New STRUC_LOG_ISSUE(
-            "DxDiag Log Unavailable",
-            "Some diagnostic details are unavailable due to missing log information.",
-            "",
-            ENUM_LOG_ISSUE_TYPE.ERROR
-        )
-
-        If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
             mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
 
