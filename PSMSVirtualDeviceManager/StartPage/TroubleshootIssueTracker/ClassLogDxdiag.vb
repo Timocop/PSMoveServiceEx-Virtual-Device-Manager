@@ -65,12 +65,12 @@ Public Class ClassLogDxdiag
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Possible Bluetooth Bandwidth Issues - {0}"
-        mTemplate.sDescription = "Having multiple bluetooth devices connected, such as '{0}', could cause bandwidth issues if you want to use bluetooth controllers such as PlayStation Move controllers."
-        mTemplate.sSolution = "If you encounter issues with connected controllers, reduce the amount of devices connected to your bluetooth adapter."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Possible Bluetooth Bandwidth Issues",
+            "Having multiple bluetooth devices connected, such as '{0}', could cause bandwidth issues if you want to use bluetooth devices such as PlayStation Move controllers.",
+            "If you encounter issues with connected controllers, reduce the amount of devices connected to your bluetooth adapter.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
 
         Dim sLastDevice As String = ""
         Dim sLastHardwareID As String = ""
@@ -85,12 +85,8 @@ Public Class ClassLogDxdiag
                 sLastDevice = sLines(i).TrimStart.Remove(0, "Description:".Length).Trim
 
                 If (sLastHardwareID.ToUpperInvariant.Contains("BTHENUM\".ToUpperInvariant)) Then
-                    Dim mIssue As New STRUC_LOG_ISSUE
-                    mIssue.bValid = True
-                    mIssue.sMessage = String.Format(mTemplate.sMessage, sLastDevice)
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
                     mIssue.sDescription = String.Format(mTemplate.sDescription, sLastDevice)
-                    mIssue.sSolution = mTemplate.sSolution
-                    mIssue.iType = mTemplate.iType
 
                     mIssues.Add(mIssue)
                 End If
@@ -115,12 +111,12 @@ Public Class ClassLogDxdiag
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Not enough USB 3.0 Host Controllers"
-        mTemplate.sDescription = "This computer does not have enough USB host controllers which limits the amount of devices you can connect to your computer simultaneously."
-        mTemplate.sSolution = "Switch the computer mainboard that has more USB host controllers or get a PCI-Express USB card and install it in your computer."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Not enough USB 3.0 Host Controllers",
+            "This computer does not have enough USB host controllers which limits the amount of devices you can connect to your computer simultaneously.",
+            "Switch the computer mainboard that has more USB host controllers or get a PCI-Express USB card and install it in your computer.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
 
         Dim iUsbHostCount As Integer = 0
 
@@ -150,14 +146,7 @@ Public Class ClassLogDxdiag
         Next
 
         If (iUsbHostCount < 2) Then
-            Dim mIssue As New STRUC_LOG_ISSUE
-            mIssue.bValid = True
-            mIssue.sMessage = mTemplate.sMessage
-            mIssue.sDescription = mTemplate.sDescription
-            mIssue.sSolution = mTemplate.sSolution
-            mIssue.iType = mTemplate.iType
-
-            mIssues.Add(mIssue)
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
 
         Return mIssues.ToArray

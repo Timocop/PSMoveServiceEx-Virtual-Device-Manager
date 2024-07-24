@@ -50,6 +50,7 @@ Public Class ClassLogService
         mIssues.AddRange(CheckServicePairingNotFound(mData))
         mIssues.AddRange(CheckServicePairingFail(mData))
         mIssues.AddRange(CheckServiceDeviceTimeout(mData))
+        mIssues.AddRange(CheckServiceEmpty(mData))
         Return mIssues.ToArray
     End Function
 
@@ -69,12 +70,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Outdated PSMoveServiceEx Version - v{0}"
-        mTemplate.sDescription = "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features."
-        mTemplate.sSolution = "Udpate PSMoveServiceEx to v{0}."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Outdated PSMoveServiceEx Version",
+            "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features.",
+            "Udpate PSMoveServiceEx.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -96,12 +97,8 @@ Public Class ClassLogService
                         sCurrentVersion = Regex.Match(sCurrentVersion, "[0-9\.]+").Value
 
                         If (New Version(sNextVersion) > New Version(sCurrentVersion)) Then
-                            Dim mNewIssue As New STRUC_LOG_ISSUE
-                            mNewIssue.bValid = True
-                            mNewIssue.sMessage = String.Format(mTemplate.sMessage, New Version(sCurrentVersion).ToString)
+                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                             mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
-                            mNewIssue.sSolution = String.Format(mTemplate.sSolution, New Version(sNextVersion).ToString)
-                            mNewIssue.iType = mTemplate.iType
 
                             mIssues.Add(mNewIssue)
                         End If
@@ -127,12 +124,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "PSMoveServiceEx framerate too low"
-        mTemplate.sDescription = "PSMoveServiceEx is running at a very low framerate {0} (minimum {1}) which can cause bad tracking quality."
-        mTemplate.sSolution = "Upgrade your computers CPU."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "PSMoveServiceEx framerate too low",
+            "PSMoveServiceEx is running at a very low framerate {0} (minimum {1}) which can cause bad tracking quality.",
+            "Upgrade your computers CPU.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -151,12 +148,8 @@ Public Class ClassLogService
                     Dim iFpsMinimum As Integer = CInt(mMiNMatch.Groups("Minimum").Value)
 
                     If (iFpsAvg < 100 OrElse iFpsMinimum < 100) Then
-                        Dim mNewIssue As New STRUC_LOG_ISSUE
-                        mNewIssue.bValid = True
-                        mNewIssue.sMessage = mTemplate.sMessage
+                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                         mNewIssue.sDescription = String.Format(mTemplate.sDescription, iFpsAvg, iFpsMinimum)
-                        mNewIssue.sSolution = mTemplate.sSolution
-                        mNewIssue.iType = mTemplate.iType
 
                         mIssues.Add(mNewIssue)
                     End If
@@ -177,12 +170,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Legacy PSMoveService configuration"
-        mTemplate.sDescription = "Legacy PSMoveService configuration has been found. Using legacy configuration can cause abnormal tracking side effects and bad performance."
-        mTemplate.sSolution = "By default PSMoveServieEx should factory reset all configurations automatically when a legacy configuration has been found. But a full factory reset and uninstalling legacy PSMoveService is recommended."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Legacy PSMoveService configuration",
+            "Legacy PSMoveService configuration has been found. Using legacy configuration can cause abnormal tracking side effects and bad performance.",
+            "By default PSMoveServieEx should factory reset all configurations automatically when a legacy configuration has been found. But a full factory reset and uninstalling legacy PSMoveService is recommended.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -193,14 +186,7 @@ Public Class ClassLogService
             End If
 
             If (sLine.Contains("Legacy PSMoveService config detected")) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE
-                mNewIssue.bValid = True
-                mNewIssue.sMessage = mTemplate.sMessage
-                mNewIssue.sDescription = mTemplate.sDescription
-                mNewIssue.sSolution = mTemplate.sSolution
-                mNewIssue.iType = mTemplate.iType
-
-                mIssues.Add(mNewIssue)
+                mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
 
                 Exit For
             End If
@@ -217,12 +203,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Some configration have been factory reset"
-        mTemplate.sDescription = "Some configurations have been factory reset due to version mismatch and some devices have to be configured again."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Some configurations have been factory reset",
+            "Due to version mismatch some configurations have been factory reset and some devices have to be configured again.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -233,14 +219,7 @@ Public Class ClassLogService
             End If
 
             If (sLine.Contains("Config version") AndAlso sLine.Contains("does not match expected version")) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE
-                mNewIssue.bValid = True
-                mNewIssue.sMessage = mTemplate.sMessage
-                mNewIssue.sDescription = mTemplate.sDescription
-                mNewIssue.sSolution = mTemplate.sSolution
-                mNewIssue.iType = mTemplate.iType
-
-                mIssues.Add(mNewIssue)
+                mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
 
                 Exit For
             End If
@@ -257,12 +236,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Failed to retrieve bluetooth adapter information"
-        mTemplate.sDescription = "PSMoveServiceEx is unable to retrieve any bluetooth adapter information."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Failed to retrieve bluetooth adapter information",
+            "PSMoveServiceEx is unable to retrieve any bluetooth adapter information.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -273,14 +252,7 @@ Public Class ClassLogService
             End If
 
             If (sLine.Contains("Failed to retrieve radio info")) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE
-                mNewIssue.bValid = True
-                mNewIssue.sMessage = mTemplate.sMessage
-                mNewIssue.sDescription = mTemplate.sDescription
-                mNewIssue.sSolution = mTemplate.sSolution
-                mNewIssue.iType = mTemplate.iType
-
-                mIssues.Add(mNewIssue)
+                mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
 
                 Exit For
             End If
@@ -297,12 +269,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Failed to set host address"
-        mTemplate.sDescription = "PSMoveServiceEx failed to asign the host address to the controller id {0}."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Failed to set host address",
+            "PSMoveServiceEx failed to asign the host address to the controller id {0}.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -318,12 +290,8 @@ Public Class ClassLogService
                 If (mMatch.Success AndAlso mMatch.Groups("ID").Success) Then
                     Dim iControllerID As Integer = CInt(mMatch.Groups("ID").Value)
 
-                    Dim mNewIssue As New STRUC_LOG_ISSUE
-                    mNewIssue.bValid = True
-                    mNewIssue.sMessage = mTemplate.sMessage
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                     mNewIssue.sDescription = String.Format(mTemplate.sDescription, iControllerID)
-                    mNewIssue.sSolution = mTemplate.sSolution
-                    mNewIssue.iType = mTemplate.iType
 
                     mIssues.Add(mNewIssue)
                 End If
@@ -341,12 +309,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Failed to open device"
-        mTemplate.sDescription = "PSMoveServiceEx failed to open device id {0} ({1})."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Failed to open device",
+            "PSMoveServiceEx failed to open device {0} ({1}).",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -363,12 +331,8 @@ Public Class ClassLogService
                     Dim iDeviceID As Integer = CInt(mMatch.Groups("DeviceID").Value)
                     Dim sPath As String = CStr(mMatch.Groups("Path").Value)
 
-                    Dim mNewIssue As New STRUC_LOG_ISSUE
-                    mNewIssue.bValid = True
-                    mNewIssue.sMessage = mTemplate.sMessage
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                     mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceID, sPath)
-                    mNewIssue.sSolution = mTemplate.sSolution
-                    mNewIssue.iType = mTemplate.iType
 
                     mIssues.Add(mNewIssue)
                 End If
@@ -386,12 +350,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Device limit reached"
-        mTemplate.sDescription = "PSMoveServiceEx could not open any more devices due to the device limit being hit."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Device limit reached",
+            "PSMoveServiceEx could not open any more devices due to the device limit being hit.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -402,14 +366,7 @@ Public Class ClassLogService
             End If
 
             If (sLine.Contains("Can't connect any more new devices. Too many open device")) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE
-                mNewIssue.bValid = True
-                mNewIssue.sMessage = mTemplate.sMessage
-                mNewIssue.sDescription = mTemplate.sDescription
-                mNewIssue.sSolution = mTemplate.sSolution
-                mNewIssue.iType = mTemplate.iType
-
-                mIssues.Add(mNewIssue)
+                mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
 
                 Exit For
             End If
@@ -426,19 +383,19 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Failed to open PlayStation VR Head-mounted Display"
-        mTemplate.sDescription = "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Failed to open PlayStation VR Head-mounted Display",
+            "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
-        Dim mDisabledTemplate As New STRUC_LOG_ISSUE
-        mDisabledTemplate.bValid = False
-        mDisabledTemplate.sMessage = "Failed to open PlayStation VR"
-        mDisabledTemplate.sDescription = "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display device (Morpheus) because it has been disabled."
-        mDisabledTemplate.sSolution = ""
-        mDisabledTemplate.iType = ENUM_LOG_ISSUE_TYPE.INFO
+        Dim mDiabledTemplate As New STRUC_LOG_ISSUE(
+            "Failed to open PlayStation VR",
+            "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display device (Morpheus) because it has been disabled.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -451,23 +408,9 @@ Public Class ClassLogService
 
             If (sLine.Contains("Failed to open MorpheusHMD")) Then
                 If (sLine.Contains("MorpheusHMD is disabled")) Then
-                    Dim mNewIssue As New STRUC_LOG_ISSUE
-                    mNewIssue.bValid = True
-                    mNewIssue.sMessage = mDisabledTemplate.sMessage
-                    mNewIssue.sDescription = mDisabledTemplate.sDescription
-                    mNewIssue.sSolution = mDisabledTemplate.sSolution
-                    mNewIssue.iType = mDisabledTemplate.iType
-
-                    mIssues.Add(mNewIssue)
+                    mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
                 Else
-                    Dim mNewIssue As New STRUC_LOG_ISSUE
-                    mNewIssue.bValid = True
-                    mNewIssue.sMessage = mTemplate.sMessage
-                    mNewIssue.sDescription = mTemplate.sDescription
-                    mNewIssue.sSolution = mTemplate.sSolution
-                    mNewIssue.iType = mTemplate.iType
-
-                    mIssues.Add(mNewIssue)
+                    mIssues.Add(New STRUC_LOG_ISSUE(mDiabledTemplate))
                 End If
 
                 Exit For
@@ -487,12 +430,12 @@ Public Class ClassLogService
 
         Dim mDeviceList As New List(Of String)
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Failed to find bluetooth device"
-        mTemplate.sDescription = "PSMoveServiceEx could not find the target bluetooth device for pairing ({0})."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Failed to find bluetooth device",
+            "PSMoveServiceEx could not find the target bluetooth device ({0}) for pairing.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -509,12 +452,8 @@ Public Class ClassLogService
                     Dim sDeviceAddress As String = mMatch.Groups("Address").Value.Trim.ToUpperInvariant
 
                     If (Not mDeviceList.Contains(sDeviceAddress)) Then
-                        Dim mNewIssue As New STRUC_LOG_ISSUE
-                        mNewIssue.bValid = True
-                        mNewIssue.sMessage = mTemplate.sMessage
+                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                         mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceAddress)
-                        mNewIssue.sSolution = mTemplate.sSolution
-                        mNewIssue.iType = mTemplate.iType
 
                         mIssues.Add(mNewIssue)
 
@@ -535,12 +474,12 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Multiple bluetooth pairing issues"
-        mTemplate.sDescription = "PSMoveServiceEx encountered multiple bluetooth pairing issues. See logs for more details."
-        mTemplate.sSolution = ""
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Multiple bluetooth pairing issues",
+            "PSMoveServiceEx encountered multiple bluetooth pairing issues. See logs for more details.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sTotalFailures As String() = {
                 "No Bluetooth device found matching the given address",
@@ -592,14 +531,7 @@ Public Class ClassLogService
 
 
             If (bFailed) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE
-                mNewIssue.bValid = True
-                mNewIssue.sMessage = mTemplate.sMessage
-                mNewIssue.sDescription = mTemplate.sDescription
-                mNewIssue.sSolution = mTemplate.sSolution
-                mNewIssue.iType = mTemplate.iType
-
-                mIssues.Add(mNewIssue)
+                mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
 
                 Exit For
             End If
@@ -618,12 +550,12 @@ Public Class ClassLogService
 
         Dim mTimedoutDevices As New List(Of Integer)
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Device '{0}' timed out"
-        mTemplate.sDescription = "PSMoveServiceEx had to close a device (ID: {0}) that timed out. This happens when PSMoveServiceEx does not receive any data from the device for example due to connection issues."
-        mTemplate.sSolution = "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too mandy devices and are in range of the bluetooth adapter."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Device timed out",
+            "PSMoveServiceEx had to close device {0} that timed out. This happens when PSMoveServiceEx does not receive any data from the device for example due to connection issues.",
+            "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too mandy devices and are in range of the bluetooth adapter.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -640,12 +572,8 @@ Public Class ClassLogService
                     Dim iDeviceId As Integer = CInt(mMatch.Groups("ID").Value)
 
                     If (Not mTimedoutDevices.Contains(iDeviceId)) Then
-                        Dim mNewIssue As New STRUC_LOG_ISSUE
-                        mNewIssue.bValid = True
-                        mNewIssue.sMessage = String.Format(mTemplate.sMessage, iDeviceId)
+                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                         mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceId)
-                        mNewIssue.sSolution = mTemplate.sSolution
-                        mNewIssue.iType = mTemplate.iType
 
                         mIssues.Add(mNewIssue)
 
@@ -658,7 +586,7 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckServiceException(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckServiceEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
         Dim sContent As String = GetSectionContent(mData)
@@ -666,52 +594,16 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTemplate As New STRUC_LOG_ISSUE
-        mTemplate.bValid = False
-        mTemplate.sMessage = "Outdated PSMoveServiceEx Version - v{0}"
-        mTemplate.sDescription = "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features."
-        mTemplate.sSolution = "Udpate PSMoveServiceEx to v{0}."
-        mTemplate.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "PSMoveServiceEx Log Unavailable",
+            "Some diagnostic details are unavailable due to missing log information.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
 
-        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
-        For i = 0 To sLines.Length - 1
-            Dim sLine As String = sLines(i)
-
-            If (Not sLine.StartsWith("[")) Then
-                Continue For
-            End If
-
-            If (sLine.Contains("Starting PSMoveServiceEx")) Then
-                Dim mMatch As Match = Regex.Match(sLine, "Starting PSMoveServiceEx v(?<Version>0.27.0.0)", RegexOptions.IgnoreCase)
-
-                If (mMatch.Success AndAlso mMatch.Groups("Version").Success) Then
-                    Try
-                        Dim sCurrentVersion As String = mMatch.Groups("Version").Value
-                        Dim sNextVersion As String = ClassUpdate.ClassPsms.GetNextVersion(Nothing)
-
-                        sNextVersion = Regex.Match(sNextVersion, "[0-9\.]+").Value
-                        sCurrentVersion = Regex.Match(sCurrentVersion, "[0-9\.]+").Value
-
-                        If (New Version(sNextVersion) > New Version(sCurrentVersion)) Then
-                            Dim mNewIssue As New STRUC_LOG_ISSUE
-                            mNewIssue.bValid = True
-                            mNewIssue.sMessage = String.Format(mTemplate.sMessage, New Version(sCurrentVersion).ToString)
-                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
-                            mNewIssue.sSolution = String.Format(mTemplate.sSolution, New Version(sNextVersion).ToString)
-                            mNewIssue.iType = mTemplate.iType
-
-                            mIssues.Add(mNewIssue)
-                        End If
-                    Catch ex As Threading.ThreadAbortException
-                        Throw
-                    Catch ex As Exception
-                        ' Ignore any connection issues
-                    End Try
-                End If
-
-                Exit For
-            End If
-        Next
+        If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+        End If
 
         Return mIssues.ToArray
     End Function

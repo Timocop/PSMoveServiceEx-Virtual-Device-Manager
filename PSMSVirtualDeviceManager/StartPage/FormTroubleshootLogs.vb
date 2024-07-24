@@ -42,6 +42,18 @@ Public Class FormTroubleshootLogs
         Dim sDescription As String
         Dim sSolution As String
         Dim iType As ENUM_LOG_ISSUE_TYPE
+
+        Public Sub New(_Issue As STRUC_LOG_ISSUE)
+            Me.New(_Issue.sMessage, _Issue.sDescription, _Issue.sSolution, _Issue.iType)
+        End Sub
+
+        Public Sub New(_Message As String, _Description As String, _Solution As String, _Type As ENUM_LOG_ISSUE_TYPE)
+            bValid = True
+            sMessage = _Message
+            sDescription = _Description
+            sSolution = _Solution
+            iType = _Type
+        End Sub
     End Structure
 
     Public Interface ILogAction
