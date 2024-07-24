@@ -44,7 +44,8 @@ Public Class ClassLogManageOscDevices
 
             sTrackersList.AppendFormat("[Device_{0}]", mItem.iIndex).AppendLine()
             sTrackersList.AppendFormat("ID={0}", mItem.iIndex).AppendLine()
-            sTrackersList.AppendFormat("Type={0}", mItem.iType).AppendLine()
+            sTrackersList.AppendFormat("Type={0}", CInt(mItem.iType)).AppendLine()
+            sTrackersList.AppendFormat("TypeName={0}", mItem.iType.ToString).AppendLine()
             sTrackersList.AppendFormat("Serial={0}", mItem.sSerial).AppendLine()
             sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",
                                                                             mPos.X.ToString(Globalization.CultureInfo.InvariantCulture),
@@ -127,16 +128,7 @@ Public Class ClassLogManageOscDevices
                 ' Required
                 While True
                     If (mDevoceProp.ContainsKey("Type")) Then
-                        Select Case (mDevoceProp("Type"))
-                            Case "CONTROLLER"
-                                mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
-                            Case "HMD"
-                                mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
-                            Case "TRACKER"
-                                mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
-                            Case Else
-                                Exit While
-                        End Select
+                        mNewDevice.iType = CType(CInt(mDevoceProp("Type")), ENUM_DEVICE_TYPE)
                     Else
                         Exit While
                     End If

@@ -52,7 +52,8 @@ Public Class ClassLogManageServiceDevices
             sTrackersList.AppendFormat("IsTracking={0}", mItem.m_IsTracking).AppendLine()
             sTrackersList.AppendFormat("IsValid={0}", mItem.m_IsValid).AppendLine()
             sTrackersList.AppendFormat("Serial={0}", mItem.m_Serial).AppendLine()
-            sTrackersList.AppendFormat("TrackingColor={0}", mItem.m_TrackingColor).AppendLine()
+            sTrackersList.AppendFormat("TrackingColor={0}", CInt(mItem.m_TrackingColor)).AppendLine()
+            sTrackersList.AppendFormat("TrackingColorName={0}", mItem.m_TrackingColor.ToString).AppendLine()
             sTrackersList.AppendFormat("BatteryLevel={0}", mItem.m_BatteryLevel).AppendLine()
             sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
             sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",

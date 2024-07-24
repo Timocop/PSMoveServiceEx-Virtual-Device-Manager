@@ -36,9 +36,15 @@ Public Class ClassLogManagerAttachments
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
                                                    sTrackersList.AppendFormat("ParentControllerID={0}", mItem.g_mClassIO.m_ParentController).AppendLine()
                                                    sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
-                                                   sTrackersList.AppendFormat("ControllerOffset={0}", mItem.g_mClassIO.m_ControllerOffset.ToString).AppendLine()
+                                                   sTrackersList.AppendFormat("ControllerOffset={0}", String.Format("{0}, {1}, {2}",
+                                                                                                                    mItem.g_mClassIO.m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                    mItem.g_mClassIO.m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                    mItem.g_mClassIO.m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture))).AppendLine()
                                                    sTrackersList.AppendFormat("ControllerYawCorrection={0}", mItem.g_mClassIO.m_ControllerYawCorrection).AppendLine()
-                                                   sTrackersList.AppendFormat("JointOffset={0}", mItem.g_mClassIO.m_JointOffset.ToString).AppendLine()
+                                                   sTrackersList.AppendFormat("JointOffset={0}", String.Format("{0}, {1}, {2}",
+                                                                                                                    mItem.g_mClassIO.m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                    mItem.g_mClassIO.m_JointOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                    mItem.g_mClassIO.m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture))).AppendLine()
                                                    sTrackersList.AppendFormat("JointYawCorrection={0}", mItem.g_mClassIO.m_JointYawCorrection).AppendLine()
                                                    sTrackersList.AppendFormat("OnlyJointOffset={0}", mItem.g_mClassIO.m_OnlyJointOffset).AppendLine()
 

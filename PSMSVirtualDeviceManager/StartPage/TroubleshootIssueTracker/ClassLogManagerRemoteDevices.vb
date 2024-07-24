@@ -1,4 +1,5 @@
-﻿Imports PSMSVirtualDeviceManager
+﻿Imports System.Numerics
+Imports PSMSVirtualDeviceManager
 Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 
 Public Class ClassLogManagerRemoteDevices
@@ -30,14 +31,23 @@ Public Class ClassLogManagerRemoteDevices
         ClassUtils.SyncInvoke(g_mFormMain, Sub()
                                                Dim mRemoteDevices = g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices.GetRemoteDevices()
                                                For Each mItem In mRemoteDevices
+                                                   Dim mAng As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_Orientation)
+                                                   Dim mReset As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_ResetOrientation)
+
                                                    sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
                                                    sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
                                                    sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
                                                    sTrackersList.AppendFormat("TrackerName={0}", mItem.m_TrackerName).AppendLine()
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
                                                    sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
-                                                   sTrackersList.AppendFormat("Orientation={0}", ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_Orientation).ToString).AppendLine()
-                                                   sTrackersList.AppendFormat("ResetOrientation={0}", ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_ResetOrientation).ToString).AppendLine()
+                                                   sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
+                                                                                                                mAng.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                mAng.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                mAng.Z.ToString(Globalization.CultureInfo.InvariantCulture))).AppendLine()
+                                                   sTrackersList.AppendFormat("ResetOrientation={0}", String.Format("{0}, {1}, {2}",
+                                                                                                                mReset.X.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                mReset.Y.ToString(Globalization.CultureInfo.InvariantCulture),
+                                                                                                                mReset.Z.ToString(Globalization.CultureInfo.InvariantCulture))).AppendLine()
                                                    sTrackersList.AppendFormat("YawOrientationOffset={0}", mItem.g_mClassIO.m_YawOrientationOffset).AppendLine()
 
                                                    sTrackersList.AppendLine()

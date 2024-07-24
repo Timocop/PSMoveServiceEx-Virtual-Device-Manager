@@ -46,7 +46,8 @@ Public Class ClassLogManagerVmtTrackers
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
                                                    sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
                                                    sTrackersList.AppendFormat("VmtID={0}", mItem.g_mClassIO.m_VmtTracker).AppendLine()
-                                                   sTrackersList.AppendFormat("VmtTrackerRole={0}", mItem.g_mClassIO.m_VmtTrackerRole).AppendLine()
+                                                   sTrackersList.AppendFormat("VmtTrackerRole={0}", CInt(mItem.g_mClassIO.m_VmtTrackerRole)).AppendLine()
+                                                   sTrackersList.AppendFormat("VmtTrackerRoleName={0}", mItem.g_mClassIO.m_VmtTrackerRole.ToString).AppendLine()
                                                    sTrackersList.AppendFormat("FpsOscCounter={0}", mItem.g_mClassIO.m_FpsOscCounter).AppendLine()
 
                                                    sTrackersList.AppendLine()
