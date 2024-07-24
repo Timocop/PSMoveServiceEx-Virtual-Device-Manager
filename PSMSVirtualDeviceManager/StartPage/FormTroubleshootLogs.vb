@@ -48,11 +48,7 @@ Public Class FormTroubleshootLogs
         Function GetActionTitle() As String
         Sub DoWork(mData As Dictionary(Of String, String))
         Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
-    End Interface
-
-    Public Interface IIssuesTracker
-        Function GetSectionContent() As String
-        Function GetIssues() As STRUC_LOG_ISSUE()
+        Function GetSectionContent(mData As Dictionary(Of String, String)) As String
     End Interface
 
     Public Sub New(_FormMain As FormMain)
@@ -88,13 +84,7 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
-        If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
-            Return
-        End If
-
-        g_mThread = New Threading.Thread(AddressOf ThreadRefresh)
-        g_mThread.IsBackground = True
-        g_mThread.Start()
+        StartLogAnalysis(True, True)
     End Sub
 
     Private Sub Button_LogCopy_Click(sender As Object, e As EventArgs) Handles Button_LogCopy.Click
@@ -148,21 +138,13 @@ Public Class FormTroubleshootLogs
                     End SyncLock
 
                     RefreshDisplayLogs()
+
+                    StartLogAnalysis(False, True)
                 End If
             End Using
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
-    End Sub
-
-    Private Sub Button_LogCheckIssues_Click(sender As Object, e As EventArgs) Handles Button_LogCheckIssues.Click
-        If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
-            Return
-        End If
-
-        g_mThread = New Threading.Thread(AddressOf ThreadScanIssues)
-        g_mThread.IsBackground = True
-        g_mThread.Start()
     End Sub
 
     Private Function GetCombinedLogs() As String
@@ -230,7 +212,17 @@ Public Class FormTroubleshootLogs
         End Get
     End Property
 
-    Private Sub ThreadScanIssues()
+    Public Sub StartLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean)
+        If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
+            Return
+        End If
+
+        g_mThread = New Threading.Thread(Sub() ThreadLogAnalysis(bGenerateLogs, bDiagnostics))
+        g_mThread.IsBackground = True
+        g_mThread.Start()
+    End Sub
+
+    Private Sub ThreadLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean)
         Try
             ClassUtils.AsyncInvoke(Me, Sub()
                                            If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
@@ -239,74 +231,18 @@ Public Class FormTroubleshootLogs
                                            End If
 
                                            g_mProgress = New FormLoading
-                                           g_mProgress.Text = "Checking for issues..."
+                                           g_mProgress.Text = "Preparing..."
                                            g_mProgress.ShowDialog(Me)
                                        End Sub)
 
-            Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+            If (bGenerateLogs) Then
+                ThreadDoGenerateLogs()
+            End If
 
-            For Each mJob In g_mLogJobs
-                Dim sJobAction As String = String.Format("Checking {0}...", mJob.GetActionTitle())
+            If (bDiagnostics) Then
+                ThreadDoDiagnostics()
+            End If
 
-                ClassUtils.AsyncInvoke(Me, Sub()
-                                               If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                                   g_mProgress.Text = sJobAction
-                                               End If
-                                           End Sub)
-
-                Try
-                    mIssues.AddRange(mJob.GetIssues(m_FileContent))
-                Catch ex As NotImplementedException
-                    ' Ignore
-                Catch ex As Threading.ThreadAbortException
-                    Throw
-                Catch ex As Exception
-                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-                End Try
-            Next
-
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           ListView_Issues.Items.Clear()
-
-                                           ListView_Issues.BeginUpdate()
-                                           Try
-                                               For Each mItem In mIssues
-                                                   Dim mNewItem As New ListViewItem(New String() {
-                                                       mItem.sMessage,
-                                                       mItem.sDescription,
-                                                       mItem.sSolution
-                                                   })
-
-                                                   mNewItem.ImageIndex = 0
-
-                                                   Select Case (mItem.iType)
-                                                       Case ENUM_LOG_ISSUE_TYPE.INFO
-                                                           mNewItem.ImageKey = "Info"
-                                                       Case ENUM_LOG_ISSUE_TYPE.WARNING
-                                                           mNewItem.ImageKey = "Warn"
-                                                       Case ENUM_LOG_ISSUE_TYPE.ERROR
-                                                           mNewItem.ImageKey = "Error"
-                                                   End Select
-
-                                                   ListView_Issues.Items.Add(mNewItem)
-                                               Next
-
-                                               If (ListView_Issues.Items.Count < 1) Then
-                                                   Dim mNewItem As New ListViewItem(New String() {
-                                                        "No issues have been found",
-                                                        "",
-                                                        ""
-                                                    })
-
-                                                   mNewItem.ImageKey = "Good"
-                                                   ListView_Issues.Items.Add(mNewItem)
-                                               End If
-                                           Finally
-                                               ListView_Issues.EndUpdate()
-                                           End Try
-
-                                           TabControl_Diagnostic.SelectedTab = TabPage_Issues
-                                       End Sub)
         Catch ex As Threading.ThreadAbortException
             Throw
         Catch ex As Exception
@@ -321,98 +257,128 @@ Public Class FormTroubleshootLogs
         End Try
     End Sub
 
-    Private Sub ThreadRefresh()
-        Try
+    Private Sub ThreadDoGenerateLogs()
+        m_FileContent.Clear()
+
+        For Each mJob In g_mLogJobs
+            Dim sJobAction As String = String.Format("Gathering {0}...", mJob.GetActionTitle())
+
             ClassUtils.AsyncInvoke(Me, Sub()
                                            If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Dispose()
-                                               g_mProgress = Nothing
+                                               g_mProgress.Text = sJobAction
                                            End If
-
-                                           g_mProgress = New FormLoading
-                                           g_mProgress.Text = "Gathering logs..."
-                                           g_mProgress.ShowDialog(Me)
                                        End Sub)
 
-            m_FileContent.Clear()
+            Try
+                mJob.DoWork(m_FileContent)
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+                m_FileContent(mJob.GetActionTitle()) = String.Format("EXCEPTION: {0}", ex.Message)
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+            End Try
+        Next
 
-            For Each mJob In g_mLogJobs
-                Dim sJobAction As String = String.Format("Gathering {0}...", mJob.GetActionTitle())
+        ClassUtils.AsyncInvoke(Me, Sub() RefreshDisplayLogs())
+    End Sub
 
-                ClassUtils.AsyncInvoke(Me, Sub()
-                                               If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                                   g_mProgress.Text = sJobAction
-                                               End If
-                                           End Sub)
+    Private Sub ThreadDoDiagnostics()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-                Try
-                    mJob.DoWork(m_FileContent)
-                Catch ex As Threading.ThreadAbortException
-                    Throw
-                Catch ex As Exception
-                    m_FileContent(mJob.GetActionTitle()) = String.Format("EXCEPTION: {0}", ex.Message)
-                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-                End Try
-            Next
+        For Each mJob In g_mLogJobs
+            Dim sJobAction As String = String.Format("Checking {0}...", mJob.GetActionTitle())
 
-            ClassUtils.AsyncInvoke(Me, Sub() RefreshDisplayLogs())
-        Catch ex As Threading.ThreadAbortException
-            Throw
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        Finally
             ClassUtils.AsyncInvoke(Me, Sub()
                                            If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Dispose()
-                                               g_mProgress = Nothing
+                                               g_mProgress.Text = sJobAction
                                            End If
                                        End Sub)
-        End Try
+
+            Try
+                mIssues.AddRange(mJob.GetIssues(m_FileContent))
+            Catch ex As NotImplementedException
+                ' Ignore
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+            End Try
+        Next
+
+        ClassUtils.AsyncInvoke(Me, Sub()
+                                       ListView_Issues.Items.Clear()
+
+                                       ListView_Issues.BeginUpdate()
+                                       Try
+                                           For Each mItem In mIssues
+                                               Dim mNewItem As New ListViewItem(New String() {
+                                                   mItem.sMessage,
+                                                   mItem.sDescription,
+                                                   mItem.sSolution
+                                               })
+
+                                               mNewItem.ImageIndex = 0
+
+                                               Select Case (mItem.iType)
+                                                   Case ENUM_LOG_ISSUE_TYPE.INFO
+                                                       mNewItem.ImageKey = "Info"
+                                                   Case ENUM_LOG_ISSUE_TYPE.WARNING
+                                                       mNewItem.ImageKey = "Warn"
+                                                   Case ENUM_LOG_ISSUE_TYPE.ERROR
+                                                       mNewItem.ImageKey = "Error"
+                                               End Select
+
+                                               ListView_Issues.Items.Add(mNewItem)
+                                           Next
+
+                                           If (ListView_Issues.Items.Count < 1) Then
+                                               Dim mNewItem As New ListViewItem(New String() {
+                                                    "No issues have been found",
+                                                    "",
+                                                    ""
+                                                })
+
+                                               mNewItem.ImageKey = "Good"
+                                               ListView_Issues.Items.Add(mNewItem)
+                                           End If
+                                       Finally
+                                           ListView_Issues.EndUpdate()
+                                       End Try
+                                   End Sub)
     End Sub
 
     Private Sub RefreshDisplayLogs()
-        For i = TabControl_Logs.TabCount - 1 To 0 Step -1
-            TabControl_Logs.TabPages(i).Dispose()
-        Next
+        Try
+            TabControl_Logs.SuspendLayout()
 
-        For Each mItem In m_FileContent
-            Dim mTab As New TabPage(mItem.Key)
-            mTab.BackColor = Color.White
+            For i = TabControl_Logs.TabCount - 1 To 0 Step -1
+                TabControl_Logs.TabPages(i).Dispose()
+            Next
 
-            Dim mTextBox As New TextBox
-            mTextBox.SuspendLayout()
-            mTextBox.Parent = mTab
+            For Each mItem In m_FileContent
+                Dim mTab As New TabPage(mItem.Key)
+                mTab.BackColor = Color.White
 
-            mTextBox.Multiline = True
-            mTextBox.WordWrap = False
-            mTextBox.ReadOnly = True
-            mTextBox.BackColor = Color.White
+                Dim mTextBox As New TextBox
+                mTextBox.SuspendLayout()
+                mTextBox.Parent = mTab
 
-            mTextBox.Text = mItem.Value
-            mTextBox.Dock = DockStyle.Fill
-            mTextBox.BorderStyle = BorderStyle.None
-            mTextBox.ScrollBars = ScrollBars.Both
-            mTextBox.ResumeLayout()
+                mTextBox.Multiline = True
+                mTextBox.WordWrap = False
+                mTextBox.ReadOnly = True
+                mTextBox.BackColor = Color.White
 
-            TabControl_Logs.TabPages.Add(mTab)
-        Next
+                mTextBox.Text = mItem.Value
+                mTextBox.Dock = DockStyle.Fill
+                mTextBox.BorderStyle = BorderStyle.None
+                mTextBox.ScrollBars = ScrollBars.Both
+                mTextBox.ResumeLayout()
 
-        If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-            g_mProgress.Dispose()
-            g_mProgress = Nothing
-        End If
-    End Sub
-
-    Private Sub CleanUp()
-        If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
-            g_mThread.Abort()
-            g_mThread.Join()
-            g_mThread = Nothing
-        End If
-    End Sub
-
-    Private Sub FormTroubleshootLogs_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
-        CleanUp()
+                TabControl_Logs.TabPages.Add(mTab)
+            Next
+        Finally
+            TabControl_Logs.ResumeLayout()
+        End Try
     End Sub
 
     Private Sub ListView_Issues_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Issues.SelectedIndexChanged
@@ -437,5 +403,17 @@ Public Class FormTroubleshootLogs
         sInfo.AppendLine()
 
         TextBox_IssueInfo.Text = sInfo.ToString
+    End Sub
+
+    Private Sub FormTroubleshootLogs_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        CleanUp()
+    End Sub
+
+    Private Sub CleanUp()
+        If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
+            g_mThread.Abort()
+            g_mThread.Join()
+            g_mThread = Nothing
+        End If
     End Sub
 End Class

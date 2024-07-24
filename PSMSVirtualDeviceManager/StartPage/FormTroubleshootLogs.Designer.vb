@@ -28,7 +28,6 @@ Partial Class FormTroubleshootLogs
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Button_LogCheckIssues = New System.Windows.Forms.Button()
         Me.Button_LogLoad = New System.Windows.Forms.Button()
         Me.Button_LogSave = New System.Windows.Forms.Button()
         Me.Button_LogCopy = New System.Windows.Forms.Button()
@@ -56,7 +55,6 @@ Partial Class FormTroubleshootLogs
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.SystemColors.Control
-        Me.Panel1.Controls.Add(Me.Button_LogCheckIssues)
         Me.Panel1.Controls.Add(Me.Button_LogLoad)
         Me.Panel1.Controls.Add(Me.Button_LogSave)
         Me.Panel1.Controls.Add(Me.Button_LogCopy)
@@ -67,17 +65,6 @@ Partial Class FormTroubleshootLogs
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(784, 48)
         Me.Panel1.TabIndex = 0
-        '
-        'Button_LogCheckIssues
-        '
-        Me.Button_LogCheckIssues.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_LogCheckIssues.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_LogCheckIssues.Location = New System.Drawing.Point(472, 13)
-        Me.Button_LogCheckIssues.Name = "Button_LogCheckIssues"
-        Me.Button_LogCheckIssues.Size = New System.Drawing.Size(116, 23)
-        Me.Button_LogCheckIssues.TabIndex = 5
-        Me.Button_LogCheckIssues.Text = "Check for issues"
-        Me.Button_LogCheckIssues.UseVisualStyleBackColor = True
         '
         'Button_LogLoad
         '
@@ -269,7 +256,6 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents TabControl_Logs As TabControl
     Friend WithEvents Button_LogSave As Button
     Friend WithEvents Button_LogLoad As Button
-    Friend WithEvents Button_LogCheckIssues As Button
     Friend WithEvents TabControl_Diagnostic As TabControl
     Friend WithEvents TabPage_Logs As TabPage
     Friend WithEvents TabPage_Issues As TabPage

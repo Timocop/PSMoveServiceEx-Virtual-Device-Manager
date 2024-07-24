@@ -1,4 +1,5 @@
-﻿Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager
+Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 
 Public Class ClassLogManagerRemoteDevices
     Implements ILogAction
@@ -41,6 +42,10 @@ Public Class ClassLogManagerRemoteDevices
     End Function
 
     Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
+        Throw New NotImplementedException()
+    End Function
+
+    Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
         Throw New NotImplementedException()
     End Function
 End Class
