@@ -51,6 +51,7 @@ Public Class ClassLogService
         mIssues.AddRange(CheckServicePairingFail(mData))
         mIssues.AddRange(CheckServiceDeviceTimeout(mData))
         mIssues.AddRange(CheckServiceEmpty(mData))
+        mIssues.AddRange(CheckServiceIncomplete(mData))
         Return mIssues.ToArray
     End Function
 
@@ -604,4 +605,61 @@ Public Class ClassLogService
 
         Return mIssues.ToArray
     End Function
+
+    Public Function CheckServiceIncomplete(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "PSMoveServiceEx log incomplete",
+            "The PSMoveServiceEx log is incompelte and has missing logging details. Some diagnostic details are unavailable due to missing log information.",
+            "Let PSMoveServiceEx finish initalizing.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim iState As Integer = 0
+        Dim bSuccess As Boolean = False
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = 0 To sLines.Length - 1
+            Dim sLine As String = sLines(i)
+
+            If (Not sLine.StartsWith("[")) Then
+                Continue For
+            End If
+
+            If (Not sLine.Contains("PSMoveServiceEx")) Then
+                Continue For
+            End If
+
+            Select Case (iState)
+                Case 0
+                    If (sLine.Contains("Starting PSMoveServiceEx")) Then
+                        iState = 1
+                    End If
+
+                Case 1
+                    If (sLine.Contains("Startup successful!")) Then
+                        iState = 2
+                    End If
+
+                Case 2
+                    If (sLine.Contains("Successfully Initialized!")) Then
+                        iState = 3
+                        bSuccess = True
+                    End If
+            End Select
+        Next
+
+        If (Not bSuccess) Then
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
 End Class
