@@ -125,11 +125,11 @@ Public Class ClassLogManagerVmtTrackers
                 Continue For
             End If
 
+            Dim bExist As Boolean = False
+            Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
             Select Case (mDevice.iType)
                 Case ENUM_DEVICE_TYPE.CONTROLLER
-                    Dim bExist As Boolean = False
-                    Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
-
                     For Each mServiceDevice In mServiceLog.GetDevices()
                         If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
                             Continue For
@@ -152,9 +152,6 @@ Public Class ClassLogManagerVmtTrackers
                     End If
 
                 Case ENUM_DEVICE_TYPE.HMD
-                    Dim bExist As Boolean = False
-                    Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
-
                     For Each mServiceDevice In mServiceLog.GetDevices()
                         If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.HMD) Then
                             Continue For
