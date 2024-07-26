@@ -132,7 +132,7 @@ Public Class ClassLogManagerRemoteDevices
             If (Not bExist) Then
                 Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
                 mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
-                mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                mIssues.Add(mIssue)
             End If
         Next
 

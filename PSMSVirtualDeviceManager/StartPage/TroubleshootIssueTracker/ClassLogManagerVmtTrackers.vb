@@ -148,7 +148,7 @@ Public Class ClassLogManagerVmtTrackers
                         mIssue.sMessage = String.Format(mIssue.sMessage, "Controller")
                         mIssue.sDescription = String.Format(mIssue.sDescription, "Controller", mDevice.iId)
                         mIssue.sSolution = String.Format(mIssue.sSolution, "Controller")
-                        mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                        mIssues.Add(mIssue)
                     End If
 
                 Case ENUM_DEVICE_TYPE.HMD
@@ -170,7 +170,7 @@ Public Class ClassLogManagerVmtTrackers
                         mIssue.sMessage = String.Format(mIssue.sMessage, "Head-mounted Display")
                         mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
                         mIssue.sSolution = String.Format(mIssue.sSolution, "Head-mounted Display")
-                        mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                        mIssues.Add(mIssue)
                     End If
             End Select
         Next
