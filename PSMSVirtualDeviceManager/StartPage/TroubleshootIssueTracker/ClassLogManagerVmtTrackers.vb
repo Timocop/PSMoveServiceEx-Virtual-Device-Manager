@@ -66,6 +66,7 @@ Public Class ClassLogManagerVmtTrackers
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckInvalidIds())
+        mIssues.AddRange(CheckCheckGenericRoles())
         Return mIssues.ToArray
     End Function
 
@@ -162,6 +163,41 @@ Public Class ClassLogManagerVmtTrackers
 
                 End Select
             End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckCheckGenericRoles() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual Motion Tracker (VMT) uses generic tracker roles",
+            "Virtual Motion Tracker (VMT) controller id {0} uses generic tracker roles. Generic tracker roles require manual bindings to be set up and is not recommended for SteamVR.",
+            "If you are planning to use Virtual Motion Trackers (VMTs) with SteamVR, use HTC Vive emulated device roles instead.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.CONTROLLER) Then
+                Continue For
+            End If
+
+            Select Case (mDevice.iVmtTrackerRole)
+                Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER,
+                      ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER,
+                      ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
+                    Continue For
+            End Select
+
+            Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+            mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
+            mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
         Next
 
         Return mIssues.ToArray
