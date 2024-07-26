@@ -85,15 +85,15 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
-            "Invalid Virtual Motion Tracker (VMT) ids",
-            "Some Virtual Motion Tracker (VMT) controller, head-mounted display or VMT ids have not set properly. Therefore those trackers are disabled.",
+            "Invalid virtual motion tracker ids",
+            "Some virtual motion tracker controller, head-mounted display or VMT ids have not set properly. Therefore those trackers are disabled.",
             "Properly asign the controller or head-mounted display id to an existing PSMoveServiceEx device and the VMT id to free slot that is not in use.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
-            "Virtual Motion Tracker (VMT) {0} id does not point to a existing device",
-            "The Virtual Motion Tracker (VMT) {0} id {1} does not point to a existing PSMoveServiceEx device.",
+            "Virtual motion tracker {0} id does not point to a existing device",
+            "The virtual motion tracker {0} id {1} does not point to a existing PSMoveServiceEx device.",
             "Properly asign the {0} id to an existing PSMoveServiceEx device and the VMT id to free slot that is not in use.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )

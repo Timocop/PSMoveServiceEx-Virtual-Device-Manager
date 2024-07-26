@@ -64,7 +64,9 @@ Public Class ClassLogManagerRemoteDevices
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckInvalidIds())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -73,6 +75,68 @@ Public Class ClassLogManagerRemoteDevices
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckInvalidIds() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
+            "Invalid remote device ids",
+            "Some remote device controller ids have not set properly. Therefore those remote devices are disabled.",
+            "Properly asign the remote device controller id to an existing PSMoveServiceEx device.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
+            "Remote devices does not point to an existing device",
+            "Remote device controller id {0} does not point to a existing PSMoveServiceEx device.",
+            "Properly asign the remote device controller id to an existing PSMoveServiceEx device.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        ' Check if IDs are -1 or invalid 
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
+                Exit For
+            End If
+        Next
+
+        ' Check if ID even point to existing devices
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            Dim bExist As Boolean = False
+            Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
+            For Each mServiceDevice In mServiceLog.GetDevices()
+                If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
+                    Continue For
+                End If
+
+                If (mDevice.iId <> mServiceDevice.iId) Then
+                    Continue For
+                End If
+
+                bExist = True
+                Exit For
+            Next
+
+            If (Not bExist) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
+                mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+            End If
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
