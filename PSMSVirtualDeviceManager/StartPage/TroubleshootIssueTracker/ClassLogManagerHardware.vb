@@ -18,6 +18,7 @@ Public Class ClassLogManagerHardware
         Dim bHasDriverInstalled As Boolean
         Dim bIsEnabled As Boolean
         Dim bIsRemoved As Boolean
+        Dim iConfigFlags As ClassLibusbDriver.DEVICE_CONFIG_FLAGS
         Dim bIsCorrectDrvierInstalled As Boolean
     End Structure
 
@@ -105,8 +106,22 @@ Public Class ClassLogManagerHardware
                 sTrackersList.AppendFormat("HasDriverInstalled={0}", mProvider.HasDriverInstalled).AppendLine()
                 sTrackersList.AppendFormat("IsEnabled={0}", mProvider.IsEnabled).AppendLine()
                 sTrackersList.AppendFormat("IsRemoved={0}", mProvider.IsRemoved).AppendLine()
+                sTrackersList.AppendFormat("ConfigFlags={0}", CInt(mProvider.iConfigFlags)).AppendLine()
+                sTrackersList.AppendFormat("ConfigFlagsName={0}", mProvider.iConfigFlags.ToString).AppendLine()
 
-                sTrackersList.AppendFormat("IsCorrectDrvierInstalled={0}", mProvider.sService.ToUpperInvariant = mDevice.Value.sService.ToUpperInvariant).AppendLine()
+                If (Not mProvider.HasDriverInstalled()) Then
+                    sTrackersList.AppendFormat("IsCorrectDrvierInstalled={0}", "false").AppendLine()
+                Else
+                    If (String.IsNullOrEmpty(mDevice.Value.sService) AndAlso String.IsNullOrEmpty(mProvider.sService)) Then
+                        sTrackersList.AppendFormat("IsCorrectDrvierInstalled={0}", "true").AppendLine()
+                    Else
+                        If (Not String.IsNullOrEmpty(mDevice.Value.sService) AndAlso Not String.IsNullOrEmpty(mProvider.sService)) Then
+                            sTrackersList.AppendFormat("IsCorrectDrvierInstalled={0}", mProvider.sService.ToUpperInvariant = mDevice.Value.sService.ToUpperInvariant).AppendLine()
+                        Else
+                            sTrackersList.AppendFormat("IsCorrectDrvierInstalled={0}", "false").AppendLine()
+                        End If
+                    End If
+                End If
 
                 sTrackersList.AppendLine()
             Next
@@ -120,7 +135,9 @@ Public Class ClassLogManagerHardware
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckBadDrivers())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -129,6 +146,35 @@ Public Class ClassLogManagerHardware
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckBadDrivers() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Required drivers not installed",
+            "Drivers for device {0} ({1}) are not installed and might not work correctly.",
+            "Install all nessecary drivers.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        ' Check if ID even point to existing devices
+        For Each mDevice In GetDevices()
+            If (mDevice.bIsCorrectDrvierInstalled) Then
+                Continue For
+            End If
+
+            Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+            mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.sPath, mDevice.sName)
+            mIssues.Add(mIssue)
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
@@ -215,6 +261,12 @@ Public Class ClassLogManagerHardware
 
                     If (mDeviceProp.ContainsKey("IsRemoved")) Then
                         mNewDevice.bIsRemoved = (mDeviceProp("IsRemoved").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("ConfigFlags")) Then
+                        mNewDevice.iConfigFlags = CType(CInt(mDeviceProp("ConfigFlags")), ClassLibusbDriver.DEVICE_CONFIG_FLAGS)
                     Else
                         Exit While
                     End If
