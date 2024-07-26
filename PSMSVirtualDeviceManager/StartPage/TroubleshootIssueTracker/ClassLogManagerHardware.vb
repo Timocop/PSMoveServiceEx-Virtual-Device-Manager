@@ -4,6 +4,23 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerHardware
     Implements ILogAction
 
+    Structure STRUC_DEVICE_ITEM
+        Dim sPath As String
+
+        Dim sName As String
+        Dim sManufacture As String
+        Dim sExpectedService As String
+        Dim sDriverInfPath As String
+        Dim sProviderDescription As String
+        Dim sProviderName As String
+        Dim sProviderVersion As String
+        Dim sService As String
+        Dim bHasDriverInstalled As Boolean
+        Dim bIsEnabled As Boolean
+        Dim bIsRemoved As Boolean
+        Dim bIsCorrectDrvierInstalled As Boolean
+    End Structure
+
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
@@ -112,5 +129,117 @@ Public Class ClassLogManagerHardware
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function GetDevices() As STRUC_DEVICE_ITEM()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
+        Dim mDeviceProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
+                Dim sDeviceKey As String = sLine.Substring(1, sLine.Length - 2)
+
+                Dim mNewDevice As New STRUC_DEVICE_ITEM
+
+                ' Required
+                While True
+                    mNewDevice.sPath = sDeviceKey
+
+                    If (mDeviceProp.ContainsKey("Name")) Then
+                        mNewDevice.sName = mDeviceProp("Name")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("Manufacture")) Then
+                        mNewDevice.sManufacture = mDeviceProp("Manufacture")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("ExpectedService")) Then
+                        mNewDevice.sExpectedService = mDeviceProp("ExpectedService")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("DriverInfPath")) Then
+                        mNewDevice.sDriverInfPath = mDeviceProp("DriverInfPath")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("ProviderDescription")) Then
+                        mNewDevice.sProviderDescription = mDeviceProp("ProviderDescription")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("ProviderName")) Then
+                        mNewDevice.sProviderName = mDeviceProp("ProviderName")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("ProviderVersion")) Then
+                        mNewDevice.sProviderVersion = mDeviceProp("ProviderVersion")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("Service")) Then
+                        mNewDevice.sService = mDeviceProp("Service")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("HasDriverInstalled")) Then
+                        mNewDevice.bHasDriverInstalled = (mDeviceProp("HasDriverInstalled").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("IsEnabled")) Then
+                        mNewDevice.bIsEnabled = (mDeviceProp("IsEnabled").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("IsRemoved")) Then
+                        mNewDevice.bIsRemoved = (mDeviceProp("IsRemoved").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDeviceProp.ContainsKey("IsCorrectDrvierInstalled")) Then
+                        mNewDevice.bIsCorrectDrvierInstalled = (mDeviceProp("IsCorrectDrvierInstalled").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    mDeviceList.Add(mNewDevice)
+                    Exit While
+                End While
+
+                mDeviceProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDeviceProp(sKey) = sValue
+            End If
+        Next
+
+        Return mDeviceList.ToArray
     End Function
 End Class
