@@ -285,7 +285,7 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
-        Dim mDevoceProp As New Dictionary(Of String, String)
+        Dim mDeviceProp As New Dictionary(Of String, String)
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = sLines.Length - 1 To 0 Step -1
@@ -297,8 +297,8 @@ Public Class ClassLogManageServiceDevices
                 Dim mNewDevice As New STRUC_DEVICE_ITEM
 
                 ' Optional
-                If (mDevoceProp.ContainsKey("Position") AndAlso mDevoceProp("Position").Split(","c).Count = 3) Then
-                    Dim mPos = mDevoceProp("Position").Split(","c)
+                If (mDeviceProp.ContainsKey("Position") AndAlso mDeviceProp("Position").Split(","c).Count = 3) Then
+                    Dim mPos = mDeviceProp("Position").Split(","c)
                     Dim iPos(3) As Single
 
                     If (Single.TryParse(mPos(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(0)) AndAlso
@@ -310,8 +310,8 @@ Public Class ClassLogManageServiceDevices
                     End If
                 End If
 
-                If (mDevoceProp.ContainsKey("Orientation") AndAlso mDevoceProp("Orientation").Split(","c).Count = 3) Then
-                    Dim mAng = mDevoceProp("Orientation").Split(","c)
+                If (mDeviceProp.ContainsKey("Orientation") AndAlso mDeviceProp("Orientation").Split(","c).Count = 3) Then
+                    Dim mAng = mDeviceProp("Orientation").Split(","c)
                     Dim iAng(3) As Single
 
                     If (Single.TryParse(mAng(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(0)) AndAlso
@@ -329,8 +329,8 @@ Public Class ClassLogManageServiceDevices
                         Case sDeviceKey.StartsWith("Controller_")
                             mNewDevice.iType = ENUM_DEVICE_TYPE.CONTROLLER
 
-                            If (mDevoceProp.ContainsKey("Serial")) Then
-                                mNewDevice.sSerial = mDevoceProp("Serial")
+                            If (mDeviceProp.ContainsKey("Serial")) Then
+                                mNewDevice.sSerial = mDeviceProp("Serial")
                             Else
                                 Exit While
                             End If
@@ -338,8 +338,8 @@ Public Class ClassLogManageServiceDevices
                         Case sDeviceKey.StartsWith("Hmd_")
                             mNewDevice.iType = ENUM_DEVICE_TYPE.HMD
 
-                            If (mDevoceProp.ContainsKey("Serial")) Then
-                                mNewDevice.sSerial = mDevoceProp("Serial")
+                            If (mDeviceProp.ContainsKey("Serial")) Then
+                                mNewDevice.sSerial = mDeviceProp("Serial")
                             Else
                                 Exit While
                             End If
@@ -347,8 +347,8 @@ Public Class ClassLogManageServiceDevices
                         Case sDeviceKey.StartsWith("Tracker_")
                             mNewDevice.iType = ENUM_DEVICE_TYPE.TRACKER
 
-                            If (mDevoceProp.ContainsKey("Path")) Then
-                                mNewDevice.sSerial = mDevoceProp("Path")
+                            If (mDeviceProp.ContainsKey("Path")) Then
+                                mNewDevice.sSerial = mDeviceProp("Path")
                             Else
                                 Exit While
                             End If
@@ -357,8 +357,8 @@ Public Class ClassLogManageServiceDevices
                             Exit While
                     End Select
 
-                    If (mDevoceProp.ContainsKey("ID")) Then
-                        mNewDevice.iId = CInt(mDevoceProp("ID"))
+                    If (mDeviceProp.ContainsKey("ID")) Then
+                        mNewDevice.iId = CInt(mDeviceProp("ID"))
                     Else
                         Exit While
                     End If
@@ -367,14 +367,14 @@ Public Class ClassLogManageServiceDevices
                     Exit While
                 End While
 
-                mDevoceProp.Clear()
+                mDeviceProp.Clear()
             End If
 
             If (sLine.Contains("="c)) Then
                 Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
                 Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
 
-                mDevoceProp(sKey) = sValue
+                mDeviceProp(sKey) = sValue
             End If
         Next
 

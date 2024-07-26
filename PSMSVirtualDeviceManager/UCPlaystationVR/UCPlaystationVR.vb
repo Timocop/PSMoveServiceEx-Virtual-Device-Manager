@@ -8,6 +8,10 @@
     Private g_mHardwareChangeStatusThread As Threading.Thread = Nothing
     Private g_bHardwareChangeStatusUpdatenNow As Boolean = False
 
+    Private g_iDeviceHdmiStatus As ENUM_DEVICE_HDMI_STATUS = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED
+    Private g_iDeviceUsbStatus As ENUM_DEVICE_USB_STATUS = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED
+    Private g_iDeviceDisplayStatus As ENUM_DEVICE_DISPLAY_STATUS = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED
+
     Enum ENUM_DEVICE_HDMI_STATUS
         NOT_CONNECTED
         CONNECTED
@@ -69,6 +73,30 @@
         g_mHardwareChangeStatusThread.IsBackground = True
         g_mHardwareChangeStatusThread.Start()
     End Sub
+
+    ReadOnly Property m_DeviceHdmiStatus As ENUM_DEVICE_HDMI_STATUS
+        Get
+            SyncLock _ThreadLock
+                Return g_iDeviceHdmiStatus
+            End SyncLock
+        End Get
+    End Property
+
+    ReadOnly Property m_DeviceUsbStatus As ENUM_DEVICE_USB_STATUS
+        Get
+            SyncLock _ThreadLock
+                Return g_iDeviceUsbStatus
+            End SyncLock
+        End Get
+    End Property
+
+    ReadOnly Property m_DeviceDisplayStatus As ENUM_DEVICE_DISPLAY_STATUS
+        Get
+            SyncLock _ThreadLock
+                Return g_iDeviceDisplayStatus
+            End SyncLock
+        End Get
+    End Property
 
     Public Sub SetPlaystationVRStatus(iHdmiStatus As ENUM_DEVICE_HDMI_STATUS, iUsbStatus As ENUM_DEVICE_USB_STATUS, iDisplayStatus As ENUM_DEVICE_DISPLAY_STATUS)
         Select Case (iHdmiStatus)
@@ -423,6 +451,12 @@
                     iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.GENERAL_ISSUE
                     ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
+
+                SyncLock _ThreadLock
+                    g_iDeviceHdmiStatus = iHdmiStatus
+                    g_iDeviceUsbStatus = iUsbStatus
+                    g_iDeviceDisplayStatus = iDisplayStatus
+                End SyncLock
 
                 ClassUtils.AsyncInvoke(Me, Sub() SetPlaystationVRStatus(iHdmiStatus, iUsbStatus, iDisplayStatus))
 
