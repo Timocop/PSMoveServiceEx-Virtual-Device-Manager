@@ -662,4 +662,110 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
+    Public Function FindConfigFromSerial(mData As Dictionary(Of String, String), sSerial As String) As ClassServiceConfig
+        Dim mConfigs = GetConfigs(mData)
+
+        ' $TODO Config files have different naming schemes. Maybe device index to json instead? This is fucking aids.
+
+        ' PSEyes
+        If (sSerial.ToUpperInvariant.Contains(String.Format("VID_{0}&PID_{1}", ClassLibusbDriver.DRV_PSEYE_KNOWN_CONFIGS(0).VID, ClassLibusbDriver.DRV_PSEYE_KNOWN_CONFIGS(0).PID).ToUpperInvariant)) Then
+            Dim sPathSplit As String() = sSerial.Split("\"c)
+            If (sPathSplit.Length > 0) Then
+                Dim sPathEnd As String = String.Format("ps3eye_{0}", sPathSplit(sPathSplit.Length - 1))
+
+                For Each mConfig In mConfigs
+                    If (mConfig.Key.EndsWith(sPathEnd)) Then
+                        Return mConfig.Value
+                    End If
+                Next
+            End If
+        End If
+
+        ' Virtual Trackers
+        If (sSerial.ToUpperInvariant.StartsWith("VirtualTracker".ToUpperInvariant)) Then
+            Dim sPathEnd As String = sSerial.Replace("VirtualTracker_", "virtual_")
+
+            For Each mConfig In mConfigs
+                If (mConfig.Key.EndsWith(sPathEnd)) Then
+                    Return mConfig.Value
+                End If
+            Next
+        End If
+
+        ' Morpheus
+        If (sSerial.ToUpperInvariant.Contains(String.Format("VID_{0}&PID_{1}", ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS(0).VID, ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS(0).PID).ToUpperInvariant)) Then
+            If (mConfigs.ContainsKey("MorpheusHMDConfig")) Then
+                Return mConfigs("MorpheusHMDConfig")
+            End If
+        End If
+
+        ' Bluetooth address (dualshock, psmove, psnavi)
+        If (sSerial.Contains(":"c)) Then
+            Dim sPathEnd As String = sSerial.Replace(":"c, "_"c).ToLowerInvariant
+
+            For Each mConfig In mConfigs
+                If (mConfig.Key.EndsWith(sPathEnd)) Then
+                    Return mConfig.Value
+                End If
+            Next
+        End If
+
+        ' Try anything else, if it works
+        For Each mConfig In mConfigs
+            If (mConfig.Key.EndsWith(sSerial)) Then
+                Return mConfig.Value
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+    Public Function GetConfigs(mData As Dictionary(Of String, String)) As Dictionary(Of String, ClassServiceConfig)
+        Dim mConfigs As New Dictionary(Of String, ClassServiceConfig)
+
+        Dim sContent As String = GetSectionContent(mData)
+        If (sContent Is Nothing) Then
+            Return mConfigs
+        End If
+
+        Dim mConfigLines As New List(Of String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("["c) AndAlso sLine.EndsWith(".json - {")) Then
+                Try
+                    mConfigLines.Add(sLine.Remove(0, sLine.LastIndexOf("{"c)))
+
+                    mConfigLines.Reverse()
+                    Dim sConfigContent As String = String.Join(Environment.NewLine, mConfigLines.ToArray)
+
+                    Dim sSplitPath As String() = sLine.Split("\"c)
+                    If (sSplitPath.Length > 0) Then
+                        Dim sFileName As String = sSplitPath(sSplitPath.Length - 1).Split("-"c)(0)
+                        Dim sFileNameNoExt As String = IO.Path.GetFileNameWithoutExtension(sFileName)
+
+                        ' Attempt to load parsed config
+                        Dim mParsedConfig As New ClassServiceConfig()
+                        mParsedConfig.LoadFromString(sConfigContent)
+
+                        mConfigs(sFileNameNoExt) = mParsedConfig
+                    End If
+                Catch ex As Exception
+                    'Ignore any issues.
+                End Try
+
+                mConfigLines.Clear()
+            End If
+
+            mConfigLines.Add(sLine)
+
+            If (sLine.StartsWith("["c)) Then
+                mConfigLines.Clear()
+            End If
+        Next
+
+        Return mConfigs
+    End Function
 End Class

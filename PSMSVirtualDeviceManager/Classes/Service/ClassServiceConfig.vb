@@ -6,6 +6,10 @@ Public Class ClassServiceConfig
 
     Private g_sPath As String = Nothing
     Private g_bConfigLoaded As Boolean = False
+    Private g_bFromString As Boolean = False
+
+    Public Sub New()
+    End Sub
 
     Public Sub New(_Path As String)
         g_sPath = _Path
@@ -59,6 +63,27 @@ Public Class ClassServiceConfig
         Return CType(mScansDic(sKey), T)
     End Function
 
+    Public Sub LoadFromString(sContent As String)
+        Dim mTmp As Object = Nothing
+        g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+
+        g_sPath = Nothing
+        g_bConfigLoaded = True
+        g_bFromString = True
+    End Sub
+
+    Public Function SaveToString() As String
+        If (Not g_bConfigLoaded) Then
+            Return Nothing
+        End If
+
+        If (Not g_bFromString) Then
+            Return Nothing
+        End If
+
+        Return ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mConfig))
+    End Function
+
     Public Function LoadConfig() As Boolean
         If (g_sPath Is Nothing) Then
             g_bConfigLoaded = True
@@ -75,6 +100,7 @@ Public Class ClassServiceConfig
         Dim mTmp As Object = Nothing
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
+        g_bFromString = False
         g_bConfigLoaded = True
         Return True
     End Function
@@ -85,6 +111,10 @@ Public Class ClassServiceConfig
         End If
 
         If (Not g_bConfigLoaded) Then
+            Return
+        End If
+
+        If (g_bFromString) Then
             Return
         End If
 
