@@ -4,7 +4,15 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogProcesses
     Implements ILogAction
 
-    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
+    Private g_mFormMain As FormMain
+    Private g_ClassLogContent As ClassLogContent
+
+    Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
+        g_mFormMain = _FormMain
+        g_ClassLogContent = _ClassLogContent
+    End Sub
+
+    Public Sub Generate() Implements ILogAction.Generate
         Dim sProcessLog As New Text.StringBuilder
 
         For Each mProcess In Process.GetProcesses
@@ -27,22 +35,22 @@ Public Class ClassLogProcesses
             sProcessLog.AppendLine()
         Next
 
-        mData(GetActionTitle()) = sProcessLog.ToString
+        g_ClassLogContent.m_Content(GetActionTitle()) = sProcessLog.ToString
     End Sub
 
     Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
         Return SECTION_PROCESSES
     End Function
 
-    Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
+    Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Throw New NotImplementedException()
     End Function
 
-    Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
-        If (Not mData.ContainsKey(GetActionTitle())) Then
+    Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
+        If (Not g_ClassLogContent.m_Content.ContainsKey(GetActionTitle())) Then
             Return Nothing
         End If
 
-        Return mData(GetActionTitle())
+        Return g_ClassLogContent.m_Content(GetActionTitle())
     End Function
 End Class

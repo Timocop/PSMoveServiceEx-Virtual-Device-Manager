@@ -25,12 +25,14 @@ Public Class ClassLogManageServiceDevices
     End Structure
 
     Private g_mFormMain As FormMain
+    Private g_ClassLogContent As ClassLogContent
 
-    Public Sub New(_FormMain As FormMain)
+    Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
         g_mFormMain = _FormMain
+        g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
+    Public Sub Generate() Implements ILogAction.Generate
         If (g_mFormMain.g_mPSMoveServiceCAPI Is Nothing) Then
             Return
         End If
@@ -119,34 +121,34 @@ Public Class ClassLogManageServiceDevices
             sTrackersList.AppendLine()
         Next
 
-        mData(GetActionTitle()) = sTrackersList.ToString
+        g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub
 
     Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
         Return SECTION_VDM_SERVICE_DEVICES
     End Function
 
-    Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
+    Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
-        mIssues.AddRange(CheckEmpty(mData))
-        mIssues.AddRange(CheckTrackerCount(mData))
-        mIssues.AddRange(CheckVirtualHmdObsolete(mData))
-        mIssues.AddRange(CheckNoDevice(mData))
+        mIssues.AddRange(CheckEmpty())
+        mIssues.AddRange(CheckTrackerCount())
+        mIssues.AddRange(CheckVirtualHmdObsolete())
+        mIssues.AddRange(CheckNoDevice())
         Return mIssues.ToArray
     End Function
 
-    Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
-        If (Not mData.ContainsKey(GetActionTitle())) Then
+    Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
+        If (Not g_ClassLogContent.m_Content.ContainsKey(GetActionTitle())) Then
             Return Nothing
         End If
 
-        Return mData(GetActionTitle())
+        Return g_ClassLogContent.m_Content(GetActionTitle())
     End Function
 
-    Public Function CheckEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckEmpty() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             String.Format("{0} log unavailable", GetActionTitle()),
@@ -162,8 +164,8 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckTrackerCount(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
-        Dim sContent As String = GetSectionContent(mData)
+    Public Function CheckTrackerCount() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return {}
         End If
@@ -183,7 +185,7 @@ Public Class ClassLogManageServiceDevices
         )
 
         Dim iTrackerCount As Integer = 0
-        For Each mDevice In GetDevices(mData)
+        For Each mDevice In GetDevices()
             If (mDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
                 Continue For
             End If
@@ -201,8 +203,8 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckVirtualHmdObsolete(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
-        Dim sContent As String = GetSectionContent(mData)
+    Public Function CheckVirtualHmdObsolete() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return {}
         End If
@@ -215,7 +217,7 @@ Public Class ClassLogManageServiceDevices
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
-        For Each mDevice In GetDevices(mData)
+        For Each mDevice In GetDevices()
             If (mDevice.iType <> ENUM_DEVICE_TYPE.HMD) Then
                 Continue For
             End If
@@ -231,8 +233,8 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckNoDevice(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
-        Dim sContent As String = GetSectionContent(mData)
+    Public Function CheckNoDevice() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return {}
         End If
@@ -248,7 +250,7 @@ Public Class ClassLogManageServiceDevices
         Dim iControllers As Integer = 0
         Dim iHmds As Integer = 0
 
-        For Each mDevice In GetDevices(mData)
+        For Each mDevice In GetDevices()
             Select Case (mDevice.iType)
                 Case ENUM_DEVICE_TYPE.CONTROLLER
                     iControllers += 1
@@ -276,8 +278,8 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
-    Public Function GetDevices(mData As Dictionary(Of String, String)) As STRUC_DEVICE_ITEM()
-        Dim sContent As String = GetSectionContent(mData)
+    Public Function GetDevices() As STRUC_DEVICE_ITEM()
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return {}
         End If

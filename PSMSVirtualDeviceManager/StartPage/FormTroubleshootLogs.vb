@@ -20,14 +20,32 @@ Public Class FormTroubleshootLogs
     Public Const SECTION_STEAMVR_SETTINGS = "SteamVR Settings"
     Public Const SECTION_CONNECTED_HARDWARE = "Connected Hardware"
 
-    Private g_mThreadLock As New Object
     Private g_mThread As Threading.Thread = Nothing
-    Private g_mFileContent As New Dictionary(Of String, String)
+    Private g_mLogContent As New ClassLogContent()
     Private g_mProgress As FormLoading = Nothing
 
     Private g_mLogJobs As New List(Of ILogAction)
 
     Private g_mFormMain As FormMain = Nothing
+
+    Class ClassLogContent
+        Private g_mLock As New Object
+        Private g_mLogContent As New Dictionary(Of String, String)
+
+        ReadOnly Property m_Content As Dictionary(Of String, String)
+            Get
+                SyncLock g_mLock
+                    Return g_mLogContent
+                End SyncLock
+            End Get
+        End Property
+
+        ReadOnly Property m_Lock As Object
+            Get
+                Return g_mLock
+            End Get
+        End Property
+    End Class
 
     Enum ENUM_LOG_ISSUE_TYPE
         INFO
@@ -58,9 +76,9 @@ Public Class FormTroubleshootLogs
 
     Public Interface ILogAction
         Function GetActionTitle() As String
-        Sub Generate(mData As Dictionary(Of String, String))
-        Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
-        Function GetSectionContent(mData As Dictionary(Of String, String)) As String
+        Sub Generate()
+        Function GetIssues() As STRUC_LOG_ISSUE()
+        Function GetSectionContent() As String
     End Interface
 
     Public Sub New(_FormMain As FormMain)
@@ -77,22 +95,22 @@ Public Class FormTroubleshootLogs
         ImageList_Issues.Images.Add("Good", My.Resources.netshell_1610_32x32_32)
 
         g_mLogJobs.Clear()
-        g_mLogJobs.Add(New ClassLogDxdiag())
-        g_mLogJobs.Add(New ClassLogService())
-        g_mLogJobs.Add(New ClassLogProcesses())
-        g_mLogJobs.Add(New ClassLogManager())
-        g_mLogJobs.Add(New ClassLogManagerVmtTrackers(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManageOscDevices(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManageServiceDevices(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManagerAttachments(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManagerRemoteDevices(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManagerPSVR(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManagerVirtualTrackers(g_mFormMain))
-        g_mLogJobs.Add(New ClassLogManagerSteamVrDrivers())
-        g_mLogJobs.Add(New ClassLogManagerSteamVrManifests())
-        g_mLogJobs.Add(New ClassLogManagerSteamVrOverrides())
-        g_mLogJobs.Add(New ClassLogManagerSteamVrSettings())
-        g_mLogJobs.Add(New ClassLogManagerHardware())
+        g_mLogJobs.Add(New ClassLogDxdiag(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogService(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogProcesses(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManager(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerVmtTrackers(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManageOscDevices(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManageServiceDevices(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerAttachments(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerRemoteDevices(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerPSVR(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerVirtualTrackers(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerSteamVrDrivers(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerSteamVrManifests(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerSteamVrOverrides(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerSteamVrSettings(g_mFormMain, m_LogContent))
+        g_mLogJobs.Add(New ClassLogManagerHardware(g_mFormMain, m_LogContent))
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
@@ -145,9 +163,11 @@ Public Class FormTroubleshootLogs
                         End If
                     End If
 
-                    SyncLock g_mThreadLock
-                        g_mFileContent = ParseCombinedLogs(IO.File.ReadAllText(mForm.FileName, System.Text.Encoding.Default))
-                    End SyncLock
+                    m_LogContent.m_Content.Clear()
+
+                    For Each mItem In ParseCombinedLogs(IO.File.ReadAllText(mForm.FileName, System.Text.Encoding.Default))
+                        m_LogContent.m_Content(mItem.Key) = mItem.Value
+                    Next
 
                     RefreshDisplayLogs()
 
@@ -162,14 +182,16 @@ Public Class FormTroubleshootLogs
     Private Function GetCombinedLogs() As String
         Dim sContent As New Text.StringBuilder
 
-        For Each mItem In m_FileContent
-            sContent.AppendFormat("{0} {1} {2}", SECTION_BUFFER, mItem.Key, SECTION_BUFFER).AppendLine()
-            sContent.AppendLine()
+        SyncLock m_LogContent.m_Lock
+            For Each mItem In m_LogContent.m_Content
+                sContent.AppendFormat("{0} {1} {2}", SECTION_BUFFER, mItem.Key, SECTION_BUFFER).AppendLine()
+                sContent.AppendLine()
 
-            sContent.AppendLine(mItem.Value)
+                sContent.AppendLine(mItem.Value)
 
-            sContent.AppendLine()
-        Next
+                sContent.AppendLine()
+            Next
+        End SyncLock
 
         Return sContent.ToString
     End Function
@@ -216,10 +238,10 @@ Public Class FormTroubleshootLogs
         Return mData
     End Function
 
-    ReadOnly Property m_FileContent As Dictionary(Of String, String)
+    ReadOnly Property m_LogContent As ClassLogContent
         Get
-            SyncLock g_mThreadLock
-                Return g_mFileContent
+            SyncLock g_mLogContent.m_Lock
+                Return g_mLogContent
             End SyncLock
         End Get
     End Property
@@ -270,7 +292,7 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub ThreadDoGenerateLogs()
-        m_FileContent.Clear()
+        m_LogContent.m_Content.Clear()
 
         For Each mJob In g_mLogJobs
             Dim sJobAction As String = String.Format("Gathering {0}...", mJob.GetActionTitle())
@@ -282,11 +304,11 @@ Public Class FormTroubleshootLogs
                                        End Sub)
 
             Try
-                mJob.Generate(m_FileContent)
+                mJob.Generate()
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-                m_FileContent(mJob.GetActionTitle()) = String.Format("EXCEPTION: {0}", ex.Message)
+                m_LogContent.m_Content(mJob.GetActionTitle()) = String.Format("EXCEPTION: {0}", ex.Message)
                 ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try
         Next
@@ -307,9 +329,22 @@ Public Class FormTroubleshootLogs
                                        End Sub)
 
             Try
-                For Each mIssue In mJob.GetIssues(m_FileContent)
-                    mIssues.Add(New KeyValuePair(Of String, STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mIssue))
-                Next
+                Dim sContent As String = mJob.GetSectionContent()
+                If (Not String.IsNullOrEmpty(sContent) AndAlso sContent.Trim.StartsWith("EXCEPTION: ")) Then
+                    Dim sException As String = sContent.Trim.Remove(0, "EXCEPTION: ".Length)
+
+                    Dim mException As New STRUC_LOG_ISSUE(
+                        "Log generation exception",
+                        sException,
+                        "",
+                        ENUM_LOG_ISSUE_TYPE.ERROR
+                    )
+                    mIssues.Add(New KeyValuePair(Of String, STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mException))
+                Else
+                    For Each mIssue In mJob.GetIssues()
+                        mIssues.Add(New KeyValuePair(Of String, STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mIssue))
+                    Next
+                End If
             Catch ex As NotImplementedException
                 ' Ignore
             Catch ex As Threading.ThreadAbortException
@@ -371,27 +406,29 @@ Public Class FormTroubleshootLogs
                 TabControl_Logs.TabPages(i).Dispose()
             Next
 
-            For Each mItem In m_FileContent
-                Dim mTab As New TabPage(mItem.Key)
-                mTab.BackColor = Color.White
+            SyncLock m_LogContent.m_Lock
+                For Each mItem In m_LogContent.m_Content
+                    Dim mTab As New TabPage(mItem.Key)
+                    mTab.BackColor = Color.White
 
-                Dim mTextBox As New TextBox
-                mTextBox.SuspendLayout()
-                mTextBox.Parent = mTab
+                    Dim mTextBox As New TextBox
+                    mTextBox.SuspendLayout()
+                    mTextBox.Parent = mTab
 
-                mTextBox.Multiline = True
-                mTextBox.WordWrap = False
-                mTextBox.ReadOnly = True
-                mTextBox.BackColor = Color.White
+                    mTextBox.Multiline = True
+                    mTextBox.WordWrap = False
+                    mTextBox.ReadOnly = True
+                    mTextBox.BackColor = Color.White
 
-                mTextBox.Text = mItem.Value
-                mTextBox.Dock = DockStyle.Fill
-                mTextBox.BorderStyle = BorderStyle.None
-                mTextBox.ScrollBars = ScrollBars.Both
-                mTextBox.ResumeLayout()
+                    mTextBox.Text = mItem.Value
+                    mTextBox.Dock = DockStyle.Fill
+                    mTextBox.BorderStyle = BorderStyle.None
+                    mTextBox.ScrollBars = ScrollBars.Both
+                    mTextBox.ResumeLayout()
 
-                TabControl_Logs.TabPages.Add(mTab)
-            Next
+                    TabControl_Logs.TabPages.Add(mTab)
+                Next
+            End SyncLock
         Finally
             TabControl_Logs.ResumeLayout()
         End Try

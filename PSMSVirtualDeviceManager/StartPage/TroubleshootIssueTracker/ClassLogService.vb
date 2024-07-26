@@ -4,7 +4,15 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogService
     Implements ILogAction
 
-    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
+    Private g_mFormMain As FormMain
+    Private g_ClassLogContent As ClassLogContent
+
+    Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
+        g_mFormMain = _FormMain
+        g_ClassLogContent = _ClassLogContent
+    End Sub
+
+    Public Sub Generate() Implements ILogAction.Generate
         Dim mConfig As New ClassServiceInfo
         mConfig.LoadConfig()
 
@@ -28,7 +36,7 @@ Public Class ClassLogService
         Dim sTmp As String = IO.Path.GetTempFileName
         IO.File.Copy(sLogFile, sTmp, True)
 
-        mData(GetActionTitle()) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
+        g_ClassLogContent.m_Content(GetActionTitle()) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
         IO.File.Delete(sTmp)
     End Sub
 
@@ -36,37 +44,37 @@ Public Class ClassLogService
         Return SECTION_PSMOVESERVICEEX
     End Function
 
-    Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
+    Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
-        mIssues.AddRange(CheckEmpty(mData))
-        mIssues.AddRange(CheckVersion(mData))
-        mIssues.AddRange(CheckFps(mData))
-        mIssues.AddRange(CheckLegacy(mData))
-        mIssues.AddRange(CheckConfigReset(mData))
-        mIssues.AddRange(CheckBluetoothAdapterFail(mData))
-        mIssues.AddRange(CheckBluetoothAdapterAssignFail(mData))
-        mIssues.AddRange(CheckDeviceOpenFail(mData))
-        mIssues.AddRange(CheckDeviceLimit(mData))
-        mIssues.AddRange(CheckMorpheusFail(mData))
-        mIssues.AddRange(CheckBluetoothPairingNotFound(mData))
-        mIssues.AddRange(CheckBluetoothPairingFail(mData))
-        mIssues.AddRange(CheckDeviceTimeout(mData))
-        mIssues.AddRange(CheckIncomplete(mData))
+        mIssues.AddRange(CheckEmpty())
+        mIssues.AddRange(CheckVersion())
+        mIssues.AddRange(CheckFps())
+        mIssues.AddRange(CheckLegacy())
+        mIssues.AddRange(CheckConfigReset())
+        mIssues.AddRange(CheckBluetoothAdapterFail())
+        mIssues.AddRange(CheckBluetoothAdapterAssignFail())
+        mIssues.AddRange(CheckDeviceOpenFail())
+        mIssues.AddRange(CheckDeviceLimit())
+        mIssues.AddRange(CheckMorpheusFail())
+        mIssues.AddRange(CheckBluetoothPairingNotFound())
+        mIssues.AddRange(CheckBluetoothPairingFail())
+        mIssues.AddRange(CheckDeviceTimeout())
+        mIssues.AddRange(CheckIncomplete())
         Return mIssues.ToArray
     End Function
 
-    Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
-        If (Not mData.ContainsKey(GetActionTitle())) Then
+    Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
+        If (Not g_ClassLogContent.m_Content.ContainsKey(GetActionTitle())) Then
             Return Nothing
         End If
 
-        Return mData(GetActionTitle())
+        Return g_ClassLogContent.m_Content(GetActionTitle())
     End Function
 
-    Public Function CheckEmpty(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckEmpty() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             String.Format("{0} log unavailable", GetActionTitle()),
@@ -82,10 +90,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckVersion(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckVersion() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -136,10 +144,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckFps(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckFps() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -182,10 +190,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckLegacy(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckLegacy() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -215,10 +223,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckConfigReset(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckConfigReset() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -248,10 +256,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckBluetoothAdapterFail(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckBluetoothAdapterFail() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -281,10 +289,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckBluetoothAdapterAssignFail(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckBluetoothAdapterAssignFail() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -321,10 +329,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckDeviceOpenFail(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckDeviceOpenFail() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -362,10 +370,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckDeviceLimit(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckDeviceLimit() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -395,10 +403,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckMorpheusFail(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckMorpheusFail() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -440,10 +448,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckBluetoothPairingNotFound(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckBluetoothPairingNotFound() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -486,10 +494,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckBluetoothPairingFail(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckBluetoothPairingFail() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -560,10 +568,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckDeviceTimeout(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckDeviceTimeout() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -606,10 +614,10 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckIncomplete(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE()
+    Public Function CheckIncomplete() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
@@ -662,10 +670,11 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function FindConfigFromSerial(mData As Dictionary(Of String, String), sSerial As String) As ClassServiceConfig
-        Dim mConfigs = GetConfigs(mData)
+    Public Function FindConfigFromSerial(sSerial As String) As ClassServiceConfig
+        Dim mConfigs = GetConfigs()
 
         ' $TODO Config files have different naming schemes. Maybe device index to json instead? This is fucking aids.
+        ' This might not even work correctly with PSNavis...
 
         ' PSEyes
         If (sSerial.ToUpperInvariant.Contains(String.Format("VID_{0}&PID_{1}", ClassLibusbDriver.DRV_PSEYE_KNOWN_CONFIGS(0).VID, ClassLibusbDriver.DRV_PSEYE_KNOWN_CONFIGS(0).PID).ToUpperInvariant)) Then
@@ -720,10 +729,10 @@ Public Class ClassLogService
         Return Nothing
     End Function
 
-    Public Function GetConfigs(mData As Dictionary(Of String, String)) As Dictionary(Of String, ClassServiceConfig)
+    Public Function GetConfigs() As Dictionary(Of String, ClassServiceConfig)
         Dim mConfigs As New Dictionary(Of String, ClassServiceConfig)
 
-        Dim sContent As String = GetSectionContent(mData)
+        Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return mConfigs
         End If

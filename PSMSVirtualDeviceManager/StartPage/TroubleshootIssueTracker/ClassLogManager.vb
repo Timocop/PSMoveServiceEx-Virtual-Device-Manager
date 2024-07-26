@@ -4,7 +4,15 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManager
     Implements ILogAction
 
-    Public Sub Generate(mData As Dictionary(Of String, String)) Implements ILogAction.Generate
+    Private g_mFormMain As FormMain
+    Private g_ClassLogContent As ClassLogContent
+
+    Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
+        g_mFormMain = _FormMain
+        g_ClassLogContent = _ClassLogContent
+    End Sub
+
+    Public Sub Generate() Implements ILogAction.Generate
         Dim mManagerLogs As New Dictionary(Of String, String)
         mManagerLogs("VDM INI Application Exceptions") = (ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
         mManagerLogs("VDM INI Settings") = (ClassConfigConst.PATH_CONFIG_SETTINGS)
@@ -22,7 +30,7 @@ Public Class ClassLogManager
             Dim sTmp As String = IO.Path.GetTempFileName
             IO.File.Copy(mItem.Value, sTmp, True)
 
-            mData(mItem.Key) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
+            g_ClassLogContent.m_Content(mItem.Key) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
             IO.File.Delete(sTmp)
         Next
     End Sub
@@ -31,15 +39,15 @@ Public Class ClassLogManager
         Return SECTION_VDM_CONFIG
     End Function
 
-    Public Function GetIssues(mData As Dictionary(Of String, String)) As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
+    Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Throw New NotImplementedException()
     End Function
 
-    Public Function GetSectionContent(mData As Dictionary(Of String, String)) As String Implements ILogAction.GetSectionContent
-        If (Not mData.ContainsKey(GetActionTitle())) Then
+    Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
+        If (Not g_ClassLogContent.m_Content.ContainsKey(GetActionTitle())) Then
             Return Nothing
         End If
 
-        Return mData(GetActionTitle())
+        Return g_ClassLogContent.m_Content(GetActionTitle())
     End Function
 End Class
