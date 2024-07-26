@@ -64,7 +64,9 @@ Public Class ClassLogManagerVmtTrackers
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckInvalidIds())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -73,6 +75,96 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckInvalidIds() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
+            "Invalid Virtual Motion Tracker (VMT) ids",
+            "Some Virtual Motion Tracker (VMT) controller, head-mounted display or VMT ids have not set properly. Therefore those trackers are disabled.",
+            "Properly asign the controller or head-mounted display id to an existing PSMoveServiceEx device and the VMT id to free slot that is not in use.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
+            "Virtual Motion Tracker (VMT) {0} id does not point to a existing device",
+            "The Virtual Motion Tracker (VMT) {0} id {1} does not point to a existing PSMoveServiceEx device.",
+            "Properly asign the {0} id to an existing PSMoveServiceEx device and the VMT id to free slot that is not in use.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        For Each mDevice In GetDevices()
+            ' Check if IDs are -1 or invalid
+            If (True) Then
+                If (mDevice.iId < 0 OrElse mDevice.iVmtId < 0) Then
+                    mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
+                End If
+            End If
+
+            ' Check if ID even point to existing devices
+            If (True) Then
+                Select Case (mDevice.iType)
+                    Case ENUM_DEVICE_TYPE.CONTROLLER
+                        Dim bExist As Boolean = False
+                        Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
+                        For Each mServiceDevice In mServiceLog.GetDevices()
+                            If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
+                                Continue For
+                            End If
+
+                            If (mDevice.iId <> mServiceDevice.iId) Then
+                                Continue For
+                            End If
+
+                            bExist = True
+                            Exit For
+                        Next
+
+                        If (Not bExist) Then
+                            Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
+                            mIssue.sMessage = String.Format(mIssue.sMessage, "Controller")
+                            mIssue.sDescription = String.Format(mIssue.sDescription, "Controller", mDevice.iId)
+                            mIssue.sSolution = String.Format(mIssue.sSolution, "Controller")
+                            mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                        End If
+
+                    Case ENUM_DEVICE_TYPE.HMD
+                        Dim bExist As Boolean = False
+                        Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
+                        For Each mServiceDevice In mServiceLog.GetDevices()
+                            If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.HMD) Then
+                                Continue For
+                            End If
+
+                            If (mDevice.iId <> mServiceDevice.iId) Then
+                                Continue For
+                            End If
+
+                            bExist = True
+                            Exit For
+                        Next
+
+                        If (Not bExist) Then
+                            Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
+                            mIssue.sMessage = String.Format(mIssue.sMessage, "Head-mounted Display")
+                            mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
+                            mIssue.sSolution = String.Format(mIssue.sSolution, "Head-mounted Display")
+                            mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                        End If
+
+                End Select
+            End If
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
