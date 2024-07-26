@@ -100,69 +100,82 @@ Public Class ClassLogManagerVmtTrackers
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
+        ' Check if IDs are -1 or invalid 
         For Each mDevice In GetDevices()
-            ' Check if IDs are -1 or invalid
-            If (True) Then
-                If (mDevice.iId < 0 OrElse mDevice.iVmtId < 0) Then
-                    mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
-                End If
+            Select Case (mDevice.iType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    If (mDevice.iId < 0 OrElse mDevice.iVmtId < 0) Then
+                        mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
+                        Exit For
+                    End If
+
+                Case ENUM_DEVICE_TYPE.HMD
+                    If (mDevice.iId < 0) Then
+                        mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
+                        Exit For
+                    End If
+
+            End Select
+
+        Next
+
+        ' Check if ID even point to existing devices
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
             End If
 
-            ' Check if ID even point to existing devices
-            If (True) Then
-                Select Case (mDevice.iType)
-                    Case ENUM_DEVICE_TYPE.CONTROLLER
-                        Dim bExist As Boolean = False
-                        Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+            Select Case (mDevice.iType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    Dim bExist As Boolean = False
+                    Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
 
-                        For Each mServiceDevice In mServiceLog.GetDevices()
-                            If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
-                                Continue For
-                            End If
-
-                            If (mDevice.iId <> mServiceDevice.iId) Then
-                                Continue For
-                            End If
-
-                            bExist = True
-                            Exit For
-                        Next
-
-                        If (Not bExist) Then
-                            Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
-                            mIssue.sMessage = String.Format(mIssue.sMessage, "Controller")
-                            mIssue.sDescription = String.Format(mIssue.sDescription, "Controller", mDevice.iId)
-                            mIssue.sSolution = String.Format(mIssue.sSolution, "Controller")
-                            mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                    For Each mServiceDevice In mServiceLog.GetDevices()
+                        If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
+                            Continue For
                         End If
 
-                    Case ENUM_DEVICE_TYPE.HMD
-                        Dim bExist As Boolean = False
-                        Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
-
-                        For Each mServiceDevice In mServiceLog.GetDevices()
-                            If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.HMD) Then
-                                Continue For
-                            End If
-
-                            If (mDevice.iId <> mServiceDevice.iId) Then
-                                Continue For
-                            End If
-
-                            bExist = True
-                            Exit For
-                        Next
-
-                        If (Not bExist) Then
-                            Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
-                            mIssue.sMessage = String.Format(mIssue.sMessage, "Head-mounted Display")
-                            mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
-                            mIssue.sSolution = String.Format(mIssue.sSolution, "Head-mounted Display")
-                            mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                        If (mDevice.iId <> mServiceDevice.iId) Then
+                            Continue For
                         End If
 
-                End Select
-            End If
+                        bExist = True
+                        Exit For
+                    Next
+
+                    If (Not bExist) Then
+                        Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
+                        mIssue.sMessage = String.Format(mIssue.sMessage, "Controller")
+                        mIssue.sDescription = String.Format(mIssue.sDescription, "Controller", mDevice.iId)
+                        mIssue.sSolution = String.Format(mIssue.sSolution, "Controller")
+                        mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                    End If
+
+                Case ENUM_DEVICE_TYPE.HMD
+                    Dim bExist As Boolean = False
+                    Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
+                    For Each mServiceDevice In mServiceLog.GetDevices()
+                        If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.HMD) Then
+                            Continue For
+                        End If
+
+                        If (mDevice.iId <> mServiceDevice.iId) Then
+                            Continue For
+                        End If
+
+                        bExist = True
+                        Exit For
+                    Next
+
+                    If (Not bExist) Then
+                        Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
+                        mIssue.sMessage = String.Format(mIssue.sMessage, "Head-mounted Display")
+                        mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
+                        mIssue.sSolution = String.Format(mIssue.sSolution, "Head-mounted Display")
+                        mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
+                    End If
+            End Select
         Next
 
         Return mIssues.ToArray
@@ -196,7 +209,7 @@ Public Class ClassLogManagerVmtTrackers
             End Select
 
             Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-            mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
+            mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
             mIssues.Add(New STRUC_LOG_ISSUE(mIssue))
         Next
 
