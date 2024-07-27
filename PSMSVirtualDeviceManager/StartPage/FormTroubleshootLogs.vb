@@ -464,7 +464,11 @@ Public Class FormTroubleshootLogs
                 ListView_Devices.Items.Add(mItem)
             Next
 
-            ListView_Devices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
+            If (ListView_Devices.Items.Count = 0) Then
+                ListView_Devices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize)
+            Else
+                ListView_Devices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
+            End If
         Finally
             ListView_Devices.EndUpdate()
         End Try

@@ -72,7 +72,10 @@ Public Class ClassLogManagerVirtualTrackers
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckInvalidIds())
+        mIssues.AddRange(CheckBadTrackerCount())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -81,6 +84,111 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckInvalidIds() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
+            "Invalid virtual tracker ids",
+            "Some virtual tracker ids have not set properly. Therefore those trackers are disabled.",
+            "Properly asign the tracker id to an existing PSMoveServiceEx device.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
+            "Virtual tracker does not point to a existing device",
+            "The virtual tracker id {0} ({1}) does not point to a existing PSMoveServiceEx device.",
+            "Properly asign the tracker id to an existing PSMoveServiceEx device.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        ' Check if IDs are -1 or invalid 
+        For Each mDevice In GetDevices()
+            If (mDevice.iPipePrimaryIndex < 0) Then
+                mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
+                Exit For
+            End If
+        Next
+
+        ' Check if ID even point to existing devices
+        For Each mDevice In GetDevices()
+            If (mDevice.iPipePrimaryIndex < 0) Then
+                Continue For
+            End If
+
+            Dim bExist As Boolean = False
+            Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
+            For Each mServiceDevice In mServiceLog.GetDevices()
+                If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.TRACKER) Then
+                    Continue For
+                End If
+
+                If (Not mServiceDevice.sSerial.StartsWith("VirtualTracker_")) Then
+                    Continue For
+                End If
+
+                If (mDevice.iPipePrimaryIndex <> mServiceDevice.iId) Then
+                    Continue For
+                End If
+
+                bExist = True
+                Exit For
+            Next
+
+            If (Not bExist) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iPipePrimaryIndex, mDevice.sPath)
+                mIssues.Add(mIssue)
+            End If
+
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckBadTrackerCount() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual tracker count too low",
+            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. Some virtual input devices will be unavailable.",
+            "Increase the virtual tracker count.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+        Dim mServiceConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+        If (mServiceConfig IsNot Nothing) Then
+            Dim iServiceCount As Integer = mServiceConfig.GetValue(Of Integer)("", "virtual_tracker_count")
+            Dim iCount As Integer = 0
+
+            For Each mDevice In GetDevices()
+                If (mDevice.bIsPlayStationCamera) Then
+                    iCount += 2
+                Else
+                    iCount += 1
+                End If
+            Next
+
+            If (iServiceCount < iCount) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, iServiceCount, iCount)
+                mIssues.Add(mIssue)
+            End If
+        End If
+            Return mIssues.ToArray
     End Function
 
     Public Function GetDevices() As STRUC_DEVICE_ITEM()

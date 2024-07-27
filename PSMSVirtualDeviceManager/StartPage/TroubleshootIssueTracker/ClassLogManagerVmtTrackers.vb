@@ -185,9 +185,9 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual Motion Tracker (VMT) uses generic tracker roles",
-            "Virtual Motion Tracker (VMT) controller id {0} uses generic tracker roles. Generic tracker roles require manual bindings to be set up and is not recommended for SteamVR.",
-            "If you are planning to use Virtual Motion Trackers (VMTs) with SteamVR, use HTC Vive emulated device roles instead.",
+            "Virtual motion tracker uses generic tracker roles",
+            "Virtual motion tracker controller id {0} uses generic tracker roles. Generic tracker roles require manual bindings to be set up and is not recommended for SteamVR.",
+            "If you are planning to use virtual motion trackers with SteamVR, use HTC Vive emulated device roles instead.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 

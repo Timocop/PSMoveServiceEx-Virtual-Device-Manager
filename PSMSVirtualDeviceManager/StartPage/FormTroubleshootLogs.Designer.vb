@@ -240,6 +240,7 @@ Partial Class FormTroubleshootLogs
         '
         'SplitContainer2
         '
+        Me.SplitContainer2.BackColor = System.Drawing.SystemColors.Control
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer2.Location = New System.Drawing.Point(3, 3)
         Me.SplitContainer2.Name = "SplitContainer2"
@@ -257,6 +258,7 @@ Partial Class FormTroubleshootLogs
         '
         'ListView_Devices
         '
+        Me.ListView_Devices.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ListView_Devices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
         Me.ListView_Devices.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_Devices.HideSelection = False
@@ -286,7 +288,7 @@ Partial Class FormTroubleshootLogs
         '
         'TextBox_DeviceConfig
         '
-        Me.TextBox_DeviceConfig.BackColor = System.Drawing.Color.White
+        Me.TextBox_DeviceConfig.BackColor = System.Drawing.SystemColors.Window
         Me.TextBox_DeviceConfig.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_DeviceConfig.Cursor = System.Windows.Forms.Cursors.Default
         Me.TextBox_DeviceConfig.Dock = System.Windows.Forms.DockStyle.Fill
