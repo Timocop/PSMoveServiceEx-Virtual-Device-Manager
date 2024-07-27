@@ -35,21 +35,33 @@ Partial Class FormTroubleshootLogs
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.TabControl_Logs = New System.Windows.Forms.TabControl()
         Me.TabControl_Diagnostic = New System.Windows.Forms.TabControl()
-        Me.TabPage_Logs = New System.Windows.Forms.TabPage()
         Me.TabPage_Issues = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.ListView_Issues = New System.Windows.Forms.ListView()
         Me.ColumnHeader_Message = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ImageList_Issues = New System.Windows.Forms.ImageList(Me.components)
         Me.TextBox_IssueInfo = New System.Windows.Forms.TextBox()
+        Me.TabPage_Devices = New System.Windows.Forms.TabPage()
+        Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.ListView_Devices = New System.Windows.Forms.ListView()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.TextBox_DeviceConfig = New System.Windows.Forms.TextBox()
+        Me.TabPage_Logs = New System.Windows.Forms.TabPage()
         Me.Panel1.SuspendLayout()
         Me.TabControl_Diagnostic.SuspendLayout()
-        Me.TabPage_Logs.SuspendLayout()
         Me.TabPage_Issues.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
+        Me.TabPage_Devices.SuspendLayout()
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer2.Panel1.SuspendLayout()
+        Me.SplitContainer2.Panel2.SuspendLayout()
+        Me.SplitContainer2.SuspendLayout()
+        Me.TabPage_Logs.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -135,23 +147,14 @@ Partial Class FormTroubleshootLogs
         Me.TabControl_Diagnostic.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Logs)
         Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Issues)
+        Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Devices)
+        Me.TabControl_Diagnostic.Controls.Add(Me.TabPage_Logs)
         Me.TabControl_Diagnostic.Location = New System.Drawing.Point(12, 12)
         Me.TabControl_Diagnostic.Name = "TabControl_Diagnostic"
         Me.TabControl_Diagnostic.SelectedIndex = 0
         Me.TabControl_Diagnostic.Size = New System.Drawing.Size(760, 495)
         Me.TabControl_Diagnostic.TabIndex = 2
-        '
-        'TabPage_Logs
-        '
-        Me.TabPage_Logs.Controls.Add(Me.TabControl_Logs)
-        Me.TabPage_Logs.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage_Logs.Name = "TabPage_Logs"
-        Me.TabPage_Logs.Size = New System.Drawing.Size(752, 469)
-        Me.TabPage_Logs.TabIndex = 0
-        Me.TabPage_Logs.Text = "Logs"
-        Me.TabPage_Logs.UseVisualStyleBackColor = True
         '
         'TabPage_Issues
         '
@@ -224,6 +227,88 @@ Partial Class FormTroubleshootLogs
         Me.TextBox_IssueInfo.TabIndex = 1
         Me.TextBox_IssueInfo.Text = "Nothing selected."
         '
+        'TabPage_Devices
+        '
+        Me.TabPage_Devices.Controls.Add(Me.SplitContainer2)
+        Me.TabPage_Devices.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_Devices.Name = "TabPage_Devices"
+        Me.TabPage_Devices.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_Devices.Size = New System.Drawing.Size(752, 469)
+        Me.TabPage_Devices.TabIndex = 2
+        Me.TabPage_Devices.Text = "Devices"
+        Me.TabPage_Devices.UseVisualStyleBackColor = True
+        '
+        'SplitContainer2
+        '
+        Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer2.Location = New System.Drawing.Point(3, 3)
+        Me.SplitContainer2.Name = "SplitContainer2"
+        '
+        'SplitContainer2.Panel1
+        '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.ListView_Devices)
+        '
+        'SplitContainer2.Panel2
+        '
+        Me.SplitContainer2.Panel2.Controls.Add(Me.TextBox_DeviceConfig)
+        Me.SplitContainer2.Size = New System.Drawing.Size(746, 463)
+        Me.SplitContainer2.SplitterDistance = 247
+        Me.SplitContainer2.TabIndex = 0
+        '
+        'ListView_Devices
+        '
+        Me.ListView_Devices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
+        Me.ListView_Devices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_Devices.HideSelection = False
+        Me.ListView_Devices.Location = New System.Drawing.Point(0, 0)
+        Me.ListView_Devices.MultiSelect = False
+        Me.ListView_Devices.Name = "ListView_Devices"
+        Me.ListView_Devices.Size = New System.Drawing.Size(247, 463)
+        Me.ListView_Devices.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_Devices.TabIndex = 0
+        Me.ListView_Devices.UseCompatibleStateImageBehavior = False
+        Me.ListView_Devices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Type"
+        Me.ColumnHeader1.Width = 71
+        '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "ID"
+        Me.ColumnHeader2.Width = 30
+        '
+        'ColumnHeader3
+        '
+        Me.ColumnHeader3.Text = "Serial"
+        Me.ColumnHeader3.Width = 112
+        '
+        'TextBox_DeviceConfig
+        '
+        Me.TextBox_DeviceConfig.BackColor = System.Drawing.Color.White
+        Me.TextBox_DeviceConfig.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_DeviceConfig.Cursor = System.Windows.Forms.Cursors.Default
+        Me.TextBox_DeviceConfig.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TextBox_DeviceConfig.Location = New System.Drawing.Point(0, 0)
+        Me.TextBox_DeviceConfig.Multiline = True
+        Me.TextBox_DeviceConfig.Name = "TextBox_DeviceConfig"
+        Me.TextBox_DeviceConfig.ReadOnly = True
+        Me.TextBox_DeviceConfig.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.TextBox_DeviceConfig.Size = New System.Drawing.Size(495, 463)
+        Me.TextBox_DeviceConfig.TabIndex = 0
+        Me.TextBox_DeviceConfig.WordWrap = False
+        '
+        'TabPage_Logs
+        '
+        Me.TabPage_Logs.Controls.Add(Me.TabControl_Logs)
+        Me.TabPage_Logs.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_Logs.Name = "TabPage_Logs"
+        Me.TabPage_Logs.Size = New System.Drawing.Size(752, 469)
+        Me.TabPage_Logs.TabIndex = 0
+        Me.TabPage_Logs.Text = "Logs"
+        Me.TabPage_Logs.UseVisualStyleBackColor = True
+        '
         'FormTroubleshootLogs
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -239,13 +324,19 @@ Partial Class FormTroubleshootLogs
         Me.Text = "Logs and Diagnostics"
         Me.Panel1.ResumeLayout(False)
         Me.TabControl_Diagnostic.ResumeLayout(False)
-        Me.TabPage_Logs.ResumeLayout(False)
         Me.TabPage_Issues.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         Me.SplitContainer1.Panel2.PerformLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
+        Me.TabPage_Devices.ResumeLayout(False)
+        Me.SplitContainer2.Panel1.ResumeLayout(False)
+        Me.SplitContainer2.Panel2.ResumeLayout(False)
+        Me.SplitContainer2.Panel2.PerformLayout()
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer2.ResumeLayout(False)
+        Me.TabPage_Logs.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -265,4 +356,11 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents ColumnHeader_Message As ColumnHeader
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TextBox_IssueInfo As TextBox
+    Friend WithEvents TabPage_Devices As TabPage
+    Friend WithEvents SplitContainer2 As SplitContainer
+    Friend WithEvents TextBox_DeviceConfig As TextBox
+    Friend WithEvents ListView_Devices As ListView
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents ColumnHeader2 As ColumnHeader
+    Friend WithEvents ColumnHeader3 As ColumnHeader
 End Class

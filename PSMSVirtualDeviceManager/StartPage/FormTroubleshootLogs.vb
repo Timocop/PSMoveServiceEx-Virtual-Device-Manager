@@ -170,6 +170,7 @@ Public Class FormTroubleshootLogs
                     Next
 
                     RefreshDisplayLogs()
+                    RefreshDevices()
 
                     StartLogAnalysis(False, True)
                 End If
@@ -314,6 +315,7 @@ Public Class FormTroubleshootLogs
         Next
 
         ClassUtils.AsyncInvoke(Me, Sub() RefreshDisplayLogs())
+        ClassUtils.AsyncInvoke(Me, Sub() RefreshDevices())
     End Sub
 
     Private Sub ThreadDoDiagnostics()
@@ -434,6 +436,40 @@ Public Class FormTroubleshootLogs
         End Try
     End Sub
 
+    Private Sub RefreshDevices()
+        Try
+            ListView_Devices.BeginUpdate()
+            ListView_Devices.Items.Clear()
+
+            Dim mDevices = New ClassLogManageServiceDevices(g_mFormMain, m_LogContent)
+            Dim mService = New ClassLogService(g_mFormMain, m_LogContent)
+
+            Dim mDeviceList = mDevices.GetDevices()
+
+            For i = mDeviceList.Length - 1 To 0 Step -1
+                Dim mDeviceConfig = mService.FindConfigFromSerial(mDeviceList(i).sSerial)
+
+                Dim mItem As New ListViewItem(New String() {
+                                              mDeviceList(i).iType.ToString,
+                                              CStr(mDeviceList(i).iId),
+                                              mDeviceList(i).sSerial
+                })
+
+                If (mDeviceConfig Is Nothing) Then
+                    mItem.Tag = ""
+                Else
+                    mItem.Tag = mDeviceConfig.SaveToString()
+                End If
+
+                ListView_Devices.Items.Add(mItem)
+            Next
+
+            ListView_Devices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
+        Finally
+            ListView_Devices.EndUpdate()
+        End Try
+    End Sub
+
     Private Sub ListView_Issues_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Issues.SelectedIndexChanged
         If (ListView_Issues.SelectedItems.Count < 1) Then
             TextBox_IssueInfo.Text = "Nothing selected."
@@ -462,6 +498,18 @@ Public Class FormTroubleshootLogs
         TextBox_IssueInfo.Text = sInfo.ToString
     End Sub
 
+    Private Sub ListView_Devices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Devices.SelectedIndexChanged
+        If (ListView_Devices.SelectedItems.Count < 1) Then
+            Return
+        End If
+
+        If (ListView_Devices.SelectedItems(0).Tag Is Nothing) Then
+            Return
+        End If
+
+        ClassUtils.UpdateTextBoxNoScroll(TextBox_DeviceConfig, CStr(ListView_Devices.SelectedItems(0).Tag))
+    End Sub
+
     Private Sub FormTroubleshootLogs_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
         CleanUp()
     End Sub
@@ -471,6 +519,11 @@ Public Class FormTroubleshootLogs
             g_mThread.Abort()
             g_mThread.Join()
             g_mThread = Nothing
+        End If
+
+        If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
+            g_mProgress.Dispose()
+            g_mProgress = Nothing
         End If
     End Sub
 End Class

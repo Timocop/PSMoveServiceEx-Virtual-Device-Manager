@@ -3,17 +3,53 @@ Imports System.Runtime.InteropServices
 
 Public Class ClassUtils
     Class ClassWin32
-        Friend Shared ReadOnly GWL_EXSTYLE As Integer = -20
-        Friend Shared ReadOnly WS_EX_COMPOSITED As Integer = &H2000000
+        Public Const GWL_EXSTYLE As Integer = -20
+        Public Const WS_EX_COMPOSITED As Integer = &H2000000
+        Public Const EM_GETFIRSTVISIBLELINE As Integer = &HCE
+        Public Const EM_LINESCROLL As Integer = &HB6
+        Public Const WM_SETREDRAW As Integer = &HB
 
         <DllImport("user32")>
-        Friend Shared Function GetWindowLong(hWnd As IntPtr, nIndex As Integer) As Integer
+        Public Shared Function GetWindowLong(hWnd As IntPtr, nIndex As Integer) As Integer
         End Function
 
         <DllImport("user32")>
-        Friend Shared Function SetWindowLong(hWnd As IntPtr, nIndex As Integer, dwNewLong As Integer) As Integer
+        Public Shared Function SetWindowLong(hWnd As IntPtr, nIndex As Integer, dwNewLong As Integer) As Integer
         End Function
+
+        <DllImport("user32.dll")>
+        Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal lParam As Integer) As Integer
+        End Function
+
+        Public Shared Function GetTopVisibleLine(tb As TextBox) As Integer
+            Return SendMessage(tb.Handle, EM_GETFIRSTVISIBLELINE, 0, 0)
+        End Function
+
+        Public Shared Sub SetTopVisibleLine(tb As TextBox, lineIndex As Integer)
+            Dim currentTopLine As Integer = GetTopVisibleLine(tb)
+            SendMessage(tb.Handle, EM_LINESCROLL, 0, lineIndex - currentTopLine)
+        End Sub
     End Class
+
+    Public Shared Sub SuspendDrawing(tb As TextBox)
+        ClassWin32.SendMessage(tb.Handle, ClassWin32.WM_SETREDRAW, 0, 0)
+    End Sub
+
+    Public Shared Sub ResumeDrawing(tb As TextBox)
+        ClassWin32.SendMessage(tb.Handle, ClassWin32.WM_SETREDRAW, 1, 0)
+        tb.Invalidate() ' 
+    End Sub
+
+    Public Shared Sub UpdateTextBoxNoScroll(mTextBox As TextBox, sText As String)
+        SuspendDrawing(mTextBox)
+        Try
+            Dim i As Integer = ClassWin32.GetTopVisibleLine(mTextBox)
+            mTextBox.Text = sText
+            ClassWin32.SetTopVisibleLine(mTextBox, i)
+        Finally
+            ResumeDrawing(mTextBox)
+        End Try
+    End Sub
 
 
     Public Shared Function RunWithAdmin(sCmds As String()) As Integer
