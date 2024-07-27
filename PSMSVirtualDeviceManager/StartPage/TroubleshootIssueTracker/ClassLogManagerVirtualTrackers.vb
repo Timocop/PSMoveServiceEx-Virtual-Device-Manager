@@ -160,7 +160,7 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual tracker count too low",
+            "Virtual tracker slot count too low",
             "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. Some virtual input devices will be unavailable.",
             "Increase the virtual tracker count.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -171,24 +171,28 @@ Public Class ClassLogManagerVirtualTrackers
         Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
         Dim mServiceConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
         If (mServiceConfig IsNot Nothing) Then
-            Dim iServiceCount As Integer = mServiceConfig.GetValue(Of Integer)("", "virtual_tracker_count")
-            Dim iCount As Integer = 0
+            Dim sServiceCount As String = mServiceConfig.GetValue(Of String)("", "virtual_tracker_count", Nothing)
+            If (Not String.IsNullOrEmpty(sServiceCount)) Then
+                Dim iServiceCount As Integer = CInt(sServiceCount)
+                Dim iCount As Integer = 0
 
-            For Each mDevice In GetDevices()
-                If (mDevice.bIsPlayStationCamera) Then
-                    iCount += 2
-                Else
-                    iCount += 1
+                For Each mDevice In GetDevices()
+                    If (mDevice.bIsPlayStationCamera) Then
+                        iCount += 2
+                    Else
+                        iCount += 1
+                    End If
+                Next
+
+                If (iServiceCount < iCount) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, iServiceCount, iCount)
+                    mIssues.Add(mIssue)
                 End If
-            Next
-
-            If (iServiceCount < iCount) Then
-                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-                mIssue.sDescription = String.Format(mIssue.sDescription, iServiceCount, iCount)
-                mIssues.Add(mIssue)
             End If
         End If
-            Return mIssues.ToArray
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
