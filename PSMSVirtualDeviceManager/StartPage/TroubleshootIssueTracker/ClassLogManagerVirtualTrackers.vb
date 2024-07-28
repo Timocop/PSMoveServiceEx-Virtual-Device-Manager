@@ -75,6 +75,8 @@ Public Class ClassLogManagerVirtualTrackers
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckInvalidIds())
         mIssues.AddRange(CheckBadTrackerCount())
+        mIssues.AddRange(CheckTooDemanding())
+        mIssues.AddRange(CheckIncompatibleResolution())
         Return mIssues.ToArray
     End Function
 
@@ -101,7 +103,7 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
             "Virtual tracker does not point to a existing device",
-            "The virtual tracker id {0} ({1}) does not point to a existing PSMoveServiceEx device.",
+            "The virtual tracker id {0} for video input device id {1} ({2}) does not point to a existing PSMoveServiceEx device.",
             "Properly asign the tracker id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -130,7 +132,7 @@ Public Class ClassLogManagerVirtualTrackers
                     Continue For
                 End If
 
-                If (Not mServiceDevice.sSerial.StartsWith("VirtualTracker_")) Then
+                If (Not mServiceDevice.sSerial.StartsWith("VirtualTracker")) Then
                     Continue For
                 End If
 
@@ -144,7 +146,7 @@ Public Class ClassLogManagerVirtualTrackers
 
             If (Not bExist) Then
                 Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
-                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iPipePrimaryIndex, mDevice.sPath)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iPipePrimaryIndex, mDevice.iDeviceIndex, mDevice.sPath)
                 mIssues.Add(mIssue)
             End If
 
@@ -161,7 +163,7 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Virtual tracker slot count too low",
-            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. Some virtual input devices will be unavailable.",
+            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. Some video input devices will be unavailable.",
             "Increase the virtual tracker count.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -170,8 +172,10 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
         Dim mServiceConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+
         If (mServiceConfig IsNot Nothing) Then
             Dim sServiceCount As String = mServiceConfig.GetValue(Of String)("", "virtual_tracker_count", Nothing)
+
             If (Not String.IsNullOrEmpty(sServiceCount)) Then
                 Dim iServiceCount As Integer = CInt(sServiceCount)
                 Dim iCount As Integer = 0
@@ -191,6 +195,107 @@ Public Class ClassLogManagerVirtualTrackers
                 End If
             End If
         End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckTooDemanding() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual tracker too ressource intensive",
+            "Virtual tracker resolution and framerate is too high for virtual input device id {0} ({1}). Using too high settings demands more system resosurces.",
+            "Its recommended to use either high resolution and lower framrate or lower resolution and high framerate. Not both resolution and framerate on high.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iCameraFramerate < 60) Then
+                Continue For
+            End If
+
+            If (mDevice.iCameraResolution = ENUM_RESOLUTION.SD AndAlso Not mDevice.bSupersampling) Then
+                Continue For
+            End If
+
+            Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+            mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath)
+            mIssues.Add(mIssue)
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckIncompatibleResolution() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual tracker and video input device resolution mismatch",
+            "The video input device {0} ({1}) resolution and PSMoveServiceEx resolution for virtual tracker id {2} do not match. This will result in a 'Tracker timed out.' error.",
+            "Match the resolution of video input device id {0} ({1}) with the PSMoveServiceEx virtual tracker {2} in color calibration inside the config tool.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+
+        Dim mServiceDevices = mServiceDevicesLog.GetDevices()
+
+        For Each mDevice In GetDevices()
+            Dim mIndexes As Integer()
+
+            If (mDevice.bIsPlayStationCamera) Then
+                mIndexes = New Integer() {mDevice.iPipePrimaryIndex, mDevice.iPipeSecondaryIndex}
+            Else
+                mIndexes = New Integer() {mDevice.iPipePrimaryIndex}
+            End If
+
+            For Each iIndex In mIndexes
+                If (iIndex < 0) Then
+                    Continue For
+                End If
+
+                For Each mServiceDevice In mServiceDevices
+                    If (mServiceDevice.iId <> iIndex) Then
+                        Continue For
+                    End If
+
+                    Dim mServiceConfig = mServiceLog.FindConfigFromSerial(mServiceDevice.sSerial)
+                    If (mServiceConfig Is Nothing) Then
+                        Exit For
+                    End If
+
+                    Dim sResolutionWidth As String = mServiceConfig.GetValue(Of String)("", "frame_width", Nothing)
+                    If (String.IsNullOrEmpty(sResolutionWidth)) Then
+                        Exit For
+                    End If
+
+                    Dim iResolutionWidth As Integer = CInt(sResolutionWidth)
+                    If (mDevice.iCameraResolution = ENUM_RESOLUTION.SD AndAlso iResolutionWidth = 640) Then
+                        Exit For
+                    End If
+                    If (mDevice.iCameraResolution = ENUM_RESOLUTION.HD AndAlso iResolutionWidth = 1920) Then
+                        Exit For
+                    End If
+
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath, mDevice.iPipePrimaryIndex)
+                    mIssue.sSolution = String.Format(mIssue.sSolution, mDevice.iDeviceIndex, mDevice.sPath, mDevice.iPipePrimaryIndex)
+                    mIssues.Add(mIssue)
+                    Exit For
+                Next
+            Next
+        Next
 
         Return mIssues.ToArray
     End Function
