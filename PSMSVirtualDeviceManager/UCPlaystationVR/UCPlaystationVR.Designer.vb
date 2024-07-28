@@ -219,7 +219,6 @@ Partial Class UCPlaystationVR
         'Label_DisplayStatus
         '
         Me.Label_DisplayStatus.AutoSize = True
-        Me.Label_DisplayStatus.BackColor = System.Drawing.Color.Transparent
         Me.Label_DisplayStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_DisplayStatus.ForeColor = System.Drawing.Color.Navy
         Me.Label_DisplayStatus.Location = New System.Drawing.Point(108, 19)
@@ -257,7 +256,6 @@ Partial Class UCPlaystationVR
         'Label_HDMIStatus
         '
         Me.Label_HDMIStatus.AutoSize = True
-        Me.Label_HDMIStatus.BackColor = System.Drawing.Color.Transparent
         Me.Label_HDMIStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_HDMIStatus.ForeColor = System.Drawing.Color.Navy
         Me.Label_HDMIStatus.Location = New System.Drawing.Point(107, 19)
@@ -318,7 +316,6 @@ Partial Class UCPlaystationVR
         'Label_USBStatus
         '
         Me.Label_USBStatus.AutoSize = True
-        Me.Label_USBStatus.BackColor = System.Drawing.Color.Transparent
         Me.Label_USBStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_USBStatus.ForeColor = System.Drawing.Color.Navy
         Me.Label_USBStatus.Location = New System.Drawing.Point(108, 19)
@@ -343,7 +340,7 @@ Partial Class UCPlaystationVR
         '
         'Label_PSVRStatus
         '
-        Me.Label_PSVRStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_PSVRStatus.BackColor = System.Drawing.Color.White
         Me.Label_PSVRStatus.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label_PSVRStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_PSVRStatus.ForeColor = System.Drawing.Color.Navy
@@ -655,7 +652,7 @@ Partial Class UCPlaystationVR
         '
         'Label12
         '
-        Me.Label12.BackColor = System.Drawing.Color.Transparent
+        Me.Label12.BackColor = System.Drawing.Color.White
         Me.Label12.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label12.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.Navy
@@ -681,6 +678,7 @@ Partial Class UCPlaystationVR
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoScroll = True
+        Me.BackColor = System.Drawing.Color.White
         Me.Controls.Add(Me.Panel8)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)

@@ -75,7 +75,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_RestartPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_RestartPSMS.AutoSize = True
-        Me.LinkLabel_RestartPSMS.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_RestartPSMS.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_RestartPSMS.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_RestartPSMS.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_RestartPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
@@ -97,7 +97,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_StopPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_StopPSMS.AutoSize = True
-        Me.LinkLabel_StopPSMS.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_StopPSMS.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_StopPSMS.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_StopPSMS.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_StopPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5337_16x16_32
@@ -119,7 +119,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_RunPSMSTool.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_RunPSMSTool.AutoSize = True
-        Me.LinkLabel_RunPSMSTool.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_RunPSMSTool.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_RunPSMSTool.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_RunPSMSTool.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_RunPSMSTool.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_16x16_32
@@ -141,7 +141,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_RunPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_RunPSMS.AutoSize = True
-        Me.LinkLabel_RunPSMS.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_RunPSMS.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_RunPSMS.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_RunPSMS.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_RunPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
@@ -200,7 +200,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_PlayCalibStatus.ActiveLinkColor = System.Drawing.Color.Black
         Me.LinkLabel_PlayCalibStatus.AutoSize = True
-        Me.LinkLabel_PlayCalibStatus.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PlayCalibStatus.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_PlayCalibStatus.DisabledLinkColor = System.Drawing.Color.Black
         Me.LinkLabel_PlayCalibStatus.ForeColor = System.Drawing.Color.Black
         Me.LinkLabel_PlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
@@ -221,7 +221,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_PlayCalibStart.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_PlayCalibStart.AutoSize = True
-        Me.LinkLabel_PlayCalibStart.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PlayCalibStart.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_PlayCalibStart.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_PlayCalibStart.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_PlayCalibStart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
@@ -242,7 +242,7 @@ Partial Class FormMain
         '
         Me.Label_PsvrStatus.ActiveLinkColor = System.Drawing.Color.Black
         Me.Label_PsvrStatus.AutoSize = True
-        Me.Label_PsvrStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_PsvrStatus.BackColor = System.Drawing.Color.GhostWhite
         Me.Label_PsvrStatus.DisabledLinkColor = System.Drawing.Color.Black
         Me.Label_PsvrStatus.ForeColor = System.Drawing.Color.Black
         Me.Label_PsvrStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
@@ -263,7 +263,7 @@ Partial Class FormMain
         '
         Me.Label_RemoteDeviceStatus.ActiveLinkColor = System.Drawing.Color.Black
         Me.Label_RemoteDeviceStatus.AutoSize = True
-        Me.Label_RemoteDeviceStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_RemoteDeviceStatus.BackColor = System.Drawing.Color.GhostWhite
         Me.Label_RemoteDeviceStatus.DisabledLinkColor = System.Drawing.Color.Black
         Me.Label_RemoteDeviceStatus.ForeColor = System.Drawing.Color.Black
         Me.Label_RemoteDeviceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
@@ -284,7 +284,7 @@ Partial Class FormMain
         '
         Me.Label_ServiceStatus.ActiveLinkColor = System.Drawing.Color.Black
         Me.Label_ServiceStatus.AutoSize = True
-        Me.Label_ServiceStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_ServiceStatus.BackColor = System.Drawing.Color.GhostWhite
         Me.Label_ServiceStatus.DisabledLinkColor = System.Drawing.Color.Black
         Me.Label_ServiceStatus.ForeColor = System.Drawing.Color.Black
         Me.Label_ServiceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
@@ -305,7 +305,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_PSVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_PSVR.AutoSize = True
-        Me.LinkLabel_PSVR.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_PSVR.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_PSVR.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_PSVR.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_PSVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
@@ -326,7 +326,7 @@ Partial Class FormMain
         '
         Me.Label_VmtStatus.ActiveLinkColor = System.Drawing.Color.Black
         Me.Label_VmtStatus.AutoSize = True
-        Me.Label_VmtStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_VmtStatus.BackColor = System.Drawing.Color.GhostWhite
         Me.Label_VmtStatus.DisabledLinkColor = System.Drawing.Color.Black
         Me.Label_VmtStatus.ForeColor = System.Drawing.Color.Black
         Me.Label_VmtStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
@@ -347,7 +347,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_VMT.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_VMT.AutoSize = True
-        Me.LinkLabel_VMT.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_VMT.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_VMT.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_VMT.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_VMT.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
@@ -368,7 +368,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_StartPage.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_StartPage.AutoSize = True
-        Me.LinkLabel_StartPage.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_StartPage.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_StartPage.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_StartPage.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_StartPage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
@@ -390,7 +390,7 @@ Partial Class FormMain
         Me.LinkLabel_RunSteamVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_RunSteamVR.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LinkLabel_RunSteamVR.AutoSize = True
-        Me.LinkLabel_RunSteamVR.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_RunSteamVR.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_RunSteamVR.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_RunSteamVR.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_RunSteamVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5323_16x16_32
@@ -411,7 +411,7 @@ Partial Class FormMain
         '
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.AutoSize = True
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel1LinkLabel_VMTPauseOscServer.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel1LinkLabel_VMTPauseOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
@@ -432,7 +432,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_RemoteStartSocket.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_RemoteStartSocket.AutoSize = True
-        Me.LinkLabel_RemoteStartSocket.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_RemoteStartSocket.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_RemoteStartSocket.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_RemoteStartSocket.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_RemoteStartSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
@@ -453,7 +453,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_VMTStartOscServer.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_VMTStartOscServer.AutoSize = True
-        Me.LinkLabel_VMTStartOscServer.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_VMTStartOscServer.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_VMTStartOscServer.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_VMTStartOscServer.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_VMTStartOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
@@ -475,7 +475,7 @@ Partial Class FormMain
         Me.LinkLabel_Updates.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_Updates.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LinkLabel_Updates.AutoSize = True
-        Me.LinkLabel_Updates.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_Updates.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_Updates.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_Updates.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_Updates.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_16x16_32
@@ -497,7 +497,7 @@ Partial Class FormMain
         Me.LinkLabel_Github.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_Github.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LinkLabel_Github.AutoSize = True
-        Me.LinkLabel_Github.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_Github.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_Github.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_Github.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_Github.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netcenter_7_16x16_32
@@ -518,7 +518,7 @@ Partial Class FormMain
         '
         Me.Label_Version.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label_Version.AutoSize = True
-        Me.Label_Version.BackColor = System.Drawing.Color.Transparent
+        Me.Label_Version.BackColor = System.Drawing.Color.GhostWhite
         Me.Label_Version.ForeColor = System.Drawing.Color.Black
         Me.Label_Version.Location = New System.Drawing.Point(17, 723)
         Me.Label_Version.Margin = New System.Windows.Forms.Padding(8, 3, 3, 16)
@@ -531,7 +531,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_Trackers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_Trackers.AutoSize = True
-        Me.LinkLabel_Trackers.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_Trackers.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_Trackers.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_Trackers.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_Trackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
@@ -552,7 +552,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_HMDs.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_HMDs.AutoSize = True
-        Me.LinkLabel_HMDs.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_HMDs.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_HMDs.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_HMDs.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_HMDs.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
@@ -582,7 +582,7 @@ Partial Class FormMain
         '
         Me.LinkLabel_Controllers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
         Me.LinkLabel_Controllers.AutoSize = True
-        Me.LinkLabel_Controllers.BackColor = System.Drawing.Color.Transparent
+        Me.LinkLabel_Controllers.BackColor = System.Drawing.Color.GhostWhite
         Me.LinkLabel_Controllers.DisabledLinkColor = System.Drawing.Color.Gray
         Me.LinkLabel_Controllers.ForeColor = System.Drawing.Color.Navy
         Me.LinkLabel_Controllers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
@@ -602,7 +602,7 @@ Partial Class FormMain
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.Color.Transparent
+        Me.Label2.BackColor = System.Drawing.Color.GhostWhite
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.Black
         Me.Label2.Location = New System.Drawing.Point(17, 41)

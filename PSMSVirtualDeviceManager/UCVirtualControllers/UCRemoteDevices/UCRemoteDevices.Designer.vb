@@ -216,7 +216,7 @@ Partial Class UCRemoteDevices
         '
         'Label12
         '
-        Me.Label12.BackColor = System.Drawing.Color.Transparent
+        Me.Label12.BackColor = System.Drawing.Color.White
         Me.Label12.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label12.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.Navy

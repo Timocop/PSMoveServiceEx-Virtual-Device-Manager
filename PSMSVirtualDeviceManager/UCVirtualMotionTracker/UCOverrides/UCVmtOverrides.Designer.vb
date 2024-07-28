@@ -106,6 +106,7 @@ Partial Class UCVmtOverrides
         '
         Me.ListView_Overrides.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView_Overrides.BackColor = System.Drawing.Color.White
         Me.ListView_Overrides.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
         Me.ListView_Overrides.FullRowSelect = True
         Me.ListView_Overrides.HideSelection = False

@@ -141,6 +141,7 @@ Partial Class UCVirtualControllers
         '
         'TabPage_General
         '
+        Me.TabPage_General.BackColor = System.Drawing.Color.White
         Me.TabPage_General.Controls.Add(Me.CheckBox_PSmoveEmu)
         Me.TabPage_General.Controls.Add(Me.Label5)
         Me.TabPage_General.Controls.Add(Me.Label3)
@@ -151,7 +152,6 @@ Partial Class UCVirtualControllers
         Me.TabPage_General.Size = New System.Drawing.Size(728, 467)
         Me.TabPage_General.TabIndex = 2
         Me.TabPage_General.Text = "General"
-        Me.TabPage_General.UseVisualStyleBackColor = True
         '
         'CheckBox_PSmoveEmu
         '
@@ -191,21 +191,21 @@ Partial Class UCVirtualControllers
         '
         'TabPage_RemoteSettings
         '
+        Me.TabPage_RemoteSettings.BackColor = System.Drawing.Color.White
         Me.TabPage_RemoteSettings.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_RemoteSettings.Name = "TabPage_RemoteSettings"
         Me.TabPage_RemoteSettings.Size = New System.Drawing.Size(728, 467)
         Me.TabPage_RemoteSettings.TabIndex = 0
         Me.TabPage_RemoteSettings.Text = "Remote Devices"
-        Me.TabPage_RemoteSettings.UseVisualStyleBackColor = True
         '
         'TabPage_ControllerAttachments
         '
+        Me.TabPage_ControllerAttachments.BackColor = System.Drawing.Color.White
         Me.TabPage_ControllerAttachments.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_ControllerAttachments.Name = "TabPage_ControllerAttachments"
         Me.TabPage_ControllerAttachments.Size = New System.Drawing.Size(728, 467)
         Me.TabPage_ControllerAttachments.TabIndex = 1
         Me.TabPage_ControllerAttachments.Text = "Controller Attachments"
-        Me.TabPage_ControllerAttachments.UseVisualStyleBackColor = True
         '
         'UCVirtualControllers
         '

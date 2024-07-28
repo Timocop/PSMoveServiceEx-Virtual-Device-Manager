@@ -69,6 +69,7 @@ Partial Class UCVmtTrackers
         '
         'ListView_Trackers
         '
+        Me.ListView_Trackers.BackColor = System.Drawing.Color.White
         Me.ListView_Trackers.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ListView_Trackers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader6, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5})
         Me.ListView_Trackers.ContextMenuStrip = Me.ContextMenuStrip_Trackers
@@ -131,7 +132,6 @@ Partial Class UCVmtTrackers
         '
         'Label66
         '
-        Me.Label66.BackColor = System.Drawing.Color.Transparent
         Me.Label66.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label66.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label66.ForeColor = System.Drawing.Color.Navy

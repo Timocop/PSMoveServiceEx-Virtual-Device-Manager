@@ -28,11 +28,6 @@ Partial Class UCVmtManagement
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
-        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
-        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
@@ -56,6 +51,11 @@ Partial Class UCVmtManagement
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.Panel_AvailableDevices.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.Panel_Status.SuspendLayout()
@@ -80,42 +80,6 @@ Partial Class UCVmtManagement
         Me.Panel_AvailableDevices.Size = New System.Drawing.Size(767, 250)
         Me.Panel_AvailableDevices.TabIndex = 4
         '
-        'ListView_OscDevices
-        '
-        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
-        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_OscDevices.FullRowSelect = True
-        Me.ListView_OscDevices.HideSelection = False
-        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(765, 206)
-        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.ListView_OscDevices.TabIndex = 1
-        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Type
-        '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 100
-        '
-        'ColumnHeader_Serial
-        '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
-        '
-        'ColumnHeader_Position
-        '
-        Me.ColumnHeader_Position.Text = "Position"
-        Me.ColumnHeader_Position.Width = 150
-        '
-        'ColumnHeader_Orientation
-        '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 150
-        '
         'Panel8
         '
         Me.Panel8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
@@ -129,7 +93,7 @@ Partial Class UCVmtManagement
         '
         'Label12
         '
-        Me.Label12.BackColor = System.Drawing.Color.Transparent
+        Me.Label12.BackColor = System.Drawing.Color.White
         Me.Label12.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label12.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.Navy
@@ -362,7 +326,7 @@ Partial Class UCVmtManagement
         '
         'Label_OscStatus
         '
-        Me.Label_OscStatus.BackColor = System.Drawing.Color.Transparent
+        Me.Label_OscStatus.BackColor = System.Drawing.Color.White
         Me.Label_OscStatus.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label_OscStatus.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_OscStatus.ForeColor = System.Drawing.Color.Navy
@@ -408,6 +372,42 @@ Partial Class UCVmtManagement
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 100
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Position
+        '
+        Me.ColumnHeader_Position.Text = "Position"
+        Me.ColumnHeader_Position.Width = 150
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 150
+        '
+        'ListView_OscDevices
+        '
+        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
+        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_OscDevices.FullRowSelect = True
+        Me.ListView_OscDevices.HideSelection = False
+        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_OscDevices.Name = "ListView_OscDevices"
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(765, 206)
+        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_OscDevices.TabIndex = 1
+        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        '
         'UCVmtManagement
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -434,11 +434,6 @@ Partial Class UCVmtManagement
     End Sub
 
     Friend WithEvents Panel_AvailableDevices As Panel
-    Friend WithEvents ListView_OscDevices As ClassListViewEx
-    Friend WithEvents ColumnHeader_Type As ColumnHeader
-    Friend WithEvents ColumnHeader_Serial As ColumnHeader
-    Friend WithEvents ColumnHeader_Position As ColumnHeader
-    Friend WithEvents ColumnHeader_Orientation As ColumnHeader
     Friend WithEvents Panel8 As Panel
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel10 As Panel
@@ -462,4 +457,9 @@ Partial Class UCVmtManagement
     Friend WithEvents Panel3 As Panel
     Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents ToolTip_Default As ToolTip
+    Friend WithEvents ListView_OscDevices As ClassListViewEx
+    Friend WithEvents ColumnHeader_Type As ColumnHeader
+    Friend WithEvents ColumnHeader_Serial As ColumnHeader
+    Friend WithEvents ColumnHeader_Position As ColumnHeader
+    Friend WithEvents ColumnHeader_Orientation As ColumnHeader
 End Class

@@ -463,7 +463,6 @@ Partial Class UCVmtPlayspaceCalib
         '
         'Label_PlayCalibTitle
         '
-        Me.Label_PlayCalibTitle.BackColor = System.Drawing.Color.Transparent
         Me.Label_PlayCalibTitle.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label_PlayCalibTitle.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_PlayCalibTitle.ForeColor = System.Drawing.Color.Navy

@@ -282,6 +282,7 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_DeviceProperties
         '
+        Me.TabPage_DeviceProperties.BackColor = System.Drawing.Color.White
         Me.TabPage_DeviceProperties.Controls.Add(Me.LinkLabel_MiscSettings)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceResolution)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceCodec)
@@ -299,7 +300,6 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(460, 200)
         Me.TabPage_DeviceProperties.TabIndex = 0
         Me.TabPage_DeviceProperties.Text = "Device Properties"
-        Me.TabPage_DeviceProperties.UseVisualStyleBackColor = True
         '
         'LinkLabel_MiscSettings
         '
@@ -339,6 +339,7 @@ Partial Class UCVirtualTrackerItem
         '
         'TabPage_TrackerProperties
         '
+        Me.TabPage_TrackerProperties.BackColor = System.Drawing.Color.White
         Me.TabPage_TrackerProperties.Controls.Add(Me.Label12)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraFramerate)
         Me.TabPage_TrackerProperties.Controls.Add(Me.ComboBox_CameraLensDistortion)
@@ -361,7 +362,6 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_TrackerProperties.Size = New System.Drawing.Size(460, 200)
         Me.TabPage_TrackerProperties.TabIndex = 1
         Me.TabPage_TrackerProperties.Text = "Tracker Properties"
-        Me.TabPage_TrackerProperties.UseVisualStyleBackColor = True
         '
         'Label12
         '

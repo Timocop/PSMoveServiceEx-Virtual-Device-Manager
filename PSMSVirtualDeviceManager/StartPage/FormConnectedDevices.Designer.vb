@@ -49,6 +49,7 @@ Partial Class FormConnectedDevices
         '
         'TreeView_ConnectedDevices
         '
+        Me.TreeView_ConnectedDevices.BackColor = System.Drawing.Color.White
         Me.TreeView_ConnectedDevices.ContextMenuStrip = Me.ContextMenuStrip_Devices
         Me.TreeView_ConnectedDevices.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TreeView_ConnectedDevices.FullRowSelect = True
@@ -124,6 +125,7 @@ Partial Class FormConnectedDevices
         '
         'ListView_DeviceInfo
         '
+        Me.ListView_DeviceInfo.BackColor = System.Drawing.Color.White
         Me.ListView_DeviceInfo.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
         Me.ListView_DeviceInfo.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_DeviceInfo.HideSelection = False
@@ -188,8 +190,8 @@ Partial Class FormConnectedDevices
         '
         'FormConnectedDevices
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(789, 578)
         Me.Controls.Add(Me.Button_CopyOutput)

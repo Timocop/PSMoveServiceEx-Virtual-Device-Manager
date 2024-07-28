@@ -158,17 +158,17 @@ Partial Class FormTroubleshootLogs
         '
         'TabPage_Issues
         '
+        Me.TabPage_Issues.BackColor = System.Drawing.Color.White
         Me.TabPage_Issues.Controls.Add(Me.SplitContainer1)
         Me.TabPage_Issues.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Issues.Name = "TabPage_Issues"
         Me.TabPage_Issues.Size = New System.Drawing.Size(752, 469)
         Me.TabPage_Issues.TabIndex = 1
         Me.TabPage_Issues.Text = "Diagnostics"
-        Me.TabPage_Issues.UseVisualStyleBackColor = True
         '
         'SplitContainer1
         '
-        Me.SplitContainer1.BackColor = System.Drawing.SystemColors.Control
+        Me.SplitContainer1.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
         Me.SplitContainer1.Name = "SplitContainer1"
@@ -187,6 +187,7 @@ Partial Class FormTroubleshootLogs
         '
         'ListView_Issues
         '
+        Me.ListView_Issues.BackColor = System.Drawing.Color.White
         Me.ListView_Issues.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ListView_Issues.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Message})
         Me.ListView_Issues.Dock = System.Windows.Forms.DockStyle.Fill
@@ -215,7 +216,7 @@ Partial Class FormTroubleshootLogs
         '
         'TextBox_IssueInfo
         '
-        Me.TextBox_IssueInfo.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBox_IssueInfo.BackColor = System.Drawing.Color.White
         Me.TextBox_IssueInfo.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_IssueInfo.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TextBox_IssueInfo.Location = New System.Drawing.Point(0, 0)
@@ -229,6 +230,7 @@ Partial Class FormTroubleshootLogs
         '
         'TabPage_Devices
         '
+        Me.TabPage_Devices.BackColor = System.Drawing.Color.White
         Me.TabPage_Devices.Controls.Add(Me.SplitContainer2)
         Me.TabPage_Devices.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Devices.Name = "TabPage_Devices"
@@ -236,11 +238,10 @@ Partial Class FormTroubleshootLogs
         Me.TabPage_Devices.Size = New System.Drawing.Size(752, 469)
         Me.TabPage_Devices.TabIndex = 2
         Me.TabPage_Devices.Text = "Devices"
-        Me.TabPage_Devices.UseVisualStyleBackColor = True
         '
         'SplitContainer2
         '
-        Me.SplitContainer2.BackColor = System.Drawing.SystemColors.Control
+        Me.SplitContainer2.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer2.Location = New System.Drawing.Point(3, 3)
         Me.SplitContainer2.Name = "SplitContainer2"
@@ -258,6 +259,7 @@ Partial Class FormTroubleshootLogs
         '
         'ListView_Devices
         '
+        Me.ListView_Devices.BackColor = System.Drawing.Color.White
         Me.ListView_Devices.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ListView_Devices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
         Me.ListView_Devices.Dock = System.Windows.Forms.DockStyle.Fill
@@ -288,7 +290,7 @@ Partial Class FormTroubleshootLogs
         '
         'TextBox_DeviceConfig
         '
-        Me.TextBox_DeviceConfig.BackColor = System.Drawing.SystemColors.Window
+        Me.TextBox_DeviceConfig.BackColor = System.Drawing.Color.White
         Me.TextBox_DeviceConfig.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_DeviceConfig.Cursor = System.Windows.Forms.Cursors.Default
         Me.TextBox_DeviceConfig.Dock = System.Windows.Forms.DockStyle.Fill
@@ -303,13 +305,13 @@ Partial Class FormTroubleshootLogs
         '
         'TabPage_Logs
         '
+        Me.TabPage_Logs.BackColor = System.Drawing.Color.White
         Me.TabPage_Logs.Controls.Add(Me.TabControl_Logs)
         Me.TabPage_Logs.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Logs.Name = "TabPage_Logs"
         Me.TabPage_Logs.Size = New System.Drawing.Size(752, 469)
         Me.TabPage_Logs.TabIndex = 0
         Me.TabPage_Logs.Text = "Logs"
-        Me.TabPage_Logs.UseVisualStyleBackColor = True
         '
         'FormTroubleshootLogs
         '
