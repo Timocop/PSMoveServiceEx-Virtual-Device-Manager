@@ -65,6 +65,7 @@ Public Class ClassLogManagerVmtTrackers
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckHasError())
         mIssues.AddRange(CheckInvalidIds())
         mIssues.AddRange(CheckCheckGenericRoles())
         Return mIssues.ToArray
@@ -76,6 +77,34 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckHasError() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual motion tracker encountered an error",
+            "Virtual motion tracker id {0} with controller id {1} is encountering an error.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        ' Check if IDs are -1 or invalid 
+        For Each mDevice In GetDevices()
+            If (mDevice.bHasStatusError) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iVmtId, mDevice.iId)
+                mIssues.Add(mIssue)
+                Exit For
+            End If
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Public Function CheckInvalidIds() As STRUC_LOG_ISSUE()

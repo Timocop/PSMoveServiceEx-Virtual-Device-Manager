@@ -6,11 +6,11 @@ Public Class ClassLogManagerAttachments
 
     Structure STRUC_DEVICE_ITEM
         Dim iId As Integer
-        Dim iParentId As Integer
+        Dim iParentControllerID As Integer
 
         Dim sNickName As String
-        Dim bHasError As Boolean
-        Dim iFpsCounter As Integer
+        Dim bHasStatusError As Boolean
+        Dim iFpsPipeCounter As Integer
     End Structure
 
     Private g_mFormMain As FormMain
@@ -63,6 +63,7 @@ Public Class ClassLogManagerAttachments
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckHasError())
         mIssues.AddRange(CheckInvalidIds())
         Return mIssues.ToArray
     End Function
@@ -73,6 +74,34 @@ Public Class ClassLogManagerAttachments
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckHasError() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Controller attachment encountered an error",
+            "Controller attachment with controller id {0} and parent controller id {1} is encountering an error.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        ' Check if IDs are -1 or invalid 
+        For Each mDevice In GetDevices()
+            If (mDevice.bHasStatusError) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDevice.iParentControllerID)
+                mIssues.Add(mIssue)
+                Exit For
+            End If
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Public Function CheckInvalidIds() As STRUC_LOG_ISSUE()
@@ -99,7 +128,7 @@ Public Class ClassLogManagerAttachments
 
         ' Check if IDs are -1 or invalid 
         For Each mDevice In GetDevices()
-            If (mDevice.iId < 0 OrElse mDevice.iParentId < 0) Then
+            If (mDevice.iId < 0 OrElse mDevice.iParentControllerID < 0) Then
                 mIssues.Add(New STRUC_LOG_ISSUE(mInvalidIdTemplate))
                 Exit For
             End If
@@ -164,7 +193,7 @@ Public Class ClassLogManagerAttachments
                     End If
 
                     If (mDevoceProp.ContainsKey("ParentControllerID")) Then
-                        mNewDevice.iParentId = CInt(mDevoceProp("ParentControllerID"))
+                        mNewDevice.iParentControllerID = CInt(mDevoceProp("ParentControllerID"))
                     Else
                         Exit While
                     End If
@@ -176,13 +205,13 @@ Public Class ClassLogManagerAttachments
                     End If
 
                     If (mDevoceProp.ContainsKey("HasStatusError")) Then
-                        mNewDevice.bHasError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
+                        mNewDevice.bHasStatusError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
                     Else
                         Exit While
                     End If
 
                     If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
-                        mNewDevice.iFpsCounter = CInt(mDevoceProp("FpsPipeCounter"))
+                        mNewDevice.iFpsPipeCounter = CInt(mDevoceProp("FpsPipeCounter"))
                     Else
                         Exit While
                     End If
