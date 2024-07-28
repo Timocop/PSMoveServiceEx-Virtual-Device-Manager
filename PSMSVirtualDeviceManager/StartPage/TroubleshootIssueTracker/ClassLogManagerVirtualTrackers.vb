@@ -174,7 +174,7 @@ Public Class ClassLogManagerVirtualTrackers
         Dim mServiceConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
 
         If (mServiceConfig IsNot Nothing) Then
-            Dim sServiceCount As String = mServiceConfig.GetValue(Of String)("", "virtual_tracker_count", Nothing)
+            Dim sServiceCount As String = mServiceConfig.GetValue("", "virtual_tracker_count", "")
 
             If (Not String.IsNullOrEmpty(sServiceCount)) Then
                 Dim iServiceCount As Integer = CInt(sServiceCount)
@@ -275,7 +275,7 @@ Public Class ClassLogManagerVirtualTrackers
                         Exit For
                     End If
 
-                    Dim sResolutionWidth As String = mServiceConfig.GetValue(Of String)("", "frame_width", Nothing)
+                    Dim sResolutionWidth As String = mServiceConfig.GetValue("", "frame_width", "")
                     If (String.IsNullOrEmpty(sResolutionWidth)) Then
                         Exit For
                     End If
