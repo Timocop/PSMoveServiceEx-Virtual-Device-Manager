@@ -193,8 +193,15 @@ Public Class ClassLogManagerVirtualTrackers
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Virtual tracker slot count too low",
             "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. Some video input devices will be unavailable.",
-            "Increase the virtual tracker count.",
+            "Set the virtual tracker count to the available video input device count.",
             ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mNoMatchTemplate As New STRUC_LOG_ISSUE(
+            "More virtual tracker slots available than video input devices",
+            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. You currently dont have enough video input devices to fill all those available slots.",
+            "Set the virtual tracker count to the available video input device count.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
@@ -219,6 +226,12 @@ Public Class ClassLogManagerVirtualTrackers
 
                 If (iServiceCount < iCount) Then
                     Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, iServiceCount, iCount)
+                    mIssues.Add(mIssue)
+                End If
+
+                If (iServiceCount > iCount) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mNoMatchTemplate)
                     mIssue.sDescription = String.Format(mIssue.sDescription, iServiceCount, iCount)
                     mIssues.Add(mIssue)
                 End If
