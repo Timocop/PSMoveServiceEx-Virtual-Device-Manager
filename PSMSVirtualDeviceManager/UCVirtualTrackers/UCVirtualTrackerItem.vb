@@ -14,7 +14,6 @@ Public Class UCVirtualTrackerItem
 
     Public g_mUCVirtualTrackers As UCVirtualTrackers
 
-    Private g_mStatusThread As Threading.Thread = Nothing
     Private g_iStatisLastTrackerId As Integer = -1
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
@@ -235,10 +234,6 @@ Public Class UCVirtualTrackerItem
         End Try
 
         g_mClassCaptureLogic.StartInitThread(False)
-
-        g_mStatusThread = New Threading.Thread(AddressOf StatusThread)
-        g_mStatusThread.IsBackground = True
-        g_mStatusThread.Start()
 
         ' Hide timeout error
         Panel_Status.Visible = False
@@ -501,16 +496,6 @@ Public Class UCVirtualTrackerItem
             Return g_bHasStatusError
         End Get
     End Property
-
-
-    Private Sub StatusThread()
-        While True
-
-
-            Threading.Thread.Sleep(1000)
-        End While
-    End Sub
-
 
     Private Sub SetUnsavedState(bIsUnsaved As Boolean)
         If (g_bIgnoreUnsaved) Then
@@ -898,12 +883,6 @@ Public Class UCVirtualTrackerItem
     End Sub
 
     Private Sub CleanUp()
-        If (g_mStatusThread IsNot Nothing AndAlso g_mStatusThread.IsAlive) Then
-            g_mStatusThread.Abort()
-            g_mStatusThread.Join()
-            g_mStatusThread = Nothing
-        End If
-
         If (g_mClassCaptureLogic IsNot Nothing) Then
             g_mClassCaptureLogic.Dispose()
             g_mClassCaptureLogic = Nothing
