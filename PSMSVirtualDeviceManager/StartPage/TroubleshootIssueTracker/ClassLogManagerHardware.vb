@@ -156,7 +156,7 @@ Public Class ClassLogManagerHardware
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Required drivers not installed",
-            "Drivers for device {0} ({1}) are not installed and might not work correctly.",
+            "Drivers for device {0} ({1}) are not installed and the device might not work properly.",
             "Install all nessecary drivers.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )

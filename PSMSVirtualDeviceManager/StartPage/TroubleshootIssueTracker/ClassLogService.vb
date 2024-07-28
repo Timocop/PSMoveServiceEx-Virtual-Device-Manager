@@ -99,7 +99,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Outdated PSMoveServiceEx Version",
+            "Outdated PSMoveServiceEx version",
             "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features.",
             "Udpate PSMoveServiceEx.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -199,9 +199,9 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Legacy PSMoveService configuration",
-            "Legacy PSMoveService configuration has been found. Using legacy configuration can cause abnormal tracking side effects and bad performance.",
-            "By default PSMoveServieEx should factory reset all configurations automatically when a legacy configuration has been found. But a full factory reset and uninstalling legacy PSMoveService is recommended.",
+            "Legacy PSMoveService configuration detected",
+            "Legacy PSMoveService configuration has been found. Abnormal tracking side effects and bad performance can be caused by using outdated legacy configuration.",
+            "By default PSMoveServieEx should factory reset all configurations automatically when legacy configurations have been found. But a full factory reset and uninstalling legacy PSMoveService is recommended.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
@@ -379,7 +379,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Device limit reached",
+            "Device slot limit reached",
             "PSMoveServiceEx could not open any more devices due to the device limit being hit.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -624,7 +624,7 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "PSMoveServiceEx log incomplete",
-            "The PSMoveServiceEx log is incompelte and has missing logging details. Some diagnostic details are unavailable due to missing log information.",
+            "The PSMoveServiceEx log is incomplete and has missing logging details. Some diagnostic details are unavailable due to missing log information.",
             "Let PSMoveServiceEx finish initalizing.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )

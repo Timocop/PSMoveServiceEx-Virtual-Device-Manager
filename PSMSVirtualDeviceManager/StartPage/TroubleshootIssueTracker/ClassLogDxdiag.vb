@@ -102,7 +102,7 @@ Public Class ClassLogDxdiag
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Possible Bluetooth Bandwidth Issues",
+            "Possible Bluetooth bandwidth issues",
             "Having multiple bluetooth devices connected, such as '{0}', could cause bandwidth issues if you want to use bluetooth devices such as PlayStation Move controllers.",
             "If you encounter issues with connected controllers, reduce the amount of devices connected to your bluetooth adapter.",
             ENUM_LOG_ISSUE_TYPE.WARNING

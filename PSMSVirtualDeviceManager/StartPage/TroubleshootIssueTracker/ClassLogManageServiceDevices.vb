@@ -174,13 +174,13 @@ Public Class ClassLogManageServiceDevices
         Dim mOneTrackerTemplate As New STRUC_LOG_ISSUE(
             "Very limited tracking quality",
             "You are using only one tracker for optical tracking. Triangulation is not available for singular trackers and tracking quality is greatly redcued.",
-            "Use more than one tracker. (such as additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera).",
+            "Add more trackers, such as an additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
         Dim mNoTrackerTemplate As New STRUC_LOG_ISSUE(
             "No optical tracking",
             "You have no trackers and are unable to track your devices optically.",
-            "Add trackers to enable optical tracking. (such as PlayStation Eye, Webcam or PlayStation 4 Stereo Camera)",
+            "Add trackers such as PlayStation Eyes, Webcams or PlayStation 4 Stereo Cameras to enable optical tracking.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -212,8 +212,8 @@ Public Class ClassLogManageServiceDevices
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Virtual Head-mounted Displays deprecated",
-            "You are using virtual Head-mounted Displays. Those types of virtual devices are deprecated due to limited functionality and remote protocol compatibility.",
-            "Do not use virtual Head-mounted Displays, use virtual controllers instead to track your Head-mounted Display. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
+            "You are using virtual head-mounted displays. Those types of virtual devices are deprecated due to limited functionality and will only be used for backwards protocol compatibility.",
+            "Do not use virtual head-mounted displays and use virtual controllers instead to track your head-mounted display. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
