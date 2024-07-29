@@ -114,7 +114,7 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
-        StartLogAnalysis(True, True)
+        StartLogAnalysis(True, True, True, True)
     End Sub
 
     Private Sub Button_LogCopy_Click(sender As Object, e As EventArgs) Handles Button_LogCopy.Click
@@ -169,10 +169,7 @@ Public Class FormTroubleshootLogs
                         m_LogContent.m_Content(mItem.Key) = mItem.Value
                     Next
 
-                    RefreshDisplayLogs()
-                    RefreshDevices()
-
-                    StartLogAnalysis(False, True)
+                    StartLogAnalysis(False, True, True, True)
                 End If
             End Using
         Catch ex As Exception
@@ -247,17 +244,17 @@ Public Class FormTroubleshootLogs
         End Get
     End Property
 
-    Public Sub StartLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean)
+    Public Sub StartLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean)
         If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
             Return
         End If
 
-        g_mThread = New Threading.Thread(Sub() ThreadLogAnalysis(bGenerateLogs, bDiagnostics))
+        g_mThread = New Threading.Thread(Sub() ThreadLogAnalysis(bGenerateLogs, bDiagnostics, bRefreshDisplayLogs, bRefreshDevices))
         g_mThread.IsBackground = True
         g_mThread.Start()
     End Sub
 
-    Private Sub ThreadLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean)
+    Private Sub ThreadLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean)
         Try
             ClassUtils.AsyncInvoke(Me, Sub()
                                            If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
@@ -276,6 +273,14 @@ Public Class FormTroubleshootLogs
 
             If (bDiagnostics) Then
                 ThreadDoDiagnostics()
+            End If
+
+            If (bRefreshDisplayLogs) Then
+                ClassUtils.AsyncInvoke(Me, Sub() RefreshDisplayLogs())
+            End If
+
+            If (bRefreshDevices) Then
+                ClassUtils.AsyncInvoke(Me, Sub() RefreshDevices())
             End If
 
         Catch ex As Threading.ThreadAbortException
@@ -313,9 +318,6 @@ Public Class FormTroubleshootLogs
                 ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try
         Next
-
-        ClassUtils.AsyncInvoke(Me, Sub() RefreshDisplayLogs())
-        ClassUtils.AsyncInvoke(Me, Sub() RefreshDevices())
     End Sub
 
     Private Sub ThreadDoDiagnostics()
