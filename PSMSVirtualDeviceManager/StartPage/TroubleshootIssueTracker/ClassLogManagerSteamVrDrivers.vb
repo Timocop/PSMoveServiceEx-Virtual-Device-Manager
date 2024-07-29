@@ -58,8 +58,8 @@ Public Class ClassLogManagerSteamVrDrivers
 
         Dim mBadPathTemplate As New STRUC_LOG_ISSUE(
             "Virtual motion tracker SteamVR driver is not properly installed",
-            "The SteamVR driver has been registered using a incorrect path and the driver might not work properly.",
-            "Re-register the SteamVR driver to correct driver path.",
+            "The SteamVR driver may not work properly because the driver is registered under an incorrect path ({0}).",
+            "Re-register the SteamVR driver to fix the registered driver path.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -68,11 +68,13 @@ Public Class ClassLogManagerSteamVrDrivers
         Dim mLogVmt As New ClassLogManagerVmtTrackers(g_mFormMain, g_ClassLogContent)
         Dim bDriverExist As Boolean = False
         Dim bDriverPathCorrect As Boolean = False
+        Dim sDriverPath As String = ""
 
         If (mLogVmt.GetDevices().Length > 0) Then
             For Each sDriver In GetDrivers()
                 If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
                     bDriverExist = True
+                    sDriverPath = sDriver
 
                     Dim sCorrectDriverPath As String = IO.Path.Combine(Application.StartupPath, ClassVmtConst.VMT_DRIVER_ROOT_PATH)
                     If (sDriver.ToLowerInvariant.StartsWith(sCorrectDriverPath.ToLowerInvariant)) Then
@@ -89,6 +91,7 @@ Public Class ClassLogManagerSteamVrDrivers
             Else
                 If (Not bDriverPathCorrect) Then
                     Dim mIssue As New STRUC_LOG_ISSUE(mBadPathTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, sDriverPath)
                     mIssues.Add(mIssue)
                 End If
             End If
