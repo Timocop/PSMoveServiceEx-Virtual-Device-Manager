@@ -67,6 +67,7 @@ Public Class ClassLogManagerRemoteDevices
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckHasError())
         mIssues.AddRange(CheckInvalidIds())
+        mIssues.AddRange(CheckControllerExternalSource())
         Return mIssues.ToArray
     End Function
 
@@ -127,6 +128,7 @@ Public Class ClassLogManagerRemoteDevices
         )
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
 
         ' Check if IDs are -1 or invalid 
         For Each mDevice In GetDevices()
@@ -143,9 +145,8 @@ Public Class ClassLogManagerRemoteDevices
             End If
 
             Dim bExist As Boolean = False
-            Dim mServiceLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
 
-            For Each mServiceDevice In mServiceLog.GetDevices()
+            For Each mServiceDevice In mServiceDevicesLog.GetDevices()
                 If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
                     Continue For
                 End If
@@ -163,6 +164,80 @@ Public Class ClassLogManagerRemoteDevices
                 mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
                 mIssues.Add(mIssue)
             End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckControllerExternalSource() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mVirtualTemplate As New STRUC_LOG_ISSUE(
+            "Virtual controller PlayStation Move emulation not enabled",
+            "To orientate the controller id {0} using external sources such as remote devices, PlayStation Move emulation must be enabled. Otherwise, orientation data will not be transmitted via the protocol.",
+            "Enable PlayStation Move emulation for this controller.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mFilterTemplate As New STRUC_LOG_ISSUE(
+            "Controller orientation filter not set properly",
+            "To orientate the controller id {0} using external sources such as remote devices, filter 'OrientationExternal' must be used. Otherwise, orientation data will not be transmitted via the protocol.",
+            "Switch to the 'OrientationExternal' orientation filter.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            For Each mServiceDevice In mServiceDevicesLog.GetDevices()
+                If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
+                    Continue For
+                End If
+
+                If (mDevice.iId <> mServiceDevice.iId) Then
+                    Continue For
+                End If
+
+                Dim mServiceConfig = mServiceLog.FindConfigFromSerial(mServiceDevice.sSerial)
+                If (mServiceConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                If (mServiceDevice.sSerial.StartsWith("VirtualController")) Then
+                    Dim sPSmoveEmulation As String = mServiceConfig.GetValue("", "psmove_emulation", "")
+                    If (String.IsNullOrEmpty(sPSmoveEmulation)) Then
+                        Continue For
+                    End If
+
+                    If (sPSmoveEmulation <> "true") Then
+                        Dim mIssue As New STRUC_LOG_ISSUE(mVirtualTemplate)
+                        mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
+                        mIssues.Add(mIssue)
+                    End If
+                Else
+                    Dim sOrientationExternal As String = mServiceConfig.GetValue("OrientationFilter", "FilterType", "")
+                    If (String.IsNullOrEmpty(sOrientationExternal)) Then
+                        Continue For
+                    End If
+
+                    If (sOrientationExternal <> "OrientationExternal") Then
+                        Dim mIssue As New STRUC_LOG_ISSUE(mFilterTemplate)
+                        mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
+                        mIssues.Add(mIssue)
+                    End If
+                End If
+
+                Exit For
+            Next
         Next
 
         Return mIssues.ToArray
