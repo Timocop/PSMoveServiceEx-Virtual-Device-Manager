@@ -234,7 +234,6 @@ Partial Class FormTroubleshootLogs
         Me.TabPage_Devices.Controls.Add(Me.SplitContainer2)
         Me.TabPage_Devices.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Devices.Name = "TabPage_Devices"
-        Me.TabPage_Devices.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage_Devices.Size = New System.Drawing.Size(752, 469)
         Me.TabPage_Devices.TabIndex = 2
         Me.TabPage_Devices.Text = "Devices"
@@ -243,7 +242,7 @@ Partial Class FormTroubleshootLogs
         '
         Me.SplitContainer2.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer2.Location = New System.Drawing.Point(3, 3)
+        Me.SplitContainer2.Location = New System.Drawing.Point(0, 0)
         Me.SplitContainer2.Name = "SplitContainer2"
         '
         'SplitContainer2.Panel1
@@ -253,8 +252,8 @@ Partial Class FormTroubleshootLogs
         'SplitContainer2.Panel2
         '
         Me.SplitContainer2.Panel2.Controls.Add(Me.TextBox_DeviceConfig)
-        Me.SplitContainer2.Size = New System.Drawing.Size(746, 463)
-        Me.SplitContainer2.SplitterDistance = 247
+        Me.SplitContainer2.Size = New System.Drawing.Size(752, 469)
+        Me.SplitContainer2.SplitterDistance = 248
         Me.SplitContainer2.TabIndex = 0
         '
         'ListView_Devices
@@ -267,7 +266,7 @@ Partial Class FormTroubleshootLogs
         Me.ListView_Devices.Location = New System.Drawing.Point(0, 0)
         Me.ListView_Devices.MultiSelect = False
         Me.ListView_Devices.Name = "ListView_Devices"
-        Me.ListView_Devices.Size = New System.Drawing.Size(247, 463)
+        Me.ListView_Devices.Size = New System.Drawing.Size(248, 469)
         Me.ListView_Devices.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_Devices.TabIndex = 0
         Me.ListView_Devices.UseCompatibleStateImageBehavior = False
@@ -299,7 +298,7 @@ Partial Class FormTroubleshootLogs
         Me.TextBox_DeviceConfig.Name = "TextBox_DeviceConfig"
         Me.TextBox_DeviceConfig.ReadOnly = True
         Me.TextBox_DeviceConfig.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.TextBox_DeviceConfig.Size = New System.Drawing.Size(495, 463)
+        Me.TextBox_DeviceConfig.Size = New System.Drawing.Size(500, 469)
         Me.TextBox_DeviceConfig.TabIndex = 0
         Me.TextBox_DeviceConfig.WordWrap = False
         '
