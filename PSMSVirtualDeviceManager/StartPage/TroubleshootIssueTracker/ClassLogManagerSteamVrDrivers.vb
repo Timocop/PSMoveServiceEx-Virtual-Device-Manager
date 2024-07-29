@@ -30,7 +30,9 @@ Public Class ClassLogManagerSteamVrDrivers
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckVmtDriver())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -39,5 +41,81 @@ Public Class ClassLogManagerSteamVrDrivers
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckVmtDriver() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Virtual motion tracker SteamVR driver not installed",
+            "You set up virtual motion trackers but the SteamVR driver has not been registered yet.",
+            "Register the SteamVR driver to use the virtual motion trackers in SteamVR. If you dont use SteamVR ignore this warning.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mBadPathTemplate As New STRUC_LOG_ISSUE(
+            "Virtual motion tracker SteamVR driver is not properly installed",
+            "The SteamVR driver has been registered using a incorrect path and the driver might not work properly.",
+            "Re-register the SteamVR driver to correct driver path.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim mLogVmt As New ClassLogManagerVmtTrackers(g_mFormMain, g_ClassLogContent)
+        Dim bDriverExist As Boolean = False
+        Dim bDriverPathCorrect As Boolean = False
+
+        If (mLogVmt.GetDevices().Length > 0) Then
+            For Each sDriver In GetDrivers()
+                If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+                    bDriverExist = True
+
+                    Dim sCorrectDriverPath As String = IO.Path.Combine(Application.StartupPath, ClassVmtConst.VMT_DRIVER_ROOT_PATH)
+                    If (sDriver.ToLowerInvariant.StartsWith(sCorrectDriverPath.ToLowerInvariant)) Then
+                        bDriverPathCorrect = True
+                    End If
+
+                    Exit For
+                End If
+            Next
+
+            If (Not bDriverExist) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssues.Add(mIssue)
+            Else
+                If (Not bDriverPathCorrect) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mBadPathTemplate)
+                    mIssues.Add(mIssue)
+                End If
+            End If
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function GetDrivers() As String()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim sDriverList As New List(Of String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
+                Dim sDriverPath As String = sLine.Substring(1, sLine.Length - 2)
+
+                sDriverList.Add(sDriverPath)
+            End If
+        Next
+
+        Return sDriverList.ToArray
     End Function
 End Class
