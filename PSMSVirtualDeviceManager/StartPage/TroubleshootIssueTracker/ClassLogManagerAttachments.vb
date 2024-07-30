@@ -65,6 +65,8 @@ Public Class ClassLogManagerAttachments
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckHasError())
         mIssues.AddRange(CheckInvalidIds())
+        mIssues.AddRange(CheckFilterExternalSource())
+        mIssues.AddRange(CheckDisableTracking())
         Return mIssues.ToArray
     End Function
 
@@ -161,6 +163,115 @@ Public Class ClassLogManagerAttachments
                 mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
                 mIssues.Add(mIssue)
             End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckFilterExternalSource() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Controller position filter not set properly",
+            "To attach the controller id {0} using controller attachments, filter 'PositionExternalAttachment' must be used. Otherwise, controller attachments will not work.",
+            "Switch to the 'PositionExternalAttachment' orientation filter.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            For Each mServiceDevice In mServiceDevicesLog.GetDevices()
+                If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
+                    Continue For
+                End If
+
+                If (mDevice.iId <> mServiceDevice.iId) Then
+                    Continue For
+                End If
+
+                Dim mServiceConfig = mServiceLog.FindConfigFromSerial(mServiceDevice.sSerial)
+                If (mServiceConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sOrientationExternal As String = mServiceConfig.GetValue("PositionFilter", "FilterType", "")
+                If (String.IsNullOrEmpty(sOrientationExternal)) Then
+                    Continue For
+                End If
+
+                If (sOrientationExternal <> "PositionExternalAttachment") Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
+                    mIssues.Add(mIssue)
+                End If
+
+                Exit For
+            Next
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckDisableTracking() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Disable optical tracking for better performance",
+            "Controller id {0} is using the filter 'PositionExternalAttachment' and optical tracking is not used.",
+            "Disable optical tracking for this controller to increase performance.",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            For Each mServiceDevice In mServiceDevicesLog.GetDevices()
+                If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.CONTROLLER) Then
+                    Continue For
+                End If
+
+                If (mDevice.iId <> mServiceDevice.iId) Then
+                    Continue For
+                End If
+
+                Dim mServiceConfig = mServiceLog.FindConfigFromSerial(mServiceDevice.sSerial)
+                If (mServiceConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sOrientationExternal As String = mServiceConfig.GetValue("PositionFilter", "FilterType", "")
+                Dim sOpticalTrackingEnabled As String = mServiceConfig.GetValue("", "enable_optical_tracking", "")
+                If (String.IsNullOrEmpty(sOrientationExternal) OrElse String.IsNullOrEmpty(sOpticalTrackingEnabled)) Then
+                    Continue For
+                End If
+
+                If (sOrientationExternal = "PositionExternalAttachment" AndAlso sOpticalTrackingEnabled = "true") Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
+                    mIssues.Add(mIssue)
+                End If
+
+                Exit For
+            Next
         Next
 
         Return mIssues.ToArray
