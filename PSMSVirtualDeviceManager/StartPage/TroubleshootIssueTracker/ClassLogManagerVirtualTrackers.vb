@@ -45,7 +45,7 @@ Public Class ClassLogManagerVirtualTrackers
                                                For Each mItem In mTrackers
                                                    sTrackersList.AppendFormat("[{0}]", mItem.m_DevicePath).AppendLine()
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
-                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.Label_StatusMessage.Text.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
+                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.m_HasStatusErrorMessage.Value.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
                                                    sTrackersList.AppendFormat("CameraFramerate={0}", mItem.g_mClassCaptureLogic.m_CameraFramerate).AppendLine()
                                                    sTrackersList.AppendFormat("CameraResolution={0}", CInt(mItem.g_mClassCaptureLogic.m_CameraResolution)).AppendLine()
                                                    sTrackersList.AppendFormat("CameraResolutionName={0}", mItem.g_mClassCaptureLogic.m_CameraResolution.ToString).AppendLine()

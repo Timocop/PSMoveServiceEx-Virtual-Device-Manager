@@ -37,7 +37,7 @@ Public Class ClassLogManagerAttachments
                                                    sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
                                                    sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
-                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.Label_StatusMessage.Text.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
+                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.m_HasStatusErrorMessage.Value.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
                                                    sTrackersList.AppendFormat("ParentControllerID={0}", mItem.g_mClassIO.m_ParentController).AppendLine()
                                                    sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
                                                    sTrackersList.AppendFormat("ControllerOffset={0}", String.Format("{0}, {1}, {2}",

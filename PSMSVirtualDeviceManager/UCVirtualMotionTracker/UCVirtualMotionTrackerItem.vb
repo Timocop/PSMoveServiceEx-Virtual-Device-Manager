@@ -24,6 +24,7 @@ Public Class UCVirtualMotionTrackerItem
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
     Private g_bHasStatusError As Boolean = False
+    Private g_sHasStatusErrormessage As New KeyValuePair(Of String, String)("", "")
 
     Public g_mDriverLastResponse As New Stopwatch
     Public g_mControllerLastResponse As New Stopwatch
@@ -668,11 +669,12 @@ Public Class UCVirtualMotionTrackerItem
             End While
 
             g_bHasStatusError = (iStatusType > -1)
+            g_sHasStatusErrormessage = New KeyValuePair(Of String, String)(sTitle, sMessage)
 
             If (Me.Visible) Then
-                If (Label_StatusTitle.Text <> sTitle OrElse Label_StatusMessage.Text <> sMessage) Then
-                    Label_StatusTitle.Text = sTitle
-                    Label_StatusMessage.Text = sMessage
+                If (Label_StatusTitle.Text <> g_sHasStatusErrormessage.Key OrElse Label_StatusMessage.Text <> g_sHasStatusErrormessage.Value) Then
+                    Label_StatusTitle.Text = g_sHasStatusErrormessage.Key
+                    Label_StatusMessage.Text = g_sHasStatusErrormessage.Value
                 End If
 
                 If (g_bHasStatusError) Then
@@ -703,6 +705,12 @@ Public Class UCVirtualMotionTrackerItem
     ReadOnly Property m_HasStatusError As Boolean
         Get
             Return g_bHasStatusError
+        End Get
+    End Property
+
+    ReadOnly Property m_HasStatusErrorMessage As KeyValuePair(Of String, String)
+        Get
+            Return g_sHasStatusErrormessage
         End Get
     End Property
 
