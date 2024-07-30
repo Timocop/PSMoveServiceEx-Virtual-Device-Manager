@@ -10,6 +10,7 @@ Public Class ClassLogManagerAttachments
 
         Dim sNickName As String
         Dim bHasStatusError As Boolean
+        Dim sHasStatusErrorMessage As String
         Dim iFpsPipeCounter As Integer
     End Structure
 
@@ -36,6 +37,7 @@ Public Class ClassLogManagerAttachments
                                                    sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
                                                    sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.Label_StatusMessage.Text.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
                                                    sTrackersList.AppendFormat("ParentControllerID={0}", mItem.g_mClassIO.m_ParentController).AppendLine()
                                                    sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
                                                    sTrackersList.AppendFormat("ControllerOffset={0}", String.Format("{0}, {1}, {2}",
@@ -86,7 +88,7 @@ Public Class ClassLogManagerAttachments
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Controller attachment encountered an error",
-            "Controller attachment with controller id {0} and parent controller id {1} is encountering an error.",
+            "Controller attachment with controller id {0} and parent controller id {1} encountered the following error: {2}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -97,7 +99,7 @@ Public Class ClassLogManagerAttachments
         For Each mDevice In GetDevices()
             If (mDevice.bHasStatusError) Then
                 Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDevice.iParentControllerID)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDevice.iParentControllerID, mDevice.sHasStatusErrorMessage)
                 mIssues.Add(mIssue)
                 Exit For
             End If
@@ -323,6 +325,12 @@ Public Class ClassLogManagerAttachments
 
                     If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
                         mNewDevice.iFpsPipeCounter = CInt(mDevoceProp("FpsPipeCounter"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("HasStatusErrorMessage")) Then
+                        mNewDevice.sHasStatusErrorMessage = mDevoceProp("HasStatusErrorMessage")
                     Else
                         Exit While
                     End If

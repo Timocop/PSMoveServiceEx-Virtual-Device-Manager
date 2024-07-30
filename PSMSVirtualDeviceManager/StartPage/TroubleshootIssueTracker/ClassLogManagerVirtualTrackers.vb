@@ -21,6 +21,7 @@ Public Class ClassLogManagerVirtualTrackers
         Dim bSupersampling As Boolean
         Dim bUseMJPG As Boolean
         Dim bHasStatusError As Boolean
+        Dim sHasStatusErrorMessage As String
     End Structure
 
     Private g_mFormMain As FormMain
@@ -44,6 +45,7 @@ Public Class ClassLogManagerVirtualTrackers
                                                For Each mItem In mTrackers
                                                    sTrackersList.AppendFormat("[{0}]", mItem.m_DevicePath).AppendLine()
                                                    sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.Label_StatusMessage.Text.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
                                                    sTrackersList.AppendFormat("CameraFramerate={0}", mItem.g_mClassCaptureLogic.m_CameraFramerate).AppendLine()
                                                    sTrackersList.AppendFormat("CameraResolution={0}", CInt(mItem.g_mClassCaptureLogic.m_CameraResolution)).AppendLine()
                                                    sTrackersList.AppendFormat("CameraResolutionName={0}", mItem.g_mClassCaptureLogic.m_CameraResolution.ToString).AppendLine()
@@ -97,7 +99,7 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Video input device encountered an error",
-            "Video input device id {0} ({1}) is encountering an error.",
+            "Video input device id {0} ({1}) encountered the following error: {2}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -108,7 +110,7 @@ Public Class ClassLogManagerVirtualTrackers
         For Each mDevice In GetDevices()
             If (mDevice.bHasStatusError) Then
                 Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath, mDevice.sHasStatusErrorMessage)
                 mIssues.Add(mIssue)
                 Exit For
             End If
@@ -198,8 +200,8 @@ Public Class ClassLogManagerVirtualTrackers
         )
 
         Dim mNoMatchTemplate As New STRUC_LOG_ISSUE(
-            "More virtual tracker slots available than video input devices",
-            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. You currently dont have enough video input devices to fill all those available slots.",
+            "More virtual tracker slots than video input devices",
+            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. You currently dont have enough video input devices to fill all those available slots. Having unused virtual trackers will reduce performance.",
             "Set the virtual tracker count to the available video input device count.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
@@ -438,6 +440,12 @@ Public Class ClassLogManagerVirtualTrackers
 
                     If (mDevoceProp.ContainsKey("HasStatusError")) Then
                         mNewDevice.bHasStatusError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("HasStatusErrorMessage")) Then
+                        mNewDevice.sHasStatusErrorMessage = mDevoceProp("HasStatusErrorMessage")
                     Else
                         Exit While
                     End If
