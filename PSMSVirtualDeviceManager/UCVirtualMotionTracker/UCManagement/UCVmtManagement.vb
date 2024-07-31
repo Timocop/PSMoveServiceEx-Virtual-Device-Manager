@@ -40,7 +40,9 @@ Public Class UCVmtManagement
 
     Private Sub LinkLabel_OscRun_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscRun.LinkClicked
         Try
-            g_UCVirtualMotionTracker.g_ClassOscServer.StartServer()
+            Dim sRemoteIP As String = g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_OscRemoteIP
+
+            g_UCVirtualMotionTracker.g_ClassOscServer.StartServer(sRemoteIP)
             g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests = False
 
             g_UCVirtualMotionTracker.g_ClassOscDevices.StartThread()

@@ -154,12 +154,20 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Public Sub StartServer()
+            StartServer(Nothing)
+        End Sub
+
+        Public Sub StartServer(sAddress As String)
             SyncLock _ThreadLock
                 If (g_VmtOsc IsNot Nothing) Then
                     Return
                 End If
 
-                g_VmtOsc = New ClassOSC(ClassVmtConst.VMT_IP, ClassVmtConst.VMT_PORT_RECEIVE, ClassVmtConst.VMT_PORT_SEND, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
+                If (String.IsNullOrEmpty(sAddress) OrElse sAddress.Trim.Length = 0) Then
+                    sAddress = ClassVmtConst.VMT_IP
+                End If
+
+                g_VmtOsc = New ClassOSC(sAddress, ClassVmtConst.VMT_PORT_RECEIVE, ClassVmtConst.VMT_PORT_SEND, AddressOf __OnOscProcessBundle, AddressOf __OnOscProcessMessage)
             End SyncLock
 
             RaiseEvent OnSuspendChanged()
@@ -827,6 +835,7 @@ Public Class UCVirtualMotionTracker
             Private g_bEnableHepticFeedback As Boolean = True
             Private g_bOptimizeTransportPackets As Boolean = True
             Private g_bRenderWindowFix As Boolean = True
+            Private g_sOscRemoteIP As String = ""
 
             Property m_DisableBaseStationSpawning As Boolean
                 Get
@@ -861,6 +870,15 @@ Public Class UCVirtualMotionTracker
                 End Get
                 Set(value As Boolean)
                     g_bRenderWindowFix = value
+                End Set
+            End Property
+
+            Property m_OscRemoteIP As String
+                Get
+                    Return g_sOscRemoteIP
+                End Get
+                Set(value As String)
+                    g_sOscRemoteIP = value
                 End Set
             End Property
         End Class
@@ -1043,6 +1061,7 @@ Public Class UCVirtualMotionTracker
                         g_mMiscSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("MiscSettings", "EnableHepticFeedback", "true") = "true")
                         g_mMiscSettings.m_OptimizeTransportPackets = (mIni.ReadKeyValue("MiscSettings", "OptimizeTransportPackets", "true") = "true")
                         g_mMiscSettings.m_RenderWindowFix = (mIni.ReadKeyValue("MiscSettings", "RenderWindowFix", "true") = "true")
+                        g_mMiscSettings.m_OscRemoteIP = mIni.ReadKeyValue("MiscSettings", "OscRemoteIP", "")
 
                         ' Playspace Settings
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1227,6 +1246,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OptimizeTransportPackets", If(g_mMiscSettings.m_OptimizeTransportPackets, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "RenderWindowFix", If(g_mMiscSettings.m_RenderWindowFix, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OscRemoteIP", g_mMiscSettings.m_OscRemoteIP))
                         End If
 
                         If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then

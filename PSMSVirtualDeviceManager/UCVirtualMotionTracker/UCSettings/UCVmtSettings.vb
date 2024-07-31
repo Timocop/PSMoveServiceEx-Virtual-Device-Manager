@@ -1,4 +1,6 @@
 ﻿
+Imports System.Text.RegularExpressions
+
 Public Class UCVmtSettings
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
 
@@ -233,6 +235,7 @@ Public Class UCVmtSettings
             CheckBox_EnableHeptics.Checked = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
             CheckBox_OptimizePackets.Checked = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
             CheckBox_RenderFix.Checked = mClassSettings.m_MiscSettings.m_RenderWindowFix
+            TextBox_OscRemoteIP.Text = mClassSettings.m_MiscSettings.m_OscRemoteIP
 
             ' Playspace Settings
             NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, mClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
@@ -832,6 +835,37 @@ Public Class UCVmtSettings
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
+    End Sub
+
+    Private Sub LinkLabel_OscIpChange_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_OscIpChange.LinkClicked
+        Try
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            If (g_UCVirtualMotionTracker.g_ClassOscServer IsNot Nothing AndAlso g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
+                Throw New ArgumentException("You can not change the OSC remote IP address while the OSC server is already initialized and running!")
+            End If
+            Dim sRemoteIP As String = InputBox("Enter a new remote IP for a OSC connection. If you already have run the OSC server, you need to restart the application in order to use the new remote IP instead.", "OSC Remote IP", "")
+            If (String.IsNullOrEmpty(sRemoteIP)) Then
+                sRemoteIP = ""
+            Else
+                sRemoteIP = sRemoteIP.Trim
+            End If
+
+            If (Not Regex.IsMatch(sRemoteIP, "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$", RegexOptions.IgnoreCase)) Then
+                Throw New ArgumentException("The entered IP is not valid")
+            End If
+
+            g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_OscRemoteIP = sRemoteIP
+            g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+
+            TextBox_OscRemoteIP.Text = sRemoteIP
+
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+
     End Sub
 
     Private Sub CleanUp()

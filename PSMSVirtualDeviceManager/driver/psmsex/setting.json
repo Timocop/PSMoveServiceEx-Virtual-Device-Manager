@@ -1,5 +1,6 @@
 {
    "DriverName": "psmsex",
+   "SendIp": "127.0.0.1",
    "ReceivePort": 34570,
    "SendPort": 34571,
    "SerialPrefix": "PSMS_EX",

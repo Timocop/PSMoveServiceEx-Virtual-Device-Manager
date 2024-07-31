@@ -131,6 +131,8 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.CheckBox_RenderFix = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_OscMaxThreadFps = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label65 = New System.Windows.Forms.Label()
@@ -146,8 +148,9 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.CheckBox_RenderFix = New System.Windows.Forms.CheckBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TextBox_OscRemoteIP = New System.Windows.Forms.TextBox()
+        Me.LinkLabel_OscIpChange = New System.Windows.Forms.LinkLabel()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -1509,6 +1512,9 @@ Partial Class UCVmtSettings
         'TabPage_SettingsOther
         '
         Me.TabPage_SettingsOther.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsOther.Controls.Add(Me.LinkLabel_OscIpChange)
+        Me.TabPage_SettingsOther.Controls.Add(Me.TextBox_OscRemoteIP)
+        Me.TabPage_SettingsOther.Controls.Add(Me.Label3)
         Me.TabPage_SettingsOther.Controls.Add(Me.Label2)
         Me.TabPage_SettingsOther.Controls.Add(Me.CheckBox_RenderFix)
         Me.TabPage_SettingsOther.Controls.Add(Me.NumericUpDown_OscMaxThreadFps)
@@ -1526,6 +1532,32 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsOther.Size = New System.Drawing.Size(786, 1093)
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Label2.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label2.Location = New System.Drawing.Point(16, 343)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Padding = New System.Windows.Forms.Padding(3)
+        Me.Label2.Size = New System.Drawing.Size(505, 32)
+        Me.Label2.TabIndex = 55
+        Me.Label2.Text = "        SteamVR has a bug where rendering stops if the Virtual-Mode render window" &
+    " loses focus. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        Enabling this setting can resolve the issue."
+        '
+        'CheckBox_RenderFix
+        '
+        Me.CheckBox_RenderFix.AutoSize = True
+        Me.CheckBox_RenderFix.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_RenderFix.Location = New System.Drawing.Point(16, 322)
+        Me.CheckBox_RenderFix.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.CheckBox_RenderFix.Name = "CheckBox_RenderFix"
+        Me.CheckBox_RenderFix.Size = New System.Drawing.Size(243, 18)
+        Me.CheckBox_RenderFix.TabIndex = 54
+        Me.CheckBox_RenderFix.Text = "Enable Virtual-Mode SteamVR Render Fix"
+        Me.CheckBox_RenderFix.UseVisualStyleBackColor = True
         '
         'NumericUpDown_OscMaxThreadFps
         '
@@ -1707,31 +1739,41 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
-        'Label2
+        'Label3
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label2.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label2.Location = New System.Drawing.Point(16, 343)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 0, 3, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label2.Size = New System.Drawing.Size(505, 32)
-        Me.Label2.TabIndex = 55
-        Me.Label2.Text = "        SteamVR has a bug where rendering stops if the Virtual-Mode render window" &
-    " loses focus. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        Enabling this setting can resolve the issue."
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(16, 391)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(86, 13)
+        Me.Label3.TabIndex = 56
+        Me.Label3.Text = "OSC Remote IP:"
         '
-        'CheckBox_RenderFix
+        'TextBox_OscRemoteIP
         '
-        Me.CheckBox_RenderFix.AutoSize = True
-        Me.CheckBox_RenderFix.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_RenderFix.Location = New System.Drawing.Point(16, 322)
-        Me.CheckBox_RenderFix.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.CheckBox_RenderFix.Name = "CheckBox_RenderFix"
-        Me.CheckBox_RenderFix.Size = New System.Drawing.Size(243, 18)
-        Me.CheckBox_RenderFix.TabIndex = 54
-        Me.CheckBox_RenderFix.Text = "Enable Virtual-Mode SteamVR Render Fix"
-        Me.CheckBox_RenderFix.UseVisualStyleBackColor = True
+        Me.TextBox_OscRemoteIP.BackColor = System.Drawing.Color.White
+        Me.TextBox_OscRemoteIP.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.TextBox_OscRemoteIP.Location = New System.Drawing.Point(229, 388)
+        Me.TextBox_OscRemoteIP.Name = "TextBox_OscRemoteIP"
+        Me.TextBox_OscRemoteIP.ReadOnly = True
+        Me.TextBox_OscRemoteIP.Size = New System.Drawing.Size(118, 22)
+        Me.TextBox_OscRemoteIP.TabIndex = 57
+        '
+        'LinkLabel_OscIpChange
+        '
+        Me.LinkLabel_OscIpChange.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_OscIpChange.AutoSize = True
+        Me.LinkLabel_OscIpChange.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_OscIpChange.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_OscIpChange.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_OscIpChange.Location = New System.Drawing.Point(353, 391)
+        Me.LinkLabel_OscIpChange.Margin = New System.Windows.Forms.Padding(3)
+        Me.LinkLabel_OscIpChange.Name = "LinkLabel_OscIpChange"
+        Me.LinkLabel_OscIpChange.Size = New System.Drawing.Size(90, 13)
+        Me.LinkLabel_OscIpChange.TabIndex = 58
+        Me.LinkLabel_OscIpChange.TabStop = True
+        Me.LinkLabel_OscIpChange.Text = "Change address"
+        Me.LinkLabel_OscIpChange.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'UCVmtSettings
         '
@@ -1934,4 +1976,7 @@ Partial Class UCVmtSettings
     Friend WithEvents ToolTip_Default As ToolTip
     Friend WithEvents Label2 As Label
     Friend WithEvents CheckBox_RenderFix As CheckBox
+    Friend WithEvents TextBox_OscRemoteIP As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents LinkLabel_OscIpChange As LinkLabel
 End Class
