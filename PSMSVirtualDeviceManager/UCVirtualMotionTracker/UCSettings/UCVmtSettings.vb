@@ -846,14 +846,17 @@ Public Class UCVmtSettings
             If (g_UCVirtualMotionTracker.g_ClassOscServer IsNot Nothing AndAlso g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
                 Throw New ArgumentException("You can not change the OSC remote IP address while the OSC server is already initialized and running!")
             End If
-            Dim sRemoteIP As String = InputBox("Enter a new remote IP for a OSC connection. If you already have run the OSC server, you need to restart the application in order to use the new remote IP instead.", "OSC Remote IP", "")
+
+            Dim sRemoteIP As String = g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_OscRemoteIP
+
+            sRemoteIP = InputBox("Enter a new remote IP for a OSC connection. If you already have run the OSC server, you need to restart the application in order to use the new remote IP instead.", "OSC Remote IP", sRemoteIP)
             If (String.IsNullOrEmpty(sRemoteIP)) Then
                 sRemoteIP = ""
             Else
                 sRemoteIP = sRemoteIP.Trim
             End If
 
-            If (Not Regex.IsMatch(sRemoteIP, "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$", RegexOptions.IgnoreCase)) Then
+            If (Not String.IsNullOrEmpty(sRemoteIP) AndAlso Not Regex.IsMatch(sRemoteIP, "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$", RegexOptions.IgnoreCase)) Then
                 Throw New ArgumentException("The entered IP is not valid")
             End If
 
