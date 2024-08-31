@@ -7,6 +7,13 @@ Public Class ClassLogProcesses
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
+    Structure STRUC_PROCESS_ITEM
+        Dim iId As Integer
+        Dim sName As String
+        Dim sPath As String
+        Dim sDescription As String
+    End Structure
+
     Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
         g_mFormMain = _FormMain
         g_ClassLogContent = _ClassLogContent
@@ -52,5 +59,68 @@ Public Class ClassLogProcesses
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function GetProcesses() As STRUC_PROCESS_ITEM()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mProcessList As New List(Of STRUC_PROCESS_ITEM)
+        Dim mProcessProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("["c) AndAlso sLine.EndsWith("]"c)) Then
+                Dim sProcessKey As String = sLine.Substring(1, sLine.Length - 2)
+                Dim sProcessId As String = sProcessKey.Remove(0, "ProcessID_".Length)
+
+                Dim mNewDevice As New STRUC_PROCESS_ITEM
+                mNewDevice.iId = CInt(sProcessId)
+
+                ' Optional
+                If (mProcessProp.ContainsKey("ProcessName")) Then
+                    mNewDevice.sName = mProcessProp("ProcessName")
+                End If
+
+                If (mProcessProp.ContainsKey("FileName")) Then
+                    mNewDevice.sPath = mProcessProp("FileName")
+                End If
+
+                If (mProcessProp.ContainsKey("FileDescription")) Then
+                    mNewDevice.sDescription = mProcessProp("FileDescription")
+                End If
+
+                mProcessList.Add(mNewDevice)
+                mProcessProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mProcessProp(sKey) = sValue
+            End If
+        Next
+
+        Return mProcessList.ToArray
+    End Function
+
+    Public Function GetProcessByName(sProcessName As String, ByRef r_Process As STRUC_PROCESS_ITEM) As Boolean
+        For Each mProcess In GetProcesses()
+            If (String.IsNullOrEmpty(mProcess.sName)) Then
+                Continue For
+            End If
+
+            If (mProcess.sName.ToLowerInvariant = sProcessName.ToLower) Then
+                r_Process = mProcess
+                Return True
+            End If
+        Next
+
+        Return False
     End Function
 End Class

@@ -69,7 +69,22 @@ Public Class ClassLogManagerSteamVrDrivers
         Dim bDriverExist As Boolean = False
         Dim bDriverPathCorrect As Boolean = False
         Dim sDriverPath As String = ""
-        Dim sCorrectDriverPath As String = IO.Path.Combine(Application.StartupPath, ClassVmtConst.VMT_DRIVER_ROOT_PATH)
+
+        ' $TODO Maybe get assembly name instead? User can change the file name here.
+        Dim sApplicationName As String = IO.Path.GetFileNameWithoutExtension(Application.ExecutablePath)
+
+        Dim mLogProcesses As New ClassLogProcesses(g_mFormMain, g_ClassLogContent)
+        Dim mApplicationProcess As New ClassLogProcesses.STRUC_PROCESS_ITEM
+        If (Not mLogProcesses.GetProcessByName(sApplicationName, mApplicationProcess)) Then
+            Return {}
+        End If
+
+        If (String.IsNullOrEmpty(mApplicationProcess.sPath)) Then
+            Return {}
+        End If
+
+        Dim sApplicationDirectory As String = IO.Path.GetDirectoryName(mApplicationProcess.sPath)
+        Dim sCorrectDriverPath As String = IO.Path.Combine(sApplicationDirectory, ClassVmtConst.VMT_DRIVER_ROOT_PATH)
 
         If (mLogVmt.GetDevices().Length > 0) Then
             For Each sDriver In GetDrivers()
