@@ -32,6 +32,7 @@ Public Class ClassLogManagerSteamVrDrivers
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckVmtDriver())
+        mIssues.AddRange(CheckBadDrivers())
         Return mIssues.ToArray
     End Function
 
@@ -115,6 +116,77 @@ Public Class ClassLogManagerSteamVrDrivers
         Return mIssues.ToArray
     End Function
 
+    Public Function CheckBadDrivers() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        ' The following drivers can cause conflicts with the VDM SteamVR driver. Mostly because they access the same hardware, which isnt possible.
+        Dim mBadDrivers As New List(Of String)
+        mBadDrivers.Add("psmove") 'Legacy PSMoveService VRBridge. Its dead and unsupported. VDM SteamVR driver is the successor.
+        mBadDrivers.Add("trinuspsvr") 'TrinusVR. Conflicts with PSVR hardware access.
+        mBadDrivers.Add("driver4vr") 'Driver4VR. PSVR support dropped. Conflicts with PS4 Camera and PSVR hardware access.
+        mBadDrivers.Add("iVRy") 'iVRy. PSVR support outdated and PSMS module broken? Conflicts with PSVR and PS4 Camera hardware access.
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Third-party SteamVR driver detected",
+            "A third-party SteamVR driver '{0}' has been detected. Make sure its configured to work properly with the PSMoveServiceEx SteamVR driver to avoid issues and crashes.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim mBadTemplate As New STRUC_LOG_ISSUE(
+            "Conflicting third-party SteamVR driver detected",
+            "The third-party SteamVR driver '{0}' is not compatible with the PSMoveServiceEx SteamVR driver or may causes issues or crashes when activated.",
+            "Uninstall or deactivate the conflicting third-party SteamVR driver '{0}'.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim mLogVmt As New ClassLogManagerVmtTrackers(g_mFormMain, g_ClassLogContent)
+        Dim bDriverExist As Boolean = False
+
+        If (mLogVmt.GetDevices().Length > 0) Then
+            For Each sDriver In GetDrivers()
+                If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+                    bDriverExist = True
+                    Exit For
+                End If
+            Next
+
+            If (bDriverExist) Then
+                For Each sDriver In GetDrivers()
+                    Dim bBadFound As Boolean = False
+
+                    If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+                        Continue For
+                    End If
+
+                    For Each sBadDriver In mBadDrivers
+                        If (sDriver.ToLowerInvariant.EndsWith(sBadDriver.ToLowerInvariant)) Then
+                            Dim mIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                            mIssue.sDescription = String.Format(mIssue.sDescription, sDriver)
+                            mIssue.sSolution = String.Format(mIssue.sSolution, sDriver)
+                            mIssues.Add(mIssue)
+
+                            bBadFound = True
+                        End If
+                    Next
+
+                    If (Not bBadFound) Then
+                        Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                        mIssue.sDescription = String.Format(mIssue.sDescription, sDriver)
+                        mIssues.Add(mIssue)
+                    End If
+                Next
+            End If
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
     Public Function GetDrivers() As String()
         Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
@@ -137,3 +209,4 @@ Public Class ClassLogManagerSteamVrDrivers
         Return sDriverList.ToArray
     End Function
 End Class
+
