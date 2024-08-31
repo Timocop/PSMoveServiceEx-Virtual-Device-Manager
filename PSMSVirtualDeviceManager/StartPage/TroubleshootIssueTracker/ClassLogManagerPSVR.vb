@@ -37,7 +37,9 @@ Public Class ClassLogManagerPSVR
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckPsvrHasError())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -46,6 +48,78 @@ Public Class ClassLogManagerPSVR
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckPsvrHasError() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mHdmiTemplate As New STRUC_LOG_ISSUE(
+            "PlayStation VR encountered an HDMI issue",
+            "PlayStation VR encountered the following error: {0}",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mUsbTemplate As New STRUC_LOG_ISSUE(
+            "PlayStation VR encountered an USB issue",
+            "PlayStation VR encountered the following error: {0}",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mDisplayTemplate As New STRUC_LOG_ISSUE(
+            "PlayStation VR encountered an display issue",
+            "PlayStation VR encountered the following error: {0}",
+            "",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim iHdmiStatus As ENUM_DEVICE_HDMI_STATUS
+        Dim iUsbStatus As ENUM_DEVICE_USB_STATUS
+        Dim iDisplayStatus As ENUM_DEVICE_DISPLAY_STATUS
+        If (Not GetDeviceStatus(iHdmiStatus, iUsbStatus, iDisplayStatus)) Then
+            Return {}
+        End If
+
+        If (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED AndAlso
+                iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED AndAlso
+                iDisplayStatus = ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED) Then
+            Return {}
+        End If
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Select Case (iHdmiStatus)
+            Case ENUM_DEVICE_HDMI_STATUS.CONNECTED, ENUM_DEVICE_HDMI_STATUS.DIRECT_MODE
+                ' Good
+            Case Else
+                Dim mIssue As New STRUC_LOG_ISSUE(mHdmiTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, iHdmiStatus.ToString)
+                mIssues.Add(mIssue)
+        End Select
+
+        Select Case (iUsbStatus)
+            Case ENUM_DEVICE_USB_STATUS.CONNECTED
+                ' Good
+            Case Else
+                Dim mIssue As New STRUC_LOG_ISSUE(mUsbTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, iUsbStatus.ToString)
+                mIssues.Add(mIssue)
+        End Select
+
+        Select Case (iDisplayStatus)
+            Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI, ENUM_DEVICE_DISPLAY_STATUS.DIRECT_MODE
+                ' Good
+            Case Else
+                Dim mIssue As New STRUC_LOG_ISSUE(mDisplayTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, iDisplayStatus.ToString)
+                mIssues.Add(mIssue)
+        End Select
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetDeviceStatus(ByRef _HdmiStatus As ENUM_DEVICE_HDMI_STATUS,
