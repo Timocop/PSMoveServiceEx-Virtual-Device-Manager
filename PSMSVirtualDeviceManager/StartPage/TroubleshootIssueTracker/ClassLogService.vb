@@ -480,15 +480,28 @@ Public Class ClassLogService
                     Dim sDeviceAddress As String = mMatch.Groups("Address").Value.Trim.ToUpperInvariant
 
                     If (Not mDeviceList.Contains(sDeviceAddress)) Then
-                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                        mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceAddress)
-
-                        mIssues.Add(mNewIssue)
-
                         mDeviceList.Add(sDeviceAddress)
                     End If
                 End If
             End If
+
+            ' Remove found devices.
+            If (sLine.Contains("Bluetooth device found matching the given address")) Then
+                Dim mMatch As Match = Regex.Match(sLine, "Bluetooth device found matching the given address\: (?<Address>(..\:..\:..\:..\:..\:..))", RegexOptions.IgnoreCase)
+
+                If (mMatch.Success AndAlso mMatch.Groups("Address").Success) Then
+                    Dim sDeviceAddress As String = mMatch.Groups("Address").Value.Trim.ToUpperInvariant
+
+                    mDeviceList.Remove(sDeviceAddress)
+                End If
+            End If
+        Next
+
+        For Each sDevice In mDeviceList
+            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+            mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDevice)
+
+            mIssues.Add(mNewIssue)
         Next
 
         Return mIssues.ToArray
