@@ -715,14 +715,15 @@ Public Class ClassLogService
         End If
 
         ' Morpheus
-        If (sSerial.ToUpperInvariant.Contains(String.Format("VID_{0}&PID_{1}", ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS(0).VID, ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS(0).PID).ToUpperInvariant)) Then
+        If (sSerial.StartsWith("MorpheusHMD") OrElse
+                sSerial.ToUpperInvariant.Contains(String.Format("VID_{0}&PID_{1}", ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS(0).VID, ClassLibusbDriver.DRV_PSVR_KNOWN_CONFIGS(0).PID).ToUpperInvariant)) Then
             If (mConfigs.ContainsKey("MorpheusHMDConfig")) Then
                 Return mConfigs("MorpheusHMDConfig")
             End If
         End If
 
         ' Bluetooth address (dualshock, psmove, psnavi)
-        If (sSerial.Contains(":"c)) Then
+        If (sSerial.Split(":"c).Count = 6 OrElse sSerial.Split("_"c).Count = 6) Then
             Dim sPathEnd As String = sSerial.Replace(":"c, "_"c).ToLowerInvariant
 
             For Each mConfig In mConfigs
