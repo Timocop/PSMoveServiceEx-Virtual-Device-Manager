@@ -114,6 +114,21 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
+        If (g_mFormMain.g_mPSMoveServiceCAPI IsNot Nothing AndAlso Not g_mFormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("PSMoveServiceEx is not running!")
+            sMessage.AppendLine("To generate all diagnostic information, PSMoveServiceEx must be running.")
+            sMessage.AppendLine("If PSMoveServiceEx is not running, some diagnostic information may be missing or displayed incorrectly.")
+            sMessage.AppendLine("It's recommended to run PSMoveServiceEx before generating diagnostics information!")
+            sMessage.AppendLine("")
+            sMessage.AppendLine("Click OK to ignore this warning and generate diagnostic information without PSMovServiceEx running.")
+            sMessage.AppendLine("Otherwise click CANCEL to abort.")
+
+            If (MessageBox.Show(sMessage.ToString, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                Return
+            End If
+        End If
+
         StartLogAnalysis(True, True, True, True)
     End Sub
 
