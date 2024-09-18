@@ -133,7 +133,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckEmpty())
         mIssues.AddRange(CheckTrackerCount())
         mIssues.AddRange(CheckVirtualHmdObsolete())
-        mIssues.AddRange(CheckNoDevice())
+        mIssues.AddRange(CheckDeviceCount())
         Return mIssues.ToArray
     End Function
 
@@ -233,7 +233,7 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckNoDevice() As STRUC_LOG_ISSUE()
+    Public Function CheckDeviceCount() As STRUC_LOG_ISSUE()
         Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return {}
@@ -245,6 +245,12 @@ Public Class ClassLogManageServiceDevices
             "",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO
+        )
+        Dim mManyTemplate As New STRUC_LOG_ISSUE(
+            "Multiple {0} found",
+            "There are currently {0} {1} available but some applications may only support {2} at the time.",
+            "Its recommended to reduce the number of {0} to {1}.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim iControllers As Integer = 0
@@ -271,6 +277,14 @@ Public Class ClassLogManageServiceDevices
             Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
 
             mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Head-mounted Displays")
+
+            mIssues.Add(mNewIssue)
+        ElseIf (iHmds > 1) Then
+            Dim mNewIssue As New STRUC_LOG_ISSUE(mManyTemplate)
+
+            mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Head-mounted Displays")
+            mNewIssue.sDescription = String.Format(mNewIssue.sDescription, iHmds, "Head-mounted Displays", "1")
+            mNewIssue.sSolution = String.Format(mNewIssue.sSolution, "Head-mounted Displays", "1")
 
             mIssues.Add(mNewIssue)
         End If
