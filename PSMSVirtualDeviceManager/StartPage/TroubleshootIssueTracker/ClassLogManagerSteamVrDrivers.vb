@@ -131,14 +131,14 @@ Public Class ClassLogManagerSteamVrDrivers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Third-party SteamVR driver detected",
-            "A third-party SteamVR driver '{0}' has been detected. Make sure its configured to work properly with the PSMoveServiceEx SteamVR driver to avoid issues and crashes.",
+            "A third-party SteamVR driver '{0}' has been detected. Make sure its configured to work properly with the virtual motion tracker SteamVR driver to avoid issues and crashes.",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
 
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             "Conflicting third-party SteamVR driver detected",
-            "The third-party SteamVR driver '{0}' is not compatible with the PSMoveServiceEx SteamVR driver or may causes issues or crashes when activated.",
+            "The third-party SteamVR driver '{0}' is not compatible with the virtual motion tracker SteamVR driver or may causes issues or crashes when activated.",
             "Uninstall or deactivate the conflicting third-party SteamVR driver '{0}'.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
