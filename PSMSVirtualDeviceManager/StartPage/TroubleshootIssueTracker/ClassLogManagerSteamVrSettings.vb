@@ -7,6 +7,19 @@ Public Class ClassLogManagerSteamVrSettings
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
+    Structure STRUC_CONFIG_ITEM
+        Dim bIsValid As Boolean
+        Dim sSteamPath As String
+
+        Dim bActivateMultipleDrivers As Boolean
+        Dim bEnableHomeApp As Boolean
+        Dim bEnableMirrorView As Boolean
+        Dim bEnablePerformanceGraph As Boolean
+        Dim sForcedDriver As String
+        Dim bNullHmdEnabled As Boolean
+        Dim bRequireHmd As Boolean
+    End Structure
+
     Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
         g_mFormMain = _FormMain
         g_ClassLogContent = _ClassLogContent
@@ -35,7 +48,9 @@ Public Class ClassLogManagerSteamVrSettings
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckRequiredHmd())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -44,5 +59,130 @@ Public Class ClassLogManagerSteamVrSettings
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckRequiredHmd() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "SteamVR driver may not load properly",
+            "SteamVR is configured to load drivers when a Head-mounted Display is present, but the PSMoveServiceEx SteamVR driver loads its devices after it has loaded and initialized, causing the SteamVR driver to never activate.",
+            "In Virtual Device Manager go to 'Virtual Motion Tracker > Managment > SteamVR Support > Advanced Settings...' and uncheck 'Require Head-mounted Display' to properly load the SteamVR driver even if no Head-mounted Display is available.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim mSettings = GetSettings()
+        If (Not mSettings.bIsValid) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim bHmdExist As Boolean = False
+        Dim mVmtLog As New ClassLogManagerVmtTrackers(g_mFormMain, g_ClassLogContent)
+        For Each mDevice In mVmtLog.GetDevices()
+            If (mDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.HMD) Then
+                Continue For
+            End If
+
+            bHmdExist = True
+            Exit For
+        Next
+
+        If (Not bHmdExist) Then
+            Return mIssues.ToArray
+        End If
+
+        If (mSettings.bRequireHmd) Then
+            Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+            mIssues.Add(mIssue)
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function GetSettings() As STRUC_CONFIG_ITEM
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return New STRUC_CONFIG_ITEM()
+        End If
+
+        Dim mDevoceProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
+                Dim sSteamPath As String = sLine.Substring(1, sLine.Length - 2)
+
+                Dim mNewConfig As New STRUC_CONFIG_ITEM
+
+                ' Required
+                While True
+                    mNewConfig.sSteamPath = sSteamPath
+
+                    If (mDevoceProp.ContainsKey("ActivateMultipleDrivers")) Then
+                        mNewConfig.bActivateMultipleDrivers = (mDevoceProp("ActivateMultipleDrivers").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("EnableHomeApp")) Then
+                        mNewConfig.bEnableHomeApp = (mDevoceProp("EnableHomeApp").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("EnableMirrorView")) Then
+                        mNewConfig.bEnableMirrorView = (mDevoceProp("EnableMirrorView").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("EnablePerformanceGraph")) Then
+                        mNewConfig.bEnablePerformanceGraph = (mDevoceProp("EnablePerformanceGraph").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("ForcedDriver")) Then
+                        mNewConfig.sForcedDriver = mDevoceProp("ForcedDriver")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("NullHmdEnabled")) Then
+                        mNewConfig.bNullHmdEnabled = (mDevoceProp("NullHmdEnabled").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("RequireHmd")) Then
+                        mNewConfig.bRequireHmd = (mDevoceProp("RequireHmd").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    mNewConfig.bIsValid = True
+
+                    Return mNewConfig
+                End While
+
+                mDevoceProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDevoceProp(sKey) = sValue
+            End If
+        Next
+
+        Return New STRUC_CONFIG_ITEM()
     End Function
 End Class
