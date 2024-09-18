@@ -50,6 +50,7 @@ Public Class ClassLogManagerSteamVrSettings
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckRequiredHmd())
+        mIssues.AddRange(CheckMultiDrivers())
         Return mIssues.ToArray
     End Function
 
@@ -97,6 +98,55 @@ Public Class ClassLogManagerSteamVrSettings
         End If
 
         If (mSettings.bRequireHmd) Then
+            Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+            mIssues.Add(mIssue)
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckMultiDrivers() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "SteamVR driver may not load properly",
+            "SteamVR is configured to only load one driver at the time. The PSMoveServiceEx SteamVR driver might not load when other third-party drivers are activated.",
+            "In Virtual Device Manager go to 'Virtual Motion Tracker > Managment > SteamVR Support > Advanced Settings...' and check 'Activate multiple drivers' to properly load the SteamVR driver even if there are other drivers loaded and running.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim mSettings = GetSettings()
+        If (Not mSettings.bIsValid) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim bHmdExist As Boolean = False
+        Dim mVmtLog As New ClassLogManagerVmtTrackers(g_mFormMain, g_ClassLogContent)
+        If (mVmtLog.GetDevices().Length = 0) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim bDriverExist As Boolean = False
+        Dim mDrviers As New ClassLogManagerSteamVrDrivers(g_mFormMain, g_ClassLogContent)
+        For Each sDriver In mDrviers.GetDrivers()
+            If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+                Continue For
+            End If
+
+            bDriverExist = True
+            Exit For
+        Next
+
+        If (Not bDriverExist) Then
+            Return mIssues.ToArray
+        End If
+
+        If (Not mSettings.bActivateMultipleDrivers) Then
             Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
             mIssues.Add(mIssue)
         End If
