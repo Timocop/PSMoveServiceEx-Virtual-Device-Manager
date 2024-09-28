@@ -1194,6 +1194,8 @@ Public Class UCVirtualMotionTrackerItem
 
         Private Sub ThreadOsc()
             Dim iLastOutputSeqNum As Integer = 0
+            Dim iLastOutputSeqVmtNum As Integer = 0
+            Dim iLastOutputSeqNumFailures As Integer = 0
 
             Dim mOscDataPack As New STRUC_OSC_DATA_PACK()
             Dim mEnforcePacketUpdate As New Stopwatch
@@ -1343,7 +1345,8 @@ Public Class UCVirtualMotionTrackerItem
 
                             If (g_mHmdData IsNot Nothing) Then
                                 ' We got any new data?
-                                If (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
+                                If (iLastOutputSeqNumFailures > 250 OrElse iLastOutputSeqNum < g_mHmdData.m_OutputSeqNum) Then
+                                    iLastOutputSeqNumFailures = 0
                                     iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
 
                                     SyncLock _ThreadLock
@@ -1485,9 +1488,11 @@ Public Class UCVirtualMotionTrackerItem
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                iLastOutputSeqVmtNum += 1
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/HMD/Room/Driver",
+                                                        iLastOutputSeqVmtNum,
                                                         0.0F,
                                                         mOscDataPack.mPosition.X,
                                                         mOscDataPack.mPosition.Y,
@@ -1506,6 +1511,8 @@ Public Class UCVirtualMotionTrackerItem
                                             End If
                                         End If
                                     End SyncLock
+                                ElseIf (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
+                                    iLastOutputSeqNumFailures += 1
                                 End If
                             End If
                         Else
@@ -1523,7 +1530,8 @@ Public Class UCVirtualMotionTrackerItem
                                 End Select
 
                                 ' We got any new data?
-                                If (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
+                                If (iLastOutputSeqNumFailures > 250 OrElse iLastOutputSeqNum < m_ControllerData.m_OutputSeqNum) Then
+                                    iLastOutputSeqNumFailures = 0
                                     iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
 
                                     Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
@@ -1640,9 +1648,11 @@ Public Class UCVirtualMotionTrackerItem
                                         If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
                                             mLastBatteryReport.Restart()
 
+                                            iLastOutputSeqVmtNum += 1
                                             mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                 New OscMessage(
                                                     "/VMT/Property/Battery",
+                                                    iLastOutputSeqVmtNum,
                                                     m_VmtTracker,
                                                     iBatteryValue
                                                 ))
@@ -1655,9 +1665,11 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    iLastOutputSeqVmtNum += 1
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
+                                                            iLastOutputSeqVmtNum,
                                                             m_VmtTracker, ENABLE_TRACKER, 0.0F,
                                                             mOscDataPack.mPosition.X,
                                                             mOscDataPack.mPosition.Y,
@@ -1690,9 +1702,11 @@ Public Class UCVirtualMotionTrackerItem
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
                                                     For Each mButton In mOscDataPack.mButtons
+                                                        iLastOutputSeqVmtNum += 1
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                             New OscMessage(
                                                                 "/VMT/Input/Button",
+                                                                iLastOutputSeqVmtNum,
                                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                                             ))
                                                         m_FpsOscCounter += 1
@@ -1700,18 +1714,22 @@ Public Class UCVirtualMotionTrackerItem
                                                     Next
 
                                                     For Each mTrigger In mOscDataPack.mTrigger
+                                                        iLastOutputSeqVmtNum += 1
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                            New OscMessage(
                                                                "/VMT/Input/Trigger",
+                                                                iLastOutputSeqVmtNum,
                                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                                            ))
                                                         m_FpsOscCounter += 1
                                                         bSetPack = True
                                                     Next
 
+                                                    iLastOutputSeqVmtNum += 1
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Input/Joystick",
+                                                            iLastOutputSeqVmtNum,
                                                             m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
                                                         ))
                                                     m_FpsOscCounter += 1
@@ -1721,9 +1739,11 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    iLastOutputSeqVmtNum += 1
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
+                                                            iLastOutputSeqVmtNum,
                                                             m_VmtTracker, iController, 0.0F,
                                                             mOscDataPack.mPosition.X,
                                                             mOscDataPack.mPosition.Y,
@@ -1746,9 +1766,11 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    iLastOutputSeqVmtNum += 1
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
+                                                            iLastOutputSeqVmtNum,
                                                             m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
                                                             mOscDataPack.mPosition.X,
                                                             mOscDataPack.mPosition.Y,
@@ -1781,9 +1803,11 @@ Public Class UCVirtualMotionTrackerItem
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
                                                     For Each mButton In mOscDataPack.mButtons
+                                                        iLastOutputSeqVmtNum += 1
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                             New OscMessage(
                                                                 "/VMT/Input/Button",
+                                                                iLastOutputSeqVmtNum,
                                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                                             ))
                                                         m_FpsOscCounter += 1
@@ -1791,18 +1815,22 @@ Public Class UCVirtualMotionTrackerItem
                                                     Next
 
                                                     For Each mTrigger In mOscDataPack.mTrigger
+                                                        iLastOutputSeqVmtNum += 1
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                            New OscMessage(
-                                                               "/VMT/Input/Trigger",
-                                                               m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
+                                                                "/VMT/Input/Trigger",
+                                                                iLastOutputSeqVmtNum,
+                                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                                            ))
                                                         m_FpsOscCounter += 1
                                                         bSetPack = True
                                                     Next
 
+                                                    iLastOutputSeqVmtNum += 1
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Input/Joystick",
+                                                            iLastOutputSeqVmtNum,
                                                             m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
                                                         ))
                                                     m_FpsOscCounter += 1
@@ -1811,9 +1839,11 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    iLastOutputSeqVmtNum += 1
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
+                                                            iLastOutputSeqVmtNum,
                                                             m_VmtTracker, iController, 0.0F,
                                                             mOscDataPack.mPosition.X,
                                                             mOscDataPack.mPosition.Y,
@@ -1832,6 +1862,8 @@ Public Class UCVirtualMotionTrackerItem
                                                 End If
                                         End Select
                                     End SyncLock
+                                ElseIf (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
+                                    iLastOutputSeqNumFailures += 1
                                 End If
                             End If
                         End If
@@ -1862,9 +1894,11 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mFlippedQ As Quaternion = mOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
 
                                         'Use Right-Handed space for SteamVR 
+                                        iLastOutputSeqVmtNum += 1
                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                             New OscMessage(
                                                 "/VMT/Room/Driver",
+                                                iLastOutputSeqVmtNum,
                                                 VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
                                                 mPosition.X,
                                                 mPosition.Y,

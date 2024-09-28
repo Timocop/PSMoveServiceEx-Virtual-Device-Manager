@@ -1,6 +1,6 @@
 ﻿Public Class ClassVmtConst
     Public Const VMT_TRACKER_MAX As Integer = 16 'Max trackers we can have, reserve 10 for tracking references
-    Public Const VMT_DRIVER_VERSION_EXPECT As String = "VMTX_017"
+    Public Const VMT_DRIVER_VERSION_EXPECT As String = "VMTX_019"
 
     Public Const VMT_IP As String = "127.0.0.1"
     Public Const VMT_PORT_RECEIVE As Integer = 34571

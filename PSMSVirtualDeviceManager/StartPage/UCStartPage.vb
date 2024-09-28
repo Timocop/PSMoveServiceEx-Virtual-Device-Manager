@@ -160,6 +160,7 @@ Public Class UCStartPage
 
     Private Sub ServiceDeviceStatusThread()
         Dim mLastSeqNumDic As New Dictionary(Of String, Integer)
+        Dim mLastFpsDic As New Dictionary(Of String, Integer)
         Dim mFpsWatch As New Stopwatch
         mFpsWatch.Start()
 
@@ -198,6 +199,11 @@ Public Class UCStartPage
                                                End Try
                                            End Sub)
 
+                Dim bTimeElapsed = (mFpsWatch.ElapsedMilliseconds >= 1000)
+                If (bTimeElapsed) Then
+                    mFpsWatch.Restart()
+                End If
+
                 ' List Controllers
                 If (True) Then
                     Dim mDevices = g_FormMain.g_mPSMoveServiceCAPI.GetControllersData()
@@ -212,16 +218,23 @@ Public Class UCStartPage
                         Dim mPos As Vector3 = mDevice.m_Position
                         Dim mAng As Vector3 = mDevice.GetOrientationEuler()
                         Dim iSeqNum As Integer = mDevice.m_OutputSeqNum
-                        Dim iFPS As Integer = -1
+                        Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
-                                If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
-                                    iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
-                                End If
+                            If (mLastFpsDic.ContainsKey(mDevice.m_Serial)) Then
+                                iFPS = mLastFpsDic(mDevice.m_Serial)
                             End If
 
-                            mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
+                                If (bTimeElapsed) Then
+                                    iFPS = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
+
+                                    mLastFpsDic(mDevice.m_Serial) = iFPS
+                                    mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                                End If
+                            Else
+                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                            End If
                         End If
 
                         Dim iAxisX As Integer = iFrameCount
@@ -295,7 +308,7 @@ Public Class UCStartPage
                                                        If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
                                                            Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
 
-                                                           AddChartValues(mDevice.m_Serial, Math.Max(iFPS, 0), iAxisX, iMaxCount)
+                                                           AddChartValues(mDevice.m_Serial, iFPS, iAxisX, iMaxCount)
                                                        End If
                                                    End Sub)
                     Next
@@ -318,13 +331,20 @@ Public Class UCStartPage
                         Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
-                                If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
-                                    iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Serial)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
-                                End If
+                            If (mLastFpsDic.ContainsKey(mDevice.m_Serial)) Then
+                                iFPS = mLastFpsDic(mDevice.m_Serial)
                             End If
 
-                            mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
+                                If (bTimeElapsed) Then
+                                    iFPS = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
+
+                                    mLastFpsDic(mDevice.m_Serial) = iFPS
+                                    mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                                End If
+                            Else
+                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                            End If
                         End If
 
                         Dim iAxisX As Integer = iFrameCount
@@ -384,7 +404,7 @@ Public Class UCStartPage
                                                        If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
                                                            Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
 
-                                                           AddChartValues(mDevice.m_Serial, Math.Max(iFPS, 0), iAxisX, iMaxCount)
+                                                           AddChartValues(mDevice.m_Serial, iFPS, iAxisX, iMaxCount)
                                                        End If
                                                    End Sub)
                     Next
@@ -408,13 +428,20 @@ Public Class UCStartPage
                         Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Path) AndAlso mLastSeqNumDic(mDevice.m_Path) <> 0) Then
-                                If (mFpsWatch.ElapsedMilliseconds > Single.Epsilon) Then
-                                    iFPS = ((iSeqNum - mLastSeqNumDic(mDevice.m_Path)) * CInt(1000 / mFpsWatch.ElapsedMilliseconds))
-                                End If
+                            If (mLastFpsDic.ContainsKey(mDevice.m_Path)) Then
+                                iFPS = mLastFpsDic(mDevice.m_Path)
                             End If
 
-                            mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+                            If (mLastSeqNumDic.ContainsKey(mDevice.m_Path) AndAlso mLastSeqNumDic(mDevice.m_Path) <> 0) Then
+                                If (bTimeElapsed) Then
+                                    iFPS = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Path), 0)
+
+                                    mLastFpsDic(mDevice.m_Path) = iFPS
+                                    mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+                                End If
+                            Else
+                                mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+                            End If
                         End If
 
                         Dim iAxisX As Integer = iFrameCount
@@ -465,7 +492,7 @@ Public Class UCStartPage
                                                        If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
                                                            Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
 
-                                                           AddChartValues(mDevice.m_Path, Math.Max(iFPS, 0), iAxisX, iMaxCount)
+                                                           AddChartValues(mDevice.m_Path, iFPS, iAxisX, iMaxCount)
                                                        End If
                                                    End Sub)
                     Next
@@ -478,8 +505,6 @@ Public Class UCStartPage
             End Try
 
             iFrameCount += 1
-
-            mFpsWatch.Restart()
             Threading.Thread.Sleep(500)
         End While
     End Sub
