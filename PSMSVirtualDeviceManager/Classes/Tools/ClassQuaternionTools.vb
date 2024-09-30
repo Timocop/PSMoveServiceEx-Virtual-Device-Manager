@@ -177,4 +177,40 @@ Public Class ClassQuaternionTools
 
         Return CSng(angle * (180.0F / Math.PI))
     End Function
+
+    Public Shared Function QuaternionFromAngularVelocity(angularVelocity As Vector3, dt As Double) As Quaternion
+        If angularVelocity.Length() < Single.Epsilon Then
+            Return Quaternion.Identity
+        End If
+
+        Dim halfTheta As Double = angularVelocity.Length() * dt * 0.5
+        Dim axis As Vector3 = Vector3.Normalize(angularVelocity)
+        Dim sinHalfAngle As Double = Math.Sin(halfTheta)
+
+        Return New Quaternion(axis * CSng(sinHalfAngle), CSng(Math.Cos(halfTheta)))
+    End Function
+
+    Public Shared Function AngularVelocityBetweenQuats(q1 As Quaternion, q2 As Quaternion, dt As Double) As Vector3
+        Dim r As Double = 2.0F / dt
+
+        Return New Vector3(
+            CSng((q1.W * q2.X - q1.X * q2.W - q1.Y * q2.Z + q1.Z * q2.Y) * r),
+            CSng((q1.W * q2.Y + q1.X * q2.Z - q1.Y * q2.W - q1.Z * q2.X) * r),
+            CSng((q1.W * q2.Z - q1.X * q2.Y + q1.Y * q2.X - q1.Z * q2.W) * r)
+        )
+    End Function
+
+    Public Shared Function ExponentialLowpassFilter(alpha As Single, valNew As Single, valOld As Single) As Single
+        Return alpha * valNew + (1.0F - alpha) * valOld
+    End Function
+
+    Public Shared Function ExponentialLowpassFilter(alpha As Double, valNew As Double, valOld As Double) As Double
+        Return alpha * valNew + (1.0 - alpha) * valOld
+    End Function
+
+    Public Shared Function ExponentialLowpassFilter(alpha As Single, valNew As Vector3, valOld As Vector3) As Vector3
+        Return New Vector3((alpha * valNew.X) + ((1.0F - alpha) * valOld.X),
+                            (alpha * valNew.Y) + ((1.0F - alpha) * valOld.Y),
+                            (alpha * valNew.Z) + ((1.0F - alpha) * valOld.Z))
+    End Function
 End Class

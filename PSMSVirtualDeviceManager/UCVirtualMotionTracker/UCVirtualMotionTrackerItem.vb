@@ -1238,6 +1238,10 @@ Public Class UCVirtualMotionTrackerItem
             Dim mRumbleLastTimeSend As Date = Now
             Dim mRumbleLastTimeSendValid As Boolean = False
 
+            Dim mVelocityLastTime As Date = Now
+            Dim mVelocityLastPosition As Vector3 = Vector3.Zero
+            Dim mVelocityLastOrientation As Vector3 = Vector3.Zero
+
             Dim mRecenterQuat = Quaternion.Identity
 
             Dim mClampedExecution As New ClassPrecisionSleep.ClassFrameTimed()
@@ -1498,7 +1502,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         mOscDataPack.mOrientation.X,
                                                         mOscDataPack.mOrientation.Y,
                                                         mOscDataPack.mOrientation.Z,
-                                                        mOscDataPack.mOrientation.W
+                                                        mOscDataPack.mOrientation.W,
+                                                        0.0F, 0.0F, 0.0F,
+                                                        0.0F, 0.0F, 0.0F
                                                     ))
                                                 m_FpsOscCounter += 1
                                                 bSetPack = True
@@ -1661,18 +1667,39 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+
+                                                    Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
+                                                    Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
+                                                    Dim mVelocityPosition As Vector3
+                                                    Dim mVelocityOrientation As Vector3
+                                                    InternalCalculateVelocity(mCalcPosition,
+                                                                              mCalcOrientation,
+                                                                              g_mOscDataPack.mPosition,
+                                                                              g_mOscDataPack.mOrientation,
+                                                                              mVelocityPosition,
+                                                                              mVelocityLastPosition,
+                                                                              mVelocityOrientation,
+                                                                              mVelocityLastOrientation,
+                                                                              mVelocityLastTime)
+
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
                                                             iLastOutputSeqNum,
                                                             m_VmtTracker, ENABLE_TRACKER, 0.0F,
-                                                            mOscDataPack.mPosition.X,
-                                                            mOscDataPack.mPosition.Y,
-                                                            mOscDataPack.mPosition.Z,
-                                                            mOscDataPack.mOrientation.X,
-                                                            mOscDataPack.mOrientation.Y,
-                                                            mOscDataPack.mOrientation.Z,
-                                                            mOscDataPack.mOrientation.W
+                                                            mCalcPosition.X,
+                                                            mCalcPosition.Y,
+                                                            mCalcPosition.Z,
+                                                            mCalcOrientation.X,
+                                                            mCalcOrientation.Y,
+                                                            mCalcOrientation.Z,
+                                                            mCalcOrientation.W,
+                                                            mVelocityPosition.X,
+                                                            mVelocityPosition.Y,
+                                                            mVelocityPosition.Z,
+                                                            mVelocityOrientation.X,
+                                                            mVelocityOrientation.Y,
+                                                            mVelocityOrientation.Z
                                                         ))
                                                     m_FpsOscCounter += 1
                                                     bSetPack = True
@@ -1728,17 +1755,38 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+
+                                                    Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
+                                                    Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
+                                                    Dim mVelocityPosition As Vector3
+                                                    Dim mVelocityOrientation As Vector3
+                                                    InternalCalculateVelocity(mCalcPosition,
+                                                                              mCalcOrientation,
+                                                                              g_mOscDataPack.mPosition,
+                                                                              g_mOscDataPack.mOrientation,
+                                                                              mVelocityPosition,
+                                                                              mVelocityLastPosition,
+                                                                              mVelocityOrientation,
+                                                                              mVelocityLastOrientation,
+                                                                              mVelocityLastTime)
+
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
                                                             m_VmtTracker, iController, 0.0F,
-                                                            mOscDataPack.mPosition.X,
-                                                            mOscDataPack.mPosition.Y,
-                                                            mOscDataPack.mPosition.Z,
-                                                            mOscDataPack.mOrientation.X,
-                                                            mOscDataPack.mOrientation.Y,
-                                                            mOscDataPack.mOrientation.Z,
-                                                            mOscDataPack.mOrientation.W
+                                                            mCalcPosition.X,
+                                                            mCalcPosition.Y,
+                                                            mCalcPosition.Z,
+                                                            mCalcOrientation.X,
+                                                            mCalcOrientation.Y,
+                                                            mCalcOrientation.Z,
+                                                            mCalcOrientation.W,
+                                                            mVelocityPosition.X,
+                                                            mVelocityPosition.Y,
+                                                            mVelocityPosition.Z,
+                                                            mVelocityOrientation.X,
+                                                            mVelocityOrientation.Y,
+                                                            mVelocityOrientation.Z
                                                         ))
                                                     m_FpsOscCounter += 1
                                                     bSetPack = True
@@ -1753,18 +1801,39 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+
+                                                    Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
+                                                    Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
+                                                    Dim mVelocityPosition As Vector3
+                                                    Dim mVelocityOrientation As Vector3
+                                                    InternalCalculateVelocity(mCalcPosition,
+                                                                              mCalcOrientation,
+                                                                              g_mOscDataPack.mPosition,
+                                                                              g_mOscDataPack.mOrientation,
+                                                                              mVelocityPosition,
+                                                                              mVelocityLastPosition,
+                                                                              mVelocityOrientation,
+                                                                              mVelocityLastOrientation,
+                                                                              mVelocityLastTime)
+
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
                                                             iLastOutputSeqNum,
                                                             m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, 0.0F,
-                                                            mOscDataPack.mPosition.X,
-                                                            mOscDataPack.mPosition.Y,
-                                                            mOscDataPack.mPosition.Z,
-                                                            mOscDataPack.mOrientation.X,
-                                                            mOscDataPack.mOrientation.Y,
-                                                            mOscDataPack.mOrientation.Z,
-                                                            mOscDataPack.mOrientation.W
+                                                            mCalcPosition.X,
+                                                            mCalcPosition.Y,
+                                                            mCalcPosition.Z,
+                                                            mCalcOrientation.X,
+                                                            mCalcOrientation.Y,
+                                                            mCalcOrientation.Z,
+                                                            mCalcOrientation.W,
+                                                            mVelocityPosition.X,
+                                                            mVelocityPosition.Y,
+                                                            mVelocityPosition.Z,
+                                                            mVelocityOrientation.X,
+                                                            mVelocityOrientation.Y,
+                                                            mVelocityOrientation.Z
                                                         ))
                                                     m_FpsOscCounter += 1
                                                     bSetPack = True
@@ -1819,18 +1888,39 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+
+                                                    Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
+                                                    Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
+                                                    Dim mVelocityPosition As Vector3
+                                                    Dim mVelocityOrientation As Vector3
+                                                    InternalCalculateVelocity(mCalcPosition,
+                                                                              mCalcOrientation,
+                                                                              g_mOscDataPack.mPosition,
+                                                                              g_mOscDataPack.mOrientation,
+                                                                              mVelocityPosition,
+                                                                              mVelocityLastPosition,
+                                                                              mVelocityOrientation,
+                                                                              mVelocityLastOrientation,
+                                                                              mVelocityLastTime)
+
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/Room/Driver",
                                                             iLastOutputSeqNum,
                                                             m_VmtTracker, iController, 0.0F,
-                                                            mOscDataPack.mPosition.X,
-                                                            mOscDataPack.mPosition.Y,
-                                                            mOscDataPack.mPosition.Z,
-                                                            mOscDataPack.mOrientation.X,
-                                                            mOscDataPack.mOrientation.Y,
-                                                            mOscDataPack.mOrientation.Z,
-                                                            mOscDataPack.mOrientation.W
+                                                            mCalcPosition.X,
+                                                            mCalcPosition.Y,
+                                                            mCalcPosition.Z,
+                                                            mCalcOrientation.X,
+                                                            mCalcOrientation.Y,
+                                                            mCalcOrientation.Z,
+                                                            mCalcOrientation.W,
+                                                            mVelocityPosition.X,
+                                                            mVelocityPosition.Y,
+                                                            mVelocityPosition.Z,
+                                                            mVelocityOrientation.X,
+                                                            mVelocityOrientation.Y,
+                                                            mVelocityOrientation.Z
                                                         ))
                                                     m_FpsOscCounter += 1
                                                     bSetPack = True
@@ -1884,7 +1974,9 @@ Public Class UCVirtualMotionTrackerItem
                                                 mFlippedQ.X,
                                                 mFlippedQ.Y,
                                                 mFlippedQ.Z,
-                                                mFlippedQ.W
+                                                mFlippedQ.W,
+                                                0.0F, 0.0F, 0.0F,
+                                                0.0F, 0.0F, 0.0F
                                             ))
                                     End If
                                 Next
@@ -1906,6 +1998,53 @@ Public Class UCVirtualMotionTrackerItem
                     Threading.Thread.Sleep(1000)
                 End If
             End While
+        End Sub
+
+        Private Sub InternalCalculateVelocity(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
+                                              ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
+                                              ByRef mVelocityPosition As Vector3, ByRef mLastVelocityPosition As Vector3,
+                                              ByRef mVelocityOrientation As Vector3, ByRef mLastVelocityOrientation As Vector3,
+                                              ByRef mVelocityLastTime As Date)
+            mVelocityPosition = Vector3.Zero
+            mVelocityOrientation = Vector3.Zero
+
+            Dim mDelta As TimeSpan = (Now - mVelocityLastTime)
+            Dim iDeltaTime As Double = 1.0 'mDelta.TotalSeconds
+
+            mVelocityLastTime = Now
+
+            If (iDeltaTime <= Single.Epsilon OrElse iDeltaTime > 1.0F) Then
+                Return
+            End If
+
+            ' Linear Velocity
+            If (True) Then
+                mVelocityPosition = New Vector3(
+                    CSng((mPosition.X - mLastPosition.X) / iDeltaTime),
+                    CSng((mPosition.Y - mLastPosition.Y) / iDeltaTime),
+                    CSng((mPosition.Z - mLastPosition.Z) / iDeltaTime)
+                )
+                mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(0.1F, mVelocityPosition, mLastVelocityPosition)
+
+                ' Compensate
+                mPosition = New Vector3(
+                    CSng(mPosition.X - (mVelocityPosition.X * iDeltaTime)),
+                    CSng(mPosition.Y - (mVelocityPosition.Y * iDeltaTime)),
+                    CSng(mPosition.Z - (mVelocityPosition.Z * iDeltaTime))
+                )
+            End If
+
+            ' Angular Velocity
+            If (True) Then
+                mVelocityOrientation = ClassQuaternionTools.AngularVelocityBetweenQuats(mOrientation, mLastOrientation, iDeltaTime)
+                mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(0.1F, mVelocityOrientation, mLastVelocityOrientation)
+
+                ' Compensate
+                mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iDeltaTime))
+            End If
+
+            mLastVelocityPosition = mVelocityPosition
+            mLastVelocityOrientation = mVelocityOrientation
         End Sub
 
         Private Sub InternalHepticFeedbackLogic(ByRef bEnableHepticFeedback As Boolean,
