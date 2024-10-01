@@ -32,15 +32,15 @@ Public Class UCVmtSettings
         Try
             g_bIgnoreEvents = True
 
-            ComboBox_TouchpadClickMethod.Items.Clear()
-            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Left Controller: TRIANGLE [▲] / Right Controller: SQUARE [■])")
-            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: SQUARE [■])")
-            ComboBox_TouchpadClickMethod.Items.Add("Button Drag (Both Controllers: TRIANGLE [▲])")
-            ComboBox_TouchpadClickMethod.Items.Add("While holding MOVE [~] button")
+            ComboBox_OculusButtonLayout.Items.Clear()
+            ComboBox_OculusButtonLayout.Items.Add("X/A, Y/B, Grip, Stick (Left: [O], [▲], [X], [■] / Right: [X], [■], [O], [▲])")
+            ComboBox_OculusButtonLayout.Items.Add("X/A, Y/B, Grip, Stick (Left: [X], [■], [O], [▲] / Right: [O], [▲], [X], [■])")
+            ComboBox_OculusButtonLayout.Items.Add("X/A, Y/B, Grip, Stick (Both: [O], [▲], [X], [■])")
+            ComboBox_OculusButtonLayout.Items.Add("X/A, Y/B, Grip, Stick (Both: [X], [■], [O], [▲])")
 
-            ComboBox_TouchpadClickMethod.SelectedIndex = 0
+            ComboBox_OculusButtonLayout.SelectedIndex = 0
 
-            If (ComboBox_TouchpadClickMethod.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX) Then
+            If (ComboBox_OculusButtonLayout.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -50,17 +50,15 @@ Public Class UCVmtSettings
         Try
             g_bIgnoreEvents = True
 
-            ComboBox_GrabButtonMethod.Items.Clear()
-            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Left Controller: CIRCLE [O] / Right Controller: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Both Controllers: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Toggle (Both Controllers: CIRCLE [O])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Left Controller: CIRCLE [O] / Right Controller: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Both Controllers: CROSS [X])")
-            ComboBox_GrabButtonMethod.Items.Add("Button Holding (Both Controllers: CIRCLE [O])")
+            ComboBox_HtcTouchpadClickMethod.Items.Clear()
+            ComboBox_HtcTouchpadClickMethod.Items.Add("Button Drag (Left: [▲] / Right: [■])")
+            ComboBox_HtcTouchpadClickMethod.Items.Add("Button Drag (Both: [■])")
+            ComboBox_HtcTouchpadClickMethod.Items.Add("Button Drag (Both: [▲])")
+            ComboBox_HtcTouchpadClickMethod.Items.Add("While holding MOVE [~] button")
 
-            ComboBox_GrabButtonMethod.SelectedIndex = 0
+            ComboBox_HtcTouchpadClickMethod.SelectedIndex = 0
 
-            If (ComboBox_GrabButtonMethod.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.__MAX) Then
+            If (ComboBox_HtcTouchpadClickMethod.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -70,13 +68,33 @@ Public Class UCVmtSettings
         Try
             g_bIgnoreEvents = True
 
-            ComboBox_TouchpadMethod.Items.Clear()
-            ComboBox_TouchpadMethod.Items.Add("Use Controller Position")
-            ComboBox_TouchpadMethod.Items.Add("Use Controller Orientation")
+            ComboBox_HtcGrabButtonMethod.Items.Clear()
+            ComboBox_HtcGrabButtonMethod.Items.Add("Button Toggle (Left: [O] / Right: [X])")
+            ComboBox_HtcGrabButtonMethod.Items.Add("Button Toggle (Both: [X])")
+            ComboBox_HtcGrabButtonMethod.Items.Add("Button Toggle (Both: [O])")
+            ComboBox_HtcGrabButtonMethod.Items.Add("Button Holding (Left: [O] / Right: [X])")
+            ComboBox_HtcGrabButtonMethod.Items.Add("Button Holding (Both: [X])")
+            ComboBox_HtcGrabButtonMethod.Items.Add("Button Holding (Both: [O])")
 
-            ComboBox_TouchpadMethod.SelectedIndex = 0
+            ComboBox_HtcGrabButtonMethod.SelectedIndex = 0
 
-            If (ComboBox_TouchpadMethod.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.__MAX) Then
+            If (ComboBox_HtcGrabButtonMethod.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.__MAX) Then
+                Throw New ArgumentException("Invalid size")
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_JoystickMethod.Items.Clear()
+            ComboBox_JoystickMethod.Items.Add("Use Controller Position")
+            ComboBox_JoystickMethod.Items.Add("Use Controller Orientation")
+
+            ComboBox_JoystickMethod.SelectedIndex = 0
+
+            If (ComboBox_JoystickMethod.Items.Count <> UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.__MAX) Then
                 Throw New ArgumentException("Invalid size")
             End If
         Finally
@@ -188,12 +206,21 @@ Public Class UCVmtSettings
             g_bIgnoreEvents = True
 
             ' Controller Settings
-            CheckBox_TouchpadShortcuts.Checked = mClassSettings.m_ControllerSettings.m_JoystickShortcutBinding
-            CheckBox_TouchpadShortcutClick.Checked = mClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick
-            ComboBox_TouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadClickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))
-            ComboBox_GrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_GrabButtonMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod))
-            CheckBox_TouchpadClampBounds.Checked = mClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds
-            ComboBox_TouchpadMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_TouchpadMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcTouchpadMethod))
+            ' Htc
+            CheckBox_HtcTouchpadShortcuts.Checked = mClassSettings.m_ControllerSettings.m_HtcTouchpadShortcutBinding
+            CheckBox_HtcTouchpadShortcutClick.Checked = mClassSettings.m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick
+            NumericUpDown_HtcTouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_HtcTouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_HtcTouchpadClickDeadzone.Maximum, mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone)))
+            ComboBox_HtcTouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HtcTouchpadClickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))
+            ComboBox_HtcGrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HtcGrabButtonMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod))
+
+            'Oculus
+            ComboBox_OculusButtonLayout.SelectedIndex = Math.Max(0, Math.Min(ComboBox_OculusButtonLayout.Items.Count - 1, mClassSettings.m_ControllerSettings.m_OculusButtonMethod))
+            CheckBox_OculusGripToggle.Checked = mClassSettings.m_ControllerSettings.m_OculusGripToggle
+
+            'Misc
+            ComboBox_JoystickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_JoystickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod))
+            NumericUpDown_JoystickArea.Value = CDec(Math.Max(NumericUpDown_JoystickArea.Minimum, Math.Min(NumericUpDown_JoystickArea.Maximum, mClassSettings.m_ControllerSettings.m_ControllerJoystickAreaCm)))
+            CheckBox_JoystickClampBounds.Checked = mClassSettings.m_ControllerSettings.m_ControllerClampJoystickToBounds
 
             CheckBox_ControllerRecenterEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
             ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod))
@@ -211,9 +238,6 @@ Public Class UCVmtSettings
 
             NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs))
             NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, mClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
-
-            NumericUpDown_TouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_TouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_TouchpadClickDeadzone.Maximum, mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone)))
-            NumericUpDown_TouchpadTouchArea.Value = CDec(Math.Max(NumericUpDown_TouchpadTouchArea.Minimum, Math.Min(NumericUpDown_TouchpadTouchArea.Maximum, mClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm)))
 
             CheckBox_PlayCalibEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
 
@@ -280,39 +304,57 @@ Public Class UCVmtSettings
         mMsg.ShowDialog(Me)
     End Sub
 
-    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcuts.CheckedChanged
+    Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_HtcTouchpadShortcuts.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_JoystickShortcutBinding = CheckBox_TouchpadShortcuts.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadShortcutBinding = CheckBox_HtcTouchpadShortcuts.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub CheckBox_JoystickShortcutClick_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadShortcutClick.CheckedChanged
+    Private Sub CheckBox_JoystickShortcutClick_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_HtcTouchpadShortcutClick.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_JoystickShortcutTouchpadClick = CheckBox_TouchpadShortcutClick.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick = CheckBox_HtcTouchpadShortcutClick.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub ComboBox_TouchpadClickMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_TouchpadClickMethod.SelectedIndexChanged
+    Private Sub ComboBox_HtcTouchpadClickMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HtcTouchpadClickMethod.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(ComboBox_TouchpadClickMethod.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(ComboBox_HtcTouchpadClickMethod.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub ComboBox_GrabButtonMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_GrabButtonMethod.SelectedIndexChanged
+    Private Sub ComboBox_HtcGrabButtonMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HtcGrabButtonMethod.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcGripButtonMethod = CType(ComboBox_GrabButtonMethod.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcGripButtonMethod = CType(ComboBox_HtcGrabButtonMethod.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_OculusButtonLayout_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_OculusButtonLayout.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OculusButtonMethod = CType(ComboBox_OculusButtonLayout.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD)
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_OculusGripToggle_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_OculusGripToggle.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OculusGripToggle = CheckBox_OculusGripToggle.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -352,21 +394,21 @@ Public Class UCVmtSettings
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub CheckBox_TouchpadClampBounds_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_TouchpadClampBounds.CheckedChanged
+    Private Sub CheckBox_JoystickClampBounds_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickClampBounds.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcClampTouchpadToBounds = CheckBox_TouchpadClampBounds.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_ControllerClampJoystickToBounds = CheckBox_JoystickClampBounds.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub ComboBox_TouchpadMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_TouchpadMethod.SelectedIndexChanged
+    Private Sub ComboBox_JoystickMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_JoystickMethod.SelectedIndexChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadMethod = CType(ComboBox_TouchpadMethod.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD)
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_ControllerJoystickMethod = CType(ComboBox_JoystickMethod.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD)
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
@@ -389,24 +431,24 @@ Public Class UCVmtSettings
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub NumericUpDown_TouchpadClickDeadzone_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_TouchpadClickDeadzone.ValueChanged
+    Private Sub NumericUpDown_HtcTouchpadClickDeadzone_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_HtcTouchpadClickDeadzone.ValueChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone = NumericUpDown_TouchpadClickDeadzone.Value
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone = NumericUpDown_HtcTouchpadClickDeadzone.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub NumericUpDown_TouchpadTouchArea_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_TouchpadTouchArea.ValueChanged
+    Private Sub NumericUpDown_JoystickArea_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_JoystickArea.ValueChanged
         ' See TOUCHPAD_GYRO_MULTI in UCVirutalMotionTrackerItem.vb
-        Label_TouchpadTouchAreaDeg.Text = String.Format("cm / {0}°", NumericUpDown_TouchpadTouchArea.Value * 2.5F)
+        Label_TouchpadTouchAreaDeg.Text = String.Format("cm / {0}°", NumericUpDown_JoystickArea.Value * 2.5F)
 
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HtcTouchpadTouchAreaCm = NumericUpDown_TouchpadTouchArea.Value
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_ControllerJoystickAreaCm = NumericUpDown_JoystickArea.Value
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 

@@ -579,7 +579,16 @@ Public Class UCVirtualMotionTracker
                 __MAX
             End Enum
 
-            Enum ENUM_HTC_TOUCHPAD_METHOD
+            Enum ENUM_OCULUS_BUTTON_METHOD
+                BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE
+                BUTTON_LEFT_CROSS_SQUARE_CIRCLE_TRIANGLE
+                BUTTON_BOTH_CIRCLE_TRIANGLE_CROSS_SQUARE
+                BUTTON_BOTH_CROSS_SQUARE_CIRCLE_TRIANGLE
+
+                __MAX
+            End Enum
+
+            Enum ENUM_CONTROLLER_JOYSTICK_METHOD
                 USE_POSITION
                 USE_ORIENTATION
 
@@ -593,12 +602,18 @@ Public Class UCVirtualMotionTracker
                 __MAX
             End Enum
 
-            Private g_bTouchpadShortcutBinding As Boolean = False
-            Private g_bTouchpadShortcutTouchpadClick As Boolean = False
+            Private g_bHtcTouchpadShortcutBinding As Boolean = False
+            Private g_bHtcTouchpadShortcutTouchpadClick As Boolean = False
             Private g_iHtcTouchpadEmulationClickMethod As ENUM_HTC_TOUCHPAD_CLICK_METHOD = ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
             Private g_iHtcGripButtonMethod As ENUM_HTC_GRIP_BUTTON_METHOD = ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
-            Private g_bHtcClampTouchpadToBounds As Boolean = True
-            Private g_iHtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD = ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION
+            Private g_iTouchpadClickDeadzone As Single = 0.25F
+
+            Private g_iOculusButtonMethod As ENUM_OCULUS_BUTTON_METHOD = ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE
+            Private g_bOculusGripToggle As Boolean = True
+
+            Private g_iControllerJoystickMethod As ENUM_CONTROLLER_JOYSTICK_METHOD = ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION
+            Private g_iControllerJoystickAreaCm As Single = 7.5F
+            Private g_bControllerClampJoystickToBounds As Boolean = True
 
             Private g_bEnableControllerRecenter As Boolean = True
             Private g_iControllerRecenterMethod As ENUM_DEVICE_RECENTER_METHOD = ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE
@@ -609,27 +624,25 @@ Public Class UCVirtualMotionTracker
             Private g_iRecenterButtonTimeMs As Long = 500
             Private g_iOscThreadSleepMs As Integer = 1
             Private g_iOscMaxThreadFps As Integer = 200
-            Private g_iTouchpadTouchAreaCm As Single = 7.5F
-            Private g_iTouchpadClickDeadzone As Single = 0.25F
             Private g_bEnablePlayspaceRecenter As Boolean
 
             Public Property m_ControllerRecenter As New Dictionary(Of Integer, Quaternion)
 
-            Property m_JoystickShortcutBinding As Boolean
+            Property m_HtcTouchpadShortcutBinding As Boolean
                 Get
-                    Return g_bTouchpadShortcutBinding
+                    Return g_bHtcTouchpadShortcutBinding
                 End Get
                 Set(value As Boolean)
-                    g_bTouchpadShortcutBinding = value
+                    g_bHtcTouchpadShortcutBinding = value
                 End Set
             End Property
 
-            Property m_JoystickShortcutTouchpadClick As Boolean
+            Property m_HtcTouchpadShortcutTouchpadClick As Boolean
                 Get
-                    Return g_bTouchpadShortcutTouchpadClick
+                    Return g_bHtcTouchpadShortcutTouchpadClick
                 End Get
                 Set(value As Boolean)
-                    g_bTouchpadShortcutTouchpadClick = value
+                    g_bHtcTouchpadShortcutTouchpadClick = value
                 End Set
             End Property
 
@@ -667,21 +680,47 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Property m_HtcClampTouchpadToBounds As Boolean
+            Property m_OculusButtonMethod As ENUM_OCULUS_BUTTON_METHOD
                 Get
-                    Return g_bHtcClampTouchpadToBounds
+                    Return g_iOculusButtonMethod
                 End Get
-                Set(value As Boolean)
-                    g_bHtcClampTouchpadToBounds = value
+                Set(value As ENUM_OCULUS_BUTTON_METHOD)
+                    If (value < 0) Then
+                        value = 0
+                    End If
+
+                    If (value > ENUM_OCULUS_BUTTON_METHOD.__MAX - 1) Then
+                        value = CType(ENUM_OCULUS_BUTTON_METHOD.__MAX - 1, ENUM_OCULUS_BUTTON_METHOD)
+                    End If
+
+                    g_iOculusButtonMethod = value
                 End Set
             End Property
 
-            Property m_HtcTouchpadMethod As ENUM_HTC_TOUCHPAD_METHOD
+            Property m_OculusGripToggle As Boolean
                 Get
-                    Return g_iHtcTouchpadMethod
+                    Return g_bOculusGripToggle
                 End Get
-                Set(value As ENUM_HTC_TOUCHPAD_METHOD)
-                    g_iHtcTouchpadMethod = value
+                Set(value As Boolean)
+                    g_bOculusGripToggle = value
+                End Set
+            End Property
+
+            Property m_ControllerClampJoystickToBounds As Boolean
+                Get
+                    Return g_bControllerClampJoystickToBounds
+                End Get
+                Set(value As Boolean)
+                    g_bControllerClampJoystickToBounds = value
+                End Set
+            End Property
+
+            Property m_ControllerJoystickMethod As ENUM_CONTROLLER_JOYSTICK_METHOD
+                Get
+                    Return g_iControllerJoystickMethod
+                End Get
+                Set(value As ENUM_CONTROLLER_JOYSTICK_METHOD)
+                    g_iControllerJoystickMethod = value
                 End Set
             End Property
 
@@ -787,9 +826,9 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Property m_HtcTouchpadTouchAreaCm As Single
+            Property m_ControllerJoystickAreaCm As Single
                 Get
-                    Return g_iTouchpadTouchAreaCm
+                    Return g_iControllerJoystickAreaCm
                 End Get
                 Set(value As Single)
                     If (value < 1.0F) Then
@@ -799,7 +838,7 @@ Public Class UCVirtualMotionTracker
                         value = 100.0F
                     End If
 
-                    g_iTouchpadTouchAreaCm = value
+                    g_iControllerJoystickAreaCm = value
                 End Set
             End Property
 
@@ -940,8 +979,8 @@ Public Class UCVirtualMotionTracker
                     Using mIni As New ClassIni(mStream)
 
                         ' Controller Settings
-                        m_ControllerSettings.m_JoystickShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutBindings", "false") = "true")
-                        m_ControllerSettings.m_JoystickShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "JoystickShortcutTouchpadClick", "false") = "true")
+                        m_ControllerSettings.m_HtcTouchpadShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadShortcutBinding", "false") = "true")
+                        m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadShortcutTouchpadClick", "false") = "true")
 
                         If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmpInt)) Then
                             m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
@@ -951,10 +990,15 @@ Public Class UCVirtualMotionTracker
                             m_ControllerSettings.m_HtcGripButtonMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
                         End If
 
-                        m_ControllerSettings.m_HtcClampTouchpadToBounds = (mIni.ReadKeyValue("ControllerSettings", "HtcClampTouchpadToBounds", "true") = "true")
+                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "OculusButtonMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE))), tmpInt)) Then
+                            m_ControllerSettings.m_OculusButtonMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD)
+                        End If
 
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD.USE_ORIENTATION))), tmpInt)) Then
-                            m_ControllerSettings.m_HtcTouchpadMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_METHOD)
+                        m_ControllerSettings.m_OculusGripToggle = (mIni.ReadKeyValue("ControllerSettings", "OculusGripToggle", "true") = "true")
+                        m_ControllerSettings.m_ControllerClampJoystickToBounds = (mIni.ReadKeyValue("ControllerSettings", "ControllerClampJoystickToBounds", "true") = "true")
+
+                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION))), tmpInt)) Then
+                            m_ControllerSettings.m_ControllerJoystickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD)
                         End If
 
                         m_ControllerSettings.m_EnableControllerRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
@@ -985,8 +1029,8 @@ Public Class UCVirtualMotionTracker
                             m_ControllerSettings.m_OscMaxThreadFps = tmpInt
                         End If
 
-                        If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadTouchAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_ControllerSettings.m_HtcTouchpadTouchAreaCm = tmpSng
+                        If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
+                            m_ControllerSettings.m_ControllerJoystickAreaCm = tmpSng
                         End If
 
                         If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadClickDeadzone", "0.25"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
@@ -1210,12 +1254,14 @@ Public Class UCVirtualMotionTracker
                         End If
 
                         If ((iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE) <> 0 OrElse (iSaveFlags And ENUM_SETTINGS_SAVE_TYPE_FLAGS.ALL) <> 0) Then
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutBindings", If(m_ControllerSettings.m_JoystickShortcutBinding, "true", "false")))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "JoystickShortcutTouchpadClick", If(m_ControllerSettings.m_JoystickShortcutTouchpadClick, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadShortcutBinding", If(m_ControllerSettings.m_HtcTouchpadShortcutBinding, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadShortcutTouchpadClick", If(m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_ControllerSettings.m_HtcGripButtonMethod))))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcClampTouchpadToBounds", If(m_ControllerSettings.m_HtcClampTouchpadToBounds, "true", "false")))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadMethod", CStr(CInt(m_ControllerSettings.m_HtcTouchpadMethod))))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OculusButtonMethod", CStr(CInt(m_ControllerSettings.m_OculusButtonMethod))))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OculusGripToggle", If(m_ControllerSettings.m_OculusGripToggle, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerClampJoystickToBounds", If(m_ControllerSettings.m_ControllerClampJoystickToBounds, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(m_ControllerSettings.m_ControllerJoystickMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_ControllerSettings.m_EnableControllerRecenter, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerSettings.m_ControllerRecenterMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterFromDeviceName", m_ControllerSettings.m_ControllerRecenterFromDeviceName))
@@ -1225,7 +1271,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "RecenterButtonTimeMs", CStr(m_ControllerSettings.m_RecenterButtonTimeMs)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscThreadSleepMs", CStr(m_ControllerSettings.m_OscThreadSleepMs)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OscMaxThreadFps", CStr(m_ControllerSettings.m_OscMaxThreadFps)))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadTouchAreaCm", m_ControllerSettings.m_HtcTouchpadTouchAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerJoystickAreaCm", m_ControllerSettings.m_ControllerJoystickAreaCm.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcTouchpadClickDeadzone", m_ControllerSettings.m_HtcTouchpadClickDeadzone.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnablePlayspaceRecenter", If(m_ControllerSettings.m_EnablePlayspaceRecenter, "true", "false")))
 

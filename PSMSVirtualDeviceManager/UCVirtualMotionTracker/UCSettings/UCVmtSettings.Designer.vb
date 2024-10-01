@@ -41,35 +41,26 @@ Partial Class UCVmtSettings
         Me.Label55 = New System.Windows.Forms.Label()
         Me.LinkLabel_PsvrDistReset = New System.Windows.Forms.LinkLabel()
         Me.NumericUpDown_PsvrVFov = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig14 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label53 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrHFov = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig13 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label52 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistBlueOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig16 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label51 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistGreenOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig15 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label50 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistRedOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig11 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label49 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistScale = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig12 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistK1 = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig10 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label47 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PsvrDistK0 = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig9 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label46 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label63 = New System.Windows.Forms.Label()
         Me.Label54 = New System.Windows.Forms.Label()
         Me.CheckBox_ShowDistSettings = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_PsvrIPD = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig8 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox_PsvrRenderResolution = New System.Windows.Forms.ComboBox()
@@ -81,7 +72,6 @@ Partial Class UCVmtSettings
         Me.Label25 = New System.Windows.Forms.Label()
         Me.CheckBox_PlayCalibEnabled = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_RecenterButtonTime = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Button_ResetRecenter = New System.Windows.Forms.Button()
         Me.Label20 = New System.Windows.Forms.Label()
@@ -98,48 +88,49 @@ Partial Class UCVmtSettings
         Me.Label11 = New System.Windows.Forms.Label()
         Me.CheckBox_ControllerRecenterEnabled = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox_OculusGripToggle = New System.Windows.Forms.CheckBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.ComboBox_OculusButtonLayout = New System.Windows.Forms.ComboBox()
         Me.Label_TouchpadTouchAreaDeg = New System.Windows.Forms.Label()
-        Me.NumericUpDown_TouchpadTouchArea = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.NumericUpDown_TouchpadClickDeadzone = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox_HtcTouchpadShortcuts = New System.Windows.Forms.CheckBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ComboBox_HtcGrabButtonMethod = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.ComboBox_HtcTouchpadClickMethod = New System.Windows.Forms.ComboBox()
+        Me.CheckBox_HtcTouchpadShortcutClick = New System.Windows.Forms.CheckBox()
+        Me.NumericUpDown_HtcTouchpadClickDeadzone = New System.Windows.Forms.NumericUpDown()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.LinkLabel_TouchpadShortcutHelp = New System.Windows.Forms.LinkLabel()
-        Me.ComboBox_TouchpadMethod = New System.Windows.Forms.ComboBox()
+        Me.CheckBox_JoystickClampBounds = New System.Windows.Forms.CheckBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_JoystickArea = New System.Windows.Forms.NumericUpDown()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.CheckBox_TouchpadShortcutClick = New System.Windows.Forms.CheckBox()
-        Me.CheckBox_TouchpadClampBounds = New System.Windows.Forms.CheckBox()
-        Me.CheckBox_TouchpadShortcuts = New System.Windows.Forms.CheckBox()
-        Me.ComboBox_GrabButtonMethod = New System.Windows.Forms.ComboBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.ComboBox_TouchpadClickMethod = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ComboBox_JoystickMethod = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.CheckBox_PlayCalibAutoscale = New System.Windows.Forms.CheckBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibSideOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.ComboBox_PlayCalibForwardMethod = New System.Windows.Forms.ComboBox()
         Me.Button_PlayCalibReset = New System.Windows.Forms.Button()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibHeightOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
+        Me.LinkLabel_OscIpChange = New System.Windows.Forms.LinkLabel()
+        Me.TextBox_OscRemoteIP = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckBox_RenderFix = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_OscMaxThreadFps = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label65 = New System.Windows.Forms.Label()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.CheckBox_OptimizePackets = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_OscThreadSleep = New System.Windows.Forms.NumericUpDown()
-        Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CheckBox_EnableHeptics = New System.Windows.Forms.CheckBox()
@@ -148,9 +139,23 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.TextBox_OscRemoteIP = New System.Windows.Forms.TextBox()
-        Me.LinkLabel_OscIpChange = New System.Windows.Forms.LinkLabel()
+        Me.UcNumericUpDownBig14 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig13 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig16 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig15 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig11 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig12 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig10 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig9 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig8 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig3 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig2 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -178,10 +183,12 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_RecenterButtonTime.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.NumericUpDown_TouchpadTouchArea.SuspendLayout()
-        CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.NumericUpDown_TouchpadClickDeadzone.SuspendLayout()
+        Me.GroupBox6.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
+        CType(Me.NumericUpDown_HtcTouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.SuspendLayout()
+        CType(Me.NumericUpDown_JoystickArea, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_JoystickArea.SuspendLayout()
         Me.TabPage_SettingsPlayspace.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         CType(Me.NumericUpDown_PlayCalibSideOffset, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -372,22 +379,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrVFov.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrVFov.TabIndex = 18
         '
-        'UcNumericUpDownBig14
-        '
-        Me.UcNumericUpDownBig14.AutoSize = True
-        Me.UcNumericUpDownBig14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig14.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig14.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig14.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig14.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig14.m_bDockOnControl = True
-        Me.UcNumericUpDownBig14.m_NumericUpDown = Me.NumericUpDown_PsvrVFov
-        Me.UcNumericUpDownBig14.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig14.m_ResetVisible = False
-        Me.UcNumericUpDownBig14.Name = "UcNumericUpDownBig14"
-        Me.UcNumericUpDownBig14.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig14.TabIndex = 27
-        '
         'Label53
         '
         Me.Label53.AutoSize = True
@@ -406,22 +397,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrHFov.Name = "NumericUpDown_PsvrHFov"
         Me.NumericUpDown_PsvrHFov.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrHFov.TabIndex = 16
-        '
-        'UcNumericUpDownBig13
-        '
-        Me.UcNumericUpDownBig13.AutoSize = True
-        Me.UcNumericUpDownBig13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig13.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig13.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig13.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig13.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig13.m_bDockOnControl = True
-        Me.UcNumericUpDownBig13.m_NumericUpDown = Me.NumericUpDown_PsvrHFov
-        Me.UcNumericUpDownBig13.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig13.m_ResetVisible = False
-        Me.UcNumericUpDownBig13.Name = "UcNumericUpDownBig13"
-        Me.UcNumericUpDownBig13.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig13.TabIndex = 27
         '
         'Label52
         '
@@ -444,22 +419,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrDistBlueOffset.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistBlueOffset.TabIndex = 14
         '
-        'UcNumericUpDownBig16
-        '
-        Me.UcNumericUpDownBig16.AutoSize = True
-        Me.UcNumericUpDownBig16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig16.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig16.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig16.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig16.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig16.m_bDockOnControl = True
-        Me.UcNumericUpDownBig16.m_NumericUpDown = Me.NumericUpDown_PsvrDistBlueOffset
-        Me.UcNumericUpDownBig16.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig16.m_ResetVisible = False
-        Me.UcNumericUpDownBig16.Name = "UcNumericUpDownBig16"
-        Me.UcNumericUpDownBig16.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig16.TabIndex = 27
-        '
         'Label51
         '
         Me.Label51.AutoSize = True
@@ -480,22 +439,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrDistGreenOffset.Name = "NumericUpDown_PsvrDistGreenOffset"
         Me.NumericUpDown_PsvrDistGreenOffset.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistGreenOffset.TabIndex = 12
-        '
-        'UcNumericUpDownBig15
-        '
-        Me.UcNumericUpDownBig15.AutoSize = True
-        Me.UcNumericUpDownBig15.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig15.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig15.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig15.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig15.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig15.m_bDockOnControl = True
-        Me.UcNumericUpDownBig15.m_NumericUpDown = Me.NumericUpDown_PsvrDistGreenOffset
-        Me.UcNumericUpDownBig15.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig15.m_ResetVisible = False
-        Me.UcNumericUpDownBig15.Name = "UcNumericUpDownBig15"
-        Me.UcNumericUpDownBig15.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig15.TabIndex = 27
         '
         'Label50
         '
@@ -518,22 +461,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrDistRedOffset.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistRedOffset.TabIndex = 10
         '
-        'UcNumericUpDownBig11
-        '
-        Me.UcNumericUpDownBig11.AutoSize = True
-        Me.UcNumericUpDownBig11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig11.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig11.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig11.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig11.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig11.m_bDockOnControl = True
-        Me.UcNumericUpDownBig11.m_NumericUpDown = Me.NumericUpDown_PsvrDistRedOffset
-        Me.UcNumericUpDownBig11.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig11.m_ResetVisible = False
-        Me.UcNumericUpDownBig11.Name = "UcNumericUpDownBig11"
-        Me.UcNumericUpDownBig11.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig11.TabIndex = 27
-        '
         'Label49
         '
         Me.Label49.AutoSize = True
@@ -554,22 +481,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrDistScale.Name = "NumericUpDown_PsvrDistScale"
         Me.NumericUpDown_PsvrDistScale.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistScale.TabIndex = 7
-        '
-        'UcNumericUpDownBig12
-        '
-        Me.UcNumericUpDownBig12.AutoSize = True
-        Me.UcNumericUpDownBig12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig12.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig12.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig12.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig12.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig12.m_bDockOnControl = True
-        Me.UcNumericUpDownBig12.m_NumericUpDown = Me.NumericUpDown_PsvrDistScale
-        Me.UcNumericUpDownBig12.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig12.m_ResetVisible = False
-        Me.UcNumericUpDownBig12.Name = "UcNumericUpDownBig12"
-        Me.UcNumericUpDownBig12.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig12.TabIndex = 27
         '
         'Label48
         '
@@ -592,22 +503,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrDistK1.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistK1.TabIndex = 5
         '
-        'UcNumericUpDownBig10
-        '
-        Me.UcNumericUpDownBig10.AutoSize = True
-        Me.UcNumericUpDownBig10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig10.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig10.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig10.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig10.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig10.m_bDockOnControl = True
-        Me.UcNumericUpDownBig10.m_NumericUpDown = Me.NumericUpDown_PsvrDistK1
-        Me.UcNumericUpDownBig10.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig10.m_ResetVisible = False
-        Me.UcNumericUpDownBig10.Name = "UcNumericUpDownBig10"
-        Me.UcNumericUpDownBig10.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig10.TabIndex = 27
-        '
         'Label47
         '
         Me.Label47.AutoSize = True
@@ -628,22 +523,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrDistK0.Name = "NumericUpDown_PsvrDistK0"
         Me.NumericUpDown_PsvrDistK0.Size = New System.Drawing.Size(182, 22)
         Me.NumericUpDown_PsvrDistK0.TabIndex = 3
-        '
-        'UcNumericUpDownBig9
-        '
-        Me.UcNumericUpDownBig9.AutoSize = True
-        Me.UcNumericUpDownBig9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig9.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig9.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig9.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig9.Location = New System.Drawing.Point(138, 0)
-        Me.UcNumericUpDownBig9.m_bDockOnControl = True
-        Me.UcNumericUpDownBig9.m_NumericUpDown = Me.NumericUpDown_PsvrDistK0
-        Me.UcNumericUpDownBig9.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig9.m_ResetVisible = False
-        Me.UcNumericUpDownBig9.Name = "UcNumericUpDownBig9"
-        Me.UcNumericUpDownBig9.Size = New System.Drawing.Size(44, 22)
-        Me.UcNumericUpDownBig9.TabIndex = 27
         '
         'Label46
         '
@@ -713,22 +592,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrIPD.TabIndex = 3
         Me.NumericUpDown_PsvrIPD.Value = New Decimal(New Integer() {67, 0, 0, 0})
         '
-        'UcNumericUpDownBig8
-        '
-        Me.UcNumericUpDownBig8.AutoSize = True
-        Me.UcNumericUpDownBig8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig8.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig8.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig8.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig8.Location = New System.Drawing.Point(120, 0)
-        Me.UcNumericUpDownBig8.m_bDockOnControl = True
-        Me.UcNumericUpDownBig8.m_NumericUpDown = Me.NumericUpDown_PsvrIPD
-        Me.UcNumericUpDownBig8.m_ResetValue = New Decimal(New Integer() {67, 0, 0, 0})
-        Me.UcNumericUpDownBig8.m_ResetVisible = True
-        Me.UcNumericUpDownBig8.Name = "UcNumericUpDownBig8"
-        Me.UcNumericUpDownBig8.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig8.TabIndex = 7
-        '
         'Label45
         '
         Me.Label45.AutoSize = True
@@ -797,9 +660,9 @@ Partial Class UCVmtSettings
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.CheckBox_ControllerRecenterEnabled)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox1.Location = New System.Drawing.Point(3, 241)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 350)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(780, 540)
+        Me.GroupBox1.Size = New System.Drawing.Size(780, 526)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
@@ -811,7 +674,7 @@ Partial Class UCVmtSettings
         Me.LinkLabel_HmdRecenterFromOverride.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_HmdRecenterFromOverride.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_HmdRecenterFromOverride.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_HmdRecenterFromOverride.Location = New System.Drawing.Point(188, 312)
+        Me.LinkLabel_HmdRecenterFromOverride.Location = New System.Drawing.Point(198, 312)
         Me.LinkLabel_HmdRecenterFromOverride.Name = "LinkLabel_HmdRecenterFromOverride"
         Me.LinkLabel_HmdRecenterFromOverride.Size = New System.Drawing.Size(307, 13)
         Me.LinkLabel_HmdRecenterFromOverride.TabIndex = 72
@@ -826,7 +689,7 @@ Partial Class UCVmtSettings
         Me.LinkLabel_PlayCalibShowSettings2.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_PlayCalibShowSettings2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_PlayCalibShowSettings2.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_PlayCalibShowSettings2.Location = New System.Drawing.Point(51, 457)
+        Me.LinkLabel_PlayCalibShowSettings2.Location = New System.Drawing.Point(48, 457)
         Me.LinkLabel_PlayCalibShowSettings2.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.LinkLabel_PlayCalibShowSettings2.Name = "LinkLabel_PlayCalibShowSettings2"
         Me.LinkLabel_PlayCalibShowSettings2.Size = New System.Drawing.Size(191, 13)
@@ -839,7 +702,7 @@ Partial Class UCVmtSettings
         '
         Me.Label_ScrollFocus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label_ScrollFocus.AutoSize = True
-        Me.Label_ScrollFocus.Location = New System.Drawing.Point(682, 524)
+        Me.Label_ScrollFocus.Location = New System.Drawing.Point(682, 510)
         Me.Label_ScrollFocus.Name = "Label_ScrollFocus"
         Me.Label_ScrollFocus.Size = New System.Drawing.Size(92, 13)
         Me.Label_ScrollFocus.TabIndex = 70
@@ -850,7 +713,7 @@ Partial Class UCVmtSettings
         Me.Label25.AutoSize = True
         Me.Label25.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label25.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label25.Location = New System.Drawing.Point(51, 406)
+        Me.Label25.Location = New System.Drawing.Point(48, 406)
         Me.Label25.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label25.Name = "Label25"
         Me.Label25.Padding = New System.Windows.Forms.Padding(3)
@@ -862,7 +725,7 @@ Partial Class UCVmtSettings
         '
         Me.CheckBox_PlayCalibEnabled.AutoSize = True
         Me.CheckBox_PlayCalibEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(19, 383)
+        Me.CheckBox_PlayCalibEnabled.Location = New System.Drawing.Point(16, 383)
         Me.CheckBox_PlayCalibEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_PlayCalibEnabled.Name = "CheckBox_PlayCalibEnabled"
         Me.CheckBox_PlayCalibEnabled.Size = New System.Drawing.Size(228, 18)
@@ -873,7 +736,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_RecenterButtonTime
         '
         Me.NumericUpDown_RecenterButtonTime.Controls.Add(Me.UcNumericUpDownBig7)
-        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(197, 484)
+        Me.NumericUpDown_RecenterButtonTime.Location = New System.Drawing.Point(201, 484)
         Me.NumericUpDown_RecenterButtonTime.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
         Me.NumericUpDown_RecenterButtonTime.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown_RecenterButtonTime.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
@@ -883,26 +746,10 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_RecenterButtonTime, "Default: 500")
         Me.NumericUpDown_RecenterButtonTime.Value = New Decimal(New Integer() {500, 0, 0, 0})
         '
-        'UcNumericUpDownBig7
-        '
-        Me.UcNumericUpDownBig7.AutoSize = True
-        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(48, 0)
-        Me.UcNumericUpDownBig7.m_bDockOnControl = True
-        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_RecenterButtonTime
-        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {500, 0, 0, 0})
-        Me.UcNumericUpDownBig7.m_ResetVisible = True
-        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
-        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig7.TabIndex = 72
-        '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(19, 486)
+        Me.Label13.Location = New System.Drawing.Point(16, 486)
         Me.Label13.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(172, 13)
@@ -912,7 +759,7 @@ Partial Class UCVmtSettings
         'Button_ResetRecenter
         '
         Me.Button_ResetRecenter.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.Button_ResetRecenter.Location = New System.Drawing.Point(19, 341)
+        Me.Button_ResetRecenter.Location = New System.Drawing.Point(16, 341)
         Me.Button_ResetRecenter.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Button_ResetRecenter.Name = "Button_ResetRecenter"
         Me.Button_ResetRecenter.Size = New System.Drawing.Size(214, 23)
@@ -930,7 +777,7 @@ Partial Class UCVmtSettings
         Me.Label20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.Label20.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
         Me.Label20.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label20.Location = New System.Drawing.Point(51, 223)
+        Me.Label20.Location = New System.Drawing.Point(48, 223)
         Me.Label20.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label20.Name = "Label20"
         Me.Label20.Padding = New System.Windows.Forms.Padding(3)
@@ -945,17 +792,17 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdRecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(191, 288)
+        Me.ComboBox_HmdRecenterFromDevice.Location = New System.Drawing.Point(201, 288)
         Me.ComboBox_HmdRecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_HmdRecenterFromDevice.Name = "ComboBox_HmdRecenterFromDevice"
-        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(538, 21)
+        Me.ComboBox_HmdRecenterFromDevice.Size = New System.Drawing.Size(531, 21)
         Me.ComboBox_HmdRecenterFromDevice.TabIndex = 57
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_HmdRecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(51, 291)
+        Me.Label18.Location = New System.Drawing.Point(48, 291)
         Me.Label18.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(81, 13)
@@ -969,16 +816,16 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdRecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdRecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterMethod.FormattingEnabled = True
-        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(191, 261)
+        Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(201, 261)
         Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_HmdRecenterMethod.Name = "ComboBox_HmdRecenterMethod"
-        Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(538, 21)
+        Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(531, 21)
         Me.ComboBox_HmdRecenterMethod.TabIndex = 55
         '
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(51, 264)
+        Me.Label19.Location = New System.Drawing.Point(48, 264)
         Me.Label19.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(98, 13)
@@ -990,7 +837,7 @@ Partial Class UCVmtSettings
         Me.Label16.AutoSize = True
         Me.Label16.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label16.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label16.Location = New System.Drawing.Point(51, 185)
+        Me.Label16.Location = New System.Drawing.Point(48, 185)
         Me.Label16.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label16.Name = "Label16"
         Me.Label16.Padding = New System.Windows.Forms.Padding(3)
@@ -1002,7 +849,7 @@ Partial Class UCVmtSettings
         '
         Me.CheckBox_HmdRecenterEnabled.AutoSize = True
         Me.CheckBox_HmdRecenterEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(19, 162)
+        Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(16, 162)
         Me.CheckBox_HmdRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_HmdRecenterEnabled.Name = "CheckBox_HmdRecenterEnabled"
         Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(275, 18)
@@ -1017,17 +864,17 @@ Partial Class UCVmtSettings
         Me.ComboBox_RecenterFromDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterFromDevice.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterFromDevice.FormattingEnabled = True
-        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(191, 122)
+        Me.ComboBox_RecenterFromDevice.Location = New System.Drawing.Point(198, 122)
         Me.ComboBox_RecenterFromDevice.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_RecenterFromDevice.Name = "ComboBox_RecenterFromDevice"
-        Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(538, 21)
+        Me.ComboBox_RecenterFromDevice.Size = New System.Drawing.Size(534, 21)
         Me.ComboBox_RecenterFromDevice.TabIndex = 50
         Me.ToolTip_Info.SetToolTip(Me.ComboBox_RecenterFromDevice, "The list might not be populated with trackers if the OSC Server is not running.")
         '
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(51, 125)
+        Me.Label15.Location = New System.Drawing.Point(45, 125)
         Me.Label15.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(75, 13)
@@ -1041,16 +888,16 @@ Partial Class UCVmtSettings
         Me.ComboBox_RecenterMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_RecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterMethod.FormattingEnabled = True
-        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(191, 95)
+        Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(198, 95)
         Me.ComboBox_RecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_RecenterMethod.Name = "ComboBox_RecenterMethod"
-        Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(538, 21)
+        Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(534, 21)
         Me.ComboBox_RecenterMethod.TabIndex = 48
         '
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(51, 98)
+        Me.Label14.Location = New System.Drawing.Point(45, 98)
         Me.Label14.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(98, 13)
@@ -1062,7 +909,7 @@ Partial Class UCVmtSettings
         Me.Label11.AutoSize = True
         Me.Label11.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label11.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label11.Location = New System.Drawing.Point(51, 44)
+        Me.Label11.Location = New System.Drawing.Point(45, 44)
         Me.Label11.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.Label11.Name = "Label11"
         Me.Label11.Padding = New System.Windows.Forms.Padding(3)
@@ -1074,7 +921,7 @@ Partial Class UCVmtSettings
         '
         Me.CheckBox_ControllerRecenterEnabled.AutoSize = True
         Me.CheckBox_ControllerRecenterEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(22, 21)
+        Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(16, 21)
         Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_ControllerRecenterEnabled.Name = "CheckBox_ControllerRecenterEnabled"
         Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(236, 18)
@@ -1084,109 +931,185 @@ Partial Class UCVmtSettings
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.GroupBox6)
         Me.GroupBox2.Controls.Add(Me.Label_TouchpadTouchAreaDeg)
-        Me.GroupBox2.Controls.Add(Me.NumericUpDown_TouchpadTouchArea)
+        Me.GroupBox2.Controls.Add(Me.GroupBox5)
+        Me.GroupBox2.Controls.Add(Me.CheckBox_JoystickClampBounds)
         Me.GroupBox2.Controls.Add(Me.Label23)
-        Me.GroupBox2.Controls.Add(Me.NumericUpDown_TouchpadClickDeadzone)
-        Me.GroupBox2.Controls.Add(Me.Label22)
-        Me.GroupBox2.Controls.Add(Me.LinkLabel_TouchpadShortcutHelp)
-        Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadMethod)
+        Me.GroupBox2.Controls.Add(Me.NumericUpDown_JoystickArea)
         Me.GroupBox2.Controls.Add(Me.Label10)
-        Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadShortcutClick)
-        Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadClampBounds)
-        Me.GroupBox2.Controls.Add(Me.CheckBox_TouchpadShortcuts)
-        Me.GroupBox2.Controls.Add(Me.ComboBox_GrabButtonMethod)
-        Me.GroupBox2.Controls.Add(Me.Label5)
-        Me.GroupBox2.Controls.Add(Me.ComboBox_TouchpadClickMethod)
-        Me.GroupBox2.Controls.Add(Me.Label4)
+        Me.GroupBox2.Controls.Add(Me.ComboBox_JoystickMethod)
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox2.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(780, 238)
+        Me.GroupBox2.Size = New System.Drawing.Size(780, 347)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "HTC Vive Emulation Settings"
+        Me.GroupBox2.Text = "Controller Emulation Settings"
+        '
+        'GroupBox6
+        '
+        Me.GroupBox6.Controls.Add(Me.CheckBox_OculusGripToggle)
+        Me.GroupBox6.Controls.Add(Me.Label8)
+        Me.GroupBox6.Controls.Add(Me.ComboBox_OculusButtonLayout)
+        Me.GroupBox6.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox6.Location = New System.Drawing.Point(3, 175)
+        Me.GroupBox6.Name = "GroupBox6"
+        Me.GroupBox6.Size = New System.Drawing.Size(774, 79)
+        Me.GroupBox6.TabIndex = 55
+        Me.GroupBox6.TabStop = False
+        Me.GroupBox6.Text = "Oculus Touch Controller"
+        '
+        'CheckBox_OculusGripToggle
+        '
+        Me.CheckBox_OculusGripToggle.AutoSize = True
+        Me.CheckBox_OculusGripToggle.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_OculusGripToggle.Location = New System.Drawing.Point(16, 48)
+        Me.CheckBox_OculusGripToggle.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_OculusGripToggle.Name = "CheckBox_OculusGripToggle"
+        Me.CheckBox_OculusGripToggle.Size = New System.Drawing.Size(91, 18)
+        Me.CheckBox_OculusGripToggle.TabIndex = 54
+        Me.CheckBox_OculusGripToggle.Text = "Grip toggle"
+        Me.CheckBox_OculusGripToggle.UseVisualStyleBackColor = True
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(13, 24)
+        Me.Label8.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(80, 13)
+        Me.Label8.TabIndex = 54
+        Me.Label8.Text = "Button layout:"
+        '
+        'ComboBox_OculusButtonLayout
+        '
+        Me.ComboBox_OculusButtonLayout.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_OculusButtonLayout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_OculusButtonLayout.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_OculusButtonLayout.FormattingEnabled = True
+        Me.ComboBox_OculusButtonLayout.Location = New System.Drawing.Point(195, 21)
+        Me.ComboBox_OculusButtonLayout.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_OculusButtonLayout.Name = "ComboBox_OculusButtonLayout"
+        Me.ComboBox_OculusButtonLayout.Size = New System.Drawing.Size(534, 21)
+        Me.ComboBox_OculusButtonLayout.TabIndex = 55
         '
         'Label_TouchpadTouchAreaDeg
         '
         Me.Label_TouchpadTouchAreaDeg.AutoSize = True
-        Me.Label_TouchpadTouchAreaDeg.Location = New System.Drawing.Point(317, 98)
+        Me.Label_TouchpadTouchAreaDeg.Location = New System.Drawing.Point(321, 289)
         Me.Label_TouchpadTouchAreaDeg.Name = "Label_TouchpadTouchAreaDeg"
         Me.Label_TouchpadTouchAreaDeg.Size = New System.Drawing.Size(41, 13)
         Me.Label_TouchpadTouchAreaDeg.TabIndex = 53
         Me.Label_TouchpadTouchAreaDeg.Text = "cm / 0°"
         '
-        'NumericUpDown_TouchpadTouchArea
+        'GroupBox5
         '
-        Me.NumericUpDown_TouchpadTouchArea.Controls.Add(Me.UcNumericUpDownBig5)
-        Me.NumericUpDown_TouchpadTouchArea.DecimalPlaces = 2
-        Me.NumericUpDown_TouchpadTouchArea.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
-        Me.NumericUpDown_TouchpadTouchArea.Location = New System.Drawing.Point(191, 96)
-        Me.NumericUpDown_TouchpadTouchArea.Name = "NumericUpDown_TouchpadTouchArea"
-        Me.NumericUpDown_TouchpadTouchArea.Size = New System.Drawing.Size(120, 22)
-        Me.NumericUpDown_TouchpadTouchArea.TabIndex = 52
-        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadTouchArea, "Default: 7.50")
-        Me.NumericUpDown_TouchpadTouchArea.Value = New Decimal(New Integer() {750, 0, 0, 131072})
+        Me.GroupBox5.Controls.Add(Me.CheckBox_HtcTouchpadShortcuts)
+        Me.GroupBox5.Controls.Add(Me.Label4)
+        Me.GroupBox5.Controls.Add(Me.ComboBox_HtcGrabButtonMethod)
+        Me.GroupBox5.Controls.Add(Me.Label5)
+        Me.GroupBox5.Controls.Add(Me.ComboBox_HtcTouchpadClickMethod)
+        Me.GroupBox5.Controls.Add(Me.CheckBox_HtcTouchpadShortcutClick)
+        Me.GroupBox5.Controls.Add(Me.NumericUpDown_HtcTouchpadClickDeadzone)
+        Me.GroupBox5.Controls.Add(Me.Label22)
+        Me.GroupBox5.Controls.Add(Me.LinkLabel_TouchpadShortcutHelp)
+        Me.GroupBox5.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox5.Location = New System.Drawing.Point(3, 18)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(774, 157)
+        Me.GroupBox5.TabIndex = 54
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "HTC Vive Controller"
         '
-        'UcNumericUpDownBig5
+        'CheckBox_HtcTouchpadShortcuts
         '
-        Me.UcNumericUpDownBig5.AutoSize = True
-        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(54, 0)
-        Me.UcNumericUpDownBig5.m_bDockOnControl = True
-        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_TouchpadTouchArea
-        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {750, 0, 0, 131072})
-        Me.UcNumericUpDownBig5.m_ResetVisible = True
-        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
-        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig5.TabIndex = 54
+        Me.CheckBox_HtcTouchpadShortcuts.AutoSize = True
+        Me.CheckBox_HtcTouchpadShortcuts.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_HtcTouchpadShortcuts.Location = New System.Drawing.Point(13, 21)
+        Me.CheckBox_HtcTouchpadShortcuts.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_HtcTouchpadShortcuts.Name = "CheckBox_HtcTouchpadShortcuts"
+        Me.CheckBox_HtcTouchpadShortcuts.Size = New System.Drawing.Size(226, 18)
+        Me.CheckBox_HtcTouchpadShortcuts.TabIndex = 42
+        Me.CheckBox_HtcTouchpadShortcuts.Text = "Enable touchpad emulation shortcuts"
+        Me.CheckBox_HtcTouchpadShortcuts.UseVisualStyleBackColor = True
         '
-        'Label23
+        'Label4
         '
-        Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(19, 98)
-        Me.Label23.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(166, 13)
-        Me.Label23.TabIndex = 51
-        Me.Label23.Text = "Touchpad touch area (cm/deg):"
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(13, 72)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(129, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "Touchpad click method:"
         '
-        'NumericUpDown_TouchpadClickDeadzone
+        'ComboBox_HtcGrabButtonMethod
         '
-        Me.NumericUpDown_TouchpadClickDeadzone.Controls.Add(Me.UcNumericUpDownBig6)
-        Me.NumericUpDown_TouchpadClickDeadzone.DecimalPlaces = 2
-        Me.NumericUpDown_TouchpadClickDeadzone.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
-        Me.NumericUpDown_TouchpadClickDeadzone.Location = New System.Drawing.Point(191, 151)
-        Me.NumericUpDown_TouchpadClickDeadzone.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.NumericUpDown_TouchpadClickDeadzone.Name = "NumericUpDown_TouchpadClickDeadzone"
-        Me.NumericUpDown_TouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
-        Me.NumericUpDown_TouchpadClickDeadzone.TabIndex = 50
-        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_TouchpadClickDeadzone, "Default: 0.25")
-        Me.NumericUpDown_TouchpadClickDeadzone.Value = New Decimal(New Integer() {25, 0, 0, 131072})
+        Me.ComboBox_HtcGrabButtonMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_HtcGrabButtonMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HtcGrabButtonMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HtcGrabButtonMethod.FormattingEnabled = True
+        Me.ComboBox_HtcGrabButtonMethod.Location = New System.Drawing.Point(195, 124)
+        Me.ComboBox_HtcGrabButtonMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_HtcGrabButtonMethod.Name = "ComboBox_HtcGrabButtonMethod"
+        Me.ComboBox_HtcGrabButtonMethod.Size = New System.Drawing.Size(534, 21)
+        Me.ComboBox_HtcGrabButtonMethod.TabIndex = 3
         '
-        'UcNumericUpDownBig6
+        'Label5
         '
-        Me.UcNumericUpDownBig6.AutoSize = True
-        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(54, 0)
-        Me.UcNumericUpDownBig6.m_bDockOnControl = True
-        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_TouchpadClickDeadzone
-        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {25, 0, 0, 131072})
-        Me.UcNumericUpDownBig6.m_ResetVisible = True
-        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
-        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig6.TabIndex = 54
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(13, 127)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(114, 13)
+        Me.Label5.TabIndex = 2
+        Me.Label5.Text = "Grip button method:"
+        '
+        'ComboBox_HtcTouchpadClickMethod
+        '
+        Me.ComboBox_HtcTouchpadClickMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_HtcTouchpadClickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HtcTouchpadClickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HtcTouchpadClickMethod.FormattingEnabled = True
+        Me.ComboBox_HtcTouchpadClickMethod.Location = New System.Drawing.Point(195, 69)
+        Me.ComboBox_HtcTouchpadClickMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_HtcTouchpadClickMethod.Name = "ComboBox_HtcTouchpadClickMethod"
+        Me.ComboBox_HtcTouchpadClickMethod.Size = New System.Drawing.Size(534, 21)
+        Me.ComboBox_HtcTouchpadClickMethod.TabIndex = 1
+        '
+        'CheckBox_HtcTouchpadShortcutClick
+        '
+        Me.CheckBox_HtcTouchpadShortcutClick.AutoSize = True
+        Me.CheckBox_HtcTouchpadShortcutClick.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_HtcTouchpadShortcutClick.Location = New System.Drawing.Point(45, 45)
+        Me.CheckBox_HtcTouchpadShortcutClick.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_HtcTouchpadShortcutClick.Name = "CheckBox_HtcTouchpadShortcutClick"
+        Me.CheckBox_HtcTouchpadShortcutClick.Size = New System.Drawing.Size(224, 18)
+        Me.CheckBox_HtcTouchpadShortcutClick.TabIndex = 44
+        Me.CheckBox_HtcTouchpadShortcutClick.Text = "Click touchpad when using shortcuts"
+        Me.CheckBox_HtcTouchpadShortcutClick.UseVisualStyleBackColor = True
+        '
+        'NumericUpDown_HtcTouchpadClickDeadzone
+        '
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Controls.Add(Me.UcNumericUpDownBig6)
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.DecimalPlaces = 2
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Location = New System.Drawing.Point(195, 96)
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Name = "NumericUpDown_HtcTouchpadClickDeadzone"
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.TabIndex = 50
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_HtcTouchpadClickDeadzone, "Default: 0.25")
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Value = New Decimal(New Integer() {25, 0, 0, 131072})
         '
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(19, 153)
+        Me.Label22.Location = New System.Drawing.Point(13, 98)
         Me.Label22.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(144, 13)
@@ -1202,7 +1125,7 @@ Partial Class UCVmtSettings
         Me.LinkLabel_TouchpadShortcutHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_TouchpadShortcutHelp.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_TouchpadShortcutHelp.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_TouchpadShortcutHelp.Location = New System.Drawing.Point(251, 20)
+        Me.LinkLabel_TouchpadShortcutHelp.Location = New System.Drawing.Point(245, 20)
         Me.LinkLabel_TouchpadShortcutHelp.Name = "LinkLabel_TouchpadShortcutHelp"
         Me.LinkLabel_TouchpadShortcutHelp.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
         Me.LinkLabel_TouchpadShortcutHelp.Size = New System.Drawing.Size(91, 19)
@@ -1211,110 +1134,62 @@ Partial Class UCVmtSettings
         Me.LinkLabel_TouchpadShortcutHelp.Text = "What is this?"
         Me.LinkLabel_TouchpadShortcutHelp.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'ComboBox_TouchpadMethod
+        'CheckBox_JoystickClampBounds
         '
-        Me.ComboBox_TouchpadMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_TouchpadMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_TouchpadMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_TouchpadMethod.FormattingEnabled = True
-        Me.ComboBox_TouchpadMethod.Location = New System.Drawing.Point(191, 69)
-        Me.ComboBox_TouchpadMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
-        Me.ComboBox_TouchpadMethod.Name = "ComboBox_TouchpadMethod"
-        Me.ComboBox_TouchpadMethod.Size = New System.Drawing.Size(538, 21)
-        Me.ComboBox_TouchpadMethod.TabIndex = 47
+        Me.CheckBox_JoystickClampBounds.AutoSize = True
+        Me.CheckBox_JoystickClampBounds.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_JoystickClampBounds.Location = New System.Drawing.Point(13, 315)
+        Me.CheckBox_JoystickClampBounds.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_JoystickClampBounds.Name = "CheckBox_JoystickClampBounds"
+        Me.CheckBox_JoystickClampBounds.Size = New System.Drawing.Size(260, 18)
+        Me.CheckBox_JoystickClampBounds.TabIndex = 45
+        Me.CheckBox_JoystickClampBounds.Text = "Clamp touchpad and joystick axis to bounds"
+        Me.CheckBox_JoystickClampBounds.UseVisualStyleBackColor = True
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(13, 289)
+        Me.Label23.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(176, 13)
+        Me.Label23.TabIndex = 51
+        Me.Label23.Text = "Touchpad/Joystick area (cm/deg):"
+        '
+        'NumericUpDown_JoystickArea
+        '
+        Me.NumericUpDown_JoystickArea.Controls.Add(Me.UcNumericUpDownBig5)
+        Me.NumericUpDown_JoystickArea.DecimalPlaces = 2
+        Me.NumericUpDown_JoystickArea.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
+        Me.NumericUpDown_JoystickArea.Location = New System.Drawing.Point(195, 287)
+        Me.NumericUpDown_JoystickArea.Name = "NumericUpDown_JoystickArea"
+        Me.NumericUpDown_JoystickArea.Size = New System.Drawing.Size(120, 22)
+        Me.NumericUpDown_JoystickArea.TabIndex = 52
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_JoystickArea, "Default: 7.50")
+        Me.NumericUpDown_JoystickArea.Value = New Decimal(New Integer() {750, 0, 0, 131072})
         '
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(19, 72)
+        Me.Label10.Location = New System.Drawing.Point(13, 263)
         Me.Label10.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(137, 13)
+        Me.Label10.Size = New System.Drawing.Size(147, 13)
         Me.Label10.TabIndex = 46
-        Me.Label10.Text = "Touchpad touch method:"
+        Me.Label10.Text = "Touchpad/Joystick method:"
         '
-        'CheckBox_TouchpadShortcutClick
+        'ComboBox_JoystickMethod
         '
-        Me.CheckBox_TouchpadShortcutClick.AutoSize = True
-        Me.CheckBox_TouchpadShortcutClick.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_TouchpadShortcutClick.Location = New System.Drawing.Point(51, 45)
-        Me.CheckBox_TouchpadShortcutClick.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.CheckBox_TouchpadShortcutClick.Name = "CheckBox_TouchpadShortcutClick"
-        Me.CheckBox_TouchpadShortcutClick.Size = New System.Drawing.Size(224, 18)
-        Me.CheckBox_TouchpadShortcutClick.TabIndex = 44
-        Me.CheckBox_TouchpadShortcutClick.Text = "Click touchpad when using shortcuts"
-        Me.CheckBox_TouchpadShortcutClick.UseVisualStyleBackColor = True
-        '
-        'CheckBox_TouchpadClampBounds
-        '
-        Me.CheckBox_TouchpadClampBounds.AutoSize = True
-        Me.CheckBox_TouchpadClampBounds.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_TouchpadClampBounds.Location = New System.Drawing.Point(19, 206)
-        Me.CheckBox_TouchpadClampBounds.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_TouchpadClampBounds.Name = "CheckBox_TouchpadClampBounds"
-        Me.CheckBox_TouchpadClampBounds.Size = New System.Drawing.Size(196, 18)
-        Me.CheckBox_TouchpadClampBounds.TabIndex = 45
-        Me.CheckBox_TouchpadClampBounds.Text = "Clamp touchpad axis to bounds"
-        Me.CheckBox_TouchpadClampBounds.UseVisualStyleBackColor = True
-        '
-        'CheckBox_TouchpadShortcuts
-        '
-        Me.CheckBox_TouchpadShortcuts.AutoSize = True
-        Me.CheckBox_TouchpadShortcuts.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_TouchpadShortcuts.Location = New System.Drawing.Point(19, 21)
-        Me.CheckBox_TouchpadShortcuts.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_TouchpadShortcuts.Name = "CheckBox_TouchpadShortcuts"
-        Me.CheckBox_TouchpadShortcuts.Size = New System.Drawing.Size(226, 18)
-        Me.CheckBox_TouchpadShortcuts.TabIndex = 42
-        Me.CheckBox_TouchpadShortcuts.Text = "Enable touchpad emulation shortcuts"
-        Me.CheckBox_TouchpadShortcuts.UseVisualStyleBackColor = True
-        '
-        'ComboBox_GrabButtonMethod
-        '
-        Me.ComboBox_GrabButtonMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ComboBox_JoystickMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_GrabButtonMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_GrabButtonMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_GrabButtonMethod.FormattingEnabled = True
-        Me.ComboBox_GrabButtonMethod.Location = New System.Drawing.Point(191, 179)
-        Me.ComboBox_GrabButtonMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
-        Me.ComboBox_GrabButtonMethod.Name = "ComboBox_GrabButtonMethod"
-        Me.ComboBox_GrabButtonMethod.Size = New System.Drawing.Size(538, 21)
-        Me.ComboBox_GrabButtonMethod.TabIndex = 3
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(19, 182)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(117, 13)
-        Me.Label5.TabIndex = 2
-        Me.Label5.Text = "Grab button method:"
-        '
-        'ComboBox_TouchpadClickMethod
-        '
-        Me.ComboBox_TouchpadClickMethod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox_TouchpadClickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_TouchpadClickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_TouchpadClickMethod.FormattingEnabled = True
-        Me.ComboBox_TouchpadClickMethod.Location = New System.Drawing.Point(191, 124)
-        Me.ComboBox_TouchpadClickMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
-        Me.ComboBox_TouchpadClickMethod.Name = "ComboBox_TouchpadClickMethod"
-        Me.ComboBox_TouchpadClickMethod.Size = New System.Drawing.Size(538, 21)
-        Me.ComboBox_TouchpadClickMethod.TabIndex = 1
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(19, 127)
-        Me.Label4.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(129, 13)
-        Me.Label4.TabIndex = 0
-        Me.Label4.Text = "Touchpad click method:"
+        Me.ComboBox_JoystickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_JoystickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_JoystickMethod.FormattingEnabled = True
+        Me.ComboBox_JoystickMethod.Location = New System.Drawing.Point(195, 260)
+        Me.ComboBox_JoystickMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_JoystickMethod.Name = "ComboBox_JoystickMethod"
+        Me.ComboBox_JoystickMethod.Size = New System.Drawing.Size(534, 21)
+        Me.ComboBox_JoystickMethod.TabIndex = 47
         '
         'TabPage_SettingsPlayspace
         '
@@ -1381,22 +1256,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibSideOffset.TabIndex = 83
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibSideOffset, "Default: 0")
         '
-        'UcNumericUpDownBig3
-        '
-        Me.UcNumericUpDownBig3.AutoSize = True
-        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig3.m_bDockOnControl = True
-        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_PlayCalibSideOffset
-        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig3.m_ResetVisible = True
-        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
-        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig3.TabIndex = 85
-        '
         'Label26
         '
         Me.Label26.AutoSize = True
@@ -1454,22 +1313,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibHeightOffset.TabIndex = 79
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibHeightOffset, "Default: 0")
         '
-        'UcNumericUpDownBig2
-        '
-        Me.UcNumericUpDownBig2.AutoSize = True
-        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig2.m_bDockOnControl = True
-        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_PlayCalibHeightOffset
-        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.UcNumericUpDownBig2.m_ResetVisible = True
-        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
-        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig2.TabIndex = 84
-        '
         'Label29
         '
         Me.Label29.AutoSize = True
@@ -1492,22 +1335,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PlayCalibForwardOffset.TabIndex = 77
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_PlayCalibForwardOffset, "Default: 10")
         Me.NumericUpDown_PlayCalibForwardOffset.Value = New Decimal(New Integer() {10, 0, 0, 0})
-        '
-        'UcNumericUpDownBig1
-        '
-        Me.UcNumericUpDownBig1.AutoSize = True
-        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(66, 0)
-        Me.UcNumericUpDownBig1.m_bDockOnControl = True
-        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_PlayCalibForwardOffset
-        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.UcNumericUpDownBig1.m_ResetVisible = True
-        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
-        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig1.TabIndex = 84
         '
         'TabPage_SettingsOther
         '
@@ -1532,6 +1359,42 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsOther.Size = New System.Drawing.Size(786, 1093)
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
+        '
+        'LinkLabel_OscIpChange
+        '
+        Me.LinkLabel_OscIpChange.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_OscIpChange.AutoSize = True
+        Me.LinkLabel_OscIpChange.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_OscIpChange.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel_OscIpChange.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_OscIpChange.Location = New System.Drawing.Point(353, 391)
+        Me.LinkLabel_OscIpChange.Margin = New System.Windows.Forms.Padding(3)
+        Me.LinkLabel_OscIpChange.Name = "LinkLabel_OscIpChange"
+        Me.LinkLabel_OscIpChange.Size = New System.Drawing.Size(90, 13)
+        Me.LinkLabel_OscIpChange.TabIndex = 58
+        Me.LinkLabel_OscIpChange.TabStop = True
+        Me.LinkLabel_OscIpChange.Text = "Change address"
+        Me.LinkLabel_OscIpChange.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'TextBox_OscRemoteIP
+        '
+        Me.TextBox_OscRemoteIP.BackColor = System.Drawing.Color.White
+        Me.TextBox_OscRemoteIP.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.TextBox_OscRemoteIP.Location = New System.Drawing.Point(229, 388)
+        Me.TextBox_OscRemoteIP.Name = "TextBox_OscRemoteIP"
+        Me.TextBox_OscRemoteIP.ReadOnly = True
+        Me.TextBox_OscRemoteIP.Size = New System.Drawing.Size(118, 22)
+        Me.TextBox_OscRemoteIP.TabIndex = 57
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(16, 391)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(86, 13)
+        Me.Label3.TabIndex = 56
+        Me.Label3.Text = "OSC Remote IP:"
         '
         'Label2
         '
@@ -1570,22 +1433,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_OscMaxThreadFps.TabIndex = 53
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscMaxThreadFps, "Default: 200")
         Me.NumericUpDown_OscMaxThreadFps.Value = New Decimal(New Integer() {200, 0, 0, 0})
-        '
-        'UcNumericUpDownBig18
-        '
-        Me.UcNumericUpDownBig18.AutoSize = True
-        Me.UcNumericUpDownBig18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig18.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig18.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig18.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig18.Location = New System.Drawing.Point(52, 0)
-        Me.UcNumericUpDownBig18.m_bDockOnControl = True
-        Me.UcNumericUpDownBig18.m_NumericUpDown = Me.NumericUpDown_OscMaxThreadFps
-        Me.UcNumericUpDownBig18.m_ResetValue = New Decimal(New Integer() {200, 0, 0, 0})
-        Me.UcNumericUpDownBig18.m_ResetVisible = True
-        Me.UcNumericUpDownBig18.Name = "UcNumericUpDownBig18"
-        Me.UcNumericUpDownBig18.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig18.TabIndex = 52
         '
         'Label65
         '
@@ -1632,22 +1479,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_OscThreadSleep.TabIndex = 49
         Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_OscThreadSleep, "Default: 1")
         Me.NumericUpDown_OscThreadSleep.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'UcNumericUpDownBig4
-        '
-        Me.UcNumericUpDownBig4.AutoSize = True
-        Me.UcNumericUpDownBig4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UcNumericUpDownBig4.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.UcNumericUpDownBig4.Dock = System.Windows.Forms.DockStyle.Right
-        Me.UcNumericUpDownBig4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcNumericUpDownBig4.Location = New System.Drawing.Point(52, 0)
-        Me.UcNumericUpDownBig4.m_bDockOnControl = True
-        Me.UcNumericUpDownBig4.m_NumericUpDown = Me.NumericUpDown_OscThreadSleep
-        Me.UcNumericUpDownBig4.m_ResetValue = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.UcNumericUpDownBig4.m_ResetVisible = True
-        Me.UcNumericUpDownBig4.Name = "UcNumericUpDownBig4"
-        Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
-        Me.UcNumericUpDownBig4.TabIndex = 52
         '
         'Label21
         '
@@ -1739,41 +1570,277 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
-        'Label3
+        'UcNumericUpDownBig14
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(16, 391)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(86, 13)
-        Me.Label3.TabIndex = 56
-        Me.Label3.Text = "OSC Remote IP:"
+        Me.UcNumericUpDownBig14.AutoSize = True
+        Me.UcNumericUpDownBig14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig14.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig14.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig14.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig14.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig14.m_bDockOnControl = True
+        Me.UcNumericUpDownBig14.m_NumericUpDown = Me.NumericUpDown_PsvrVFov
+        Me.UcNumericUpDownBig14.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig14.m_ResetVisible = False
+        Me.UcNumericUpDownBig14.Name = "UcNumericUpDownBig14"
+        Me.UcNumericUpDownBig14.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig14.TabIndex = 27
         '
-        'TextBox_OscRemoteIP
+        'UcNumericUpDownBig13
         '
-        Me.TextBox_OscRemoteIP.BackColor = System.Drawing.Color.White
-        Me.TextBox_OscRemoteIP.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.TextBox_OscRemoteIP.Location = New System.Drawing.Point(229, 388)
-        Me.TextBox_OscRemoteIP.Name = "TextBox_OscRemoteIP"
-        Me.TextBox_OscRemoteIP.ReadOnly = True
-        Me.TextBox_OscRemoteIP.Size = New System.Drawing.Size(118, 22)
-        Me.TextBox_OscRemoteIP.TabIndex = 57
+        Me.UcNumericUpDownBig13.AutoSize = True
+        Me.UcNumericUpDownBig13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig13.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig13.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig13.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig13.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig13.m_bDockOnControl = True
+        Me.UcNumericUpDownBig13.m_NumericUpDown = Me.NumericUpDown_PsvrHFov
+        Me.UcNumericUpDownBig13.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig13.m_ResetVisible = False
+        Me.UcNumericUpDownBig13.Name = "UcNumericUpDownBig13"
+        Me.UcNumericUpDownBig13.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig13.TabIndex = 27
         '
-        'LinkLabel_OscIpChange
+        'UcNumericUpDownBig16
         '
-        Me.LinkLabel_OscIpChange.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_OscIpChange.AutoSize = True
-        Me.LinkLabel_OscIpChange.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_OscIpChange.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_OscIpChange.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_OscIpChange.Location = New System.Drawing.Point(353, 391)
-        Me.LinkLabel_OscIpChange.Margin = New System.Windows.Forms.Padding(3)
-        Me.LinkLabel_OscIpChange.Name = "LinkLabel_OscIpChange"
-        Me.LinkLabel_OscIpChange.Size = New System.Drawing.Size(90, 13)
-        Me.LinkLabel_OscIpChange.TabIndex = 58
-        Me.LinkLabel_OscIpChange.TabStop = True
-        Me.LinkLabel_OscIpChange.Text = "Change address"
-        Me.LinkLabel_OscIpChange.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.UcNumericUpDownBig16.AutoSize = True
+        Me.UcNumericUpDownBig16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig16.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig16.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig16.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig16.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig16.m_bDockOnControl = True
+        Me.UcNumericUpDownBig16.m_NumericUpDown = Me.NumericUpDown_PsvrDistBlueOffset
+        Me.UcNumericUpDownBig16.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig16.m_ResetVisible = False
+        Me.UcNumericUpDownBig16.Name = "UcNumericUpDownBig16"
+        Me.UcNumericUpDownBig16.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig16.TabIndex = 27
+        '
+        'UcNumericUpDownBig15
+        '
+        Me.UcNumericUpDownBig15.AutoSize = True
+        Me.UcNumericUpDownBig15.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig15.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig15.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig15.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig15.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig15.m_bDockOnControl = True
+        Me.UcNumericUpDownBig15.m_NumericUpDown = Me.NumericUpDown_PsvrDistGreenOffset
+        Me.UcNumericUpDownBig15.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig15.m_ResetVisible = False
+        Me.UcNumericUpDownBig15.Name = "UcNumericUpDownBig15"
+        Me.UcNumericUpDownBig15.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig15.TabIndex = 27
+        '
+        'UcNumericUpDownBig11
+        '
+        Me.UcNumericUpDownBig11.AutoSize = True
+        Me.UcNumericUpDownBig11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig11.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig11.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig11.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig11.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig11.m_bDockOnControl = True
+        Me.UcNumericUpDownBig11.m_NumericUpDown = Me.NumericUpDown_PsvrDistRedOffset
+        Me.UcNumericUpDownBig11.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig11.m_ResetVisible = False
+        Me.UcNumericUpDownBig11.Name = "UcNumericUpDownBig11"
+        Me.UcNumericUpDownBig11.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig11.TabIndex = 27
+        '
+        'UcNumericUpDownBig12
+        '
+        Me.UcNumericUpDownBig12.AutoSize = True
+        Me.UcNumericUpDownBig12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig12.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig12.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig12.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig12.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig12.m_bDockOnControl = True
+        Me.UcNumericUpDownBig12.m_NumericUpDown = Me.NumericUpDown_PsvrDistScale
+        Me.UcNumericUpDownBig12.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig12.m_ResetVisible = False
+        Me.UcNumericUpDownBig12.Name = "UcNumericUpDownBig12"
+        Me.UcNumericUpDownBig12.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig12.TabIndex = 27
+        '
+        'UcNumericUpDownBig10
+        '
+        Me.UcNumericUpDownBig10.AutoSize = True
+        Me.UcNumericUpDownBig10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig10.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig10.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig10.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig10.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig10.m_bDockOnControl = True
+        Me.UcNumericUpDownBig10.m_NumericUpDown = Me.NumericUpDown_PsvrDistK1
+        Me.UcNumericUpDownBig10.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig10.m_ResetVisible = False
+        Me.UcNumericUpDownBig10.Name = "UcNumericUpDownBig10"
+        Me.UcNumericUpDownBig10.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig10.TabIndex = 27
+        '
+        'UcNumericUpDownBig9
+        '
+        Me.UcNumericUpDownBig9.AutoSize = True
+        Me.UcNumericUpDownBig9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig9.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig9.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig9.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig9.Location = New System.Drawing.Point(138, 0)
+        Me.UcNumericUpDownBig9.m_bDockOnControl = True
+        Me.UcNumericUpDownBig9.m_NumericUpDown = Me.NumericUpDown_PsvrDistK0
+        Me.UcNumericUpDownBig9.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig9.m_ResetVisible = False
+        Me.UcNumericUpDownBig9.Name = "UcNumericUpDownBig9"
+        Me.UcNumericUpDownBig9.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig9.TabIndex = 27
+        '
+        'UcNumericUpDownBig8
+        '
+        Me.UcNumericUpDownBig8.AutoSize = True
+        Me.UcNumericUpDownBig8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig8.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig8.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig8.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig8.Location = New System.Drawing.Point(120, 0)
+        Me.UcNumericUpDownBig8.m_bDockOnControl = True
+        Me.UcNumericUpDownBig8.m_NumericUpDown = Me.NumericUpDown_PsvrIPD
+        Me.UcNumericUpDownBig8.m_ResetValue = New Decimal(New Integer() {67, 0, 0, 0})
+        Me.UcNumericUpDownBig8.m_ResetVisible = True
+        Me.UcNumericUpDownBig8.Name = "UcNumericUpDownBig8"
+        Me.UcNumericUpDownBig8.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig8.TabIndex = 7
+        '
+        'UcNumericUpDownBig7
+        '
+        Me.UcNumericUpDownBig7.AutoSize = True
+        Me.UcNumericUpDownBig7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig7.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig7.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig7.Location = New System.Drawing.Point(48, 0)
+        Me.UcNumericUpDownBig7.m_bDockOnControl = True
+        Me.UcNumericUpDownBig7.m_NumericUpDown = Me.NumericUpDown_RecenterButtonTime
+        Me.UcNumericUpDownBig7.m_ResetValue = New Decimal(New Integer() {500, 0, 0, 0})
+        Me.UcNumericUpDownBig7.m_ResetVisible = True
+        Me.UcNumericUpDownBig7.Name = "UcNumericUpDownBig7"
+        Me.UcNumericUpDownBig7.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig7.TabIndex = 72
+        '
+        'UcNumericUpDownBig6
+        '
+        Me.UcNumericUpDownBig6.AutoSize = True
+        Me.UcNumericUpDownBig6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig6.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig6.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig6.Location = New System.Drawing.Point(54, 0)
+        Me.UcNumericUpDownBig6.m_bDockOnControl = True
+        Me.UcNumericUpDownBig6.m_NumericUpDown = Me.NumericUpDown_HtcTouchpadClickDeadzone
+        Me.UcNumericUpDownBig6.m_ResetValue = New Decimal(New Integer() {25, 0, 0, 131072})
+        Me.UcNumericUpDownBig6.m_ResetVisible = True
+        Me.UcNumericUpDownBig6.Name = "UcNumericUpDownBig6"
+        Me.UcNumericUpDownBig6.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig6.TabIndex = 54
+        '
+        'UcNumericUpDownBig5
+        '
+        Me.UcNumericUpDownBig5.AutoSize = True
+        Me.UcNumericUpDownBig5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig5.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig5.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig5.Location = New System.Drawing.Point(54, 0)
+        Me.UcNumericUpDownBig5.m_bDockOnControl = True
+        Me.UcNumericUpDownBig5.m_NumericUpDown = Me.NumericUpDown_JoystickArea
+        Me.UcNumericUpDownBig5.m_ResetValue = New Decimal(New Integer() {750, 0, 0, 131072})
+        Me.UcNumericUpDownBig5.m_ResetVisible = True
+        Me.UcNumericUpDownBig5.Name = "UcNumericUpDownBig5"
+        Me.UcNumericUpDownBig5.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig5.TabIndex = 54
+        '
+        'UcNumericUpDownBig3
+        '
+        Me.UcNumericUpDownBig3.AutoSize = True
+        Me.UcNumericUpDownBig3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig3.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig3.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig3.m_bDockOnControl = True
+        Me.UcNumericUpDownBig3.m_NumericUpDown = Me.NumericUpDown_PlayCalibSideOffset
+        Me.UcNumericUpDownBig3.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig3.m_ResetVisible = True
+        Me.UcNumericUpDownBig3.Name = "UcNumericUpDownBig3"
+        Me.UcNumericUpDownBig3.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig3.TabIndex = 85
+        '
+        'UcNumericUpDownBig2
+        '
+        Me.UcNumericUpDownBig2.AutoSize = True
+        Me.UcNumericUpDownBig2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig2.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig2.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig2.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig2.m_bDockOnControl = True
+        Me.UcNumericUpDownBig2.m_NumericUpDown = Me.NumericUpDown_PlayCalibHeightOffset
+        Me.UcNumericUpDownBig2.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig2.m_ResetVisible = True
+        Me.UcNumericUpDownBig2.Name = "UcNumericUpDownBig2"
+        Me.UcNumericUpDownBig2.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig2.TabIndex = 84
+        '
+        'UcNumericUpDownBig1
+        '
+        Me.UcNumericUpDownBig1.AutoSize = True
+        Me.UcNumericUpDownBig1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig1.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig1.Location = New System.Drawing.Point(66, 0)
+        Me.UcNumericUpDownBig1.m_bDockOnControl = True
+        Me.UcNumericUpDownBig1.m_NumericUpDown = Me.NumericUpDown_PlayCalibForwardOffset
+        Me.UcNumericUpDownBig1.m_ResetValue = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.UcNumericUpDownBig1.m_ResetVisible = True
+        Me.UcNumericUpDownBig1.Name = "UcNumericUpDownBig1"
+        Me.UcNumericUpDownBig1.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig1.TabIndex = 84
+        '
+        'UcNumericUpDownBig18
+        '
+        Me.UcNumericUpDownBig18.AutoSize = True
+        Me.UcNumericUpDownBig18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig18.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig18.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig18.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig18.Location = New System.Drawing.Point(52, 0)
+        Me.UcNumericUpDownBig18.m_bDockOnControl = True
+        Me.UcNumericUpDownBig18.m_NumericUpDown = Me.NumericUpDown_OscMaxThreadFps
+        Me.UcNumericUpDownBig18.m_ResetValue = New Decimal(New Integer() {200, 0, 0, 0})
+        Me.UcNumericUpDownBig18.m_ResetVisible = True
+        Me.UcNumericUpDownBig18.Name = "UcNumericUpDownBig18"
+        Me.UcNumericUpDownBig18.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig18.TabIndex = 52
+        '
+        'UcNumericUpDownBig4
+        '
+        Me.UcNumericUpDownBig4.AutoSize = True
+        Me.UcNumericUpDownBig4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig4.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig4.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig4.Location = New System.Drawing.Point(52, 0)
+        Me.UcNumericUpDownBig4.m_bDockOnControl = True
+        Me.UcNumericUpDownBig4.m_NumericUpDown = Me.NumericUpDown_OscThreadSleep
+        Me.UcNumericUpDownBig4.m_ResetValue = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.UcNumericUpDownBig4.m_ResetVisible = True
+        Me.UcNumericUpDownBig4.Name = "UcNumericUpDownBig4"
+        Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig4.TabIndex = 52
         '
         'UCVmtSettings
         '
@@ -1826,12 +1893,16 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_RecenterButtonTime.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        CType(Me.NumericUpDown_TouchpadTouchArea, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.NumericUpDown_TouchpadTouchArea.ResumeLayout(False)
-        Me.NumericUpDown_TouchpadTouchArea.PerformLayout()
-        CType(Me.NumericUpDown_TouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.NumericUpDown_TouchpadClickDeadzone.ResumeLayout(False)
-        Me.NumericUpDown_TouchpadClickDeadzone.PerformLayout()
+        Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox6.PerformLayout()
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
+        CType(Me.NumericUpDown_HtcTouchpadClickDeadzone, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.ResumeLayout(False)
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.PerformLayout()
+        CType(Me.NumericUpDown_JoystickArea, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_JoystickArea.ResumeLayout(False)
+        Me.NumericUpDown_JoystickArea.PerformLayout()
         Me.TabPage_SettingsPlayspace.ResumeLayout(False)
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
@@ -1927,21 +1998,21 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_ControllerRecenterEnabled As CheckBox
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents Label_TouchpadTouchAreaDeg As Label
-    Friend WithEvents NumericUpDown_TouchpadTouchArea As NumericUpDown
+    Friend WithEvents NumericUpDown_JoystickArea As NumericUpDown
     Friend WithEvents UcNumericUpDownBig5 As UCNumericUpDownBig
     Friend WithEvents Label23 As Label
-    Friend WithEvents NumericUpDown_TouchpadClickDeadzone As NumericUpDown
+    Friend WithEvents NumericUpDown_HtcTouchpadClickDeadzone As NumericUpDown
     Friend WithEvents UcNumericUpDownBig6 As UCNumericUpDownBig
     Friend WithEvents Label22 As Label
     Friend WithEvents LinkLabel_TouchpadShortcutHelp As LinkLabel
-    Friend WithEvents ComboBox_TouchpadMethod As ComboBox
+    Friend WithEvents ComboBox_JoystickMethod As ComboBox
     Friend WithEvents Label10 As Label
-    Friend WithEvents CheckBox_TouchpadShortcutClick As CheckBox
-    Friend WithEvents CheckBox_TouchpadClampBounds As CheckBox
-    Friend WithEvents CheckBox_TouchpadShortcuts As CheckBox
-    Friend WithEvents ComboBox_GrabButtonMethod As ComboBox
+    Friend WithEvents CheckBox_HtcTouchpadShortcutClick As CheckBox
+    Friend WithEvents CheckBox_JoystickClampBounds As CheckBox
+    Friend WithEvents CheckBox_HtcTouchpadShortcuts As CheckBox
+    Friend WithEvents ComboBox_HtcGrabButtonMethod As ComboBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents ComboBox_TouchpadClickMethod As ComboBox
+    Friend WithEvents ComboBox_HtcTouchpadClickMethod As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents TabPage_SettingsPlayspace As TabPage
     Friend WithEvents GroupBox3 As GroupBox
@@ -1979,4 +2050,9 @@ Partial Class UCVmtSettings
     Friend WithEvents TextBox_OscRemoteIP As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents LinkLabel_OscIpChange As LinkLabel
+    Friend WithEvents GroupBox5 As GroupBox
+    Friend WithEvents GroupBox6 As GroupBox
+    Friend WithEvents Label8 As Label
+    Friend WithEvents ComboBox_OculusButtonLayout As ComboBox
+    Friend WithEvents CheckBox_OculusGripToggle As CheckBox
 End Class
