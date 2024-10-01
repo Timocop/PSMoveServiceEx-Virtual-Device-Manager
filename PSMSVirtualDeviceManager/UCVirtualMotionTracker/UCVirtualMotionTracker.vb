@@ -874,6 +874,7 @@ Public Class UCVirtualMotionTracker
             Private g_bEnableHepticFeedback As Boolean = True
             Private g_bOptimizeTransportPackets As Boolean = True
             Private g_bRenderWindowFix As Boolean = True
+            Private g_bEnableVelocity As Boolean = True
             Private g_sOscRemoteIP As String = ""
 
             Property m_DisableBaseStationSpawning As Boolean
@@ -909,6 +910,15 @@ Public Class UCVirtualMotionTracker
                 End Get
                 Set(value As Boolean)
                     g_bRenderWindowFix = value
+                End Set
+            End Property
+
+            Property m_EnableVelocity As Boolean
+                Get
+                    Return g_bEnableVelocity
+                End Get
+                Set(value As Boolean)
+                    g_bEnableVelocity = value
                 End Set
             End Property
 
@@ -1105,6 +1115,7 @@ Public Class UCVirtualMotionTracker
                         g_mMiscSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("MiscSettings", "EnableHepticFeedback", "true") = "true")
                         g_mMiscSettings.m_OptimizeTransportPackets = (mIni.ReadKeyValue("MiscSettings", "OptimizeTransportPackets", "true") = "true")
                         g_mMiscSettings.m_RenderWindowFix = (mIni.ReadKeyValue("MiscSettings", "RenderWindowFix", "true") = "true")
+                        g_mMiscSettings.m_EnableVelocity = (mIni.ReadKeyValue("MiscSettings", "EnableVelocity", "true") = "true")
                         g_mMiscSettings.m_OscRemoteIP = mIni.ReadKeyValue("MiscSettings", "OscRemoteIP", "")
 
                         ' Playspace Settings
@@ -1292,6 +1303,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OptimizeTransportPackets", If(g_mMiscSettings.m_OptimizeTransportPackets, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "RenderWindowFix", If(g_mMiscSettings.m_RenderWindowFix, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableVelocity", If(g_mMiscSettings.m_EnableVelocity, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OscRemoteIP", g_mMiscSettings.m_OscRemoteIP))
                         End If
 

@@ -259,6 +259,7 @@ Public Class UCVmtSettings
             CheckBox_EnableHeptics.Checked = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
             CheckBox_OptimizePackets.Checked = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
             CheckBox_RenderFix.Checked = mClassSettings.m_MiscSettings.m_RenderWindowFix
+            CheckBox_EnableVelocity.Checked = mClassSettings.m_MiscSettings.m_EnableVelocity
             TextBox_OscRemoteIP.Text = mClassSettings.m_MiscSettings.m_OscRemoteIP
 
             ' Playspace Settings
@@ -391,6 +392,15 @@ Public Class UCVmtSettings
         End If
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_RenderWindowFix = CheckBox_RenderFix.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_EnableVelocity_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableVelocity.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocity = CheckBox_RenderFix.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
