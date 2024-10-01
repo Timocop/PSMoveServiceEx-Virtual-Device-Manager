@@ -769,14 +769,18 @@ Public Class UCVirtualMotionTrackerItem
         Const HTC_VIVE_BUTTON_MENU_CLICK = 5
 
         Const OCULUS_TOUCH_BUTTON_AX_CLICK = 0
-        Const OCULUS_TOUCH_BUTTON_BY_CLICK = 1
-        Const OCULUS_TOUCH_BUTTON_SYSTEM_CLICK = 2
-        Const OCULUS_TOUCH_BUTTON_GRIP_CLICK = 3
-        Const OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK = 4
-        Const OCULUS_TOUCH_BUTTON_BACK_CLICK = 5
-        Const OCULUS_TOUCH_BUTTON_GUIDE_CLICK = 6
-        Const OCULUS_TOUCH_BUTTON_START_CLICK = 7
-        Const OCULUS_TOUCH_BUTTON_TRIGGER_CLICK = 8
+        Const OCULUS_TOUCH_BUTTON_AX_TOUCH = 1
+        Const OCULUS_TOUCH_BUTTON_BY_CLICK = 2
+        Const OCULUS_TOUCH_BUTTON_BY_TOUCH = 3
+        Const OCULUS_TOUCH_BUTTON_SYSTEM_CLICK = 4 'OCULUS_TOUCH_BUTTON_BACK_CLICK
+        Const OCULUS_TOUCH_BUTTON_SYSTEM_TOUCH = 5 'OCULUS_TOUCH_BUTTON_GUIDE_CLICK
+        Const OCULUS_TOUCH_BUTTON_GRIP_CLICK = 6
+        Const OCULUS_TOUCH_BUTTON_GRIP_TOUCH = 7
+        Const OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK = 8
+        Const OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH = 9
+        Const OCULUS_TOUCH_BUTTON_START_CLICK = 10
+        Const OCULUS_TOUCH_BUTTON_TRIGGER_CLICK = 11
+        Const OCULUS_TOUCH_BUTTON_TRIGGER_TOUCH = 12
 
         Enum ENUM_TRACKER_ROLE
             GENERIC_TRACKER
@@ -2783,45 +2787,65 @@ Public Class UCVirtualMotionTrackerItem
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER) Then
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CircleButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_TriangleButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_SquareButton
                                 bGripJustPressed = m_PSMoveData.m_CrossButton
                             Else
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CrossButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_SquareButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_TriangleButton
                                 bGripJustPressed = m_PSMoveData.m_CircleButton
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CROSS_SQUARE_CIRCLE_TRIANGLE
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER) Then
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CrossButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_SquareButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_TriangleButton
                                 bGripJustPressed = m_PSMoveData.m_CircleButton
                             Else
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CircleButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_TriangleButton
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_SquareButton
                                 bGripJustPressed = m_PSMoveData.m_CrossButton
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_BOTH_CIRCLE_TRIANGLE_CROSS_SQUARE
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CircleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CircleButton
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_TriangleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_TriangleButton
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_SquareButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_SquareButton
                             bGripJustPressed = m_PSMoveData.m_CrossButton
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_BOTH_CROSS_SQUARE_CIRCLE_TRIANGLE
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CrossButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CrossButton
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_SquareButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_SquareButton
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_TriangleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_TriangleButton
                             bGripJustPressed = m_PSMoveData.m_CircleButton
 
                     End Select
 
                     If (Not bOculusGripToggle) Then
                         mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripJustPressed
+                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripJustPressed
+                        mOscDataPack.mTrigger(1) = If(bGripJustPressed, 1.0F, 0.0F)
                     Else
                         If (bGripJustPressed) Then
                             If (Not bGripButtonPressed) Then
@@ -2836,16 +2860,15 @@ Public Class UCVirtualMotionTrackerItem
                         End If
 
                         mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripToggled
+                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripToggled
+                        mOscDataPack.mTrigger(1) = If(bGripToggled, 1.0F, 0.0F)
                     End If
 
-                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BACK_CLICK) = False
-                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GUIDE_CLICK) = False
+                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_MoveButton
                     mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
                     mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_START_CLICK) = m_PSMoveData.m_PSButton
                     mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
-
-                    ' Grip
-                    mOscDataPack.mTrigger(1) = If(mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK), 0.0F, 1.0F)
+                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_TRIGGER_TOUCH) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.25F)
             End Select
 
             mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
