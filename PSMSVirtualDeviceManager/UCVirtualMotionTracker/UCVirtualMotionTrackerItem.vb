@@ -2055,9 +2055,9 @@ Public Class UCVirtualMotionTrackerItem
 
             mVelocityLastTime = Now
 
-            If (iDeltaTime <= Single.Epsilon OrElse iDeltaTime > 1.0F) Then
-                Return
-            End If
+            'If (iDeltaTime <= Single.Epsilon OrElse iDeltaTime > 1.0) Then
+            '    Return
+            'End If
 
             ' Linear Velocity
             If (True) Then
@@ -2066,7 +2066,7 @@ Public Class UCVirtualMotionTrackerItem
                     CSng((mPosition.Y - mLastPosition.Y) / iDeltaTime),
                     CSng((mPosition.Z - mLastPosition.Z) / iDeltaTime)
                 )
-                mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(0.1F, mVelocityPosition, mLastVelocityPosition)
+                mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(0.2F, mVelocityPosition, mLastVelocityPosition)
 
                 ' Compensate
                 mPosition = New Vector3(
@@ -2079,7 +2079,7 @@ Public Class UCVirtualMotionTrackerItem
             ' Angular Velocity
             If (True) Then
                 mVelocityOrientation = ClassQuaternionTools.AngularVelocityBetweenQuats(mOrientation, mLastOrientation, iDeltaTime)
-                mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(0.1F, mVelocityOrientation, mLastVelocityOrientation)
+                mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(0.2F, mVelocityOrientation, mLastVelocityOrientation)
 
                 ' Compensate
                 mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iDeltaTime))
