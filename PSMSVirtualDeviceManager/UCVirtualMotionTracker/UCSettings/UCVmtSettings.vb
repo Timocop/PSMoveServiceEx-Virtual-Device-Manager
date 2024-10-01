@@ -400,7 +400,7 @@ Public Class UCVmtSettings
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocity = CheckBox_RenderFix.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocity = CheckBox_EnableVelocity.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
