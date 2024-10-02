@@ -260,6 +260,7 @@ Public Class UCVmtSettings
             CheckBox_OptimizePackets.Checked = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
             CheckBox_RenderFix.Checked = mClassSettings.m_MiscSettings.m_RenderWindowFix
             CheckBox_EnableVelocity.Checked = mClassSettings.m_MiscSettings.m_EnableVelocity
+            CheckBox_VelocityControllersOnly.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly
             TextBox_OscRemoteIP.Text = mClassSettings.m_MiscSettings.m_OscRemoteIP
 
             ' Playspace Settings
