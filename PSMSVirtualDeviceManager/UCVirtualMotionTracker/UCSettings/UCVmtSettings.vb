@@ -404,6 +404,15 @@ Public Class UCVmtSettings
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
+    Private Sub CheckBox_VelocityControllersOnly_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_VelocityControllersOnly.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly = CheckBox_VelocityControllersOnly.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
     Private Sub CheckBox_JoystickClampBounds_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickClampBounds.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return

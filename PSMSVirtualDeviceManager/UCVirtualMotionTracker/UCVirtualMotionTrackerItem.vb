@@ -1353,6 +1353,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim bEnableHepticFeedback As Boolean = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
                         Dim bOptimizeTransportPackets As Boolean = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
                         Dim bEnableVelocity As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocity
+                        Dim bEnableVelocityControllerOnly As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly
 
 
                         Dim bEnfocePacketUpdate As Boolean = False
@@ -1698,7 +1699,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim mVelocityPosition As Vector3 = Vector3.Zero
                                                     Dim mVelocityOrientation As Vector3 = Vector3.Zero
 
-                                                    If (bEnableVelocity) Then
+                                                    If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
                                                         InternalCalculateVelocity(mCalcPosition,
                                                                                   mCalcOrientation,
                                                                                   g_mOscDataPack.mPosition,
@@ -1838,7 +1839,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim mVelocityPosition As Vector3 = Vector3.Zero
                                                     Dim mVelocityOrientation As Vector3 = Vector3.Zero
 
-                                                    If (bEnableVelocity) Then
+                                                    If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
                                                         InternalCalculateVelocity(mCalcPosition,
                                                                                   mCalcOrientation,
                                                                                   g_mOscDataPack.mPosition,

@@ -136,6 +136,7 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.CheckBox_VelocityControllersOnly = New System.Windows.Forms.CheckBox()
         Me.UcNumericUpDownBig14 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig13 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig16 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
@@ -1336,6 +1337,7 @@ Partial Class UCVmtSettings
         'TabPage_SettingsOther
         '
         Me.TabPage_SettingsOther.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsOther.Controls.Add(Me.CheckBox_VelocityControllersOnly)
         Me.TabPage_SettingsOther.Controls.Add(Me.CheckBox_EnableVelocity)
         Me.TabPage_SettingsOther.Controls.Add(Me.LinkLabel_OscIpChange)
         Me.TabPage_SettingsOther.Controls.Add(Me.TextBox_OscRemoteIP)
@@ -1533,6 +1535,18 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.AutoPopDelay = 30000
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
+        '
+        'CheckBox_VelocityControllersOnly
+        '
+        Me.CheckBox_VelocityControllersOnly.AutoSize = True
+        Me.CheckBox_VelocityControllersOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_VelocityControllersOnly.Location = New System.Drawing.Point(41, 215)
+        Me.CheckBox_VelocityControllersOnly.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_VelocityControllersOnly.Name = "CheckBox_VelocityControllersOnly"
+        Me.CheckBox_VelocityControllersOnly.Size = New System.Drawing.Size(209, 18)
+        Me.CheckBox_VelocityControllersOnly.TabIndex = 60
+        Me.CheckBox_VelocityControllersOnly.Text = "Enable velocity for controllers only"
+        Me.CheckBox_VelocityControllersOnly.UseVisualStyleBackColor = True
         '
         'UcNumericUpDownBig14
         '
@@ -2016,4 +2030,5 @@ Partial Class UCVmtSettings
     Friend WithEvents ComboBox_OculusButtonLayout As ComboBox
     Friend WithEvents CheckBox_OculusGripToggle As CheckBox
     Friend WithEvents CheckBox_EnableVelocity As CheckBox
+    Friend WithEvents CheckBox_VelocityControllersOnly As CheckBox
 End Class
