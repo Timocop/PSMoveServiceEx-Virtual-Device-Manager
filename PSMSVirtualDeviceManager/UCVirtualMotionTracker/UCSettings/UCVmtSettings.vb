@@ -397,6 +397,8 @@ Public Class UCVmtSettings
     End Sub
 
     Private Sub CheckBox_EnableVelocity_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableVelocity.CheckedChanged
+        CheckBox_VelocityControllersOnly.Enabled = CheckBox_EnableVelocity.Checked
+
         If (g_bIgnoreEvents) Then
             Return
         End If
