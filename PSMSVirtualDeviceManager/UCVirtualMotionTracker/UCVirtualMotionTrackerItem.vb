@@ -1259,8 +1259,17 @@ Public Class UCVirtualMotionTrackerItem
             Dim mRumbleLastTimeSendValid As Boolean = False
 
             Dim mVelocityLastTime As Date = Now
+            Dim mVelocityPositionLastTime As Date = Now
+            Dim mVelocityOrientationLastTime As Date = Now
             Dim mVelocityLastPosition As Vector3 = Vector3.Zero
-            Dim mVelocityLastOrientation As Vector3 = Vector3.Zero
+            Dim mVelocityLastOrientation As Quaternion = Quaternion.Identity
+            Dim mVelocityLastVelPosition As Vector3 = Vector3.Zero
+            Dim mVelocityLastVelOrientation As Vector3 = Vector3.Zero
+            Dim mKnownPosition As Vector3 = Vector3.Zero
+            Dim mKnownOrientation As Quaternion = Quaternion.Identity
+            Dim mLastKnownPosition As Vector3 = Vector3.Zero
+            Dim mLastKnownOrientation As Quaternion = Quaternion.Identity
+            Dim mVelocityNormalizedDelta As New Queue(Of Double)
 
             Dim mRecenterQuat = Quaternion.Identity
 
@@ -1515,20 +1524,43 @@ Public Class UCVirtualMotionTrackerItem
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+
+                                                Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
+                                                Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
+                                                Dim mVelocityPosition As Vector3 = Vector3.Zero
+                                                Dim mVelocityOrientation As Vector3 = Vector3.Zero
+                                                Dim iVelocityTimeOffset As Single = 0.0F
+
+                                                If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
+                                                    InternalCalculateVelocity(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mKnownPosition, mKnownOrientation,
+                                                            mLastKnownPosition, mLastKnownOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                            mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                        )
+                                                End If
+
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/HMD/Room/Driver",
-                                                        iLastOutputSeqNum,
-                                                        0.0F,
-                                                        mOscDataPack.mPosition.X,
-                                                        mOscDataPack.mPosition.Y,
-                                                        mOscDataPack.mPosition.Z,
-                                                        mOscDataPack.mOrientation.X,
-                                                        mOscDataPack.mOrientation.Y,
-                                                        mOscDataPack.mOrientation.Z,
-                                                        mOscDataPack.mOrientation.W,
-                                                        0.0F, 0.0F, 0.0F,
-                                                        0.0F, 0.0F, 0.0F
+                                                        iLastOutputSeqNum, 0.0F,
+                                                        mCalcPosition.X,
+                                                        mCalcPosition.Y,
+                                                        mCalcPosition.Z,
+                                                        mCalcOrientation.X,
+                                                        mCalcOrientation.Y,
+                                                        mCalcOrientation.Z,
+                                                        mCalcOrientation.W,
+                                                        mVelocityPosition.X,
+                                                        mVelocityPosition.Y,
+                                                        mVelocityPosition.Z,
+                                                        mVelocityOrientation.X,
+                                                        mVelocityOrientation.Y,
+                                                        mVelocityOrientation.Z
                                                     ))
                                                 m_FpsOscCounter += 1
                                                 bSetPack = True
@@ -1701,16 +1733,16 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
-                                                        InternalCalculateVelocity(mCalcPosition,
-                                                                                  mCalcOrientation,
-                                                                                  g_mOscDataPack.mPosition,
-                                                                                  g_mOscDataPack.mOrientation,
-                                                                                  mVelocityPosition,
-                                                                                  mVelocityLastPosition,
-                                                                                  mVelocityOrientation,
-                                                                                  mVelocityLastOrientation,
-                                                                                  mVelocityLastTime,
-                                                                                  iVelocityTimeOffset)
+                                                        InternalCalculateVelocity(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mKnownPosition, mKnownOrientation,
+                                                            mLastKnownPosition, mLastKnownOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                            mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                        )
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1794,16 +1826,16 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocity) Then
-                                                        InternalCalculateVelocity(mCalcPosition,
-                                                                                  mCalcOrientation,
-                                                                                  g_mOscDataPack.mPosition,
-                                                                                  g_mOscDataPack.mOrientation,
-                                                                                  mVelocityPosition,
-                                                                                  mVelocityLastPosition,
-                                                                                  mVelocityOrientation,
-                                                                                  mVelocityLastOrientation,
-                                                                                  mVelocityLastTime,
-                                                                                  iVelocityTimeOffset)
+                                                        InternalCalculateVelocity(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mKnownPosition, mKnownOrientation,
+                                                            mLastKnownPosition, mLastKnownOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                            mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                        )
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1845,16 +1877,16 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
-                                                        InternalCalculateVelocity(mCalcPosition,
-                                                                                  mCalcOrientation,
-                                                                                  g_mOscDataPack.mPosition,
-                                                                                  g_mOscDataPack.mOrientation,
-                                                                                  mVelocityPosition,
-                                                                                  mVelocityLastPosition,
-                                                                                  mVelocityOrientation,
-                                                                                  mVelocityLastOrientation,
-                                                                                  mVelocityLastTime,
-                                                                                  iVelocityTimeOffset)
+                                                        InternalCalculateVelocity(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mKnownPosition, mKnownOrientation,
+                                                            mLastKnownPosition, mLastKnownOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                            mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                        )
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1944,16 +1976,16 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocity) Then
-                                                        InternalCalculateVelocity(mCalcPosition,
-                                                                                  mCalcOrientation,
-                                                                                  g_mOscDataPack.mPosition,
-                                                                                  g_mOscDataPack.mOrientation,
-                                                                                  mVelocityPosition,
-                                                                                  mVelocityLastPosition,
-                                                                                  mVelocityOrientation,
-                                                                                  mVelocityLastOrientation,
-                                                                                  mVelocityLastTime,
-                                                                                  iVelocityTimeOffset)
+                                                        InternalCalculateVelocity(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mKnownPosition, mKnownOrientation,
+                                                            mLastKnownPosition, mLastKnownOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                            mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                        )
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -2056,51 +2088,101 @@ Public Class UCVirtualMotionTrackerItem
 
         Private Sub InternalCalculateVelocity(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
                                               ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
-                                              ByRef mVelocityPosition As Vector3, ByRef mLastVelocityPosition As Vector3,
-                                              ByRef mVelocityOrientation As Vector3, ByRef mLastVelocityOrientation As Vector3,
-                                              ByRef mVelocityLastTime As Date, ByRef iVelocityTimeOffset As Single)
-            Dim mDelta As TimeSpan = (Now - mVelocityLastTime)
-            Dim iDeltaTime As Double = 0.1 '100ms
-            'Dim iDeltaTime As Double = mDelta.TotalSeconds 'Doesnt work? Too jittery...
+                                              ByRef mKnownPosition As Vector3, ByRef mKnownOrientation As Quaternion,
+                                              ByRef mLastKnownPosition As Vector3, ByRef mLastKnownOrientation As Quaternion,
+                                              ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
+                                              ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
+                                              ByRef mVelocityPositionLastTime As Date, ByRef mVelocityOrientationLastTime As Date, ByRef mVelocityLastTime As Date,
+                                              ByRef iVelocityTimeOffset As Single, ByRef mVelocityNormalizedDelta As Queue(Of Double))
+            Dim MAX_VELOCITY_FREQ As Single = (1.0 / 10.0)
+            Dim MIN_VELOCITY_FREQ As Single = (1.0 / 2500.0)
 
-            mVelocityLastTime = Now
+            Dim mNow As Date = Now
+            Dim bVelocityCompensation As Boolean = True
+            Dim iAlpha As Single = 0.2F
 
-            If (iDeltaTime <= Single.Epsilon OrElse iDeltaTime > 1.0) Then
-                Return
+            Dim mGlobalDelta As TimeSpan = (mNow - mVelocityLastTime)
+            Dim iGlobalDeltaTime As Double = mGlobalDelta.TotalSeconds
+            mVelocityLastTime = mNow
+
+            mVelocityNormalizedDelta.Enqueue(iGlobalDeltaTime)
+            If (mVelocityNormalizedDelta.Count > 100) Then
+                mVelocityNormalizedDelta.Dequeue()
             End If
-
-            ' $HACK: Disable SteamVR 100ms extrapolation which causes jitter.
-            ' Also multiply the velocity the same way to compensate.
-            iVelocityTimeOffset = CSng(-iDeltaTime)
+            iGlobalDeltaTime = mVelocityNormalizedDelta.Average()
 
             ' Linear Velocity
             If (True) Then
-                mVelocityPosition = New Vector3(
-                    CSng((mPosition.X - mLastPosition.X) / iDeltaTime),
-                    CSng((mPosition.Y - mLastPosition.Y) / iDeltaTime),
-                    CSng((mPosition.Z - mLastPosition.Z) / iDeltaTime)
-                )
-                mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(0.8F, mVelocityPosition, mLastVelocityPosition)
+                If (mPosition <> mLastPosition) Then
+                    mKnownPosition = mPosition
+                    mLastKnownPosition = mLastPosition
 
-                ' Compensate
-                mPosition = New Vector3(
-                    CSng(mPosition.X - (mVelocityPosition.X * iDeltaTime)),
-                    CSng(mPosition.Y - (mVelocityPosition.Y * iDeltaTime)),
-                    CSng(mPosition.Z - (mVelocityPosition.Z * iDeltaTime))
-                )
+                    mVelocityPositionLastTime = mNow
+                    mLastPosition = mPosition
+                End If
+
+                Dim mDelta As TimeSpan = (mNow - mVelocityPositionLastTime)
+                Dim iDeltaTime As Double = mDelta.TotalSeconds
+
+                If (iGlobalDeltaTime > MIN_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MAX_VELOCITY_FREQ AndAlso
+                        iDeltaTime <= MAX_VELOCITY_FREQ) Then
+                    mVelocityPosition = New Vector3(
+                        CSng((mKnownPosition.X - mLastKnownPosition.X) / iGlobalDeltaTime),
+                        CSng((mKnownPosition.Y - mLastKnownPosition.Y) / iGlobalDeltaTime),
+                        CSng((mKnownPosition.Z - mLastKnownPosition.Z) / iGlobalDeltaTime)
+                    )
+
+                    mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(iAlpha, mVelocityPosition, mLastVelocityPosition)
+                    mLastVelocityPosition = mVelocityPosition
+
+                    ' Compensate
+                    If (bVelocityCompensation) Then
+                        If (iDeltaTime > Double.Epsilon AndAlso iDeltaTime <= MAX_VELOCITY_FREQ) Then
+                            mPosition = New Vector3(
+                                CSng(mKnownPosition.X - (mVelocityPosition.X * iDeltaTime)),
+                                CSng(mKnownPosition.Y - (mVelocityPosition.Y * iDeltaTime)),
+                                CSng(mKnownPosition.Z - (mVelocityPosition.Z * iDeltaTime))
+                            )
+                        Else
+                            mPosition = mKnownPosition
+                        End If
+                    End If
+
+                End If
             End If
 
             ' Angular Velocity
             If (True) Then
-                mVelocityOrientation = ClassQuaternionTools.AngularVelocityBetweenQuats(mLastOrientation, mOrientation, iDeltaTime)
-                mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(0.8F, mVelocityOrientation, mLastVelocityOrientation)
+                If (mOrientation <> mLastOrientation) Then
+                    mKnownOrientation = mOrientation
+                    mLastKnownOrientation = mLastOrientation
 
-                ' Compensate
-                mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iDeltaTime))
+                    mVelocityOrientationLastTime = mNow
+                    mLastOrientation = mOrientation
+                End If
+
+                Dim mDelta As TimeSpan = (mNow - mVelocityOrientationLastTime)
+                Dim iDeltaTime As Double = mDelta.TotalSeconds
+
+                If (iGlobalDeltaTime > MIN_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MAX_VELOCITY_FREQ AndAlso
+                        iDeltaTime <= MAX_VELOCITY_FREQ) Then
+                    mVelocityOrientation = ClassQuaternionTools.AngularVelocityBetweenQuats(
+                        mLastKnownOrientation, mKnownOrientation, iGlobalDeltaTime
+                    )
+
+                    mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(iAlpha, mVelocityOrientation, mLastVelocityOrientation)
+                    mLastVelocityOrientation = mVelocityOrientation
+
+                    ' Compensate
+                    If (bVelocityCompensation) Then
+                        If (iDeltaTime > Double.Epsilon AndAlso iDeltaTime <= MAX_VELOCITY_FREQ) Then
+                            mOrientation = mKnownOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iDeltaTime))
+                        Else
+                            mOrientation = mKnownOrientation
+                        End If
+                    End If
+                End If
             End If
-
-            mLastVelocityPosition = mVelocityPosition
-            mLastVelocityOrientation = mVelocityOrientation
         End Sub
 
         Private Sub InternalHepticFeedbackLogic(ByRef bEnableHepticFeedback As Boolean,
