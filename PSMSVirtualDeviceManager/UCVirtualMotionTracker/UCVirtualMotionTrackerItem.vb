@@ -2094,7 +2094,7 @@ Public Class UCVirtualMotionTrackerItem
                                               ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
                                               ByRef mVelocityPositionLastTime As Date, ByRef mVelocityOrientationLastTime As Date, ByRef mVelocityLastTime As Date,
                                               ByRef iVelocityTimeOffset As Single, ByRef mVelocityNormalizedDelta As Queue(Of Double))
-            Dim MAX_VELOCITY_FREQ As Single = (1.0 / 10.0)
+            Dim MAX_VELOCITY_FREQ As Single = (1.0 / 5.0)
             Dim MIN_VELOCITY_FREQ As Single = (1.0 / 2500.0)
 
             Dim mNow As Date = Now
