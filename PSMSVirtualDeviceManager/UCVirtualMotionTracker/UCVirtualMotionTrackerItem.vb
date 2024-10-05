@@ -1540,7 +1540,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
                                                             mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            True
                                                         )
                                                 End If
 
@@ -1741,7 +1742,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
                                                             mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            False
                                                         )
                                                     End If
 
@@ -1834,7 +1836,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
                                                             mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            False
                                                         )
                                                     End If
 
@@ -1885,7 +1888,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
                                                             mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            False
                                                         )
                                                     End If
 
@@ -1984,7 +1988,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
                                                             mVelocityOrientationLastTime, mVelocityPositionLastTime, mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta
+                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            False
                                                         )
                                                     End If
 
@@ -2093,13 +2098,23 @@ Public Class UCVirtualMotionTrackerItem
                                               ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
                                               ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
                                               ByRef mVelocityPositionLastTime As Date, ByRef mVelocityOrientationLastTime As Date, ByRef mVelocityLastTime As Date,
-                                              ByRef iVelocityTimeOffset As Single, ByRef mVelocityNormalizedDelta As Queue(Of Double))
+                                              ByRef iVelocityTimeOffset As Single, ByRef mVelocityNormalizedDelta As Queue(Of Double),
+                                              ByRef bIsHMD As Boolean)
             Dim MAX_VELOCITY_FREQ As Single = (1.0 / 5.0)
             Dim MIN_VELOCITY_FREQ As Single = (1.0 / 2500.0)
 
             Dim mNow As Date = Now
             Dim bVelocityCompensation As Boolean = True
-            Dim iAlpha As Single = 0.2F
+            Dim iPosAlpha As Single = 0.6F
+            Dim iAngAlpha As Single = 0.6F
+
+            If (bIsHMD) Then
+                iPosAlpha = 0.6F
+                iAngAlpha = 0.1F
+            Else
+                iPosAlpha = 0.6F
+                iAngAlpha = 0.4F
+            End If
 
             Dim mGlobalDelta As TimeSpan = (mNow - mVelocityLastTime)
             Dim iGlobalDeltaTime As Double = mGlobalDelta.TotalSeconds
@@ -2110,6 +2125,8 @@ Public Class UCVirtualMotionTrackerItem
                 mVelocityNormalizedDelta.Dequeue()
             End If
             iGlobalDeltaTime = mVelocityNormalizedDelta.Average()
+
+            iVelocityTimeOffset += CSng(iGlobalDeltaTime)
 
             ' Linear Velocity
             If (True) Then
@@ -2132,7 +2149,7 @@ Public Class UCVirtualMotionTrackerItem
                         CSng((mKnownPosition.Z - mLastKnownPosition.Z) / iGlobalDeltaTime)
                     )
 
-                    mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(iAlpha, mVelocityPosition, mLastVelocityPosition)
+                    mVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(iPosAlpha, mVelocityPosition, mLastVelocityPosition)
                     mLastVelocityPosition = mVelocityPosition
 
                     ' Compensate
@@ -2170,7 +2187,7 @@ Public Class UCVirtualMotionTrackerItem
                         mLastKnownOrientation, mKnownOrientation, iGlobalDeltaTime
                     )
 
-                    mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(iAlpha, mVelocityOrientation, mLastVelocityOrientation)
+                    mVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(iAngAlpha, mVelocityOrientation, mLastVelocityOrientation)
                     mLastVelocityOrientation = mVelocityOrientation
 
                     ' Compensate
