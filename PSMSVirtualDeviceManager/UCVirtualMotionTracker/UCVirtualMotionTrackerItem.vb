@@ -1224,6 +1224,7 @@ Public Class UCVirtualMotionTrackerItem
             Dim bGripButtonPressed As Boolean = False
             Dim mJoystickButtonPressedTime As New Stopwatch
             Dim mJoystickPressedLastOrientation As New Quaternion
+            Dim mJoystickPostion As New Vector3
             Dim mJoystickPressedLastPosition As New Vector3
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
@@ -1697,6 +1698,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                         mJoystickPressedLastOrientation,
                                                                         mRecenterQuat,
                                                                         m_PSMoveData,
+                                                                        mJoystickPostion,
                                                                         mJoystickPressedLastPosition,
                                                                         bControllerClampJoystickToBounds,
                                                                         iControllerJoystickAreaCm,
@@ -2633,6 +2635,7 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef mJoystickPressedLastOrientation As Quaternion,
                                                    ByRef mRecenterQuat As Quaternion,
                                                    ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
+                                                   ByRef mJoystickPostion As Vector3,
                                                    ByRef mJoystickPressedLastPosition As Vector3,
                                                    ByRef bControllerClampJoystickToBounds As Boolean,
                                                    ByRef iControllerJoystickAreaCm As Single,
@@ -2649,66 +2652,56 @@ Public Class UCVirtualMotionTrackerItem
                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
                 End If
 
-                ' Just pressed
-                Dim mNewPos As Vector3
-
                 If (iControllerJoystickMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION) Then
+                    Dim mCurrentOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
+                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0F, 0.0F, -1.0F))
+                    mCurrentOrientation = Quaternion.Conjugate(mControllerYaw) * mCurrentOrientation
+
                     If (Not bJoystickButtonPressed) Then
                         bJoystickButtonPressed = True
 
                         mJoystickButtonPressedTime.Restart()
 
-                        mJoystickPressedLastOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
+                        mJoystickPostion = New Vector3(0, 0, 0)
+
+                        mJoystickPressedLastOrientation = mCurrentOrientation
+                        mJoystickPressedLastPosition = New Vector3(0, 0, 0)
                     End If
 
-                    mJoystickPressedLastPosition = New Vector3(0, 0, 0)
+                    Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientation, New Vector3(0, -1, 0))
 
-                    mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mRecenterQuat * m_PSMoveData.m_Orientation, New Vector3(0, -1, 0))
+                    mJoystickPostion = mJoystickPostion - (mNewJoystickPosition * TOUCHPAD_GYRO_MULTI)
+
+                    mJoystickPressedLastOrientation = mCurrentOrientation
+                    mJoystickPressedLastPosition = mNewJoystickPosition
+
                 Else
                     If (Not bJoystickButtonPressed) Then
                         bJoystickButtonPressed = True
 
                         mJoystickButtonPressedTime.Restart()
 
+                        mJoystickPostion = New Vector3(0, 0, 0)
+
                         mJoystickPressedLastOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
-                        mJoystickPressedLastPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                        mJoystickPressedLastPosition = m_PSMoveData.m_Position
                     End If
 
-                    mNewPos = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position)
+                    Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position - mJoystickPressedLastPosition)
+
+                    mJoystickPostion = mJoystickPostion - (mNewJoystickPosition / iControllerJoystickAreaCm)
+
+                    mJoystickPressedLastOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
+                    mJoystickPressedLastPosition = m_PSMoveData.m_Position
                 End If
 
-                Dim mNewPosDiff As New Vector3(
-                    mNewPos.X - mJoystickPressedLastPosition.X,
-                    mNewPos.Y - mJoystickPressedLastPosition.Y,
-                    mNewPos.Z - mJoystickPressedLastPosition.Z
+                mJoystickPostion.X = Math.Min(Math.Max(mJoystickPostion.X, -1.0F), 1.0F)
+                mJoystickPostion.Z = Math.Min(Math.Max(mJoystickPostion.Z, -1.0F), 1.0F)
+
+                Dim mJoystickVec = New Vector2(
+                    -mJoystickPostion.X,
+                    mJoystickPostion.Z
                 )
-
-                If (bControllerClampJoystickToBounds) Then
-                    ' Clamp new position to iTouchpadTouchAreaCm
-                    If (Math.Abs(mNewPosDiff.X) > (iControllerJoystickAreaCm + TOUCHPAD_CLAMP_BUFFER)) Then
-                        mJoystickPressedLastPosition.X -= Math.Sign(mNewPosDiff.X) * ((iControllerJoystickAreaCm + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.X))
-                    End If
-
-                    If (Math.Abs(mNewPosDiff.Y) > iControllerJoystickAreaCm + TOUCHPAD_CLAMP_BUFFER) Then
-                        mJoystickPressedLastPosition.Y -= Math.Sign(mNewPosDiff.Y) * ((iControllerJoystickAreaCm + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Y))
-                    End If
-
-                    If (Math.Abs(mNewPosDiff.Z) > iControllerJoystickAreaCm + TOUCHPAD_CLAMP_BUFFER) Then
-                        mJoystickPressedLastPosition.Z -= Math.Sign(mNewPosDiff.Z) * ((iControllerJoystickAreaCm + TOUCHPAD_CLAMP_BUFFER) - Math.Abs(mNewPosDiff.Z))
-                    End If
-                End If
-
-                If (iControllerJoystickMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION) Then
-                    mNewPos = (mNewPos - mJoystickPressedLastPosition) * TOUCHPAD_GYRO_MULTI
-                    mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
-                    mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
-                Else
-                    mNewPos = ((mNewPos - mJoystickPressedLastPosition) / iControllerJoystickAreaCm)
-                    mNewPos.X = Math.Min(Math.Max(mNewPos.X, -1.0F), 1.0F)
-                    mNewPos.Z = Math.Min(Math.Max(mNewPos.Z, -1.0F), 1.0F)
-                End If
-
-                Dim mJoystickVec = New Vector2(mNewPos.X, -mNewPos.Z)
 
                 mOscDataPack.mJoyStick = mJoystickVec
 
