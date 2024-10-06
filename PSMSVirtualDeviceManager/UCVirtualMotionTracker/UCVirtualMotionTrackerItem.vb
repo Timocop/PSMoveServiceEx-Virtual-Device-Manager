@@ -2117,7 +2117,7 @@ Public Class UCVirtualMotionTrackerItem
             mVelocityLastTime = mNow
 
             mVelocityNormalizedDelta.Enqueue(iGlobalDeltaTime)
-            If (mVelocityNormalizedDelta.Count > 1000) Then
+            If (mVelocityNormalizedDelta.Count > 120) Then
                 mVelocityNormalizedDelta.Dequeue()
             End If
             iGlobalDeltaTime = mVelocityNormalizedDelta.Average()
