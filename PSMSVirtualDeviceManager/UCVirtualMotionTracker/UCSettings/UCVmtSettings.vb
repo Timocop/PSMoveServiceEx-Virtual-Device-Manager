@@ -259,8 +259,9 @@ Public Class UCVmtSettings
             CheckBox_EnableHeptics.Checked = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
             CheckBox_OptimizePackets.Checked = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
             CheckBox_RenderFix.Checked = mClassSettings.m_MiscSettings.m_RenderWindowFix
-            CheckBox_EnableVelocity.Checked = mClassSettings.m_MiscSettings.m_EnableVelocity
-            CheckBox_VelocityControllersOnly.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly
+            CheckBox_EnableVelocityHmd.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityHmd
+            CheckBox_EnableVelocityControllers.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityController
+            CheckBox_EnableVelocityTrackers.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityTracker
             TextBox_OscRemoteIP.Text = mClassSettings.m_MiscSettings.m_OscRemoteIP
 
             ' Playspace Settings
@@ -405,23 +406,30 @@ Public Class UCVmtSettings
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub CheckBox_EnableVelocity_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableVelocity.CheckedChanged
-        CheckBox_VelocityControllersOnly.Enabled = CheckBox_EnableVelocity.Checked
-
+    Private Sub CheckBox_EnableVelocity_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableVelocityHmd.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocity = CheckBox_EnableVelocity.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityHmd = CheckBox_EnableVelocityHmd.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub CheckBox_VelocityControllersOnly_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_VelocityControllersOnly.CheckedChanged
+    Private Sub CheckBox_EnableVelocityControllers_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableVelocityControllers.CheckedChanged
         If (g_bIgnoreEvents) Then
             Return
         End If
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly = CheckBox_VelocityControllersOnly.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityController = CheckBox_EnableVelocityControllers.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_EnableVelocityTrackers_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableVelocityTrackers.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityTracker = CheckBox_EnableVelocityTrackers.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 

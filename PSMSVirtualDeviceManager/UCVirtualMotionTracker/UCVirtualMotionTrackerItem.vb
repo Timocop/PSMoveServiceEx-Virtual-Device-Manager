@@ -1362,8 +1362,9 @@ Public Class UCVirtualMotionTrackerItem
                         Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
                         Dim bEnableHepticFeedback As Boolean = mClassSettings.m_MiscSettings.m_EnableHepticFeedback
                         Dim bOptimizeTransportPackets As Boolean = mClassSettings.m_MiscSettings.m_OptimizeTransportPackets
-                        Dim bEnableVelocity As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocity
-                        Dim bEnableVelocityControllerOnly As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly
+                        Dim bEnableVelocityHmd As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityHmd
+                        Dim bEnableVelocityController As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityController
+                        Dim bEnableVelocityTracker As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityTracker
 
 
                         Dim bEnfocePacketUpdate As Boolean = False
@@ -1532,7 +1533,7 @@ Public Class UCVirtualMotionTrackerItem
                                                 Dim mVelocityOrientation As Vector3 = Vector3.Zero
                                                 Dim iVelocityTimeOffset As Single = 0.0F
 
-                                                If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
+                                                If (bEnableVelocityHmd) Then
                                                     InternalCalculateVelocity(
                                                             mCalcPosition, mCalcOrientation,
                                                             mVelocityLastPosition, mVelocityLastOrientation,
@@ -1736,7 +1737,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim mVelocityOrientation As Vector3 = Vector3.Zero
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
-                                                    If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
+                                                    If (bEnableVelocityTracker) Then
                                                         InternalCalculateVelocity(
                                                             mCalcPosition, mCalcOrientation,
                                                             mVelocityLastPosition, mVelocityLastOrientation,
@@ -1831,7 +1832,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim mVelocityOrientation As Vector3 = Vector3.Zero
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
-                                                    If (bEnableVelocity) Then
+                                                    If (bEnableVelocityController) Then
                                                         InternalCalculateVelocity(
                                                             mCalcPosition, mCalcOrientation,
                                                             mVelocityLastPosition, mVelocityLastOrientation,
@@ -1884,7 +1885,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim mVelocityOrientation As Vector3 = Vector3.Zero
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
-                                                    If (bEnableVelocity AndAlso Not bEnableVelocityControllerOnly) Then
+                                                    If (bEnableVelocityTracker) Then
                                                         InternalCalculateVelocity(
                                                             mCalcPosition, mCalcOrientation,
                                                             mVelocityLastPosition, mVelocityLastOrientation,
@@ -1985,7 +1986,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim mVelocityOrientation As Vector3 = Vector3.Zero
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
-                                                    If (bEnableVelocity) Then
+                                                    If (bEnableVelocityController) Then
                                                         InternalCalculateVelocity(
                                                             mCalcPosition, mCalcOrientation,
                                                             mVelocityLastPosition, mVelocityLastOrientation,
