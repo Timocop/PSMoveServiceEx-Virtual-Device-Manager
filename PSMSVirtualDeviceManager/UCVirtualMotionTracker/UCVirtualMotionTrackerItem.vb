@@ -2982,26 +2982,63 @@ Public Class UCVirtualMotionTrackerItem
 
                     End Select
 
-                    If (Not bOculusGripToggle) Then
-                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripJustPressed
-                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripJustPressed
-                        mOscDataPack.mTrigger(1) = If(bGripJustPressed, 1.0F, 0.0F)
-                    Else
-                        If (bGripJustPressed) Then
-                            If (Not bGripButtonPressed) Then
-                                bGripButtonPressed = True
+                    Dim bHybridGrip As Boolean = False
 
-                                bGripToggled = Not bGripToggled
+                    ' Hybrid grip toggle 
+                    If (bHybridGripToggle AndAlso bOculusGripToggle) Then
+                        If (bGripJustPressed) Then
+                            If (Not mGripPressTime.IsRunning) Then
+                                mGripPressTime.Restart()
+                            End If
+
+                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = True
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = True
+                                mOscDataPack.mTrigger(1) = 1.0F
+
+                                bHybridGrip = True
                             End If
                         Else
-                            If (bGripButtonPressed) Then
-                                bGripButtonPressed = False
-                            End If
-                        End If
+                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = False
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = False
+                                mOscDataPack.mTrigger(1) = 0.0F
 
-                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripToggled
-                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripToggled
-                        mOscDataPack.mTrigger(1) = If(bGripToggled, 1.0F, 0.0F)
+                                bHybridGrip = True
+                            End If
+
+                            mGripPressTime.Reset()
+                        End If
+                    Else
+                        mGripPressTime.Reset()
+                    End If
+
+                    ' Grip toggle
+                    If (bHybridGrip) Then
+                        bGripToggled = False
+                        bGripButtonPressed = False
+                    Else
+                        If (Not bOculusGripToggle) Then
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripJustPressed
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripJustPressed
+                            mOscDataPack.mTrigger(1) = If(bGripJustPressed, 1.0F, 0.0F)
+                        Else
+                            If (bGripJustPressed) Then
+                                If (Not bGripButtonPressed) Then
+                                    bGripButtonPressed = True
+
+                                    bGripToggled = Not bGripToggled
+                                End If
+                            Else
+                                If (bGripButtonPressed) Then
+                                    bGripButtonPressed = False
+                                End If
+                            End If
+
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripToggled
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripToggled
+                            mOscDataPack.mTrigger(1) = If(bGripToggled, 1.0F, 0.0F)
+                        End If
                     End If
 
                     mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_MoveButton
