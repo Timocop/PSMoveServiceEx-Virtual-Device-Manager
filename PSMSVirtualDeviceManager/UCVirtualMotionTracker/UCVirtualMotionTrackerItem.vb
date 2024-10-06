@@ -3053,6 +3053,8 @@ Public Class UCVirtualMotionTrackerItem
                     ' System click only works on the left controller
                     If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER) Then
                         mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
+                    Else
+                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_SYSTEM_CLICK) = False
                     End If
 
                     mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_START_CLICK) = m_PSMoveData.m_PSButton
