@@ -738,7 +738,7 @@ Public Class UCVirtualMotionTrackerItem
         Public g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
 
         Const TOUCHPAD_CLAMP_BUFFER = 2.5F
-        Const TOUCHPAD_GYRO_MULTI = 2.5F
+        Const TOUCHPAD_GYRO_MULTI = 25.0F
 
         Const ENABLE_GENERIC_TRACKER = 1
         Const ENABLE_GENERIC_CONTROLLER_L = 2
@@ -2647,6 +2647,11 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef bHtcTouchpadShortcutTouchpadClick As Boolean)
 
             If (bJoystickTrigger) Then
+                'This should not be possible. Just in case
+                If (iControllerJoystickAreaCm < 0.1) Then
+                    iControllerJoystickAreaCm = 0.1
+                End If
+
                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
                         m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then
                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
@@ -2670,7 +2675,7 @@ Public Class UCVirtualMotionTrackerItem
 
                         Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
 
-                        mJoystickPostion = mJoystickPostion - (mNewJoystickPosition * (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
+                        mJoystickPostion = mJoystickPostion - (mNewJoystickPosition / (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
 
                         mJoystickPressedLastOrientation = mCurrentOrientationRelative
                         mJoystickPressedLastPosition = mNewJoystickPosition
