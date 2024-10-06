@@ -1222,7 +1222,6 @@ Public Class UCVirtualMotionTrackerItem
             ' Controller
             Dim bJoystickButtonPressed As Boolean = False
             Dim bGripButtonPressed As Boolean = False
-            Dim mJoystickButtonPressedTime As New Stopwatch
             Dim mJoystickPressedLastOrientation As New Quaternion
             Dim mJoystickPostion As New Vector3
             Dim mJoystickPressedLastPosition As New Vector3
@@ -1693,7 +1692,6 @@ Public Class UCVirtualMotionTrackerItem
                                                                         bJoystickTrigger,
                                                                         iControllerJoystickMethod,
                                                                         bJoystickButtonPressed,
-                                                                        mJoystickButtonPressedTime,
                                                                         mJoystickPressedLastOrientation,
                                                                         mRecenterQuat,
                                                                         m_PSMoveData,
@@ -2629,7 +2627,6 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef bJoystickTrigger As Boolean,
                                                    ByRef iControllerJoystickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD,
                                                    ByRef bJoystickButtonPressed As Boolean,
-                                                   ByRef mJoystickButtonPressedTime As Stopwatch,
                                                    ByRef mJoystickPressedLastOrientation As Quaternion,
                                                    ByRef mRecenterQuat As Quaternion,
                                                    ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
@@ -2659,8 +2656,6 @@ Public Class UCVirtualMotionTrackerItem
                         If (Not bJoystickButtonPressed) Then
                             bJoystickButtonPressed = True
 
-                            mJoystickButtonPressedTime.Restart()
-
                             mJoystickPostion = New Vector3(0, 0, 0)
 
                             mJoystickPressedLastOrientation = mCurrentOrientationRelative
@@ -2677,8 +2672,6 @@ Public Class UCVirtualMotionTrackerItem
                     Else
                         If (Not bJoystickButtonPressed) Then
                             bJoystickButtonPressed = True
-
-                            mJoystickButtonPressedTime.Restart()
 
                             mJoystickPostion = New Vector3(0, 0, 0)
 
