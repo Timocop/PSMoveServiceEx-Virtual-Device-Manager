@@ -2109,7 +2109,7 @@ Public Class UCVirtualMotionTrackerItem
                                               ByRef mVelocityNormalizedDelta As Queue(Of Double),
                                               ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double,
                                               ByRef bIsHMD As Boolean)
-            Const MIN_VELOCITY_FREQ = (1.0 / 5.0)
+            Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
             Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
             Const VELOCITY_POSITION_COMPENSATION = True
             Const VELOCITY_POSITION_SMOOTHING = 0.4
