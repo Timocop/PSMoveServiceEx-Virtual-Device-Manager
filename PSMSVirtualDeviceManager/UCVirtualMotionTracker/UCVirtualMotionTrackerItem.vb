@@ -2109,9 +2109,11 @@ Public Class UCVirtualMotionTrackerItem
                                               ByRef mVelocityNormalizedDelta As Queue(Of Double),
                                               ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double,
                                               ByRef bIsHMD As Boolean)
-            Const MAX_VELOCITY_FREQ = (1.0 / 5.0)
-            Const MIN_VELOCITY_FREQ = (1.0 / 2500.0)
+            Const MIN_VELOCITY_FREQ = (1.0 / 5.0)
+            Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
             Const VELOCITY_POSITION_COMPENSATION = True
+            Const VELOCITY_POSITION_SMOOTHING = 0.4
+            Const VELOCITY_ORIENTATION_SMOOTHING = 0.2
 
             Dim mNow As Date = Now
             Dim mGlobalDelta As TimeSpan = (mNow - mVelocityLastTime)
@@ -2130,13 +2132,13 @@ Public Class UCVirtualMotionTrackerItem
                     mKnownPosition = mPosition
                     mLastKnownPosition = mLastPosition
 
-                    If (iGlobalDeltaTime > MIN_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MAX_VELOCITY_FREQ) Then
+                    If (iGlobalDeltaTime > MAX_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MIN_VELOCITY_FREQ) Then
                         Dim mNewVelocity = New Vector3(
                             CSng((mKnownPosition.X - mLastKnownPosition.X) / iGlobalDeltaTime),
                             CSng((mKnownPosition.Y - mLastKnownPosition.Y) / iGlobalDeltaTime),
                             CSng((mKnownPosition.Z - mLastKnownPosition.Z) / iGlobalDeltaTime)
                         )
-                        mLastVelocityPosition = mNewVelocity
+                        mLastVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mLastVelocityPosition)
                     End If
 
                     mLastPosition = mPosition
@@ -2144,13 +2146,13 @@ Public Class UCVirtualMotionTrackerItem
                 End If
 
                 iVelocityPositionDelta += iGlobalDeltaTime
-                If (iVelocityPositionDelta <= MAX_VELOCITY_FREQ) Then
+                If (iVelocityPositionDelta <= MIN_VELOCITY_FREQ) Then
                     mVelocityPosition = mLastVelocityPosition
                 End If
 
                 ' Compensate
                 If (VELOCITY_POSITION_COMPENSATION) Then
-                    If (iVelocityPositionDelta > Double.Epsilon AndAlso iVelocityPositionDelta <= MAX_VELOCITY_FREQ) Then
+                    If (iVelocityPositionDelta > Double.Epsilon AndAlso iVelocityPositionDelta <= MIN_VELOCITY_FREQ) Then
                         mPosition = New Vector3(
                             CSng(mKnownPosition.X - (mVelocityPosition.X * iVelocityPositionDelta)),
                             CSng(mKnownPosition.Y - (mVelocityPosition.Y * iVelocityPositionDelta)),
@@ -2168,11 +2170,11 @@ Public Class UCVirtualMotionTrackerItem
                     mKnownOrientation = mOrientation
                     mLastKnownOrientation = mLastOrientation
 
-                    If (iGlobalDeltaTime > MIN_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MAX_VELOCITY_FREQ) Then
+                    If (iGlobalDeltaTime > MAX_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MIN_VELOCITY_FREQ) Then
                         Dim mNewVelocity = ClassQuaternionTools.AngularVelocityBetweenQuats(
                             mLastKnownOrientation, mKnownOrientation, iGlobalDeltaTime
                         )
-                        mLastVelocityOrientation = mNewVelocity
+                        mLastVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mLastVelocityOrientation)
                     End If
 
                     mLastOrientation = mOrientation
@@ -2180,13 +2182,13 @@ Public Class UCVirtualMotionTrackerItem
                 End If
 
                 iVelocityOrientationDelta += iGlobalDeltaTime
-                If (iVelocityOrientationDelta <= MAX_VELOCITY_FREQ) Then
+                If (iVelocityOrientationDelta <= MIN_VELOCITY_FREQ) Then
                     mVelocityOrientation = mLastVelocityOrientation
                 End If
 
                 ' Compensate
                 If (VELOCITY_POSITION_COMPENSATION) Then
-                    If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MAX_VELOCITY_FREQ) Then
+                    If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ) Then
                         mOrientation = mKnownOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
                     Else
                         mOrientation = mKnownOrientation
