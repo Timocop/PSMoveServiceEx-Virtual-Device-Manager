@@ -1332,7 +1332,6 @@ Public Class UCVirtualMotionTrackerItem
                         Dim iOculusButtonMethod = mClassSettings.m_ControllerSettings.m_OculusButtonMethod
                         Dim bOculusGripToggle = mClassSettings.m_ControllerSettings.m_OculusGripToggle
                         Dim iHtcGripButtonMethod = mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod
-                        Dim bControllerClampJoystickToBounds = mClassSettings.m_ControllerSettings.m_ControllerClampJoystickToBounds
                         Dim iControllerJoystickMethod = mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod
                         Dim bEnableControllerRecenter = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
                         Dim iControllerRecenterMethod = mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod
@@ -1700,7 +1699,6 @@ Public Class UCVirtualMotionTrackerItem
                                                                         m_PSMoveData,
                                                                         mJoystickPostion,
                                                                         mJoystickPressedLastPosition,
-                                                                        bControllerClampJoystickToBounds,
                                                                         iControllerJoystickAreaCm,
                                                                         iTouchpadClickDeadzone,
                                                                         iHtcTouchpadEmulationClickMethod,
@@ -2637,7 +2635,6 @@ Public Class UCVirtualMotionTrackerItem
                                                    ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
                                                    ByRef mJoystickPostion As Vector3,
                                                    ByRef mJoystickPressedLastPosition As Vector3,
-                                                   ByRef bControllerClampJoystickToBounds As Boolean,
                                                    ByRef iControllerJoystickAreaCm As Single,
                                                    ByRef iTouchpadClickDeadzone As Single,
                                                    ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD,
@@ -2672,7 +2669,7 @@ Public Class UCVirtualMotionTrackerItem
 
                         Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
 
-                        mJoystickPostion = mJoystickPostion - (mNewJoystickPosition * TOUCHPAD_GYRO_MULTI)
+                        mJoystickPostion = mJoystickPostion - (mNewJoystickPosition * (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
 
                         mJoystickPressedLastOrientation = mCurrentOrientationRelative
                         mJoystickPressedLastPosition = mNewJoystickPosition

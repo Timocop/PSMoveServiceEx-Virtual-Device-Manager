@@ -220,7 +220,6 @@ Public Class UCVmtSettings
             'Misc
             ComboBox_JoystickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_JoystickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod))
             NumericUpDown_JoystickArea.Value = CDec(Math.Max(NumericUpDown_JoystickArea.Minimum, Math.Min(NumericUpDown_JoystickArea.Maximum, mClassSettings.m_ControllerSettings.m_ControllerJoystickAreaCm)))
-            CheckBox_JoystickClampBounds.Checked = mClassSettings.m_ControllerSettings.m_ControllerClampJoystickToBounds
 
             CheckBox_ControllerRecenterEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
             ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod))
@@ -413,15 +412,6 @@ Public Class UCVmtSettings
         End If
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityControllerOnly = CheckBox_VelocityControllersOnly.Checked
-        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
-    End Sub
-
-    Private Sub CheckBox_JoystickClampBounds_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_JoystickClampBounds.CheckedChanged
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
-        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_ControllerClampJoystickToBounds = CheckBox_JoystickClampBounds.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 

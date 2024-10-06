@@ -103,7 +103,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_HtcTouchpadClickDeadzone = New System.Windows.Forms.NumericUpDown()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.LinkLabel_TouchpadShortcutHelp = New System.Windows.Forms.LinkLabel()
-        Me.CheckBox_JoystickClampBounds = New System.Windows.Forms.CheckBox()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.NumericUpDown_JoystickArea = New System.Windows.Forms.NumericUpDown()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -121,6 +120,7 @@ Partial Class UCVmtSettings
         Me.Label29 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibForwardOffset = New System.Windows.Forms.NumericUpDown()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
+        Me.CheckBox_VelocityControllersOnly = New System.Windows.Forms.CheckBox()
         Me.CheckBox_EnableVelocity = New System.Windows.Forms.CheckBox()
         Me.LinkLabel_OscIpChange = New System.Windows.Forms.LinkLabel()
         Me.TextBox_OscRemoteIP = New System.Windows.Forms.TextBox()
@@ -136,7 +136,6 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.CheckBox_VelocityControllersOnly = New System.Windows.Forms.CheckBox()
         Me.UcNumericUpDownBig14 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig13 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig16 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
@@ -658,7 +657,7 @@ Partial Class UCVmtSettings
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.CheckBox_ControllerRecenterEnabled)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox1.Location = New System.Drawing.Point(3, 350)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 327)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(780, 526)
         Me.GroupBox1.TabIndex = 47
@@ -932,7 +931,6 @@ Partial Class UCVmtSettings
         Me.GroupBox2.Controls.Add(Me.GroupBox6)
         Me.GroupBox2.Controls.Add(Me.Label_TouchpadTouchAreaDeg)
         Me.GroupBox2.Controls.Add(Me.GroupBox5)
-        Me.GroupBox2.Controls.Add(Me.CheckBox_JoystickClampBounds)
         Me.GroupBox2.Controls.Add(Me.Label23)
         Me.GroupBox2.Controls.Add(Me.NumericUpDown_JoystickArea)
         Me.GroupBox2.Controls.Add(Me.Label10)
@@ -940,7 +938,7 @@ Partial Class UCVmtSettings
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox2.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(780, 347)
+        Me.GroupBox2.Size = New System.Drawing.Size(780, 324)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Controller Emulation Settings"
@@ -1131,18 +1129,6 @@ Partial Class UCVmtSettings
         Me.LinkLabel_TouchpadShortcutHelp.TabStop = True
         Me.LinkLabel_TouchpadShortcutHelp.Text = "What is this?"
         Me.LinkLabel_TouchpadShortcutHelp.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'CheckBox_JoystickClampBounds
-        '
-        Me.CheckBox_JoystickClampBounds.AutoSize = True
-        Me.CheckBox_JoystickClampBounds.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_JoystickClampBounds.Location = New System.Drawing.Point(13, 315)
-        Me.CheckBox_JoystickClampBounds.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_JoystickClampBounds.Name = "CheckBox_JoystickClampBounds"
-        Me.CheckBox_JoystickClampBounds.Size = New System.Drawing.Size(260, 18)
-        Me.CheckBox_JoystickClampBounds.TabIndex = 45
-        Me.CheckBox_JoystickClampBounds.Text = "Clamp touchpad and joystick axis to bounds"
-        Me.CheckBox_JoystickClampBounds.UseVisualStyleBackColor = True
         '
         'Label23
         '
@@ -1356,6 +1342,18 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsOther.TabIndex = 1
         Me.TabPage_SettingsOther.Text = "Other"
         '
+        'CheckBox_VelocityControllersOnly
+        '
+        Me.CheckBox_VelocityControllersOnly.AutoSize = True
+        Me.CheckBox_VelocityControllersOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_VelocityControllersOnly.Location = New System.Drawing.Point(41, 215)
+        Me.CheckBox_VelocityControllersOnly.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.CheckBox_VelocityControllersOnly.Name = "CheckBox_VelocityControllersOnly"
+        Me.CheckBox_VelocityControllersOnly.Size = New System.Drawing.Size(209, 18)
+        Me.CheckBox_VelocityControllersOnly.TabIndex = 60
+        Me.CheckBox_VelocityControllersOnly.Text = "Enable velocity for controllers only"
+        Me.CheckBox_VelocityControllersOnly.UseVisualStyleBackColor = True
+        '
         'CheckBox_EnableVelocity
         '
         Me.CheckBox_EnableVelocity.AutoSize = True
@@ -1535,18 +1533,6 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.AutoPopDelay = 30000
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
-        '
-        'CheckBox_VelocityControllersOnly
-        '
-        Me.CheckBox_VelocityControllersOnly.AutoSize = True
-        Me.CheckBox_VelocityControllersOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_VelocityControllersOnly.Location = New System.Drawing.Point(41, 215)
-        Me.CheckBox_VelocityControllersOnly.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.CheckBox_VelocityControllersOnly.Name = "CheckBox_VelocityControllersOnly"
-        Me.CheckBox_VelocityControllersOnly.Size = New System.Drawing.Size(209, 18)
-        Me.CheckBox_VelocityControllersOnly.TabIndex = 60
-        Me.CheckBox_VelocityControllersOnly.Text = "Enable velocity for controllers only"
-        Me.CheckBox_VelocityControllersOnly.UseVisualStyleBackColor = True
         '
         'UcNumericUpDownBig14
         '
@@ -1986,7 +1972,6 @@ Partial Class UCVmtSettings
     Friend WithEvents ComboBox_JoystickMethod As ComboBox
     Friend WithEvents Label10 As Label
     Friend WithEvents CheckBox_HtcTouchpadShortcutClick As CheckBox
-    Friend WithEvents CheckBox_JoystickClampBounds As CheckBox
     Friend WithEvents CheckBox_HtcTouchpadShortcuts As CheckBox
     Friend WithEvents ComboBox_HtcGrabButtonMethod As ComboBox
     Friend WithEvents Label5 As Label

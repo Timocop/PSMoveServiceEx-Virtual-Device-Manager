@@ -706,15 +706,6 @@ Public Class UCVirtualMotionTracker
                 End Set
             End Property
 
-            Property m_ControllerClampJoystickToBounds As Boolean
-                Get
-                    Return g_bControllerClampJoystickToBounds
-                End Get
-                Set(value As Boolean)
-                    g_bControllerClampJoystickToBounds = value
-                End Set
-            End Property
-
             Property m_ControllerJoystickMethod As ENUM_CONTROLLER_JOYSTICK_METHOD
                 Get
                     Return g_iControllerJoystickMethod
@@ -1015,7 +1006,6 @@ Public Class UCVirtualMotionTracker
                         End If
 
                         m_ControllerSettings.m_OculusGripToggle = (mIni.ReadKeyValue("ControllerSettings", "OculusGripToggle", "true") = "true")
-                        m_ControllerSettings.m_ControllerClampJoystickToBounds = (mIni.ReadKeyValue("ControllerSettings", "ControllerClampJoystickToBounds", "true") = "true")
 
                         If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION))), tmpInt)) Then
                             m_ControllerSettings.m_ControllerJoystickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD)
@@ -1282,7 +1272,6 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_ControllerSettings.m_HtcGripButtonMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OculusButtonMethod", CStr(CInt(m_ControllerSettings.m_OculusButtonMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OculusGripToggle", If(m_ControllerSettings.m_OculusGripToggle, "true", "false")))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerClampJoystickToBounds", If(m_ControllerSettings.m_ControllerClampJoystickToBounds, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(m_ControllerSettings.m_ControllerJoystickMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_ControllerSettings.m_EnableControllerRecenter, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerSettings.m_ControllerRecenterMethod))))
