@@ -610,6 +610,7 @@ Public Class UCVirtualMotionTracker
 
             Private g_iOculusButtonMethod As ENUM_OCULUS_BUTTON_METHOD = ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE
             Private g_bOculusGripToggle As Boolean = True
+            Private g_bHybridGripToggle As Boolean = True
 
             Private g_iControllerJoystickMethod As ENUM_CONTROLLER_JOYSTICK_METHOD = ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION
             Private g_iControllerJoystickAreaCm As Single = 7.5F
@@ -703,6 +704,15 @@ Public Class UCVirtualMotionTracker
                 End Get
                 Set(value As Boolean)
                     g_bOculusGripToggle = value
+                End Set
+            End Property
+
+            Property m_HybridGripToggle As Boolean
+                Get
+                    Return g_bHybridGripToggle
+                End Get
+                Set(value As Boolean)
+                    g_bHybridGripToggle = value
                 End Set
             End Property
 
@@ -1006,6 +1016,7 @@ Public Class UCVirtualMotionTracker
                         End If
 
                         m_ControllerSettings.m_OculusGripToggle = (mIni.ReadKeyValue("ControllerSettings", "OculusGripToggle", "true") = "true")
+                        m_ControllerSettings.m_HybridGripToggle = (mIni.ReadKeyValue("ControllerSettings", "HybridGripToggle", "true") = "true")
 
                         If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION))), tmpInt)) Then
                             m_ControllerSettings.m_ControllerJoystickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD)
@@ -1272,6 +1283,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(m_ControllerSettings.m_HtcGripButtonMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OculusButtonMethod", CStr(CInt(m_ControllerSettings.m_OculusButtonMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "OculusGripToggle", If(m_ControllerSettings.m_OculusGripToggle, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "HybridGripToggle", If(m_ControllerSettings.m_HybridGripToggle, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(m_ControllerSettings.m_ControllerJoystickMethod))))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "EnableControllerRecenter", If(m_ControllerSettings.m_EnableControllerRecenter, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(m_ControllerSettings.m_ControllerRecenterMethod))))

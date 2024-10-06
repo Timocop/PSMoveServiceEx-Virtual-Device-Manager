@@ -216,6 +216,7 @@ Public Class UCVmtSettings
             'Oculus
             ComboBox_OculusButtonLayout.SelectedIndex = Math.Max(0, Math.Min(ComboBox_OculusButtonLayout.Items.Count - 1, mClassSettings.m_ControllerSettings.m_OculusButtonMethod))
             CheckBox_OculusGripToggle.Checked = mClassSettings.m_ControllerSettings.m_OculusGripToggle
+            CheckBox_HybridGripToggle.Checked = mClassSettings.m_ControllerSettings.m_HybridGripToggle
 
             'Misc
             ComboBox_JoystickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_JoystickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod))
@@ -356,6 +357,15 @@ Public Class UCVmtSettings
         End If
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OculusGripToggle = CheckBox_OculusGripToggle.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_HybridGripToggle_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_HybridGripToggle.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_HybridGripToggle = CheckBox_HybridGripToggle.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 

@@ -1227,6 +1227,7 @@ Public Class UCVirtualMotionTrackerItem
             Dim mJoystickPressedLastPosition As New Vector3
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
+            Dim mGripPressTime As New Stopwatch
             Dim mLastBatteryReport As New Stopwatch
             Dim mLastRecenterTime As New Stopwatch
             Dim mLastHmdRecenterTime As New Stopwatch
@@ -1330,6 +1331,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim iHtcTouchpadEmulationClickMethod = mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod
                         Dim iOculusButtonMethod = mClassSettings.m_ControllerSettings.m_OculusButtonMethod
                         Dim bOculusGripToggle = mClassSettings.m_ControllerSettings.m_OculusGripToggle
+                        Dim bHybridGripToggle = mClassSettings.m_ControllerSettings.m_HybridGripToggle
                         Dim iHtcGripButtonMethod = mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod
                         Dim iControllerJoystickMethod = mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod
                         Dim bEnableControllerRecenter = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
@@ -1685,7 +1687,9 @@ Public Class UCVirtualMotionTrackerItem
                                                                     bGripToggled,
                                                                     iHtcTouchpadEmulationClickMethod,
                                                                     bOculusGripToggle,
-                                                                    iOculusButtonMethod)
+                                                                    iOculusButtonMethod,
+                                                                    bHybridGripToggle,
+                                                                    mGripPressTime)
 
                                                 'Joystick emulation
                                                 InternalJoystickEmulationLogic(mOscDataPack,
@@ -2788,7 +2792,9 @@ Public Class UCVirtualMotionTrackerItem
                                          ByRef bGripToggled As Boolean,
                                          ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD,
                                          ByRef bOculusGripToggle As Boolean,
-                                         ByRef iOculusButtonMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD)
+                                         ByRef iOculusButtonMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD,
+                                         ByRef bHybridGripToggle As Boolean,
+                                         ByRef mGripPressTime As Stopwatch)
             Select Case (m_VmtTrackerRole)
                 Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
                     For i = 0 To mButtons.Length - 1
@@ -2839,22 +2845,55 @@ Public Class UCVirtualMotionTrackerItem
 
                     End Select
 
-                    If (Not bIsGripToggle) Then
-                        mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripJustPressed
-                    Else
-                        If (bGripJustPressed) Then
-                            If (Not bGripButtonPressed) Then
-                                bGripButtonPressed = True
+                    Dim bHybridGrip As Boolean = False
 
-                                bGripToggled = Not bGripToggled
+                    ' Hybrid grip toggle 
+                    If (bHybridGripToggle AndAlso bIsGripToggle) Then
+                        If (bGripJustPressed) Then
+                            If (Not mGripPressTime.IsRunning) Then
+                                mGripPressTime.Restart()
+                            End If
+
+                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                                mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = True
+
+                                bHybridGrip = True
                             End If
                         Else
-                            If (bGripButtonPressed) Then
-                                bGripButtonPressed = False
-                            End If
-                        End If
+                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                                mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
 
-                        mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+                                bHybridGrip = True
+                            End If
+
+                            mGripPressTime.Reset()
+                        End If
+                    Else
+                        mGripPressTime.Reset()
+                    End If
+
+                    ' Grip toggle
+                    If (bHybridGrip) Then
+                        bGripToggled = False
+                        bGripButtonPressed = False
+                    Else
+                        If (Not bIsGripToggle) Then
+                            mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripJustPressed
+                        Else
+                            If (bGripJustPressed) Then
+                                If (Not bGripButtonPressed) Then
+                                    bGripButtonPressed = True
+
+                                    bGripToggled = Not bGripToggled
+                                End If
+                            Else
+                                If (bGripButtonPressed) Then
+                                    bGripButtonPressed = False
+                                End If
+                            End If
+
+                            mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+                        End If
                     End If
 
                     ' Do touchpad click

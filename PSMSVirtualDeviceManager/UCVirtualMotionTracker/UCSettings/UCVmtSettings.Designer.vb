@@ -153,6 +153,7 @@ Partial Class UCVmtSettings
         Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig18 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.UcNumericUpDownBig4 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.CheckBox_HybridGripToggle = New System.Windows.Forms.CheckBox()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -657,7 +658,7 @@ Partial Class UCVmtSettings
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.CheckBox_ControllerRecenterEnabled)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox1.Location = New System.Drawing.Point(3, 327)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 377)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(780, 526)
         Me.GroupBox1.TabIndex = 47
@@ -928,6 +929,7 @@ Partial Class UCVmtSettings
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.CheckBox_HybridGripToggle)
         Me.GroupBox2.Controls.Add(Me.GroupBox6)
         Me.GroupBox2.Controls.Add(Me.Label_TouchpadTouchAreaDeg)
         Me.GroupBox2.Controls.Add(Me.GroupBox5)
@@ -938,7 +940,7 @@ Partial Class UCVmtSettings
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox2.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(780, 324)
+        Me.GroupBox2.Size = New System.Drawing.Size(780, 374)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Controller Emulation Settings"
@@ -1806,6 +1808,18 @@ Partial Class UCVmtSettings
         Me.UcNumericUpDownBig4.Size = New System.Drawing.Size(66, 22)
         Me.UcNumericUpDownBig4.TabIndex = 52
         '
+        'CheckBox_HybridGripToggle
+        '
+        Me.CheckBox_HybridGripToggle.AutoSize = True
+        Me.CheckBox_HybridGripToggle.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_HybridGripToggle.Location = New System.Drawing.Point(16, 315)
+        Me.CheckBox_HybridGripToggle.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_HybridGripToggle.Name = "CheckBox_HybridGripToggle"
+        Me.CheckBox_HybridGripToggle.Size = New System.Drawing.Size(127, 18)
+        Me.CheckBox_HybridGripToggle.TabIndex = 56
+        Me.CheckBox_HybridGripToggle.Text = "Hybrid grip toggle"
+        Me.CheckBox_HybridGripToggle.UseVisualStyleBackColor = True
+        '
         'UCVmtSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2016,4 +2030,5 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_OculusGripToggle As CheckBox
     Friend WithEvents CheckBox_EnableVelocity As CheckBox
     Friend WithEvents CheckBox_VelocityControllersOnly As CheckBox
+    Friend WithEvents CheckBox_HybridGripToggle As CheckBox
 End Class
