@@ -323,7 +323,12 @@ Public Class ClassLogManageServiceDevices
                     sFullSerial = String.Format("controller_{0}", mDevice.sSerial)
                     sDeviceType = "Controller"
                 Case ENUM_DEVICE_TYPE.HMD
-                    sFullSerial = String.Format("hmd_{0}", mDevice.sSerial)
+                    If (mDevice.sSerial.StartsWith("MorpheusHMD")) Then
+                        sFullSerial = "morpheus"
+                    Else
+                        sFullSerial = String.Format("hmd_{0}", mDevice.sSerial)
+                    End If
+
                     sDeviceType = "Head-mounted Display"
                 Case Else
                     Continue For
