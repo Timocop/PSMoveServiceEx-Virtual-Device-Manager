@@ -46,7 +46,11 @@ Public Class ClassServiceConfig
             End If
 
             If (Not mScansDic.ContainsKey(sPathKey)) Then
-                Return Nothing
+                If (mDefaultValue IsNot Nothing) Then
+                    Return mDefaultValue
+                Else
+                    Throw New ArgumentException(String.Format("Key '{0}' does not exist!", sKey))
+                End If
             End If
 
             mScansDic = TryCast(mScansDic(sPathKey), Dictionary(Of String, Object))
