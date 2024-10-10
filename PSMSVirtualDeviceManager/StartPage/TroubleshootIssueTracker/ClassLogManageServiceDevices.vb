@@ -409,7 +409,7 @@ Public Class ClassLogManageServiceDevices
             End If
 
             ' Ignore virtual controllers
-            If (mDevice.sSerial.StartsWith("Virtual")) Then
+            If (mDevice.sSerial.StartsWith("VirtualController")) Then
                 Continue For
             End If
 
