@@ -1,5 +1,4 @@
 ﻿Imports System.Numerics
-Imports PSMSVirtualDeviceManager
 Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 
 Public Class ClassLogManageServiceDevices
@@ -134,6 +133,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckTrackerCount())
         mIssues.AddRange(CheckVirtualHmdObsolete())
         mIssues.AddRange(CheckDeviceCount())
+        mIssues.AddRange(CheckColorCalibration())
         Return mIssues.ToArray
     End Function
 
@@ -288,6 +288,95 @@ Public Class ClassLogManageServiceDevices
 
             mIssues.Add(mNewIssue)
         End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckColorCalibration() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mBadTemplate As New STRUC_LOG_ISSUE(
+            "Bad color calibration for device",
+            "Color calibration for {0} id {1} is not properly set on trakcer id {2} which may cause tracking issues.",
+            "Properly calibrate color for this device.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            Dim sFullSerial As String = ""
+            Dim sDeviceType As String = ""
+
+            Select Case (mDevice.iType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    sFullSerial = String.Format("controller_{0}", mDevice.sSerial)
+                    sDeviceType = "Controller"
+                Case ENUM_DEVICE_TYPE.HMD
+                    sFullSerial = String.Format("hmd_{0}", mDevice.sSerial)
+                    sDeviceType = "Head-mounted Display"
+                Case Else
+                    Continue For
+            End Select
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim sSelectedColor As String = mDeviceConfig.GetValue(Of String)("", "tracking_color", "")
+            If (String.IsNullOrEmpty(sSelectedColor) OrElse sSelectedColor.Trim.Length = 0) Then
+                Continue For
+            End If
+
+            ' We dont care about custom
+            If (sSelectedColor.StartsWith("custom")) Then
+                Continue For
+            End If
+
+            For Each mServiceDevice In mServiceDevicesLog.GetDevices()
+                If (mServiceDevice.iType <> ClassLogManageServiceDevices.ENUM_DEVICE_TYPE.TRACKER) Then
+                    Continue For
+                End If
+
+                Dim mTrackerConfig = mServiceLog.FindConfigFromSerial(mServiceDevice.sSerial)
+                If (mTrackerConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sColorPath As String = String.Format("{0}\color_preset\{1}", sFullSerial, sSelectedColor)
+
+                Dim iHueCenter = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "hue_center", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Dim iHueRange = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "hue_range", "10"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Dim iSaturationCenter = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "saturation_center", "255"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Dim iSaturationRange = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "saturation_range", "32"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Dim iValueCenter = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "value_center", "255"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Dim iValueRange = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "value_range", "32"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+                ' Assuming the user didnt even change anything
+                If (iHueRange = 10 AndAlso
+                        iSaturationCenter = 255 AndAlso iValueCenter = 255 AndAlso
+                        iSaturationRange = 32 AndAlso iValueRange = 32) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, mServiceDevice.iId)
+                    mIssues.Add(mNewIssue)
+
+                ElseIf (iSaturationCenter < 80.0F OrElse iValueCenter < 80.0F) Then
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, mServiceDevice.iId)
+                    mIssues.Add(mNewIssue)
+                End If
+            Next
+        Next
 
         Return mIssues.ToArray
     End Function
