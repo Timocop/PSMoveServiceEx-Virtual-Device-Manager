@@ -408,6 +408,11 @@ Public Class ClassLogManageServiceDevices
                 Continue For
             End If
 
+            ' Ignore virtual controllers
+            If (mDevice.sSerial.StartsWith("Virtual")) Then
+                Continue For
+            End If
+
             Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
             If (mDeviceConfig Is Nothing) Then
                 Continue For
