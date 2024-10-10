@@ -134,6 +134,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckVirtualHmdObsolete())
         mIssues.AddRange(CheckDeviceCount())
         mIssues.AddRange(CheckColorCalibration())
+        mIssues.AddRange(CheckMagnetometer())
         Return mIssues.ToArray
     End Function
 
@@ -376,6 +377,59 @@ Public Class ClassLogManageServiceDevices
                     mIssues.Add(mNewIssue)
                 End If
             Next
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckMagnetometer() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mBadTemplate As New STRUC_LOG_ISSUE(
+            "Missing or uncalibrated magnetometer",
+            "The controller id {0} does not have a magnetometer or is not yet calibrated, which may cause orientation yaw drift over time.",
+            "Calibrate the controllers magnetometer if available. Ignore this warning if the magnetometer is not available.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.CONTROLLER) Then
+                Continue For
+            End If
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim sExtX = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "X", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sExtY = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "Y", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sExtZ = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "Z", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sIdentX = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "X", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sIdentY = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "Y", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sIdentZ = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "Z", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+            If (sExtX = 0 AndAlso sExtY = 0 AndAlso sExtZ = 0) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, mDevice.iId)
+                mIssues.Add(mNewIssue)
+
+            ElseIf (sIdentX = 0 AndAlso sIdentY = 0 AndAlso sIdentZ = 0) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, mDevice.iId)
+                mIssues.Add(mNewIssue)
+            End If
         Next
 
         Return mIssues.ToArray

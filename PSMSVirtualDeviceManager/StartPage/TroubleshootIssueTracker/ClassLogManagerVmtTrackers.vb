@@ -232,7 +232,7 @@ Public Class ClassLogManagerVmtTrackers
                       ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER,
                       ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER,
                       ENUM_TRACKER_ROLE.OCULUS_TOUCH_RIGHT_CONTROLLER,
-                      ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER,
+                      ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
                     Continue For
             End Select
 
