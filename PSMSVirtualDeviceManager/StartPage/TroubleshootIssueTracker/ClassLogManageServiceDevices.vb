@@ -317,6 +317,7 @@ Public Class ClassLogManageServiceDevices
 
             Dim sFullSerial As String = ""
             Dim sDeviceType As String = ""
+            Dim bIsMorpheusHmd As Boolean = False
 
             Select Case (mDevice.iType)
                 Case ENUM_DEVICE_TYPE.CONTROLLER
@@ -324,7 +325,8 @@ Public Class ClassLogManageServiceDevices
                     sDeviceType = "Controller"
                 Case ENUM_DEVICE_TYPE.HMD
                     If (mDevice.sSerial.StartsWith("MorpheusHMD")) Then
-                        sFullSerial = "morpheus"
+                        sFullSerial = String.Format("hmd_{0}", "morpheus")
+                        bIsMorpheusHmd = True
                     Else
                         sFullSerial = String.Format("hmd_{0}", mDevice.sSerial)
                     End If
@@ -339,14 +341,28 @@ Public Class ClassLogManageServiceDevices
                 Continue For
             End If
 
-            Dim sSelectedColor As String = mDeviceConfig.GetValue(Of String)("", "tracking_color", "")
-            If (String.IsNullOrEmpty(sSelectedColor) OrElse sSelectedColor.Trim.Length = 0) Then
-                Continue For
-            End If
+            Dim sSelectedColor As String = ""
+            If (bIsMorpheusHmd) Then
+                Dim sUsingCustomTracking As String = mDeviceConfig.GetValue(Of String)("", "use_custom_optical_tracking", "")
+                If (String.IsNullOrEmpty(sUsingCustomTracking) OrElse sUsingCustomTracking.Trim.Length = 0) Then
+                    Continue For
+                End If
 
-            ' We dont care about custom
-            If (sSelectedColor.StartsWith("custom")) Then
-                Continue For
+                If (sUsingCustomTracking <> "true") Then
+                    sSelectedColor = "blue"
+                Else
+                    sSelectedColor = "custom9"
+                End If
+            Else
+                sSelectedColor = mDeviceConfig.GetValue(Of String)("", "tracking_color", "")
+                If (String.IsNullOrEmpty(sSelectedColor) OrElse sSelectedColor.Trim.Length = 0) Then
+                    Continue For
+                End If
+
+                ' We dont care about custom
+                If (sSelectedColor.StartsWith("custom")) Then
+                    Continue For
+                End If
             End If
 
             For Each mServiceDevice In mServiceDevicesLog.GetDevices()
