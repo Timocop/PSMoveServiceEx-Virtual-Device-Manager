@@ -154,10 +154,19 @@ Public Class ClassLogDxdiag
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
+        Dim mHostTemplate As New STRUC_LOG_ISSUE(
+            "USB 3.0 Host Controller",
+            "Found USB 3.0 Host Controller '{0}'.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
         Dim iUsbHostCount As Integer = 0
 
         Dim sLastDevice As String = ""
         Dim sLastDriver As String = ""
+
+        Dim mHostControllers As New List(Of String)
 
         Dim sLines As String() = FindSection("System Devices", sContent)
         If (sLines Is Nothing OrElse sLines.Length < 1) Then
@@ -166,10 +175,12 @@ Public Class ClassLogDxdiag
 
         For i = sLines.Length - 1 To 0 Step -1
             If (sLines(i).TrimStart.StartsWith("Name:")) Then
-                sLastDevice = sLines(i).TrimStart.Remove(0, "Name:".Length)
+                sLastDevice = sLines(i).TrimStart.Remove(0, "Name:".Length).Trim
 
                 If (sLastDriver.ToUpperInvariant.Contains("USBXHCI.SYS".ToUpperInvariant)) Then
                     iUsbHostCount += 1
+
+                    mHostControllers.Add(sLastDevice)
                 End If
 
                 sLastDevice = ""
@@ -179,6 +190,13 @@ Public Class ClassLogDxdiag
             If (sLines(i).TrimStart.StartsWith("Driver:")) Then
                 sLastDriver &= sLines(i).TrimStart.Remove(0, "Driver:".Length) & Environment.NewLine
             End If
+        Next
+
+        For Each sHostController In mHostControllers
+            Dim mIssue As New STRUC_LOG_ISSUE(mHostTemplate)
+            mIssue.sDescription = String.Format(mHostTemplate.sDescription, sHostController)
+
+            mIssues.Add(mIssue)
         Next
 
         If (iUsbHostCount < 2) Then
