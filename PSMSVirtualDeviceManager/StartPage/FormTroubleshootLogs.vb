@@ -3,6 +3,8 @@
 Public Class FormTroubleshootLogs
     ReadOnly SECTION_BUFFER As String = New String("#"c, 32)
 
+    Public Const SECTION_DETAILED_LOG_SUMMARY = "Detailed Log Summary"
+
     Public Const SECTION_DXDIAG = "DirectX Diagnostics"
     Public Const SECTION_PSMOVESERVICEEX = "PSMoveServiceEx"
     Public Const SECTION_PROCESSES = "Running Processes"
@@ -195,6 +197,29 @@ Public Class FormTroubleshootLogs
     Private Function GetCombinedLogs() As String
         Dim sContent As New Text.StringBuilder
 
+        If (ListView_Issues.Items.Count > 0) Then
+            sContent.AppendFormat("{0} {1} {2}", SECTION_BUFFER, SECTION_DETAILED_LOG_SUMMARY, SECTION_BUFFER).AppendLine()
+            sContent.AppendLine()
+
+            For Each mItem As ListViewItem In ListView_Issues.Items
+                Dim sMessage As String = mItem.SubItems(0).Text
+                Dim sDescription As String = mItem.SubItems(1).Text
+                Dim sSolution As String = mItem.SubItems(2).Text
+
+                If (String.IsNullOrEmpty(sMessage) OrElse sMessage.Trim.Length = 0) Then
+                    Continue For
+                End If
+
+                sContent.AppendFormat("Name: {0}", sMessage.Replace(Environment.NewLine, " ")).AppendLine()
+                sContent.AppendFormat(" - Description: {0}", sDescription.Replace(Environment.NewLine, " ")).AppendLine()
+                sContent.AppendFormat(" - Solution: {0}", sSolution.Replace(Environment.NewLine, " ")).AppendLine()
+                sContent.AppendLine()
+            Next
+
+
+            sContent.AppendLine()
+        End If
+
         SyncLock m_LogContent.m_Lock
             For Each mItem In m_LogContent.m_Content
                 sContent.AppendFormat("{0} {1} {2}", SECTION_BUFFER, mItem.Key, SECTION_BUFFER).AppendLine()
@@ -221,7 +246,9 @@ Public Class FormTroubleshootLogs
 
             If (sLine.StartsWith(SECTION_BUFFER) OrElse sLine.EndsWith(SECTION_BUFFER)) Then
                 If (Not String.IsNullOrEmpty(sSection)) Then
-                    mData(sSection) = sSectionContent.ToString.Trim
+                    If (sSection <> SECTION_DETAILED_LOG_SUMMARY) Then
+                        mData(sSection) = sSectionContent.ToString.Trim
+                    End If
                 End If
 
                 sSectionContent = New Text.StringBuilder
