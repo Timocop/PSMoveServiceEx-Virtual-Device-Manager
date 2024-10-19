@@ -182,9 +182,13 @@ Public Class FormTroubleshootLogs
 
                     m_LogContent.m_Content.Clear()
 
-                    For Each mItem In ParseCombinedLogs(IO.File.ReadAllText(mForm.FileName, System.Text.Encoding.Default))
-                        m_LogContent.m_Content(mItem.Key) = mItem.Value
-                    Next
+                    ' Detect encoding
+                    Using mFile As New IO.StreamReader(mForm.FileName, True)
+                        For Each mItem In ParseCombinedLogs(mFile.ReadToEnd())
+                            m_LogContent.m_Content(mItem.Key) = mItem.Value
+                        Next
+                    End Using
+
 
                     StartLogAnalysis(False, True, True, True)
                 End If
