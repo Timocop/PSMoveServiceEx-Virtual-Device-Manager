@@ -36,7 +36,7 @@ Public Class ClassLogService
         Dim sTmp As String = IO.Path.GetTempFileName
         IO.File.Copy(sLogFile, sTmp, True)
 
-        g_ClassLogContent.m_Content(GetActionTitle()) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
+        g_ClassLogContent.m_Content(GetActionTitle()) = IO.File.ReadAllText(sTmp)
         IO.File.Delete(sTmp)
     End Sub
 

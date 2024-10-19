@@ -30,7 +30,7 @@ Public Class ClassLogManager
             Dim sTmp As String = IO.Path.GetTempFileName
             IO.File.Copy(mItem.Value, sTmp, True)
 
-            g_ClassLogContent.m_Content(mItem.Key) = IO.File.ReadAllText(sTmp, System.Text.Encoding.Default)
+            g_ClassLogContent.m_Content(mItem.Key) = IO.File.ReadAllText(sTmp)
             IO.File.Delete(sTmp)
         Next
     End Sub

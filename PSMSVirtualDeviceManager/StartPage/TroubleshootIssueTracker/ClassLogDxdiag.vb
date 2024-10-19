@@ -46,7 +46,7 @@ Public Class ClassLogDxdiag
             Return
         End If
 
-        Dim sContent As String = IO.File.ReadAllText(sOutputFile, System.Text.Encoding.Default)
+        Dim sContent As String = IO.File.ReadAllText(sOutputFile)
         If (String.IsNullOrEmpty(sContent) OrElse sContent.Trim.Length = 0) Then
             Return
         End If
