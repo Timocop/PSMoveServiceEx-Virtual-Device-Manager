@@ -117,7 +117,7 @@ Public Class ClassLogManagerRemoteDevices
 
         Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
             "Invalid remote device ids",
-            "Some remote device controller ids have not set properly. Therefore those remote devices are disabled.",
+            "Some remote device controller ids are not set properly. Therefore those remote devices are disabled.",
             "Properly asign the remote device controller id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )

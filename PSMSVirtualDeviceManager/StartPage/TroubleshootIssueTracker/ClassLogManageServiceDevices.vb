@@ -214,7 +214,7 @@ Public Class ClassLogManageServiceDevices
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Virtual Head-mounted Displays deprecated",
             "You are using virtual head-mounted displays. Those types of virtual devices are deprecated due to limited functionality and will only be used for backwards protocol compatibility.",
-            "Do not use virtual head-mounted displays and use virtual controllers instead to track your head-mounted display. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
+            "Do not use virtual head-mounted displays and use virtual controllers to track your head-mounted display instead. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 

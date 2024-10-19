@@ -114,7 +114,7 @@ Public Class ClassLogService
             End If
 
             If (sLine.Contains("Starting PSMoveServiceEx")) Then
-                Dim mMatch As Match = Regex.Match(sLine, "Starting PSMoveServiceEx v(?<Version>0.27.0.0)", RegexOptions.IgnoreCase)
+                Dim mMatch As Match = Regex.Match(sLine, "Starting PSMoveServiceEx v(?<Version>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", RegexOptions.IgnoreCase)
 
                 If (mMatch.Success AndAlso mMatch.Groups("Version").Success) Then
                     Try
@@ -413,7 +413,7 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Failed to open PlayStation VR Head-mounted Display",
-            "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device.",
+            "Due to an error, PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -436,9 +436,9 @@ Public Class ClassLogService
 
             If (sLine.Contains("Failed to open MorpheusHMD")) Then
                 If (sLine.Contains("MorpheusHMD is disabled")) Then
-                    mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
-                Else
                     mIssues.Add(New STRUC_LOG_ISSUE(mDiabledTemplate))
+                Else
+                    mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
                 End If
 
                 Exit For

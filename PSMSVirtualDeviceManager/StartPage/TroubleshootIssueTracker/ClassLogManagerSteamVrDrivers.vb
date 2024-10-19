@@ -7,6 +7,14 @@ Public Class ClassLogManagerSteamVrDrivers
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
+    ' The following drivers can cause conflicts with the VDM SteamVR driver. Mostly because they access the same hardware, which isnt possible.
+    Private ReadOnly g_mBadDrivers As String() = {
+        "psmove",       'Legacy PSMoveService VRBridge. Its dead and unsupported. VDM SteamVR driver is the successor.
+        "trinuspsvr",   'TrinusVR. Conflicts with PSVR hardware access.
+        "driver4vr",    'Driver4VR. PSVR support dropped. Conflicts with PS4 Camera and PSVR hardware access.
+        "iVRy"          'iVRy. PSVR support outdated and PSMS module broken? Conflicts with PSVR and PS4 Camera hardware access.
+    }
+
     Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
         g_mFormMain = _FormMain
         g_ClassLogContent = _ClassLogContent
@@ -52,7 +60,7 @@ Public Class ClassLogManagerSteamVrDrivers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Virtual motion tracker SteamVR driver not installed",
-            "You set up virtual motion trackers but the SteamVR driver has not been registered yet.",
+            "Virtual motion trackers are set up but the SteamVR driver has not been registered yet.",
             "Register the SteamVR driver to use the virtual motion trackers in SteamVR. If you dont use SteamVR ignore this warning.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
@@ -122,13 +130,6 @@ Public Class ClassLogManagerSteamVrDrivers
             Return {}
         End If
 
-        ' The following drivers can cause conflicts with the VDM SteamVR driver. Mostly because they access the same hardware, which isnt possible.
-        Dim mBadDrivers As New List(Of String)
-        mBadDrivers.Add("psmove") 'Legacy PSMoveService VRBridge. Its dead and unsupported. VDM SteamVR driver is the successor.
-        mBadDrivers.Add("trinuspsvr") 'TrinusVR. Conflicts with PSVR hardware access.
-        mBadDrivers.Add("driver4vr") 'Driver4VR. PSVR support dropped. Conflicts with PS4 Camera and PSVR hardware access.
-        mBadDrivers.Add("iVRy") 'iVRy. PSVR support outdated and PSMS module broken? Conflicts with PSVR and PS4 Camera hardware access.
-
         Dim mTemplate As New STRUC_LOG_ISSUE(
             "Third-party SteamVR driver detected",
             "A third-party SteamVR driver '{0}' has been detected. Make sure its configured to work properly with the virtual motion tracker SteamVR driver to avoid issues and crashes.",
@@ -164,7 +165,7 @@ Public Class ClassLogManagerSteamVrDrivers
                         Continue For
                     End If
 
-                    For Each sBadDriver In mBadDrivers
+                    For Each sBadDriver In g_mBadDrivers
                         If (sDriver.ToLowerInvariant.EndsWith(sBadDriver.ToLowerInvariant)) Then
                             Dim mIssue As New STRUC_LOG_ISSUE(mBadTemplate)
                             mIssue.sDescription = String.Format(mIssue.sDescription, sDriver)
