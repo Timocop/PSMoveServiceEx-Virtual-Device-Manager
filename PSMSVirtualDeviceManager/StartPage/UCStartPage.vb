@@ -662,6 +662,25 @@ Public Class UCStartPage
             End If
         End If
 
+        Dim mUCVirtualMotionTracker = g_FormMain.g_mUCVirtualMotionTracker
+        If (mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+            Dim sMsg As New Text.StringBuilder
+            sMsg.AppendLine("The Virtual Motion Tracker OSC server is currently running which causes PSMoveServiceEx tracking to be active!")
+            sMsg.AppendLine("Having tracking active while working in PSMoveServiceEx Config Tool is not recommended and can lead to problems or bad calibrations.")
+            sMsg.AppendLine()
+            sMsg.AppendLine("Do you want to pause the Virtual Motion Tracker OSC server and run PSMoveServiceEx Config Tool?")
+            sMsg.AppendLine()
+            sMsg.AppendLine("(You need to manually start the Virtual Motion Tracker OSC server again if you choose to pause it.)")
+            Select Case (MessageBox.Show(sMsg.ToString, "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+                Case DialogResult.Yes
+                    mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscPause_Click()
+                Case DialogResult.No
+                    ' Ignor!
+                Case Else
+                    Return
+            End Select
+        End If
+
         Dim mConfig As New ClassServiceInfo
         mConfig.LoadConfig()
 
