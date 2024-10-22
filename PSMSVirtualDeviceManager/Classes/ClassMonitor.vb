@@ -335,24 +335,24 @@ Public Class ClassMonitor
                 Continue For
             End If
 
+            Dim bFound As Boolean = False
+            Dim mPsvrMonitor As New STRUC_MONITOR_IDS
+            For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                mPsvrMonitor = PSVR_MONITOR_IDS(i)
+
+                If (mPsvrMonitor.IsEqual(sMonitorName)) Then
+                    bFound = True
+                    Exit For
+                End If
+            Next
+
+            If (Not bFound) Then
+                Continue For
+            End If
+
             For Each sId As String In mMonitorKey.GetSubKeyNames()
                 Dim mIdKey As RegistryKey = mMonitorKey.OpenSubKey(sId, True)
                 If (mIdKey Is Nothing) Then
-                    Continue For
-                End If
-
-                Dim bFound As Boolean
-                Dim mPsvrMonitor As New STRUC_MONITOR_IDS
-                For i = 0 To PSVR_MONITOR_IDS.Length - 1
-                    mPsvrMonitor = PSVR_MONITOR_IDS(i)
-
-                    If (mPsvrMonitor.IsEqual(sMonitorName)) Then
-                        bFound = True
-                        Exit For
-                    End If
-                Next
-
-                If (Not bFound) Then
                     Continue For
                 End If
 
@@ -430,24 +430,24 @@ Public Class ClassMonitor
                 Continue For
             End If
 
+            Dim bFound As Boolean = False
+            Dim mPsvrMonitor As New STRUC_MONITOR_IDS
+            For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                mPsvrMonitor = PSVR_MONITOR_IDS(i)
+
+                If (mPsvrMonitor.IsEqual(sMonitorName)) Then
+                    bFound = True
+                    Exit For
+                End If
+            Next
+
+            If (Not bFound) Then
+                Continue For
+            End If
+
             For Each sId As String In mMonitorKey.GetSubKeyNames()
                 Dim mIdKey As RegistryKey = mMonitorKey.OpenSubKey(sId, False)
                 If (mIdKey Is Nothing) Then
-                    Continue For
-                End If
-
-                Dim bFound As Boolean
-                Dim mPsvrMonitor As New STRUC_MONITOR_IDS
-                For i = 0 To PSVR_MONITOR_IDS.Length - 1
-                    mPsvrMonitor = PSVR_MONITOR_IDS(i)
-
-                    If (mPsvrMonitor.IsEqual(sMonitorName)) Then
-                        bFound = True
-                        Exit For
-                    End If
-                Next
-
-                If (Not bFound) Then
                     Continue For
                 End If
 
@@ -558,24 +558,24 @@ Public Class ClassMonitor
                 Continue For
             End If
 
+            Dim bFound As Boolean = False
+            Dim mPsvrMonitor As New STRUC_MONITOR_IDS
+            For i = 0 To PSVR_MONITOR_IDS.Length - 1
+                mPsvrMonitor = PSVR_MONITOR_IDS(i)
+
+                If (mPsvrMonitor.IsEqual(sMonitorName)) Then
+                    bFound = True
+                    Exit For
+                End If
+            Next
+
+            If (Not bFound) Then
+                Continue For
+            End If
+
             For Each sId As String In mMonitorKey.GetSubKeyNames()
                 Dim mIdKey As RegistryKey = mMonitorKey.OpenSubKey(sId, False)
                 If (mIdKey Is Nothing) Then
-                    Continue For
-                End If
-
-                Dim bFound As Boolean
-                Dim mPsvrMonitor As New STRUC_MONITOR_IDS
-                For i = 0 To PSVR_MONITOR_IDS.Length - 1
-                    mPsvrMonitor = PSVR_MONITOR_IDS(i)
-
-                    If (mPsvrMonitor.IsEqual(sMonitorName)) Then
-                        bFound = True
-                        Exit For
-                    End If
-                Next
-
-                If (Not bFound) Then
                     Continue For
                 End If
 
