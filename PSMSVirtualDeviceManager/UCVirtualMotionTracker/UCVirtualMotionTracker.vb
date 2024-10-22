@@ -1155,8 +1155,8 @@ Public Class UCVirtualMotionTracker
                             m_PlayspaceSettings.m_HeightOffset = tmpSng
                         End If
 
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_PlayspaceSettings.m_ForwardMethod = CType(tmpSng, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
+                        If (Integer.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpInt)) Then
+                            m_PlayspaceSettings.m_ForwardMethod = CType(tmpInt, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
                         End If
 
                         If (Integer.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "CalibControllerId", "0"), tmpInt)) Then
