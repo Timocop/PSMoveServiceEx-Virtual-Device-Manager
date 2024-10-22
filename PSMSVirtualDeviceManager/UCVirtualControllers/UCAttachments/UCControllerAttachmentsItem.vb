@@ -428,8 +428,8 @@ Public Class UCControllerAttachmentsItem
         Private g_iParentIndex As Integer = -1
         Private g_mPipeThread As Threading.Thread = Nothing
 
-        Private g_mJointOffset As New Vector3(0, 0, 0)
-        Private g_mControllerOffset As New Vector3(0, 0, 0)
+        Private g_mJointOffset As Vector3 = Vector3.Zero
+        Private g_mControllerOffset As Vector3 = Vector3.Zero
         Private g_iJointYawCorrection As Integer = 0
         Private g_iControllerYawCorrection As Integer = 0
         Private g_bOnlyJointOffset As Boolean = False
@@ -603,7 +603,7 @@ Public Class UCControllerAttachmentsItem
                                         ' Send controller offset 
                                         Dim mControllerOffset As Vector3
                                         If (m_OnlyJointOffset) Then
-                                            mControllerOffset = New Vector3(0, 0, 0)
+                                            mControllerOffset = Vector3.Zero
                                         Else
                                             mControllerOffset = m_ControllerOffset
                                         End If

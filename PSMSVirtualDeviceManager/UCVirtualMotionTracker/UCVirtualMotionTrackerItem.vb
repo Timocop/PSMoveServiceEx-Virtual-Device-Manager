@@ -499,7 +499,7 @@ Public Class UCVirtualMotionTrackerItem
         Try
             TimerPose.Stop()
 
-            Dim mPosition As New Vector3(0, 0, 0)
+            Dim mPosition As Vector3 = Vector3.Zero
             Dim mOrientation As Quaternion = Quaternion.Identity
             Dim bValid As Boolean = False
 
@@ -801,8 +801,8 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
         Private g_mOscThread As Threading.Thread = Nothing
 
-        Private g_mJointOffset As New Vector3(0, 0, 0)
-        Private g_mControllerOffset As New Vector3(0, 0, 0)
+        Private g_mJointOffset As Vector3 = Vector3.Zero
+        Private g_mControllerOffset As Vector3 = Vector3.Zero
         Private g_iJointYawCorrection As Integer = 0
         Private g_iControllerYawCorrection As Integer = 0
         Private g_bOnlyJointOffset As Boolean = False
@@ -906,12 +906,12 @@ Public Class UCVirtualMotionTrackerItem
         Class STRUC_OSC_DATA_PACK
             Const EQUAL_TOLERANCE As Single = 0.0001F
 
-            Public mPosition As New Vector3(0.0F, 0.0F, 0.0F)
-            Public mOrientation As New Quaternion(0.0F, 0.0F, 0.0F, 1.0F)
+            Public mPosition As Vector3 = Vector3.Zero
+            Public mOrientation As Quaternion = Quaternion.Identity
 
             Public mButtons As New Dictionary(Of Integer, Boolean)
             Public mTrigger As New Dictionary(Of Integer, Single)
-            Public mJoyStick As New Vector2(0.0F, 0.0F)
+            Public mJoyStick As Vector2 = Vector2.Zero
 
             Public Sub New()
             End Sub
@@ -1222,9 +1222,9 @@ Public Class UCVirtualMotionTrackerItem
             ' Controller
             Dim bJoystickButtonPressed As Boolean = False
             Dim bGripButtonPressed As Boolean = False
-            Dim mJoystickPressedLastOrientation As New Quaternion
-            Dim mJoystickPostion As New Vector3
-            Dim mJoystickPressedLastPosition As New Vector3
+            Dim mJoystickPressedLastOrientation As Quaternion = Quaternion.Identity
+            Dim mJoystickPostion As Vector3 = Vector3.Zero
+            Dim mJoystickPressedLastPosition As Vector3 = Vector3.Zero
             Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
             Dim bGripToggled As Boolean = False
             Dim mGripPressTime As New Stopwatch
@@ -2472,7 +2472,7 @@ Public Class UCVirtualMotionTrackerItem
                                 ' Make sure the distance is big enough to get the angle.
                                 If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
                                     Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+                                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
                                     mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
 
@@ -2485,7 +2485,7 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (bDoFactoryRecenter) Then
-                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
@@ -2514,7 +2514,7 @@ Public Class UCVirtualMotionTrackerItem
                                         ByRef bIsHmd As Boolean,
                                         ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
             Dim bOtherControllerRecenterButtonPressed As Boolean = False
-            Dim bOtherControllerPos As New Vector3
+            Dim bOtherControllerPos As Vector3 = Vector3.Zero
 
             If (bEnableHmdRecenter) Then
                 For Each mControllerDataSearch In mServiceClient.GetControllersData()
@@ -2595,7 +2595,7 @@ Public Class UCVirtualMotionTrackerItem
                                     ' Make sure the distance is big enough to get the angle.
                                     If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
                                         Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
                                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
 
@@ -2613,7 +2613,7 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (bDoFactoryRecenter) Then
-                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0F, 0.0F, -1.0F))
+                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
@@ -2660,7 +2660,7 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (True) Then
                     Dim mCurrentOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
-                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0F, 0.0F, -1.0F))
+                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0, 0, -1))
                     Dim mCurrentOrientationRelative = Quaternion.Conjugate(mControllerYaw) * mCurrentOrientation
 
                     If (iControllerJoystickMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION) Then
@@ -2668,10 +2668,10 @@ Public Class UCVirtualMotionTrackerItem
                         If (Not bJoystickButtonPressed) Then
                             bJoystickButtonPressed = True
 
-                            mJoystickPostion = New Vector3(0, 0, 0)
+                            mJoystickPostion = Vector3.Zero
 
                             mJoystickPressedLastOrientation = mCurrentOrientationRelative
-                            mJoystickPressedLastPosition = New Vector3(0, 0, 0)
+                            mJoystickPressedLastPosition = Vector3.Zero
                         End If
 
                         Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
@@ -2685,7 +2685,7 @@ Public Class UCVirtualMotionTrackerItem
                         If (Not bJoystickButtonPressed) Then
                             bJoystickButtonPressed = True
 
-                            mJoystickPostion = New Vector3(0, 0, 0)
+                            mJoystickPostion = Vector3.Zero
 
                             mJoystickPressedLastOrientation = mCurrentOrientation
                             mJoystickPressedLastPosition = m_PSMoveData.m_Position
@@ -2764,7 +2764,7 @@ Public Class UCVirtualMotionTrackerItem
                     bJoystickButtonPressed = False
                 End If
 
-                mOscDataPack.mJoyStick = New Vector2(0.0F, 0.0F)
+                mOscDataPack.mJoyStick = Vector2.Zero
 
                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER OrElse
                         m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER) Then

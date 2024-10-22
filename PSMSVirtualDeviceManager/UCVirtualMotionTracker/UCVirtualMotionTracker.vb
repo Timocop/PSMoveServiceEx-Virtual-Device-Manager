@@ -546,15 +546,15 @@ Public Class UCVirtualMotionTracker
             Public Sub Reset()
                 m_Valid = False
 
-                m_PosOffset = New Vector3
+                m_PosOffset = Vector3.Zero
                 m_AngOffset = Quaternion.Identity
                 m_HmdAngOffset = Quaternion.Identity
                 m_ScaleOffset = 1.0F
 
-                m_PointControllerBeginPos = New Vector3
-                m_PointControllerEndPos = New Vector3
-                m_PointHmdBeginPos = New Vector3
-                m_PointHmdEndPos = New Vector3
+                m_PointControllerBeginPos = Vector3.Zero
+                m_PointControllerEndPos = Vector3.Zero
+                m_PointHmdBeginPos = Vector3.Zero
+                m_PointHmdEndPos = Vector3.Zero
             End Sub
         End Class
 
@@ -1168,7 +1168,7 @@ Public Class UCVirtualMotionTracker
 
 
                         ' Playspace Calibration Settings
-                        tmpVec3 = New Vector3
+                        tmpVec3 = Vector3.Zero
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpVec3.X = tmpSng
                         End If
@@ -1180,7 +1180,7 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_PosOffset = tmpVec3
 
-                        tmpQuat = New Quaternion
+                        tmpQuat = Quaternion.Identity
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpQuat.X = tmpSng
                         End If
@@ -1195,7 +1195,7 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_AngOffset = tmpQuat
 
-                        tmpVec3 = New Vector3
+                        tmpVec3 = Vector3.Zero
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpVec3.X = tmpSng
                         End If
@@ -1207,7 +1207,7 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_PointControllerBeginPos = tmpVec3
 
-                        tmpVec3 = New Vector3
+                        tmpVec3 = Vector3.Zero
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpVec3.X = tmpSng
                         End If
@@ -1219,7 +1219,7 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_PointControllerEndPos = tmpVec3
 
-                        tmpVec3 = New Vector3
+                        tmpVec3 = Vector3.Zero
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpVec3.X = tmpSng
                         End If
@@ -1231,7 +1231,7 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_PointHmdBeginPos = tmpVec3
 
-                        tmpVec3 = New Vector3
+                        tmpVec3 = Vector3.Zero
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpVec3.X = tmpSng
                         End If
@@ -1243,7 +1243,7 @@ Public Class UCVirtualMotionTracker
                         End If
                         m_PlayspaceSettings.m_PointHmdEndPos = tmpVec3
 
-                        tmpQuat = New Quaternion
+                        tmpQuat = Quaternion.Identity
                         If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
                             tmpQuat.X = tmpSng
                         End If
@@ -1423,7 +1423,7 @@ Public Class UCVirtualMotionTracker
                 iIndex = _Index
                 iType = _Type
                 sSerial = _Serial
-                mPos = New Vector3()
+                mPos = Vector3.Zero
                 mOrientation = Quaternion.Identity
             End Sub
 

@@ -897,7 +897,7 @@ Public Class UCRemoteDevices
             Private g_mEndPoint As IPEndPoint
             Private g_mLastPacket As New Stopwatch
             Private g_iLastPacketIndex As ULong = 0
-            Private g_mOrientation As New Quaternion
+            Private g_mOrientation As Quaternion = Quaternion.Identity
             Private g_iProtocolType As ENUM_PROTOCOL_TYPE = ENUM_PROTOCOL_TYPE.INVALID
 
             Public Sub New(_Name As String, _ProtocolType As ENUM_PROTOCOL_TYPE, _mEndPoint As IPEndPoint)

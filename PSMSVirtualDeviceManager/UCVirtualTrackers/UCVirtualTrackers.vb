@@ -340,8 +340,6 @@
     End Sub
 
     Public Sub AddNewDevice(mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
-        Dim mUCVirtualTrackerItem As UCVirtualTrackerItem
-
         For Each mUCVirtualTrackerItem In GetAllDevices()
             If (mUCVirtualTrackerItem.m_DevicePath = mDeviceInfo.m_Path) Then
                 Throw New ArgumentException("Device already in the list")

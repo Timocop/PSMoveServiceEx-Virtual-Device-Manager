@@ -460,7 +460,7 @@ Public Class ClassServiceClient
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_Position = g_mControllerPool(mController.m_Info.m_ControllerId).m_Position
                                                         Else
-                                                            mData.m_Position = New Vector3(0, 0, 0)
+                                                            mData.m_Position = Vector3.Zero
                                                         End If
                                                     End SyncLock
                                                 End If
@@ -562,7 +562,7 @@ Public Class ClassServiceClient
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
                                                         Else
-                                                            mData.m_Position = New Vector3(0, 0, 0)
+                                                            mData.m_Position = Vector3.Zero
                                                         End If
                                                     End SyncLock
                                                 End If
@@ -617,7 +617,7 @@ Public Class ClassServiceClient
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
                                                         Else
-                                                            mData.m_Position = New Vector3(0, 0, 0)
+                                                            mData.m_Position = Vector3.Zero
                                                         End If
                                                     End SyncLock
                                                 End If
