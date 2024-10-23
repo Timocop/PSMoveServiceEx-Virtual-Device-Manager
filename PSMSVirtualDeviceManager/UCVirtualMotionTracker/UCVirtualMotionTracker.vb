@@ -1001,9 +1001,6 @@ Public Class UCVirtualMotionTracker
             SyncLock _ThreadLock
                 g_bSettingsLoaded = True
 
-                Dim tmpSng As Single
-                Dim tmpInt As Integer
-                Dim tmpLng As Long
                 Dim tmpVec3 As Vector3
                 Dim tmpQuat As Quaternion
 
@@ -1011,256 +1008,160 @@ Public Class UCVirtualMotionTracker
                     Using mIni As New ClassIni(mStream)
 
                         ' Controller Settings
-                        m_ControllerSettings.m_HtcTouchpadShortcutBinding = (mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadShortcutBinding", "false") = "true")
-                        m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick = (mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadShortcutTouchpadClick", "false") = "true")
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED))), tmpInt)) Then
-                            m_ControllerSettings.m_HtcTouchpadEmulationClickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
-                        End If
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED))), tmpInt)) Then
-                            m_ControllerSettings.m_HtcGripButtonMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
-                        End If
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "OculusButtonMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE))), tmpInt)) Then
-                            m_ControllerSettings.m_OculusButtonMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD)
-                        End If
-
-                        m_ControllerSettings.m_OculusGripToggle = (mIni.ReadKeyValue("ControllerSettings", "OculusGripToggle", "true") = "true")
-                        m_ControllerSettings.m_HybridGripToggle = (mIni.ReadKeyValue("ControllerSettings", "HybridGripToggle", "true") = "true")
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION))), tmpInt)) Then
-                            m_ControllerSettings.m_ControllerJoystickMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD)
-                        End If
-
-                        m_ControllerSettings.m_EnableControllerRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
-                            m_ControllerSettings.m_ControllerRecenterMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
-                        End If
-
-                        m_ControllerSettings.m_ControllerRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterFromDeviceName", "")
-
-                        m_ControllerSettings.m_EnableHmdRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnableHmdRecenter", "true") = "true")
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE))), tmpInt)) Then
-                            m_ControllerSettings.m_HmdRecenterMethod = CType(tmpInt, STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
-                        End If
-
-                        m_ControllerSettings.m_HmdRecenterFromDeviceName = mIni.ReadKeyValue("ControllerSettings", "HmdRecenterFromDeviceName", "")
-
-                        If (Long.TryParse(mIni.ReadKeyValue("ControllerSettings", "RecenterButtonTimeMs", "500"), tmpLng)) Then
-                            m_ControllerSettings.m_RecenterButtonTimeMs = tmpLng
-                        End If
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"), tmpInt)) Then
-                            m_ControllerSettings.m_OscThreadSleepMs = tmpInt
-                        End If
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("ControllerSettings", "OscMaxThreadFps", "200"), tmpInt)) Then
-                            m_ControllerSettings.m_OscMaxThreadFps = tmpInt
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_ControllerSettings.m_ControllerJoystickAreaCm = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadClickDeadzone", "0.25"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_ControllerSettings.m_HtcTouchpadClickDeadzone = tmpSng
-                        End If
-
-                        m_ControllerSettings.m_EnablePlayspaceRecenter = (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
+                        m_ControllerSettings.m_HtcTouchpadShortcutBinding =
+                            (mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadShortcutBinding", "false") = "true")
+                        m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick =
+                            (mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadShortcutTouchpadClick", "false") = "true")
+                        m_ControllerSettings.m_HtcTouchpadEmulationClickMethod =
+                                CType(Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadEmulationClickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED)))), STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD)
+                        m_ControllerSettings.m_HtcGripButtonMethod =
+                            CType(Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "HtcGripButtonMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED)))), STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD)
+                        m_ControllerSettings.m_OculusButtonMethod =
+                            CType(Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "OculusButtonMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE)))), STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD)
+                        m_ControllerSettings.m_OculusGripToggle =
+                            (mIni.ReadKeyValue("ControllerSettings", "OculusGripToggle", "true") = "true")
+                        m_ControllerSettings.m_HybridGripToggle =
+                            (mIni.ReadKeyValue("ControllerSettings", "HybridGripToggle", "true") = "true")
+                        m_ControllerSettings.m_ControllerJoystickMethod =
+                            CType(Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION)))), STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD)
+                        m_ControllerSettings.m_EnableControllerRecenter =
+                            (mIni.ReadKeyValue("ControllerSettings", "EnableControllerRecenter", "true") = "true")
+                        m_ControllerSettings.m_ControllerRecenterMethod =
+                            CType(Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE)))), STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
+                        m_ControllerSettings.m_ControllerRecenterFromDeviceName =
+                            mIni.ReadKeyValue("ControllerSettings", "ControllerRecenterFromDeviceName", "")
+                        m_ControllerSettings.m_EnableHmdRecenter =
+                            (mIni.ReadKeyValue("ControllerSettings", "EnableHmdRecenter", "true") = "true")
+                        m_ControllerSettings.m_HmdRecenterMethod =
+                            CType(Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "HmdRecenterMethod", CStr(CInt(STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD.USE_DEVICE)))), STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD)
+                        m_ControllerSettings.m_HmdRecenterFromDeviceName =
+                            mIni.ReadKeyValue("ControllerSettings", "HmdRecenterFromDeviceName", "")
+                        m_ControllerSettings.m_RecenterButtonTimeMs =
+                            Long.Parse(mIni.ReadKeyValue("ControllerSettings", "RecenterButtonTimeMs", "500"))
+                        m_ControllerSettings.m_OscThreadSleepMs =
+                            Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "OscThreadSleepMs", "1"))
+                        m_ControllerSettings.m_OscMaxThreadFps =
+                            Integer.Parse(mIni.ReadKeyValue("ControllerSettings", "OscMaxThreadFps", "200"))
+                        m_ControllerSettings.m_ControllerJoystickAreaCm =
+                            Single.Parse(mIni.ReadKeyValue("ControllerSettings", "ControllerJoystickAreaCm", "7.5"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_ControllerSettings.m_HtcTouchpadClickDeadzone =
+                            Single.Parse(mIni.ReadKeyValue("ControllerSettings", "HtcTouchpadClickDeadzone", "0.25"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_ControllerSettings.m_EnablePlayspaceRecenter =
+                            (mIni.ReadKeyValue("ControllerSettings", "EnablePlayspaceRecenter", "true") = "true")
 
                         ' Per Controller Settings
                         For j = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
                             tmpQuat = Quaternion.Identity
-                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                                tmpQuat.X = tmpSng
-                            End If
-                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                                tmpQuat.Y = tmpSng
-                            End If
-                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                                tmpQuat.Z = tmpSng
-                            End If
-                            If (Single.TryParse(mIni.ReadKeyValue(CStr(j), "Recenter.W", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                                tmpQuat.W = tmpSng
-                            End If
+                            tmpQuat.X = Single.Parse(mIni.ReadKeyValue(CStr(j), "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                            tmpQuat.Y = Single.Parse(mIni.ReadKeyValue(CStr(j), "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                            tmpQuat.Z = Single.Parse(mIni.ReadKeyValue(CStr(j), "Recenter.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                            tmpQuat.W = Single.Parse(mIni.ReadKeyValue(CStr(j), "Recenter.W", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                             m_ControllerSettings.m_ControllerRecenter(j) = tmpQuat
                         Next
 
                         ' Hmd Settings
-                        m_HmdSettings.m_UseCustomDistortion = (mIni.ReadKeyValue("HmdSettings", "UseCustomDistortion", "false") = "true")
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK0", DISPLAY_DISTORTION_K0.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_DistortionK0(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionK1", DISPLAY_DISTORTION_K1.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_DistortionK1(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionScale", DISPLAY_DISTORTION_SCALE.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_DistortionScale(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionRedOffset", DISPLAY_DISTORTION_RED_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_DistortionRedOffset(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionGreenOffset", DISPLAY_DISTORTION_GREEN_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_DistortionGreenOffset(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "DistortionBlueOffset", DISPLAY_DISTORTION_BLUE_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_DistortionBlueOffset(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "HFov", DISPLAY_HFOV.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_HFov(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "VFov", DISPLAY_VFOV.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_VFov(True) = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "IPD", "67.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_IPD = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("HmdSettings", "RenderScale", "1.3"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_HmdSettings.m_RenderScale = tmpSng
-                        End If
+                        m_HmdSettings.m_UseCustomDistortion =
+                            (mIni.ReadKeyValue("HmdSettings", "UseCustomDistortion", "false") = "true")
+                        m_HmdSettings.m_DistortionK0(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "DistortionK0", DISPLAY_DISTORTION_K0.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_DistortionK1(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "DistortionK1", DISPLAY_DISTORTION_K1.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_DistortionScale(True) =
+                             Single.Parse(mIni.ReadKeyValue("HmdSettings", "DistortionScale", DISPLAY_DISTORTION_SCALE.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_DistortionRedOffset(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "DistortionRedOffset", DISPLAY_DISTORTION_RED_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_DistortionGreenOffset(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "DistortionGreenOffset", DISPLAY_DISTORTION_GREEN_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_DistortionBlueOffset(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "DistortionBlueOffset", DISPLAY_DISTORTION_BLUE_OFFSET.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_HFov(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "HFov", DISPLAY_HFOV.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_VFov(True) =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "VFov", DISPLAY_VFOV.ToString(Globalization.CultureInfo.InvariantCulture)), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_IPD =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "IPD", "67.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_RenderScale =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "RenderScale", "1.3"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
                         ' Misc Settings 
-                        g_mMiscSettings.m_DisableBaseStationSpawning = (mIni.ReadKeyValue("MiscSettings", "DisableBaseStationSpawning", "false") = "true")
-                        g_mMiscSettings.m_EnableHepticFeedback = (mIni.ReadKeyValue("MiscSettings", "EnableHepticFeedback", "true") = "true")
-                        g_mMiscSettings.m_OptimizeTransportPackets = (mIni.ReadKeyValue("MiscSettings", "OptimizeTransportPackets", "true") = "true")
-                        g_mMiscSettings.m_RenderWindowFix = (mIni.ReadKeyValue("MiscSettings", "RenderWindowFix", "true") = "true")
-                        g_mMiscSettings.m_EnableVelocityHmd = (mIni.ReadKeyValue("MiscSettings", "EnableVelocityHmd", "true") = "true")
-                        g_mMiscSettings.m_EnableVelocityController = (mIni.ReadKeyValue("MiscSettings", "EnableVelocityController", "true") = "true")
-                        g_mMiscSettings.m_EnableVelocityTracker = (mIni.ReadKeyValue("MiscSettings", "EnableVelocityTracker", "true") = "true")
-                        g_mMiscSettings.m_OscRemoteIP = mIni.ReadKeyValue("MiscSettings", "OscRemoteIP", "")
+                        g_mMiscSettings.m_DisableBaseStationSpawning =
+                            (mIni.ReadKeyValue("MiscSettings", "DisableBaseStationSpawning", "false") = "true")
+                        g_mMiscSettings.m_EnableHepticFeedback =
+                            (mIni.ReadKeyValue("MiscSettings", "EnableHepticFeedback", "true") = "true")
+                        g_mMiscSettings.m_OptimizeTransportPackets =
+                            (mIni.ReadKeyValue("MiscSettings", "OptimizeTransportPackets", "true") = "true")
+                        g_mMiscSettings.m_RenderWindowFix =
+                            (mIni.ReadKeyValue("MiscSettings", "RenderWindowFix", "true") = "true")
+                        g_mMiscSettings.m_EnableVelocityHmd =
+                            (mIni.ReadKeyValue("MiscSettings", "EnableVelocityHmd", "true") = "true")
+                        g_mMiscSettings.m_EnableVelocityController =
+                            (mIni.ReadKeyValue("MiscSettings", "EnableVelocityController", "true") = "true")
+                        g_mMiscSettings.m_EnableVelocityTracker =
+                            (mIni.ReadKeyValue("MiscSettings", "EnableVelocityTracker", "true") = "true")
+                        g_mMiscSettings.m_OscRemoteIP =
+                            mIni.ReadKeyValue("MiscSettings", "OscRemoteIP", "")
 
                         ' Playspace Settings
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_PlayspaceSettings.m_ForwardOffset = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "SideOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_PlayspaceSettings.m_SideOffset = tmpSng
-                        End If
-
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "HeightOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_PlayspaceSettings.m_HeightOffset = tmpSng
-                        End If
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0"), tmpInt)) Then
-                            m_PlayspaceSettings.m_ForwardMethod = CType(tmpInt, STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
-                        End If
-
-                        If (Integer.TryParse(mIni.ReadKeyValue("PlayspaceSettings", "CalibControllerId", "0"), tmpInt)) Then
-                            m_PlayspaceSettings.m_CalibrationControllerId = tmpInt
-                        End If
-
-                        m_PlayspaceSettings.m_AutoScale = (mIni.ReadKeyValue("PlayspaceSettings", "AutoScale", "true") = "true")
-
-
+                        m_PlayspaceSettings.m_ForwardOffset =
+                            Single.Parse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardOffset", "10.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_PlayspaceSettings.m_SideOffset =
+                            Single.Parse(mIni.ReadKeyValue("PlayspaceSettings", "SideOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_PlayspaceSettings.m_HeightOffset =
+                            Single.Parse(mIni.ReadKeyValue("PlayspaceSettings", "HeightOffset", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_PlayspaceSettings.m_ForwardMethod =
+                            CType(Integer.Parse(mIni.ReadKeyValue("PlayspaceSettings", "ForwardMethod", "0")), STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD)
+                        m_PlayspaceSettings.m_CalibrationControllerId =
+                            Integer.Parse(mIni.ReadKeyValue("PlayspaceSettings", "CalibControllerId", "0"))
+                        m_PlayspaceSettings.m_AutoScale =
+                            (mIni.ReadKeyValue("PlayspaceSettings", "AutoScale", "true") = "true")
 
                         ' Playspace Calibration Settings
                         tmpVec3 = Vector3.Zero
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Z = tmpSng
-                        End If
+                        tmpVec3.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PosOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_PosOffset = tmpVec3
 
                         tmpQuat = Quaternion.Identity
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.Z = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.W = tmpSng
-                        End If
+                        tmpQuat.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpQuat.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpQuat.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpQuat.W = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "AngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_AngOffset = tmpQuat
 
                         tmpVec3 = Vector3.Zero
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Z = tmpSng
-                        End If
+                        tmpVec3.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_PointControllerBeginPos = tmpVec3
 
                         tmpVec3 = Vector3.Zero
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Z = tmpSng
-                        End If
+                        tmpVec3.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointControllerEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_PointControllerEndPos = tmpVec3
 
                         tmpVec3 = Vector3.Zero
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Z = tmpSng
-                        End If
+                        tmpVec3.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdBeginPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_PointHmdBeginPos = tmpVec3
 
                         tmpVec3 = Vector3.Zero
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpVec3.Z = tmpSng
-                        End If
+                        tmpVec3.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "PointHmdEndPosZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_PointHmdEndPos = tmpVec3
 
                         tmpQuat = Quaternion.Identity
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.X = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.Y = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.Z = tmpSng
-                        End If
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            tmpQuat.W = tmpSng
-                        End If
+                        tmpQuat.X = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpQuat.Y = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpQuat.Z = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpQuat.W = Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "HmdAngOffsetW", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_PlayspaceSettings.m_HmdAngOffset = tmpQuat
 
-                        If (Single.TryParse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "ScaleOffset", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, tmpSng)) Then
-                            m_PlayspaceSettings.m_ScaleOffset = tmpSng
-                        End If
+                        m_PlayspaceSettings.m_ScaleOffset =
+                            Single.Parse(mIni.ReadKeyValue("PlayspaceCalibrationSettings", "ScaleOffset", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
                         m_PlayspaceSettings.m_Valid = (mIni.ReadKeyValue("PlayspaceCalibrationSettings", "Valid", "false") = "true")
 

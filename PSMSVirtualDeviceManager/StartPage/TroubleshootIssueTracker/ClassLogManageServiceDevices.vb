@@ -482,28 +482,22 @@ Public Class ClassLogManageServiceDevices
                 ' Optional
                 If (mDeviceProp.ContainsKey("Position") AndAlso mDeviceProp("Position").Split(","c).Count = 3) Then
                     Dim mPos = mDeviceProp("Position").Split(","c)
-                    Dim iPos(3) As Single
-
-                    If (Single.TryParse(mPos(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(0)) AndAlso
-                        Single.TryParse(mPos(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(1)) AndAlso
-                        Single.TryParse(mPos(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iPos(2))) Then
-
-                        mNewDevice.mPosition = New Vector3(iPos(0), iPos(1), iPos(2))
-                        mNewDevice.bPositionValid = True
-                    End If
+                    mNewDevice.mPosition = New Vector3(
+                        Single.Parse(mPos(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                        Single.Parse(mPos(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                        Single.Parse(mPos(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    )
+                    mNewDevice.bPositionValid = True
                 End If
 
                 If (mDeviceProp.ContainsKey("Orientation") AndAlso mDeviceProp("Orientation").Split(","c).Count = 3) Then
                     Dim mAng = mDeviceProp("Orientation").Split(","c)
-                    Dim iAng(3) As Single
-
-                    If (Single.TryParse(mAng(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(0)) AndAlso
-                        Single.TryParse(mAng(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(1)) AndAlso
-                        Single.TryParse(mAng(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, iAng(2))) Then
-
-                        mNewDevice.mOrientation = New Vector3(iAng(0), iAng(1), iAng(2))
-                        mNewDevice.bOrientationValid = True
-                    End If
+                    mNewDevice.mOrientation = New Vector3(
+                        Single.Parse(mAng(0), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                        Single.Parse(mAng(1), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                        Single.Parse(mAng(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                    )
+                    mNewDevice.bOrientationValid = True
                 End If
 
                 ' Required
