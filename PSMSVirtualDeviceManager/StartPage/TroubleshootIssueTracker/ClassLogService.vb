@@ -60,6 +60,7 @@ Public Class ClassLogService
         mIssues.AddRange(CheckBluetoothPairingFail())
         mIssues.AddRange(CheckDeviceTimeout())
         mIssues.AddRange(CheckIncomplete())
+        mIssues.AddRange(CheckOboleteConfiguration())
         Return mIssues.ToArray
     End Function
 
@@ -679,6 +680,42 @@ Public Class ClassLogService
         If (Not bSuccess) Then
             mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckOboleteConfiguration() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim mTimedoutDevices As New List(Of Integer)
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Old PSMoveServiceEx diagnostics configuration detected",
+            "Some of the PSMoveServiceEx configurations have been subsequently changed, but the diagnostics still use the old PSMoveServiceEx configuration, which may lead to incorrect diagnostic results.",
+            "Restart PSMoveServiceEx and refresh diagnostics to parse the new PSMoveServiceEx configurations.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = 0 To sLines.Length - 1
+            Dim sLine As String = sLines(i)
+
+            If (Not sLine.StartsWith("[")) Then
+                Continue For
+            End If
+
+            If (sLine.EndsWith(".json - Configuration saved!")) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssues.Add(mNewIssue)
+
+                Exit For
+            End If
+        Next
 
         Return mIssues.ToArray
     End Function
