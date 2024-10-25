@@ -583,7 +583,7 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
-    Function IsHueInRange(iTarget As Integer, iCenter As Integer, iRange As Integer) As Boolean
+    Private Function IsHueInRange(iTarget As Integer, iCenter As Integer, iRange As Integer) As Boolean
         Dim iLower As Integer = (iCenter - iRange + 180) Mod 180
         Dim iUpper As Integer = (iCenter + iRange) Mod 180
 
