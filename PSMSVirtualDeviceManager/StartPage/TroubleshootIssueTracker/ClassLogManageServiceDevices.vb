@@ -301,7 +301,7 @@ Public Class ClassLogManageServiceDevices
 
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             "Bad color calibration for device",
-            "Color calibration for {0} id {1} is not properly set on trakcer id {2} which may cause tracking issues.",
+            "Color calibration for {0} id {1} is not properly set on tracker id {2} which may cause tracking issues.",
             "Properly calibrate color for this device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
