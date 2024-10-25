@@ -306,9 +306,25 @@ Public Class ClassLogManageServiceDevices
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
+        Dim mColorCollisionTemplate As New STRUC_LOG_ISSUE(
+            "Possible color collsion between devices",
+            "{0} id {1} has possible color collisions with {2} id {3} on tracker id {4} which may cause tracking issues.",
+            "Properly calibrate color for this device or enable 'Prevent color collisions' setting in color calibration before sampling colors.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mWrongColorTemplate As New STRUC_LOG_ISSUE(
+            "Device uses wrong tracking color",
+            "The tracking color of {0} id {1} on tracker id {2} not match the selected tracking color ({3}) that is set for this device.",
+            "Properly calibrate color for this device.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
         Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        Dim mColorSettings As New List(Of Dictionary(Of String, Object))
 
         For Each mDevice In GetDevices()
             If (mDevice.iId < 0) Then
@@ -323,6 +339,7 @@ Public Class ClassLogManageServiceDevices
                 Case ENUM_DEVICE_TYPE.CONTROLLER
                     sFullSerial = String.Format("controller_{0}", mDevice.sSerial)
                     sDeviceType = "Controller"
+
                 Case ENUM_DEVICE_TYPE.HMD
                     If (mDevice.sSerial.StartsWith("MorpheusHMD")) Then
                         sFullSerial = String.Format("hmd_{0}", "morpheus")
@@ -377,26 +394,131 @@ Public Class ClassLogManageServiceDevices
 
                 Dim sColorPath As String = String.Format("{0}\color_preset\{1}", sFullSerial, sSelectedColor)
 
-                Dim iHueCenter = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "hue_center", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                Dim iHueRange = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "hue_range", "10"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                Dim iSaturationCenter = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "saturation_center", "255"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                Dim iSaturationRange = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "saturation_range", "32"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                Dim iValueCenter = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "value_center", "255"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                Dim iValueRange = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "value_range", "32"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Dim mSettings As New Dictionary(Of String, Object)
 
-                ' Assuming the user didnt even change anything
-                If (iHueRange = 10 AndAlso
-                        iSaturationCenter = 255 AndAlso iValueCenter = 255 AndAlso
-                        iSaturationRange = 32 AndAlso iValueRange = 32) Then
-                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, mServiceDevice.iId)
-                    mIssues.Add(mNewIssue)
+                mSettings("device_id") = mDevice.iId
+                mSettings("device_type") = mDevice.iType
+                mSettings("tracker_id") = mServiceDevice.iId
+                mSettings("color") = sSelectedColor
 
-                ElseIf (iSaturationCenter < 80.0F OrElse iValueCenter < 80.0F) Then
-                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, mServiceDevice.iId)
-                    mIssues.Add(mNewIssue)
+                mSettings("hue_center") = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "hue_center", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mSettings("hue_range") = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "hue_range", "10"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mSettings("saturation_center") = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "saturation_center", "255"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mSettings("saturation_range") = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "saturation_range", "32"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mSettings("value_center") = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "value_center", "255"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                mSettings("value_range") = Single.Parse(mTrackerConfig.GetValue(Of String)(sColorPath, "value_range", "32"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+                mColorSettings.Add(mSettings)
+
+            Next
+        Next
+
+        For Each mSettings As Dictionary(Of String, Object) In mColorSettings
+            If (mSettings Is Nothing) Then
+                Continue For
+            End If
+
+            Dim iDeviceId As Integer = CInt(mSettings("device_id"))
+            Dim iDeviceType As ENUM_DEVICE_TYPE = CType(mSettings("device_type"), ENUM_DEVICE_TYPE)
+            Dim iTrackerId As Integer = CInt(mSettings("tracker_id"))
+            Dim sSelectedColor As String = CStr(mSettings("color"))
+
+            Dim iHueCenter As Single = CSng(mSettings("hue_center"))
+            Dim iHueRange As Single = CSng(mSettings("hue_range"))
+            Dim iSaturationCenter As Single = CSng(mSettings("saturation_center"))
+            Dim iSaturationRange As Single = CSng(mSettings("saturation_range"))
+            Dim iValueCenter As Single = CSng(mSettings("value_center"))
+            Dim iValueRange As Single = CSng(mSettings("value_range"))
+
+            Dim sDeviceType As String = "<Unknown>"
+
+            Select Case (iDeviceType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    sDeviceType = "Controller"
+
+                Case ENUM_DEVICE_TYPE.HMD
+                    sDeviceType = "Head-mounted Display"
+            End Select
+
+            ' Assuming the user didnt even change anything
+            If (CInt(iHueRange) = 10 AndAlso
+                    CInt(iSaturationCenter) = 255 AndAlso CInt(iValueCenter) = 255 AndAlso
+                    CInt(iSaturationRange) = 32 AndAlso CInt(iValueRange) = 32) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId)
+                mIssues.Add(mNewIssue)
+
+            ElseIf (iSaturationCenter < 80.0F OrElse iValueCenter < 80.0F) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId)
+                mIssues.Add(mNewIssue)
+            End If
+
+            Dim bGoodColor As Boolean = True
+            Dim iGoodColorRange As Integer = 25
+            Select Case (sSelectedColor.ToLower)
+                Case "magenta"
+                    bGoodColor = IsHueInRange(CInt(iHueCenter), 150, iGoodColorRange)
+                Case "cyan"
+                    bGoodColor = IsHueInRange(CInt(iHueCenter), 90, iGoodColorRange)
+                Case "yellow"
+                    bGoodColor = IsHueInRange(CInt(iHueCenter), 30, iGoodColorRange)
+                Case "red"
+                    bGoodColor = IsHueInRange(CInt(iHueCenter), 0, iGoodColorRange)
+                Case "green"
+                    bGoodColor = IsHueInRange(CInt(iHueCenter), 60, iGoodColorRange)
+                Case "blue"
+                    bGoodColor = IsHueInRange(CInt(iHueCenter), 120, iGoodColorRange)
+                Case Else
+                    ' Ignore custom colors
+            End Select
+
+            If (Not bGoodColor) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mWrongColorTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId, sSelectedColor)
+                mIssues.Add(mNewIssue)
+            End If
+
+            ' Check for color collisions between devices
+            For Each mOtherSettings As Dictionary(Of String, Object) In mColorSettings
+                Dim iOtherDeviceId As Integer = CInt(mOtherSettings("device_id"))
+                Dim iOtherDeviceType As ENUM_DEVICE_TYPE = CType(mOtherSettings("device_type"), ENUM_DEVICE_TYPE)
+                Dim iOtherTrackerId As Integer = CInt(mOtherSettings("tracker_id"))
+
+                Dim iOtherHueCenter As Single = CSng(mOtherSettings("hue_center"))
+                Dim iOtherHueRange As Single = CSng(mOtherSettings("hue_range"))
+                Dim iOtherSaturationCenter As Single = CSng(mOtherSettings("saturation_center"))
+                Dim iOtherSaturationRange As Single = CSng(mOtherSettings("saturation_range"))
+                Dim iOtherValueCenter As Single = CSng(mOtherSettings("value_center"))
+                Dim iOtherValueRange As Single = CSng(mOtherSettings("value_range"))
+
+                Dim sOtherDeviceType As String = "<Unknown>"
+
+                Select Case (iDeviceType)
+                    Case ENUM_DEVICE_TYPE.CONTROLLER
+                        sOtherDeviceType = "Controller"
+
+                    Case ENUM_DEVICE_TYPE.HMD
+                        sOtherDeviceType = "Head-mounted Display"
+                End Select
+
+                ' Must be the same tracker
+                If (iTrackerId <> iOtherTrackerId) Then
+                    Continue For
                 End If
+
+                ' Dont check same device
+                If (iDeviceId = iOtherDeviceId AndAlso iDeviceType = iOtherDeviceType) Then
+                    Continue For
+                End If
+
+                If (Not IsHueInRange(CInt(iHueCenter), CInt(iOtherHueCenter), CInt(iOtherHueRange))) Then
+                    Continue For
+                End If
+
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mColorCollisionTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, sOtherDeviceType, iOtherDeviceId, iTrackerId)
+                mIssues.Add(mNewIssue)
             Next
         Next
 
@@ -459,6 +581,17 @@ Public Class ClassLogManageServiceDevices
         Next
 
         Return mIssues.ToArray
+    End Function
+
+    Function IsHueInRange(iTarget As Integer, iCenter As Integer, iRange As Integer) As Boolean
+        Dim iLower As Integer = (iCenter - iRange + 180) Mod 180
+        Dim iUpper As Integer = (iCenter + iRange) Mod 180
+
+        If (iLower < iUpper) Then
+            Return (iTarget >= iLower AndAlso iTarget <= iUpper)
+        Else
+            Return (iTarget >= iLower OrElse iTarget <= iUpper)
+        End If
     End Function
 
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
