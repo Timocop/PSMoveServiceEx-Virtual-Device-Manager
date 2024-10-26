@@ -1437,7 +1437,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             iDisplayY = mDevMode.dmPositionY
                                                             iDisplayW = mDevMode.dmPelsWidth
                                                             iDisplayH = mDevMode.dmPelsHeight
-                                                            iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                            iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
                                                             iRenderH = CInt((iDisplayH * iHmdRenderScale))
                                                             iFrameRate = mDevMode.dmDisplayFrequency
                                                             bDirectMode = False
@@ -1455,7 +1455,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         iDisplayY = 0
                                                         iDisplayW = 1920
                                                         iDisplayH = 1080
-                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale))
+                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
                                                         iRenderH = CInt((iDisplayH * iHmdRenderScale))
                                                         iFrameRate = HMD_DIRECT_MODE_FRAMERATE
                                                         bDirectMode = True
