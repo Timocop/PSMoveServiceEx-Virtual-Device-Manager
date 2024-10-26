@@ -135,6 +135,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckDeviceCount())
         mIssues.AddRange(CheckColorCalibration())
         mIssues.AddRange(CheckMagnetometer())
+        mIssues.AddRange(CheckGyroAndAccel())
         Return mIssues.ToArray
     End Function
 
@@ -561,12 +562,12 @@ Public Class ClassLogManageServiceDevices
                 Continue For
             End If
 
-            Dim sExtX = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "X", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-            Dim sExtY = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "Y", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-            Dim sExtZ = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "Z", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-            Dim sIdentX = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "X", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-            Dim sIdentY = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "Y", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-            Dim sIdentZ = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "Z", "0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sExtX = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "X", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sExtY = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "Y", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sExtZ = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Extents", "Z", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sIdentX = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "X", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sIdentY = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "Y", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim sIdentZ = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Magnetometer\Identity", "Z", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
             If (sExtX = 0 AndAlso sExtY = 0 AndAlso sExtZ = 0) Then
                 Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
@@ -578,6 +579,73 @@ Public Class ClassLogManageServiceDevices
                 mNewIssue.sDescription = String.Format(mNewIssue.sDescription, mDevice.iId)
                 mIssues.Add(mNewIssue)
             End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckGyroAndAccel() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mBadTemplate As New STRUC_LOG_ISSUE(
+            "Uncalibrated {0}",
+            "The {0} id {1} {2} has not been calibrated yet, which may cause orientation drift.",
+            "Calibrate the {0} {1}.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceDevicesLog As New ClassLogManageServiceDevices(g_mFormMain, g_ClassLogContent)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            Dim sDeviceType As String = "<Unknown>"
+
+            Select Case (mDevice.iType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    sDeviceType = "Controller"
+
+                Case ENUM_DEVICE_TYPE.HMD
+                    sDeviceType = "Head-mounted Display"
+            End Select
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim iGyroVariance As Single = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Gyro", "Variance", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            Dim iAccelVariance As Single = Single.Parse(mDeviceConfig.GetValue(Of String)("Calibration\Accel", "Variance", "-1"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+            ' These are the default values set by PSMoveServiceEx
+            Dim iPSMoveDefaultVariance As New KeyValuePair(Of Single, Single)(0.00035F, 0.0000072F)
+            Dim iDualShockDefaultVariance As New KeyValuePair(Of Single, Single)(0.00000475F, 0.0000145F)
+            Dim iMorpheusDefaultVariance As New KeyValuePair(Of Single, Single)(0.00000133875039F, 0.0F)
+
+            Select Case (iGyroVariance)
+                Case iPSMoveDefaultVariance.Key, iDualShockDefaultVariance.Key, iMorpheusDefaultVariance.Key
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                    mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "gyroscope")
+                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "gyroscope")
+                    mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "gyroscope")
+                    mIssues.Add(mNewIssue)
+            End Select
+
+            Select Case (iAccelVariance)
+                Case iPSMoveDefaultVariance.Value, iDualShockDefaultVariance.Value, iMorpheusDefaultVariance.Value
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                    mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "accelerometer")
+                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "accelerometer")
+                    mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "accelerometer")
+                    mIssues.Add(mNewIssue)
+            End Select
         Next
 
         Return mIssues.ToArray

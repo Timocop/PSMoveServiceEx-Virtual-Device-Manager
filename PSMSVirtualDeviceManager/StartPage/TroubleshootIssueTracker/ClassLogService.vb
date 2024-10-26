@@ -61,6 +61,7 @@ Public Class ClassLogService
         mIssues.AddRange(CheckDeviceTimeout())
         mIssues.AddRange(CheckIncomplete())
         mIssues.AddRange(CheckOboleteConfiguration())
+        mIssues.AddRange(CheckBadDeviations())
         Return mIssues.ToArray
     End Function
 
@@ -616,7 +617,6 @@ Public Class ClassLogService
                     If (Not mTimedoutDevices.Contains(iDeviceId)) Then
                         Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
                         mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceId)
-
                         mIssues.Add(mNewIssue)
 
                         mTimedoutDevices.Add(iDeviceId)
@@ -714,6 +714,110 @@ Public Class ClassLogService
                 mIssues.Add(mNewIssue)
 
                 Exit For
+            End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckBadDeviations() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            "Bad tracker deviations",
+            "{0} id {1} on tracker id {2} stopped tracking due to bad tracking deviations ({3} cases in total). Usually this is a result of color noise/collisions, bad pose calibration or the trackers have been moved after pose calibration has been done.",
+            "Redo pose calibration and check for color noise and collisions in color calibration.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mBadDeviation As New Dictionary(Of String, Dictionary(Of String, Object))
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = 0 To sLines.Length - 1
+            Dim sLine As String = sLines(i)
+
+            If (Not sLine.StartsWith("[")) Then
+                Continue For
+            End If
+
+            If (sLine.Contains("deviated too much from other trackers and stopped tracking")) Then
+                Dim mMatch As Match = Regex.Match(sLine, "\b(?<DeviceType>Controller|Hmd)\b id (?<DeviceId>\d+) and tracker id (?<TrackerId>\d+) deviated too much from other trackers and stopped tracking", RegexOptions.IgnoreCase)
+                If (mMatch.Success) Then
+                    Dim sDeviceType As String = mMatch.Groups("DeviceType").Value
+                    Dim iDeviceId As Integer = CInt(mMatch.Groups("DeviceId").Value)
+                    Dim iTrackerId As Integer = CInt(mMatch.Groups("TrackerId").Value)
+
+                    Dim sKey As String = String.Format("{0}\{1}\{2}", sDeviceType, iDeviceId, iTrackerId)
+                    If (Not mBadDeviation.ContainsKey(sKey)) Then
+                        Dim mDevice As New Dictionary(Of String, Object)
+
+                        ' Give HMDs a proper long name
+                        If (sDeviceType = "Hmd") Then
+                            sDeviceType = "Head-mounted Display"
+                        End If
+
+                        mDevice("device_type") = sDeviceType
+                        mDevice("device_id") = iDeviceId
+                        mDevice("tracker_id") = iTrackerId
+                        mDevice("bad_count") = 0
+                        mDevice("total_bad_count") = 0
+
+                        mBadDeviation(sKey) = mDevice
+                    End If
+
+                    mBadDeviation(sKey)("bad_count") = CInt(mBadDeviation(sKey)("bad_count")) + 1
+                    mBadDeviation(sKey)("total_bad_count") = CInt(mBadDeviation(sKey)("total_bad_count")) + 1
+                End If
+            End If
+
+            If (sLine.Contains("tracking restored!")) Then
+                Dim mMatch As Match = Regex.Match(sLine, "\b(?<DeviceType>Controller|Hmd)\b id (?<DeviceId>\d+) and tracker id (?<TrackerId>\d+) tracking restored", RegexOptions.IgnoreCase)
+                If (mMatch.Success) Then
+                    Dim sDeviceType As String = mMatch.Groups("DeviceType").Value
+                    Dim iDeviceId As Integer = CInt(mMatch.Groups("DeviceId").Value)
+                    Dim iTrackerId As Integer = CInt(mMatch.Groups("TrackerId").Value)
+
+                    Dim sKey As String = String.Format("{0}\{1}\{2}", sDeviceType, iDeviceId, iTrackerId)
+                    If (Not mBadDeviation.ContainsKey(sKey)) Then
+                        Dim mDevice As New Dictionary(Of String, Object)
+
+                        ' Give HMDs a proper long name
+                        If (sDeviceType = "Hmd") Then
+                            sDeviceType = "Head-mounted Display"
+                        End If
+
+                        mDevice("device_type") = sDeviceType
+                        mDevice("device_id") = iDeviceId
+                        mDevice("tracker_id") = iTrackerId
+                        mDevice("bad_count") = 0
+                        mDevice("total_bad_count") = 0
+
+                        mBadDeviation(sKey) = mDevice
+                    End If
+
+                    mBadDeviation(sKey)("bad_count") = CInt(mBadDeviation(sKey)("bad_count")) - 1
+                End If
+            End If
+        Next
+
+        For Each sKey As String In mBadDeviation.Keys
+            Dim mDevice = mBadDeviation(sKey)
+
+            Dim sDeviceType As String = CStr(mDevice("device_type"))
+            Dim iDeviceId As Integer = CInt(mDevice("device_id"))
+            Dim iTrackerId As Integer = CInt(mDevice("tracker_id"))
+            Dim iBadCount As Integer = CInt(mDevice("bad_count"))
+            Dim iTotalBadCount As Integer = CInt(mDevice("total_bad_count"))
+
+            If (iBadCount > 0) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceType, iDeviceId, iTrackerId, iTotalBadCount)
+                mIssues.Add(mNewIssue)
             End If
         Next
 
