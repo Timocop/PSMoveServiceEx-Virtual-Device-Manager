@@ -629,23 +629,48 @@ Public Class ClassLogManageServiceDevices
             Dim iDualShockDefaultVariance As New KeyValuePair(Of Single, Single)(0.00000475F, 0.0000145F)
             Dim iMorpheusDefaultVariance As New KeyValuePair(Of Single, Single)(0.00000133875039F, 0.0F)
 
-            Select Case (iGyroVariance)
-                Case iPSMoveDefaultVariance.Key, iDualShockDefaultVariance.Key, iMorpheusDefaultVariance.Key
-                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                    mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "gyroscope")
-                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "gyroscope")
-                    mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "gyroscope")
-                    mIssues.Add(mNewIssue)
+            Dim bBadGyro As Boolean = False
+            Dim bBadAccel As Boolean = False
+
+            Select Case (mDevice.iType)
+                Case ENUM_DEVICE_TYPE.CONTROLLER
+                    Select Case (iGyroVariance)
+                        Case iPSMoveDefaultVariance.Key, iDualShockDefaultVariance.Key
+                            bBadGyro = True
+                    End Select
+
+                    Select Case (iAccelVariance)
+                        Case iPSMoveDefaultVariance.Value, iDualShockDefaultVariance.Value
+                            bBadAccel = True
+                    End Select
+
+                Case ENUM_DEVICE_TYPE.HMD
+                    Select Case (iGyroVariance)
+                        Case iMorpheusDefaultVariance.Key
+                            bBadGyro = True
+                    End Select
+
+                    Select Case (iAccelVariance)
+                        Case iMorpheusDefaultVariance.Value
+                            bBadAccel = True
+                    End Select
             End Select
 
-            Select Case (iAccelVariance)
-                Case iPSMoveDefaultVariance.Value, iDualShockDefaultVariance.Value, iMorpheusDefaultVariance.Value
-                    Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                    mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "accelerometer")
-                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "accelerometer")
-                    mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "accelerometer")
-                    mIssues.Add(mNewIssue)
-            End Select
+            If (bBadGyro) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "gyroscope")
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "gyroscope")
+                mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "gyroscope")
+                mIssues.Add(mNewIssue)
+            End If
+
+            If (bBadAccel) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "accelerometer")
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "accelerometer")
+                mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "accelerometer")
+                mIssues.Add(mNewIssue)
+            End If
         Next
 
         Return mIssues.ToArray
