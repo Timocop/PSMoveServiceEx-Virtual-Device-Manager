@@ -495,7 +495,7 @@ Public Class ClassLogManageServiceDevices
 
                 Dim sOtherDeviceType As String = "<Unknown>"
 
-                Select Case (iDeviceType)
+                Select Case (iOtherDeviceType)
                     Case ENUM_DEVICE_TYPE.CONTROLLER
                         sOtherDeviceType = "Controller"
 
