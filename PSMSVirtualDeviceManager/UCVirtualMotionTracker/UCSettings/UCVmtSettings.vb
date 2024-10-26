@@ -262,6 +262,7 @@ Public Class UCVmtSettings
             CheckBox_EnableVelocityHmd.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityHmd
             CheckBox_EnableVelocityControllers.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityController
             CheckBox_EnableVelocityTrackers.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityTracker
+            CheckBox_EnableInterpolation.Checked = mClassSettings.m_MiscSettings.m_EnableVelocityInterpoliation
             TextBox_OscRemoteIP.Text = mClassSettings.m_MiscSettings.m_OscRemoteIP
 
             ' Playspace Settings
@@ -430,6 +431,15 @@ Public Class UCVmtSettings
         End If
 
         g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityTracker = CheckBox_EnableVelocityTrackers.Checked
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CheckBox_EnableInterpolation_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_EnableInterpolation.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_MiscSettings.m_EnableVelocityInterpoliation = CheckBox_EnableInterpolation.Checked
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 

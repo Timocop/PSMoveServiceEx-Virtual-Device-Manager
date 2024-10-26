@@ -878,6 +878,7 @@ Public Class UCVirtualMotionTracker
             Private g_bEnableVelocityHmd As Boolean = True
             Private g_bEnableVelocityController As Boolean = True
             Private g_bEnableVelocityTracker As Boolean = True
+            Private g_bEnableVelocityInterpolation As Boolean = False
             Private g_bEnableVelocityControllerOnly As Boolean = True
             Private g_sOscRemoteIP As String = ""
 
@@ -941,6 +942,15 @@ Public Class UCVirtualMotionTracker
                 End Get
                 Set(value As Boolean)
                     g_bEnableVelocityTracker = value
+                End Set
+            End Property
+
+            Property m_EnableVelocityInterpoliation As Boolean
+                Get
+                    Return g_bEnableVelocityInterpolation
+                End Get
+                Set(value As Boolean)
+                    g_bEnableVelocityInterpolation = value
                 End Set
             End Property
 
@@ -1098,6 +1108,8 @@ Public Class UCVirtualMotionTracker
                             (mIni.ReadKeyValue("MiscSettings", "EnableVelocityController", "true") = "true")
                         g_mMiscSettings.m_EnableVelocityTracker =
                             (mIni.ReadKeyValue("MiscSettings", "EnableVelocityTracker", "true") = "true")
+                        g_mMiscSettings.m_EnableVelocityInterpoliation =
+                            (mIni.ReadKeyValue("MiscSettings", "EnableVelocityInterpoliation", "false") = "true")
                         g_mMiscSettings.m_OscRemoteIP =
                             mIni.ReadKeyValue("MiscSettings", "OscRemoteIP", "")
 
@@ -1231,6 +1243,7 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableVelocityHmd", If(g_mMiscSettings.m_EnableVelocityHmd, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableVelocityController", If(g_mMiscSettings.m_EnableVelocityController, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableVelocityTracker", If(g_mMiscSettings.m_EnableVelocityTracker, "true", "false")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableVelocityInterpoliation", If(g_mMiscSettings.m_EnableVelocityInterpoliation, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "OscRemoteIP", g_mMiscSettings.m_OscRemoteIP))
                         End If
 

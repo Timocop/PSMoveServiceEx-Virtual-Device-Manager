@@ -1259,7 +1259,9 @@ Public Class UCVirtualMotionTrackerItem
             Dim mRumbleLastTimeSend As Date = Now
             Dim mRumbleLastTimeSendValid As Boolean = False
 
-            Dim mVelocityLastTime As Date = Now
+            Dim mLastVelocityTime As Date = Now
+            Dim mLastPositionTime As Date = Now
+            Dim mLastOrientationTime As Date = Now
             Dim mVelocityLastPosition As Vector3 = Vector3.Zero
             Dim mVelocityLastOrientation As Quaternion = Quaternion.Identity
             Dim mVelocityLastVelPosition As Vector3 = Vector3.Zero
@@ -1268,7 +1270,9 @@ Public Class UCVirtualMotionTrackerItem
             Dim mKnownOrientation As Quaternion = Quaternion.Identity
             Dim mLastKnownPosition As Vector3 = Vector3.Zero
             Dim mLastKnownOrientation As Quaternion = Quaternion.Identity
-            Dim mVelocityNormalizedDelta As New Queue(Of Double)
+            Dim mNormalizedLocalDelta As New Queue(Of Double)
+            Dim mNormalizedPositionDelta As New Queue(Of Double)
+            Dim mNormalizedOrientationDelta As New Queue(Of Double)
             Dim iVelocityPositionDelta As Double = 0.0
             Dim iVelocityOrientationDelta As Double = 0.0
 
@@ -1365,6 +1369,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim bEnableVelocityHmd As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityHmd
                         Dim bEnableVelocityController As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityController
                         Dim bEnableVelocityTracker As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityTracker
+                        Dim bEnableVelocityInterpoliation As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityInterpoliation
 
 
                         Dim bEnfocePacketUpdate As Boolean = False
@@ -1541,10 +1546,12 @@ Public Class UCVirtualMotionTrackerItem
                                                             mLastKnownPosition, mLastKnownOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            mLastVelocityTime,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedLocalDelta,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
                                                             iVelocityPositionDelta, iVelocityOrientationDelta,
-                                                            True
+                                                            True, bEnableVelocityInterpoliation
                                                         )
                                                 End If
 
@@ -1745,10 +1752,12 @@ Public Class UCVirtualMotionTrackerItem
                                                             mLastKnownPosition, mLastKnownOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            mLastVelocityTime,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedLocalDelta,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
                                                             iVelocityPositionDelta, iVelocityOrientationDelta,
-                                                            True
+                                                            True, bEnableVelocityInterpoliation
                                                         )
                                                     End If
 
@@ -1840,10 +1849,12 @@ Public Class UCVirtualMotionTrackerItem
                                                             mLastKnownPosition, mLastKnownOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            mLastVelocityTime,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedLocalDelta,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
                                                             iVelocityPositionDelta, iVelocityOrientationDelta,
-                                                            True
+                                                            True, bEnableVelocityInterpoliation
                                                         )
                                                     End If
 
@@ -1893,10 +1904,12 @@ Public Class UCVirtualMotionTrackerItem
                                                             mLastKnownPosition, mLastKnownOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            mLastVelocityTime,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedLocalDelta,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
                                                             iVelocityPositionDelta, iVelocityOrientationDelta,
-                                                            True
+                                                            True, bEnableVelocityInterpoliation
                                                         )
                                                     End If
 
@@ -1994,10 +2007,12 @@ Public Class UCVirtualMotionTrackerItem
                                                             mLastKnownPosition, mLastKnownOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mVelocityLastTime,
-                                                            iVelocityTimeOffset, mVelocityNormalizedDelta,
+                                                            mLastVelocityTime,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedLocalDelta,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
                                                             iVelocityPositionDelta, iVelocityOrientationDelta,
-                                                            True
+                                                            True, bEnableVelocityInterpoliation
                                                         )
                                                     End If
 
@@ -2105,27 +2120,27 @@ Public Class UCVirtualMotionTrackerItem
                                               ByRef mLastKnownPosition As Vector3, ByRef mLastKnownOrientation As Quaternion,
                                               ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
                                               ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
-                                              ByRef mVelocityLastTime As Date,
-                                              ByRef iVelocityTimeOffset As Single,
-                                              ByRef mVelocityNormalizedDelta As Queue(Of Double),
+                                              ByRef mLastVelocityTime As Date,
+                                              ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
+                                              ByRef mNormalizedLocalDelta As Queue(Of Double),
+                                              ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
                                               ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double,
-                                              ByRef bIsHMD As Boolean)
+                                              ByRef bIsHMD As Boolean, bVelocityInterpolation As Boolean)
             Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
             Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
-            Const VELOCITY_POSITION_COMPENSATION = True
             Const VELOCITY_POSITION_SMOOTHING = 0.4
             Const VELOCITY_ORIENTATION_SMOOTHING = 0.2
 
             Dim mNow As Date = Now
-            Dim mGlobalDelta As TimeSpan = (mNow - mVelocityLastTime)
-            Dim iGlobalDeltaTime As Double = mGlobalDelta.TotalSeconds
-            mVelocityLastTime = mNow
+            Dim mLocalDelta As TimeSpan = (mNow - mLastVelocityTime)
+            Dim iLocalDeltaTime As Double = mLocalDelta.TotalSeconds
+            mLastVelocityTime = mNow
 
-            mVelocityNormalizedDelta.Enqueue(iGlobalDeltaTime)
-            If (mVelocityNormalizedDelta.Count > 120) Then
-                mVelocityNormalizedDelta.Dequeue()
+            mNormalizedLocalDelta.Enqueue(iLocalDeltaTime)
+            If (mNormalizedLocalDelta.Count > 120) Then
+                mNormalizedLocalDelta.Dequeue()
             End If
-            iGlobalDeltaTime = mVelocityNormalizedDelta.Average()
+            iLocalDeltaTime = mNormalizedLocalDelta.Average()
 
             ' Linear Velocity
             If (True) Then
@@ -2133,32 +2148,60 @@ Public Class UCVirtualMotionTrackerItem
                     mKnownPosition = mPosition
                     mLastKnownPosition = mLastPosition
 
-                    If (iGlobalDeltaTime > MAX_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    Dim mDelta As TimeSpan = (mNow - mLastPositionTime)
+                    Dim iDeltaTime As Double = mDelta.TotalSeconds
+                    mLastPositionTime = mNow
+
+                    mNormalizedPositionDelta.Enqueue(iDeltaTime)
+                    If (mNormalizedPositionDelta.Count > 30) Then
+                        mNormalizedPositionDelta.Dequeue()
+                    End If
+                    iDeltaTime = mNormalizedPositionDelta.Average()
+
+                    If (bVelocityInterpolation) Then
+                        iDeltaTime = iLocalDeltaTime
+                    End If
+
+                    If (iDeltaTime > MAX_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                         Dim mNewVelocity = New Vector3(
-                            CSng((mKnownPosition.X - mLastKnownPosition.X) / iGlobalDeltaTime),
-                            CSng((mKnownPosition.Y - mLastKnownPosition.Y) / iGlobalDeltaTime),
-                            CSng((mKnownPosition.Z - mLastKnownPosition.Z) / iGlobalDeltaTime)
+                            CSng((mKnownPosition.X - mLastKnownPosition.X) / iDeltaTime),
+                            CSng((mKnownPosition.Y - mLastKnownPosition.Y) / iDeltaTime),
+                            CSng((mKnownPosition.Z - mLastKnownPosition.Z) / iDeltaTime)
                         )
                         mLastVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mLastVelocityPosition)
                     End If
 
                     mLastPosition = mPosition
-                    iVelocityPositionDelta = iGlobalDeltaTime
+                    iVelocityPositionDelta = 0
                 End If
 
-                iVelocityPositionDelta += iGlobalDeltaTime
                 If (iVelocityPositionDelta <= MIN_VELOCITY_FREQ) Then
                     mVelocityPosition = mLastVelocityPosition
                 End If
 
-                ' Compensate
-                If (VELOCITY_POSITION_COMPENSATION) Then
-                    If (iVelocityPositionDelta > Double.Epsilon AndAlso iVelocityPositionDelta <= MIN_VELOCITY_FREQ) Then
-                        mPosition = New Vector3(
-                            CSng(mKnownPosition.X - (mVelocityPosition.X * iVelocityPositionDelta)),
-                            CSng(mKnownPosition.Y - (mVelocityPosition.Y * iVelocityPositionDelta)),
-                            CSng(mKnownPosition.Z - (mVelocityPosition.Z * iVelocityPositionDelta))
-                        )
+                ' Interpolation
+                If (True) Then
+                    Dim iInterpolateDelta As Double = iLocalDeltaTime
+                    If (bVelocityInterpolation) Then
+                        iInterpolateDelta = iVelocityPositionDelta
+                    End If
+
+                    iVelocityPositionDelta += iLocalDeltaTime
+
+                    If (iInterpolateDelta > Double.Epsilon AndAlso iInterpolateDelta <= MIN_VELOCITY_FREQ) Then
+                        If (bVelocityInterpolation) Then
+                            mPosition = New Vector3(
+                                CSng(mLastKnownPosition.X + (mVelocityPosition.X * iInterpolateDelta)),
+                                CSng(mLastKnownPosition.Y + (mVelocityPosition.Y * iInterpolateDelta)),
+                                CSng(mLastKnownPosition.Z + (mVelocityPosition.Z * iInterpolateDelta))
+                            )
+                        Else
+                            mPosition = New Vector3(
+                                CSng(mKnownPosition.X - (mVelocityPosition.X * iInterpolateDelta)),
+                                CSng(mKnownPosition.Y - (mVelocityPosition.Y * iInterpolateDelta)),
+                                CSng(mKnownPosition.Z - (mVelocityPosition.Z * iInterpolateDelta))
+                            )
+                        End If
                     Else
                         mPosition = mKnownPosition
                     End If
@@ -2171,31 +2214,54 @@ Public Class UCVirtualMotionTrackerItem
                     mKnownOrientation = mOrientation
                     mLastKnownOrientation = mLastOrientation
 
-                    If (iGlobalDeltaTime > MAX_VELOCITY_FREQ AndAlso iGlobalDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    Dim mDelta As TimeSpan = (mNow - mLastOrientationTime)
+                    Dim iDeltaTime As Double = mDelta.TotalSeconds
+                    mLastOrientationTime = mNow
+
+                    mNormalizedOrientationDelta.Enqueue(iDeltaTime)
+                    If (mNormalizedOrientationDelta.Count > 30) Then
+                        mNormalizedOrientationDelta.Dequeue()
+                    End If
+                    iDeltaTime = mNormalizedOrientationDelta.Average()
+
+                    If (bVelocityInterpolation) Then
+                        iDeltaTime = iLocalDeltaTime
+                    End If
+
+                    If (iDeltaTime > MAX_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                         Dim mNewVelocity = ClassQuaternionTools.AngularVelocityBetweenQuats(
-                            mLastKnownOrientation, mKnownOrientation, iGlobalDeltaTime
+                            mLastKnownOrientation, mKnownOrientation, iDeltaTime
                         )
                         mLastVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mLastVelocityOrientation)
                     End If
 
                     mLastOrientation = mOrientation
-                    iVelocityOrientationDelta = iGlobalDeltaTime
+                    iVelocityOrientationDelta = 0
                 End If
 
-                iVelocityOrientationDelta += iGlobalDeltaTime
                 If (iVelocityOrientationDelta <= MIN_VELOCITY_FREQ) Then
                     mVelocityOrientation = mLastVelocityOrientation
                 End If
 
-                ' Compensate
-                If (VELOCITY_POSITION_COMPENSATION) Then
-                    If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ) Then
-                        mOrientation = mKnownOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
+                ' Interpolation
+                If (True) Then
+                    Dim iInterpolateDelta As Double = iLocalDeltaTime
+                    If (bVelocityInterpolation) Then
+                        iInterpolateDelta = iVelocityOrientationDelta
+                    End If
+
+                    iVelocityOrientationDelta += iLocalDeltaTime
+
+                    If (iInterpolateDelta > Double.Epsilon AndAlso iInterpolateDelta <= MIN_VELOCITY_FREQ) Then
+                        If (bVelocityInterpolation) Then
+                            mOrientation = mLastKnownOrientation * ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iInterpolateDelta)
+                        Else
+                            mOrientation = mKnownOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iInterpolateDelta))
+                        End If
                     Else
                         mOrientation = mKnownOrientation
                     End If
                 End If
-
             End If
         End Sub
 
