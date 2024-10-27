@@ -58,8 +58,10 @@ Public Class UCVirtualMotionTrackerItem
 
         If (g_bIsHMD) Then
             Label_DeviceID.Text = "HMD ID:"
+            Me.ToolTip1.SetToolTip(ComboBox_DeviceID, "The PSMoveServiceEx head-mounted display id that will be used for this tracker.")
         Else
             Label_DeviceID.Text = "Controller ID:"
+            Me.ToolTip1.SetToolTip(ComboBox_DeviceID, "The PSMoveServiceEx controller id that will be used for this tracker.")
         End If
 
         Try

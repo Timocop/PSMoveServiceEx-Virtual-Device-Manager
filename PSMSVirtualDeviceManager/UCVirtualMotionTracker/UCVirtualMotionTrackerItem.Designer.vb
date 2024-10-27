@@ -72,7 +72,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_DeviceID.Name = "ComboBox_DeviceID"
         Me.ComboBox_DeviceID.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_DeviceID.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.ComboBox_DeviceID, "The PSMoveServiceEx controller id that will be used for this tracker.")
+        Me.ToolTip1.SetToolTip(Me.ComboBox_DeviceID, "The PSMoveServiceEx device id that will be used for this tracker.")
         '
         'Label_DeviceID
         '

@@ -502,7 +502,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
         Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(132, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 78
-        Me.ToolTip_Info.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The controller id you want to use for playspace calibration.")
+        Me.ToolTip_Info.SetToolTip(Me.ComboBox_PlayCalibControllerID, "The PSMoveServiceEx controller id you want to use for playspace calibration.")
         '
         'Label28
         '
