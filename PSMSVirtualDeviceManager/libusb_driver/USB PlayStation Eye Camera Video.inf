@@ -1,10 +1,10 @@
-; USB PlayStation Eye Camera.inf
+; USB PlayStation Eye Camera Video.inf
 ; Copyright (c) 2010 libusb-win32 (GNU LGPL)
 [Strings]
-DeviceName = "USB PlayStation Eye Camera"
+DeviceName = "USB PlayStation Eye Camera Video"
 VendorName = "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc."
-SourceName = "USB PlayStation Eye Camera Install Disk"
-DeviceID   = "VID_1415&PID_2000"
+SourceName = "USB PlayStation Eye Camera Video Install Disk"
+DeviceID   = "VID_1415&PID_2000&MI_00"
 DeviceGUID = "{AEBAA2BB-5059-491B-8A7B-79FE57FB01DA}"
 
 [Version]
@@ -12,7 +12,7 @@ Signature   = "$Windows NT$"
 Class       = "libusb-win32 devices"
 ClassGuid   = {EB781AAF-9C70-4523-A5DF-642A87ECA567}
 Provider    = "libusb-win32"
-CatalogFile = USB PlayStation Eye Camera.cat
+CatalogFile = USB PlayStation Eye Camera Video.cat
 DriverVer   = 02/29/2024, 1.2.6.0
 
 [ClassInstall32]

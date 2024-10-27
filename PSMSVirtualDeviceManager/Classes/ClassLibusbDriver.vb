@@ -66,25 +66,27 @@ Public Class ClassLibusbDriver
     Public Shared ReadOnly DRV_PS4CAM_FIRMWARE_NAME As String = "FirmwareLoader.exe"
     Public Shared ReadOnly DRV_PS4CAM_FIRMWARE_BIN_NAME As String = "firmware.bin"
 
+    Public Shared ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 1) Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058A", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 1) Stereo Camera Video (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058A", "00", USBVIDEO_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 2) Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 2) Stereo Camera Video (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
+    }
     Public Shared ReadOnly DRV_PS4CAM_WINUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.WINUSBK)
     }
-    Public Shared ReadOnly DRV_PS4CAM_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "0580", Nothing, WINUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 1) Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058A", Nothing, USBCTRL_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 1) Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058A", "00", USBVIDEO_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 2) Stereo Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", Nothing, USBCTRL_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 (Gen 2) Stereo Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "05A9", "058B", "00", USBVIDEO_SERVICE_NAME)
-    }
+
 
     Public Shared ReadOnly DRV_PSEYE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00", Nothing),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01", USBAUDIO_SERVICE_NAME)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera (Composite Device)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, USBCTRL_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera Video (Interface 0)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00", LIBUSB_SERVICE_NAME),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera Audio (Interface 1)", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "01", USBAUDIO_SERVICE_NAME)
     }
     Public Shared ReadOnly DRV_PSEYE_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", Nothing, LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB)
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Eye Camera Video", "Nam Tai E&E Products Ltd. or OmniVision Technologies, Inc.", "1415", "2000", "00", LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB)
     }
+
 
     Public Shared ReadOnly DRV_PSVR_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR (Composite Device)", "Sony Corp.", "054C", "09AF", Nothing, USBCTRL_SERVICE_NAME),
@@ -97,23 +99,26 @@ Public Class ClassLibusbDriver
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Input Device (Interface 8)", "Sony Corp.", "054C", "09AF", "08", HID_SERVICE_NAME)
     }
     Public Shared ReadOnly DRV_PSVR_LIBUSB_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00", LIBUSB_SERVICE_NAME), ' Just add a driver so it does not show as hardware issue.
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control", "Sony Corp.", "054C", "09AF", "05", LIBUSB_SERVICE_NAME),
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06", LIBUSB_SERVICE_NAME), ' Just add a driver so it does not show as hardware issue.
-        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07", LIBUSB_SERVICE_NAME) ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR 3D Audio", "Sony Corp.", "054C", "09AF", "00", LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Control", "Sony Corp.", "054C", "09AF", "05", LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB),
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR H.264", "Sony Corp.", "054C", "09AF", "06", LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB), ' Just add a driver so it does not show as hardware issue.
+        New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR BulkIn", "Sony Corp.", "054C", "09AF", "07", LIBUSB_SERVICE_NAME, ENUM_WDI_DRIVERTYPE.LIBUSB) ' Just add a driver so it does not show as hardware issue.
     }
     Public Shared ReadOnly DRV_PSVR_HID_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation VR Sensor", "Sony Corp.", "054C", "09AF", "04", HID_SERVICE_NAME)
     }
+
 
     Public Shared ReadOnly DRV_PSMOVE_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 3 Motion Controller", "Sony Corp.", "054C", "03D5", Nothing, HID_SERVICE_NAME),
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation 4 Motion Controller", "Sony Corp.", "054C", "0C5E", Nothing, HID_SERVICE_NAME)
     }
 
+
     Public Shared ReadOnly DRV_CONTROLLER_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation Controller (Composite Device)", "Sony Corp.", "1D6B", "0104", Nothing, USBCTRL_SERVICE_NAME) ' PSNavi / DualShock3 (via RaspberryPi Multifunction Composite Device)
     }
+
 
     Public Shared ReadOnly DRV_DUALSHOCK_KNOWN_CONFIGS As STRUC_DEVICE_DRIVER_INFO() = {
         New STRUC_DEVICE_DRIVER_INFO("USB PlayStation DualShock 4 Controller", "Sony Corp.", "054C", "05C4", Nothing, HID_SERVICE_NAME)
