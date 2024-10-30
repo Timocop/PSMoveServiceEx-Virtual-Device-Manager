@@ -879,7 +879,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSEYE_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
@@ -965,7 +965,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSVR_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
@@ -1052,7 +1052,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PS4CAM_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
@@ -1108,7 +1108,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PS4CAM, FormMain.COMMANDLINE_VERBOSE})
@@ -1155,7 +1155,7 @@ Public Class UCStartPage
 
                     Dim bUseDirectMode As Boolean = False
                     Using i As New FormDisplayModeSelection
-                        If (i.ShowDialog = DialogResult.OK) Then
+                        If (i.ShowDialog(g_FormMain) = DialogResult.OK) Then
                             bUseDirectMode = i.m_ResultDirectMode
                         Else
                             Return
@@ -1195,7 +1195,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Installing configuration..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim sMode As String
@@ -1258,7 +1258,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PSEYE, FormMain.COMMANDLINE_VERBOSE})
@@ -1314,7 +1314,7 @@ Public Class UCStartPage
 
                                                    g_mDriverInstallFormLoad = New FormLoading
                                                    g_mDriverInstallFormLoad.Text = "Uninstalling drivers and display configurations..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(Me)
+                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                                End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PSVR, FormMain.COMMANDLINE_VERBOSE})
@@ -1392,7 +1392,7 @@ Public Class UCStartPage
     Private Sub LinkLabel_ManageConnectedDevices_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ManageConnectedDevices.LinkClicked
         Try
             Using mForm As New FormConnectedDevices
-                mForm.ShowDialog()
+                mForm.ShowDialog(g_FormMain)
             End Using
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
@@ -1414,7 +1414,7 @@ Public Class UCStartPage
 
                                                                                              g_mUpdateInstallFormLoad = New FormLoading
                                                                                              g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
-                                                                                             g_mUpdateInstallFormLoad.ShowDialog(Me)
+                                                                                             g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
                                                                                          End Sub)
 
                                                               Dim mConfig As New ClassServiceInfo
@@ -1465,7 +1465,7 @@ Public Class UCStartPage
 
                                                                                              g_mUpdateInstallFormLoad = New FormLoading
                                                                                              g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
-                                                                                             g_mUpdateInstallFormLoad.ShowDialog(Me)
+                                                                                             g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
                                                                                          End Sub)
 
                                                               Dim sEndProcessNames As New List(Of String)
@@ -1513,7 +1513,7 @@ Public Class UCStartPage
 
                                                                                              g_mUpdateInstallFormLoad = New FormLoading
                                                                                              g_mUpdateInstallFormLoad.Text = "Downloading and installing PSMoveServiceEx..."
-                                                                                             g_mUpdateInstallFormLoad.ShowDialog(Me)
+                                                                                             g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
                                                                                          End Sub)
 
                                                               Dim sServicePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "PSMoveServiceEx")
@@ -1589,7 +1589,7 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
         Using mLogs As New FormTroubleshootLogs(g_FormMain)
-            mLogs.ShowDialog(Me)
+            mLogs.ShowDialog(g_FormMain)
         End Using
     End Sub
 End Class

@@ -305,7 +305,7 @@ Public Class UCVmtSettings
     Private Sub LinkLabel_TouchpadShortcutHelp_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_TouchpadShortcutHelp.LinkClicked
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpTouchpadShortcuts
-        mMsg.ShowDialog(Me)
+        mMsg.ShowDialog(g_UCVirtualMotionTracker.g_mFormMain)
     End Sub
 
     Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_HtcTouchpadShortcuts.CheckedChanged

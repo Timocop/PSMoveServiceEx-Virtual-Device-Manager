@@ -964,7 +964,7 @@ Public Class UCRemoteDevices
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpRemoteDevices
-        mMsg.ShowDialog(Me)
+        mMsg.ShowDialog(g_mUCVirtualControllers.g_mFormMain)
     End Sub
 
     Private Sub ListView_RemoteDevices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_RemoteDevices.SelectedIndexChanged

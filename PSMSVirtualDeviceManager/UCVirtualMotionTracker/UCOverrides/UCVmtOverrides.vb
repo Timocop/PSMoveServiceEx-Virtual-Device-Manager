@@ -21,7 +21,7 @@
             Dim sKnownTrackers As String() = mConfig.m_ClassTrackerRoles.GetKnownTrackers
 
             Using i As New FormTrackerOverrideSetup(sKnownTrackers)
-                If (i.ShowDialog = DialogResult.OK) Then
+                If (i.ShowDialog(g_UCVirtualMotionTracker.g_mFormMain) = DialogResult.OK) Then
                     Dim mResult = i.m_DialogResult
 
                     Dim sTracker As String = ""

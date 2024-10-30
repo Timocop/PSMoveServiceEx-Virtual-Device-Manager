@@ -2326,7 +2326,7 @@ Public Class UCVirtualTrackerItem
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim mHelp As New FormRtfHelp
         mHelp.RichTextBox_Help.Rtf = My.Resources.HelpVirtualTracker
-        mHelp.ShowDialog(Me)
+        mHelp.ShowDialog(g_mUCVirtualTrackers.g_mFormMain)
     End Sub
 
     Private Sub LinkLabel_MiscSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_MiscSettings.LinkClicked

@@ -161,7 +161,7 @@ Public Class UCVmtManagement
     Private Sub LinkLabel_SteamSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_SteamSettings.LinkClicked
         Try
             Using mSettings As New FormSteamSettings
-                mSettings.ShowDialog(Me)
+                mSettings.ShowDialog(g_UCVirtualMotionTracker.g_mFormMain)
             End Using
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)

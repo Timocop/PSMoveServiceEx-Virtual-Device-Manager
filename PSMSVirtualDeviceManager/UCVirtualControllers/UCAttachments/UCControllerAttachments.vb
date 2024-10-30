@@ -230,7 +230,7 @@ Public Class UCControllerAttachments
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpControllerAttachments
-        mMsg.ShowDialog(Me)
+        mMsg.ShowDialog(g_mUCVirtualControllers.g_mFormMain)
     End Sub
 
     Private Sub CleanUp()
