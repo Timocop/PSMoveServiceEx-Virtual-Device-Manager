@@ -1,4 +1,6 @@
-﻿Public Class FormMain
+﻿Imports Microsoft.Win32
+
+Public Class FormMain
 
 #Const ALWAYS_SHOW_UPDATE = False
 
@@ -25,6 +27,7 @@
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
 
+    Public Const COMMANDLINE_RUNAS_SYSTEM As String = "-runas-system"
     Public Const COMMANDLINE_PATCH_PSVR_MONITOR_MULTI As String = "-patch-psvr-monitor-multi"
     Public Const COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT As String = "-patch-psvr-monitor-direct"
     Public Const COMMANDLINE_PATCH_PSVR_MONITOR_REMOVE As String = "-patch-psvr-monitor-remove"
@@ -311,12 +314,40 @@
                     ' Patch the PSVR monitor registry to allow 120/90/60 Hz refresh rates
                     bExitOnSuccess = True
 
-
                     Try
                         Dim mClassMonitor As New ClassMonitor
                         Dim mDriverInstaller As New ClassLibusbDriver
 
-                        ' Remove conflicting drivers (e.g libusb on hid).
+                        ' Test if we have access to the display registry keys, or do we require SYSTEM priviliges
+                        ' This should only trigger on older Windows 10 builds or Windows versions prior to Windows 10.
+                        If (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT) Then
+                            If (Not sCmdLines.Contains(COMMANDLINE_RUNAS_SYSTEM)) Then
+                                Dim bRequiresSystem As Boolean = True
+
+                                Try
+                                    If (Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", True) Is Nothing) Then
+                                        bRequiresSystem = True
+                                    End If
+                                Catch ex As Exception
+                                    bRequiresSystem = True
+                                End Try
+
+                                If (bRequiresSystem) Then
+                                    Dim sCmdLinesSystem As New List(Of String)
+                                    sCmdLinesSystem.AddRange(sCmdLines)
+                                    sCmdLinesSystem.Add(COMMANDLINE_RUNAS_SYSTEM)
+
+                                    ' Remove executablepath
+                                    sCmdLinesSystem.RemoveAt(0)
+                                    ClassUtils.RunAsSystem(sCmdLinesSystem.ToArray)
+
+                                    Environment.Exit(1)
+                                    End
+                                End If
+                            End If
+                        End If
+
+                        ' Remove PSVR monitors
                         If (True) Then
                             Dim bScanNewDevices As Boolean = False
                             Dim sDevicesToRemove As New List(Of String)

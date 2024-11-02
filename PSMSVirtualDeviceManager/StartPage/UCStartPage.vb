@@ -29,7 +29,8 @@ Public Class UCStartPage
         "test_kalman_filter.exe",
         "test_navi_controller.exe",
         "test_psmove_controller.exe",
-        "unit_test_suite.exe"}
+        "unit_test_suite.exe"
+    }
 
     Public Sub New(mFormMain As FormMain)
         g_FormMain = mFormMain
@@ -1155,7 +1156,7 @@ Public Class UCStartPage
 
                     Dim bUseDirectMode As Boolean = False
                     Using i As New FormDisplayModeSelection
-                        If (i.ShowDialog(g_FormMain) = DialogResult.OK) Then
+                        If (i.ShowDialog = DialogResult.OK) Then
                             bUseDirectMode = i.m_ResultDirectMode
                         Else
                             Return
@@ -1208,9 +1209,12 @@ Public Class UCStartPage
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {sMode, FormMain.COMMANDLINE_VERBOSE})
 
                     ' Verbose already shows errors messages
-                    If (iExitCode = 0) Then
-                        MessageBox.Show("Configuration installed successfully!", "Configuration Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    End If
+                    Select Case (iExitCode)
+                        Case 0 'Success
+                            MessageBox.Show("Configuration installed successfully!", "Configuration Installation", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        Case 1 ' Finished but unknown status
+                            MessageBox.Show("The configuration installation is complete, but the result of the installation cannot be retrieved because it was run with SYSTEM privileges.", "Configuration Installation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    End Select
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception

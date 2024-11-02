@@ -71,6 +71,58 @@ Public Class ClassUtils
         End Using
     End Function
 
+    Public Shared Sub RunAsSystem(sCmds As String())
+        Dim sTaskIdentifier As String = Guid.NewGuid().ToString
+        Dim sTaskExecutable As String = "schtasks.exe"
+        Dim sProcessName As String = IO.Path.GetFileNameWithoutExtension(Application.ExecutablePath)
+
+        Dim iProcessIds As New List(Of Integer)
+
+
+        Dim sTaskCreateCmd As String = String.Format(
+            "/create /tn ""{0}"" /tr """"{1}"" {0} {2}"" /sc once /st 00:00 /rl highest /ru SYSTEM",
+            sTaskIdentifier, Application.ExecutablePath, String.Join(" ", sCmds)
+        )
+        Dim sTaskRunCmd As String = String.Format("/run /tn ""{0}""", sTaskIdentifier)
+        Dim sTaskDeleteCmd As String = String.Format("/delete /tn ""{0}"" /f", sTaskIdentifier)
+
+        Dim sCommandList As New List(Of String)
+        sCommandList.Add(sTaskCreateCmd)
+        sCommandList.Add(sTaskRunCmd)
+        sCommandList.Add(sTaskDeleteCmd)
+
+        ' Lets grab all already running application process ids so we can find the new application later
+        ' This is terribly lazy
+        For Each mProcess In Process.GetProcessesByName(sProcessName)
+            iProcessIds.Add(mProcess.Id)
+        Next
+
+        For Each sTaskComamnd As String In sCommandList
+            Using mProcess As New Process
+                mProcess.StartInfo.FileName = sTaskExecutable
+                mProcess.StartInfo.Arguments = sTaskComamnd
+                mProcess.StartInfo.CreateNoWindow = True
+                mProcess.StartInfo.UseShellExecute = False
+
+                mProcess.Start()
+                mProcess.WaitForExit()
+
+                If (mProcess.ExitCode <> 0) Then
+                    Throw New ArgumentException("Task failed with error code: " & mProcess.ExitCode)
+                End If
+            End Using
+        Next
+
+        ' Lets wait all new spawned processes
+        For Each mProcess In Process.GetProcessesByName(sProcessName)
+            If (iProcessIds.IndexOf(mProcess.Id) > -1) Then
+                Continue For
+            End If
+
+            mProcess.WaitForExit()
+        Next
+    End Sub
+
     Public Shared Sub SyncInvoke(mControl As Control, mFunction As [Delegate])
         mControl.Invoke(mFunction)
     End Sub
