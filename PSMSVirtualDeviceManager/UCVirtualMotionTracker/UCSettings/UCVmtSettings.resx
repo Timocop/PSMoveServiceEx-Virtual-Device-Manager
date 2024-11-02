@@ -136,19 +136,16 @@
     <value>        Holding the SELECT button on the PSmove controller will recenter the controllers orientation. 
         This is useful for controllers without magnetometers which experience yaw drift over time.</value>
   </data>
-  <data name="CheckBox_EnableInterpolation.ToolTip" xml:space="preserve">
-    <value>Enables interpolation for smoother motion. This is usually not necessary as PSMoveServiceEx already does the interpolation by default.
-If you are experiencing unstable or jittery motion due to packet loss or other causes, try enabling this feature.
-This feature only works when velocity is enabled and also adds a frame of additional latency.</value>
+  <data name="CheckBox_EnableManualVelocity.ToolTip" xml:space="preserve">
+    <value>When enabled, the velocity between the current and previous frame is calculated without using the PSMoveServiceEx device velocity.
+This may not be optimal because the PSMoveServiceEx velocity is already included in position and orientation.
+(Not recommended)</value>
   </data>
   <data name="CheckBox_DisableBasestations.ToolTip" xml:space="preserve">
     <value>Spawning emulated Base Stations consumes device slots, and currently, SteamVR supports a maximum of 16 devices. 
 If you are using numerous devices, consider disabling emulated Base Station spawning to free up slots for trackers. 
 It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
   </data>
-  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>273, 25</value>
-  </metadata>
   <metadata name="BackgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>529, 25</value>
   </metadata>

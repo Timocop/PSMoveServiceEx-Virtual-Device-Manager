@@ -137,7 +137,7 @@ Partial Class UCVmtSettings
         Me.UcNumericUpDownBig1 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.TabPage_SettingsOther = New System.Windows.Forms.TabPage()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
-        Me.CheckBox_EnableInterpolation = New System.Windows.Forms.CheckBox()
+        Me.CheckBox_EnableManualVelocity = New System.Windows.Forms.CheckBox()
         Me.CheckBox_EnableVelocityTrackers = New System.Windows.Forms.CheckBox()
         Me.CheckBox_EnableVelocityControllers = New System.Windows.Forms.CheckBox()
         Me.CheckBox_EnableVelocityHmd = New System.Windows.Forms.CheckBox()
@@ -1604,7 +1604,7 @@ Partial Class UCVmtSettings
         '
         Me.GroupBox7.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox7.Controls.Add(Me.CheckBox_EnableInterpolation)
+        Me.GroupBox7.Controls.Add(Me.CheckBox_EnableManualVelocity)
         Me.GroupBox7.Controls.Add(Me.CheckBox_EnableVelocityTrackers)
         Me.GroupBox7.Controls.Add(Me.CheckBox_EnableVelocityControllers)
         Me.GroupBox7.Controls.Add(Me.CheckBox_EnableVelocityHmd)
@@ -1615,18 +1615,18 @@ Partial Class UCVmtSettings
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Linear and angular velocity"
         '
-        'CheckBox_EnableInterpolation
+        'CheckBox_EnableManualVelocity
         '
-        Me.CheckBox_EnableInterpolation.AutoSize = True
-        Me.CheckBox_EnableInterpolation.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_EnableInterpolation.Location = New System.Drawing.Point(13, 93)
-        Me.CheckBox_EnableInterpolation.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_EnableInterpolation.Name = "CheckBox_EnableInterpolation"
-        Me.CheckBox_EnableInterpolation.Size = New System.Drawing.Size(138, 18)
-        Me.CheckBox_EnableInterpolation.TabIndex = 62
-        Me.CheckBox_EnableInterpolation.Text = "Enable Interpolation"
-        Me.ToolTip_Info.SetToolTip(Me.CheckBox_EnableInterpolation, resources.GetString("CheckBox_EnableInterpolation.ToolTip"))
-        Me.CheckBox_EnableInterpolation.UseVisualStyleBackColor = True
+        Me.CheckBox_EnableManualVelocity.AutoSize = True
+        Me.CheckBox_EnableManualVelocity.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_EnableManualVelocity.Location = New System.Drawing.Point(13, 93)
+        Me.CheckBox_EnableManualVelocity.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_EnableManualVelocity.Name = "CheckBox_EnableManualVelocity"
+        Me.CheckBox_EnableManualVelocity.Size = New System.Drawing.Size(218, 18)
+        Me.CheckBox_EnableManualVelocity.TabIndex = 62
+        Me.CheckBox_EnableManualVelocity.Text = "Calculate velocity per frames instead"
+        Me.ToolTip_Info.SetToolTip(Me.CheckBox_EnableManualVelocity, resources.GetString("CheckBox_EnableManualVelocity.ToolTip"))
+        Me.CheckBox_EnableManualVelocity.UseVisualStyleBackColor = True
         '
         'CheckBox_EnableVelocityTrackers
         '
@@ -2084,5 +2084,5 @@ Partial Class UCVmtSettings
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents CheckBox_EnableVelocityTrackers As CheckBox
     Friend WithEvents CheckBox_EnableVelocityControllers As CheckBox
-    Friend WithEvents CheckBox_EnableInterpolation As CheckBox
+    Friend WithEvents CheckBox_EnableManualVelocity As CheckBox
 End Class

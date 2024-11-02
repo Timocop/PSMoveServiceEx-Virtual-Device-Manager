@@ -36,6 +36,8 @@ Public Class ClassServiceClient
 
         Property m_Position As Vector3
         Property m_Orientation As Quaternion
+        Property m_PositionVelocity As Vector3
+        Property m_OrientationVelocity As Vector3
 
         Property m_OutputSeqNum As Integer
         Property m_BatteryLevel As Single
@@ -55,6 +57,8 @@ Public Class ClassServiceClient
 
         Property m_Position As Vector3
         Property m_Orientation As Quaternion
+        Property m_PositionVelocity As Vector3
+        Property m_OrientationVelocity As Vector3
 
         Property m_OutputSeqNum As Integer
 
@@ -99,6 +103,8 @@ Public Class ClassServiceClient
 
         Public Property m_Position As Vector3 Implements IControllerData.m_Position
         Public Property m_Orientation As Quaternion Implements IControllerData.m_Orientation
+        Public Property m_PositionVelocity As Vector3 Implements IControllerData.m_PositionVelocity
+        Public Property m_OrientationVelocity As Vector3 Implements IControllerData.m_OrientationVelocity
 
         Public Property m_OutputSeqNum As Integer Implements IControllerData.m_OutputSeqNum
         Public Property m_BatteryLevel As Single Implements IControllerData.m_BatteryLevel
@@ -140,6 +146,8 @@ Public Class ClassServiceClient
 
         Public Property m_Position As Vector3 Implements IHmdData.m_Position
         Public Property m_Orientation As Quaternion Implements IHmdData.m_Orientation
+        Public Property m_PositionVelocity As Vector3 Implements IHmdData.m_PositionVelocity
+        Public Property m_OrientationVelocity As Vector3 Implements IHmdData.m_OrientationVelocity
 
         Public Property m_OutputSeqNum As Integer Implements IHmdData.m_OutputSeqNum
         Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
@@ -160,6 +168,8 @@ Public Class ClassServiceClient
 
         Public Property m_Position As Vector3 Implements IHmdData.m_Position
         Public Property m_Orientation As Quaternion Implements IHmdData.m_Orientation
+        Public Property m_PositionVelocity As Vector3 Implements IHmdData.m_PositionVelocity
+        Public Property m_OrientationVelocity As Vector3 Implements IHmdData.m_OrientationVelocity
 
         Public Property m_OutputSeqNum As Integer Implements IHmdData.m_OutputSeqNum
         Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
@@ -357,13 +367,23 @@ Public Class ClassServiceClient
                             Try
                                 SyncLock __ClientLock
                                     If (g_mPostStreamRequest.Count > 0) Then
-                                        If ((mController.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
-                                            mController.m_DataStreamFlags = (mController.m_DataStreamFlags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
+                                        Dim flags = mController.m_DataStreamFlags
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
+                                            flags = (flags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
                                         End If
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePhysicsData) = 0) Then
+                                            flags = (flags Or PSMStreamFlags.PSMStreamFlags_includePhysicsData)
+                                        End If
+                                        mController.m_DataStreamFlags = flags
                                     Else
-                                        If ((mController.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) > 0) Then
-                                            mController.m_DataStreamFlags = (mController.m_DataStreamFlags And Not PSMStreamFlags.PSMStreamFlags_includePositionData)
+                                        Dim flags = mController.m_DataStreamFlags
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePositionData) > 0) Then
+                                            flags = (flags And Not PSMStreamFlags.PSMStreamFlags_includePositionData)
                                         End If
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePhysicsData) > 0) Then
+                                            flags = (flags And Not PSMStreamFlags.PSMStreamFlags_includePhysicsData)
+                                        End If
+                                        mController.m_DataStreamFlags = flags
                                     End If
 
                                     If (Not mController.m_Listening) Then
@@ -452,6 +472,18 @@ Public Class ClassServiceClient
                                                         mController.m_Info.m_Pose.m_Orientation.w)
                                                 End If
 
+                                                If (mController.m_Info.IsPhysicsValid) Then
+                                                    mData.m_PositionVelocity = New Vector3(
+                                                        mController.m_Info.m_Physics.m_LinearVelocityCmPerSec.x,
+                                                        mController.m_Info.m_Physics.m_LinearVelocityCmPerSec.y,
+                                                        mController.m_Info.m_Physics.m_LinearVelocityCmPerSec.z)
+
+                                                    mData.m_OrientationVelocity = New Vector3(
+                                                        mController.m_Info.m_Physics.m_AngularVelocityRadPerSec.x,
+                                                        mController.m_Info.m_Physics.m_AngularVelocityRadPerSec.y,
+                                                        mController.m_Info.m_Physics.m_AngularVelocityRadPerSec.z)
+                                                End If
+
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
@@ -478,6 +510,30 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
+                                                If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
+                                                        Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
+                                                        Single.IsNaN(mData.m_PositionVelocity.Z)) Then
+                                                    SyncLock __DataLock
+                                                        If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                                            mData.m_PositionVelocity = g_mControllerPool(mController.m_Info.m_ControllerId).m_PositionVelocity
+                                                        Else
+                                                            mData.m_PositionVelocity = Vector3.Zero
+                                                        End If
+                                                    End SyncLock
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
+                                                        Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
+                                                        Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
+                                                    SyncLock __DataLock
+                                                        If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                                            mData.m_OrientationVelocity = g_mControllerPool(mController.m_Info.m_ControllerId).m_OrientationVelocity
+                                                        Else
+                                                            mData.m_OrientationVelocity = Vector3.Zero
+                                                        End If
+                                                    End SyncLock
+                                                End If
+
                                                 SyncLock __DataLock
                                                     g_mControllerPool(mController.m_Info.m_ControllerId) = mData
                                                 End SyncLock
@@ -496,13 +552,23 @@ Public Class ClassServiceClient
                             Try
                                 SyncLock __ClientLock
                                     If (g_mPostStreamRequest.Count > 0) Then
-                                        If ((mHmd.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
-                                            mHmd.m_DataStreamFlags = (mHmd.m_DataStreamFlags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
+                                        Dim flags = mHmd.m_DataStreamFlags
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
+                                            flags = (flags Or PSMStreamFlags.PSMStreamFlags_includePositionData)
                                         End If
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePhysicsData) = 0) Then
+                                            flags = (flags Or PSMStreamFlags.PSMStreamFlags_includePhysicsData)
+                                        End If
+                                        mHmd.m_DataStreamFlags = flags
                                     Else
-                                        If ((mHmd.m_DataStreamFlags And PSMStreamFlags.PSMStreamFlags_includePositionData) > 0) Then
-                                            mHmd.m_DataStreamFlags = (mHmd.m_DataStreamFlags And Not PSMStreamFlags.PSMStreamFlags_includePositionData)
+                                        Dim flags = mHmd.m_DataStreamFlags
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePositionData) > 0) Then
+                                            flags = (flags And Not PSMStreamFlags.PSMStreamFlags_includePositionData)
                                         End If
+                                        If ((flags And PSMStreamFlags.PSMStreamFlags_includePhysicsData) > 0) Then
+                                            flags = (flags And Not PSMStreamFlags.PSMStreamFlags_includePhysicsData)
+                                        End If
+                                        mHmd.m_DataStreamFlags = flags
                                     End If
 
                                     If (Not mHmd.m_Listening) Then
@@ -554,6 +620,18 @@ Public Class ClassServiceClient
                                                         mHmd.m_Info.m_Pose.m_Orientation.w)
                                                 End If
 
+                                                If (mHmd.m_Info.IsPhysicsValid) Then
+                                                    mData.m_PositionVelocity = New Vector3(
+                                                        mHmd.m_Info.m_Physics.m_LinearVelocityCmPerSec.x,
+                                                        mHmd.m_Info.m_Physics.m_LinearVelocityCmPerSec.y,
+                                                        mHmd.m_Info.m_Physics.m_LinearVelocityCmPerSec.z)
+
+                                                    mData.m_OrientationVelocity = New Vector3(
+                                                        mHmd.m_Info.m_Physics.m_AngularVelocityRadPerSec.x,
+                                                        mHmd.m_Info.m_Physics.m_AngularVelocityRadPerSec.y,
+                                                        mHmd.m_Info.m_Physics.m_AngularVelocityRadPerSec.z)
+                                                End If
+
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
@@ -576,6 +654,30 @@ Public Class ClassServiceClient
                                                             mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
                                                         Else
                                                             mData.m_Orientation = Quaternion.Identity
+                                                        End If
+                                                    End SyncLock
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
+                                                        Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
+                                                        Single.IsNaN(mData.m_PositionVelocity.Z)) Then
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_PositionVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_PositionVelocity
+                                                        Else
+                                                            mData.m_PositionVelocity = Vector3.Zero
+                                                        End If
+                                                    End SyncLock
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
+                                                        Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
+                                                        Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_OrientationVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_OrientationVelocity
+                                                        Else
+                                                            mData.m_OrientationVelocity = Vector3.Zero
                                                         End If
                                                     End SyncLock
                                                 End If
@@ -609,6 +711,18 @@ Public Class ClassServiceClient
                                                         mHmd.m_Info.m_Pose.m_Orientation.w)
                                                 End If
 
+                                                If (mHmd.m_Info.IsPhysicsValid) Then
+                                                    mData.m_PositionVelocity = New Vector3(
+                                                        mHmd.m_Info.m_Physics.m_LinearVelocityCmPerSec.x,
+                                                        mHmd.m_Info.m_Physics.m_LinearVelocityCmPerSec.y,
+                                                        mHmd.m_Info.m_Physics.m_LinearVelocityCmPerSec.z)
+
+                                                    mData.m_OrientationVelocity = New Vector3(
+                                                        mHmd.m_Info.m_Physics.m_AngularVelocityRadPerSec.x,
+                                                        mHmd.m_Info.m_Physics.m_AngularVelocityRadPerSec.y,
+                                                        mHmd.m_Info.m_Physics.m_AngularVelocityRadPerSec.z)
+                                                End If
+
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
@@ -631,6 +745,30 @@ Public Class ClassServiceClient
                                                             mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
                                                         Else
                                                             mData.m_Orientation = Quaternion.Identity
+                                                        End If
+                                                    End SyncLock
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
+                                                        Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
+                                                        Single.IsNaN(mData.m_PositionVelocity.Z)) Then
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_PositionVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_PositionVelocity
+                                                        Else
+                                                            mData.m_PositionVelocity = Vector3.Zero
+                                                        End If
+                                                    End SyncLock
+                                                End If
+
+                                                If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
+                                                        Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
+                                                        Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
+                                                    SyncLock __DataLock
+                                                        If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                            mData.m_OrientationVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_OrientationVelocity
+                                                        Else
+                                                            mData.m_OrientationVelocity = Vector3.Zero
                                                         End If
                                                     End SyncLock
                                                 End If

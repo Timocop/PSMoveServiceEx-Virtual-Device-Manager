@@ -910,6 +910,8 @@ Public Class UCVirtualMotionTrackerItem
 
             Public mPosition As Vector3 = Vector3.Zero
             Public mOrientation As Quaternion = Quaternion.Identity
+            Public mPositionVelocity As Vector3 = Vector3.Zero
+            Public mOrientationVelocity As Vector3 = Vector3.Zero
 
             Public mButtons As New Dictionary(Of Integer, Boolean)
             Public mTrigger As New Dictionary(Of Integer, Single)
@@ -921,6 +923,8 @@ Public Class UCVirtualMotionTrackerItem
             Public Sub New(_Pack As STRUC_OSC_DATA_PACK)
                 mPosition = _Pack.mPosition
                 mOrientation = _Pack.mOrientation
+                mPositionVelocity = _Pack.mPositionVelocity
+                mOrientationVelocity = _Pack.mOrientationVelocity
 
                 mButtons = New Dictionary(Of Integer, Boolean)(_Pack.mButtons)
                 mTrigger = New Dictionary(Of Integer, Single)(_Pack.mTrigger)
@@ -1365,7 +1369,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim bEnableVelocityHmd As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityHmd
                         Dim bEnableVelocityController As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityController
                         Dim bEnableVelocityTracker As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityTracker
-                        Dim bEnableVelocityInterpoliation As Boolean = mClassSettings.m_MiscSettings.m_EnableVelocityInterpoliation
+                        Dim bEnableManualVelocity As Boolean = mClassSettings.m_MiscSettings.m_EnableManualVelocity
 
 
                         Dim bEnfocePacketUpdate As Boolean = False
@@ -1389,20 +1393,28 @@ Public Class UCVirtualMotionTrackerItem
                                     iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
 
                                     SyncLock _ThreadLock
-                                        Dim mRawOrientation = g_mHmdData.m_Orientation
-                                        Dim mCalibratedOrientation = mRawOrientation
-
                                         Dim mRawPosition = g_mHmdData.m_Position
+                                        Dim mRawOrientation = g_mHmdData.m_Orientation
+                                        Dim mRawPositionVelocity = g_mHmdData.m_PositionVelocity
+                                        Dim mRawOrientationVelocity = g_mHmdData.m_OrientationVelocity
+
                                         Dim mCalibratedPosition = mRawPosition
+                                        Dim mCalibratedOrientation = mRawOrientation
+                                        Dim mCalibratedPositionVelocity = mRawPositionVelocity
+                                        Dim mCalibratedOrientationVelocity = mRawOrientationVelocity
 
                                         ' Playspace offsets, used for playspace calibration
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation, mCalibratedPositionVelocity, mCalibratedOrientationVelocity)
 
-                                        Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPosition = mCalibratedPosition
+                                        Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                        Dim mPositionVelocity = mCalibratedPositionVelocity
+                                        Dim mOrientationVelocity = mCalibratedOrientationVelocity
 
-                                        mOscDataPack.mOrientation = mOrientation
                                         mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mOrientation = mOrientation
+                                        mOscDataPack.mPositionVelocity = mPositionVelocity * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mOrientationVelocity = mOrientationVelocity
 
                                         ' $TODO Do something cool?
 
@@ -1535,15 +1547,29 @@ Public Class UCVirtualMotionTrackerItem
                                                 Dim iVelocityTimeOffset As Single = 0.0F
 
                                                 If (bEnableVelocityHmd) Then
-                                                    InternalCalculateVelocity(
-                                                        mCalcPosition, mCalcOrientation,
-                                                        mVelocityLastPosition, mVelocityLastOrientation,
-                                                        mVelocityPosition, mVelocityOrientation,
-                                                        mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                        mLastPositionTime, mLastOrientationTime,
-                                                        mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                        iVelocityPositionDelta, iVelocityOrientationDelta
-                                                    )
+                                                    If (bEnableManualVelocity) Then
+                                                        InternalCalculateVelocityManual(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                            iVelocityPositionDelta, iVelocityOrientationDelta
+                                                        )
+                                                    Else
+                                                        mVelocityPosition = mOscDataPack.mPositionVelocity
+                                                        mVelocityOrientation = mOscDataPack.mOrientationVelocity
+
+                                                        InternalCalculateVelocity(
+                                                            mCalcPosition, mCalcOrientation,
+                                                            mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mVelocityPosition, mVelocityOrientation,
+                                                            mLastPositionTime, mLastOrientationTime,
+                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                            iVelocityPositionDelta, iVelocityOrientationDelta
+                                                        )
+                                                    End If
                                                 End If
 
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1599,23 +1625,29 @@ Public Class UCVirtualMotionTrackerItem
                                     Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
                                     Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
 
-
-
                                     SyncLock _ThreadLock
-                                        Dim mRawOrientation = m_ControllerData.m_Orientation
-                                        Dim mCalibratedOrientation = mRawOrientation
-
                                         Dim mRawPosition = m_ControllerData.m_Position
+                                        Dim mRawOrientation = m_ControllerData.m_Orientation
+                                        Dim mRawPositionVelocity = m_ControllerData.m_PositionVelocity
+                                        Dim mRawOrientationVelocity = m_ControllerData.m_OrientationVelocity
+
                                         Dim mCalibratedPosition = mRawPosition
+                                        Dim mCalibratedOrientation = mRawOrientation
+                                        Dim mCalibratedPositionVelocity = mRawPositionVelocity
+                                        Dim mCalibratedOrientationVelocity = mRawOrientationVelocity
 
                                         ' Playspace offsets, used for playspace calibration
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation, mCalibratedPositionVelocity, mCalibratedOrientationVelocity)
 
-                                        Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPosition = mCalibratedPosition
+                                        Dim mOrientation = mRecenterQuat * mCalibratedOrientation
+                                        Dim mPositionVelocity = mCalibratedPositionVelocity
+                                        Dim mOrientationVelocity = mCalibratedOrientationVelocity
 
-                                        mOscDataPack.mOrientation = mOrientation
                                         mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mOrientation = mOrientation
+                                        mOscDataPack.mPositionVelocity = mPositionVelocity * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mOrientationVelocity = mOrientationVelocity
 
                                         Select Case (True)
                                             Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
@@ -1736,15 +1768,29 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocityTracker) Then
-                                                        InternalCalculateVelocity(
-                                                            mCalcPosition, mCalcOrientation,
-                                                            mVelocityLastPosition, mVelocityLastOrientation,
-                                                            mVelocityPosition, mVelocityOrientation,
-                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mLastPositionTime, mLastOrientationTime,
-                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                            iVelocityPositionDelta, iVelocityOrientationDelta
-                                                        )
+                                                        If (bEnableManualVelocity) Then
+                                                            InternalCalculateVelocityManual(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        Else
+                                                            mVelocityPosition = mOscDataPack.mPositionVelocity
+                                                            mVelocityOrientation = mOscDataPack.mOrientationVelocity
+
+                                                            InternalCalculateVelocity(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        End If
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1828,15 +1874,29 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocityController) Then
-                                                        InternalCalculateVelocity(
-                                                            mCalcPosition, mCalcOrientation,
-                                                            mVelocityLastPosition, mVelocityLastOrientation,
-                                                            mVelocityPosition, mVelocityOrientation,
-                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mLastPositionTime, mLastOrientationTime,
-                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                            iVelocityPositionDelta, iVelocityOrientationDelta
-                                                        )
+                                                        If (bEnableManualVelocity) Then
+                                                            InternalCalculateVelocityManual(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        Else
+                                                            mVelocityPosition = mOscDataPack.mPositionVelocity
+                                                            mVelocityOrientation = mOscDataPack.mOrientationVelocity
+
+                                                            InternalCalculateVelocity(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        End If
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1878,15 +1938,29 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocityTracker) Then
-                                                        InternalCalculateVelocity(
-                                                            mCalcPosition, mCalcOrientation,
-                                                            mVelocityLastPosition, mVelocityLastOrientation,
-                                                            mVelocityPosition, mVelocityOrientation,
-                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mLastPositionTime, mLastOrientationTime,
-                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                            iVelocityPositionDelta, iVelocityOrientationDelta
-                                                        )
+                                                        If (bEnableManualVelocity) Then
+                                                            InternalCalculateVelocityManual(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        Else
+                                                            mVelocityPosition = mOscDataPack.mPositionVelocity
+                                                            mVelocityOrientation = mOscDataPack.mOrientationVelocity
+
+                                                            InternalCalculateVelocity(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        End If
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1976,15 +2050,29 @@ Public Class UCVirtualMotionTrackerItem
                                                     Dim iVelocityTimeOffset As Single = 0.0F
 
                                                     If (bEnableVelocityController) Then
-                                                        InternalCalculateVelocity(
-                                                            mCalcPosition, mCalcOrientation,
-                                                            mVelocityLastPosition, mVelocityLastOrientation,
-                                                            mVelocityPosition, mVelocityOrientation,
-                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mLastPositionTime, mLastOrientationTime,
-                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                            iVelocityPositionDelta, iVelocityOrientationDelta
-                                                        )
+                                                        If (bEnableManualVelocity) Then
+                                                            InternalCalculateVelocityManual(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        Else
+                                                            mVelocityPosition = mOscDataPack.mPositionVelocity
+                                                            mVelocityOrientation = mOscDataPack.mOrientationVelocity
+
+                                                            InternalCalculateVelocity(
+                                                                mCalcPosition, mCalcOrientation,
+                                                                mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mVelocityPosition, mVelocityOrientation,
+                                                                mLastPositionTime, mLastOrientationTime,
+                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
+                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            )
+                                                        End If
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -2039,7 +2127,7 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mCalibratedPosition = mRawPosition
 
                                         ' Playspace offsets, used for playspace calibration
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation, Vector3.Zero, Vector3.Zero)
 
                                         Dim mOrientation As Quaternion = mCalibratedOrientation
                                         Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
@@ -2085,13 +2173,13 @@ Public Class UCVirtualMotionTrackerItem
             End While
         End Sub
 
-        Private Sub InternalCalculateVelocity(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
-                                              ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
-                                              ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
-                                              ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
-                                              ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
-                                              ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
-                                              ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
+        Private Sub InternalCalculateVelocityManual(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
+                                                  ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
+                                                  ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
+                                                  ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
+                                                  ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
+                                                  ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
+                                                  ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
             Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
             Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
             Const VELOCITY_POSITION_SMOOTHING = 0.4
@@ -2168,6 +2256,72 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
+        Private Sub InternalCalculateVelocity(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
+                                                      ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
+                                                      ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
+                                                      ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
+                                                      ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
+                                                      ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
+            Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
+            Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
+
+            Dim mNow As Date = Now
+
+            ' Linear Velocity
+            If (True) Then
+                Dim mDelta As TimeSpan = (mNow - mLastPositionTime)
+                Dim iDeltaTime As Double = mDelta.TotalSeconds
+
+                If (mPosition <> mLastPosition) Then
+                    mLastPositionTime = mNow
+
+                    mNormalizedOrientationDelta.Enqueue(iDeltaTime)
+                    If (mNormalizedOrientationDelta.Count > 30) Then
+                        mNormalizedOrientationDelta.Dequeue()
+                    End If
+                    Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
+
+                    mLastPosition = mPosition
+                    iVelocityPositionDelta = iAvgDeltaTime
+                End If
+
+                If (iVelocityPositionDelta > Double.Epsilon AndAlso iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    mPosition = New Vector3(
+                        CSng(mPosition.X - (mVelocityPosition.X * iVelocityPositionDelta)),
+                        CSng(mPosition.Y - (mVelocityPosition.Y * iVelocityPositionDelta)),
+                        CSng(mPosition.Z - (mVelocityPosition.Z * iVelocityPositionDelta))
+                    )
+                Else
+                    mVelocityPosition = Vector3.Zero
+                End If
+            End If
+
+            ' Angular Velocity
+            If (True) Then
+                Dim mDelta As TimeSpan = (mNow - mLastOrientationTime)
+                Dim iDeltaTime As Double = mDelta.TotalSeconds
+
+                If (mOrientation <> mLastOrientation) Then
+                    mLastOrientationTime = mNow
+
+                    mNormalizedOrientationDelta.Enqueue(iDeltaTime)
+                    If (mNormalizedOrientationDelta.Count > 30) Then
+                        mNormalizedOrientationDelta.Dequeue()
+                    End If
+                    Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
+
+                    mLastOrientation = mOrientation
+                    iVelocityOrientationDelta = iAvgDeltaTime
+                End If
+
+                If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
+                Else
+                    mVelocityPosition = Vector3.Zero
+                End If
+            End If
+        End Sub
+
         Private Sub InternalHepticFeedbackLogic(ByRef bEnableHepticFeedback As Boolean,
                                                 ByRef mRumbleLastTimeSendValid As Boolean,
                                                 ByRef mRumbleLastTimeSend As Date,
@@ -2229,7 +2383,9 @@ Public Class UCVirtualMotionTrackerItem
 
         Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
                                                            ByRef mPosition As Vector3,
-                                                           ByRef mOrientation As Quaternion)
+                                                           ByRef mOrientation As Quaternion,
+                                                           ByRef mPositionVelocity As Vector3,
+                                                           ByRef mOrientationVelocity As Vector3)
             ' Dont use offsets while we calibrate.
             If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING OrElse
                 m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
@@ -2261,10 +2417,13 @@ Public Class UCVirtualMotionTrackerItem
 
                 Dim mPlayspaceRotated = ClassQuaternionTools.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition)
+                Dim mPlayspaceRotatedVelocity = ClassQuaternionTools.RotateVector(
+                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPositionVelocity)
 
                 Dim mHeightOffset = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
 
                 mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated + mHeightOffset
+                mPositionVelocity = mPlayspaceRotatedVelocity + mPlayspaceCalibPointsRotated
                 mOrientation = Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset) * mOrientation
             End If
         End Sub
