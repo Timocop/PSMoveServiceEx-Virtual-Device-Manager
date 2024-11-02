@@ -10,8 +10,6 @@ Public Class UCVirtualMotionTrackerItem
 
     Const VMT_LIGHTHOUSE_BEGIN_INDEX As Integer = (ClassVmtConst.VMT_TRACKER_MAX + 1)
 
-    Shared _ThreadLock As New Object
-
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
 
     Public g_mClassIO As ClassIO
@@ -1433,62 +1431,6 @@ Public Class UCVirtualMotionTrackerItem
                                                             True,
                                                             mClassSettings)
 
-                                        If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
-                                            mDisplayNextUpdate.Restart()
-
-                                            Dim mClassMonitor As New ClassMonitor
-                                            Dim mDevMode As ClassMonitor.DEVMODE = Nothing
-                                            Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
-
-                                            Select Case (mClassMonitor.FindPlaystationVrMonitor(mDevMode, mDisplayInfo))
-                                                Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
-                                                    ' If we found a monitor, its probably in virtual-mode.
-
-                                                    If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
-                                                        If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI) Then
-                                                            iDisplayX = mDevMode.dmPositionX
-                                                            iDisplayY = mDevMode.dmPositionY
-                                                            iDisplayW = mDevMode.dmPelsWidth
-                                                            iDisplayH = mDevMode.dmPelsHeight
-                                                            iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
-                                                            iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                            iFrameRate = mDevMode.dmDisplayFrequency
-                                                            bDirectMode = False
-
-                                                            bDisplaySuccess = True
-                                                        End If
-                                                    End If
-
-                                                Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE,
-                                                        ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
-                                                    ' If display is not active or not found, its probably direct-mode
-                                                    If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
-                                                        '$TODO: Use settings to adjust properties like framerate.
-                                                        iDisplayX = 0
-                                                        iDisplayY = 0
-                                                        iDisplayW = 1920
-                                                        iDisplayH = 1080
-                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
-                                                        iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                        iFrameRate = HMD_DIRECT_MODE_FRAMERATE
-                                                        bDirectMode = True
-
-                                                        Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
-
-                                                        For l = 0 To ClassMonitor.PSVR_MONITOR_IDS.Length - 1
-                                                            Dim mPsvrMonitor = ClassMonitor.PSVR_MONITOR_IDS(l)
-
-                                                            If (mPsvrMonitor.GetMonitorNameLong().ToUpperInvariant.EndsWith(sMonitorName.ToUpperInvariant)) Then
-                                                                iVendorId = mPsvrMonitor.GetVID()
-                                                                iProductId = mPsvrMonitor.GetPID()
-
-                                                                bDisplaySuccess = True
-                                                            End If
-                                                        Next
-                                                    End If
-                                            End Select
-                                        End If
-
                                         If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
                                             Dim bSetPack As Boolean = False
 
@@ -1597,6 +1539,63 @@ Public Class UCVirtualMotionTrackerItem
                                             If (bSetPack) Then
                                                 g_mOscDataPack = New STRUC_OSC_DATA_PACK(mOscDataPack)
                                             End If
+                                        End If
+
+                                        ' May cause thread delay, put this in the end so we send pose without delay just in case.
+                                        If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
+                                            mDisplayNextUpdate.Restart()
+
+                                            Dim mClassMonitor As New ClassMonitor
+                                            Dim mDevMode As ClassMonitor.DEVMODE = Nothing
+                                            Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
+
+                                            Select Case (mClassMonitor.FindPlaystationVrMonitor(mDevMode, mDisplayInfo))
+                                                Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS
+                                                    ' If we found a monitor, its probably in virtual-mode.
+
+                                                    If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
+                                                        If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI) Then
+                                                            iDisplayX = mDevMode.dmPositionX
+                                                            iDisplayY = mDevMode.dmPositionY
+                                                            iDisplayW = mDevMode.dmPelsWidth
+                                                            iDisplayH = mDevMode.dmPelsHeight
+                                                            iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
+                                                            iRenderH = CInt((iDisplayH * iHmdRenderScale))
+                                                            iFrameRate = mDevMode.dmDisplayFrequency
+                                                            bDirectMode = False
+
+                                                            bDisplaySuccess = True
+                                                        End If
+                                                    End If
+
+                                                Case ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_ACTIVE,
+                                                        ClassMonitor.ENUM_PSVR_MONITOR_STATUS.ERROR_NOT_FOUND
+                                                    ' If display is not active or not found, its probably direct-mode
+                                                    If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
+                                                        '$TODO: Use settings to adjust properties like framerate.
+                                                        iDisplayX = 0
+                                                        iDisplayY = 0
+                                                        iDisplayW = 1920
+                                                        iDisplayH = 1080
+                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
+                                                        iRenderH = CInt((iDisplayH * iHmdRenderScale))
+                                                        iFrameRate = HMD_DIRECT_MODE_FRAMERATE
+                                                        bDirectMode = True
+
+                                                        Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
+
+                                                        For l = 0 To ClassMonitor.PSVR_MONITOR_IDS.Length - 1
+                                                            Dim mPsvrMonitor = ClassMonitor.PSVR_MONITOR_IDS(l)
+
+                                                            If (mPsvrMonitor.GetMonitorNameLong().ToUpperInvariant.EndsWith(sMonitorName.ToUpperInvariant)) Then
+                                                                iVendorId = mPsvrMonitor.GetVID()
+                                                                iProductId = mPsvrMonitor.GetPID()
+
+                                                                bDisplaySuccess = True
+                                                            End If
+                                                        Next
+                                                    End If
+                                            End Select
                                         End If
                                     End SyncLock
                                 ElseIf (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
@@ -3254,13 +3253,11 @@ Public Class UCVirtualMotionTrackerItem
 
                 Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        SyncLock _ThreadLock
-                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                            ' Nothing?
+                        ' Nothing?
 
-                            mIni.WriteKeyValue(mIniContent.ToArray)
-                        End SyncLock
+                        mIni.WriteKeyValue(mIniContent.ToArray)
                     End Using
                 End Using
             Else
@@ -3269,14 +3266,12 @@ Public Class UCVirtualMotionTrackerItem
 
                 Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        SyncLock _ThreadLock
-                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
 
-                            mIni.WriteKeyValue(mIniContent.ToArray)
-                        End SyncLock
+                        mIni.WriteKeyValue(mIniContent.ToArray)
                     End Using
                 End Using
             End If
