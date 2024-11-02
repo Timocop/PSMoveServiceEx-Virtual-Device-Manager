@@ -4,6 +4,7 @@ Public Class FormTroubleshootLogs
     ReadOnly SECTION_BUFFER As String = New String("#"c, 32)
 
     Public Const SECTION_DETAILED_LOG_SUMMARY = "Detailed Log Summary"
+    Public Const SECTION_DETAILED_LOG_EXCEPTIONS = "Log Generation Exceptions"
 
     Public Const SECTION_DXDIAG = "DirectX Diagnostics"
     Public Const SECTION_PSMOVESERVICEEX = "PSMoveServiceEx"
@@ -346,6 +347,8 @@ Public Class FormTroubleshootLogs
     Private Sub ThreadDoGenerateLogs()
         m_LogContent.m_Content.Clear()
 
+        Dim sLogExceptions As New List(Of String)
+
         For Each mJob In g_mLogJobs
             Dim sJobAction As String = String.Format("Gathering {0}...", mJob.GetActionTitle())
 
@@ -360,10 +363,15 @@ Public Class FormTroubleshootLogs
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
-                m_LogContent.m_Content(mJob.GetActionTitle()) = String.Format("EXCEPTION: {0}", ex.Message)
+                sLogExceptions.Add(String.Format("{0}: {1}", mJob.GetActionTitle(), ex.Message))
+
                 ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
             End Try
         Next
+
+        If (sLogExceptions.Count > 0) Then
+            m_LogContent.m_Content(SECTION_DETAILED_LOG_EXCEPTIONS) = String.Join(Environment.NewLine, sLogExceptions.ToArray)
+        End If
     End Sub
 
     Private Sub ThreadDoDiagnostics()

@@ -23,14 +23,14 @@ Public Class ClassLogService
         End If
 
         If (Not mConfig.FileExist) Then
-            Return
+            Throw New ArgumentException("Could not find PSMoveServiceEx executable")
         End If
 
         Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
         Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
 
         If (Not IO.File.Exists(sLogFile)) Then
-            Return
+            Throw New ArgumentException("Could not find PSMoveServiceEx logs")
         End If
 
         Dim sTmp As String = IO.Path.GetTempFileName

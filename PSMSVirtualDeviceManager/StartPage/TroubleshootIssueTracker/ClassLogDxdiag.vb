@@ -13,43 +13,37 @@ Public Class ClassLogDxdiag
     End Sub
 
     Public Sub Generate() Implements ILogAction.Generate
-        Dim sRootFolder As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "dxdiag.exe")
+        Dim sDxDiagExecutable As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "dxdiag.exe")
         Dim sOutputFile As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName)
 
-        If (Not IO.File.Exists(sRootFolder)) Then
-            Return
+        If (Not IO.File.Exists(sDxDiagExecutable)) Then
+            Throw New ArgumentException("DirectX diagnostics executable could not be found")
         End If
 
-        Try
-            Using mProcess As New Process
-                mProcess.StartInfo.FileName = sRootFolder
-                mProcess.StartInfo.Arguments = String.Format("/whql:off /t ""{0}""", sOutputFile)
-                mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sRootFolder)
-                mProcess.StartInfo.CreateNoWindow = True
-                mProcess.StartInfo.UseShellExecute = True
-                mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+        Using mProcess As New Process
+            mProcess.StartInfo.FileName = sDxDiagExecutable
+            mProcess.StartInfo.Arguments = String.Format("/whql:off /t ""{0}""", sOutputFile)
+            mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sDxDiagExecutable)
+            mProcess.StartInfo.CreateNoWindow = True
+            mProcess.StartInfo.UseShellExecute = True
+            mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
 
-                If (Environment.OSVersion.Version.Major > 5) Then
-                    mProcess.StartInfo.Verb = "runas"
-                End If
+            If (Environment.OSVersion.Version.Major > 5) Then
+                mProcess.StartInfo.Verb = "runas"
+            End If
 
-                mProcess.Start()
-                mProcess.WaitForExit()
-            End Using
-        Catch ex As Threading.ThreadAbortException
-            Throw
-        Catch ex As Exception
-            ' Ignore errors
-        End Try
+            mProcess.Start()
+            mProcess.WaitForExit()
+        End Using
 
         If (Not IO.File.Exists(sOutputFile)) Then
-            Return
+            Throw New ArgumentException("DirectX diagnostics output log could not be found")
         End If
 
         ' DxDiag output is UTF-7?
         Dim sContent As String = IO.File.ReadAllText(sOutputFile, System.Text.Encoding.UTF7)
         If (String.IsNullOrEmpty(sContent) OrElse sContent.Trim.Length = 0) Then
-            Return
+            Throw New ArgumentException("DirectX diagnostics output log is empty")
         End If
 
         g_ClassLogContent.m_Content(GetActionTitle()) = "[System]" & Environment.NewLine & sContent
