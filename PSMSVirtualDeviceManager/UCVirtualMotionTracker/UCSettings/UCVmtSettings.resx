@@ -117,6 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>273, 25</value>
+  </metadata>
+  <data name="CheckBox_DisableBasestations.ToolTip" xml:space="preserve">
+    <value>Spawning emulated Base Stations consumes device slots, and currently, SteamVR supports a maximum of 16 devices. 
+If you are using numerous devices, consider disabling emulated Base Station spawning to free up slots for trackers. 
+It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
+  </data>
   <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>392, 25</value>
   </metadata>
@@ -141,11 +149,9 @@
 This may not be optimal because the PSMoveServiceEx velocity is already included in position and orientation.
 (Not recommended)</value>
   </data>
-  <data name="CheckBox_DisableBasestations.ToolTip" xml:space="preserve">
-    <value>Spawning emulated Base Stations consumes device slots, and currently, SteamVR supports a maximum of 16 devices. 
-If you are using numerous devices, consider disabling emulated Base Station spawning to free up slots for trackers. 
-It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
-  </data>
+  <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>392, 25</value>
+  </metadata>
   <metadata name="BackgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>529, 25</value>
   </metadata>

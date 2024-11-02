@@ -1713,9 +1713,9 @@ Partial Class UCVmtSettings
         Me.CheckBox_RenderFix.Location = New System.Drawing.Point(16, 139)
         Me.CheckBox_RenderFix.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_RenderFix.Name = "CheckBox_RenderFix"
-        Me.CheckBox_RenderFix.Size = New System.Drawing.Size(243, 18)
+        Me.CheckBox_RenderFix.Size = New System.Drawing.Size(238, 18)
         Me.CheckBox_RenderFix.TabIndex = 54
-        Me.CheckBox_RenderFix.Text = "Enable Virtual-Mode SteamVR Render Fix"
+        Me.CheckBox_RenderFix.Text = "Enable Virtual-Mode SteamVR render fix"
         Me.ToolTip_Info.SetToolTip(Me.CheckBox_RenderFix, "SteamVR has a bug where rendering stops if the Virtual-Mode render window loses f" &
         "ocus. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Enabling this setting can resolve the issue." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
         Me.CheckBox_RenderFix.UseVisualStyleBackColor = True
