@@ -322,7 +322,7 @@ Public Class FormMain
                         ' This should only trigger on older Windows 10 builds or Windows versions prior to Windows 10.
                         If (sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_MULTI OrElse sCommand = COMMANDLINE_PATCH_PSVR_MONITOR_DIRECT) Then
                             If (Not sCmdLines.Contains(COMMANDLINE_RUNAS_SYSTEM)) Then
-                                Dim bRequiresSystem As Boolean = True
+                                Dim bRequiresSystem As Boolean = False
 
                                 Try
                                     If (Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY", True) Is Nothing) Then
