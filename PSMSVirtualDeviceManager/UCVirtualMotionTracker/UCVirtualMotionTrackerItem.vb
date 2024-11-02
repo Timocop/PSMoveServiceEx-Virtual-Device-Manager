@@ -2274,11 +2274,11 @@ Public Class UCVirtualMotionTrackerItem
                 If (mPosition <> mLastPosition) Then
                     mLastPositionTime = mNow
 
-                    mNormalizedOrientationDelta.Enqueue(iDeltaTime)
-                    If (mNormalizedOrientationDelta.Count > 30) Then
-                        mNormalizedOrientationDelta.Dequeue()
+                    mNormalizedPositionDelta.Enqueue(iDeltaTime)
+                    If (mNormalizedPositionDelta.Count > 30) Then
+                        mNormalizedPositionDelta.Dequeue()
                     End If
-                    Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
+                    Dim iAvgDeltaTime = mNormalizedPositionDelta.Average()
 
                     mLastPosition = mPosition
                     iVelocityPositionDelta = iAvgDeltaTime
@@ -2316,7 +2316,7 @@ Public Class UCVirtualMotionTrackerItem
                 If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                     mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
                 Else
-                    mVelocityPosition = Vector3.Zero
+                    mVelocityOrientation = Vector3.Zero
                 End If
             End If
         End Sub
