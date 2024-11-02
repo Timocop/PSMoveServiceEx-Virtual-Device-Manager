@@ -1622,9 +1622,9 @@ Partial Class UCVmtSettings
         Me.CheckBox_EnableManualVelocity.Location = New System.Drawing.Point(13, 93)
         Me.CheckBox_EnableManualVelocity.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_EnableManualVelocity.Name = "CheckBox_EnableManualVelocity"
-        Me.CheckBox_EnableManualVelocity.Size = New System.Drawing.Size(218, 18)
+        Me.CheckBox_EnableManualVelocity.Size = New System.Drawing.Size(213, 18)
         Me.CheckBox_EnableManualVelocity.TabIndex = 62
-        Me.CheckBox_EnableManualVelocity.Text = "Calculate velocity per frames instead"
+        Me.CheckBox_EnableManualVelocity.Text = "Calculate velocity per frame instead"
         Me.ToolTip_Info.SetToolTip(Me.CheckBox_EnableManualVelocity, resources.GetString("CheckBox_EnableManualVelocity.ToolTip"))
         Me.CheckBox_EnableManualVelocity.UseVisualStyleBackColor = True
         '
