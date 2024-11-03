@@ -73,7 +73,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>bootux_1021.ico</ApplicationIcon>
+    <ApplicationIcon>PSMSX-Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -530,6 +530,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
+    <Content Include="PSMSX-Icon.ico" />
     <None Include="Resources\EDID_PSVR1_5504_DIRECT.bin" />
     <None Include="Resources\EDID_PSVR1_5504_MULTI.bin" />
     <None Include="Resources\EDID_PSVR1_B403_DIRECT.bin" />
