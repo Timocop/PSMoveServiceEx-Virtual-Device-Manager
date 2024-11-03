@@ -1,4 +1,4 @@
-# PSMoveServiceEx - Virtual Device Manager
+# ![](https://github.com/user-attachments/assets/c21f7b9b-e65f-4250-897b-b4ffbbf705f8) PSMoveServiceEx - Virtual Device Manager
 A virtual device manager for PSMoveServiceEx.
 With this program you can control any virtual device in PSMoveServiceEx and even use them in SteamVR or other services!
 
