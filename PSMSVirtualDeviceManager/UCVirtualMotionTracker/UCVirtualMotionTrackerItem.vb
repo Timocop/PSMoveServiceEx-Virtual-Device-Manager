@@ -2422,7 +2422,7 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mHeightOffset = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
 
                 mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated + mHeightOffset
-                mPositionVelocity = mPlayspaceRotatedVelocity + mPlayspaceCalibPointsRotated
+                mPositionVelocity = mPlayspaceRotatedVelocity
                 mOrientation = Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset) * mOrientation
             End If
         End Sub
