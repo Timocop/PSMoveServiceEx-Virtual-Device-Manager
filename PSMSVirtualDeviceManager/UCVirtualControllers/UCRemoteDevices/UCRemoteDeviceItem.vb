@@ -21,8 +21,8 @@ Public Class UCRemoteDeviceItem
 
     Private g_bIgnoreEvents As Boolean = False
     Private g_bIgnoreUnsaved As Boolean = False
-    Private g_iFpsPacketCounter As Integer = 0
-    Private g_iFpsOrientationCounter As Integer = 0
+    Private g_mFpsPacketCounter As New Queue(Of Date)
+    Private g_mFpsOrientationCounter As New Queue(Of Date)
 
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
@@ -144,8 +144,8 @@ Public Class UCRemoteDeviceItem
             Dim iFpssPipeCounter As Integer
 
             SyncLock _ThreadLock
-                iFpsPacketCounter = g_iFpsPacketCounter
-                iFpsOrientationCounter = g_iFpsOrientationCounter
+                iFpsPacketCounter = m_FpsPacketCounter
+                iFpsOrientationCounter = m_FpsOrientationCounter
                 iFpssPipeCounter = g_mClassIO.m_FpsPipeCounter
             End SyncLock
 
@@ -159,12 +159,6 @@ Public Class UCRemoteDeviceItem
             If (Me.Visible) Then
                 TextBox_Fps.Text = String.Format("Packets Total: {0}/s | Orientation Packets: {1}/s | Pipe IO: {2}/s", iFpsPacketCounter, iFpsOrientationCounter, iFpssPipeCounter)
             End If
-
-            SyncLock _ThreadLock
-                g_iFpsPacketCounter = 0
-                g_iFpsOrientationCounter = 0
-                g_mClassIO.m_FpsPipeCounter = 0
-            End SyncLock
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
@@ -277,9 +271,7 @@ Public Class UCRemoteDeviceItem
 
         g_mClassIO.m_Orientation = New Quaternion(iX, iY, iZ, iW)
 
-        SyncLock _ThreadLock
-            g_iFpsOrientationCounter += 1
-        End SyncLock
+        AddFpsOrientationCounter()
 
         If (g_mRotationWait.ElapsedMilliseconds > 100) Then
             g_mRotationWait.Restart()
@@ -321,9 +313,7 @@ Public Class UCRemoteDeviceItem
             Return
         End If
 
-        SyncLock _ThreadLock
-            g_iFpsPacketCounter += 1
-        End SyncLock
+        AddFpsPacketCounter()
     End Sub
 
     Private Sub OnTrackerBattery(mTracker As ClassTracker, iBatteryPercent As Integer)
@@ -384,6 +374,55 @@ Public Class UCRemoteDeviceItem
         SetUnsavedState(True)
     End Sub
 
+    Private ReadOnly Property m_FpsPacketCounter As Integer
+        Get
+            SyncLock _ThreadLock
+                Dim mNow As Date = Now
+
+                While (g_mFpsPacketCounter.Count > 0)
+                    If (g_mFpsPacketCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                        g_mFpsPacketCounter.Dequeue()
+                    Else
+                        Exit While
+                    End If
+                End While
+
+                Return g_mFpsPacketCounter.Count
+            End SyncLock
+        End Get
+    End Property
+
+    Private Sub AddFpsPacketCounter()
+        SyncLock _ThreadLock
+            g_mFpsPacketCounter.Enqueue(Now)
+        End SyncLock
+    End Sub
+
+    Private ReadOnly Property m_FpsOrientationCounter As Integer
+        Get
+            SyncLock _ThreadLock
+                Dim mNow As Date = Now
+
+                While (g_mFpsOrientationCounter.Count > 0)
+                    If (g_mFpsOrientationCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                        g_mFpsOrientationCounter.Dequeue()
+                    Else
+                        Exit While
+                    End If
+                End While
+
+                Return g_mFpsOrientationCounter.Count
+            End SyncLock
+        End Get
+    End Property
+
+    Private Sub AddFpsOrientationCounter()
+        SyncLock _ThreadLock
+            g_mFpsOrientationCounter.Enqueue(Now)
+        End SyncLock
+    End Sub
+
+
     Private Sub CleanUp()
         If (g_mUCRemoteDevices.g_mClassStrackerSocket IsNot Nothing) Then
             RemoveHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerRotation, AddressOf OnTrackerRotation
@@ -411,7 +450,7 @@ Public Class UCRemoteDeviceItem
         Private g_mResetOrentation As Quaternion = Quaternion.Identity
 
         Private g_iYawOrientationOffset As Integer = 0
-        Private g_iFpsPipeCounter As Integer = 0
+        Private g_mFpsPipeCounter As New Queue(Of Date)
 
         Public Sub New()
         End Sub
@@ -492,18 +531,29 @@ Public Class UCRemoteDeviceItem
             g_mPipeThread.Start()
         End Sub
 
-        Property m_FpsPipeCounter As Integer
+        ReadOnly Property m_FpsPipeCounter As Integer
             Get
                 SyncLock _ThreadLock
-                    Return g_iFpsPipeCounter
+                    Dim mNow As Date = Now
+
+                    While (g_mFpsPipeCounter.Count > 0)
+                        If (g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                            g_mFpsPipeCounter.Dequeue()
+                        Else
+                            Exit While
+                        End If
+                    End While
+
+                    Return g_mFpsPipeCounter.Count
                 End SyncLock
             End Get
-            Set(value As Integer)
-                SyncLock _ThreadLock
-                    g_iFpsPipeCounter = value
-                End SyncLock
-            End Set
         End Property
+
+        Public Sub AddFpsPipeCounter()
+            SyncLock _ThreadLock
+                g_mFpsPipeCounter.Enqueue(Now)
+            End SyncLock
+        End Sub
 
         Public Sub Disable()
             If (g_mPipeThread Is Nothing OrElse Not g_mPipeThread.IsAlive) Then
@@ -559,7 +609,7 @@ Public Class UCRemoteDeviceItem
                                         Bw.Write(Encoding.ASCII.GetBytes(mNewResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
 
-                                        g_iFpsPipeCounter += 1
+                                        AddFpsPipeCounter()
                                     End SyncLock
                                 End Using
 

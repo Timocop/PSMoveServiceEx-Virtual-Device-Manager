@@ -161,9 +161,7 @@ Public Class UCStartPage
 
     Private Sub ServiceDeviceStatusThread()
         Dim mLastSeqNumDic As New Dictionary(Of String, Integer)
-        Dim mLastFpsDic As New Dictionary(Of String, Integer)
-        Dim mFpsWatch As New Stopwatch
-        mFpsWatch.Start()
+        Dim mFpsCountDic As New Dictionary(Of String, Queue(Of KeyValuePair(Of Date, Integer)))
 
         Dim iFrameCount As Integer = 0
 
@@ -178,6 +176,8 @@ Public Class UCStartPage
                 Const LISTVIEW_SUBITEM_BATTERY As Integer = 6
                 Const LISTVIEW_SUBITEM_FPS As Integer = 7
 
+                Dim mNow As Date = Now
+
                 ' Show disconnected devices
                 ClassUtils.AsyncInvoke(Me, Sub()
                                                If (Not Me.Visible) Then
@@ -189,7 +189,7 @@ Public Class UCStartPage
                                                    For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
                                                        Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > mNow) Then
                                                            mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
                                                        Else
                                                            mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
@@ -199,11 +199,6 @@ Public Class UCStartPage
                                                    ListView_ServiceDevices.EndUpdate()
                                                End Try
                                            End Sub)
-
-                Dim bTimeElapsed = (mFpsWatch.ElapsedMilliseconds >= 1000)
-                If (bTimeElapsed) Then
-                    mFpsWatch.Restart()
-                End If
 
                 ' List Controllers
                 If (True) Then
@@ -222,20 +217,33 @@ Public Class UCStartPage
                         Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (mLastFpsDic.ContainsKey(mDevice.m_Serial)) Then
-                                iFPS = mLastFpsDic(mDevice.m_Serial)
+                            ' Set queue if missing
+                            If (Not mFpsCountDic.ContainsKey(mDevice.m_Serial)) Then
+                                mFpsCountDic(mDevice.m_Serial) = New Queue(Of KeyValuePair(Of Date, Integer))
                             End If
 
+                            ' Store fps sequence
                             If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
-                                If (bTimeElapsed) Then
-                                    iFPS = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
+                                Dim iSeqFps = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
 
-                                    mLastFpsDic(mDevice.m_Serial) = iFPS
-                                    mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
-                                End If
-                            Else
-                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                                mFpsCountDic(mDevice.m_Serial).Enqueue(New KeyValuePair(Of Date, Integer)(mNow, iSeqFps))
                             End If
+
+                            mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+
+                            ' Remove old
+                            While (mFpsCountDic(mDevice.m_Serial).Count > 0)
+                                If (mFpsCountDic(mDevice.m_Serial).Peek().Key + New TimeSpan(0, 0, 1) < mNow) Then
+                                    mFpsCountDic(mDevice.m_Serial).Dequeue()
+                                Else
+                                    Exit While
+                                End If
+                            End While
+
+                            ' Calc FPS
+                            For Each mFps In mFpsCountDic(mDevice.m_Serial)
+                                iFPS += mFps.Value
+                            Next
                         End If
 
                         Dim iAxisX As Integer = iFrameCount
@@ -332,20 +340,33 @@ Public Class UCStartPage
                         Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (mLastFpsDic.ContainsKey(mDevice.m_Serial)) Then
-                                iFPS = mLastFpsDic(mDevice.m_Serial)
+                            ' Set queue if missing
+                            If (Not mFpsCountDic.ContainsKey(mDevice.m_Serial)) Then
+                                mFpsCountDic(mDevice.m_Serial) = New Queue(Of KeyValuePair(Of Date, Integer))
                             End If
 
+                            ' Store fps sequence
                             If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
-                                If (bTimeElapsed) Then
-                                    iFPS = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
+                                Dim iSeqFps = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
 
-                                    mLastFpsDic(mDevice.m_Serial) = iFPS
-                                    mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
-                                End If
-                            Else
-                                mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+                                mFpsCountDic(mDevice.m_Serial).Enqueue(New KeyValuePair(Of Date, Integer)(mNow, iSeqFps))
                             End If
+
+                            mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
+
+                            ' Remove old
+                            While (mFpsCountDic(mDevice.m_Serial).Count > 0)
+                                If (mFpsCountDic(mDevice.m_Serial).Peek().Key + New TimeSpan(0, 0, 1) < mNow) Then
+                                    mFpsCountDic(mDevice.m_Serial).Dequeue()
+                                Else
+                                    Exit While
+                                End If
+                            End While
+
+                            ' Calc FPS
+                            For Each mFps In mFpsCountDic(mDevice.m_Serial)
+                                iFPS += mFps.Value
+                            Next
                         End If
 
                         Dim iAxisX As Integer = iFrameCount
@@ -429,20 +450,33 @@ Public Class UCStartPage
                         Dim iFPS As Integer = 0
 
                         If (True) Then
-                            If (mLastFpsDic.ContainsKey(mDevice.m_Path)) Then
-                                iFPS = mLastFpsDic(mDevice.m_Path)
+                            ' Set queue if missing
+                            If (Not mFpsCountDic.ContainsKey(mDevice.m_Path)) Then
+                                mFpsCountDic(mDevice.m_Path) = New Queue(Of KeyValuePair(Of Date, Integer))
                             End If
 
+                            ' Store fps sequence
                             If (mLastSeqNumDic.ContainsKey(mDevice.m_Path) AndAlso mLastSeqNumDic(mDevice.m_Path) <> 0) Then
-                                If (bTimeElapsed) Then
-                                    iFPS = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Path), 0)
+                                Dim iSeqFps = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Path), 0)
 
-                                    mLastFpsDic(mDevice.m_Path) = iFPS
-                                    mLastSeqNumDic(mDevice.m_Path) = iSeqNum
-                                End If
-                            Else
-                                mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+                                mFpsCountDic(mDevice.m_Path).Enqueue(New KeyValuePair(Of Date, Integer)(mNow, iSeqFps))
                             End If
+
+                            mLastSeqNumDic(mDevice.m_Path) = iSeqNum
+
+                            ' Remove old
+                            While (mFpsCountDic(mDevice.m_Path).Count > 0)
+                                If (mFpsCountDic(mDevice.m_Path).Peek().Key + New TimeSpan(0, 0, 1) < mNow) Then
+                                    mFpsCountDic(mDevice.m_Path).Dequeue()
+                                Else
+                                    Exit While
+                                End If
+                            End While
+
+                            ' Calc FPS
+                            For Each mFps In mFpsCountDic(mDevice.m_Path)
+                                iFPS += mFps.Value
+                            Next
                         End If
 
                         Dim iAxisX As Integer = iFrameCount

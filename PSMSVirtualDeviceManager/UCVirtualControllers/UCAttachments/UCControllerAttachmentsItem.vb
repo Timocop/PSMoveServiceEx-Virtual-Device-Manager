@@ -319,8 +319,6 @@ Public Class UCControllerAttachmentsItem
             If (Me.Visible) Then
                 TextBox_Fps.Text = String.Format("Pipe IO: {0}/s", iFpsPipeCounter)
             End If
-
-            g_mClassIO.m_FpsPipeCounter = 0
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
@@ -434,7 +432,7 @@ Public Class UCControllerAttachmentsItem
         Private g_iControllerYawCorrection As Integer = 0
         Private g_bOnlyJointOffset As Boolean = False
 
-        Private g_iFpsPipeCounter As Integer = 0
+        Private g_iFpsPipeCounter As New Queue(Of Date)
 
         Public Sub New()
         End Sub
@@ -546,18 +544,29 @@ Public Class UCControllerAttachmentsItem
             g_mPipeThread.Start()
         End Sub
 
-        Property m_FpsPipeCounter As Integer
+        ReadOnly Property m_FpsPipeCounter As Integer
             Get
                 SyncLock _ThreadLock
-                    Return g_iFpsPipeCounter
+                    Dim mNow As Date = Now
+
+                    While (g_iFpsPipeCounter.Count > 0)
+                        If (g_iFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                            g_iFpsPipeCounter.Dequeue()
+                        Else
+                            Exit While
+                        End If
+                    End While
+
+                    Return g_iFpsPipeCounter.Count
                 End SyncLock
             End Get
-            Set(value As Integer)
-                SyncLock _ThreadLock
-                    g_iFpsPipeCounter = value
-                End SyncLock
-            End Set
         End Property
+
+        Public Sub AddFpsPipeCounter()
+            SyncLock _ThreadLock
+                g_iFpsPipeCounter.Enqueue(Now)
+            End SyncLock
+        End Sub
 
         Public Sub Disable()
             If (g_mPipeThread Is Nothing OrElse Not g_mPipeThread.IsAlive) Then
@@ -639,7 +648,7 @@ Public Class UCControllerAttachmentsItem
                                         Bw.Write(Encoding.ASCII.GetBytes(mNewControllerYawCorrection.W.ToString(Globalization.CultureInfo.InvariantCulture)))
                                         Bw.Write(CByte(0))
 
-                                        g_iFpsPipeCounter += 1
+                                        AddFpsPipeCounter()
                                     End SyncLock
                                 End Using
 
