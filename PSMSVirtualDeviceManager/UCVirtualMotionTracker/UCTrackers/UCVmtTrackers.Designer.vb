@@ -38,7 +38,6 @@ Partial Class UCVmtTrackers
         Me.Panel19 = New System.Windows.Forms.Panel()
         Me.Label66 = New System.Windows.Forms.Label()
         Me.Panel20 = New System.Windows.Forms.Panel()
-        Me.Panel_VMTTrackers = New System.Windows.Forms.Panel()
         Me.Button_VMTControllers = New System.Windows.Forms.Button()
         Me.Button_AddVMTController = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_Autostart = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -48,15 +47,19 @@ Partial Class UCVmtTrackers
         Me.Timer_VMTTrackers = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel_VMTTrackers = New System.Windows.Forms.Panel()
         Me.Panel_AvailableTrackers.SuspendLayout()
         Me.ContextMenuStrip_Trackers.SuspendLayout()
         Me.Panel19.SuspendLayout()
         Me.ContextMenuStrip_AddTracker.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel_AvailableTrackers
         '
-        Me.Panel_AvailableTrackers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_AvailableTrackers.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_AvailableTrackers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableTrackers.Controls.Add(Me.ListView_Trackers)
@@ -152,18 +155,6 @@ Partial Class UCVmtTrackers
         Me.Panel20.Size = New System.Drawing.Size(766, 1)
         Me.Panel20.TabIndex = 0
         '
-        'Panel_VMTTrackers
-        '
-        Me.Panel_VMTTrackers.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel_VMTTrackers.AutoScroll = True
-        Me.Panel_VMTTrackers.Location = New System.Drawing.Point(16, 281)
-        Me.Panel_VMTTrackers.Margin = New System.Windows.Forms.Padding(16)
-        Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
-        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(768, 303)
-        Me.Panel_VMTTrackers.TabIndex = 25
-        '
         'Button_VMTControllers
         '
         Me.Button_VMTControllers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5353_16x16_32
@@ -235,15 +226,36 @@ Partial Class UCVmtTrackers
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.Button_VMTControllers)
+        Me.Panel1.Controls.Add(Me.Button_AddVMTController)
+        Me.Panel1.Controls.Add(Me.Panel_AvailableTrackers)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(800, 266)
+        Me.Panel1.TabIndex = 27
+        '
+        'Panel_VMTTrackers
+        '
+        Me.Panel_VMTTrackers.AutoSize = True
+        Me.Panel_VMTTrackers.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel_VMTTrackers.Location = New System.Drawing.Point(0, 266)
+        Me.Panel_VMTTrackers.MinimumSize = New System.Drawing.Size(0, 32)
+        Me.Panel_VMTTrackers.Name = "Panel_VMTTrackers"
+        Me.Panel_VMTTrackers.Padding = New System.Windows.Forms.Padding(16, 0, 16, 0)
+        Me.Panel_VMTTrackers.Size = New System.Drawing.Size(800, 32)
+        Me.Panel_VMTTrackers.TabIndex = 28
+        '
         'UCVmtTrackers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Panel_AvailableTrackers)
         Me.Controls.Add(Me.Panel_VMTTrackers)
-        Me.Controls.Add(Me.Button_VMTControllers)
-        Me.Controls.Add(Me.Button_AddVMTController)
+        Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVmtTrackers"
         Me.Size = New System.Drawing.Size(800, 600)
@@ -251,7 +263,9 @@ Partial Class UCVmtTrackers
         Me.ContextMenuStrip_Trackers.ResumeLayout(False)
         Me.Panel19.ResumeLayout(False)
         Me.ContextMenuStrip_AddTracker.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -264,7 +278,6 @@ Partial Class UCVmtTrackers
     Friend WithEvents Panel19 As Panel
     Friend WithEvents Label66 As Label
     Friend WithEvents Panel20 As Panel
-    Friend WithEvents Panel_VMTTrackers As Panel
     Friend WithEvents Button_VMTControllers As Button
     Friend WithEvents Button_AddVMTController As Button
     Friend WithEvents ContextMenuStrip_Autostart As ContextMenuStrip
@@ -276,4 +289,6 @@ Partial Class UCVmtTrackers
     Friend WithEvents Timer_VMTTrackers As Timer
     Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents ToolTip_Default As ToolTip
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel_VMTTrackers As Panel
 End Class

@@ -51,11 +51,13 @@ Partial Class UCVirtualTrackers
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Timer_VideoInputDevices = New System.Windows.Forms.Timer(Me.components)
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_AvailableDevices.SuspendLayout()
         Me.ContextMenuStrip_VideoInputDevice.SuspendLayout()
         Me.Panel8.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -117,7 +119,7 @@ Partial Class UCVirtualTrackers
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(32, 118)
+        Me.Label3.Location = New System.Drawing.Point(32, 51)
         Me.Label3.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(158, 13)
@@ -131,27 +133,27 @@ Partial Class UCVirtualTrackers
         Me.ComboBox_Devices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_Devices.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_Devices.FormattingEnabled = True
-        Me.ComboBox_Devices.Location = New System.Drawing.Point(199, 115)
+        Me.ComboBox_Devices.Location = New System.Drawing.Point(199, 48)
         Me.ComboBox_Devices.Name = "ComboBox_Devices"
         Me.ComboBox_Devices.Size = New System.Drawing.Size(488, 21)
         Me.ComboBox_Devices.TabIndex = 2
         '
         'Panel_Devices
         '
-        Me.Panel_Devices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel_Devices.AutoScroll = True
-        Me.Panel_Devices.Location = New System.Drawing.Point(32, 334)
+        Me.Panel_Devices.AutoSize = True
+        Me.Panel_Devices.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel_Devices.Location = New System.Drawing.Point(0, 319)
         Me.Panel_Devices.Margin = New System.Windows.Forms.Padding(32, 16, 32, 32)
+        Me.Panel_Devices.MinimumSize = New System.Drawing.Size(0, 32)
         Me.Panel_Devices.Name = "Panel_Devices"
-        Me.Panel_Devices.Size = New System.Drawing.Size(736, 569)
+        Me.Panel_Devices.Padding = New System.Windows.Forms.Padding(16, 0, 16, 0)
+        Me.Panel_Devices.Size = New System.Drawing.Size(800, 32)
         Me.Panel_Devices.TabIndex = 4
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(32, 83)
+        Me.Label5.Location = New System.Drawing.Point(32, 16)
         Me.Label5.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(115, 13)
@@ -165,7 +167,7 @@ Partial Class UCVirtualTrackers
         Me.ComboBox_VirtualTrackerCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_VirtualTrackerCount.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VirtualTrackerCount.FormattingEnabled = True
-        Me.ComboBox_VirtualTrackerCount.Location = New System.Drawing.Point(199, 80)
+        Me.ComboBox_VirtualTrackerCount.Location = New System.Drawing.Point(199, 13)
         Me.ComboBox_VirtualTrackerCount.Name = "ComboBox_VirtualTrackerCount"
         Me.ComboBox_VirtualTrackerCount.Size = New System.Drawing.Size(488, 21)
         Me.ComboBox_VirtualTrackerCount.TabIndex = 6
@@ -174,7 +176,7 @@ Partial Class UCVirtualTrackers
         '
         Me.Button_DeviceAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_DeviceAdd.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_16x16_32
-        Me.Button_DeviceAdd.Location = New System.Drawing.Point(693, 113)
+        Me.Button_DeviceAdd.Location = New System.Drawing.Point(693, 46)
         Me.Button_DeviceAdd.Margin = New System.Windows.Forms.Padding(3, 3, 32, 3)
         Me.Button_DeviceAdd.Name = "Button_DeviceAdd"
         Me.Button_DeviceAdd.Size = New System.Drawing.Size(75, 23)
@@ -191,10 +193,10 @@ Partial Class UCVirtualTrackers
         Me.Panel_AvailableDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableDevices.Controls.Add(Me.ListView_VideoDevices)
         Me.Panel_AvailableDevices.Controls.Add(Me.Panel8)
-        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(36, 167)
+        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(16, 88)
         Me.Panel_AvailableDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
-        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(728, 135)
+        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(768, 151)
         Me.Panel_AvailableDevices.TabIndex = 7
         '
         'ListView_VideoDevices
@@ -209,7 +211,7 @@ Partial Class UCVirtualTrackers
         Me.ListView_VideoDevices.Location = New System.Drawing.Point(0, 42)
         Me.ListView_VideoDevices.MultiSelect = False
         Me.ListView_VideoDevices.Name = "ListView_VideoDevices"
-        Me.ListView_VideoDevices.Size = New System.Drawing.Size(726, 91)
+        Me.ListView_VideoDevices.Size = New System.Drawing.Size(766, 107)
         Me.ListView_VideoDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_VideoDevices.TabIndex = 1
         Me.ListView_VideoDevices.UseCompatibleStateImageBehavior = False
@@ -263,7 +265,7 @@ Partial Class UCVirtualTrackers
         Me.Panel8.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel8.Location = New System.Drawing.Point(0, 0)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(726, 42)
+        Me.Panel8.Size = New System.Drawing.Size(766, 42)
         Me.Panel8.TabIndex = 0
         '
         'Label12
@@ -274,7 +276,7 @@ Partial Class UCVirtualTrackers
         Me.Label12.Location = New System.Drawing.Point(0, 0)
         Me.Label12.Name = "Label12"
         Me.Label12.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label12.Size = New System.Drawing.Size(726, 41)
+        Me.Label12.Size = New System.Drawing.Size(766, 41)
         Me.Label12.TabIndex = 1
         Me.Label12.Text = "Available Video Input Devices"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -285,7 +287,7 @@ Partial Class UCVirtualTrackers
         Me.Panel10.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel10.Location = New System.Drawing.Point(0, 41)
         Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(726, 1)
+        Me.Panel10.Size = New System.Drawing.Size(766, 1)
         Me.Panel10.TabIndex = 0
         '
         'Timer_VideoInputDevices
@@ -293,28 +295,40 @@ Partial Class UCVirtualTrackers
         Me.Timer_VideoInputDevices.Enabled = True
         Me.Timer_VideoInputDevices.Interval = 500
         '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.Label5)
+        Me.Panel2.Controls.Add(Me.Label3)
+        Me.Panel2.Controls.Add(Me.Panel_AvailableDevices)
+        Me.Panel2.Controls.Add(Me.ComboBox_Devices)
+        Me.Panel2.Controls.Add(Me.ComboBox_VirtualTrackerCount)
+        Me.Panel2.Controls.Add(Me.Button_DeviceAdd)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 64)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(800, 255)
+        Me.Panel2.TabIndex = 8
+        '
         'UCVirtualTrackers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Panel_AvailableDevices)
-        Me.Controls.Add(Me.ComboBox_VirtualTrackerCount)
-        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Panel_Devices)
-        Me.Controls.Add(Me.Button_DeviceAdd)
-        Me.Controls.Add(Me.ComboBox_Devices)
-        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVirtualTrackers"
-        Me.Size = New System.Drawing.Size(800, 935)
+        Me.Size = New System.Drawing.Size(800, 600)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel_AvailableDevices.ResumeLayout(False)
         Me.ContextMenuStrip_VideoInputDevice.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -344,4 +358,5 @@ Partial Class UCVirtualTrackers
     Friend WithEvents ToolStripMenuItem_VideoRemove As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem_VideoReconnect As ToolStripMenuItem
     Friend WithEvents ColumnHeader_TrackerId As ColumnHeader
+    Friend WithEvents Panel2 As Panel
 End Class

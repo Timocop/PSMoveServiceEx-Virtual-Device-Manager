@@ -43,7 +43,7 @@ Public Class UCVirtualMotionTracker
 
         g_UCVmtManagement = New UCVmtManagement(Me)
         g_UCVmtManagement.Parent = TabPage_Management
-        g_UCVmtManagement.Dock = DockStyle.Top
+        g_UCVmtManagement.Dock = DockStyle.Fill
 
         g_UCVmtTrackers = New UCVmtTrackers(Me)
         g_UCVmtTrackers.Parent = TabPage_Trackers
@@ -55,7 +55,7 @@ Public Class UCVirtualMotionTracker
 
         g_UCVmtPlayspaceCalib = New UCVmtPlayspaceCalib(Me)
         g_UCVmtPlayspaceCalib.Parent = TabPage_PlayspaceCalib
-        g_UCVmtPlayspaceCalib.Dock = DockStyle.Top
+        g_UCVmtPlayspaceCalib.Dock = DockStyle.Fill
 
         g_UCVmtOverrides = New UCVmtOverrides(Me)
         g_UCVmtOverrides.Parent = TabPage_Overrides

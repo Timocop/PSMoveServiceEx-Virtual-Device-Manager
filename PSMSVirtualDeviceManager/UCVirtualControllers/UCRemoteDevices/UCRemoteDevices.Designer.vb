@@ -40,9 +40,11 @@ Partial Class UCRemoteDevices
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.Panel1 = New System.Windows.Forms.Panel()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_AvailableRemoteDevices.SuspendLayout()
         Me.Panel8.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label_Port
@@ -58,14 +60,14 @@ Partial Class UCRemoteDevices
         '
         'Panel_RemoteDevices
         '
-        Me.Panel_RemoteDevices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel_RemoteDevices.AutoScroll = True
-        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(16, 289)
+        Me.Panel_RemoteDevices.AutoSize = True
+        Me.Panel_RemoteDevices.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(0, 337)
         Me.Panel_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_RemoteDevices.MinimumSize = New System.Drawing.Size(0, 32)
         Me.Panel_RemoteDevices.Name = "Panel_RemoteDevices"
-        Me.Panel_RemoteDevices.Size = New System.Drawing.Size(768, 295)
+        Me.Panel_RemoteDevices.Padding = New System.Windows.Forms.Padding(16, 0, 16, 0)
+        Me.Panel_RemoteDevices.Size = New System.Drawing.Size(800, 32)
         Me.Panel_RemoteDevices.TabIndex = 1
         '
         'Button_StartSocket
@@ -163,7 +165,7 @@ Partial Class UCRemoteDevices
         Me.ListView_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_RemoteDevices.MultiSelect = False
         Me.ListView_RemoteDevices.Name = "ListView_RemoteDevices"
-        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(766, 91)
+        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(766, 154)
         Me.ListView_RemoteDevices.TabIndex = 20
         Me.ListView_RemoteDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_RemoteDevices.View = System.Windows.Forms.View.Details
@@ -192,7 +194,8 @@ Partial Class UCRemoteDevices
         '
         'Panel_AvailableRemoteDevices
         '
-        Me.Panel_AvailableRemoteDevices.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_AvailableRemoteDevices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_AvailableRemoteDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableRemoteDevices.Controls.Add(Me.ListView_RemoteDevices)
@@ -200,7 +203,7 @@ Partial Class UCRemoteDevices
         Me.Panel_AvailableRemoteDevices.Location = New System.Drawing.Point(16, 123)
         Me.Panel_AvailableRemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableRemoteDevices.Name = "Panel_AvailableRemoteDevices"
-        Me.Panel_AvailableRemoteDevices.Size = New System.Drawing.Size(768, 135)
+        Me.Panel_AvailableRemoteDevices.Size = New System.Drawing.Size(768, 198)
         Me.Panel_AvailableRemoteDevices.TabIndex = 21
         '
         'Panel8
@@ -237,27 +240,38 @@ Partial Class UCRemoteDevices
         Me.Panel10.Size = New System.Drawing.Size(766, 1)
         Me.Panel10.TabIndex = 0
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.PictureBox1)
+        Me.Panel1.Controls.Add(Me.Panel_AvailableRemoteDevices)
+        Me.Panel1.Controls.Add(Me.Label_Port)
+        Me.Panel1.Controls.Add(Me.Label_ConnectedDevices)
+        Me.Panel1.Controls.Add(Me.Button_StartSocket)
+        Me.Panel1.Controls.Add(Me.LinkLabel_ReadMore)
+        Me.Panel1.Controls.Add(Me.CheckBox_AllowNewDevices)
+        Me.Panel1.Controls.Add(Me.Label1)
+        Me.Panel1.Controls.Add(Me.LinkLabel_EditPort)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(800, 337)
+        Me.Panel1.TabIndex = 22
+        '
         'UCRemoteDevices
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Panel_AvailableRemoteDevices)
-        Me.Controls.Add(Me.Label_ConnectedDevices)
-        Me.Controls.Add(Me.LinkLabel_ReadMore)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.PictureBox1)
-        Me.Controls.Add(Me.LinkLabel_EditPort)
-        Me.Controls.Add(Me.CheckBox_AllowNewDevices)
-        Me.Controls.Add(Me.Button_StartSocket)
         Me.Controls.Add(Me.Panel_RemoteDevices)
-        Me.Controls.Add(Me.Label_Port)
+        Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCRemoteDevices"
         Me.Size = New System.Drawing.Size(800, 600)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel_AvailableRemoteDevices.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -280,4 +294,5 @@ Partial Class UCRemoteDevices
     Friend WithEvents Panel8 As Panel
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel10 As Panel
+    Friend WithEvents Panel1 As Panel
 End Class

@@ -600,6 +600,7 @@ Partial Class UCVmtPlayspaceCalib
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.White
         Me.Controls.Add(Me.NumericUpDown_PlayCalibPrepTime)
         Me.Controls.Add(Me.Label41)
@@ -613,7 +614,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVmtPlayspaceCalib"
-        Me.Size = New System.Drawing.Size(800, 600)
+        Me.Size = New System.Drawing.Size(800, 597)
         CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_PlayCalibPrepTime.ResumeLayout(False)
         Me.NumericUpDown_PlayCalibPrepTime.PerformLayout()

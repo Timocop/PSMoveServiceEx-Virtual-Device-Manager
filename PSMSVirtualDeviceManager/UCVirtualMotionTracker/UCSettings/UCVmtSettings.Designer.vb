@@ -1872,6 +1872,7 @@ Partial Class UCVmtSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoSize = True
         Me.BackColor = System.Drawing.Color.White
         Me.Controls.Add(Me.Button_SaveControllerSettings)
         Me.Controls.Add(Me.TabControl_SettingsDevices)

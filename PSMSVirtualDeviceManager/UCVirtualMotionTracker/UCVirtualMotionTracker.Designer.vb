@@ -83,7 +83,6 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_Management
         '
-        Me.TabPage_Management.AutoScroll = True
         Me.TabPage_Management.BackColor = System.Drawing.Color.White
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
@@ -113,7 +112,6 @@ Partial Class UCVirtualMotionTracker
         '
         'TabPage_PlayspaceCalib
         '
-        Me.TabPage_PlayspaceCalib.AutoScroll = True
         Me.TabPage_PlayspaceCalib.BackColor = System.Drawing.Color.White
         Me.TabPage_PlayspaceCalib.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_PlayspaceCalib.Name = "TabPage_PlayspaceCalib"

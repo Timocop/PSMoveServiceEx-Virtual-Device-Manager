@@ -45,22 +45,24 @@ Partial Class UCControllerAttachments
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.ContextMenuStrip_Attachments.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel_AvailableAttachments.SuspendLayout()
         Me.Panel8.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel_Attachments
         '
-        Me.Panel_Attachments.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel_Attachments.AutoScroll = True
-        Me.Panel_Attachments.Location = New System.Drawing.Point(16, 286)
+        Me.Panel_Attachments.AutoSize = True
+        Me.Panel_Attachments.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel_Attachments.Location = New System.Drawing.Point(0, 340)
         Me.Panel_Attachments.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_Attachments.MinimumSize = New System.Drawing.Size(0, 32)
         Me.Panel_Attachments.Name = "Panel_Attachments"
-        Me.Panel_Attachments.Size = New System.Drawing.Size(768, 298)
+        Me.Panel_Attachments.Padding = New System.Windows.Forms.Padding(16, 0, 16, 0)
+        Me.Panel_Attachments.Size = New System.Drawing.Size(800, 32)
         Me.Panel_Attachments.TabIndex = 7
         '
         'ListView_Attachments
@@ -75,7 +77,7 @@ Partial Class UCControllerAttachments
         Me.ListView_Attachments.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_Attachments.MultiSelect = False
         Me.ListView_Attachments.Name = "ListView_Attachments"
-        Me.ListView_Attachments.Size = New System.Drawing.Size(766, 91)
+        Me.ListView_Attachments.Size = New System.Drawing.Size(766, 160)
         Me.ListView_Attachments.TabIndex = 0
         Me.ListView_Attachments.UseCompatibleStateImageBehavior = False
         Me.ListView_Attachments.View = System.Windows.Forms.View.Details
@@ -180,7 +182,8 @@ Partial Class UCControllerAttachments
         '
         'Panel_AvailableAttachments
         '
-        Me.Panel_AvailableAttachments.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_AvailableAttachments.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_AvailableAttachments.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableAttachments.Controls.Add(Me.ListView_Attachments)
@@ -188,7 +191,7 @@ Partial Class UCControllerAttachments
         Me.Panel_AvailableAttachments.Location = New System.Drawing.Point(16, 120)
         Me.Panel_AvailableAttachments.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableAttachments.Name = "Panel_AvailableAttachments"
-        Me.Panel_AvailableAttachments.Size = New System.Drawing.Size(768, 135)
+        Me.Panel_AvailableAttachments.Size = New System.Drawing.Size(768, 204)
         Me.Panel_AvailableAttachments.TabIndex = 22
         '
         'Panel8
@@ -225,25 +228,36 @@ Partial Class UCControllerAttachments
         Me.Panel10.Size = New System.Drawing.Size(766, 1)
         Me.Panel10.TabIndex = 0
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.PictureBox1)
+        Me.Panel1.Controls.Add(Me.Button_AddAttachment)
+        Me.Panel1.Controls.Add(Me.Button_Autostart)
+        Me.Panel1.Controls.Add(Me.Panel_AvailableAttachments)
+        Me.Panel1.Controls.Add(Me.Label1)
+        Me.Panel1.Controls.Add(Me.LinkLabel_ReadMore)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(800, 340)
+        Me.Panel1.TabIndex = 23
+        '
         'UCControllerAttachments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Panel_AvailableAttachments)
-        Me.Controls.Add(Me.LinkLabel_ReadMore)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.PictureBox1)
-        Me.Controls.Add(Me.Button_Autostart)
-        Me.Controls.Add(Me.Button_AddAttachment)
         Me.Controls.Add(Me.Panel_Attachments)
+        Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCControllerAttachments"
-        Me.Size = New System.Drawing.Size(800, 600)
+        Me.Size = New System.Drawing.Size(800, 732)
         Me.ContextMenuStrip_Attachments.ResumeLayout(False)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel_AvailableAttachments.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -265,4 +279,5 @@ Partial Class UCControllerAttachments
     Friend WithEvents Panel8 As Panel
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel10 As Panel
+    Friend WithEvents Panel1 As Panel
 End Class
