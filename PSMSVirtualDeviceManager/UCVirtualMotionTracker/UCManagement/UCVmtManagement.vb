@@ -371,31 +371,31 @@ Public Class UCVmtManagement
     End Sub
 
     Private Sub AddChartValues(sSeriesName As String, iValue As Integer, iCount As Integer, iMaxCount As Integer)
-        If (Not Chart_ServicePerformance.Enabled) Then
+        If (Not Chart_VmtPerformance.Enabled) Then
             Return
         End If
 
-        If (Chart_ServicePerformance.ChartAreas.Count < 1) Then
+        If (Chart_VmtPerformance.ChartAreas.Count < 1) Then
             Return
         End If
 
-        If (Chart_ServicePerformance.Series.IndexOf(sSeriesName) = -1) Then
-            Dim mSeries = Chart_ServicePerformance.Series.Add(sSeriesName)
+        If (Chart_VmtPerformance.Series.IndexOf(sSeriesName) = -1) Then
+            Dim mSeries = Chart_VmtPerformance.Series.Add(sSeriesName)
 
-            mSeries.ChartArea = Chart_ServicePerformance.ChartAreas(0).Name
+            mSeries.ChartArea = Chart_VmtPerformance.ChartAreas(0).Name
             mSeries.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
             mSeries.BorderWidth = 2
         End If
 
-        Chart_ServicePerformance.Series(sSeriesName).Points.AddXY(iCount, iValue)
+        Chart_VmtPerformance.Series(sSeriesName).Points.AddXY(iCount, iValue)
 
-        While (Chart_ServicePerformance.Series(sSeriesName).Points.Count > 1 AndAlso
-            Chart_ServicePerformance.Series(sSeriesName).Points(1).XValue < (iCount - iMaxCount))
-            Chart_ServicePerformance.Series(sSeriesName).Points.RemoveAt(0)
+        While (Chart_VmtPerformance.Series(sSeriesName).Points.Count > 1 AndAlso
+            Chart_VmtPerformance.Series(sSeriesName).Points(1).XValue < (iCount - iMaxCount))
+            Chart_VmtPerformance.Series(sSeriesName).Points.RemoveAt(0)
         End While
 
         ' Adjust bounds
-        Dim mAxisX = Chart_ServicePerformance.ChartAreas(0).AxisX()
+        Dim mAxisX = Chart_VmtPerformance.ChartAreas(0).AxisX()
         If (mAxisX.Maximum < iCount) Then
             mAxisX.Maximum = iCount
         End If
@@ -403,7 +403,7 @@ Public Class UCVmtManagement
             mAxisX.Minimum = iCount - iMaxCount
         End If
 
-        Dim mAxisY = Chart_ServicePerformance.ChartAreas(0).AxisY()
+        Dim mAxisY = Chart_VmtPerformance.ChartAreas(0).AxisY()
         Dim iValueMax = Math.Ceiling(iValue * 0.1) * 10
         Dim iValueMin = Math.Floor(iValue * 0.1) * 10
 
@@ -420,19 +420,19 @@ Public Class UCVmtManagement
     End Sub
 
     Private Sub ToolStripMenuItem_ChartEnabled_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_ChartEnabled.Click
-        Chart_ServicePerformance.Enabled = ToolStripMenuItem_ChartEnabled.Checked
+        Chart_VmtPerformance.Enabled = ToolStripMenuItem_ChartEnabled.Checked
     End Sub
 
     Private Sub ContextMenuStrip_Chart_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip_Chart.Opening
-        ToolStripMenuItem_ChartEnabled.Checked = Chart_ServicePerformance.Enabled
+        ToolStripMenuItem_ChartEnabled.Checked = Chart_VmtPerformance.Enabled
     End Sub
 
     Private Sub ToolStripMenuItem_ChartClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_ChartClear.Click
-        Chart_ServicePerformance.Series.Clear()
-        Chart_ServicePerformance.ChartAreas(0).AxisX.Maximum = 1
-        Chart_ServicePerformance.ChartAreas(0).AxisX.Minimum = 0
-        Chart_ServicePerformance.ChartAreas(0).AxisY.Maximum = 1
-        Chart_ServicePerformance.ChartAreas(0).AxisY.Minimum = 0
+        Chart_VmtPerformance.Series.Clear()
+        Chart_VmtPerformance.ChartAreas(0).AxisX.Maximum = 1
+        Chart_VmtPerformance.ChartAreas(0).AxisX.Minimum = 0
+        Chart_VmtPerformance.ChartAreas(0).AxisY.Maximum = 1
+        Chart_VmtPerformance.ChartAreas(0).AxisY.Minimum = 0
     End Sub
 
     Private Sub CleanUp()

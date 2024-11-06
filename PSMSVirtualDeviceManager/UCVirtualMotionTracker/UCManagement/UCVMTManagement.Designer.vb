@@ -29,6 +29,7 @@ Partial Class UCVmtManagement
         Me.components = New System.ComponentModel.Container()
         Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -62,7 +63,7 @@ Partial Class UCVmtManagement
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Panel13 = New System.Windows.Forms.Panel()
         Me.Panel24 = New System.Windows.Forms.Panel()
-        Me.Chart_ServicePerformance = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.Chart_VmtPerformance = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.Panel25 = New System.Windows.Forms.Panel()
         Me.Button_ChartSettings = New System.Windows.Forms.Button()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -86,7 +87,7 @@ Partial Class UCVmtManagement
         Me.Panel5.SuspendLayout()
         Me.Panel13.SuspendLayout()
         Me.Panel24.SuspendLayout()
-        CType(Me.Chart_ServicePerformance, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Chart_VmtPerformance, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel25.SuspendLayout()
         Me.ContextMenuStrip_Chart.SuspendLayout()
         Me.SuspendLayout()
@@ -467,7 +468,7 @@ Partial Class UCVmtManagement
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel24.Controls.Add(Me.Chart_ServicePerformance)
+        Me.Panel24.Controls.Add(Me.Chart_VmtPerformance)
         Me.Panel24.Controls.Add(Me.Panel25)
         Me.Panel24.Location = New System.Drawing.Point(16, 16)
         Me.Panel24.Margin = New System.Windows.Forms.Padding(16)
@@ -475,18 +476,22 @@ Partial Class UCVmtManagement
         Me.Panel24.Size = New System.Drawing.Size(768, 364)
         Me.Panel24.TabIndex = 2
         '
-        'Chart_ServicePerformance
+        'Chart_VmtPerformance
         '
         ChartArea1.Name = "ChartArea1"
-        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea1)
-        Me.Chart_ServicePerformance.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Chart_VmtPerformance.ChartAreas.Add(ChartArea1)
+        Me.Chart_VmtPerformance.Dock = System.Windows.Forms.DockStyle.Fill
         Legend1.Name = "Legend1"
-        Me.Chart_ServicePerformance.Legends.Add(Legend1)
-        Me.Chart_ServicePerformance.Location = New System.Drawing.Point(0, 42)
-        Me.Chart_ServicePerformance.Name = "Chart_ServicePerformance"
-        Me.Chart_ServicePerformance.Size = New System.Drawing.Size(766, 320)
-        Me.Chart_ServicePerformance.TabIndex = 1
-        Me.Chart_ServicePerformance.Text = "Chart1"
+        Me.Chart_VmtPerformance.Legends.Add(Legend1)
+        Me.Chart_VmtPerformance.Location = New System.Drawing.Point(0, 42)
+        Me.Chart_VmtPerformance.Name = "Chart_VmtPerformance"
+        Me.Chart_VmtPerformance.Size = New System.Drawing.Size(766, 320)
+        Me.Chart_VmtPerformance.TabIndex = 1
+        Me.Chart_VmtPerformance.Text = "Chart1"
+        Title1.Alignment = System.Drawing.ContentAlignment.MiddleRight
+        Title1.Name = "Title1"
+        Title1.Text = "OSC device packets per second"
+        Me.Chart_VmtPerformance.Titles.Add(Title1)
         '
         'Panel25
         '
@@ -541,7 +546,7 @@ Partial Class UCVmtManagement
         '
         Me.ContextMenuStrip_Chart.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_ChartEnabled, Me.ToolStripMenuItem_ChartClear, Me.ToolStripSeparator1, Me.ToolStripMenuItem1, Me.ToolStripComboBox_ChartSamples})
         Me.ContextMenuStrip_Chart.Name = "ContextMenuStrip_Chart"
-        Me.ContextMenuStrip_Chart.Size = New System.Drawing.Size(182, 125)
+        Me.ContextMenuStrip_Chart.Size = New System.Drawing.Size(182, 103)
         '
         'ToolStripMenuItem_ChartEnabled
         '
@@ -603,7 +608,7 @@ Partial Class UCVmtManagement
         Me.Panel5.ResumeLayout(False)
         Me.Panel13.ResumeLayout(False)
         Me.Panel24.ResumeLayout(False)
-        CType(Me.Chart_ServicePerformance, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Chart_VmtPerformance, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel25.ResumeLayout(False)
         Me.ContextMenuStrip_Chart.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -643,7 +648,7 @@ Partial Class UCVmtManagement
     Friend WithEvents Panel5 As Panel
     Friend WithEvents Panel13 As Panel
     Friend WithEvents Panel24 As Panel
-    Friend WithEvents Chart_ServicePerformance As DataVisualization.Charting.Chart
+    Friend WithEvents Chart_VmtPerformance As DataVisualization.Charting.Chart
     Friend WithEvents Panel25 As Panel
     Friend WithEvents Button_ChartSettings As Button
     Friend WithEvents Label15 As Label
