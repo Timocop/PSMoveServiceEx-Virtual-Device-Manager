@@ -486,8 +486,6 @@ Public Class UCVirtualMotionTrackerItem
             If (Me.Visible) Then
                 TextBox_Fps.Text = String.Format("OSC IO: {0}/s", iFpsCoutner)
             End If
-
-            g_mClassIO.m_FpsOscCounter = 0
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
@@ -807,7 +805,7 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iControllerYawCorrection As Integer = 0
         Private g_bOnlyJointOffset As Boolean = False
 
-        Private g_iFpsOscCounter As Integer = 0
+        Private g_mFpsOscCounter As New Queue(Of Date)
         Private g_mControllerData As ClassServiceClient.IControllerData
         Private g_mHmdData As ClassServiceClient.IHmdData
         Private g_mTrackerData As New Dictionary(Of Integer, ClassServiceClient.ITrackerData)
@@ -1107,18 +1105,29 @@ Public Class UCVirtualMotionTrackerItem
             g_mOscThread.Start()
         End Sub
 
-        Property m_FpsOscCounter As Integer
+        ReadOnly Property m_FpsOscCounter As Integer
             Get
                 SyncLock _ThreadLock
-                    Return g_iFpsOscCounter
+                    Dim mNow As Date = Now
+
+                    While (g_mFpsOscCounter.Count > 0)
+                        If (g_mFpsOscCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                            g_mFpsOscCounter.Dequeue()
+                        Else
+                            Exit While
+                        End If
+                    End While
+
+                    Return g_mFpsOscCounter.Count
                 End SyncLock
             End Get
-            Set(value As Integer)
-                SyncLock _ThreadLock
-                    g_iFpsOscCounter = value
-                End SyncLock
-            End Set
         End Property
+
+        Public Sub AddFpsOscCounter()
+            SyncLock _ThreadLock
+                g_mFpsOscCounter.Enqueue(Now)
+            End SyncLock
+        End Sub
 
         Property m_HmdData As ClassServiceClient.IHmdData
             Get
@@ -1449,7 +1458,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             iFrameRate,
                                                             iVendorId, iProductId
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                 Else
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
@@ -1459,7 +1468,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             iRenderW, iRenderH,
                                                             iFrameRate
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                 End If
 
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1469,14 +1478,14 @@ Public Class UCVirtualMotionTrackerItem
                                                         -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
                                                         iHmdHFov, iHmdVFov
                                                     ))
-                                                m_FpsOscCounter += 1
+                                                AddFpsOscCounter()
 
                                                 mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                     New OscMessage(
                                                         "/VMT/HMD/SetIpdMeters",
                                                         iHmdIPD
                                                     ))
-                                                m_FpsOscCounter += 1
+                                                AddFpsOscCounter()
                                             End If
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
@@ -1532,7 +1541,7 @@ Public Class UCVirtualMotionTrackerItem
                                                         mVelocityOrientation.Y,
                                                         mVelocityOrientation.Z
                                                     ))
-                                                m_FpsOscCounter += 1
+                                                AddFpsOscCounter()
                                                 bSetPack = True
                                             End If
 
@@ -1750,7 +1759,7 @@ Public Class UCVirtualMotionTrackerItem
                                                     m_VmtTracker,
                                                     iBatteryValue
                                                 ))
-                                            m_FpsOscCounter += 1
+                                            AddFpsOscCounter()
                                         End If
 
                                         Select Case (m_VmtTrackerRole)
@@ -1811,7 +1820,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation.Y,
                                                             mVelocityOrientation.Z
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
 
@@ -1839,7 +1848,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                 "/VMT/Input/Button",
                                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                                             ))
-                                                        m_FpsOscCounter += 1
+                                                        AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
@@ -1849,7 +1858,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                "/VMT/Input/Trigger",
                                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                                            ))
-                                                        m_FpsOscCounter += 1
+                                                        AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
@@ -1858,7 +1867,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             "/VMT/Input/Joystick",
                                                             m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                     bSetPack = True
 
                                                 End If
@@ -1916,7 +1925,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation.Y,
                                                             mVelocityOrientation.Z
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
 
@@ -1981,7 +1990,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation.Y,
                                                             mVelocityOrientation.Z
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
 
@@ -2016,7 +2025,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                 "/VMT/Input/Button",
                                                                 m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
                                                             ))
-                                                        m_FpsOscCounter += 1
+                                                        AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
@@ -2026,7 +2035,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                 "/VMT/Input/Trigger",
                                                                 m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
                                                            ))
-                                                        m_FpsOscCounter += 1
+                                                        AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
@@ -2035,7 +2044,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             "/VMT/Input/Joystick",
                                                             m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
 
@@ -2093,7 +2102,7 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation.Y,
                                                             mVelocityOrientation.Z
                                                         ))
-                                                    m_FpsOscCounter += 1
+                                                    AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
 

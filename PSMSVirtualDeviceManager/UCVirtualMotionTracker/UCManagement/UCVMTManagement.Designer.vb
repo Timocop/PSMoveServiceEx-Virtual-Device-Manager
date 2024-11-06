@@ -27,7 +27,14 @@ Partial Class UCVmtManagement
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
+        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
@@ -51,11 +58,21 @@ Partial Class UCVmtManagement
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Serial = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Position = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader_Orientation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Panel13 = New System.Windows.Forms.Panel()
+        Me.Panel24 = New System.Windows.Forms.Panel()
+        Me.Chart_ServicePerformance = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.Panel25 = New System.Windows.Forms.Panel()
+        Me.Button_ChartSettings = New System.Windows.Forms.Button()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Panel26 = New System.Windows.Forms.Panel()
+        Me.ContextMenuStrip_Chart = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuItem_ChartEnabled = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem_ChartClear = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripComboBox_ChartSamples = New System.Windows.Forms.ToolStripComboBox()
         Me.Panel_AvailableDevices.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.Panel_Status.SuspendLayout()
@@ -65,20 +82,64 @@ Partial Class UCVmtManagement
         Me.Panel2.SuspendLayout()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel12.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.Panel5.SuspendLayout()
+        Me.Panel13.SuspendLayout()
+        Me.Panel24.SuspendLayout()
+        CType(Me.Chart_ServicePerformance, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel25.SuspendLayout()
+        Me.ContextMenuStrip_Chart.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel_AvailableDevices
         '
-        Me.Panel_AvailableDevices.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_AvailableDevices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_AvailableDevices.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableDevices.Controls.Add(Me.ListView_OscDevices)
         Me.Panel_AvailableDevices.Controls.Add(Me.Panel8)
-        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(17, 226)
+        Me.Panel_AvailableDevices.Location = New System.Drawing.Point(16, 16)
         Me.Panel_AvailableDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
-        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(767, 250)
+        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(768, 233)
         Me.Panel_AvailableDevices.TabIndex = 4
+        '
+        'ListView_OscDevices
+        '
+        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
+        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
+        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView_OscDevices.FullRowSelect = True
+        Me.ListView_OscDevices.HideSelection = False
+        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
+        Me.ListView_OscDevices.Name = "ListView_OscDevices"
+        Me.ListView_OscDevices.Size = New System.Drawing.Size(766, 189)
+        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.ListView_OscDevices.TabIndex = 1
+        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
+        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader_Type
+        '
+        Me.ColumnHeader_Type.Text = "Type"
+        Me.ColumnHeader_Type.Width = 100
+        '
+        'ColumnHeader_Serial
+        '
+        Me.ColumnHeader_Serial.Text = "Serial"
+        Me.ColumnHeader_Serial.Width = 250
+        '
+        'ColumnHeader_Position
+        '
+        Me.ColumnHeader_Position.Text = "Position"
+        Me.ColumnHeader_Position.Width = 150
+        '
+        'ColumnHeader_Orientation
+        '
+        Me.ColumnHeader_Orientation.Text = "Orientation"
+        Me.ColumnHeader_Orientation.Width = 150
         '
         'Panel8
         '
@@ -88,7 +149,7 @@ Partial Class UCVmtManagement
         Me.Panel8.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel8.Location = New System.Drawing.Point(0, 0)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(765, 42)
+        Me.Panel8.Size = New System.Drawing.Size(766, 42)
         Me.Panel8.TabIndex = 0
         '
         'Label12
@@ -100,7 +161,7 @@ Partial Class UCVmtManagement
         Me.Label12.Location = New System.Drawing.Point(0, 0)
         Me.Label12.Name = "Label12"
         Me.Label12.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
-        Me.Label12.Size = New System.Drawing.Size(765, 41)
+        Me.Label12.Size = New System.Drawing.Size(766, 41)
         Me.Label12.TabIndex = 1
         Me.Label12.Text = "Available OSC Devices"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -111,12 +172,13 @@ Partial Class UCVmtManagement
         Me.Panel10.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel10.Location = New System.Drawing.Point(0, 41)
         Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(765, 1)
+        Me.Panel10.Size = New System.Drawing.Size(766, 1)
         Me.Panel10.TabIndex = 0
         '
         'Panel_Status
         '
-        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_Status.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_Status.Controls.Add(Me.TableLayoutPanel1)
@@ -372,52 +434,160 @@ Partial Class UCVmtManagement
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
-        'ColumnHeader_Type
+        'Panel1
         '
-        Me.ColumnHeader_Type.Text = "Type"
-        Me.ColumnHeader_Type.Width = 100
+        Me.Panel1.Controls.Add(Me.Panel_Status)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(800, 207)
+        Me.Panel1.TabIndex = 5
         '
-        'ColumnHeader_Serial
+        'Panel5
         '
-        Me.ColumnHeader_Serial.Text = "Serial"
-        Me.ColumnHeader_Serial.Width = 250
+        Me.Panel5.Controls.Add(Me.Panel_AvailableDevices)
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel5.Location = New System.Drawing.Point(0, 207)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(800, 265)
+        Me.Panel5.TabIndex = 6
         '
-        'ColumnHeader_Position
+        'Panel13
         '
-        Me.ColumnHeader_Position.Text = "Position"
-        Me.ColumnHeader_Position.Width = 150
+        Me.Panel13.Controls.Add(Me.Panel24)
+        Me.Panel13.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel13.Location = New System.Drawing.Point(0, 472)
+        Me.Panel13.Name = "Panel13"
+        Me.Panel13.Size = New System.Drawing.Size(800, 396)
+        Me.Panel13.TabIndex = 10
         '
-        'ColumnHeader_Orientation
+        'Panel24
         '
-        Me.ColumnHeader_Orientation.Text = "Orientation"
-        Me.ColumnHeader_Orientation.Width = 150
+        Me.Panel24.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel24.Controls.Add(Me.Chart_ServicePerformance)
+        Me.Panel24.Controls.Add(Me.Panel25)
+        Me.Panel24.Location = New System.Drawing.Point(16, 16)
+        Me.Panel24.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel24.Name = "Panel24"
+        Me.Panel24.Size = New System.Drawing.Size(768, 364)
+        Me.Panel24.TabIndex = 2
         '
-        'ListView_OscDevices
+        'Chart_ServicePerformance
         '
-        Me.ListView_OscDevices.BackColor = System.Drawing.Color.White
-        Me.ListView_OscDevices.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_OscDevices.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Type, Me.ColumnHeader_Serial, Me.ColumnHeader_Position, Me.ColumnHeader_Orientation})
-        Me.ListView_OscDevices.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_OscDevices.FullRowSelect = True
-        Me.ListView_OscDevices.HideSelection = False
-        Me.ListView_OscDevices.Location = New System.Drawing.Point(0, 42)
-        Me.ListView_OscDevices.Name = "ListView_OscDevices"
-        Me.ListView_OscDevices.Size = New System.Drawing.Size(765, 206)
-        Me.ListView_OscDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.ListView_OscDevices.TabIndex = 1
-        Me.ListView_OscDevices.UseCompatibleStateImageBehavior = False
-        Me.ListView_OscDevices.View = System.Windows.Forms.View.Details
+        ChartArea1.Name = "ChartArea1"
+        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea1)
+        Me.Chart_ServicePerformance.Dock = System.Windows.Forms.DockStyle.Fill
+        Legend1.Name = "Legend1"
+        Me.Chart_ServicePerformance.Legends.Add(Legend1)
+        Me.Chart_ServicePerformance.Location = New System.Drawing.Point(0, 42)
+        Me.Chart_ServicePerformance.Name = "Chart_ServicePerformance"
+        Me.Chart_ServicePerformance.Size = New System.Drawing.Size(766, 320)
+        Me.Chart_ServicePerformance.TabIndex = 1
+        Me.Chart_ServicePerformance.Text = "Chart1"
+        '
+        'Panel25
+        '
+        Me.Panel25.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel25.Controls.Add(Me.Button_ChartSettings)
+        Me.Panel25.Controls.Add(Me.Label15)
+        Me.Panel25.Controls.Add(Me.Panel26)
+        Me.Panel25.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel25.Location = New System.Drawing.Point(0, 0)
+        Me.Panel25.Name = "Panel25"
+        Me.Panel25.Size = New System.Drawing.Size(766, 42)
+        Me.Panel25.TabIndex = 0
+        '
+        'Button_ChartSettings
+        '
+        Me.Button_ChartSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_ChartSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5321_16x16_32
+        Me.Button_ChartSettings.Location = New System.Drawing.Point(623, 6)
+        Me.Button_ChartSettings.Margin = New System.Windows.Forms.Padding(16, 6, 16, 6)
+        Me.Button_ChartSettings.Name = "Button_ChartSettings"
+        Me.Button_ChartSettings.Size = New System.Drawing.Size(127, 30)
+        Me.Button_ChartSettings.TabIndex = 2
+        Me.Button_ChartSettings.Text = "Graph Settings..."
+        Me.Button_ChartSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_ChartSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_ChartSettings.UseVisualStyleBackColor = True
+        '
+        'Label15
+        '
+        Me.Label15.BackColor = System.Drawing.Color.White
+        Me.Label15.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label15.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.ForeColor = System.Drawing.Color.Navy
+        Me.Label15.Location = New System.Drawing.Point(0, 0)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
+        Me.Label15.Size = New System.Drawing.Size(766, 41)
+        Me.Label15.TabIndex = 1
+        Me.Label15.Text = "OSC Performance Graph"
+        Me.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Panel26
+        '
+        Me.Panel26.BackColor = System.Drawing.Color.Gray
+        Me.Panel26.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel26.Location = New System.Drawing.Point(0, 41)
+        Me.Panel26.Name = "Panel26"
+        Me.Panel26.Size = New System.Drawing.Size(766, 1)
+        Me.Panel26.TabIndex = 0
+        '
+        'ContextMenuStrip_Chart
+        '
+        Me.ContextMenuStrip_Chart.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_ChartEnabled, Me.ToolStripMenuItem_ChartClear, Me.ToolStripSeparator1, Me.ToolStripMenuItem1, Me.ToolStripComboBox_ChartSamples})
+        Me.ContextMenuStrip_Chart.Name = "ContextMenuStrip_Chart"
+        Me.ContextMenuStrip_Chart.Size = New System.Drawing.Size(182, 125)
+        '
+        'ToolStripMenuItem_ChartEnabled
+        '
+        Me.ToolStripMenuItem_ChartEnabled.CheckOnClick = True
+        Me.ToolStripMenuItem_ChartEnabled.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.ToolStripMenuItem_ChartEnabled.Name = "ToolStripMenuItem_ChartEnabled"
+        Me.ToolStripMenuItem_ChartEnabled.Size = New System.Drawing.Size(181, 22)
+        Me.ToolStripMenuItem_ChartEnabled.Text = "Enabled"
+        '
+        'ToolStripMenuItem_ChartClear
+        '
+        Me.ToolStripMenuItem_ChartClear.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
+        Me.ToolStripMenuItem_ChartClear.Name = "ToolStripMenuItem_ChartClear"
+        Me.ToolStripMenuItem_ChartClear.Size = New System.Drawing.Size(181, 22)
+        Me.ToolStripMenuItem_ChartClear.Text = "Clear"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(178, 6)
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Enabled = False
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(181, 22)
+        Me.ToolStripMenuItem1.Text = "Maximum Samples:"
+        '
+        'ToolStripComboBox_ChartSamples
+        '
+        Me.ToolStripComboBox_ChartSamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ToolStripComboBox_ChartSamples.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ToolStripComboBox_ChartSamples.Name = "ToolStripComboBox_ChartSamples"
+        Me.ToolStripComboBox_ChartSamples.Size = New System.Drawing.Size(121, 23)
         '
         'UCVmtManagement
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.Controls.Add(Me.Panel_AvailableDevices)
-        Me.Controls.Add(Me.Panel_Status)
+        Me.Controls.Add(Me.Panel13)
+        Me.Controls.Add(Me.Panel5)
+        Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVmtManagement"
-        Me.Size = New System.Drawing.Size(800, 497)
+        Me.Size = New System.Drawing.Size(800, 1004)
         Me.Panel_AvailableDevices.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
         Me.Panel_Status.ResumeLayout(False)
@@ -429,6 +599,13 @@ Partial Class UCVmtManagement
         Me.Panel2.PerformLayout()
         CType(Me.ClassPictureBoxQuality2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel12.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel5.ResumeLayout(False)
+        Me.Panel13.ResumeLayout(False)
+        Me.Panel24.ResumeLayout(False)
+        CType(Me.Chart_ServicePerformance, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel25.ResumeLayout(False)
+        Me.ContextMenuStrip_Chart.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -462,4 +639,19 @@ Partial Class UCVmtManagement
     Friend WithEvents ColumnHeader_Serial As ColumnHeader
     Friend WithEvents ColumnHeader_Position As ColumnHeader
     Friend WithEvents ColumnHeader_Orientation As ColumnHeader
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents Panel13 As Panel
+    Friend WithEvents Panel24 As Panel
+    Friend WithEvents Chart_ServicePerformance As DataVisualization.Charting.Chart
+    Friend WithEvents Panel25 As Panel
+    Friend WithEvents Button_ChartSettings As Button
+    Friend WithEvents Label15 As Label
+    Friend WithEvents Panel26 As Panel
+    Friend WithEvents ContextMenuStrip_Chart As ContextMenuStrip
+    Friend WithEvents ToolStripMenuItem_ChartEnabled As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem_ChartClear As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents ToolStripComboBox_ChartSamples As ToolStripComboBox
 End Class

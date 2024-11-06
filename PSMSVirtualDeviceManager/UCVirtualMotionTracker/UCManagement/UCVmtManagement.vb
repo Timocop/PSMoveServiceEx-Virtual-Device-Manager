@@ -13,6 +13,13 @@ Public Class UCVmtManagement
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        ToolStripComboBox_ChartSamples.Items.Clear()
+        ToolStripComboBox_ChartSamples.Items.Add("100")
+        ToolStripComboBox_ChartSamples.Items.Add("250")
+        ToolStripComboBox_ChartSamples.Items.Add("500")
+        ToolStripComboBox_ChartSamples.Items.Add("1000")
+        ToolStripComboBox_ChartSamples.SelectedIndex = 0
+
         g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
         g_mOscStatusThread.IsBackground = True
         g_mOscStatusThread.Start()
@@ -213,8 +220,12 @@ Public Class UCVmtManagement
     End Sub
 
     Private Sub OscStatusThread()
+        Dim iFrameCount As Integer = 0
+
         While True
             Try
+                Dim bRunning As Boolean = False
+
                 If (g_UCVirtualMotionTracker.g_ClassOscServer Is Nothing OrElse Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning()) Then
                     ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
                 Else
@@ -228,7 +239,44 @@ Public Class UCVmtManagement
                         Else
                             ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.CONNECTED))
                         End If
+
+                        bRunning = True
                     End If
+                End If
+
+                If (bRunning) Then
+                    Dim iAxisX As Integer = iFrameCount
+
+                    ClassUtils.AsyncInvoke(Me, Sub()
+                                                   If (Not Me.Visible) Then
+                                                       Return
+                                                   End If
+
+                                                   Dim mDevices = g_UCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
+
+                                                   For i = 0 To mDevices.Length - 1
+                                                       Dim mDeviceIO = mDevices(i).g_mClassIO
+
+                                                       Dim iVmtTrackerId As Integer = mDeviceIO.m_VmtTracker
+                                                       Dim iFPS As Integer = mDeviceIO.m_FpsOscCounter
+                                                       Dim bIsHmd As Boolean = mDeviceIO.m_IsHMD
+
+                                                       ' Add to chart
+                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+                                                           Dim sTargetName As String
+
+                                                           If (bIsHmd) Then
+                                                               sTargetName = ((ClassVmtConst.VMT_DEVICE_NAME & "HMD"))
+                                                           Else
+                                                               sTargetName = ((ClassVmtConst.VMT_DEVICE_NAME & iVmtTrackerId))
+                                                           End If
+
+                                                           AddChartValues(sTargetName, iFPS, iAxisX, iMaxCount)
+                                                       End If
+                                                   Next
+                                               End Sub)
+
                 End If
             Catch ex As Threading.ThreadAbortException
                 Throw
@@ -236,7 +284,8 @@ Public Class UCVmtManagement
                 ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
-            Threading.Thread.Sleep(1000)
+            iFrameCount += 1
+            Threading.Thread.Sleep(500)
         End While
     End Sub
 
@@ -326,6 +375,71 @@ Public Class UCVmtManagement
 
             Threading.Thread.Sleep(500)
         End While
+    End Sub
+
+    Private Sub AddChartValues(sSeriesName As String, iValue As Integer, iCount As Integer, iMaxCount As Integer)
+        If (Not Chart_ServicePerformance.Enabled) Then
+            Return
+        End If
+
+        If (Chart_ServicePerformance.ChartAreas.Count < 1) Then
+            Return
+        End If
+
+        If (Chart_ServicePerformance.Series.IndexOf(sSeriesName) = -1) Then
+            Dim mSeries = Chart_ServicePerformance.Series.Add(sSeriesName)
+
+            mSeries.ChartArea = Chart_ServicePerformance.ChartAreas(0).Name
+            mSeries.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+            mSeries.BorderWidth = 2
+        End If
+
+        Chart_ServicePerformance.Series(sSeriesName).Points.AddXY(iCount, iValue)
+
+        While (Chart_ServicePerformance.Series(sSeriesName).Points.Count > 1 AndAlso
+            Chart_ServicePerformance.Series(sSeriesName).Points(1).XValue < (iCount - iMaxCount))
+            Chart_ServicePerformance.Series(sSeriesName).Points.RemoveAt(0)
+        End While
+
+        ' Adjust bounds
+        Dim mAxisX = Chart_ServicePerformance.ChartAreas(0).AxisX()
+        If (mAxisX.Maximum < iCount) Then
+            mAxisX.Maximum = iCount
+        End If
+        If (mAxisX.Minimum < (iCount - iMaxCount)) Then
+            mAxisX.Minimum = iCount - iMaxCount
+        End If
+
+        Dim mAxisY = Chart_ServicePerformance.ChartAreas(0).AxisY()
+        Dim iValueMax = Math.Ceiling(iValue * 0.1) * 10
+        Dim iValueMin = Math.Floor(iValue * 0.1) * 10
+
+        If (mAxisY.Maximum < iValueMax) Then
+            mAxisY.Maximum = iValueMax
+        End If
+        If (mAxisY.Minimum > iValueMin) Then
+            mAxisY.Minimum = iValueMin
+        End If
+    End Sub
+
+    Private Sub Button_ChartSettings_Click(sender As Object, e As EventArgs) Handles Button_ChartSettings.Click
+        ContextMenuStrip_Chart.Show(Button_ChartSettings, New Point(0, Button_ChartSettings.Height))
+    End Sub
+
+    Private Sub ToolStripMenuItem_ChartEnabled_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_ChartEnabled.Click
+        Chart_ServicePerformance.Enabled = ToolStripMenuItem_ChartEnabled.Checked
+    End Sub
+
+    Private Sub ContextMenuStrip_Chart_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip_Chart.Opening
+        ToolStripMenuItem_ChartEnabled.Checked = Chart_ServicePerformance.Enabled
+    End Sub
+
+    Private Sub ToolStripMenuItem_ChartClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_ChartClear.Click
+        Chart_ServicePerformance.Series.Clear()
+        Chart_ServicePerformance.ChartAreas(0).AxisX.Maximum = 1
+        Chart_ServicePerformance.ChartAreas(0).AxisX.Minimum = 0
+        Chart_ServicePerformance.ChartAreas(0).AxisY.Maximum = 1
+        Chart_ServicePerformance.ChartAreas(0).AxisY.Minimum = 0
     End Sub
 
     Private Sub CleanUp()
