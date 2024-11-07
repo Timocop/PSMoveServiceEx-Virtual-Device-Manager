@@ -1,6 +1,6 @@
 ﻿Imports System.Numerics
 
-Public Class ClassQuaternionTools
+Public Class ClassMathUtils
     Public Shared Function ToQ(yaw As Single, pitch As Single, roll As Single) As Quaternion
         ToQ(New Vector3(pitch, yaw, roll))
     End Function

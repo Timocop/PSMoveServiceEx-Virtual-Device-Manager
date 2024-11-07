@@ -34,8 +34,8 @@ Public Class ClassLogManagerRemoteDevices
         ClassUtils.SyncInvoke(Sub()
                                   Dim mRemoteDevices = g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices.GetRemoteDevices()
                                   For Each mItem In mRemoteDevices
-                                      Dim mAng As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_Orientation)
-                                      Dim mReset As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_ResetOrientation)
+                                      Dim mAng As Vector3 = ClassMathUtils.FromQ(mItem.g_mClassIO.m_Orientation)
+                                      Dim mReset As Vector3 = ClassMathUtils.FromQ(mItem.g_mClassIO.m_ResetOrientation)
 
                                       sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
                                       sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()

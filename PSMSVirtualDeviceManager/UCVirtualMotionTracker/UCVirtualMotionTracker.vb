@@ -1363,7 +1363,7 @@ Public Class UCVirtualMotionTracker
             End Function
 
             Public Function GetOrientationEuler() As Vector3
-                Return ClassQuaternionTools.FromQ(mOrientation)
+                Return ClassMathUtils.FromQ(mOrientation)
             End Function
 
             Dim mLastPoseTimestamp As Date

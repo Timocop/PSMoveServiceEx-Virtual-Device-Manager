@@ -113,7 +113,7 @@ Public Class ClassServiceClient
         Public Property m_LastTimeStamp As Date Implements IControllerData.m_LastTimeStamp
 
         Private Function IControllerData_GetOrientationEuler() As Vector3 Implements IControllerData.GetOrientationEuler
-            Return ClassQuaternionTools.FromQ(m_Orientation)
+            Return ClassMathUtils.FromQ(m_Orientation)
         End Function
     End Structure
 
@@ -131,7 +131,7 @@ Public Class ClassServiceClient
         Public Property m_LastTimeStamp As Date Implements ITrackerData.m_LastTimeStamp
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
-            Return ClassQuaternionTools.FromQ(m_Orientation)
+            Return ClassMathUtils.FromQ(m_Orientation)
         End Function
     End Structure
 
@@ -153,7 +153,7 @@ Public Class ClassServiceClient
         Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
 
         Public Function GetOrientationEuler() As Vector3 Implements IHmdData.GetOrientationEuler
-            Return ClassQuaternionTools.FromQ(m_Orientation)
+            Return ClassMathUtils.FromQ(m_Orientation)
         End Function
     End Structure
 
@@ -175,7 +175,7 @@ Public Class ClassServiceClient
         Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
 
         Public Function GetOrientationEuler() As Vector3 Implements IHmdData.GetOrientationEuler
-            Return ClassQuaternionTools.FromQ(m_Orientation)
+            Return ClassMathUtils.FromQ(m_Orientation)
         End Function
     End Structure
 

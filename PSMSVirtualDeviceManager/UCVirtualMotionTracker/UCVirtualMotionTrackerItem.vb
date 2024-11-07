@@ -518,7 +518,7 @@ Public Class UCVirtualMotionTrackerItem
                 If (bValid) Then
                     TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", Math.Floor(mPosition.X), Math.Floor(mPosition.Y), Math.Floor(mPosition.Z), Environment.NewLine)
 
-                    Dim iAng = ClassQuaternionTools.FromQ(mOrientation)
+                    Dim iAng = ClassMathUtils.FromQ(mOrientation)
                     TextBox_Gyro.Text = String.Format("Ang X: {0}{3}Ang Y: {1}{3}Ang Z: {2}", Math.Floor(iAng.X), Math.Floor(iAng.Y), Math.Floor(iAng.Z), Environment.NewLine)
                 Else
                     TextBox_Pos.Text = String.Format("Pos X: {0}{3}Pos Y: {1}{3}Pos Z: {2}", "N/A", "N/A", "N/A", Environment.NewLine)
@@ -2215,7 +2215,7 @@ Public Class UCVirtualMotionTrackerItem
                             CSng((mPosition.Y - mLastPosition.Y) / iAvgiDeltaTime),
                             CSng((mPosition.Z - mLastPosition.Z) / iAvgiDeltaTime)
                         )
-                        mLastVelocityPosition = ClassQuaternionTools.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mLastVelocityPosition)
+                        mLastVelocityPosition = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mLastVelocityPosition)
                     End If
 
                     mLastPosition = mPosition
@@ -2247,10 +2247,10 @@ Public Class UCVirtualMotionTrackerItem
                     Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
 
                     If (iAvgDeltaTime > MAX_VELOCITY_FREQ AndAlso iAvgDeltaTime <= MIN_VELOCITY_FREQ) Then
-                        Dim mNewVelocity = ClassQuaternionTools.AngularVelocityBetweenQuats(
+                        Dim mNewVelocity = ClassMathUtils.AngularVelocityBetweenQuats(
                             mLastOrientation, mOrientation, iAvgDeltaTime
                         )
-                        mLastVelocityOrientation = ClassQuaternionTools.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mLastVelocityOrientation)
+                        mLastVelocityOrientation = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mLastVelocityOrientation)
                     End If
 
                     mLastOrientation = mOrientation
@@ -2259,7 +2259,7 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                     mVelocityOrientation = mLastVelocityOrientation
-                    mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
+                    mOrientation = mOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
                 End If
             End If
         End Sub
@@ -2323,7 +2323,7 @@ Public Class UCVirtualMotionTrackerItem
                 End If
 
                 If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
-                    mOrientation = mOrientation * Quaternion.Conjugate(ClassQuaternionTools.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
+                    mOrientation = mOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
                 Else
                     mVelocityOrientation = Vector3.Zero
                 End If
@@ -2405,27 +2405,27 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mForward As Vector3
                 Dim mSideways As Vector3
                 If (m_PlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
-                    mCalibrationForward = ClassQuaternionTools.ExtractYawQuaternion(m_PlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
+                    mCalibrationForward = ClassMathUtils.ExtractYawQuaternion(m_PlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
                     mForward = Vector3.UnitZ * m_PlayspaceSettings.m_ForwardOffset
                     mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
                 Else
-                    mCalibrationForward = ClassQuaternionTools.LookRotation(
+                    mCalibrationForward = ClassMathUtils.LookRotation(
                         m_PlayspaceSettings.m_PointHmdEndPos - m_PlayspaceSettings.m_PointHmdBeginPos, Vector3.UnitY)
                     mForward = Vector3.UnitY * m_PlayspaceSettings.m_ForwardOffset
                     mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
                 End If
 
-                Dim mOffsetForward = ClassQuaternionTools.RotateVector(mCalibrationForward, mForward)
-                Dim mOffsetSideways = ClassQuaternionTools.RotateVector(mCalibrationForward, mSideways)
+                Dim mOffsetForward = ClassMathUtils.RotateVector(mCalibrationForward, mForward)
+                Dim mOffsetSideways = ClassMathUtils.RotateVector(mCalibrationForward, mSideways)
 
-                Dim mPlayspaceCalibPointsRotated = ClassQuaternionTools.RotateVector(
+                Dim mPlayspaceCalibPointsRotated = ClassMathUtils.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), m_PlayspaceSettings.m_PointControllerBeginPos)
 
                 mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward + mOffsetSideways) - mPlayspaceCalibPointsRotated
 
-                Dim mPlayspaceRotated = ClassQuaternionTools.RotateVector(
+                Dim mPlayspaceRotated = ClassMathUtils.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition)
-                Dim mPlayspaceRotatedVelocity = ClassQuaternionTools.RotateVector(
+                Dim mPlayspaceRotatedVelocity = ClassMathUtils.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPositionVelocity)
 
                 Dim mHeightOffset = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
@@ -2511,8 +2511,8 @@ Public Class UCVirtualMotionTrackerItem
                                 mFromDevicePosBegin.Y = 0.0F
                                 mFromDevicePosEnd.Y = 0.0F
 
-                                Dim mRelControllerVec = ClassQuaternionTools.LookRotation(mControllerPosEnd - mControllerPosBegin, Vector3.UnitY)
-                                Dim mRelDeviceVec = ClassQuaternionTools.LookRotation(mFromDevicePosEnd - mFromDevicePosBegin, Vector3.UnitY)
+                                Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerPosEnd - mControllerPosBegin, Vector3.UnitY)
+                                Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFromDevicePosEnd - mFromDevicePosBegin, Vector3.UnitY)
                                 Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
 
                                 mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mFromDevicePosEnd - mControllerPosEnd
@@ -2607,8 +2607,8 @@ Public Class UCVirtualMotionTrackerItem
 
                                 ' Make sure the distance is big enough to get the angle.
                                 If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
-                                    Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                                    Dim mQuatDirection = ClassMathUtils.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                    Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
                                     mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
 
@@ -2621,9 +2621,9 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (bDoFactoryRecenter) Then
-                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
-                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
+                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassMathUtils.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
                         mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
                         mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.DEVICE_RECENTER)
@@ -2730,8 +2730,8 @@ Public Class UCVirtualMotionTrackerItem
 
                                     ' Make sure the distance is big enough to get the angle.
                                     If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
-                                        Dim mQuatDirection = ClassQuaternionTools.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                                        Dim mQuatDirection = ClassMathUtils.FromVectorToVector(mFromDevicePos, mControllerPos)
+                                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
                                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
 
@@ -2749,9 +2749,9 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (bDoFactoryRecenter) Then
-                        Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
 
-                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassQuaternionTools.LookRotation(Vector3.UnitX, Vector3.UnitY)
+                        mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassMathUtils.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
                         If (Not bIsHmd) Then
                             mClassControllerSettings.m_ControllerSettings.m_ControllerRecenter(g_iIndex) = mRecenterQuat
@@ -2796,7 +2796,7 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (True) Then
                     Dim mCurrentOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
-                    Dim mControllerYaw = ClassQuaternionTools.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0, 0, -1))
+                    Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0, 0, -1))
                     Dim mCurrentOrientationRelative = Quaternion.Conjugate(mControllerYaw) * mCurrentOrientation
 
                     If (iControllerJoystickMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION) Then
@@ -2810,7 +2810,7 @@ Public Class UCVirtualMotionTrackerItem
                             mJoystickPressedLastPosition = Vector3.Zero
                         End If
 
-                        Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
+                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
 
                         mJoystickPostion = mJoystickPostion - (mNewJoystickPosition / (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
 
@@ -2827,7 +2827,7 @@ Public Class UCVirtualMotionTrackerItem
                             mJoystickPressedLastPosition = m_PSMoveData.m_Position
                         End If
 
-                        Dim mNewJoystickPosition = ClassQuaternionTools.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position - mJoystickPressedLastPosition)
+                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position - mJoystickPressedLastPosition)
 
                         mJoystickPostion = mJoystickPostion - (mNewJoystickPosition / iControllerJoystickAreaCm)
 

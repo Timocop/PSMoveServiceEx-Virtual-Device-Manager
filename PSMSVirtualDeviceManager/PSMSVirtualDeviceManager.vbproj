@@ -193,7 +193,7 @@
     </Compile>
     <Compile Include="Classes\Tools\ClassPrecisionSleep.vb" />
     <Compile Include="Classes\Service\ClassSerivceConst.vb" />
-    <Compile Include="Classes\Tools\ClassQuaternionTools.vb" />
+    <Compile Include="Classes\Tools\ClassMathUtils.vb" />
     <Compile Include="Classes\Service\ClassServiceConfig.vb" />
     <Compile Include="Classes\Service\ClassServiceClient.vb" />
     <Compile Include="Classes\Service\ClassServiceInfo.vb" />

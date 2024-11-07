@@ -276,11 +276,11 @@ Public Class UCRemoteDeviceItem
         If (g_mRotationWait.ElapsedMilliseconds > 100) Then
             g_mRotationWait.Restart()
 
-            Dim mAngle As Vector3 = ClassQuaternionTools.FromQ(New Quaternion(iX, iY, iZ, iW))
-            Dim mResetAngle As Vector3 = ClassQuaternionTools.FromQ(g_mClassIO.m_ResetOrientation)
+            Dim mAngle As Vector3 = ClassMathUtils.FromQ(New Quaternion(iX, iY, iZ, iW))
+            Dim mResetAngle As Vector3 = ClassMathUtils.FromQ(g_mClassIO.m_ResetOrientation)
             Dim iOffsetAngle As Integer = +g_mClassIO.m_YawOrientationOffset
 
-            mAngle = ClassQuaternionTools.NormalizeAngles(New Vector3(mAngle.X - mResetAngle.X, mAngle.Y - mResetAngle.Y, mAngle.Z - mResetAngle.Z - iOffsetAngle))
+            mAngle = ClassMathUtils.NormalizeAngles(New Vector3(mAngle.X - mResetAngle.X, mAngle.Y - mResetAngle.Y, mAngle.Z - mResetAngle.Z - iOffsetAngle))
 
             ClassUtils.AsyncInvoke(Sub() TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z)))
         End If
