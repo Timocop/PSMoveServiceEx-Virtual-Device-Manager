@@ -99,7 +99,7 @@
             ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
 
-        ClassUtils.AsyncInvoke(Me, Sub() Me.Visible = False)
+        ClassUtils.AsyncInvoke(Sub() Me.Visible = False)
     End Sub
 
     Private Sub CleanUp()

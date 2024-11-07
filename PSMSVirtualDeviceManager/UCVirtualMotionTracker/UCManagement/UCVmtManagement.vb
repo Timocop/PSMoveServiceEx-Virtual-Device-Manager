@@ -227,17 +227,17 @@ Public Class UCVmtManagement
                 Dim bRunning As Boolean = False
 
                 If (g_UCVirtualMotionTracker.g_ClassOscServer Is Nothing OrElse Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning()) Then
-                    ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
+                    ClassUtils.AsyncInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.NOT_STARTED))
                 Else
                     If (g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
-                        ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED))
+                        ClassUtils.AsyncInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED))
                     Else
                         Dim mLastResponse As TimeSpan = (Now - g_UCVirtualMotionTracker.g_ClassOscServer.m_LastResponse)
 
                         If (mLastResponse.TotalMilliseconds > 5000) Then
-                            ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.TIMEOUT))
+                            ClassUtils.AsyncInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.TIMEOUT))
                         Else
-                            ClassUtils.AsyncInvoke(Me, Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.CONNECTED))
+                            ClassUtils.AsyncInvoke(Sub() SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.CONNECTED))
                         End If
 
                         bRunning = True
@@ -247,31 +247,31 @@ Public Class UCVmtManagement
                 If (bRunning) Then
                     Dim iAxisX As Integer = iFrameCount
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   Dim mDevices = g_UCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
+                    ClassUtils.AsyncInvoke(Sub()
+                                               Dim mDevices = g_UCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
 
-                                                   For i = 0 To mDevices.Length - 1
-                                                       Dim mDeviceIO = mDevices(i).g_mClassIO
+                                               For i = 0 To mDevices.Length - 1
+                                                   Dim mDeviceIO = mDevices(i).g_mClassIO
 
-                                                       Dim iVmtTrackerId As Integer = mDeviceIO.m_VmtTracker
-                                                       Dim iFPS As Integer = mDeviceIO.m_FpsOscCounter
-                                                       Dim bIsHmd As Boolean = mDeviceIO.m_IsHMD
+                                                   Dim iVmtTrackerId As Integer = mDeviceIO.m_VmtTracker
+                                                   Dim iFPS As Integer = mDeviceIO.m_FpsOscCounter
+                                                   Dim bIsHmd As Boolean = mDeviceIO.m_IsHMD
 
-                                                       ' Add to chart
-                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
-                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
-                                                           Dim sTargetName As String
+                                                   ' Add to chart
+                                                   If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                       Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+                                                       Dim sTargetName As String
 
-                                                           If (bIsHmd) Then
-                                                               sTargetName = ((ClassVmtConst.VMT_DEVICE_NAME & "HMD"))
-                                                           Else
-                                                               sTargetName = ((ClassVmtConst.VMT_DEVICE_NAME & iVmtTrackerId))
-                                                           End If
-
-                                                           AddChartValues(sTargetName, iFPS, iAxisX, iMaxCount)
+                                                       If (bIsHmd) Then
+                                                           sTargetName = ((ClassVmtConst.VMT_DEVICE_NAME & "HMD"))
+                                                       Else
+                                                           sTargetName = ((ClassVmtConst.VMT_DEVICE_NAME & iVmtTrackerId))
                                                        End If
-                                                   Next
-                                               End Sub)
+
+                                                       AddChartValues(sTargetName, iFPS, iAxisX, iMaxCount)
+                                                   End If
+                                               Next
+                                           End Sub)
 
                 End If
             Catch ex As Threading.ThreadAbortException
@@ -294,26 +294,26 @@ Public Class UCVmtManagement
                 Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
                 Const LISTVIEW_SUBITEM_FPS As Integer = 4
 
-                ClassUtils.AsyncInvoke(Me, Sub()
-                                               If (Not Me.Visible) Then
-                                                   Return
-                                               End If
+                ClassUtils.AsyncInvoke(Sub()
+                                           If (Not Me.Visible) Then
+                                               Return
+                                           End If
 
-                                               ListView_OscDevices.BeginUpdate()
-                                               Try
-                                                   For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                           ListView_OscDevices.BeginUpdate()
+                                           Try
+                                               For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                                       Else
-                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                                       End If
-                                                   Next
-                                               Finally
-                                                   ListView_OscDevices.EndUpdate()
-                                               End Try
-                                           End Sub)
+                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                   Else
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                   End If
+                                               Next
+                                           Finally
+                                               ListView_OscDevices.EndUpdate()
+                                           End Try
+                                       End Sub)
 
                 Dim mDevices = g_UCVirtualMotionTracker.g_ClassOscDevices.GetDevices
 
@@ -323,41 +323,41 @@ Public Class UCVmtManagement
                     Dim mPos As Vector3 = mDevice.GetPosCm()
                     Dim mAng As Vector3 = mDevice.GetOrientationEuler()
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   Dim bFound As Boolean = False
+                    ClassUtils.AsyncInvoke(Sub()
+                                               Dim bFound As Boolean = False
 
-                                                   ' Change info about device
-                                                   ListView_OscDevices.BeginUpdate()
-                                                   Try
-                                                       For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
+                                               ' Change info about device
+                                               ListView_OscDevices.BeginUpdate()
+                                               Try
+                                                   For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
+                                                       If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.sSerial) Then
 
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                               mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+                                                           mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                           mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                           mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
 
-                                                               bFound = True
-                                                           End If
-                                                       Next
-                                                   Finally
-                                                       ListView_OscDevices.EndUpdate()
-                                                   End Try
+                                                           bFound = True
+                                                       End If
+                                                   Next
+                                               Finally
+                                                   ListView_OscDevices.EndUpdate()
+                                               End Try
 
-                                                   ' Added device when not found
-                                                   If (Not bFound) Then
-                                                       Dim mListViewItem = New ListViewItem(New String() {
-                                                            mDevice.iType.ToString,
-                                                            mDevice.sSerial,
-                                                            String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
-                                                            String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
-                                                            "0"
-                                                        })
-                                                       mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                       mListViewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+                                               ' Added device when not found
+                                               If (Not bFound) Then
+                                                   Dim mListViewItem = New ListViewItem(New String() {
+                                                        mDevice.iType.ToString,
+                                                        mDevice.sSerial,
+                                                        String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z))),
+                                                        String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z))),
+                                                        "0"
+                                                    })
+                                                   mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                   mListViewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
 
-                                                       ListView_OscDevices.Items.Add(mListViewItem)
-                                                   End If
-                                               End Sub)
+                                                   ListView_OscDevices.Items.Add(mListViewItem)
+                                               End If
+                                           End Sub)
                 Next
 
             Catch ex As Threading.ThreadAbortException

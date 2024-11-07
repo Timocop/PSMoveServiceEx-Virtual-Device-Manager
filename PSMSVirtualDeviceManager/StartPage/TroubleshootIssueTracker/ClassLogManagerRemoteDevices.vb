@@ -31,32 +31,32 @@ Public Class ClassLogManagerRemoteDevices
         Dim sTrackersList As New Text.StringBuilder
 
         ' Not thread-safe
-        ClassUtils.SyncInvoke(g_mFormMain, Sub()
-                                               Dim mRemoteDevices = g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices.GetRemoteDevices()
-                                               For Each mItem In mRemoteDevices
-                                                   Dim mAng As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_Orientation)
-                                                   Dim mReset As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_ResetOrientation)
+        ClassUtils.SyncInvoke(Sub()
+                                  Dim mRemoteDevices = g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices.GetRemoteDevices()
+                                  For Each mItem In mRemoteDevices
+                                      Dim mAng As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_Orientation)
+                                      Dim mReset As Vector3 = ClassQuaternionTools.FromQ(mItem.g_mClassIO.m_ResetOrientation)
 
-                                                   sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
-                                                   sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
-                                                   sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
-                                                   sTrackersList.AppendFormat("TrackerName={0}", mItem.m_TrackerName).AppendLine()
-                                                   sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
-                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.m_HasStatusErrorMessage.Value.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
-                                                   sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
-                                                   sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
+                                      sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                      sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
+                                      sTrackersList.AppendFormat("NickName={0}", mItem.m_Nickname).AppendLine()
+                                      sTrackersList.AppendFormat("TrackerName={0}", mItem.m_TrackerName).AppendLine()
+                                      sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                      sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.m_HasStatusErrorMessage.Value.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
+                                      sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassIO.m_FpsPipeCounter).AppendLine()
+                                      sTrackersList.AppendFormat("Orientation={0}", String.Format("{0}, {1}, {2}",
                                                                                                                 mAng.X.ToString(Globalization.CultureInfo.InvariantCulture),
                                                                                                                 mAng.Y.ToString(Globalization.CultureInfo.InvariantCulture),
                                                                                                                 mAng.Z.ToString(Globalization.CultureInfo.InvariantCulture))).AppendLine()
-                                                   sTrackersList.AppendFormat("ResetOrientation={0}", String.Format("{0}, {1}, {2}",
+                                      sTrackersList.AppendFormat("ResetOrientation={0}", String.Format("{0}, {1}, {2}",
                                                                                                                 mReset.X.ToString(Globalization.CultureInfo.InvariantCulture),
                                                                                                                 mReset.Y.ToString(Globalization.CultureInfo.InvariantCulture),
                                                                                                                 mReset.Z.ToString(Globalization.CultureInfo.InvariantCulture))).AppendLine()
-                                                   sTrackersList.AppendFormat("YawOrientationOffset={0}", mItem.g_mClassIO.m_YawOrientationOffset).AppendLine()
+                                      sTrackersList.AppendFormat("YawOrientationOffset={0}", mItem.g_mClassIO.m_YawOrientationOffset).AppendLine()
 
-                                                   sTrackersList.AppendLine()
-                                               Next
-                                           End Sub)
+                                      sTrackersList.AppendLine()
+                                  Next
+                              End Sub)
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub

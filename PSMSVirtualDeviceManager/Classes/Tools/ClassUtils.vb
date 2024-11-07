@@ -123,21 +123,23 @@ Public Class ClassUtils
         Next
     End Sub
 
-    Public Shared Sub SyncInvoke(mControl As Control, mFunction As [Delegate])
-        mControl.Invoke(mFunction)
+    Public Shared Property m_InvokeControl As Control = Nothing
+    Public Shared Sub SyncInvoke(mFunction As [Delegate])
+        m_InvokeControl.Invoke(mFunction)
     End Sub
 
-    Public Shared Function SyncInvokeEx(Of T)(mControl As Control, mFunction As [Delegate]) As T
-        Return CType(mControl.Invoke(mFunction), T)
+    Public Shared Function SyncInvokeEx(Of T)(mFunction As [Delegate]) As T
+        Return CType(m_InvokeControl.Invoke(mFunction), T)
     End Function
 
-    Public Shared Sub AsyncInvoke(mControl As Control, mFunction As [Delegate])
-        mControl.BeginInvoke(Sub()
-                                 Try
-                                     mFunction.DynamicInvoke()
-                                 Catch ex As Exception
-                                 End Try
-                             End Sub)
+    Public Shared Sub AsyncInvoke(mFunction As [Delegate])
+        m_InvokeControl.BeginInvoke(
+            Sub()
+                Try
+                    mFunction.DynamicInvoke()
+                Catch ex As Exception
+                End Try
+            End Sub)
     End Sub
 
     Public Shared Function FormatJsonOutput(ByVal sContent As String) As String

@@ -237,12 +237,12 @@ Public Class UCVirtualMotionTrackerItem
                         sDriverPath = CStr(mMessage(1))
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   g_mDriverLastResponse.Restart()
+                    ClassUtils.AsyncInvoke(Sub()
+                                               g_mDriverLastResponse.Restart()
 
-                                                   g_sDriverVersion = sDriverVersion
-                                                   g_sDriverPath = sDriverPath
-                                               End Sub)
+                                               g_sDriverVersion = sDriverVersion
+                                               g_sDriverPath = sDriverPath
+                                           End Sub)
                 Case "/VMT/Out/Haptic"
                     If (mMessage.Count < 4) Then
                         Return
@@ -284,19 +284,19 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (iCode = 0) Then
-                        ClassUtils.AsyncInvoke(Me, Sub()
-                                                       g_mDriverLastResponse.Restart()
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   g_mDriverLastResponse.Restart()
 
-                                                       g_sDriverLastResponseCode = iCode
-                                                       g_sDriverLastResponseMessage = sReason
-                                                   End Sub)
+                                                   g_sDriverLastResponseCode = iCode
+                                                   g_sDriverLastResponseMessage = sReason
+                                               End Sub)
                     Else
-                        ClassUtils.AsyncInvoke(Me, Sub()
-                                                       g_mDriverLastResponse.Restart()
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   g_mDriverLastResponse.Restart()
 
-                                                       g_sDriverLastResponseCode = iCode
-                                                       g_sDriverLastResponseMessage = sReason
-                                                   End Sub)
+                                                   g_sDriverLastResponseCode = iCode
+                                                   g_sDriverLastResponseMessage = sReason
+                                               End Sub)
                     End If
 
                 Case "/VMT/Out/HmdInfo"
@@ -309,12 +309,12 @@ Public Class UCVirtualMotionTrackerItem
                     Dim iScreenHeight As Integer = CInt(mMessage(2))
                     Dim bDirectMode = CBool(mMessage(3))
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   g_mDriverLastResponse.Restart()
+                    ClassUtils.AsyncInvoke(Sub()
+                                               g_mDriverLastResponse.Restart()
 
-                                                   g_iHmdFramerate = iFramerate
-                                                   g_bIsHmdDirectMode = bDirectMode
-                                               End Sub)
+                                               g_iHmdFramerate = iFramerate
+                                               g_bIsHmdDirectMode = bDirectMode
+                                           End Sub)
             End Select
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLog(ex)

@@ -458,7 +458,7 @@
                     g_iDeviceDisplayStatus = iDisplayStatus
                 End SyncLock
 
-                ClassUtils.AsyncInvoke(Me, Sub() SetPlaystationVRStatus(iHdmiStatus, iUsbStatus, iDisplayStatus))
+                ClassUtils.AsyncInvoke(Sub() SetPlaystationVRStatus(iHdmiStatus, iUsbStatus, iDisplayStatus))
 
             Catch ex As Threading.ThreadAbortException
                 Throw

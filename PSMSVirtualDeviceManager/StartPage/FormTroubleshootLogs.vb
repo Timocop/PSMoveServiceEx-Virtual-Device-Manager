@@ -303,16 +303,16 @@ Public Class FormTroubleshootLogs
 
     Private Sub ThreadLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean)
         Try
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Dispose()
-                                               g_mProgress = Nothing
-                                           End If
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
+                                           g_mProgress.Dispose()
+                                           g_mProgress = Nothing
+                                       End If
 
-                                           g_mProgress = New FormLoading
-                                           g_mProgress.Text = "Preparing..."
-                                           g_mProgress.ShowDialog(Me)
-                                       End Sub)
+                                       g_mProgress = New FormLoading
+                                       g_mProgress.Text = "Preparing..."
+                                       g_mProgress.ShowDialog(Me)
+                                   End Sub)
 
             If (bGenerateLogs) Then
                 ThreadDoGenerateLogs()
@@ -323,11 +323,11 @@ Public Class FormTroubleshootLogs
             End If
 
             If (bRefreshDisplayLogs) Then
-                ClassUtils.AsyncInvoke(Me, Sub() RefreshDisplayLogs())
+                ClassUtils.AsyncInvoke(Sub() RefreshDisplayLogs())
             End If
 
             If (bRefreshDevices) Then
-                ClassUtils.AsyncInvoke(Me, Sub() RefreshDevices())
+                ClassUtils.AsyncInvoke(Sub() RefreshDevices())
             End If
 
         Catch ex As Threading.ThreadAbortException
@@ -335,12 +335,12 @@ Public Class FormTroubleshootLogs
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Dispose()
-                                               g_mProgress = Nothing
-                                           End If
-                                       End Sub)
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
+                                           g_mProgress.Dispose()
+                                           g_mProgress = Nothing
+                                       End If
+                                   End Sub)
         End Try
     End Sub
 
@@ -352,11 +352,11 @@ Public Class FormTroubleshootLogs
         For Each mJob In g_mLogJobs
             Dim sJobAction As String = String.Format("Gathering {0}...", mJob.GetActionTitle())
 
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Text = sJobAction
-                                           End If
-                                       End Sub)
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
+                                           g_mProgress.Text = sJobAction
+                                       End If
+                                   End Sub)
 
             Try
                 mJob.Generate()
@@ -380,11 +380,11 @@ Public Class FormTroubleshootLogs
         For Each mJob In g_mLogJobs
             Dim sJobAction As String = String.Format("Checking {0}...", mJob.GetActionTitle())
 
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
-                                               g_mProgress.Text = sJobAction
-                                           End If
-                                       End Sub)
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
+                                           g_mProgress.Text = sJobAction
+                                       End If
+                                   End Sub)
 
             Try
                 Dim sContent As String = mJob.GetSectionContent()
@@ -412,48 +412,48 @@ Public Class FormTroubleshootLogs
             End Try
         Next
 
-        ClassUtils.AsyncInvoke(Me, Sub()
-                                       ListView_Issues.Items.Clear()
+        ClassUtils.AsyncInvoke(Sub()
+                                   ListView_Issues.Items.Clear()
 
-                                       ListView_Issues.BeginUpdate()
-                                       Try
-                                           For Each mItem In mIssues
-                                               Dim mNewItem As New ListViewItem(New String() {
+                                   ListView_Issues.BeginUpdate()
+                                   Try
+                                       For Each mItem In mIssues
+                                           Dim mNewItem As New ListViewItem(New String() {
                                                    mItem.Value.sMessage,
                                                    mItem.Value.sDescription,
                                                    mItem.Value.sSolution,
                                                    mItem.Key
                                                })
 
-                                               mNewItem.ImageIndex = 0
+                                           mNewItem.ImageIndex = 0
 
-                                               Select Case (mItem.Value.iType)
-                                                   Case ENUM_LOG_ISSUE_TYPE.INFO
-                                                       mNewItem.ImageKey = "Info"
-                                                   Case ENUM_LOG_ISSUE_TYPE.WARNING
-                                                       mNewItem.ImageKey = "Warn"
-                                                   Case ENUM_LOG_ISSUE_TYPE.ERROR
-                                                       mNewItem.ImageKey = "Error"
-                                               End Select
+                                           Select Case (mItem.Value.iType)
+                                               Case ENUM_LOG_ISSUE_TYPE.INFO
+                                                   mNewItem.ImageKey = "Info"
+                                               Case ENUM_LOG_ISSUE_TYPE.WARNING
+                                                   mNewItem.ImageKey = "Warn"
+                                               Case ENUM_LOG_ISSUE_TYPE.ERROR
+                                                   mNewItem.ImageKey = "Error"
+                                           End Select
 
-                                               ListView_Issues.Items.Add(mNewItem)
-                                           Next
+                                           ListView_Issues.Items.Add(mNewItem)
+                                       Next
 
-                                           If (ListView_Issues.Items.Count < 1) Then
-                                               Dim mNewItem As New ListViewItem(New String() {
+                                       If (ListView_Issues.Items.Count < 1) Then
+                                           Dim mNewItem As New ListViewItem(New String() {
                                                     "No issues have been found",
                                                     "",
                                                     "",
                                                     ""
                                                 })
 
-                                               mNewItem.ImageKey = "Good"
-                                               ListView_Issues.Items.Add(mNewItem)
-                                           End If
-                                       Finally
-                                           ListView_Issues.EndUpdate()
-                                       End Try
-                                   End Sub)
+                                           mNewItem.ImageKey = "Good"
+                                           ListView_Issues.Items.Add(mNewItem)
+                                       End If
+                                   Finally
+                                       ListView_Issues.EndUpdate()
+                                   End Try
+                               End Sub)
     End Sub
 
     Private Sub RefreshDisplayLogs()

@@ -37,24 +37,24 @@ Public Class ClassLogManagerVmtTrackers
         Dim sTrackersList As New Text.StringBuilder
 
         ' Not thread-safe
-        ClassUtils.SyncInvoke(g_mFormMain, Sub()
-                                               Dim mVmtTrackers = g_mFormMain.g_mUCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
-                                               For Each mItem In mVmtTrackers
-                                                   If (mItem.g_mClassIO.m_IsHMD) Then
-                                                       sTrackersList.AppendFormat("[Hmd_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
-                                                   Else
-                                                       sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
-                                                   End If
-                                                   sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
-                                                   sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
-                                                   sTrackersList.AppendFormat("VmtID={0}", mItem.g_mClassIO.m_VmtTracker).AppendLine()
-                                                   sTrackersList.AppendFormat("VmtTrackerRole={0}", CInt(mItem.g_mClassIO.m_VmtTrackerRole)).AppendLine()
-                                                   sTrackersList.AppendFormat("VmtTrackerRoleName={0}", mItem.g_mClassIO.m_VmtTrackerRole.ToString).AppendLine()
-                                                   sTrackersList.AppendFormat("FpsOscCounter={0}", mItem.g_mClassIO.m_FpsOscCounter).AppendLine()
+        ClassUtils.SyncInvoke(Sub()
+                                  Dim mVmtTrackers = g_mFormMain.g_mUCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
+                                  For Each mItem In mVmtTrackers
+                                      If (mItem.g_mClassIO.m_IsHMD) Then
+                                          sTrackersList.AppendFormat("[Hmd_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                      Else
+                                          sTrackersList.AppendFormat("[Controller_{0}]", mItem.g_mClassIO.m_Index).AppendLine()
+                                      End If
+                                      sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                      sTrackersList.AppendFormat("ID={0}", mItem.g_mClassIO.m_Index).AppendLine()
+                                      sTrackersList.AppendFormat("VmtID={0}", mItem.g_mClassIO.m_VmtTracker).AppendLine()
+                                      sTrackersList.AppendFormat("VmtTrackerRole={0}", CInt(mItem.g_mClassIO.m_VmtTrackerRole)).AppendLine()
+                                      sTrackersList.AppendFormat("VmtTrackerRoleName={0}", mItem.g_mClassIO.m_VmtTrackerRole.ToString).AppendLine()
+                                      sTrackersList.AppendFormat("FpsOscCounter={0}", mItem.g_mClassIO.m_FpsOscCounter).AppendLine()
 
-                                                   sTrackersList.AppendLine()
-                                               Next
-                                           End Sub)
+                                      sTrackersList.AppendLine()
+                                  Next
+                              End Sub)
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub

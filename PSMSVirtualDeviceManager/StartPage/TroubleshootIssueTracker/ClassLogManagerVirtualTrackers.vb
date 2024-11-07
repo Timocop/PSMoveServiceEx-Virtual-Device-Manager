@@ -40,31 +40,31 @@ Public Class ClassLogManagerVirtualTrackers
         Dim sTrackersList As New Text.StringBuilder
 
         ' Not thread-safe
-        ClassUtils.SyncInvoke(g_mFormMain, Sub()
-                                               Dim mTrackers = g_mFormMain.g_mUCVirtualTrackers.GetAllDevices()
-                                               For Each mItem In mTrackers
-                                                   sTrackersList.AppendFormat("[{0}]", mItem.m_DevicePath).AppendLine()
-                                                   sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
-                                                   sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.m_HasStatusErrorMessage.Value.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
-                                                   sTrackersList.AppendFormat("CameraFramerate={0}", mItem.g_mClassCaptureLogic.m_CameraFramerate).AppendLine()
-                                                   sTrackersList.AppendFormat("CameraResolution={0}", CInt(mItem.g_mClassCaptureLogic.m_CameraResolution)).AppendLine()
-                                                   sTrackersList.AppendFormat("CameraResolutionName={0}", mItem.g_mClassCaptureLogic.m_CameraResolution.ToString).AppendLine()
-                                                   sTrackersList.AppendFormat("DeviceIndex={0}", mItem.g_mClassCaptureLogic.m_DeviceIndex).AppendLine()
-                                                   sTrackersList.AppendFormat("FlipImage={0}", mItem.g_mClassCaptureLogic.m_FlipImage).AppendLine()
-                                                   sTrackersList.AppendFormat("ImageInterpolation={0}", CInt(mItem.g_mClassCaptureLogic.m_ImageInterpolation)).AppendLine()
-                                                   sTrackersList.AppendFormat("ImageInterpolationName={0}", mItem.g_mClassCaptureLogic.m_ImageInterpolation.ToString).AppendLine()
-                                                   sTrackersList.AppendFormat("Initialized={0}", mItem.g_mClassCaptureLogic.m_Initialized).AppendLine()
-                                                   sTrackersList.AppendFormat("IsPlayStationCamera={0}", mItem.g_mClassCaptureLogic.m_IsPlayStationCamera).AppendLine()
-                                                   sTrackersList.AppendFormat("PipeConnected={0}", mItem.g_mClassCaptureLogic.m_PipeConnected).AppendLine()
-                                                   sTrackersList.AppendFormat("PipePrimaryIndex={0}", mItem.g_mClassCaptureLogic.m_PipePrimaryIndex).AppendLine()
-                                                   sTrackersList.AppendFormat("PipeSecondaryIndex={0}", mItem.g_mClassCaptureLogic.m_PipeSecondaryIndex).AppendLine()
-                                                   sTrackersList.AppendFormat("ShowCaptureImage={0}", mItem.g_mClassCaptureLogic.m_ShowCaptureImage).AppendLine()
-                                                   sTrackersList.AppendFormat("Supersampling={0}", mItem.g_mClassCaptureLogic.m_Supersampling).AppendLine()
-                                                   sTrackersList.AppendFormat("UseMJPG={0}", mItem.g_mClassCaptureLogic.m_UseMJPG).AppendLine()
+        ClassUtils.SyncInvoke(Sub()
+                                  Dim mTrackers = g_mFormMain.g_mUCVirtualTrackers.GetAllDevices()
+                                  For Each mItem In mTrackers
+                                      sTrackersList.AppendFormat("[{0}]", mItem.m_DevicePath).AppendLine()
+                                      sTrackersList.AppendFormat("HasStatusError={0}", mItem.m_HasStatusError).AppendLine()
+                                      sTrackersList.AppendFormat("HasStatusErrorMessage={0}", mItem.m_HasStatusErrorMessage.Value.Replace(vbNewLine, "").Replace(vbLf, "")).AppendLine()
+                                      sTrackersList.AppendFormat("CameraFramerate={0}", mItem.g_mClassCaptureLogic.m_CameraFramerate).AppendLine()
+                                      sTrackersList.AppendFormat("CameraResolution={0}", CInt(mItem.g_mClassCaptureLogic.m_CameraResolution)).AppendLine()
+                                      sTrackersList.AppendFormat("CameraResolutionName={0}", mItem.g_mClassCaptureLogic.m_CameraResolution.ToString).AppendLine()
+                                      sTrackersList.AppendFormat("DeviceIndex={0}", mItem.g_mClassCaptureLogic.m_DeviceIndex).AppendLine()
+                                      sTrackersList.AppendFormat("FlipImage={0}", mItem.g_mClassCaptureLogic.m_FlipImage).AppendLine()
+                                      sTrackersList.AppendFormat("ImageInterpolation={0}", CInt(mItem.g_mClassCaptureLogic.m_ImageInterpolation)).AppendLine()
+                                      sTrackersList.AppendFormat("ImageInterpolationName={0}", mItem.g_mClassCaptureLogic.m_ImageInterpolation.ToString).AppendLine()
+                                      sTrackersList.AppendFormat("Initialized={0}", mItem.g_mClassCaptureLogic.m_Initialized).AppendLine()
+                                      sTrackersList.AppendFormat("IsPlayStationCamera={0}", mItem.g_mClassCaptureLogic.m_IsPlayStationCamera).AppendLine()
+                                      sTrackersList.AppendFormat("PipeConnected={0}", mItem.g_mClassCaptureLogic.m_PipeConnected).AppendLine()
+                                      sTrackersList.AppendFormat("PipePrimaryIndex={0}", mItem.g_mClassCaptureLogic.m_PipePrimaryIndex).AppendLine()
+                                      sTrackersList.AppendFormat("PipeSecondaryIndex={0}", mItem.g_mClassCaptureLogic.m_PipeSecondaryIndex).AppendLine()
+                                      sTrackersList.AppendFormat("ShowCaptureImage={0}", mItem.g_mClassCaptureLogic.m_ShowCaptureImage).AppendLine()
+                                      sTrackersList.AppendFormat("Supersampling={0}", mItem.g_mClassCaptureLogic.m_Supersampling).AppendLine()
+                                      sTrackersList.AppendFormat("UseMJPG={0}", mItem.g_mClassCaptureLogic.m_UseMJPG).AppendLine()
 
-                                                   sTrackersList.AppendLine()
-                                               Next
-                                           End Sub)
+                                      sTrackersList.AppendLine()
+                                  Next
+                              End Sub)
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub

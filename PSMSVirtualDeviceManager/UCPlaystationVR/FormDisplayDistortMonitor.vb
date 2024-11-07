@@ -36,11 +36,11 @@
                     Dim mMonitor As New ClassMonitor
                     Dim mMonitorInfo As ClassMonitor.DEVMODE = Nothing
                     If (mMonitor.FindPlaystationVrMonitor(mMonitorInfo, Nothing) <> ClassMonitor.ENUM_PSVR_MONITOR_STATUS.SUCCESS) Then
-                        ClassUtils.AsyncInvoke(Me, Sub()
-                                                       If (Me.Visible) Then
-                                                           Me.Visible = False
-                                                       End If
-                                                   End Sub)
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   If (Me.Visible) Then
+                                                       Me.Visible = False
+                                                   End If
+                                               End Sub)
 
                         Exit Try
                     End If
@@ -52,29 +52,29 @@
                     Dim iWindowW As Integer = mMonitorInfo.dmPelsWidth
                     Dim iWindowH As Integer = mMonitorInfo.dmPelsHeight
 
-                    Dim iDistortFov As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortFov)
-                    Dim iDistortK0 As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortK0)
-                    Dim iDistortK1 As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortK1)
-                    Dim iDistortScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortScale)
-                    Dim iDistortRScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortRScale)
-                    Dim iDistortGScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortGScale)
-                    Dim iDistortBScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Me, Function() g_iDistortBScale)
-                    Dim iPatternSize As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Me, Function() g_iPatternSize)
+                    Dim iDistortFov As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortFov)
+                    Dim iDistortK0 As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortK0)
+                    Dim iDistortK1 As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortK1)
+                    Dim iDistortScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortScale)
+                    Dim iDistortRScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortRScale)
+                    Dim iDistortGScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortGScale)
+                    Dim iDistortBScale As Single = ClassUtils.SyncInvokeEx(Of Single)(Function() g_iDistortBScale)
+                    Dim iPatternSize As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Function() g_iPatternSize)
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   Me.Location = New Point(iWindowX, iWindowY)
-                                                   Me.Size = New Size(iWindowW, iWindowH)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               Me.Location = New Point(iWindowX, iWindowY)
+                                               Me.Size = New Size(iWindowW, iWindowH)
 
-                                                   If (Not Me.Visible) Then
-                                                       Me.Visible = True
-                                                   End If
-                                               End Sub)
+                                               If (Not Me.Visible) Then
+                                                   Me.Visible = True
+                                               End If
+                                           End Sub)
 
                     Const EYE_LEFT = 0
                     Const EYE_RIGHT = 1
 
-                    Dim iRenderW As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Me, Function() Me.Width)
-                    Dim iRenderH As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Me, Function() Me.Height)
+                    Dim iRenderW As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Function() Me.Width)
+                    Dim iRenderH As Integer = ClassUtils.SyncInvokeEx(Of Integer)(Function() Me.Height)
 
                     Dim mPatternThreads As New List(Of Threading.Thread)
                     Try
@@ -183,10 +183,10 @@
                         Next
                     End Try
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   PictureBox_EyeL.Image = mEyeBitmap(EYE_LEFT)
-                                                   PictureBox_EyeR.Image = mEyeBitmap(EYE_RIGHT)
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               PictureBox_EyeL.Image = mEyeBitmap(EYE_LEFT)
+                                               PictureBox_EyeR.Image = mEyeBitmap(EYE_RIGHT)
+                                           End Sub)
 
                 Catch ex As Threading.ThreadAbortException
                     Throw

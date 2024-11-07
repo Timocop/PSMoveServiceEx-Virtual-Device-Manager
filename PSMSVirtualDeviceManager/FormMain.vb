@@ -53,6 +53,8 @@ Public Class FormMain
     End Enum
 
     Public Sub New()
+        ClassUtils.m_InvokeControl = Me
+
         Try
             ProcessCommandline(False)
         Catch ex As Exception
@@ -257,10 +259,10 @@ Public Class FormMain
                                     Next
                                 End If
 
-                                ClassUtils.AsyncInvoke(Me, Sub()
-                                                               g_bAutoClose = True
-                                                               Me.Close()
-                                                           End Sub)
+                                ClassUtils.AsyncInvoke(Sub()
+                                                           g_bAutoClose = True
+                                                           Me.Close()
+                                                       End Sub)
                             Catch ex As Exception
                                 ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                             End Try
@@ -1077,8 +1079,7 @@ Public Class FormMain
                                             End Sub)
 #Else
                     If (ClassUpdate.ClassVdm.CheckUpdateAvailable(Application.ExecutablePath, sLocationInfo)) Then
-                        ClassUtils.AsyncInvoke(g_mFormMain,
-                                               Sub()
+                        ClassUtils.AsyncInvoke(Sub()
                                                    g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
                                                    g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
 
@@ -1105,17 +1106,15 @@ Public Class FormMain
                                                  End Sub)
 #Else
                         If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
-                            ClassUtils.AsyncInvoke(g_mFormMain,
-                                                    Sub()
-                                                        g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
-                                                    End Sub)
+                            ClassUtils.AsyncInvoke(Sub()
+                                                       g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
+                                                   End Sub)
                         End If
 #End If
                     Else
-                        ClassUtils.AsyncInvoke(g_mFormMain,
-                                             Sub()
-                                                 g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
-                                             End Sub)
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
+                                               End Sub)
                     End If
                 End If
 

@@ -129,7 +129,7 @@ Public Class UCStartPage
                     If (g_bIsServiceRunning <> bServiceRunning) Then
                         g_bIsServiceRunning = bServiceRunning
 
-                        ClassUtils.AsyncInvoke(Me, Sub() SetStatusServiceConnected())
+                        ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -146,7 +146,7 @@ Public Class UCStartPage
                     If (g_bIsServiceConnected <> bIsConnected) Then
                         g_bIsServiceConnected = bIsConnected
 
-                        ClassUtils.AsyncInvoke(Me, Sub() SetStatusServiceConnected())
+                        ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -179,26 +179,26 @@ Public Class UCStartPage
                 Dim mNow As Date = Now
 
                 ' Show disconnected devices
-                ClassUtils.AsyncInvoke(Me, Sub()
-                                               If (Not Me.Visible) Then
-                                                   Return
-                                               End If
+                ClassUtils.AsyncInvoke(Sub()
+                                           If (Not Me.Visible) Then
+                                               Return
+                                           End If
 
-                                               ListView_ServiceDevices.BeginUpdate()
-                                               Try
-                                                   For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                       Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                           ListView_ServiceDevices.BeginUpdate()
+                                           Try
+                                               For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
 
-                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > mNow) Then
-                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
-                                                       Else
-                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
-                                                       End If
-                                                   Next
-                                               Finally
-                                                   ListView_ServiceDevices.EndUpdate()
-                                               End Try
-                                           End Sub)
+                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > mNow) Then
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                   Else
+                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                   End If
+                                               Next
+                                           Finally
+                                               ListView_ServiceDevices.EndUpdate()
+                                           End Try
+                                       End Sub)
 
                 ' List Controllers
                 If (True) Then
@@ -248,56 +248,56 @@ Public Class UCStartPage
 
                         Dim iAxisX As Integer = iFrameCount
 
-                        ClassUtils.AsyncInvoke(Me, Sub()
-                                                       Dim bFound As Boolean = False
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   Dim bFound As Boolean = False
 
-                                                       Dim sTrackingColor As String = "Unknown"
-                                                       Select Case (mDevice.m_TrackingColor)
-                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Magenta
-                                                               sTrackingColor = "Magenta"
-                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Cyan
-                                                               sTrackingColor = "Cyan"
-                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Yellow
-                                                               sTrackingColor = "Yellow"
-                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Red
-                                                               sTrackingColor = "Red"
-                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Green
-                                                               sTrackingColor = "Green"
-                                                           Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Blue
-                                                               sTrackingColor = "Blue"
+                                                   Dim sTrackingColor As String = "Unknown"
+                                                   Select Case (mDevice.m_TrackingColor)
+                                                       Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Magenta
+                                                           sTrackingColor = "Magenta"
+                                                       Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Cyan
+                                                           sTrackingColor = "Cyan"
+                                                       Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Yellow
+                                                           sTrackingColor = "Yellow"
+                                                       Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Red
+                                                           sTrackingColor = "Red"
+                                                       Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Green
+                                                           sTrackingColor = "Green"
+                                                       Case PSMoveServiceExCAPI.PSMoveServiceExCAPI.Constants.PSMTrackingColorType.PSMTrackingColorType_Blue
+                                                           sTrackingColor = "Blue"
+                                                   End Select
+
+                                                   ' Change info about device 
+                                                   ListView_ServiceDevices.BeginUpdate()
+                                                   Try
+                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
+                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                   Finally
+                                                       ListView_ServiceDevices.EndUpdate()
+                                                   End Try
+
+                                                   ' Added device when not found
+                                                   If (Not bFound) Then
+                                                       Dim sDeviceType As String = "UNKNOWN"
+
+                                                       Select Case (True)
+                                                           Case TypeOf mDevice Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
+                                                               sDeviceType = "PSMOVE"
                                                        End Select
 
-                                                       ' Change info about device 
-                                                       ListView_ServiceDevices.BeginUpdate()
-                                                       Try
-                                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = sTrackingColor
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
-
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
-                                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
-
-                                                                   bFound = True
-                                                               End If
-                                                           Next
-                                                       Finally
-                                                           ListView_ServiceDevices.EndUpdate()
-                                                       End Try
-
-                                                       ' Added device when not found
-                                                       If (Not bFound) Then
-                                                           Dim sDeviceType As String = "UNKNOWN"
-
-                                                           Select Case (True)
-                                                               Case TypeOf mDevice Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA
-                                                                   sDeviceType = "PSMOVE"
-                                                           End Select
-
-                                                           Dim mListViewItem = New ListViewItem(New String() {
+                                                       Dim mListViewItem = New ListViewItem(New String() {
                                                                 sDeviceType,
                                                                 sTrackingColor,
                                                                 CStr(mDevice.m_Id),
@@ -307,19 +307,19 @@ Public Class UCStartPage
                                                                 "0 %",
                                                                 CStr(iFPS)
                                                             })
-                                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                           mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                       mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                       mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                           ListView_ServiceDevices.Items.Add(mListViewItem)
-                                                       End If
+                                                       ListView_ServiceDevices.Items.Add(mListViewItem)
+                                                   End If
 
-                                                       ' Add to chart
-                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
-                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+                                                   ' Add to chart
+                                                   If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                       Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
 
-                                                           AddChartValues(mDevice.m_Serial, iFPS, iAxisX, iMaxCount)
-                                                       End If
-                                                   End Sub)
+                                                       AddChartValues(mDevice.m_Serial, iFPS, iAxisX, iMaxCount)
+                                                   End If
+                                               End Sub)
                     Next
                 End If
 
@@ -371,42 +371,42 @@ Public Class UCStartPage
 
                         Dim iAxisX As Integer = iFrameCount
 
-                        ClassUtils.AsyncInvoke(Me, Sub()
-                                                       Dim bFound As Boolean = False
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   Dim bFound As Boolean = False
 
-                                                       ' Change info about device 
-                                                       ListView_ServiceDevices.BeginUpdate()
-                                                       Try
-                                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                   ' Change info about device 
+                                                   ListView_ServiceDevices.BeginUpdate()
+                                                   Try
+                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Serial) Then
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
-                                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
+                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                                   bFound = True
-                                                               End If
-                                                           Next
-                                                       Finally
-                                                           ListView_ServiceDevices.EndUpdate()
-                                                       End Try
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                   Finally
+                                                       ListView_ServiceDevices.EndUpdate()
+                                                   End Try
 
-                                                       ' Added device when not found
-                                                       If (Not bFound) Then
-                                                           Dim sDeviceType As String = "UNKNOWN"
+                                                   ' Added device when not found
+                                                   If (Not bFound) Then
+                                                       Dim sDeviceType As String = "UNKNOWN"
 
-                                                           Select Case (True)
-                                                               Case TypeOf mDevice Is ClassServiceClient.STRUC_MORPHEUS_HMD_DATA
-                                                                   sDeviceType = "MORPHEUS"
-                                                               Case TypeOf mDevice Is ClassServiceClient.STRUC_VIRTUAL_HMD_DATA
-                                                                   sDeviceType = "VIRTUAL"
-                                                           End Select
+                                                       Select Case (True)
+                                                           Case TypeOf mDevice Is ClassServiceClient.STRUC_MORPHEUS_HMD_DATA
+                                                               sDeviceType = "MORPHEUS"
+                                                           Case TypeOf mDevice Is ClassServiceClient.STRUC_VIRTUAL_HMD_DATA
+                                                               sDeviceType = "VIRTUAL"
+                                                       End Select
 
-                                                           Dim mListViewItem = New ListViewItem(New String() {
+                                                       Dim mListViewItem = New ListViewItem(New String() {
                                                                 sDeviceType,
                                                                 "N/A",
                                                                 CStr(mDevice.m_Id),
@@ -416,19 +416,19 @@ Public Class UCStartPage
                                                                 "N/A",
                                                                 CStr(iFPS)
                                                             })
-                                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                           mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                       mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                       mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                           ListView_ServiceDevices.Items.Add(mListViewItem)
-                                                       End If
+                                                       ListView_ServiceDevices.Items.Add(mListViewItem)
+                                                   End If
 
-                                                       ' Add to chart
-                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
-                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+                                                   ' Add to chart
+                                                   If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                       Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
 
-                                                           AddChartValues(mDevice.m_Serial, iFPS, iAxisX, iMaxCount)
-                                                       End If
-                                                   End Sub)
+                                                       AddChartValues(mDevice.m_Serial, iFPS, iAxisX, iMaxCount)
+                                                   End If
+                                               End Sub)
                     Next
                 End If
 
@@ -481,33 +481,33 @@ Public Class UCStartPage
 
                         Dim iAxisX As Integer = iFrameCount
 
-                        ClassUtils.AsyncInvoke(Me, Sub()
-                                                       Dim bFound As Boolean = False
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   Dim bFound As Boolean = False
 
-                                                       ' Change info about device 
-                                                       ListView_ServiceDevices.BeginUpdate()
-                                                       Try
-                                                           For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                               If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
+                                                   ' Change info about device 
+                                                   ListView_ServiceDevices.BeginUpdate()
+                                                   Try
+                                                       For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
+                                                           If (mListVIewItem.SubItems(LISTVIEW_SUBITEM_SERIAL).Text = mDevice.m_Path) Then
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_COLOR).Text = "N/A"
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ID).Text = CStr(mDevice.m_Id)
 
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
-                                                                   mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
-                                                                   mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
+                                                               mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
+                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                                   bFound = True
-                                                               End If
-                                                           Next
-                                                       Finally
-                                                           ListView_ServiceDevices.EndUpdate()
-                                                       End Try
+                                                               bFound = True
+                                                           End If
+                                                       Next
+                                                   Finally
+                                                       ListView_ServiceDevices.EndUpdate()
+                                                   End Try
 
-                                                       ' Added device when not found
-                                                       If (Not bFound) Then
-                                                           Dim mListViewItem = New ListViewItem(New String() {
+                                                   ' Added device when not found
+                                                   If (Not bFound) Then
+                                                       Dim mListViewItem = New ListViewItem(New String() {
                                                                 "TRACKER",
                                                                 "N/A",
                                                                 CStr(mDevice.m_Id),
@@ -517,19 +517,19 @@ Public Class UCStartPage
                                                                 "N/A",
                                                                 CStr(iFPS)
                                                             })
-                                                           mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                           mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+                                                       mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
+                                                       mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
 
-                                                           ListView_ServiceDevices.Items.Add(mListViewItem)
-                                                       End If
+                                                       ListView_ServiceDevices.Items.Add(mListViewItem)
+                                                   End If
 
-                                                       ' Add to chart
-                                                       If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
-                                                           Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
+                                                   ' Add to chart
+                                                   If (ToolStripComboBox_ChartSamples.SelectedItem IsNot Nothing) Then
+                                                       Dim iMaxCount As Integer = Math.Max(CInt(ToolStripComboBox_ChartSamples.SelectedItem), 100)
 
-                                                           AddChartValues(mDevice.m_Path, iFPS, iAxisX, iMaxCount)
-                                                       End If
-                                                   End Sub)
+                                                       AddChartValues(mDevice.m_Path, iFPS, iAxisX, iMaxCount)
+                                                   End If
+                                               End Sub)
                     Next
                 End If
 
@@ -906,16 +906,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSEYE_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
 
@@ -928,12 +928,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -992,16 +992,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSVR_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
 
@@ -1014,12 +1014,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -1079,16 +1079,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Installing drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PS4CAM_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
 
@@ -1101,12 +1101,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -1135,16 +1135,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PS4CAM, FormMain.COMMANDLINE_VERBOSE})
 
@@ -1157,12 +1157,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -1222,16 +1222,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Installing configuration..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Installing configuration..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim sMode As String
                     If (bUseDirectMode) Then
@@ -1254,12 +1254,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -1288,16 +1288,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Uninstalling drivers..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PSEYE, FormMain.COMMANDLINE_VERBOSE})
 
@@ -1310,12 +1310,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -1344,16 +1344,16 @@ Public Class UCStartPage
                         End If
                     End If
 
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
 
-                                                   g_mDriverInstallFormLoad = New FormLoading
-                                                   g_mDriverInstallFormLoad.Text = "Uninstalling drivers and display configurations..."
-                                                   g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
-                                               End Sub)
+                                               g_mDriverInstallFormLoad = New FormLoading
+                                               g_mDriverInstallFormLoad.Text = "Uninstalling drivers and display configurations..."
+                                               g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_UNINSTALL_PSVR, FormMain.COMMANDLINE_VERBOSE})
 
@@ -1366,12 +1366,12 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
-                    ClassUtils.AsyncInvoke(Me, Sub()
-                                                   If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
-                                                       g_mDriverInstallFormLoad.Dispose()
-                                                       g_mDriverInstallFormLoad = Nothing
-                                                   End If
-                                               End Sub)
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
+                                                   g_mDriverInstallFormLoad.Dispose()
+                                                   g_mDriverInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
                 End Try
             End Sub)
         g_mDriverInstallThread.IsBackground = True
@@ -1442,48 +1442,49 @@ Public Class UCStartPage
             Return
         End If
 
-        g_mUpdateInstallThread = New Threading.Thread(Sub()
-                                                          Try
-                                                              ClassUtils.AsyncInvoke(Me, Sub()
-                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
-                                                                                                 g_mUpdateInstallFormLoad.Dispose()
-                                                                                                 g_mUpdateInstallFormLoad = Nothing
-                                                                                             End If
+        g_mUpdateInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                   g_mUpdateInstallFormLoad.Dispose()
+                                                   g_mUpdateInstallFormLoad = Nothing
+                                               End If
 
-                                                                                             g_mUpdateInstallFormLoad = New FormLoading
-                                                                                             g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
-                                                                                             g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
-                                                                                         End Sub)
+                                               g_mUpdateInstallFormLoad = New FormLoading
+                                               g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
+                                               g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
-                                                              Dim mConfig As New ClassServiceInfo
-                                                              mConfig.LoadConfig()
+                    Dim mConfig As New ClassServiceInfo
+                    mConfig.LoadConfig()
 
-                                                              If (Not mConfig.FileExist()) Then
-                                                                  If (Not mConfig.FindByProcess()) Then
-                                                                      Throw New ArgumentException("Unable to find PSMoveServiceEx")
-                                                                  End If
-                                                              End If
+                    If (Not mConfig.FileExist()) Then
+                        If (Not mConfig.FindByProcess()) Then
+                            Throw New ArgumentException("Unable to find PSMoveServiceEx")
+                        End If
+                    End If
 
-                                                              Dim sServicePath As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
+                    Dim sServicePath As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
 
-                                                              Dim sEndProcessNames As New List(Of String)
-                                                              sEndProcessNames.AddRange(g_sServiceProcesses)
-                                                              sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
+                    Dim sEndProcessNames As New List(Of String)
+                    sEndProcessNames.AddRange(g_sServiceProcesses)
+                    sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
-                                                              ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
-                                                          Catch ex As Threading.ThreadAbortException
-                                                              Throw
-                                                          Catch ex As Exception
-                                                              ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-                                                          Finally
-                                                              ClassUtils.AsyncInvoke(Me, Sub()
-                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
-                                                                                                 g_mUpdateInstallFormLoad.Dispose()
-                                                                                                 g_mUpdateInstallFormLoad = Nothing
-                                                                                             End If
-                                                                                         End Sub)
-                                                          End Try
-                                                      End Sub)
+                    ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+                Finally
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                   g_mUpdateInstallFormLoad.Dispose()
+                                                   g_mUpdateInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
+                End Try
+            End Sub)
         g_mUpdateInstallThread.IsBackground = True
         g_mUpdateInstallThread.Start()
     End Sub
@@ -1493,37 +1494,38 @@ Public Class UCStartPage
             Return
         End If
 
-        g_mUpdateInstallThread = New Threading.Thread(Sub()
-                                                          Try
-                                                              ClassUtils.AsyncInvoke(Me, Sub()
-                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
-                                                                                                 g_mUpdateInstallFormLoad.Dispose()
-                                                                                                 g_mUpdateInstallFormLoad = Nothing
-                                                                                             End If
+        g_mUpdateInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                   g_mUpdateInstallFormLoad.Dispose()
+                                                   g_mUpdateInstallFormLoad = Nothing
+                                               End If
 
-                                                                                             g_mUpdateInstallFormLoad = New FormLoading
-                                                                                             g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
-                                                                                             g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
-                                                                                         End Sub)
+                                               g_mUpdateInstallFormLoad = New FormLoading
+                                               g_mUpdateInstallFormLoad.Text = "Downloading and installing new update..."
+                                               g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
-                                                              Dim sEndProcessNames As New List(Of String)
-                                                              sEndProcessNames.AddRange(g_sServiceProcesses)
-                                                              sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
+                    Dim sEndProcessNames As New List(Of String)
+                    sEndProcessNames.AddRange(g_sServiceProcesses)
+                    sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
-                                                              ClassUpdate.ClassVdm.InstallUpdate(Application.StartupPath, sEndProcessNames.ToArray)
-                                                          Catch ex As Threading.ThreadAbortException
-                                                              Throw
-                                                          Catch ex As Exception
-                                                              ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-                                                          Finally
-                                                              ClassUtils.AsyncInvoke(Me, Sub()
-                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
-                                                                                                 g_mUpdateInstallFormLoad.Dispose()
-                                                                                                 g_mUpdateInstallFormLoad = Nothing
-                                                                                             End If
-                                                                                         End Sub)
-                                                          End Try
-                                                      End Sub)
+                    ClassUpdate.ClassVdm.InstallUpdate(Application.StartupPath, sEndProcessNames.ToArray)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+                Finally
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                   g_mUpdateInstallFormLoad.Dispose()
+                                                   g_mUpdateInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
+                End Try
+            End Sub)
         g_mUpdateInstallThread.IsBackground = True
         g_mUpdateInstallThread.Start()
     End Sub
@@ -1541,47 +1543,48 @@ Public Class UCStartPage
             Return
         End If
 
-        g_mUpdateInstallThread = New Threading.Thread(Sub()
-                                                          Try
-                                                              ClassUtils.AsyncInvoke(Me, Sub()
-                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
-                                                                                                 g_mUpdateInstallFormLoad.Dispose()
-                                                                                                 g_mUpdateInstallFormLoad = Nothing
-                                                                                             End If
+        g_mUpdateInstallThread = New Threading.Thread(
+            Sub()
+                Try
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                   g_mUpdateInstallFormLoad.Dispose()
+                                                   g_mUpdateInstallFormLoad = Nothing
+                                               End If
 
-                                                                                             g_mUpdateInstallFormLoad = New FormLoading
-                                                                                             g_mUpdateInstallFormLoad.Text = "Downloading and installing PSMoveServiceEx..."
-                                                                                             g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
-                                                                                         End Sub)
+                                               g_mUpdateInstallFormLoad = New FormLoading
+                                               g_mUpdateInstallFormLoad.Text = "Downloading and installing PSMoveServiceEx..."
+                                               g_mUpdateInstallFormLoad.ShowDialog(g_FormMain)
+                                           End Sub)
 
-                                                              Dim sServicePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "PSMoveServiceEx")
-                                                              If (Not IO.Directory.Exists(sServicePath)) Then
-                                                                  IO.Directory.CreateDirectory(sServicePath)
-                                                              End If
+                    Dim sServicePath As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), "PSMoveServiceEx")
+                    If (Not IO.Directory.Exists(sServicePath)) Then
+                        IO.Directory.CreateDirectory(sServicePath)
+                    End If
 
-                                                              Dim mConfig As New ClassServiceInfo
-                                                              mConfig.LoadConfig()
-                                                              mConfig.m_FileName = IO.Path.Combine(sServicePath, "PSMoveService.exe")
-                                                              mConfig.SaveConfig()
+                    Dim mConfig As New ClassServiceInfo
+                    mConfig.LoadConfig()
+                    mConfig.m_FileName = IO.Path.Combine(sServicePath, "PSMoveService.exe")
+                    mConfig.SaveConfig()
 
-                                                              Dim sEndProcessNames As New List(Of String)
-                                                              sEndProcessNames.AddRange(g_sServiceProcesses)
-                                                              sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
+                    Dim sEndProcessNames As New List(Of String)
+                    sEndProcessNames.AddRange(g_sServiceProcesses)
+                    sEndProcessNames.Add(IO.Path.GetFileName(Application.ExecutablePath))
 
-                                                              ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
-                                                          Catch ex As Threading.ThreadAbortException
-                                                              Throw
-                                                          Catch ex As Exception
-                                                              ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-                                                          Finally
-                                                              ClassUtils.AsyncInvoke(Me, Sub()
-                                                                                             If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
-                                                                                                 g_mUpdateInstallFormLoad.Dispose()
-                                                                                                 g_mUpdateInstallFormLoad = Nothing
-                                                                                             End If
-                                                                                         End Sub)
-                                                          End Try
-                                                      End Sub)
+                    ClassUpdate.ClassPsms.InstallUpdate(sServicePath, sEndProcessNames.ToArray)
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+                Finally
+                    ClassUtils.AsyncInvoke(Sub()
+                                               If (g_mUpdateInstallFormLoad IsNot Nothing AndAlso Not g_mUpdateInstallFormLoad.IsDisposed) Then
+                                                   g_mUpdateInstallFormLoad.Dispose()
+                                                   g_mUpdateInstallFormLoad = Nothing
+                                               End If
+                                           End Sub)
+                End Try
+            End Sub)
         g_mUpdateInstallThread.IsBackground = True
         g_mUpdateInstallThread.Start()
     End Sub

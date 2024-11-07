@@ -194,7 +194,7 @@ Public Class UCRemoteDevices
                 End If
             Next
 
-            ClassUtils.AsyncInvoke(Me, Sub() m_SocketAddress = sAddress)
+            ClassUtils.AsyncInvoke(Sub() m_SocketAddress = sAddress)
         Catch ex As Threading.ThreadAbortException
             Throw
         Catch ex As Exception
@@ -228,17 +228,17 @@ Public Class UCRemoteDevices
         SyncLock _ThreadLock
             Dim sTrackerName As String = mTracker.m_Name
 
-            ClassUtils.AsyncInvoke(Me, Sub()
-                                           For Each mItem As ListViewItem In ListView_RemoteDevices.Items
-                                               Dim mRemoteDevicesItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
-                                               If (mRemoteDevicesItem.m_TrackerName = sTrackerName) Then
-                                                   Return
-                                               End If
-                                           Next
+            ClassUtils.AsyncInvoke(Sub()
+                                       For Each mItem As ListViewItem In ListView_RemoteDevices.Items
+                                           Dim mRemoteDevicesItem = DirectCast(mItem, ClassRemoteDevicesListViewItem)
+                                           If (mRemoteDevicesItem.m_TrackerName = sTrackerName) Then
+                                               Return
+                                           End If
+                                       Next
 
-                                           ListView_RemoteDevices.Items.Add(New ClassRemoteDevicesListViewItem(sTrackerName, Me))
-                                           Label_ConnectedDevices.Text = String.Format("Connected devices: {0}", ListView_RemoteDevices.Items.Count)
-                                       End Sub)
+                                       ListView_RemoteDevices.Items.Add(New ClassRemoteDevicesListViewItem(sTrackerName, Me))
+                                       Label_ConnectedDevices.Text = String.Format("Connected devices: {0}", ListView_RemoteDevices.Items.Count)
+                                   End Sub)
         End SyncLock
     End Sub
 
