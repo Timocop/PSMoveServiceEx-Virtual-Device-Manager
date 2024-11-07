@@ -1411,7 +1411,12 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mCalibratedOrientationVelocity = mRawOrientationVelocity
 
                                         ' Playspace offsets, used for playspace calibration
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation, mCalibratedPositionVelocity, mCalibratedOrientationVelocity)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings,
+                                                                               mCalibratedPosition,
+                                                                               mCalibratedOrientation,
+                                                                               mCalibratedPositionVelocity,
+                                                                               mCalibratedOrientationVelocity,
+                                                                               True)
 
                                         Dim mPosition = mCalibratedPosition
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
@@ -1645,7 +1650,12 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mCalibratedOrientationVelocity = mRawOrientationVelocity
 
                                         ' Playspace offsets, used for playspace calibration
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation, mCalibratedPositionVelocity, mCalibratedOrientationVelocity)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings,
+                                                                               mCalibratedPosition,
+                                                                               mCalibratedOrientation,
+                                                                               mCalibratedPositionVelocity,
+                                                                               mCalibratedOrientationVelocity,
+                                                                               True)
 
                                         Dim mPosition = mCalibratedPosition
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
@@ -2129,13 +2139,18 @@ Public Class UCVirtualMotionTrackerItem
 
                                     If (m_TrackerData(i) IsNot Nothing) Then
                                         Dim mRawOrientation = m_TrackerData(i).m_Orientation
-                                        Dim mCalibratedOrientation = mRawOrientation
-
                                         Dim mRawPosition = m_TrackerData(i).m_Position
+
+                                        Dim mCalibratedOrientation = mRawOrientation
                                         Dim mCalibratedPosition = mRawPosition
 
                                         ' Playspace offsets, used for playspace calibration
-                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings, mCalibratedPosition, mCalibratedOrientation, Vector3.Zero, Vector3.Zero)
+                                        InternalApplyPlayspaceCalibrationLogic(mClassSettings.m_PlayspaceSettings,
+                                                                               mCalibratedPosition,
+                                                                               mCalibratedOrientation,
+                                                                               Vector3.Zero,
+                                                                               Vector3.Zero,
+                                                                               False)
 
                                         Dim mOrientation As Quaternion = mCalibratedOrientation
                                         Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
@@ -2393,7 +2408,8 @@ Public Class UCVirtualMotionTrackerItem
                                                            ByRef mPosition As Vector3,
                                                            ByRef mOrientation As Quaternion,
                                                            ByRef mPositionVelocity As Vector3,
-                                                           ByRef mOrientationVelocity As Vector3)
+                                                           ByRef mOrientationVelocity As Vector3,
+                                                           ByRef bEnableAutoScale As Boolean)
             ' Dont use offsets while we calibrate.
             If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING OrElse
                 m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
@@ -2401,6 +2417,35 @@ Public Class UCVirtualMotionTrackerItem
             End If
 
             If (m_PlayspaceSettings.m_Valid) Then
+
+                Dim mCorrectedPointControllerBeginPos = m_PlayspaceSettings.m_PointControllerBeginPos
+                Dim mCorrectedPointControllerEndPos = m_PlayspaceSettings.m_PointControllerEndPos
+
+                ' Auto scale playspace by points distance difference
+                If (Not bEnableAutoScale AndAlso m_PlayspaceSettings.m_AutoScale) Then
+                    Dim iScale As Single = 1.0F
+
+                    Dim iPointHmdDistance As Single = Vector3.Distance(m_PlayspaceSettings.m_PointHmdBeginPos, m_PlayspaceSettings.m_PointHmdEndPos)
+                    Dim iPointControllerDistance As Single = Vector3.Distance(mCorrectedPointControllerBeginPos, mCorrectedPointControllerEndPos)
+                    If (iPointHmdDistance > Single.Epsilon AndAlso iPointControllerDistance > Single.Epsilon) Then
+                        iScale = (iPointHmdDistance / iPointControllerDistance)
+
+                        If (iScale > 2.0F) Then
+                            iScale = 2.0F
+                        End If
+
+                        If (iScale < 0.1F) Then
+                            iScale = 0.1F
+                        End If
+                    End If
+
+                    Dim mScale = New Vector3(iScale, iScale, iScale)
+
+                    mCorrectedPointControllerBeginPos *= mScale
+                    mCorrectedPointControllerEndPos *= mScale
+                    mPosition *= mScale
+                End If
+
                 Dim mCalibrationForward As Quaternion
                 Dim mForward As Vector3
                 Dim mSideways As Vector3
@@ -2419,7 +2464,7 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mOffsetSideways = ClassMathUtils.RotateVector(mCalibrationForward, mSideways)
 
                 Dim mPlayspaceCalibPointsRotated = ClassMathUtils.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), m_PlayspaceSettings.m_PointControllerBeginPos)
+                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mCorrectedPointControllerBeginPos)
 
                 mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward + mOffsetSideways) - mPlayspaceCalibPointsRotated
 
@@ -2428,9 +2473,9 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mPlayspaceRotatedVelocity = ClassMathUtils.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPositionVelocity)
 
-                Dim mHeightOffset = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
+                Dim mOffsetHeight = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
 
-                mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated + mHeightOffset
+                mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated + mOffsetHeight
                 mPositionVelocity = mPlayspaceRotatedVelocity
                 mOrientation = Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset) * mOrientation
             End If
