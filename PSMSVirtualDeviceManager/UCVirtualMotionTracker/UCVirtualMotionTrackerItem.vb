@@ -1237,7 +1237,8 @@ Public Class UCVirtualMotionTrackerItem
             Dim iLastOutputSeqNumFailures As Integer = 0
 
             Dim mOscDataPack As New STRUC_OSC_DATA_PACK()
-            Dim mEnforcePacketUpdate As New Stopwatch
+            Dim mEnforcePosePacketUpdate As New Stopwatch
+            Dim mEnforceInputPacketUpdate As New Stopwatch
 
             ' Controller
             Dim bJoystickButtonPressed As Boolean = False
@@ -1322,7 +1323,8 @@ Public Class UCVirtualMotionTrackerItem
 
                             mTrackerDataUpdate.Restart()
                             mLastBatteryReport.Restart()
-                            mEnforcePacketUpdate.Restart()
+                            mEnforcePosePacketUpdate.Restart()
+                            mEnforceInputPacketUpdate.Restart()
 
                             'Load recentering
                             If (Not m_IsHMD) Then
@@ -1386,11 +1388,17 @@ Public Class UCVirtualMotionTrackerItem
                         Dim bEnableManualVelocity As Boolean = mClassSettings.m_MiscSettings.m_EnableManualVelocity
 
 
-                        Dim bEnfocePacketUpdate As Boolean = False
-                        If (mEnforcePacketUpdate.ElapsedMilliseconds > 1000) Then
-                            mEnforcePacketUpdate.Restart()
+                        Dim bEnfocePosePacketUpdate As Boolean = False
+                        Dim bEnfoceInputPacketUpdate As Boolean = False
+                        If (mEnforcePosePacketUpdate.ElapsedMilliseconds > 250) Then
+                            mEnforcePosePacketUpdate.Restart()
 
-                            bEnfocePacketUpdate = True
+                            bEnfocePosePacketUpdate = True
+                        End If
+                        If (mEnforceInputPacketUpdate.ElapsedMilliseconds > 250) Then
+                            mEnforceInputPacketUpdate.Restart()
+
+                            bEnfoceInputPacketUpdate = True
                         End If
 
                         Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
@@ -1500,9 +1508,9 @@ Public Class UCVirtualMotionTrackerItem
                                                 AddFpsOscCounter()
                                             End If
 
-                                            If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                            If (bEnfocePosePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                mEnforcePacketUpdate.Restart()
+                                                mEnforcePosePacketUpdate.Restart()
 
                                                 Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                 Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -1784,9 +1792,9 @@ Public Class UCVirtualMotionTrackerItem
                                             Case ENUM_TRACKER_ROLE.GENERIC_TRACKER
                                                 Dim bSetPack As Boolean = False
 
-                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                If (bEnfocePosePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                    mEnforcePacketUpdate.Restart()
+                                                    mEnforcePosePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -1859,9 +1867,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         iController = ENABLE_GENERIC_CONTROLLER_R
                                                 End Select
 
-                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                If (bEnfoceInputPacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
-                                                    mEnforcePacketUpdate.Restart()
+                                                    mEnforceInputPacketUpdate.Restart()
 
                                                     For Each mButton In mOscDataPack.mButtons
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -1893,9 +1901,9 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 End If
 
-                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                If (bEnfocePosePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                    mEnforcePacketUpdate.Restart()
+                                                    mEnforcePosePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -1958,9 +1966,9 @@ Public Class UCVirtualMotionTrackerItem
                                             Case ENUM_TRACKER_ROLE.HTC_VIVE_TRACKER
                                                 Dim bSetPack As Boolean = False
 
-                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                If (bEnfocePosePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                    mEnforcePacketUpdate.Restart()
+                                                    mEnforcePosePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -2040,9 +2048,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         iController = ENABLE_OCULUS_TOUCH_CONTROLLER_R
                                                 End Select
 
-                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                If (bEnfoceInputPacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
-                                                    mEnforcePacketUpdate.Restart()
+                                                    mEnforceInputPacketUpdate.Restart()
 
                                                     For Each mButton In mOscDataPack.mButtons
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
@@ -2073,9 +2081,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     bSetPack = True
                                                 End If
 
-                                                If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
+                                                If (bEnfocePosePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
-                                                    mEnforcePacketUpdate.Restart()
+                                                    mEnforcePosePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
