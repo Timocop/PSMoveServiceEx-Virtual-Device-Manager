@@ -12,6 +12,7 @@ Public Class ClassLogProcesses
         Dim sName As String
         Dim sPath As String
         Dim sDescription As String
+        Dim sFileVersion As String
     End Structure
 
     Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
@@ -34,6 +35,7 @@ Public Class ClassLogProcesses
             Try
                 sProcessLog.AppendFormat("FileName={0}", mProcess.MainModule.FileName).AppendLine()
                 sProcessLog.AppendFormat("FileDescription={0}", mProcess.MainModule.FileVersionInfo.FileDescription).AppendLine()
+                sProcessLog.AppendFormat("FileVersion={0}", mProcess.MainModule.FileVersionInfo.FileVersion).AppendLine()
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception
@@ -92,6 +94,10 @@ Public Class ClassLogProcesses
 
                 If (mProcessProp.ContainsKey("FileDescription")) Then
                     mNewDevice.sDescription = mProcessProp("FileDescription")
+                End If
+
+                If (mProcessProp.ContainsKey("FileVersion")) Then
+                    mNewDevice.sFileVersion = mProcessProp("FileVersion")
                 End If
 
                 mProcessList.Add(mNewDevice)
