@@ -842,8 +842,13 @@ Public Class ClassSteamVRConfig
 
 
 
-            Public Sub ParseFromFile(sFile As String)
-                Dim sContent As String = IO.File.ReadAllText(sFile)
+            Public Sub ParseFromFile(sFile As String, Optional bSafeRead As Boolean = True)
+                Dim sContent As String
+                If (bSafeRead) Then
+                    sContent = ClassUtils.FileReadAllTextSafe(sFile)
+                Else
+                    sContent = IO.File.ReadAllText(sFile)
+                End If
 
                 g_mManifest = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
@@ -967,13 +972,18 @@ Public Class ClassSteamVRConfig
             IO.File.WriteAllText(sAppConfig, sContent)
         End Sub
 
-        Public Function LoadConfig() As Boolean
+        Public Function LoadConfig(Optional bSafeRead As Boolean = True) As Boolean
             Dim sConfigPath As String = m_AppConfigFile
             If (sConfigPath Is Nothing OrElse Not IO.File.Exists(sConfigPath)) Then
                 Return False
             End If
 
-            Dim sContent As String = IO.File.ReadAllText(sConfigPath)
+            Dim sContent As String
+            If (bSafeRead) Then
+                sContent = ClassUtils.FileReadAllTextSafe(sConfigPath)
+            Else
+                sContent = IO.File.ReadAllText(sConfigPath)
+            End If
 
             g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
@@ -1031,7 +1041,7 @@ Public Class ClassSteamVRConfig
         End Sub
     End Class
 
-    Public Function LoadConfig() As Boolean
+    Public Function LoadConfig(Optional bSafeRead As Boolean = True) As Boolean
         Dim sSteamPath As String = m_SteamPath
         If (sSteamPath Is Nothing) Then
             Return False
@@ -1042,9 +1052,13 @@ Public Class ClassSteamVRConfig
             Return False
         End If
 
-        Dim sContent As String = IO.File.ReadAllText(sConfigPath)
+        Dim sContent As String
+        If (bSafeRead) Then
+            sContent = ClassUtils.FileReadAllTextSafe(sConfigPath)
+        Else
+            sContent = IO.File.ReadAllText(sConfigPath)
+        End If
 
-        Dim mTmp As Object = Nothing
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
         g_bConfigLoaded = True

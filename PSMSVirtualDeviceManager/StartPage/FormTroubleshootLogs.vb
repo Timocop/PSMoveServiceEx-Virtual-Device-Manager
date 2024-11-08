@@ -214,6 +214,7 @@ Public Class FormTroubleshootLogs
                 Dim sMessage As String = mItem.SubItems(0).Text
                 Dim sDescription As String = mItem.SubItems(1).Text
                 Dim sSolution As String = mItem.SubItems(2).Text
+                Dim sModule As String = mItem.SubItems(3).Text
 
                 If (String.IsNullOrEmpty(sMessage) OrElse sMessage.Trim.Length = 0) Then
                     Continue For
@@ -222,6 +223,7 @@ Public Class FormTroubleshootLogs
                 sContent.AppendFormat("Name: {0}", sMessage.Replace(Environment.NewLine, " ")).AppendLine()
                 sContent.AppendFormat(" - Description: {0}", sDescription.Replace(Environment.NewLine, " ")).AppendLine()
                 sContent.AppendFormat(" - Solution: {0}", sSolution.Replace(Environment.NewLine, " ")).AppendLine()
+                sContent.AppendFormat(" - Module: {0}", sModule.Replace(Environment.NewLine, " ")).AppendLine()
                 sContent.AppendLine()
             Next
 

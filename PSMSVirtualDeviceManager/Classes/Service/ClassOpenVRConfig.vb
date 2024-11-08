@@ -75,7 +75,7 @@ Public Class ClassOpenVRConfig
         Return mDrivers.ToArray
     End Function
 
-    Public Function LoadConfig() As Boolean
+    Public Function LoadConfig(Optional bSafeRead As Boolean = True) As Boolean
         Dim sOpenVRPath As String = m_OpenVRPath
         If (sOpenVRPath Is Nothing) Then
             Return False
@@ -86,7 +86,12 @@ Public Class ClassOpenVRConfig
             Return False
         End If
 
-        Dim sContent As String = IO.File.ReadAllText(sConfigPath)
+        Dim sContent As String
+        If (bSafeRead) Then
+            sContent = ClassUtils.FileReadAllTextSafe(sConfigPath)
+        Else
+            sContent = IO.File.ReadAllText(sConfigPath)
+        End If
 
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 

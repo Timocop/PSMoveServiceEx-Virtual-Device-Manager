@@ -88,7 +88,7 @@ Public Class ClassServiceConfig
         Return ClassUtils.FormatJsonOutput((New JavaScriptSerializer).Serialize(g_mConfig))
     End Function
 
-    Public Function LoadConfig() As Boolean
+    Public Function LoadConfig(Optional bSafeRead As Boolean = True) As Boolean
         If (g_sPath Is Nothing) Then
             g_bConfigLoaded = True
             Return False
@@ -99,9 +99,13 @@ Public Class ClassServiceConfig
             Return False
         End If
 
-        Dim sContent As String = IO.File.ReadAllText(g_sPath)
+        Dim sContent As String
+        If (bSafeRead) Then
+            sContent = ClassUtils.FileReadAllTextSafe(g_sPath)
+        Else
+            sContent = IO.File.ReadAllText(g_sPath)
+        End If
 
-        Dim mTmp As Object = Nothing
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
 
         g_bFromString = False

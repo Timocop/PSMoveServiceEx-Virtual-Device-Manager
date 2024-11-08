@@ -51,7 +51,6 @@ Public Class ClassUtils
         End Try
     End Sub
 
-
     Public Shared Function RunWithAdmin(sCmds As String()) As Integer
         Using mProcess As New Process
             mProcess.StartInfo.FileName = Application.ExecutablePath
@@ -239,4 +238,31 @@ Public Class ClassUtils
             Next
         End If
     End Sub
+
+    ' Reads file by copy. This wont block file access and uses last flushed cache if file handle is open.
+    Public Shared Function FileReadAllTextSafe(sFile As String) As String
+        Dim sTmp As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
+        Try
+            IO.File.Copy(sFile, sTmp, True)
+
+            Return IO.File.ReadAllText(sTmp)
+        Finally
+            ' Remove any attributes, for example read-only so we can properly dispose the file.
+            IO.File.SetAttributes(sTmp, IO.FileAttributes.Normal)
+            IO.File.Delete(sTmp)
+        End Try
+    End Function
+
+    Public Shared Function FileReadAllTextSafe(sFile As String, iEncoding As System.Text.Encoding) As String
+        Dim sTmp As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
+        Try
+            IO.File.Copy(sFile, sTmp, True)
+
+            Return IO.File.ReadAllText(sTmp, iEncoding)
+        Finally
+            ' Remove any attributes, for example read-only so we can properly dispose the file.
+            IO.File.SetAttributes(sTmp, IO.FileAttributes.Normal)
+            IO.File.Delete(sTmp)
+        End Try
+    End Function
 End Class

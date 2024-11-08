@@ -26,12 +26,7 @@ Public Class ClassLogManager
                 Continue For
             End If
 
-
-            Dim sTmp As String = IO.Path.GetTempFileName
-            IO.File.Copy(mItem.Value, sTmp, True)
-
-            g_ClassLogContent.m_Content(mItem.Key) = IO.File.ReadAllText(sTmp)
-            IO.File.Delete(sTmp)
+            g_ClassLogContent.m_Content(mItem.Key) = ClassUtils.FileReadAllTextSafe(mItem.Value)
         Next
     End Sub
 
