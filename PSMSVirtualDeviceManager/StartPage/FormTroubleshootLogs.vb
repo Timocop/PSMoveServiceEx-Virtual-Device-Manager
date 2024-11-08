@@ -3,6 +3,8 @@
 Public Class FormTroubleshootLogs
     ReadOnly SECTION_BUFFER As String = New String("#"c, 32)
 
+    ReadOnly NOTHING_SELECTED As String = "Nothing selected. Refresh to generate or load a log, then click an entry above to show more details about the issue."
+
     Public Const SECTION_DETAILED_LOG_SUMMARY = "Detailed Log Summary"
     Public Const SECTION_DETAILED_LOG_EXCEPTIONS = "Log Generation Exceptions"
 
@@ -114,6 +116,8 @@ Public Class FormTroubleshootLogs
         g_mLogJobs.Add(New ClassLogManagerSteamVrOverrides(g_mFormMain, m_LogContent))
         g_mLogJobs.Add(New ClassLogManagerSteamVrSettings(g_mFormMain, m_LogContent))
         g_mLogJobs.Add(New ClassLogManagerHardware(g_mFormMain, m_LogContent))
+
+        TextBox_IssueInfo.Text = NOTHING_SELECTED
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
@@ -176,7 +180,7 @@ Public Class FormTroubleshootLogs
                 If (mForm.ShowDialog(Me) = DialogResult.OK) Then
                     Dim iMaxLength As Integer = (1 * 1024 * 1024)
                     If (New IO.FileInfo(mForm.FileName).Length > iMaxLength) Then
-                        If (MessageBox.Show("The file to you are trying to load is quite big. Do you want to load it anways?", "Log too big", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = DialogResult.No) Then
+                        If (MessageBox.Show("The file to you are trying to load is quite big. Do you want to load it anyways?", "Log too big", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = DialogResult.No) Then
                             Return
                         End If
                     End If
@@ -532,7 +536,7 @@ Public Class FormTroubleshootLogs
 
     Private Sub ListView_Issues_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Issues.SelectedIndexChanged
         If (ListView_Issues.SelectedItems.Count < 1) Then
-            TextBox_IssueInfo.Text = "Nothing selected."
+            TextBox_IssueInfo.Text = NOTHING_SELECTED
             Return
         End If
 
