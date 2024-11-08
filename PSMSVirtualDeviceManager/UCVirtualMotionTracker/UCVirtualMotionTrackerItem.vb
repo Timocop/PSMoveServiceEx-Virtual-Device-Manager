@@ -1502,6 +1502,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                             If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                     Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                mEnforcePacketUpdate.Restart()
 
                                                 Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                 Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -1785,6 +1786,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mEnforcePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -1859,6 +1861,8 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                                    mEnforcePacketUpdate.Restart()
+
                                                     For Each mButton In mOscDataPack.mButtons
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                             New OscMessage(
@@ -1891,6 +1895,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mEnforcePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -1955,6 +1960,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mEnforcePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
@@ -2036,6 +2042,8 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsInputEqual(mOscDataPack)) Then
+                                                    mEnforcePacketUpdate.Restart()
+
                                                     For Each mButton In mOscDataPack.mButtons
                                                         mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                             New OscMessage(
@@ -2067,6 +2075,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 If (bEnfocePacketUpdate OrElse Not bOptimizeTransportPackets OrElse
                                                         Not g_mOscDataPack.IsPositionEqual(mOscDataPack) OrElse Not g_mOscDataPack.IsQuaternionEqual(mOscDataPack)) Then
+                                                    mEnforcePacketUpdate.Restart()
 
                                                     Dim mCalcPosition As Vector3 = mOscDataPack.mPosition
                                                     Dim mCalcOrientation As Quaternion = mOscDataPack.mOrientation
