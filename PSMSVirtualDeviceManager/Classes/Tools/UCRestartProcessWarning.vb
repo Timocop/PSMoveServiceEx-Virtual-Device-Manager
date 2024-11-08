@@ -3,7 +3,7 @@
 
     Private g_mRestartThread As Threading.Thread = Nothing
 
-    Private Shared ReadOnly g_mThreadLock As New Object
+    Private Shared g_mThreadLock As New Object
 
     Property m_Message As String
         Get

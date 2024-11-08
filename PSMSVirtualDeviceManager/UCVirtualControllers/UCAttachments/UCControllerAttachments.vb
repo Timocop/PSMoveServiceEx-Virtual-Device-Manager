@@ -2,6 +2,8 @@
 
 Public Class UCControllerAttachments
     Public g_mUCVirtualControllers As UCVirtualControllers
+    Private g_bInit As Boolean = False
+    Private Shared g_mThreadLock As New Object
 
     Private g_mAutostartMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
 
@@ -17,6 +19,7 @@ Public Class UCControllerAttachments
 
             g_UCControllerAttachments = _UCControllerAttachments
             g_UCControllerAttachmentsItem = New UCControllerAttachmentsItem(_Id, _UCControllerAttachments)
+            g_UCControllerAttachmentsItem.Init()
 
             UpdateItem()
         End Sub
@@ -125,26 +128,34 @@ Public Class UCControllerAttachments
         CreateControl()
     End Sub
 
-    Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
         AutostartLoad()
     End Sub
 
     Private Sub AutostartLoad()
         Dim mAutostartIndexes As New List(Of Integer)
 
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                    If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
-                        Continue For
-                    End If
+        SyncLock g_mThreadLock
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                        If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
+                            Continue For
+                        End If
 
-                    If (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true") Then
-                        mAutostartIndexes.Add(i)
-                    End If
-                Next
+                        If (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true") Then
+                            mAutostartIndexes.Add(i)
+                        End If
+                    Next
+                End Using
             End Using
-        End Using
+        End SyncLock
 
         For i = 0 To mAutostartIndexes.Count - 1
             Try
@@ -185,38 +196,50 @@ Public Class UCControllerAttachments
     End Sub
 
     Private Sub ContextMenuStrip_Autostart_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles ContextMenuStrip_Autostart.ItemClicked
-        Dim mItem As ToolStripMenuItem = TryCast(e.ClickedItem, ToolStripMenuItem)
-        If (mItem Is Nothing) Then
-            Return
-        End If
+        Try
+            SyncLock g_mThreadLock
+                Dim mItem As ToolStripMenuItem = TryCast(e.ClickedItem, ToolStripMenuItem)
+                If (mItem Is Nothing) Then
+                    Return
+                End If
 
-        mItem.Checked = Not mItem.Checked
+                mItem.Checked = Not mItem.Checked
 
-        Dim iIndex As Integer = CInt(mItem.Tag)
+                Dim iIndex As Integer = CInt(mItem.Tag)
 
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
+                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
 
-                mIni.WriteKeyValue(mIniContent.ToArray)
-            End Using
-        End Using
+                        mIni.WriteKeyValue(mIniContent.ToArray)
+                    End Using
+                End Using
+            End SyncLock
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                    If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
-                        Continue For
-                    End If
+        Try
+            SyncLock g_mThreadLock
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                            If (g_mAutostartMenuStrips(i) Is Nothing OrElse g_mAutostartMenuStrips(i).IsDisposed) Then
+                                Continue For
+                            End If
 
-                    g_mAutostartMenuStrips(i).Checked = (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true")
-                Next
-            End Using
-        End Using
+                            g_mAutostartMenuStrips(i).Checked = (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true")
+                        Next
+                    End Using
+                End Using
+            End SyncLock
+        Catch ex As Exception
+        ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub Button_AddAttachment_Click(sender As Object, e As EventArgs) Handles Button_AddAttachment.Click

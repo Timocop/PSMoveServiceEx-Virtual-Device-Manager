@@ -1,7 +1,9 @@
 ﻿Public Class ClassAdvancedExceptionLogging
     Private Shared g_mLogThread As Threading.Thread = Nothing
     Private Shared g_mLogPool As New ClassIni()
-    Private Shared g_mThreadLock As New Object()
+
+    Private Shared g_mThreadLock As New Object
+
     Private Shared g_mLoggingTime As New TimeSpan(0, 1, 0)
     Private Shared g_bHasLoadedFromFile As Boolean = False
     Private Shared g_mExceptionQueue As New Queue(Of ClassIni.STRUC_INI_CONTENT())

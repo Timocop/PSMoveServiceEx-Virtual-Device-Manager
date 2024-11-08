@@ -32,6 +32,7 @@ Public Class UCVirtualTrackerItem
 
     Public g_bIgnoreEvents As Boolean = False
     Public g_bIgnoreUnsaved As Boolean = False
+    Private g_bInit As Boolean = False
 
     Private g_iCaptureFps As Integer = 0
     Private g_iPipeFps As Integer = 0
@@ -211,6 +212,20 @@ Public Class UCVirtualTrackerItem
 
         CreateControl()
 
+        ' Hide timeout error
+        Panel_Status.Visible = False
+        g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
+        g_iStatusShowHeight = Me.Height
+        Me.Height = g_iStatusHideHeight
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
         Try
             g_bIgnoreUnsaved = True
 
@@ -235,14 +250,7 @@ Public Class UCVirtualTrackerItem
         End Try
 
         g_mClassCaptureLogic.StartInitThread(False)
-
-        ' Hide timeout error
-        Panel_Status.Visible = False
-        g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
-        g_iStatusShowHeight = Me.Height
-        Me.Height = g_iStatusHideHeight
     End Sub
-
 
     Private Sub Timer_Status_Tick(sender As Object, e As EventArgs) Handles Timer_Status.Tick
         Timer_Status.Stop()
@@ -2148,78 +2156,85 @@ Public Class UCVirtualTrackerItem
         Class ClassConfig
             Private g_mClassCaptureLogic As ClassCaptureLogic
             Private g_bConfigLoaded As Boolean = False
+            Private Shared g_mThreadLock As New Object
 
             Public Sub New(_ClassCaptureLogic As ClassCaptureLogic)
                 g_mClassCaptureLogic = _ClassCaptureLogic
             End Sub
 
             Public Shared Function CanDeviceAutostart(sDevicePath As String) As Boolean
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.Read)
-                    Using mIni As New ClassIni(mStream)
-                        Return (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
+                SyncLock g_mThreadLock
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.Read)
+                        Using mIni As New ClassIni(mStream)
+                            Return (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
+                        End Using
                     End Using
-                End Using
 
-                Return False
+                    Return False
+                End SyncLock
             End Function
 
             Public Sub SaveConfig()
-                If (Not g_bConfigLoaded) Then
-                    Return
-                End If
+                SyncLock g_mThreadLock
+                    If (Not g_bConfigLoaded) Then
+                        Return
+                    End If
 
-                Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
+                    Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
 
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                    Using mIni As New ClassIni(mStream)
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                        Using mIni As New ClassIni(mStream)
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FriendlyName", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.Label_FriendlyName.Text)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceExposure", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceGain", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceGamma", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceContrast", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FriendlyName", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.Label_FriendlyName.Text)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceExposure", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceGain", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceGamma", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "DeviceContrast", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value)))
 
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "TrackerId", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FlipImageHorizontal", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked, "True", "False")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ImageInterpolation", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "UseMJPG", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked, "True", "False")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Supersampling", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked, "True", "False")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Resolution", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraResolution.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Framerate", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraFramerate.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "TrackerId", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_DeviceTrackerId.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "FlipImageHorizontal", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked, "True", "False")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ImageInterpolation", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_ImageInterpolation.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "UseMJPG", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked, "True", "False")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Supersampling", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked, "True", "False")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Resolution", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraResolution.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Framerate", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraFramerate.SelectedIndex)))
 
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
-                        mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        End Using
                     End Using
-                End Using
+                End SyncLock
             End Sub
 
             Public Sub LoadConfig()
-                Dim mUCVirtualTrackerItem = g_mClassCaptureLogic.g_mUCVirtualTrackerItem
+                SyncLock g_mThreadLock
+                    Dim mUCVirtualTrackerItem = g_mClassCaptureLogic.g_mUCVirtualTrackerItem
 
-                Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
+                    Dim sDevicePath As String = g_mClassCaptureLogic.m_DevicePath
 
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                    Using mIni As New ClassIni(mStream)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True, True)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True, True)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True, True)
-                        SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True, True)
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                        Using mIni As New ClassIni(mStream)
+                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True, True)
+                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True, True)
+                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True, True)
+                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True, True)
 
-                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
-                        mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
-                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ENUM_INTERPOLATION.BILINEAR))))
-                        mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "False") = "True")
-                        mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
-                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ENUM_RESOLUTION.SD))))
-                        SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraFramerate, CInt(mIni.ReadKeyValue(sDevicePath, "Framerate", "0")))
+                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
+                            mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
+                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ENUM_INTERPOLATION.BILINEAR))))
+                            mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "False") = "True")
+                            mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
+                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ENUM_RESOLUTION.SD))))
+                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraFramerate, CInt(mIni.ReadKeyValue(sDevicePath, "Framerate", "0")))
 
-                        mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
+                            mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
+                        End Using
                     End Using
-                End Using
 
-                g_bConfigLoaded = True
+                    g_bConfigLoaded = True
+                End SyncLock
             End Sub
 
             Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As String, bTagFalseIfNothing As Boolean, bAdjustRange As Boolean)

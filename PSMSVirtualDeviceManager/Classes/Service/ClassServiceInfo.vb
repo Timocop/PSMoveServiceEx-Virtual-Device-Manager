@@ -2,6 +2,7 @@
     Private g_sFileName As String = ""
 
     Private g_bConfigsLoaded As Boolean = False
+    Private Shared g_mThreadLock As New Object
 
     Enum ENUM_SERVICE_PROCESS_TYPE
         NONE
@@ -78,28 +79,32 @@
 
 
     Public Sub SaveConfig()
-        If (Not g_bConfigsLoaded) Then
-            Return
-        End If
+        SyncLock g_mThreadLock
+            If (Not g_bConfigsLoaded) Then
+                Return
+            End If
 
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "PSMoveServiceLocation", m_FileName))
+                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "PSMoveServiceLocation", m_FileName))
 
-                mIni.WriteKeyValue(mIniContent.ToArray)
+                    mIni.WriteKeyValue(mIniContent.ToArray)
+                End Using
             End Using
-        End Using
+        End SyncLock
     End Sub
 
     Public Sub LoadConfig()
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                m_FileName = mIni.ReadKeyValue("Settings", "PSMoveServiceLocation", "")
+        SyncLock g_mThreadLock
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    m_FileName = mIni.ReadKeyValue("Settings", "PSMoveServiceLocation", "")
+                End Using
             End Using
-        End Using
 
-        g_bConfigsLoaded = True
+            g_bConfigsLoaded = True
+        End SyncLock
     End Sub
 End Class

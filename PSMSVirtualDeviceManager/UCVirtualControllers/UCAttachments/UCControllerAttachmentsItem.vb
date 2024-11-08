@@ -2,7 +2,8 @@
 Imports System.Text
 
 Public Class UCControllerAttachmentsItem
-    Shared _ThreadLock As New Object
+    Private Shared g_mThreadLock As New Object
+    Private g_bInit As Boolean = False
 
     Public g_mUCControllerAttachments As UCControllerAttachments
 
@@ -78,6 +79,27 @@ Public Class UCControllerAttachmentsItem
         Me.Height = g_iStatusHideHeight
     End Sub
 
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        Try
+            Try
+                g_bIgnoreUnsaved = True
+                g_mClassConfig.LoadConfig()
+            Finally
+                g_bIgnoreUnsaved = False
+            End Try
+
+            SetUnsavedState(False)
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
+
     Property m_Nickname As String
         Get
             Return g_sNickname
@@ -112,21 +134,6 @@ Public Class UCControllerAttachmentsItem
             Button_SaveSettings.Text = String.Format("Save Settings")
             Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Regular)
         End If
-    End Sub
-
-    Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Try
-            Try
-                g_bIgnoreUnsaved = True
-                g_mClassConfig.LoadConfig()
-            Finally
-                g_bIgnoreUnsaved = False
-            End Try
-
-            SetUnsavedState(False)
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
     End Sub
 
     Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
@@ -723,15 +730,15 @@ Public Class UCControllerAttachmentsItem
         End Sub
 
         Public Sub SaveConfig()
-            If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
-                Return
-            End If
+            SyncLock g_mThreadLock
+                If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
+                    Return
+                End If
 
-            Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
+                Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
 
-            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    SyncLock _ThreadLock
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.X", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
@@ -747,47 +754,49 @@ Public Class UCControllerAttachmentsItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
-                    End SyncLock
+                    End Using
                 End Using
-            End Using
+            End SyncLock
         End Sub
 
         Public Sub LoadConfig()
-            If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
-                Return
-            End If
+            SyncLock g_mThreadLock
+                If (CInt(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem) < 0) Then
+                    Return
+                End If
 
-            Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
+                Dim sDevicePath As String = CType(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedItem, String)
 
-            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    Dim iJointX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iJointY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iJointZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iJointYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "JointYawCorrection", "0"))
-                    Dim iControllerX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iControllerY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iControllerZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iControllerYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "ControllerYawCorrection", "0"))
-                    Dim bOnlyJointOffset As Boolean = (mIni.ReadKeyValue(sDevicePath, "OnlyJointOffset", "False") = "True")
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        Dim iJointX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iJointY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iJointZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Joint.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iJointYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "JointYawCorrection", "0"))
+                        Dim iControllerX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iControllerY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iControllerZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Controller.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iControllerYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "ControllerYawCorrection", "0"))
+                        Dim bOnlyJointOffset As Boolean = (mIni.ReadKeyValue(sDevicePath, "OnlyJointOffset", "False") = "True")
 
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetZ, iJointZ)
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointYawCorrection, iJointYawCorrection)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetZ, iJointZ)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointYawCorrection, iJointYawCorrection)
 
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetX, iControllerX)
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetY, iControllerY)
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetZ, iControllerZ)
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerYawCorrection, iControllerYawCorrection)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetX, iControllerX)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetY, iControllerY)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetZ, iControllerZ)
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerYawCorrection, iControllerYawCorrection)
 
-                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
+                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
 
-                    g_mUCRemoteDeviceItem.CheckBox_JointOnly.Checked = bOnlyJointOffset
+                        g_mUCRemoteDeviceItem.CheckBox_JointOnly.Checked = bOnlyJointOffset
 
-                    g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
+                        g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
+                    End Using
                 End Using
-            End Using
+            End SyncLock
         End Sub
 
         Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Single)

@@ -5,7 +5,8 @@ Imports PSMSVirtualDeviceManager.UCRemoteDevices.ClassTrackerSocket
 Public Class UCRemoteDeviceItem
     Const MAX_DEVICE_TIMEOUT As Integer = 5000
 
-    Shared _ThreadLock As New Object
+    Private Shared g_mThreadLock As New Object
+    Private g_bInit As Boolean = False
 
     Public g_mUCRemoteDevices As UCRemoteDevices
 
@@ -57,11 +58,6 @@ Public Class UCRemoteDeviceItem
         g_mClassIO = New ClassIO()
         g_mClassConfig = New ClassConfig(Me)
 
-        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerRotation, AddressOf OnTrackerRotation
-        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerGyro, AddressOf OnTrackerGyro
-        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerBattery, AddressOf OnTrackerBattery
-        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerPacket, AddressOf OnTrackerPacket
-
         g_mRotationWait.Start()
         g_mGyroWait.Start()
         g_mBatteryWait.Start()
@@ -81,21 +77,18 @@ Public Class UCRemoteDeviceItem
         Me.Height = g_iStatusHideHeight
     End Sub
 
-    Private Sub SetUnsavedState(bIsUnsaved As Boolean)
-        If (g_bIgnoreUnsaved) Then
+    Public Sub Init()
+        If (g_bInit) Then
             Return
         End If
 
-        If (bIsUnsaved) Then
-            Button_SaveSettings.Text = String.Format("Save Settings*")
-            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Bold)
-        Else
-            Button_SaveSettings.Text = String.Format("Save Settings")
-            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Regular)
-        End If
-    End Sub
+        g_bInit = True
 
-    Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
+        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerRotation, AddressOf OnTrackerRotation
+        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerGyro, AddressOf OnTrackerGyro
+        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerBattery, AddressOf OnTrackerBattery
+        AddHandler g_mUCRemoteDevices.g_mClassStrackerSocket.OnTrackerPacket, AddressOf OnTrackerPacket
+
         Try
             Try
                 g_bIgnoreUnsaved = True
@@ -108,6 +101,20 @@ Public Class UCRemoteDeviceItem
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
+    End Sub
+
+    Private Sub SetUnsavedState(bIsUnsaved As Boolean)
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+
+        If (bIsUnsaved) Then
+            Button_SaveSettings.Text = String.Format("Save Settings*")
+            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Bold)
+        Else
+            Button_SaveSettings.Text = String.Format("Save Settings")
+            Button_SaveSettings.Font = New Font(Button_SaveSettings.Font, FontStyle.Regular)
+        End If
     End Sub
 
     Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
@@ -143,7 +150,7 @@ Public Class UCRemoteDeviceItem
             Dim iFpsOrientationCounter As Integer
             Dim iFpssPipeCounter As Integer
 
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 iFpsPacketCounter = m_FpsPacketCounter
                 iFpsOrientationCounter = m_FpsOrientationCounter
                 iFpssPipeCounter = g_mClassIO.m_FpsPipeCounter
@@ -370,7 +377,7 @@ Public Class UCRemoteDeviceItem
 
     Private ReadOnly Property m_FpsPacketCounter As Integer
         Get
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 Dim mNow As Date = Now
 
                 While (g_mFpsPacketCounter.Count > 0)
@@ -387,14 +394,14 @@ Public Class UCRemoteDeviceItem
     End Property
 
     Private Sub AddFpsPacketCounter()
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             g_mFpsPacketCounter.Enqueue(Now)
         End SyncLock
     End Sub
 
     Private ReadOnly Property m_FpsOrientationCounter As Integer
         Get
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 Dim mNow As Date = Now
 
                 While (g_mFpsOrientationCounter.Count > 0)
@@ -411,7 +418,7 @@ Public Class UCRemoteDeviceItem
     End Property
 
     Private Sub AddFpsOrientationCounter()
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             g_mFpsOrientationCounter.Enqueue(Now)
         End SyncLock
     End Sub
@@ -679,11 +686,11 @@ Public Class UCRemoteDeviceItem
         End Sub
 
         Public Sub SaveConfig()
-            Dim sDevicePath As String = g_mUCRemoteDeviceItem.m_TrackerName
+            SyncLock g_mThreadLock
+                Dim sDevicePath As String = g_mUCRemoteDeviceItem.m_TrackerName
 
-            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    SyncLock _ThreadLock
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
                         Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture)))
@@ -695,28 +702,31 @@ Public Class UCRemoteDeviceItem
                         mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
 
                         mIni.WriteKeyValue(mIniContent.ToArray)
-                    End SyncLock
+                    End Using
                 End Using
-            End Using
+            End SyncLock
         End Sub
 
         Public Sub LoadConfig()
-            Dim sDevicePath As String = g_mUCRemoteDeviceItem.m_TrackerName
+            SyncLock g_mThreadLock
+                Dim sDevicePath As String = g_mUCRemoteDeviceItem.m_TrackerName
 
-            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                Using mIni As New ClassIni(mStream)
-                    Dim iX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                    Dim iW As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.W", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
 
-                    g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation = New Quaternion(iX, iY, iZ, iW)
+                        Dim iX As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.X", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iY As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.Y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iZ As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.Z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        Dim iW As Single = Single.Parse(mIni.ReadKeyValue(sDevicePath, "Recenter.W", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
-                    SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset, CInt(mIni.ReadKeyValue(sDevicePath, "YawOffset", "0")))
-                    SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ControllerID", "0")))
-                    g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
+                        g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation = New Quaternion(iX, iY, iZ, iW)
+
+                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset, CInt(mIni.ReadKeyValue(sDevicePath, "YawOffset", "0")))
+                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ControllerID", "0")))
+                        g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
+                    End Using
                 End Using
-            End Using
+            End SyncLock
         End Sub
 
         Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Integer)

@@ -17,6 +17,7 @@ Public Class UCVirtualMotionTrackerItem
 
     Private g_bIgnoreEvents As Boolean = False
     Private g_bIgnoreUnsaved As Boolean = False
+    Private g_bInit As Boolean = False
 
 
     Private g_iStatusHideHeight As Integer = 0
@@ -164,18 +165,41 @@ Public Class UCVirtualMotionTrackerItem
 
         SetUnsavedState(False)
 
-        AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
-        AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
-
         CreateControl()
-
-        OnOscSuspendChanged()
 
         ' Hide timeout error
         Panel_Status.Visible = False
         g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
         g_iStatusShowHeight = Me.Height
         Me.Height = g_iStatusHideHeight
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnOscProcessMessage, AddressOf OnOscProcessMessage
+        AddHandler g_UCVirtualMotionTracker.g_ClassOscServer.OnSuspendChanged, AddressOf OnOscSuspendChanged
+
+        Try
+            Try
+                g_bIgnoreUnsaved = True
+                g_mClassConfig.LoadConfig()
+            Finally
+                g_bIgnoreUnsaved = False
+            End Try
+
+            UpdateTrackerRoleComboBox()
+
+            SetUnsavedState(False)
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+
+        OnOscSuspendChanged()
     End Sub
 
     Private Sub UpdateTrackerTitle()
@@ -362,23 +386,6 @@ Public Class UCVirtualMotionTrackerItem
             ClassAdvancedExceptionLogging.WriteToLog(ex)
         Finally
             g_bIgnoreEvents = False
-        End Try
-    End Sub
-
-    Private Sub UCRemoteDeviceItem_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Try
-            Try
-                g_bIgnoreUnsaved = True
-                g_mClassConfig.LoadConfig()
-            Finally
-                g_bIgnoreUnsaved = False
-            End Try
-
-            UpdateTrackerRoleComboBox()
-
-            SetUnsavedState(False)
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
 
@@ -732,7 +739,7 @@ Public Class UCVirtualMotionTrackerItem
     Public Class ClassIO
         Implements IDisposable
 
-        Public _ThreadLock As New Object
+        Private g_mThreadLock As New Object
         Public g_UCVirtualMotionTrackerItem As UCVirtualMotionTrackerItem
 
         Const TOUCHPAD_CLAMP_BUFFER = 2.5F
@@ -1035,12 +1042,12 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_Index As Integer
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_iIndex
                 End SyncLock
             End Get
             Set(value As Integer)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     If (g_mOscThread IsNot Nothing AndAlso g_mOscThread.IsAlive) Then
                         Disable()
                         g_iIndex = value
@@ -1054,12 +1061,12 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_IsHMD As Boolean
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_bIsHMD
                 End SyncLock
             End Get
             Set(value As Boolean)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_bIsHMD = value
                 End SyncLock
             End Set
@@ -1067,12 +1074,12 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_VmtTracker As Integer
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_iVmtTracker
                 End SyncLock
             End Get
             Set(value As Integer)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_iVmtTracker = value
                 End SyncLock
             End Set
@@ -1080,12 +1087,12 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_VmtTrackerRole As ENUM_TRACKER_ROLE
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_iVmtTrackerRole
                 End SyncLock
             End Get
             Set(value As ENUM_TRACKER_ROLE)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_iVmtTrackerRole = value
                 End SyncLock
             End Set
@@ -1107,7 +1114,7 @@ Public Class UCVirtualMotionTrackerItem
 
         ReadOnly Property m_FpsOscCounter As Integer
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Dim mNow As Date = Now
 
                     While (g_mFpsOscCounter.Count > 0)
@@ -1124,19 +1131,19 @@ Public Class UCVirtualMotionTrackerItem
         End Property
 
         Public Sub AddFpsOscCounter()
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 g_mFpsOscCounter.Enqueue(Now)
             End SyncLock
         End Sub
 
         Property m_HmdData As ClassServiceClient.IHmdData
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mHmdData
                 End SyncLock
             End Get
             Set(value As ClassServiceClient.IHmdData)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_mHmdData = value
                 End SyncLock
             End Set
@@ -1144,12 +1151,12 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_ControllerData As ClassServiceClient.IControllerData
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mControllerData
                 End SyncLock
             End Get
             Set(value As ClassServiceClient.IControllerData)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_mControllerData = value
                 End SyncLock
             End Set
@@ -1157,12 +1164,12 @@ Public Class UCVirtualMotionTrackerItem
 
         Property m_TrackerData(iIndex As Integer) As ClassServiceClient.ITrackerData
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mTrackerData(iIndex)
                 End SyncLock
             End Get
             Set(value As ClassServiceClient.ITrackerData)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_mTrackerData(iIndex) = value
                 End SyncLock
             End Set
@@ -1174,7 +1181,7 @@ Public Class UCVirtualMotionTrackerItem
                 Return
             End If
 
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 g_mHeptic.fFrequency = fFrequency
                 g_mHeptic.fAmplitude = fAmplitude
                 g_mHeptic.fDuration = fDuration
@@ -1182,26 +1189,26 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Public Sub ResetRecenter()
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 g_mResetRecenter = True
             End SyncLock
         End Sub
 
         Public Sub StartControllerRecenter()
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 g_bManualControllerRecenter = True
             End SyncLock
         End Sub
 
         Public Sub StartHmdRecenter()
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 g_bManualHmdRecenter = True
             End SyncLock
         End Sub
 
         ReadOnly Property m_PlayspaceCalibration As STURC_PLAYSPACE_CALIBRATION
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mPlayspaceCalibration
                 End SyncLock
             End Get
@@ -1209,7 +1216,7 @@ Public Class UCVirtualMotionTrackerItem
 
         Private ReadOnly Property m_PlayspaceCalibrationState As STURC_PLAYSPACE_CALIBRATION_STATUS
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mPlayspaceCalibrationState
                 End SyncLock
             End Get
@@ -1323,7 +1330,7 @@ Public Class UCVirtualMotionTrackerItem
                             End If
                         End If
 
-                        SyncLock _ThreadLock
+                        SyncLock g_mThreadLock
                             If (g_mResetRecenter) Then
                                 g_mResetRecenter = False
 
@@ -1399,7 +1406,7 @@ Public Class UCVirtualMotionTrackerItem
                                     iLastOutputSeqNumFailures = 0
                                     iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
 
-                                    SyncLock _ThreadLock
+                                    SyncLock g_mThreadLock
                                         Dim mRawPosition = g_mHmdData.m_Position
                                         Dim mRawOrientation = g_mHmdData.m_Orientation
                                         Dim mRawPositionVelocity = g_mHmdData.m_PositionVelocity
@@ -1638,7 +1645,7 @@ Public Class UCVirtualMotionTrackerItem
                                     Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
                                     Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
 
-                                    SyncLock _ThreadLock
+                                    SyncLock g_mThreadLock
                                         Dim mRawPosition = m_ControllerData.m_Position
                                         Dim mRawOrientation = m_ControllerData.m_Orientation
                                         Dim mRawPositionVelocity = m_ControllerData.m_PositionVelocity
@@ -2356,7 +2363,7 @@ Public Class UCVirtualMotionTrackerItem
                 Dim fHepticDuraction As Single
                 Dim fHelpticAmplitude As Single
 
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     fHepticDuraction = g_mHeptic.fDuration
                     fHelpticAmplitude = g_mHeptic.fAmplitude
                 End SyncLock
@@ -2393,12 +2400,12 @@ Public Class UCVirtualMotionTrackerItem
                     mRumbleLastTimeSend = Now
                     mRumbleLastTimeSendValid = True
 
-                    SyncLock _ThreadLock
+                    SyncLock g_mThreadLock
                         g_mHeptic.Clear()
                     End SyncLock
                 End If
             Else
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_mHeptic.Clear()
                 End SyncLock
             End If
@@ -3289,80 +3296,82 @@ Public Class UCVirtualMotionTrackerItem
 
     Class ClassConfig
         Private g_mUCRemoteDeviceItem As UCVirtualMotionTrackerItem
+        Private Shared g_mThreadLock As New Object
 
         Public Sub New(_UCRemoteDeviceItem As UCVirtualMotionTrackerItem)
             g_mUCRemoteDeviceItem = _UCRemoteDeviceItem
         End Sub
 
         Public Sub SaveConfig()
-            If (CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem) < 0) Then
-                Return
-            End If
+            SyncLock g_mThreadLock
+                If (CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem) < 0) Then
+                    Return
+                End If
 
-            Dim iDeviceID As Integer = CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem)
+                Dim iDeviceID As Integer = CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem)
 
-            If (g_mUCRemoteDeviceItem.g_bIsHMD) Then
-                ' For HMDs 
-                Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
+                If (g_mUCRemoteDeviceItem.g_bIsHMD) Then
+                    ' For HMDs 
+                    Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
 
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                    Using mIni As New ClassIni(mStream)
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                        Using mIni As New ClassIni(mStream)
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                        ' Nothing?
+                            ' Nothing?
 
-                        mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        End Using
                     End Using
-                End Using
-            Else
-                ' For Controllers
-                Dim sDevicePath As String = CStr(iDeviceID)
+                Else
+                    ' For Controllers
+                    Dim sDevicePath As String = CStr(iDeviceID)
 
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                    Using mIni As New ClassIni(mStream)
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                        Using mIni As New ClassIni(mStream)
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
 
-                        mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        End Using
                     End Using
-                End Using
-            End If
-
-
+                End If
+            End SyncLock
         End Sub
 
         Public Sub LoadConfig()
-            If (CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem) < 0) Then
-                Return
-            End If
+            SyncLock g_mThreadLock
+                If (CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem) < 0) Then
+                    Return
+                End If
 
-            Dim iDeviceID As Integer = CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem)
+                Dim iDeviceID As Integer = CInt(g_mUCRemoteDeviceItem.ComboBox_DeviceID.SelectedItem)
 
-            If (g_mUCRemoteDeviceItem.g_bIsHMD) Then
-                ' For HMDs 
-                Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
+                If (g_mUCRemoteDeviceItem.g_bIsHMD) Then
+                    ' For HMDs 
+                    Dim sDevicePath As String = CStr(iDeviceID + ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT)
 
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                    Using mIni As New ClassIni(mStream)
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                        Using mIni As New ClassIni(mStream)
 
-                        ' Nothing?
+                            ' Nothing?
 
+                        End Using
                     End Using
-                End Using
-            Else
-                ' For Controllers
-                Dim sDevicePath As String = CStr(iDeviceID)
+                Else
+                    ' For Controllers
+                    Dim sDevicePath As String = CStr(iDeviceID)
 
-                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-                    Using mIni As New ClassIni(mStream)
-                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
-                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+                    Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                        Using mIni As New ClassIni(mStream)
+                            SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
+                            SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+                        End Using
                     End Using
-                End Using
-            End If
-
+                End If
+            End SyncLock
         End Sub
 
         Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Single)

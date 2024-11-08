@@ -2,6 +2,7 @@
 
 Public Class UCVmtManagement
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
+    Private g_bInit As Boolean = False
 
     Private g_mOscStatusThread As Threading.Thread = Nothing
     Private g_mOscDeviceStatusThread As Threading.Thread = Nothing
@@ -19,6 +20,16 @@ Public Class UCVmtManagement
         ToolStripComboBox_ChartSamples.Items.Add("500")
         ToolStripComboBox_ChartSamples.Items.Add("1000")
         ToolStripComboBox_ChartSamples.SelectedIndex = 0
+
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
 
         g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
         g_mOscStatusThread.IsBackground = True

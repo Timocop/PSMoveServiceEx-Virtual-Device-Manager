@@ -2,6 +2,7 @@
     Private g_bIgnoreEvents As Boolean = False
 
     Public g_mFormMain As FormMain
+    Private g_bInit As Boolean = False
 
     Public Sub New(_mFormMain As FormMain)
         g_mFormMain = _mFormMain
@@ -9,8 +10,7 @@
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-
+        ' Add any initialization after the InitializeComponent() call. 
         Try
             g_bIgnoreEvents = True
 
@@ -22,6 +22,16 @@
             g_bIgnoreEvents = False
         End Try
 
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
         Try
             g_bIgnoreEvents = True
 
@@ -31,8 +41,6 @@
         Finally
             g_bIgnoreEvents = False
         End Try
-
-        CreateControl()
     End Sub
 
     Private Sub ComboBox_VirtualHMDCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualHMDCount.SelectedIndexChanged

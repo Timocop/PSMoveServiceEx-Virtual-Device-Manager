@@ -23,6 +23,7 @@ Public Class FormMain
     Private g_bIgnoreEvents As Boolean = False
     Private g_bAutoClose As Boolean = False
     Private g_bAllowRestartPrompt As Boolean = False
+    Private g_bInit As Boolean = False
 
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
@@ -53,8 +54,6 @@ Public Class FormMain
     End Enum
 
     Public Sub New()
-        ClassUtils.m_InvokeControl = Me
-
         Try
             ProcessCommandline(False)
         Catch ex As Exception
@@ -192,12 +191,43 @@ Public Class FormMain
 
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
 
+        CreateControl()
+
+        SelectPage(ENUM_PAGE.STARTPAGE)
+    End Sub
+
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Init()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        ClassUtils.m_InvokeControl = Me
+
+        AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
+
+        g_mUCStartPage.Init()
+        g_mUCPlaystationVR.Init()
+        g_mUCVirtualControllers.Init()
+        g_mUCVirtualHMDs.Init()
+        g_mUCVirtualTrackers.Init()
+        g_mUCVirtualMotionTracker.Init()
+
         g_mClassUpdateChecker = New ClassUpdateChecker(Me)
         g_mClassUpdateChecker.StartUpdateCheck()
 
-        SelectPage(ENUM_PAGE.STARTPAGE)
+        Try
+            ProcessCommandline(True)
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
 
-        AddHandler g_mPSMoveServiceCAPI.OnConnectionStatusChanged, AddressOf OnServiceConnectionStatusChanged
+        g_bAllowRestartPrompt = True
     End Sub
 
     Public Sub PromptRestartPSMoveService()
@@ -227,16 +257,6 @@ Public Class FormMain
 
         Return False
     End Function
-
-    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Try
-            ProcessCommandline(True)
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-
-        g_bAllowRestartPrompt = True
-    End Sub
 
     Private Sub ProcessCommandline(bLateload As Boolean)
         Dim sCmdLines As String() = Environment.GetCommandLineArgs
@@ -995,6 +1015,16 @@ Public Class FormMain
             g_mClassUpdateChecker = Nothing
         End If
 
+        If (g_UCRestartSteamVR IsNot Nothing AndAlso Not g_UCRestartSteamVR.IsDisposed) Then
+            g_UCRestartSteamVR.Dispose()
+            g_UCRestartSteamVR = Nothing
+        End If
+
+        If (g_UCRestartPsms IsNot Nothing AndAlso Not g_UCRestartPsms.IsDisposed) Then
+            g_UCRestartPsms.Dispose()
+            g_UCRestartPsms = Nothing
+        End If
+
         If (g_mUCStartPage IsNot Nothing AndAlso Not g_mUCStartPage.IsDisposed) Then
             g_mUCStartPage.Dispose()
             g_mUCStartPage = Nothing
@@ -1024,6 +1054,15 @@ Public Class FormMain
             g_mUCVirtualMotionTracker.Dispose()
             g_mUCVirtualMotionTracker = Nothing
         End If
+
+        Try
+            If (g_mClassCameraFirmwareWatchdog IsNot Nothing) Then
+                g_mClassCameraFirmwareWatchdog.Dispose()
+                g_mClassCameraFirmwareWatchdog = Nothing
+            End If
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
 
         Try
             If (g_mPSMoveServiceCAPI IsNot Nothing) Then

@@ -1,6 +1,7 @@
 ﻿Public Class UCVmtPlayspaceCalib
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
 
+    Private g_bInit As Boolean = False
     Private g_bIgnoreEvents As Boolean = True
     Private g_mPlayspaceCalibrationThread As Threading.Thread = Nothing
 
@@ -24,6 +25,16 @@
         Finally
             g_bIgnoreEvents = False
         End Try
+
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
 
         SetPlayspaceCalibrationStatus(ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE, 0)
     End Sub

@@ -1,7 +1,8 @@
 ﻿Public Class UCVirtualTrackers
-    Private g_bIgnoreEvents As Boolean = False
-
     Public g_mFormMain As FormMain
+
+    Private g_bIgnoreEvents As Boolean = False
+    Private g_bInit As Boolean = False
 
     Public Sub New(_mFormMain As FormMain)
         g_mFormMain = _mFormMain
@@ -9,8 +10,7 @@
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call. 
-
+        ' Add any initialization after the InitializeComponent() call.  
         Try
             g_bIgnoreEvents = True
 
@@ -21,6 +21,16 @@
         Finally
             g_bIgnoreEvents = False
         End Try
+
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
 
         Try
             ' Load all devices that autostart enabled.
@@ -48,8 +58,6 @@
         Finally
             g_bIgnoreEvents = False
         End Try
-
-        CreateControl()
     End Sub
 
     Class ClassVideoInputDevicesListViewItem
@@ -80,6 +88,7 @@
                 _DeviceInfo.m_Path,
                 _DeviceInfo.m_CLSID)
             g_UCVirtualTrackerItem = New UCVirtualTrackerItem(g_UCVirtualTrackers, g_mClassDeviceInfo)
+            g_UCVirtualTrackerItem.Init()
 
             UpdateItem(New ClassVideoInputDevices.ClassDeviceInfo(
                 _DeviceInfo.m_Index,

@@ -5,6 +5,7 @@
     Public g_mUCControllerAttachments As UCControllerAttachments
 
     Private g_bIgnoreEvents As Boolean = False
+    Private g_bInit As Boolean = False
 
     Public Sub New(_mFormMain As FormMain)
         g_mFormMain = _mFormMain
@@ -14,12 +15,16 @@
 
         ' Add any initialization after the InitializeComponent() call.
         g_mUCRemoteDevices = New UCRemoteDevices(Me)
+        g_mUCRemoteDevices.SuspendLayout()
         g_mUCRemoteDevices.Parent = TabPage_RemoteSettings
         g_mUCRemoteDevices.Dock = DockStyle.Fill
+        g_mUCRemoteDevices.ResumeLayout()
 
         g_mUCControllerAttachments = New UCControllerAttachments(Me)
+        g_mUCControllerAttachments.SuspendLayout()
         g_mUCControllerAttachments.Parent = TabPage_ControllerAttachments
         g_mUCControllerAttachments.Dock = DockStyle.Fill
+        g_mUCControllerAttachments.ResumeLayout()
 
         Try
             g_bIgnoreEvents = True
@@ -32,6 +37,19 @@
             g_bIgnoreEvents = False
         End Try
 
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        g_mUCRemoteDevices.Init()
+        g_mUCControllerAttachments.Init()
+
         Try
             g_bIgnoreEvents = True
 
@@ -41,8 +59,6 @@
         Finally
             g_bIgnoreEvents = False
         End Try
-
-        CreateControl()
     End Sub
 
     Private Sub ComboBox_VirtualControllerCount_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VirtualControllerCount.SelectedIndexChanged

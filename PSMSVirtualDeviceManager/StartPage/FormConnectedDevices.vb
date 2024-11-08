@@ -73,7 +73,6 @@ Public Class FormConnectedDevices
         End Function
     End Class
 
-
     Class STRUC_LISTVIEW_NODE_DEVICE_ITEM
         Inherits TreeNode
 
@@ -236,6 +235,7 @@ Public Class FormConnectedDevices
 
     Private Sub FormConnectedDevices_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Visible = True
+        Me.Refresh()
 
         UpdateDevices()
     End Sub

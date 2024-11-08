@@ -9,7 +9,8 @@ Public Class UCRemoteDevices
 
     Const DEFAULT_SOCKET_PORT As Integer = 6969
 
-    Shared _ThreadLock As New Object
+    Private Shared g_mThreadLock As New Object
+    Private g_bInit As Boolean = False
 
     Public g_mClassStrackerSocket As ClassTrackerSocket
 
@@ -30,6 +31,7 @@ Public Class UCRemoteDevices
 
             g_UCRemoteDevices = _UCRemoteDevices
             g_UCRemoteDeviceItem = New UCRemoteDeviceItem(sTrackerName, _UCRemoteDevices)
+            g_UCRemoteDeviceItem.Init()
 
             UpdateItem()
         End Sub
@@ -140,15 +142,22 @@ Public Class UCRemoteDevices
         ' Add any initialization after the InitializeComponent() call.
         g_mClassStrackerSocket = New ClassTrackerSocket(Me)
 
-        AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
-
         m_SocketPort = DEFAULT_SOCKET_PORT
         m_SocketAddress = "127.0.0.1"
-
 
         SetStatus(False)
 
         CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
 
         g_mLocalAddressThread = New Threading.Thread(AddressOf LocalAddressThread)
         g_mLocalAddressThread.IsBackground = True
@@ -225,7 +234,7 @@ Public Class UCRemoteDevices
     End Property
 
     Private Sub OnTrackerConnected(mTracker As ClassTrackerSocket.ClassTracker)
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             Dim sTrackerName As String = mTracker.m_Name
 
             ClassUtils.AsyncInvoke(Sub()
@@ -417,12 +426,12 @@ Public Class UCRemoteDevices
 
         Property m_AllowNewDevices As Boolean
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_bAllowNewDevices
                 End SyncLock
             End Get
             Set(value As Boolean)
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_bAllowNewDevices = value
                 End SyncLock
             End Set
@@ -476,7 +485,7 @@ Public Class UCRemoteDevices
 
                         Dim mTracker As ClassTracker = Nothing
 
-                        SyncLock _ThreadLock
+                        SyncLock g_mThreadLock
                             If (g_mTrackers.ContainsKey(mEndPoint.Address.ToString)) Then
                                 mTracker = g_mTrackers(mEndPoint.Address.ToString)
                             End If
@@ -529,7 +538,7 @@ Public Class UCRemoteDevices
 
                                         RaiseEvent OnTrackerRotation(mTracker, iX, iY, iZ, iW)
 
-                                        SyncLock _ThreadLock
+                                        SyncLock g_mThreadLock
                                             mTracker.m_Orentation = mQuat
                                         End SyncLock
 
@@ -657,7 +666,7 @@ Public Class UCRemoteDevices
 
                                         RaiseEvent OnTrackerRotation(mTracker, iX, iY, iZ, iW)
 
-                                        SyncLock _ThreadLock
+                                        SyncLock g_mThreadLock
                                             mTracker.m_Orentation = mQuat
                                         End SyncLock
 
@@ -679,7 +688,7 @@ Public Class UCRemoteDevices
                         g_mLastKeepup.Reset()
                         g_mLastKeepup.Start()
 
-                        SyncLock _ThreadLock
+                        SyncLock g_mThreadLock
                             For Each mTrackerDic In g_mTrackers
                                 Try
                                     Dim mTracker = g_mTrackers(mTrackerDic.Key)
@@ -706,7 +715,7 @@ Public Class UCRemoteDevices
         Private Sub SetupNewTracker(mBinReader As IO.BinaryReader, mEndPoint As IPEndPoint)
             Dim mTracker As ClassTracker = Nothing
 
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 If (g_mTrackers.ContainsKey(mEndPoint.Address.ToString)) Then
                     mTracker = g_mTrackers(mEndPoint.Address.ToString)
                 End If
@@ -779,7 +788,7 @@ Public Class UCRemoteDevices
                     sTrackerName = String.Format("UDP: {0}", mEndPoint.Address.ToString)
                 End If
 
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     mTracker = New ClassTracker(sTrackerName, iProtocolType, mEndPoint)
                     g_mTrackers(mEndPoint.Address.ToString) = mTracker
                 End SyncLock

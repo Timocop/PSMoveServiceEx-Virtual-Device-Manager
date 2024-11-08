@@ -1,6 +1,7 @@
 ﻿Public Class UCPlaystationVR
     Private g_FormMain As FormMain
-    Private Shared _ThreadLock As New Object
+    Private Shared g_mThreadLock As New Object
+    Private g_bInit As Boolean = False
 
     Private g_ClassUsbNotify As ClassDevicesNotify
     Private g_ClassDisplayNotify As ClassDevicesNotify
@@ -48,8 +49,6 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        SetPlaystationVRStatus(ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED, ENUM_DEVICE_USB_STATUS.NOT_CONNECTED, ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
-
         Try
             g_ClassUsbNotify = New ClassDevicesNotify()
             g_ClassUsbNotify.RegisterDeviceChange(ClassDevicesNotify.ENUM_DEVICE_TYPE.GUID_DEVINTERFACE_USB_DEVICE)
@@ -64,10 +63,20 @@
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
         AddHandler g_ClassUsbNotify.OnDeviceConnectionChanged, AddressOf OnDeviceChanged
         AddHandler g_ClassDisplayNotify.OnDeviceConnectionChanged, AddressOf OnDeviceChanged
 
-        CreateControl()
+        SetPlaystationVRStatus(ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED, ENUM_DEVICE_USB_STATUS.NOT_CONNECTED, ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
 
         g_mHardwareChangeStatusThread = New Threading.Thread(AddressOf HardwareChangeStatusThread)
         g_mHardwareChangeStatusThread.IsBackground = True
@@ -76,7 +85,7 @@
 
     ReadOnly Property m_DeviceHdmiStatus As ENUM_DEVICE_HDMI_STATUS
         Get
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 Return g_iDeviceHdmiStatus
             End SyncLock
         End Get
@@ -84,7 +93,7 @@
 
     ReadOnly Property m_DeviceUsbStatus As ENUM_DEVICE_USB_STATUS
         Get
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 Return g_iDeviceUsbStatus
             End SyncLock
         End Get
@@ -92,7 +101,7 @@
 
     ReadOnly Property m_DeviceDisplayStatus As ENUM_DEVICE_DISPLAY_STATUS
         Get
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 Return g_iDeviceDisplayStatus
             End SyncLock
         End Get
@@ -279,7 +288,7 @@
     End Sub
 
     Public Sub UpdateHardwareChangeStatusNow()
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             g_bHardwareChangeStatusUpdatenNow = True
         End SyncLock
     End Sub
@@ -452,7 +461,7 @@
                     ClassAdvancedExceptionLogging.WriteToLog(ex)
                 End Try
 
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     g_iDeviceHdmiStatus = iHdmiStatus
                     g_iDeviceUsbStatus = iUsbStatus
                     g_iDeviceDisplayStatus = iDisplayStatus
@@ -467,7 +476,7 @@
             End Try
 
             For i = 0 To 10
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     If (g_bHardwareChangeStatusUpdatenNow) Then
                         g_bHardwareChangeStatusUpdatenNow = False
                         Exit For

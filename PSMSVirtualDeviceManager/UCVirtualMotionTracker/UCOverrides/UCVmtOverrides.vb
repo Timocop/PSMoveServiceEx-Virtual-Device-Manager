@@ -1,5 +1,6 @@
 ﻿Public Class UCVmtOverrides
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
+    Private g_bInit As Boolean = False
 
     Public Sub New(_UCVirtualMotionTracker As UCVirtualMotionTracker)
         g_UCVirtualMotionTracker = _UCVirtualMotionTracker
@@ -8,6 +9,21 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        Try
+            RefreshOverrides()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click

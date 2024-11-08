@@ -5,6 +5,7 @@ Public Class UCVmtSettings
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
 
     Private g_bIgnoreEvents As Boolean = True
+    Private g_bInit As Boolean = False
 
     Structure STRUC_RENDER_RES_ITEM
         Public g_iScale As Single
@@ -27,7 +28,6 @@ Public Class UCVmtSettings
         ' Add any initialization after the InitializeComponent() call.
         Label_ScrollFocus.Text = ""
         GroupBox_Distortion.Visible = False
-
 
         Try
             g_bIgnoreEvents = True
@@ -194,6 +194,21 @@ Public Class UCVmtSettings
             g_bIgnoreEvents = False
         End Try
 
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        Try
+            LoadSettings()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Public Sub LoadSettings()

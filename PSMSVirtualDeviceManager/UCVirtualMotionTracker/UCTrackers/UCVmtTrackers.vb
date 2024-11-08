@@ -2,6 +2,8 @@
 
 Public Class UCVmtTrackers
     Public g_UCVirtualMotionTracker As UCVirtualMotionTracker
+    Private g_bInit As Boolean = False
+    Private Shared g_mThreadLock As New Object
 
     Private g_mAutostartControllerMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
     Private g_mAutostartHmdMenuStrips As New Dictionary(Of Integer, ToolStripMenuItem)
@@ -41,35 +43,52 @@ Public Class UCVmtTrackers
             Next
         End If
 
+        CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        Try
+            AutostartLoad()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Public Sub AutostartLoad()
         Dim mAutostartControllerIndexes As New List(Of Integer)
         Dim mAutostartHmdIndexes As New List(Of Integer)
 
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                    If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
-                        Continue For
-                    End If
+        SyncLock g_mThreadLock
+            Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                Using mIni As New ClassIni(mStream)
+                    For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                        If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
+                            Continue For
+                        End If
 
-                    If (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true") Then
-                        mAutostartControllerIndexes.Add(i)
-                    End If
-                Next
+                        If (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true") Then
+                            mAutostartControllerIndexes.Add(i)
+                        End If
+                    Next
 
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
-                    If (g_mAutostartHmdMenuStrips(i) Is Nothing OrElse g_mAutostartHmdMenuStrips(i).IsDisposed) Then
-                        Continue For
-                    End If
+                    For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                        If (g_mAutostartHmdMenuStrips(i) Is Nothing OrElse g_mAutostartHmdMenuStrips(i).IsDisposed) Then
+                            Continue For
+                        End If
 
-                    If (mIni.ReadKeyValue("AutostartHmd", CStr(i), "false") = "true") Then
-                        mAutostartHmdIndexes.Add(i)
-                    End If
-                Next
+                        If (mIni.ReadKeyValue("AutostartHmd", CStr(i), "false") = "true") Then
+                            mAutostartHmdIndexes.Add(i)
+                        End If
+                    Next
+                End Using
             End Using
-        End Using
+        End SyncLock
 
         For i = 0 To mAutostartControllerIndexes.Count - 1
             Try
@@ -118,56 +137,68 @@ Public Class UCVmtTrackers
     End Sub
 
     Private Sub ContextMenuStrip_Autostart_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles ContextMenuStrip_Autostart.ItemClicked
-        Dim mItem As ToolStripMenuItem = TryCast(e.ClickedItem, ToolStripMenuItem)
-        If (mItem Is Nothing) Then
-            Return
-        End If
-
-        mItem.Checked = Not mItem.Checked
-
-        Dim mTagData As Object() = CType(mItem.Tag, Object())
-        Dim bIsHMD As Boolean = CBool(mTagData(0))
-        Dim iIndex As Integer = CInt(mTagData(1))
-
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                If (bIsHMD) Then
-                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("AutostartHmd", CStr(iIndex), If(mItem.Checked, "true", "false")))
-
-                    mIni.WriteKeyValue(mIniContent.ToArray)
-                Else
-                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
-
-                    mIni.WriteKeyValue(mIniContent.ToArray)
+        Try
+            SyncLock g_mThreadLock
+                Dim mItem As ToolStripMenuItem = TryCast(e.ClickedItem, ToolStripMenuItem)
+                If (mItem Is Nothing) Then
+                    Return
                 End If
-            End Using
-        End Using
+
+                mItem.Checked = Not mItem.Checked
+
+                Dim mTagData As Object() = CType(mItem.Tag, Object())
+                Dim bIsHMD As Boolean = CBool(mTagData(0))
+                Dim iIndex As Integer = CInt(mTagData(1))
+
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        If (bIsHMD) Then
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("AutostartHmd", CStr(iIndex), If(mItem.Checked, "true", "false")))
+
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        Else
+                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
+
+                            mIni.WriteKeyValue(mIniContent.ToArray)
+                        End If
+                    End Using
+                End Using
+            End SyncLock
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub ContextMenuStrip_Autostart_Opening(sender As Object, e As CancelEventArgs) Handles ContextMenuStrip_Autostart.Opening
-        Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
-            Using mIni As New ClassIni(mStream)
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
-                    If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
-                        Continue For
-                    End If
+        Try
+            SyncLock g_mThreadLock
+                Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+                    Using mIni As New ClassIni(mStream)
+                        For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                            If (g_mAutostartControllerMenuStrips(i) Is Nothing OrElse g_mAutostartControllerMenuStrips(i).IsDisposed) Then
+                                Continue For
+                            End If
 
-                    g_mAutostartControllerMenuStrips(i).Checked = (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true")
-                Next
+                            g_mAutostartControllerMenuStrips(i).Checked = (mIni.ReadKeyValue("Autostart", CStr(i), "false") = "true")
+                        Next
 
-                For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
-                    If (g_mAutostartHmdMenuStrips(i) Is Nothing OrElse g_mAutostartHmdMenuStrips(i).IsDisposed) Then
-                        Continue For
-                    End If
+                        For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1
+                            If (g_mAutostartHmdMenuStrips(i) Is Nothing OrElse g_mAutostartHmdMenuStrips(i).IsDisposed) Then
+                                Continue For
+                            End If
 
-                    g_mAutostartHmdMenuStrips(i).Checked = (mIni.ReadKeyValue("AutostartHmd", CStr(i), "false") = "true")
-                Next
-            End Using
-        End Using
+                            g_mAutostartHmdMenuStrips(i).Checked = (mIni.ReadKeyValue("AutostartHmd", CStr(i), "false") = "true")
+                        Next
+                    End Using
+                End Using
+            End SyncLock
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub Button_AddVMTController_Click(sender As Object, e As EventArgs) Handles Button_AddVMTController.Click
@@ -270,6 +301,7 @@ Public Class UCVmtTrackers
 
             g_UCVirtualMotionTracker = _UCVirtualMotionTracker
             g_UCVirtualMotionTrackerItem = New UCVirtualMotionTrackerItem(iControllerID, bIsHmd, _UCVirtualMotionTracker)
+            g_UCVirtualMotionTrackerItem.Init()
 
             UpdateItem()
         End Sub

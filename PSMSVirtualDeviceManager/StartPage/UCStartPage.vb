@@ -1,10 +1,11 @@
 ﻿Imports System.Numerics
 
 Public Class UCStartPage
-    Private _ThreadLock As New Object
+    Private Shared g_mThreadLock As New Object
 
     Private g_FormMain As FormMain
     Private g_bIgnoreEvents As Boolean = False
+    Private g_bInit As Boolean = False
 
     Private g_mStatusThread As Threading.Thread = Nothing
     Private g_mServiceDeviceStatusThread As Threading.Thread = Nothing
@@ -49,6 +50,14 @@ Public Class UCStartPage
         SetStatusServiceConnected()
 
         CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
 
         g_mStatusThread = New Threading.Thread(AddressOf CheckConnection_Thread)
         g_mStatusThread.IsBackground = True
@@ -87,7 +96,7 @@ Public Class UCStartPage
     End Sub
 
     Private Sub SetStatusServiceConnected()
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             If (g_bIsServiceRunning And Not g_bIsServiceConnected) Then
                 Label_PsmsxStatus.Text = "Connecting to Service..."
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
@@ -125,7 +134,7 @@ Public Class UCStartPage
                 Dim mServiceInfo As New ClassServiceInfo
                 Dim bServiceRunning = (mServiceInfo.IsServiceRunning <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE)
 
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     If (g_bIsServiceRunning <> bServiceRunning) Then
                         g_bIsServiceRunning = bServiceRunning
 
@@ -142,7 +151,7 @@ Public Class UCStartPage
                 ' Check if we are connected ot not
                 Dim bIsConnected = g_FormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected
 
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     If (g_bIsServiceConnected <> bIsConnected) Then
                         g_bIsServiceConnected = bIsConnected
 

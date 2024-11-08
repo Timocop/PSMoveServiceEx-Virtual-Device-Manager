@@ -17,6 +17,7 @@ Public Class UCVirtualMotionTracker
     Public g_mClassSteamVRRenderWatchdog As ClassSteamVRRenderWatchdog
 
     Private g_bIgnoreEvents As Boolean = True
+    Private g_bInit As Boolean = False
 
     Enum ENUM_SETTINGS_SAVE_TYPE_FLAGS
         ALL = -1
@@ -33,8 +34,7 @@ Public Class UCVirtualMotionTracker
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call. 
-
+        ' Add any initialization after the InitializeComponent() call.  
         g_bIgnoreEvents = False
 
         g_ClassOscServer = New ClassOscServer
@@ -42,49 +42,53 @@ Public Class UCVirtualMotionTracker
         g_ClassOscDevices = New ClassOscDevices(Me)
 
         g_UCVmtManagement = New UCVmtManagement(Me)
+        g_UCVmtManagement.SuspendLayout()
         g_UCVmtManagement.Parent = TabPage_Management
         g_UCVmtManagement.Dock = DockStyle.Fill
+        g_UCVmtManagement.ResumeLayout()
 
         g_UCVmtTrackers = New UCVmtTrackers(Me)
+        g_UCVmtTrackers.SuspendLayout()
         g_UCVmtTrackers.Parent = TabPage_Trackers
         g_UCVmtTrackers.Dock = DockStyle.Fill
+        g_UCVmtTrackers.ResumeLayout()
 
         g_UCVmtSettings = New UCVmtSettings(Me)
+        g_UCVmtSettings.SuspendLayout()
         g_UCVmtSettings.Parent = TabPage_Settings
         g_UCVmtSettings.Dock = DockStyle.Fill
+        g_UCVmtSettings.ResumeLayout()
 
         g_UCVmtPlayspaceCalib = New UCVmtPlayspaceCalib(Me)
+        g_UCVmtPlayspaceCalib.SuspendLayout()
         g_UCVmtPlayspaceCalib.Parent = TabPage_PlayspaceCalib
         g_UCVmtPlayspaceCalib.Dock = DockStyle.Fill
+        g_UCVmtPlayspaceCalib.ResumeLayout()
 
         g_UCVmtOverrides = New UCVmtOverrides(Me)
+        g_UCVmtOverrides.SuspendLayout()
         g_UCVmtOverrides.Parent = TabPage_Overrides
         g_UCVmtOverrides.Dock = DockStyle.Fill
+        g_UCVmtOverrides.ResumeLayout()
 
         CreateControl()
+    End Sub
+
+    Public Sub Init()
+        If (g_bInit) Then
+            Return
+        End If
+
+        g_bInit = True
+
+        g_UCVmtManagement.Init()
+        g_UCVmtTrackers.Init()
+        g_UCVmtSettings.Init()
+        g_UCVmtPlayspaceCalib.Init()
+        g_UCVmtOverrides.Init()
 
         g_mClassSteamVRRenderWatchdog = New ClassSteamVRRenderWatchdog(Me)
         g_mClassSteamVRRenderWatchdog.Init()
-    End Sub
-
-    Private Sub UCControllerAttachments_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Try
-            g_UCVmtSettings.LoadSettings()
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-
-        Try
-            g_UCVmtTrackers.AutostartLoad()
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-
-        Try
-            g_UCVmtOverrides.RefreshOverrides()
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
@@ -275,7 +279,7 @@ Public Class UCVirtualMotionTracker
 
     Class ClassSettings
         Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
-        Private Shared _ThreadLock As New Object
+        Private Shared g_mThreadLock As New Object
 
         Private g_bSettingsLoaded As Boolean = False
 
@@ -977,7 +981,7 @@ Public Class UCVirtualMotionTracker
 
         ReadOnly Property m_ControllerSettings As STRUC_CONTROLLER_SETTINGS
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mControllerSettings
                 End SyncLock
             End Get
@@ -985,7 +989,7 @@ Public Class UCVirtualMotionTracker
 
         ReadOnly Property m_HmdSettings As STRUC_HMD_SETTINGS
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mHmdSettings
                 End SyncLock
             End Get
@@ -993,7 +997,7 @@ Public Class UCVirtualMotionTracker
 
         ReadOnly Property m_MiscSettings As STRUC_MISC_SETTINGS
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mMiscSettings
                 End SyncLock
             End Get
@@ -1001,14 +1005,14 @@ Public Class UCVirtualMotionTracker
 
         ReadOnly Property m_PlayspaceSettings As STRUC_PLAYSPACE_SETTINGS
             Get
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     Return g_mPlaySpaceSettings
                 End SyncLock
             End Get
         End Property
 
         Public Sub LoadSettings()
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 g_bSettingsLoaded = True
 
                 Dim tmpVec3 As Vector3
@@ -1183,7 +1187,7 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Public Sub SaveSettings(iSaveFlags As ENUM_SETTINGS_SAVE_TYPE_FLAGS)
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 If (Not g_bSettingsLoaded) Then
                     Return
                 End If
@@ -1315,7 +1319,7 @@ Public Class UCVirtualMotionTracker
     Class ClassOscDevices
         Implements IDisposable
 
-        Shared _ThreadLock As New Object
+        Private Shared g_mThreadLock As New Object
         Private g_UCVirtualMotionTracker As UCVirtualMotionTracker
         Private g_mDevicesThread As Threading.Thread = Nothing
 
@@ -1412,7 +1416,7 @@ Public Class UCVirtualMotionTracker
                         End If
 
                         ' Request Device Pose 
-                        SyncLock _ThreadLock
+                        SyncLock g_mThreadLock
                             For Each mDevice In g_mDevicesDic
                                 g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicePose", New Object() {mDevice.Value.sSerial}))
                             Next
@@ -1473,7 +1477,7 @@ Public Class UCVirtualMotionTracker
                         Next
 
 
-                        SyncLock _ThreadLock
+                        SyncLock g_mThreadLock
                             ' Add missing devices
                             For Each mDevice As STRUC_DEVICE In mDeviceList
                                 If (Not g_mDevicesDic.ContainsKey(mDevice.sSerial)) Then
@@ -1514,7 +1518,7 @@ Public Class UCVirtualMotionTracker
                         Dim iQuatZ As Single = CSng(mMessage(6))
                         Dim iQuatW As Single = CSng(mMessage(7))
 
-                        SyncLock _ThreadLock
+                        SyncLock g_mThreadLock
                             Dim mDevice As STRUC_DEVICE = Nothing
 
                             If (g_mDevicesDic.TryGetValue(sSerial, mDevice)) Then
@@ -1541,7 +1545,7 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Public Function GetDevices() As STRUC_DEVICE()
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 Dim mDeviceList As New List(Of STRUC_DEVICE)
 
                 For Each mDevice In g_mDevicesDic
@@ -1553,7 +1557,7 @@ Public Class UCVirtualMotionTracker
         End Function
 
         Public Function GetDeviceBySerial(sSerial As String, ByRef mDevice As STRUC_DEVICE) As Boolean
-            SyncLock _ThreadLock
+            SyncLock g_mThreadLock
                 If (g_mDevicesDic.TryGetValue(sSerial, mDevice)) Then
                     Return True
                 End If

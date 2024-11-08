@@ -8,7 +8,7 @@
     Private g_mHardwareChangeStatusThread As Threading.Thread = Nothing
     Private g_bHardwareChangeStatusUpdatenNow As Boolean = False
 
-    Private Shared _ThreadLock As New Object
+    Private g_mThreadLock As New Object
 
     Public Sub New()
     End Sub
@@ -54,7 +54,7 @@
     End Sub
 
     Public Sub UpdateHardwareChangeStatusNow()
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             g_bHardwareChangeStatusUpdatenNow = True
         End SyncLock
     End Sub
@@ -62,7 +62,7 @@
     Private Sub HardwareChangeStatusThread()
         Try
             While True
-                SyncLock _ThreadLock
+                SyncLock g_mThreadLock
                     If (g_bHardwareChangeStatusUpdatenNow) Then
                         g_bHardwareChangeStatusUpdatenNow = False
 
@@ -85,7 +85,7 @@
     End Sub
 
     Public Sub UploadFirmware()
-        SyncLock _ThreadLock
+        SyncLock g_mThreadLock
             For Each mDevice In ClassLibusbDriver.DRV_PS4CAM_WINUSB_CONFIGS
                 Dim iTries As Integer = 10
 

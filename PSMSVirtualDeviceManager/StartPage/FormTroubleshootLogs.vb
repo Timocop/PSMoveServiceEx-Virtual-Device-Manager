@@ -32,12 +32,12 @@ Public Class FormTroubleshootLogs
     Private g_mFormMain As FormMain = Nothing
 
     Class ClassLogContent
-        Private g_mLock As New Object
+        Private g_mThreadLock As New Object
         Private g_mLogContent As New Dictionary(Of String, String)
 
         ReadOnly Property m_Content As Dictionary(Of String, String)
             Get
-                SyncLock g_mLock
+                SyncLock g_mThreadLock
                     Return g_mLogContent
                 End SyncLock
             End Get
@@ -45,7 +45,7 @@ Public Class FormTroubleshootLogs
 
         ReadOnly Property m_Lock As Object
             Get
-                Return g_mLock
+                Return g_mThreadLock
             End Get
         End Property
     End Class

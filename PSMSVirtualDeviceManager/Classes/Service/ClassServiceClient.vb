@@ -7,8 +7,8 @@ Imports PSMSVirtualDeviceManager
 Public Class ClassServiceClient
     Implements IDisposable
 
-    Private Shared __ClientLock As New Object
-    Private Shared __DataLock As New Object
+    Private Shared g_mClientLock As New Object
+    Private Shared g_mDataLock As New Object
 
     Private g_PSMoveServiceServer As Service
     Private g_ProcessingThread As Threading.Thread
@@ -187,7 +187,7 @@ Public Class ClassServiceClient
     End Sub
 
     Public Sub ServiceStart()
-        SyncLock __ClientLock
+        SyncLock g_mClientLock
             If (g_PSMoveServiceServer IsNot Nothing) Then
                 Return
             End If
@@ -224,12 +224,12 @@ Public Class ClassServiceClient
 
     Property m_EnableSelectRecenter As Boolean
         Get
-            SyncLock __ClientLock
+            SyncLock g_mClientLock
                 Return g_bEnableSelectRecenter
             End SyncLock
         End Get
         Set(value As Boolean)
-            SyncLock __ClientLock
+            SyncLock g_mClientLock
                 g_bEnableSelectRecenter = value
             End SyncLock
         End Set
@@ -237,7 +237,7 @@ Public Class ClassServiceClient
 
     ReadOnly Property m_IsServiceConnected As Boolean
         Get
-            SyncLock __ClientLock
+            SyncLock g_mClientLock
                 Return g_bIsConnected
             End SyncLock
         End Get
@@ -260,7 +260,7 @@ Public Class ClassServiceClient
                     Dim bExceptionSleep As Boolean = False
 
                     Try
-                        SyncLock __ClientLock
+                        SyncLock g_mClientLock
                             g_bIsConnected = g_PSMoveServiceServer.IsConnected
                             If (bConnected <> g_bIsConnected OrElse bDisconnected) Then
                                 bConnected = g_bIsConnected
@@ -327,7 +327,7 @@ Public Class ClassServiceClient
 
                                 mControllers.AddRange(Controllers.GetControllerList())
 
-                                SyncLock __DataLock
+                                SyncLock g_mDataLock
                                     g_mControllerPool.Clear()
                                 End SyncLock
                             End If
@@ -342,7 +342,7 @@ Public Class ClassServiceClient
 
                                 mHmds.AddRange(HeadMountedDevices.GetHmdList())
 
-                                SyncLock __DataLock
+                                SyncLock g_mDataLock
                                     g_mHmdPool.Clear()
                                 End SyncLock
                             End If
@@ -357,7 +357,7 @@ Public Class ClassServiceClient
 
                                 mTrackers.AddRange(Trackers.GetTrackerList())
 
-                                SyncLock __DataLock
+                                SyncLock g_mDataLock
                                     g_mTrackerPool.Clear()
                                 End SyncLock
                             End If
@@ -365,7 +365,7 @@ Public Class ClassServiceClient
 
                         For Each mController As Controllers In mControllers
                             Try
-                                SyncLock __ClientLock
+                                SyncLock g_mClientLock
                                     If (g_mPostStreamRequest.Count > 0) Then
                                         Dim flags = mController.m_DataStreamFlags
                                         If ((flags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
@@ -398,7 +398,7 @@ Public Class ClassServiceClient
 
                                     Dim bNewData As Boolean = False
 
-                                    SyncLock __DataLock
+                                    SyncLock g_mDataLock
                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                             If (mController.m_Info.m_OutputSequenceNum <> g_mControllerPool(mController.m_Info.m_ControllerId).m_OutputSeqNum) Then
                                                 bNewData = True
@@ -488,7 +488,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
                                                         Single.IsNaN(mData.m_Position.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_Position = g_mControllerPool(mController.m_Info.m_ControllerId).m_Position
                                                         Else
@@ -501,7 +501,7 @@ Public Class ClassServiceClient
                                                         Single.IsNaN(mData.m_Orientation.Y) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Z) OrElse
                                                         Single.IsNaN(mData.m_Orientation.W)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_Orientation = g_mControllerPool(mController.m_Info.m_ControllerId).m_Orientation
                                                         Else
@@ -513,7 +513,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
                                                         Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
                                                         Single.IsNaN(mData.m_PositionVelocity.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_PositionVelocity = g_mControllerPool(mController.m_Info.m_ControllerId).m_PositionVelocity
                                                         Else
@@ -525,7 +525,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
                                                         Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
                                                         Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_OrientationVelocity = g_mControllerPool(mController.m_Info.m_ControllerId).m_OrientationVelocity
                                                         Else
@@ -534,7 +534,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                SyncLock __DataLock
+                                                SyncLock g_mDataLock
                                                     g_mControllerPool(mController.m_Info.m_ControllerId) = mData
                                                 End SyncLock
                                         End Select
@@ -550,7 +550,7 @@ Public Class ClassServiceClient
 
                         For Each mHmd As HeadMountedDevices In mHmds
                             Try
-                                SyncLock __ClientLock
+                                SyncLock g_mClientLock
                                     If (g_mPostStreamRequest.Count > 0) Then
                                         Dim flags = mHmd.m_DataStreamFlags
                                         If ((flags And PSMStreamFlags.PSMStreamFlags_includePositionData) = 0) Then
@@ -583,7 +583,7 @@ Public Class ClassServiceClient
 
                                     Dim bNewData As Boolean = False
 
-                                    SyncLock __DataLock
+                                    SyncLock g_mDataLock
                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                             If (mHmd.m_Info.m_OutputSequenceNum <> g_mHmdPool(mHmd.m_Info.m_HmdId).m_OutputSeqNum) Then
                                                 bNewData = True
@@ -636,7 +636,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
                                                         Single.IsNaN(mData.m_Position.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
                                                         Else
@@ -649,7 +649,7 @@ Public Class ClassServiceClient
                                                         Single.IsNaN(mData.m_Orientation.Y) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Z) OrElse
                                                         Single.IsNaN(mData.m_Orientation.W)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
                                                         Else
@@ -661,7 +661,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
                                                         Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
                                                         Single.IsNaN(mData.m_PositionVelocity.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_PositionVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_PositionVelocity
                                                         Else
@@ -673,7 +673,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
                                                         Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
                                                         Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_OrientationVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_OrientationVelocity
                                                         Else
@@ -682,7 +682,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                SyncLock __DataLock
+                                                SyncLock g_mDataLock
                                                     g_mHmdPool(mHmd.m_Info.m_HmdId) = mData
                                                 End SyncLock
 
@@ -727,7 +727,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_Position.X) OrElse
                                                         Single.IsNaN(mData.m_Position.Y) OrElse
                                                         Single.IsNaN(mData.m_Position.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
                                                         Else
@@ -740,7 +740,7 @@ Public Class ClassServiceClient
                                                         Single.IsNaN(mData.m_Orientation.Y) OrElse
                                                         Single.IsNaN(mData.m_Orientation.Z) OrElse
                                                         Single.IsNaN(mData.m_Orientation.W)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
                                                         Else
@@ -752,7 +752,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
                                                         Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
                                                         Single.IsNaN(mData.m_PositionVelocity.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_PositionVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_PositionVelocity
                                                         Else
@@ -764,7 +764,7 @@ Public Class ClassServiceClient
                                                 If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
                                                         Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
                                                         Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
-                                                    SyncLock __DataLock
+                                                    SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_OrientationVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_OrientationVelocity
                                                         Else
@@ -773,7 +773,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                SyncLock __DataLock
+                                                SyncLock g_mDataLock
                                                     g_mHmdPool(mHmd.m_Info.m_HmdId) = mData
                                                 End SyncLock
                                         End Select
@@ -789,7 +789,7 @@ Public Class ClassServiceClient
 
                         For Each mTracker As Trackers In mTrackers
                             Try
-                                SyncLock __ClientLock
+                                SyncLock g_mClientLock
                                     If (Not mTracker.m_Listening) Then
                                         mTracker.m_Listening = True
                                     End If
@@ -802,7 +802,7 @@ Public Class ClassServiceClient
 
                                     Dim bNewData As Boolean = False
 
-                                    SyncLock __DataLock
+                                    SyncLock g_mDataLock
                                         If (g_mTrackerPool.ContainsKey(mTracker.m_Info.m_TrackerId)) Then
                                             If (mTracker.m_Info.m_Stats.m_SequenceNum <> g_mTrackerPool(mTracker.m_Info.m_TrackerId).m_OutputSeqNum) Then
                                                 bNewData = True
@@ -833,7 +833,7 @@ Public Class ClassServiceClient
                                                         mTracker.m_Info.m_Pose.m_Orientation.w)
                                         End If
 
-                                        SyncLock __DataLock
+                                        SyncLock g_mDataLock
                                             g_mTrackerPool(mTracker.m_Info.m_TrackerId) = mData
                                         End SyncLock
                                     End If
@@ -887,7 +887,7 @@ Public Class ClassServiceClient
     End Sub
 
     Public Sub SetControllerRecenter(iIndex As Integer, mOrientation As Quaternion)
-        SyncLock __ClientLock
+        SyncLock g_mClientLock
             Dim mController As New Controllers(iIndex)
             mController.ResetControlerOrientation(New PSMQuatf With {
                 .x = mOrientation.X,
@@ -899,14 +899,14 @@ Public Class ClassServiceClient
     End Sub
 
     Public Sub SetControllerRumble(iIndex As Integer, fRumble As Single)
-        SyncLock __ClientLock
+        SyncLock g_mClientLock
             Dim mController As New Controllers(iIndex)
             mController.SetControllerRumble(PSMControllerRumbleChannel.PSMControllerRumbleChannel_All, fRumble)
         End SyncLock
     End Sub
 
     Public Function GetControllersData() As IControllerData()
-        SyncLock __DataLock
+        SyncLock g_mDataLock
             Dim mControllerList As New List(Of IControllerData)
 
             For Each mItem In g_mControllerPool
@@ -918,7 +918,7 @@ Public Class ClassServiceClient
     End Function
 
     Public Function GetHmdsData() As IHmdData()
-        SyncLock __DataLock
+        SyncLock g_mDataLock
             Dim mHmsdList As New List(Of IHmdData)
 
             For Each mItem In g_mHmdPool
@@ -930,7 +930,7 @@ Public Class ClassServiceClient
     End Function
 
     Public Function GetTrackersData() As ITrackerData()
-        SyncLock __DataLock
+        SyncLock g_mDataLock
             Dim mTrackersList As New List(Of ITrackerData)
 
             For Each mItem In g_mTrackerPool
@@ -943,7 +943,7 @@ Public Class ClassServiceClient
 
     ReadOnly Property m_ControllerData(i As Integer) As IControllerData
         Get
-            SyncLock __DataLock
+            SyncLock g_mDataLock
                 If (Not g_mControllerPool.ContainsKey(i)) Then
                     Return Nothing
                 End If
@@ -955,7 +955,7 @@ Public Class ClassServiceClient
 
     ReadOnly Property m_HmdData(i As Integer) As IHmdData
         Get
-            SyncLock __DataLock
+            SyncLock g_mDataLock
                 If (Not g_mHmdPool.ContainsKey(i)) Then
                     Return Nothing
                 End If
@@ -967,7 +967,7 @@ Public Class ClassServiceClient
 
     ReadOnly Property m_TrackerData(i As Integer) As ITrackerData
         Get
-            SyncLock __DataLock
+            SyncLock g_mDataLock
                 If (Not g_mTrackerPool.ContainsKey(i)) Then
                     Return Nothing
                 End If
