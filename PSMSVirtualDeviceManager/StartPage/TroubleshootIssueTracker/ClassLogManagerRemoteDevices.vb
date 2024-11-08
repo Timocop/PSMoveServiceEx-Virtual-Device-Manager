@@ -23,7 +23,7 @@ Public Class ClassLogManagerRemoteDevices
         g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate() Implements ILogAction.Generate
+    Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
         If (g_mFormMain.g_mUCVirtualControllers Is Nothing OrElse g_mFormMain.g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing) Then
             Return
         End If

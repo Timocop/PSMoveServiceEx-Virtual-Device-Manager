@@ -12,7 +12,7 @@ Public Class ClassLogManager
         g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate() Implements ILogAction.Generate
+    Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
         Dim mManagerLogs As New Dictionary(Of String, String)
         mManagerLogs("VDM INI Application Exceptions") = (ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
         mManagerLogs("VDM INI Settings") = (ClassConfigConst.PATH_CONFIG_SETTINGS)

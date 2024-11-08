@@ -81,7 +81,7 @@ Public Class FormTroubleshootLogs
 
     Public Interface ILogAction
         Function GetActionTitle() As String
-        Sub Generate()
+        Sub Generate(bSilent As Boolean)
         Function GetIssues() As STRUC_LOG_ISSUE()
         Function GetSectionContent() As String
     End Interface
@@ -363,7 +363,7 @@ Public Class FormTroubleshootLogs
                                    End Sub)
 
             Try
-                mJob.Generate()
+                mJob.Generate(False)
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception

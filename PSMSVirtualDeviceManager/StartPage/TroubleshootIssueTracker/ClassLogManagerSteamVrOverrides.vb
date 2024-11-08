@@ -26,7 +26,7 @@ Public Class ClassLogManagerSteamVrOverrides
         g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate() Implements ILogAction.Generate
+    Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
         Dim sTrackersList As New Text.StringBuilder
 
         Dim mConfig As New ClassSteamVRConfig

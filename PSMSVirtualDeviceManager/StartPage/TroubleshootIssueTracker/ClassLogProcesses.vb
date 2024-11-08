@@ -20,7 +20,7 @@ Public Class ClassLogProcesses
         g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate() Implements ILogAction.Generate
+    Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
         Dim sProcessLog As New Text.StringBuilder
 
         For Each mProcess In Process.GetProcesses

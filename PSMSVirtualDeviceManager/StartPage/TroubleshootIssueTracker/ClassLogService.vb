@@ -12,7 +12,7 @@ Public Class ClassLogService
         g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate() Implements ILogAction.Generate
+    Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
         Dim mConfig As New ClassServiceInfo
         mConfig.LoadConfig()
 

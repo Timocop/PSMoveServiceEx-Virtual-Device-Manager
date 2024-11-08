@@ -12,7 +12,12 @@ Public Class ClassLogDxdiag
         g_ClassLogContent = _ClassLogContent
     End Sub
 
-    Public Sub Generate() Implements ILogAction.Generate
+    Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
+        ' Prompting a UAC promot isnt silent
+        If (bSilent) Then
+            Return
+        End If
+
         Dim sDxDiagExecutable As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "dxdiag.exe")
         Dim sOutputFile As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName)
 
