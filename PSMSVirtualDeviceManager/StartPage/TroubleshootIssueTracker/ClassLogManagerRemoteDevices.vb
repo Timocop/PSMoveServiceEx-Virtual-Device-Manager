@@ -5,6 +5,12 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerRemoteDevices
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_REMOTE_DEVICE_ERROR As String = "Remote device encountered an error"
+    Public Shared ReadOnly LOG_ISSUE_BAD_REMOTE_DEVICE_IDS As String = "Invalid remote device ids"
+    Public Shared ReadOnly LOG_ISSUE_REMOTE_DEVICE_NO_DEVICE As String = "Remote devices does not point to an existing device"
+    Public Shared ReadOnly LOG_ISSUE_NO_PSMOVE_EMULATION As String = "Virtual controller PlayStation Move emulation not enabled"
+    Public Shared ReadOnly LOG_ISSUE_BAD_ORIENTATION_FILTER As String = "Controller orientation filter not set properly"
+
     Structure STRUC_DEVICE_ITEM
         Dim iId As Integer
 
@@ -88,7 +94,7 @@ Public Class ClassLogManagerRemoteDevices
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Remote device encountered an error",
+            LOG_ISSUE_REMOTE_DEVICE_ERROR,
             "Remote device with controller id {0} and name '{1}' encountered the following error: {2}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -116,14 +122,14 @@ Public Class ClassLogManagerRemoteDevices
         End If
 
         Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
-            "Invalid remote device ids",
+            LOG_ISSUE_BAD_REMOTE_DEVICE_IDS,
             "Some remote device controller ids are not set properly. Therefore those remote devices are disabled.",
             "Properly asign the remote device controller id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
-            "Remote devices does not point to an existing device",
+           LOG_ISSUE_REMOTE_DEVICE_NO_DEVICE,
             "Remote device controller id {0} does not point to a existing PSMoveServiceEx device.",
             "Properly asign the remote device controller id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -178,14 +184,14 @@ Public Class ClassLogManagerRemoteDevices
         End If
 
         Dim mVirtualTemplate As New STRUC_LOG_ISSUE(
-            "Virtual controller PlayStation Move emulation not enabled",
+            LOG_ISSUE_NO_PSMOVE_EMULATION,
             "To orientate the controller id {0} using external sources such as remote devices, PlayStation Move emulation must be enabled. Otherwise, orientation data will not be transmitted via the protocol.",
             "Enable PlayStation Move emulation for this controller.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mFilterTemplate As New STRUC_LOG_ISSUE(
-            "Controller orientation filter not set properly",
+            LOG_ISSUE_BAD_ORIENTATION_FILTER,
             "To orientate the controller id {0} using external sources such as remote devices, filter 'OrientationExternal' must be used. Otherwise, orientation data will not be transmitted via the protocol.",
             "Switch to the 'OrientationExternal' orientation filter.",
             ENUM_LOG_ISSUE_TYPE.ERROR

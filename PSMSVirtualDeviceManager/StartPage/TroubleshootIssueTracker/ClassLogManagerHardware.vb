@@ -4,6 +4,8 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerHardware
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_NO_DRIVERS_INSTALLED As String = "Required drivers not installed"
+
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
 
@@ -155,7 +157,7 @@ Public Class ClassLogManagerHardware
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Required drivers not installed",
+            LOG_ISSUE_NO_DRIVERS_INSTALLED,
             "Drivers for device {0} ({1}) are not installed and may not be working correctly.",
             "Install all nessecary drivers.",
             ENUM_LOG_ISSUE_TYPE.ERROR

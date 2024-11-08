@@ -4,6 +4,23 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogService
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
+    Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_VERSION As String = "Outdated PSMoveServiceEx version"
+    Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_FPS As String = "PSMoveServiceEx framerate too low"
+    Public Shared ReadOnly LOG_ISSUE_BAD_LEGACY_SERVICE As String = "Legacy PSMoveService configuration detected"
+    Public Shared ReadOnly LOG_ISSUE_CONFIG_RESET As String = "Some configurations have been factory reset"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_FAIL As String = "Failed to retrieve bluetooth adapter information"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_ADDRESS_FAIL As String = "Failed to set host address"
+    Public Shared ReadOnly LOG_ISSUE_DEVICE_FAIL As String = "Failed to open device"
+    Public Shared ReadOnly LOG_ISSUE_DEVICE_SLOT_MAX As String = "Device slot limit reached"
+    Public Shared ReadOnly LOG_ISSUE_PSVR_FAIL As String = "Failed to open PlayStation VR Head-mounted Display"
+    Public Shared ReadOnly LOG_ISSUE_NO_BLUETOOTH As String = "Failed to find bluetooth device"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_PAIRING As String = "Multiple bluetooth pairing issues"
+    Public Shared ReadOnly LOG_ISSUE_DEVICE_TIMEOUT As String = "Device timed out"
+    Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_INCOMPLETE As String = "PSMoveServiceEx log incomplete"
+    Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_OUTDATED As String = "Old PSMoveServiceEx diagnostics configuration detected"
+    Public Shared ReadOnly LOG_ISSUE_DEVICE_BAD_TRACKING As String = "Bad tracker deviations"
+
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
@@ -79,7 +96,7 @@ Public Class ClassLogService
         Dim sContent As String = GetSectionContent()
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            String.Format("{0} log unavailable", GetActionTitle()),
+            LOG_ISSUE_EMPTY,
             "Some diagnostic details are unavailable due to missing log information.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -101,7 +118,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Outdated PSMoveServiceEx version",
+            LOG_ISSUE_BAD_SERVICE_VERSION,
             "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features.",
             "Udpate PSMoveServiceEx.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -155,7 +172,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "PSMoveServiceEx framerate too low",
+            LOG_ISSUE_BAD_SERVICE_FPS,
             "PSMoveServiceEx is running at a very low framerate {0} (minimum {1}) which can cause bad tracking quality.",
             "Upgrade your computers CPU.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -201,7 +218,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Legacy PSMoveService configuration detected",
+            LOG_ISSUE_BAD_LEGACY_SERVICE,
             "Legacy PSMoveService configuration has been found. Abnormal tracking side effects and bad performance can be caused by using outdated legacy configuration.",
             "By default PSMoveServieEx should factory reset all configurations automatically when legacy configurations have been found. But a full factory reset and uninstalling legacy PSMoveService is recommended.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -234,7 +251,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Some configurations have been factory reset",
+            LOG_ISSUE_CONFIG_RESET,
             "Due to version mismatch some configurations have been factory reset and some devices have to be configured again.",
             "",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -267,7 +284,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Failed to retrieve bluetooth adapter information",
+            LOG_ISSUE_BLUETOOTH_FAIL,
             "PSMoveServiceEx is unable to retrieve any bluetooth adapter information.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -300,7 +317,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Failed to set host address",
+            LOG_ISSUE_BLUETOOTH_ADDRESS_FAIL,
             "PSMoveServiceEx failed to asign the host address to the controller id {0}.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -340,7 +357,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Failed to open device",
+            LOG_ISSUE_DEVICE_FAIL,
             "PSMoveServiceEx failed to open device {0} ({1}).",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -381,7 +398,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Device slot limit reached",
+            LOG_ISSUE_DEVICE_SLOT_MAX,
             "PSMoveServiceEx could not open any more devices due to the device limit being hit.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -414,14 +431,14 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Failed to open PlayStation VR Head-mounted Display",
+            LOG_ISSUE_PSVR_FAIL,
             "Due to an error, PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mDiabledTemplate As New STRUC_LOG_ISSUE(
-            "Failed to open PlayStation VR Head-mounted Display",
+            LOG_ISSUE_PSVR_FAIL,
             "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display device (Morpheus) because it has been disabled.",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO
@@ -461,7 +478,7 @@ Public Class ClassLogService
         Dim mDeviceList As New List(Of String)
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Failed to find bluetooth device",
+            LOG_ISSUE_NO_BLUETOOTH,
             "PSMoveServiceEx could not find the target bluetooth device ({0}) for pairing.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -518,7 +535,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Multiple bluetooth pairing issues",
+            LOG_ISSUE_BLUETOOTH_PAIRING,
             "PSMoveServiceEx encountered multiple bluetooth pairing issues. See logs for more details.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -526,7 +543,7 @@ Public Class ClassLogService
 
         Dim sTotalFailures As String() = {
                 "No Bluetooth device found matching the given address",
-                "Failed to get registry value. Error Code",
+                "Failed to get registry value",
                 "Failed to set 'VirtuallyCabled'",
                 "Failed to build registry subkey",
                 "Failed to create registry key",
@@ -549,7 +566,7 @@ Public Class ClassLogService
                 "Bluetooth device denied passkey response",
                 "Failed to enable incoming connections on radio",
                 "Failed to enable radio",
-                "Failed to enable HID service. Error code:"
+                "Failed to enable HID service"
             }
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
@@ -594,7 +611,7 @@ Public Class ClassLogService
         Dim mTimedoutDevices As New List(Of Integer)
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Device timed out",
+            LOG_ISSUE_DEVICE_TIMEOUT,
             "PSMoveServiceEx had to close device {0} that timed out. This happens when PSMoveServiceEx does not receive any data from the device for example due to connection issues.",
             "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too mandy devices and are in range of the bluetooth adapter.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -637,7 +654,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "PSMoveServiceEx log incomplete",
+            LOG_ISSUE_SERVICE_LOG_INCOMPLETE,
             "The PSMoveServiceEx log is incomplete and has missing logging details. Some diagnostic details are unavailable due to missing log information.",
             "Let PSMoveServiceEx finish initalizing.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -695,7 +712,7 @@ Public Class ClassLogService
         Dim mTimedoutDevices As New List(Of Integer)
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Old PSMoveServiceEx diagnostics configuration detected",
+            LOG_ISSUE_SERVICE_LOG_OUTDATED,
             "Some of the PSMoveServiceEx configurations have been subsequently changed, but the diagnostics still use the old PSMoveServiceEx configuration, which may lead to incorrect diagnostic results.",
             "Restart PSMoveServiceEx and refresh diagnostics to parse the new PSMoveServiceEx configurations.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -729,7 +746,7 @@ Public Class ClassLogService
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Bad tracker deviations",
+            LOG_ISSUE_DEVICE_BAD_TRACKING,
             "{0} id {1} on tracker id {2} stopped tracking due to bad tracking deviations ({3} cases in total). Usually this is a result of color noise/collisions, bad pose calibration or the trackers have been moved after pose calibration has been done.",
             "Redo pose calibration and check for color noise and collisions in color calibration.",
             ENUM_LOG_ISSUE_TYPE.ERROR

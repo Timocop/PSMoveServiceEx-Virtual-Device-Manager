@@ -4,6 +4,11 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogDxdiag
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_BANDWIDTH_DEVICES As String = "Possible Bluetooth bandwidth issues"
+    Public Shared ReadOnly LOG_ISSUE_NOT_ENOUGH_USB_HOST_CONTROLLERS As String = "Not enough USB 3.0 Host Controllers"
+    Public Shared ReadOnly LOG_ISSUE_USB_HOST_CONTROLLER As String = "USB 3.0 Host Controller"
+
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
@@ -80,7 +85,7 @@ Public Class ClassLogDxdiag
         Dim sContent As String = GetSectionContent()
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            String.Format("{0} log unavailable", GetActionTitle()),
+            LOG_ISSUE_EMPTY,
             "Some diagnostic details are unavailable due to missing log information.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -102,7 +107,7 @@ Public Class ClassLogDxdiag
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Possible Bluetooth bandwidth issues",
+            LOG_ISSUE_BLUETOOTH_BANDWIDTH_DEVICES,
             "Having multiple bluetooth devices connected, such as '{0}', could cause bandwidth issues if you want to use bluetooth devices such as PlayStation Move controllers.",
             "If you encounter issues with connected controllers, reduce the amount of devices connected to your bluetooth adapter.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -148,14 +153,14 @@ Public Class ClassLogDxdiag
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Not enough USB 3.0 Host Controllers",
+            LOG_ISSUE_NOT_ENOUGH_USB_HOST_CONTROLLERS,
             "This computer does not have enough USB host controllers which limits the amount of devices you can connect to your computer simultaneously.",
             "Switch the computer mainboard that has more USB host controllers or get a PCI-Express USB card and install it in your computer.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mHostTemplate As New STRUC_LOG_ISSUE(
-            "USB 3.0 Host Controller",
+            LOG_ISSUE_USB_HOST_CONTROLLER,
             "Found USB 3.0 Host Controller '{0}'.",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO

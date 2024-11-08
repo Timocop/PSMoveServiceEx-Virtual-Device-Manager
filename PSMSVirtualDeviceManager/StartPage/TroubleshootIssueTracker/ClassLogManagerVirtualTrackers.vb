@@ -5,6 +5,14 @@ Imports PSMSVirtualDeviceManager.UCVirtualTrackerItem.ClassCaptureLogic
 Public Class ClassLogManagerVirtualTrackers
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_VIDEO_INPUT_DEVICE_ERROR As String = "Video input device encountered an error"
+    Public Shared ReadOnly LOG_ISSUE_BAD_TRACKER_IDS As String = "Invalid virtual tracker ids"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_NO_DEVICE As String = "Virtual tracker does not point to a existing device"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_COUNT_LOW As String = "Virtual tracker slot count too low"
+    Public Shared ReadOnly LOG_ISSUE_BAD_VIRTUAL_TRACKER_COUNT As String = "More virtual tracker slots than video input devices"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RESSOURCE_HEAVY As String = "Virtual tracker too ressource intensive"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RRESOLUTION_MISMATCH As String = "Virtual tracker and video input device resolution mismatch"
+
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
         Dim iDeviceIndex As Integer
@@ -98,7 +106,7 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Video input device encountered an error",
+            LOG_ISSUE_VIDEO_INPUT_DEVICE_ERROR,
             "Video input device id {0} ({1}) encountered the following error: {2}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -126,14 +134,14 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
-            "Invalid virtual tracker ids",
+            LOG_ISSUE_BAD_TRACKER_IDS,
             "Some virtual tracker ids have not set properly. Therefore those trackers are disabled.",
             "Properly asign the tracker id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
-            "Virtual tracker does not point to a existing device",
+            LOG_ISSUE_VIRTUAL_TRACKER_NO_DEVICE,
             "The virtual tracker id {0} for video input device id {1} ({2}) does not point to a existing PSMoveServiceEx device.",
             "Properly asign the tracker id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -193,14 +201,14 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual tracker slot count too low",
+            LOG_ISSUE_VIRTUAL_TRACKER_COUNT_LOW,
             "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. Some video input devices will be unavailable.",
             "Set the virtual tracker count to the available video input device count.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mNoMatchTemplate As New STRUC_LOG_ISSUE(
-            "More virtual tracker slots than video input devices",
+            LOG_ISSUE_BAD_VIRTUAL_TRACKER_COUNT,
             "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. You currently dont have enough video input devices to fill all those available slots. Having unused virtual trackers will reduce performance.",
             "Set the virtual tracker count to the available video input device count.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -250,7 +258,7 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual tracker too ressource intensive",
+            LOG_ISSUE_VIRTUAL_TRACKER_RESSOURCE_HEAVY,
             "Virtual tracker resolution and framerate is too high for virtual input device id {0} ({1}). Using too high settings demands more system resosurces.",
             "Its recommended to use either high resolution and lower framrate or lower resolution and high framerate. Not both resolution and framerate on high.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -282,7 +290,7 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual tracker and video input device resolution mismatch",
+            LOG_ISSUE_VIRTUAL_TRACKER_RRESOLUTION_MISMATCH,
             "The video input device {0} ({1}) resolution and PSMoveServiceEx resolution for virtual tracker id {2} do not match. This will result in a 'Tracker timed out.' error.",
             "Match the resolution of video input device id {0} ({1}) with the PSMoveServiceEx virtual tracker {2} in color calibration inside the config tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR

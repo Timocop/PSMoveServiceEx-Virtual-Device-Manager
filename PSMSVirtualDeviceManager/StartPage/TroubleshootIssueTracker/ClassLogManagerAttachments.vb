@@ -4,6 +4,12 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerAttachments
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_CONTROLLER_ATTACHMENT_ERROR As String = "Controller attachment encountered an error"
+    Public Shared ReadOnly LOG_ISSUE_INVALID_ATTACHMENT_IDS As String = "Invalid controller attachment ids"
+    Public Shared ReadOnly LOG_ISSUE_ATTACHMENT_ID_NO_DEVICE As String = "Controller attachment does not point to an existing device"
+    Public Shared ReadOnly LOG_ISSUE_BAD_POSITION_FILTER As String = "Controller position filter not set properly"
+    Public Shared ReadOnly LOG_ISSUE_DISABLE_OPTICAL_TRACKING As String = "Disable optical tracking for better performance"
+
     Structure STRUC_DEVICE_ITEM
         Dim iId As Integer
         Dim iParentControllerID As Integer
@@ -87,7 +93,7 @@ Public Class ClassLogManagerAttachments
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Controller attachment encountered an error",
+            LOG_ISSUE_CONTROLLER_ATTACHMENT_ERROR,
             "Controller attachment with controller id {0} and parent controller id {1} encountered the following error: {2}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -115,14 +121,14 @@ Public Class ClassLogManagerAttachments
         End If
 
         Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
-            "Invalid controller attachment ids",
+            LOG_ISSUE_INVALID_ATTACHMENT_IDS,
             "Some controller attachments ids have not set properly. Therefore those attachments are disabled.",
             "Properly asign the controller attachment to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
-            "Controller attachment does not point to an existing device",
+            LOG_ISSUE_ATTACHMENT_ID_NO_DEVICE,
             "Controller attachment id {0} does not point to a existing PSMoveServiceEx device.",
             "Properly asign the controller attachment id to an existing PSMoveServiceEx device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -177,7 +183,7 @@ Public Class ClassLogManagerAttachments
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Controller position filter not set properly",
+           LOG_ISSUE_BAD_POSITION_FILTER,
             "To attach the controller id {0} using controller attachments, filter 'PositionExternalAttachment' must be used. Otherwise, controller attachments will not work.",
             "Switch to the 'PositionExternalAttachment' orientation filter.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -231,7 +237,7 @@ Public Class ClassLogManagerAttachments
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Disable optical tracking for better performance",
+            LOG_ISSUE_DISABLE_OPTICAL_TRACKING,
             "Controller id {0} is using the filter 'PositionExternalAttachment' and optical tracking is not used.",
             "Disable optical tracking for this controller to increase performance.",
             ENUM_LOG_ISSUE_TYPE.INFO

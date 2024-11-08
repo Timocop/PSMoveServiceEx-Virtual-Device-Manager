@@ -5,6 +5,10 @@ Imports PSMSVirtualDeviceManager.UCPlaystationVR
 Public Class ClassLogManagerPSVR
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_PSVR_HDMI_ERROR As String = "PlayStation VR encountered an HDMI issue"
+    Public Shared ReadOnly LOG_ISSUE_PSVR_USB_ERROR As String = "PlayStation VR encountered an USB issue"
+    Public Shared ReadOnly LOG_ISSUE_PSVR_DISPLAY_ERROR As String = "PlayStation VR encountered an display issue"
+
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
@@ -57,21 +61,21 @@ Public Class ClassLogManagerPSVR
         End If
 
         Dim mHdmiTemplate As New STRUC_LOG_ISSUE(
-            "PlayStation VR encountered an HDMI issue",
+            LOG_ISSUE_PSVR_HDMI_ERROR,
             "PlayStation VR encountered the following error: {0}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mUsbTemplate As New STRUC_LOG_ISSUE(
-            "PlayStation VR encountered an USB issue",
+            LOG_ISSUE_PSVR_USB_ERROR,
             "PlayStation VR encountered the following error: {0}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mDisplayTemplate As New STRUC_LOG_ISSUE(
-            "PlayStation VR encountered an display issue",
+            LOG_ISSUE_PSVR_DISPLAY_ERROR,
             "PlayStation VR encountered the following error: {0}",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR

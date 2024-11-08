@@ -4,6 +4,8 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerSteamVrOverrides
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_BAD_OVERRIDES As String = "Bad SteamVR tracker overrides"
+
     Enum ENUM_OVERRIDE_TYPE
         HEAD
         LEFT_CONTROLLER
@@ -65,7 +67,7 @@ Public Class ClassLogManagerSteamVrOverrides
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Bad SteamVR tracker overrides",
+            LOG_ISSUE_BAD_OVERRIDES,
             "Virtual motion tracker id {0} ({1}) collides with the SteamVR tracker overrides ({2}). This can cause tracking issues or tracking not working at all.",
             "Remove the SteamVR override that is associated with the virtual motion tracker id.",
             ENUM_LOG_ISSUE_TYPE.ERROR

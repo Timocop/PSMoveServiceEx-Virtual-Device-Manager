@@ -4,6 +4,8 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerSteamVrSettings
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_STEAMVR_DRIVER_LOAD_ISSUE As String = "SteamVR driver may not load properly"
+
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
@@ -69,7 +71,7 @@ Public Class ClassLogManagerSteamVrSettings
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "SteamVR driver may not load properly",
+            LOG_ISSUE_STEAMVR_DRIVER_LOAD_ISSUE,
             "SteamVR is configured to load drivers when a Head-mounted Display is present, but the virtual motion tracker SteamVR driver loads its devices after it has loaded and initialized, causing the SteamVR driver to never activate.",
             "In Virtual Device Manager go to 'Virtual Motion Tracker > Managment > SteamVR Support > Advanced Settings...' and uncheck 'Require Head-mounted Display' to properly load the SteamVR driver even if no Head-mounted Display is available.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -112,7 +114,7 @@ Public Class ClassLogManagerSteamVrSettings
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "SteamVR driver may not load properly",
+            LOG_ISSUE_STEAMVR_DRIVER_LOAD_ISSUE,
             "SteamVR is configured to only load one driver at the time. The virtual motion tracker SteamVR driver might not load when other third-party drivers are activated.",
             "In Virtual Device Manager go to 'Virtual Motion Tracker > Managment > SteamVR Support > Advanced Settings...' and check 'Activate multiple drivers' to properly load the SteamVR driver even if there are other drivers loaded and running.",
             ENUM_LOG_ISSUE_TYPE.ERROR

@@ -4,6 +4,21 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManageServiceDevices
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
+    Public Shared ReadOnly LOG_ISSUE_LIMITED_TRACKING As String = "Very limited tracking quality"
+    Public Shared ReadOnly LOG_ISSUE_NO_OPTICAL_TRACKING As String = "No optical tracking"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_HMD_DEPRICATED As String = "Virtual Head-mounted Displays deprecated"
+    Public Shared ReadOnly LOG_ISSUE_NO_CONTROLLERS As String = "No controllers found"
+    Public Shared ReadOnly LOG_ISSUE_NO_HMDS As String = "No head-mounted displays found"
+    Public Shared ReadOnly LOG_ISSUE_MULTIPLE_HMDS As String = "Multiple head-mounted displays found"
+    Public Shared ReadOnly LOG_ISSUE_BAD_COLOR_CALIBRATION As String = "Bad color calibration for device"
+    Public Shared ReadOnly LOG_ISSUE_COLOR_COLLISION As String = "Possible color collsion between devices"
+    Public Shared ReadOnly LOG_ISSUE_BAD_TRACKING_COLOR As String = "Device uses wrong tracking color"
+    Public Shared ReadOnly LOG_ISSUE_BAD_MAGNETOMETER As String = "Missing or uncalibrated magnetometer"
+    Public Shared ReadOnly LOG_ISSUE_BAD_GYROSCOPE As String = "Uncalibrated gyroscope"
+    Public Shared ReadOnly LOG_ISSUE_BAD_ACCELEROMETER As String = "Uncalibrated accelerometer"
+
+
     Enum ENUM_DEVICE_TYPE
         INVALID = 0
         CONTROLLER
@@ -153,7 +168,7 @@ Public Class ClassLogManageServiceDevices
         Dim sContent As String = GetSectionContent()
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            String.Format("{0} log unavailable", GetActionTitle()),
+            LOG_ISSUE_EMPTY,
             "Some diagnostic details are unavailable due to missing log information.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -174,13 +189,13 @@ Public Class ClassLogManageServiceDevices
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         Dim mOneTrackerTemplate As New STRUC_LOG_ISSUE(
-            "Very limited tracking quality",
+            LOG_ISSUE_LIMITED_TRACKING,
             "You are using only one tracker for optical tracking. Triangulation is not available for singular trackers and tracking quality is greatly redcued.",
             "Add more trackers, such as an additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
         Dim mNoTrackerTemplate As New STRUC_LOG_ISSUE(
-            "No optical tracking",
+            LOG_ISSUE_NO_OPTICAL_TRACKING,
             "You have no trackers and are unable to track your devices optically.",
             "Add trackers such as PlayStation Eyes, Webcams or PlayStation 4 Stereo Cameras to enable optical tracking.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -213,7 +228,7 @@ Public Class ClassLogManageServiceDevices
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual Head-mounted Displays deprecated",
+            LOG_ISSUE_VIRTUAL_HMD_DEPRICATED,
             "You are using virtual head-mounted displays. Those types of virtual devices are deprecated due to limited functionality and will only be used for backwards protocol compatibility.",
             "Do not use virtual head-mounted displays and use virtual controllers to track your head-mounted display instead. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -242,16 +257,22 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
-        Dim mTemplate As New STRUC_LOG_ISSUE(
-            "No {0} found",
+        Dim mControllerTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_NO_CONTROLLERS,
+            "",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+        Dim mHmdTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_NO_HMDS,
             "",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
         Dim mManyTemplate As New STRUC_LOG_ISSUE(
-            "Multiple {0} found",
-            "There are currently {0} {1} available but some applications may only support {2} at the time.",
-            "Its recommended to reduce the number of {0} to {1}.",
+            LOG_ISSUE_MULTIPLE_HMDS,
+            "There are currently {0} head-mounted displays available but some applications may only support {1} at the time.",
+            "Its recommended to reduce the number of head-mounted displays to {0}.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
@@ -268,25 +289,18 @@ Public Class ClassLogManageServiceDevices
         Next
 
         If (iControllers = 0) Then
-            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-
-            mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Controllers")
-
+            Dim mNewIssue As New STRUC_LOG_ISSUE(mControllerTemplate)
             mIssues.Add(mNewIssue)
         End If
 
         If (iHmds = 0) Then
-            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-
-            mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Head-mounted Displays")
-
+            Dim mNewIssue As New STRUC_LOG_ISSUE(mHmdTemplate)
             mIssues.Add(mNewIssue)
         ElseIf (iHmds > 1) Then
             Dim mNewIssue As New STRUC_LOG_ISSUE(mManyTemplate)
 
-            mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "Head-mounted Displays")
-            mNewIssue.sDescription = String.Format(mNewIssue.sDescription, iHmds, "Head-mounted Displays", "1")
-            mNewIssue.sSolution = String.Format(mNewIssue.sSolution, "Head-mounted Displays", "1")
+            mNewIssue.sDescription = String.Format(mNewIssue.sDescription, iHmds, "1")
+            mNewIssue.sSolution = String.Format(mNewIssue.sSolution, "1")
 
             mIssues.Add(mNewIssue)
         End If
@@ -301,21 +315,21 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
-            "Bad color calibration for device",
+            LOG_ISSUE_BAD_COLOR_CALIBRATION,
             "Color calibration for {0} id {1} is not properly set on tracker id {2} which may cause tracking issues.",
             "Properly calibrate color for this device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mColorCollisionTemplate As New STRUC_LOG_ISSUE(
-            "Possible color collsion between devices",
+            LOG_ISSUE_COLOR_COLLISION,
             "{0} id {1} has possible color collisions with {2} id {3} on tracker id {4} which may cause tracking issues.",
             "Properly calibrate color for this device or enable 'Prevent color collisions' setting in color calibration before sampling colors.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mWrongColorTemplate As New STRUC_LOG_ISSUE(
-            "Device uses wrong tracking color",
+            LOG_ISSUE_BAD_TRACKING_COLOR,
             "The tracking color of {0} id {1} on tracker id {2} not match the selected tracking color ({3}) that is set for this device.",
             "Properly calibrate color for this device.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -533,7 +547,7 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
-            "Missing or uncalibrated magnetometer",
+            LOG_ISSUE_BAD_MAGNETOMETER,
             "The controller id {0} does not have a magnetometer or is not yet calibrated, which may cause orientation yaw drift over time.",
             "Calibrate the controllers magnetometer if available. Ignore this warning if the magnetometer is not available.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -590,10 +604,17 @@ Public Class ClassLogManageServiceDevices
             Return {}
         End If
 
-        Dim mBadTemplate As New STRUC_LOG_ISSUE(
-            "Uncalibrated {0}",
-            "The {0} id {1} {2} has not been calibrated yet, which may cause orientation drift.",
-            "Calibrate the {0} {1}.",
+        Dim mBadGyroTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BAD_GYROSCOPE,
+            "The {0} id {1} gyroscope has not been calibrated yet, which may cause orientation drift.",
+            "Calibrate the {0} gyroscope.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mBadAccelTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BAD_ACCELEROMETER,
+            "The {0} id {1} accelerometer has not been calibrated yet, which may cause orientation drift.",
+            "Calibrate the {0} accelerometer.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
@@ -657,18 +678,16 @@ Public Class ClassLogManageServiceDevices
             End Select
 
             If (bBadGyro) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "gyroscope")
-                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "gyroscope")
-                mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "gyroscope")
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadGyroTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId)
+                mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType)
                 mIssues.Add(mNewIssue)
             End If
 
             If (bBadAccel) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                mNewIssue.sMessage = String.Format(mNewIssue.sMessage, "accelerometer")
-                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId, "accelerometer")
-                mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType, "accelerometer")
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mBadAccelTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, mDevice.iId)
+                mNewIssue.sSolution = String.Format(mNewIssue.sSolution, sDeviceType)
                 mIssues.Add(mNewIssue)
             End If
         Next

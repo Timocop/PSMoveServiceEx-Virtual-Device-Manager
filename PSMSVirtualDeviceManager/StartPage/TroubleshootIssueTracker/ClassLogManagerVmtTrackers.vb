@@ -5,6 +5,11 @@ Imports PSMSVirtualDeviceManager.UCVirtualMotionTrackerItem.ClassIO
 Public Class ClassLogManagerVmtTrackers
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_MOTION_TRACKER_ERROR As String = "Virtual motion tracker encountered an error"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_MOTION_TRACKER_BAD_IDS As String = "Invalid virtual motion tracker ids"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_MOTION_TRACKER_NO_DEVICE As String = "Virtual motion tracker does not point to a existing device"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_MOTION_TRACKER_BAD_ROLE As String = "Virtual motion tracker uses generic tracker roles"
+
     Enum ENUM_DEVICE_TYPE
         INVALID = 0
         CONTROLLER
@@ -86,7 +91,7 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual motion tracker encountered an error",
+            LOG_ISSUE_VIRTUAL_MOTION_TRACKER_ERROR,
             "Virtual motion tracker id {0} with controller id {1} is encountering an error.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -114,14 +119,14 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Dim mInvalidIdTemplate As New STRUC_LOG_ISSUE(
-            "Invalid virtual motion tracker ids",
+            LOG_ISSUE_VIRTUAL_MOTION_TRACKER_BAD_IDS,
             "Some virtual motion tracker controller, head-mounted display or VMT ids have not set properly. Therefore those trackers are disabled.",
             "Properly asign the controller or head-mounted display id to an existing PSMoveServiceEx device and the VMT id to free slot that is not in use.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mBadIdTemplate As New STRUC_LOG_ISSUE(
-            "Virtual motion tracker {0} id does not point to a existing device",
+            LOG_ISSUE_VIRTUAL_MOTION_TRACKER_NO_DEVICE,
             "The virtual motion tracker {0} id {1} does not point to a existing PSMoveServiceEx device.",
             "Properly asign the {0} id to an existing PSMoveServiceEx device and the VMT id to free slot that is not in use.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -174,7 +179,6 @@ Public Class ClassLogManagerVmtTrackers
 
                     If (Not bExist) Then
                         Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
-                        mIssue.sMessage = String.Format(mIssue.sMessage, "Controller")
                         mIssue.sDescription = String.Format(mIssue.sDescription, "Controller", mDevice.iId)
                         mIssue.sSolution = String.Format(mIssue.sSolution, "Controller")
                         mIssues.Add(mIssue)
@@ -196,7 +200,6 @@ Public Class ClassLogManagerVmtTrackers
 
                     If (Not bExist) Then
                         Dim mIssue As New STRUC_LOG_ISSUE(mBadIdTemplate)
-                        mIssue.sMessage = String.Format(mIssue.sMessage, "Head-mounted Display")
                         mIssue.sDescription = String.Format(mIssue.sDescription, "Head-mounted Display", mDevice.iId)
                         mIssue.sSolution = String.Format(mIssue.sSolution, "Head-mounted Display")
                         mIssues.Add(mIssue)
@@ -214,7 +217,7 @@ Public Class ClassLogManagerVmtTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual motion tracker uses generic tracker roles",
+            LOG_ISSUE_VIRTUAL_MOTION_TRACKER_BAD_ROLE,
             "Virtual motion tracker controller id {0} uses generic tracker roles. Generic tracker roles require manual bindings to be set up and is not recommended for SteamVR.",
             "If you are planning to use virtual motion trackers with SteamVR, use HTC Vive or Oculus emulated device roles instead.",
             ENUM_LOG_ISSUE_TYPE.WARNING

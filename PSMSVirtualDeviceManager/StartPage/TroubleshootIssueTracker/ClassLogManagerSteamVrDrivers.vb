@@ -4,6 +4,11 @@ Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
 Public Class ClassLogManagerSteamVrDrivers
     Implements ILogAction
 
+    Public Shared ReadOnly LOG_ISSUE_NO_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR driver not installed"
+    Public Shared ReadOnly LOG_ISSUE_BAD_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR driver is not properly installed"
+    Public Shared ReadOnly LOG_ISSUE_THIRD_PARTY_DRIVER As String = "Third-party SteamVR driver detected"
+    Public Shared ReadOnly LOG_ISSUE_CONFLICT_THIRD_PARTY_DRIVER As String = "Conflicting third-party SteamVR driver detected"
+
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
@@ -59,14 +64,14 @@ Public Class ClassLogManagerSteamVrDrivers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Virtual motion tracker SteamVR driver not installed",
+           LOG_ISSUE_NO_STEAMVR_DRIVER,
             "Virtual motion trackers are set up but the SteamVR driver has not been registered yet.",
             "Register the SteamVR driver to use the virtual motion trackers in SteamVR. If you dont use SteamVR ignore this warning.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mBadPathTemplate As New STRUC_LOG_ISSUE(
-            "Virtual motion tracker SteamVR driver is not properly installed",
+            LOG_ISSUE_BAD_STEAMVR_DRIVER,
             "The SteamVR driver may not work properly because the driver is registered under an incorrect path '{0}' but should be in '{1}'.",
             "Re-register the SteamVR driver to fix the registered driver path.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -131,14 +136,14 @@ Public Class ClassLogManagerSteamVrDrivers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            "Third-party SteamVR driver detected",
+            LOG_ISSUE_THIRD_PARTY_DRIVER,
             "A third-party SteamVR driver '{0}' has been detected. Make sure its configured to work properly with the virtual motion tracker SteamVR driver to avoid issues and crashes.",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
 
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
-            "Conflicting third-party SteamVR driver detected",
+            LOG_ISSUE_CONFLICT_THIRD_PARTY_DRIVER,
             "The third-party SteamVR driver '{0}' is not compatible with the virtual motion tracker SteamVR driver or may causes issues or crashes when activated.",
             "Uninstall or deactivate the conflicting third-party SteamVR driver '{0}'.",
             ENUM_LOG_ISSUE_TYPE.ERROR
