@@ -1780,5 +1780,9 @@ Public Class UCStartPage
 
         RunRuntimeDiagnostics()
     End Sub
+
+    Private Sub Button_VdmDiagnosticsRestartService_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsRestartService.Click
+        LinkLabel_ServiceRestart_LinkClicked(Nothing, Nothing)
+    End Sub
 End Class
 
