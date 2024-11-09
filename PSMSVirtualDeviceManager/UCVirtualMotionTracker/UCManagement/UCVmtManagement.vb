@@ -307,6 +307,8 @@ Public Class UCVmtManagement
                 Const LISTVIEW_SUBITEM_ORIENTATION As Integer = 3
                 Const LISTVIEW_SUBITEM_FPS As Integer = 4
 
+                Dim mNow As Date = Now
+
                 ClassUtils.AsyncInvoke(Sub()
                                            If (Not Me.Visible) Then
                                                Return
@@ -315,12 +317,22 @@ Public Class UCVmtManagement
                                            ListView_OscDevices.BeginUpdate()
                                            Try
                                                For Each mListVIewItem As ListViewItem In ListView_OscDevices.Items
-                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                                   If (mListVIewItem.Tag Is Nothing) Then
+                                                       Continue For
+                                                   End If
 
-                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > Now) Then
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                   Dim mItemInfo = CType(mListVIewItem.Tag, Dictionary(Of String, Object))
+                                                   Dim mLastPoseTime As Date = CDate(mItemInfo("LastPoseTimestamp"))
+                                                   Dim mLastItemTime As Date = CDate(mItemInfo("CreationTimestamp"))
+
+                                                   If (mLastItemTime + New TimeSpan(0, 0, 2) > mNow) Then
+                                                       mListVIewItem.BackColor = Color.FromArgb(192, 255, 192)
                                                    Else
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > mNow) Then
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                       Else
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       End If
                                                    End If
                                                Next
                                            Finally
@@ -347,7 +359,12 @@ Public Class UCVmtManagement
 
                                                            mListVIewItem.SubItems(LISTVIEW_SUBITEM_POSITION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mPos.X)), CInt(Math.Floor(mPos.Y)), CInt(Math.Floor(mPos.Z)))
                                                            mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
-                                                           mListVIewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+
+                                                           If (mListVIewItem.Tag IsNot Nothing) Then
+                                                               Dim mItemInfo = CType(mListVIewItem.Tag, Dictionary(Of String, Object))
+                                                               mItemInfo("LastPoseTimestamp") = mDevice.mLastPoseTimestamp
+                                                               mListVIewItem.Tag = mItemInfo
+                                                           End If
 
                                                            bFound = True
                                                        End If
@@ -366,7 +383,11 @@ Public Class UCVmtManagement
                                                         "0"
                                                     })
                                                    mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                   mListViewItem.Tag = New Object() {mDevice.mLastPoseTimestamp}
+
+                                                   Dim mItemInfo As New Dictionary(Of String, Object)
+                                                   mItemInfo("LastPoseTimestamp") = mDevice.mLastPoseTimestamp
+                                                   mItemInfo("CreationTimestamp") = mNow
+                                                   mListViewItem.Tag = mItemInfo
 
                                                    ListView_OscDevices.Items.Add(mListViewItem)
                                                End If

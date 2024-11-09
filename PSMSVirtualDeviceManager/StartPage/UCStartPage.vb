@@ -383,12 +383,22 @@ Public Class UCStartPage
                                            ListView_ServiceDevices.BeginUpdate()
                                            Try
                                                For Each mListVIewItem As ListViewItem In ListView_ServiceDevices.Items
-                                                   Dim mLastPoseTime As Date = CDate(DirectCast(mListVIewItem.Tag, Object())(0))
+                                                   If (mListVIewItem.Tag Is Nothing) Then
+                                                       Continue For
+                                                   End If
 
-                                                   If (mLastPoseTime + New TimeSpan(0, 0, 5) > mNow) Then
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                   Dim mItemInfo = CType(mListVIewItem.Tag, Dictionary(Of String, Object))
+                                                   Dim mLastPoseTime As Date = CDate(mItemInfo("LastTimestamp"))
+                                                   Dim mLastItemTime As Date = CDate(mItemInfo("CreationTimestamp"))
+
+                                                   If (mLastItemTime + New TimeSpan(0, 0, 2) > mNow) Then
+                                                       mListVIewItem.BackColor = Color.FromArgb(192, 255, 192)
                                                    Else
-                                                       mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       If (mLastPoseTime + New TimeSpan(0, 0, 5) > mNow) Then
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 255, 255)
+                                                       Else
+                                                           mListVIewItem.BackColor = Color.FromArgb(255, 192, 192)
+                                                       End If
                                                    End If
                                                Next
                                            Finally
@@ -475,7 +485,12 @@ Public Class UCStartPage
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = CStr(CInt(mDevice.m_BatteryLevel * 100.0F)) & " %"
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
-                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                               If (mListVIewItem.Tag IsNot Nothing) Then
+                                                                   Dim mItemInfo = CType(mListVIewItem.Tag, Dictionary(Of String, Object))
+                                                                   mItemInfo("LastTimestamp") = mDevice.m_LastTimeStamp
+                                                                   mListVIewItem.Tag = mItemInfo
+                                                               End If
 
                                                                bFound = True
                                                            End If
@@ -504,7 +519,11 @@ Public Class UCStartPage
                                                                 CStr(iFPS)
                                                             })
                                                        mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                       mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                       Dim mItemInfo As New Dictionary(Of String, Object)
+                                                       mItemInfo("LastTimestamp") = mDevice.m_LastTimeStamp
+                                                       mItemInfo("CreationTimestamp") = mNow
+                                                       mListViewItem.Tag = mItemInfo
 
                                                        ListView_ServiceDevices.Items.Add(mListViewItem)
                                                    End If
@@ -582,7 +601,12 @@ Public Class UCStartPage
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
-                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                               If (mListVIewItem.Tag IsNot Nothing) Then
+                                                                   Dim mItemInfo = CType(mListVIewItem.Tag, Dictionary(Of String, Object))
+                                                                   mItemInfo("LastTimestamp") = mDevice.m_LastTimeStamp
+                                                                   mListVIewItem.Tag = mItemInfo
+                                                               End If
 
                                                                bFound = True
                                                            End If
@@ -613,7 +637,11 @@ Public Class UCStartPage
                                                                 CStr(iFPS)
                                                             })
                                                        mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                       mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                       Dim mItemInfo As New Dictionary(Of String, Object)
+                                                       mItemInfo("LastTimestamp") = mDevice.m_LastTimeStamp
+                                                       mItemInfo("CreationTimestamp") = mNow
+                                                       mListViewItem.Tag = mItemInfo
 
                                                        ListView_ServiceDevices.Items.Add(mListViewItem)
                                                    End If
@@ -692,7 +720,12 @@ Public Class UCStartPage
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_ORIENTATION).Text = String.Format("X: {0}, Y: {1}, Z: {2}", CInt(Math.Floor(mAng.X)), CInt(Math.Floor(mAng.Y)), CInt(Math.Floor(mAng.Z)))
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_BATTERY).Text = "N/A"
                                                                mListVIewItem.SubItems(LISTVIEW_SUBITEM_FPS).Text = CStr(iFPS)
-                                                               mListVIewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                               If (mListVIewItem.Tag IsNot Nothing) Then
+                                                                   Dim mItemInfo = CType(mListVIewItem.Tag, Dictionary(Of String, Object))
+                                                                   mItemInfo("LastTimestamp") = mDevice.m_LastTimeStamp
+                                                                   mListVIewItem.Tag = mItemInfo
+                                                               End If
 
                                                                bFound = True
                                                            End If
@@ -714,7 +747,11 @@ Public Class UCStartPage
                                                                 CStr(iFPS)
                                                             })
                                                        mListViewItem.BackColor = Color.FromArgb(192, 255, 192)
-                                                       mListViewItem.Tag = New Object() {mDevice.m_LastTimeStamp}
+
+                                                       Dim mItemInfo As New Dictionary(Of String, Object)
+                                                       mItemInfo("LastTimestamp") = mDevice.m_LastTimeStamp
+                                                       mItemInfo("CreationTimestamp") = mNow
+                                                       mListViewItem.Tag = mItemInfo
 
                                                        ListView_ServiceDevices.Items.Add(mListViewItem)
                                                    End If
