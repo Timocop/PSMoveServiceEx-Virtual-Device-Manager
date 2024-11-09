@@ -950,14 +950,12 @@ Public Class UCStartPage
         Select Case (mServiceInfo.IsServiceRunning())
             Case ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NORMAL
                 For Each mProcess In Process.GetProcessesByName("PSMoveService")
-                    If (Not mProcess.CloseMainWindow()) Then
-                        mProcess.Kill()
-                    End If
-
-                    mProcess.WaitForExit(10000)
+                    mProcess.Kill()
                 Next
             Case ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.ADMIN
-                MessageBox.Show("You have PSMoveServiceAdmin running, please stop the service manually.", "Unable to stop service", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                For Each mProcess In Process.GetProcessesByName("PSMoveServiceAdmin")
+                    mProcess.Kill()
+                Next
         End Select
     End Sub
 
@@ -982,11 +980,7 @@ Public Class UCStartPage
             End If
 
             For Each mProcess In mProcesses
-                If (Not mProcess.CloseMainWindow()) Then
-                    mProcess.Kill()
-                End If
-
-                mProcess.WaitForExit(10000)
+                mProcess.Kill()
             Next
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)

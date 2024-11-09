@@ -37,8 +37,12 @@
         End If
 
         For Each mProcess In pProcesses
-            m_FileName = mProcess.MainModule.FileName
-            Return True
+            Try
+                m_FileName = mProcess.MainModule.FileName
+                Return True
+            Catch ex As Exception
+                ' Ignore any access denied
+            End Try
         Next
 
         Return False

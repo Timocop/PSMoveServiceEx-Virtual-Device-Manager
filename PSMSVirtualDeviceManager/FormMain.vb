@@ -923,6 +923,7 @@ Public Class FormMain
         Try
             Dim mProcesses As New List(Of Process)
             mProcesses.AddRange(Process.GetProcessesByName("PSMoveService"))
+            mProcesses.AddRange(Process.GetProcessesByName("PSMoveServiceAdmin"))
             mProcesses.AddRange(Process.GetProcessesByName("PSMoveConfigTool"))
 
             If (mProcesses.Count > 0) Then
@@ -951,11 +952,7 @@ Public Class FormMain
                 If (bCloseService) Then
                     If (mProcesses.Count > 0) Then
                         For Each mProcess In mProcesses
-                            If (Not mProcess.CloseMainWindow()) Then
-                                mProcess.Kill()
-                            End If
-
-                            mProcess.WaitForExit(10000)
+                            mProcess.Kill()
                         Next
                     End If
                 End If
