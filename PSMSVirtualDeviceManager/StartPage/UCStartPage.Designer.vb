@@ -1386,7 +1386,7 @@ Partial Class UCStartPage
         Me.Label17.Padding = New System.Windows.Forms.Padding(8, 0, 0, 0)
         Me.Label17.Size = New System.Drawing.Size(859, 41)
         Me.Label17.TabIndex = 1
-        Me.Label17.Text = "Diagnostics Reported Issues"
+        Me.Label17.Text = "Virtual Device Manager Diagnostics Reported Issues"
         Me.Label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Panel30
