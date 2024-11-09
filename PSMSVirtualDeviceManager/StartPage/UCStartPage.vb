@@ -213,11 +213,21 @@ Public Class UCStartPage
                     For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
                         Select Case (sJobTitle)
                             Case ClassLogDxdiag.SECTION_DXDIAG
+
                                 ' DirectX diagnostics are not available in silent mode
                                 Continue For
                         End Select
 
                         For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                            Select Case (mIssue.sMessage)
+                                Case ClassLogService.LOG_ISSUE_EMPTY,
+                                     ClassLogManageServiceDevices.LOG_ISSUE_EMPTY,
+                                     ClassLogDxdiag.LOG_ISSUE_EMPTY
+
+                                    ' Not really an issue, skip it
+                                    Continue For
+                            End Select
+
                             If (mIssue.iType = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR) Then
                                 bShowIssuesPrompt = True
                                 Exit For
