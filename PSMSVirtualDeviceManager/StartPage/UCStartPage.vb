@@ -144,16 +144,56 @@ Public Class UCStartPage
     End Sub
 
     Private Sub RuntimeDiagnostics_Thread()
+        Dim mLastServiceLogTimestamp As Date = Now
+        Dim mConfig As New ClassServiceInfo
+
         While True
             Dim bShowIssuesPrompt As Boolean = False
             Dim bOutdatedServiceLogs As Boolean = False
+            Dim bForceRun As Boolean = False
 
             Try
-                ' Wait for the service to run
-                If (g_FormMain.g_mPSMoveServiceCAPI IsNot Nothing AndAlso Not g_FormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
-                    Threading.Thread.Sleep(1000)
-                    Continue While
+                SyncLock g_mThreadLock
+                    If (g_bRuntimeDiagnosticsExecute) Then
+                        g_bRuntimeDiagnosticsExecute = False
+
+                        bForceRun = True
+                    End If
+                End SyncLock
+
+                ' Just find the process, dont even bother to load from config
+                mConfig.FindByProcess()
+
+                If (Not bForceRun) Then
+                    ' Check if the log has been updated
+                    If (Not mConfig.FileExist()) Then
+                        Threading.Thread.Sleep(1000)
+                        Continue While
+                    End If
+
+                    ' Dont check too frequently
+                    If (mLastServiceLogTimestamp + New TimeSpan(0, 0, 10) > Now) Then
+                        Threading.Thread.Sleep(1000)
+                        Continue While
+                    End If
+
+                    Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
+                    Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
+                    If (Not IO.File.Exists(sLogFile)) Then
+                        Threading.Thread.Sleep(1000)
+                        Continue While
+                    End If
+
+                    Dim mServiceLogTimestamp = IO.File.GetLastWriteTime(sLogFile)
+                    If (mLastServiceLogTimestamp = mServiceLogTimestamp) Then
+                        Threading.Thread.Sleep(1000)
+                        Continue While
+                    End If
+
+                    mLastServiceLogTimestamp = mServiceLogTimestamp
                 End If
+
+                bForceRun = False
 
                 Dim mLogDiagnosticsContent As New ClassLogDiagnostics.ClassLogContent()
                 Dim mLogDiagnosticsJobs = ClassLogDiagnostics.GetAllJobs(g_FormMain, mLogDiagnosticsContent)
@@ -189,10 +229,15 @@ Public Class UCStartPage
                 Next
 
                 ' Dont prompt when these issues are available. 
+                Dim bServiceLogFound As Boolean = False
+                Dim bServiceDevicesFound As Boolean = False
+
                 For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
-                    For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
-                        Select Case (sJobTitle)
-                            Case ClassLogService.SECTION_PSMOVESERVICEEX
+                    Select Case (sJobTitle)
+                        Case ClassLogService.SECTION_PSMOVESERVICEEX
+                            bServiceLogFound = True
+
+                            For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
                                 Select Case (mIssue.sMessage)
                                     Case ClassLogService.LOG_ISSUE_EMPTY,
                                          ClassLogService.LOG_ISSUE_SERVICE_LOG_INCOMPLETE
@@ -204,11 +249,25 @@ Public Class UCStartPage
                                     Case ClassLogService.LOG_ISSUE_SERVICE_LOG_OUTDATED
                                         bOutdatedServiceLogs = True
                                 End Select
-                        End Select
-                    Next
+                            Next
+
+
+                        Case ClassLogManageServiceDevices.SECTION_VDM_SERVICE_DEVICES
+                            bServiceDevicesFound = True
+
+                            For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                                Select Case (mIssue.sMessage)
+                                    Case ClassLogManageServiceDevices.LOG_ISSUE_EMPTY
+
+                                        ' We have to make sure the service log is ready and also not empty. 
+                                        Threading.Thread.Sleep(1000)
+                                        Continue While
+                                End Select
+                            Next
+                    End Select
                 Next
 
-                If (Not bOutdatedServiceLogs) Then
+                If (bServiceLogFound AndAlso bServiceDevicesFound) Then
                     ' Check for issues
                     For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
                         Select Case (sJobTitle)
@@ -245,17 +304,7 @@ Public Class UCStartPage
                 ClassAdvancedExceptionLogging.WriteToLog(ex)
             End Try
 
-            While True
-                SyncLock g_mThreadLock
-                    If (g_bRuntimeDiagnosticsExecute) Then
-                        g_bRuntimeDiagnosticsExecute = False
-
-                        Exit While
-                    End If
-                End SyncLock
-
-                Threading.Thread.Sleep(1000)
-            End While
+            Threading.Thread.Sleep(1000)
         End While
     End Sub
 
