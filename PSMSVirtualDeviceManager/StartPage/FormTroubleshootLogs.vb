@@ -244,15 +244,29 @@
 
                                        g_mProgress = New FormLoading
                                        g_mProgress.Text = "Preparing..."
+
+                                       g_mProgress.m_ProgressBar.Style = ProgressBarStyle.Blocks
+                                       g_mProgress.m_ProgressBar.Maximum = 100
+                                       g_mProgress.m_ProgressBar.Value = 0
+
                                        g_mProgress.ShowDialog(Me)
                                    End Sub)
 
+            Dim iTotalJobs As Integer = 0
             If (bGenerateLogs) Then
-                ThreadDoGenerateLogs()
+                iTotalJobs += g_mLogJobs.Count
             End If
 
             If (bDiagnostics) Then
-                ThreadDoDiagnostics()
+                iTotalJobs += g_mLogJobs.Count
+            End If
+
+            If (bGenerateLogs) Then
+                ThreadDoGenerateLogs(iTotalJobs)
+            End If
+
+            If (bDiagnostics) Then
+                ThreadDoDiagnostics(iTotalJobs)
             End If
 
             If (bRefreshDisplayLogs) Then
@@ -277,7 +291,7 @@
         End Try
     End Sub
 
-    Private Sub ThreadDoGenerateLogs()
+    Private Sub ThreadDoGenerateLogs(iTotalJobs As Integer)
         m_LogContent.m_Content.Clear()
 
         Dim sLogExceptions As New List(Of String)
@@ -288,6 +302,12 @@
             ClassUtils.AsyncInvoke(Sub()
                                        If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
                                            g_mProgress.Text = sJobAction
+
+                                           If (iTotalJobs > 0) Then
+                                               g_mProgress.m_ProgressBar.Maximum = iTotalJobs
+                                               g_mProgress.m_ProgressBar.Increment(1)
+                                               g_mProgress.SkipProgressBarAnimation()
+                                           End If
                                        End If
                                    End Sub)
 
@@ -307,7 +327,7 @@
         End If
     End Sub
 
-    Private Sub ThreadDoDiagnostics()
+    Private Sub ThreadDoDiagnostics(iTotalJobs As Integer)
         Dim mIssues As New List(Of KeyValuePair(Of String, ClassLogDiagnostics.STRUC_LOG_ISSUE))
 
         For Each mJob In g_mLogJobs
@@ -316,6 +336,12 @@
             ClassUtils.AsyncInvoke(Sub()
                                        If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
                                            g_mProgress.Text = sJobAction
+
+                                           If (iTotalJobs > 0) Then
+                                               g_mProgress.m_ProgressBar.Maximum = iTotalJobs
+                                               g_mProgress.m_ProgressBar.Increment(1)
+                                               g_mProgress.SkipProgressBarAnimation()
+                                           End If
                                        End If
                                    End Sub)
 
