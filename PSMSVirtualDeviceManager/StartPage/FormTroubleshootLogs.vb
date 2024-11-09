@@ -11,7 +11,7 @@
     Private g_mProgress As FormLoading = Nothing
     Private g_mLogJobs As New List(Of ClassLogDiagnostics.ILogAction)
 
-    Private g_mFormMain As FormMain = Nothing
+    Private g_mFormMain As FormMain
     Private g_bInitRefresh As Boolean = False
 
     Public Sub New(_FormMain As FormMain, bRefresh As Boolean)
