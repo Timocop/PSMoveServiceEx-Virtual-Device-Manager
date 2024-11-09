@@ -163,6 +163,8 @@ Public Class UCStartPage
                 For Each mJob In mLogDiagnosticsJobs
                     Try
                         mJob.Generate(True)
+                    Catch ex As NotImplementedException
+                        ' Ignore
                     Catch ex As Threading.ThreadAbortException
                         Throw
                     Catch ex As Exception
@@ -177,6 +179,8 @@ Public Class UCStartPage
 
                         mLogDiagnosticsIssues(sJobTitle) = New List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE)
                         mLogDiagnosticsIssues(sJobTitle).AddRange(mJob.GetIssues())
+                    Catch ex As NotImplementedException
+                        ' Ignore
                     Catch ex As Threading.ThreadAbortException
                         Throw
                     Catch ex As Exception
