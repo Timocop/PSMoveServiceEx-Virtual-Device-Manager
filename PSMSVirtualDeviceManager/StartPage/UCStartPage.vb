@@ -1832,6 +1832,8 @@ Public Class UCStartPage
         Using mLogs As New FormTroubleshootLogs(g_FormMain, False)
             mLogs.ShowDialog(g_FormMain)
         End Using
+
+        RunRuntimeDiagnostics()
     End Sub
 
     Private Sub Button_VdmDiagnosticsOpen_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsOpen.Click
