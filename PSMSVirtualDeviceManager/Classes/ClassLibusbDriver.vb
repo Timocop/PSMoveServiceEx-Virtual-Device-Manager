@@ -308,17 +308,45 @@ Public Class ClassLibusbDriver
     End Sub
 
     Public Function InstallPlaystation4CamDriver64() As ENUM_WDI_ERROR
+        ' We should disable all related devices.
+        ' If we dont, WDI takes its sweet ass time to install drivers for each device. 
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, False)
+            Next
+        Next
+
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_WINUSB_CONFIGS
+            ' We should disable all related devices.
+            ' If we dont, WDI takes its sweet ass time to install drivers for each device.
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, False)
+            Next
+
             Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
             If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
                 Return iExitCode
             End If
         Next
 
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, True)
+            Next
+        Next
+
         Return ENUM_WDI_ERROR.WDI_SUCCESS
     End Function
 
     Public Function InstallPlaystationEyeDriver64() As ENUM_WDI_ERROR
+        ' We should disable all related devices.
+        ' If we dont, WDI takes its sweet ass time to install drivers for each device. 
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, False)
+            Next
+        Next
+
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_LIBUSB_CONFIGS
             Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
             If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
@@ -326,15 +354,35 @@ Public Class ClassLibusbDriver
             End If
         Next
 
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, True)
+            Next
+        Next
+
         Return ENUM_WDI_ERROR.WDI_SUCCESS
     End Function
 
     Public Function InstallPlaystationVrDrvier64() As ENUM_WDI_ERROR
+        ' We should disable all related devices.
+        ' If we dont, WDI takes its sweet ass time to install drivers for each device. 
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, False)
+            Next
+        Next
+
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_LIBUSB_CONFIGS
             Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
             If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
                 Return iExitCode
             End If
+        Next
+
+        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                DeviceSetState(mUsbInfo.sDeviceID, True)
+            Next
         Next
 
         Return ENUM_WDI_ERROR.WDI_SUCCESS
@@ -410,6 +458,18 @@ Public Class ClassLibusbDriver
         Dim sDevicesToRemove As New List(Of String)
 
         For Each mInfo In DRV_PSVR_KNOWN_CONFIGS
+            For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
+                ' Dont allow anything else than non-system drivers past here!
+                If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
+                    RemoveDriver(mUsbInfo.sDriverInfPath)
+                End If
+
+                sDevicesToRemove.Add(mUsbInfo.sDeviceID)
+            Next
+        Next
+
+        ' Remove conflicting drivers (e.g libusb on hid).
+        For Each mInfo In DRV_PSVR_HID_CONFIGS
             For Each mUsbInfo In GetDeviceProviderUSB(mInfo)
                 ' Dont allow anything else than non-system drivers past here!
                 If (Not String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) AndAlso mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then

@@ -472,46 +472,6 @@ Public Class FormMain
 
                             Exit While
                         End While
-
-                        ' Remove conflicting drivers (e.g libusb on hid).
-                        If (True) Then
-                            Dim bScanNewDevices As Boolean = False
-                            Dim sDevicesToRemove As New List(Of String)
-                            For Each mInfo In ClassLibusbDriver.DRV_PSVR_HID_CONFIGS
-                                For Each mUsbInfo In mDriverInstaller.GetDeviceProviderUSB(mInfo)
-                                    If (mUsbInfo.iConfigFlags <> 0) Then
-                                        Continue For
-                                    End If
-
-                                    If (Not mUsbInfo.HasDriverInstalled()) Then
-                                        Continue For
-                                    End If
-
-                                    If (mUsbInfo.sService = ClassLibusbDriver.HID_SERVICE_NAME) Then
-                                        Continue For
-                                    End If
-
-                                    ' Dont allow anything else than non-system drivers past here!
-                                    If (String.IsNullOrEmpty(mUsbInfo.sDriverInfPath) OrElse Not mUsbInfo.sDriverInfPath.ToLowerInvariant.StartsWith("oem")) Then
-                                        Continue For
-                                    End If
-
-                                    mDriverInstaller.RemoveDriver(mUsbInfo.sDriverInfPath)
-                                    sDevicesToRemove.Add(mUsbInfo.sDeviceID)
-                                Next
-                            Next
-
-                            ' Remove devices after everything is done.
-                            For Each mDeviceID As String In sDevicesToRemove
-                                mDriverInstaller.RemoveDevice(mDeviceID, True)
-                                bScanNewDevices = True
-                            Next
-
-                            If (bScanNewDevices) Then
-                                mDriverInstaller.ScanDevices()
-                            End If
-                        End If
-
                     Catch ex As Exception
                         ClassAdvancedExceptionLogging.WriteToLog(ex)
 
