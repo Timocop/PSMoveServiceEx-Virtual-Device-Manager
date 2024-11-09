@@ -1,9 +1,10 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 Imports PSMSVirtualDeviceManager.UCVirtualTrackerItem.ClassCaptureLogic
 
 Public Class ClassLogManagerVirtualTrackers
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_VIRTUAL_TRACKERS As String = "VDM Virtual Trackers"
 
     Public Shared ReadOnly LOG_ISSUE_VIDEO_INPUT_DEVICE_ERROR As String = "Video input device encountered an error"
     Public Shared ReadOnly LOG_ISSUE_BAD_TRACKER_IDS As String = "Invalid virtual tracker ids"

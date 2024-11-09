@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerSteamVrOverrides
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_STEAMVR_OVERRIDES As String = "SteamVR Overrides"
 
     Public Shared ReadOnly LOG_ISSUE_BAD_OVERRIDES As String = "Bad SteamVR tracker overrides"
 

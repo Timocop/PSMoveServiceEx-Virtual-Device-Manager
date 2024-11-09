@@ -81,6 +81,7 @@
         End If
 
         g_mPlayspaceCalibrationThread = New Threading.Thread(AddressOf PlayspaceCalibrationThread)
+        g_mPlayspaceCalibrationThread.Priority = Threading.ThreadPriority.Lowest
         g_mPlayspaceCalibrationThread.IsBackground = True
         g_mPlayspaceCalibrationThread.Start()
     End Sub

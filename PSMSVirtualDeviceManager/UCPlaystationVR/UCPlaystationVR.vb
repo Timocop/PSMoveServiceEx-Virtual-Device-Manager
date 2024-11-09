@@ -79,6 +79,7 @@
         SetPlaystationVRStatus(ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED, ENUM_DEVICE_USB_STATUS.NOT_CONNECTED, ENUM_DEVICE_DISPLAY_STATUS.NOT_CONNECTED)
 
         g_mHardwareChangeStatusThread = New Threading.Thread(AddressOf HardwareChangeStatusThread)
+        g_mHardwareChangeStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mHardwareChangeStatusThread.IsBackground = True
         g_mHardwareChangeStatusThread.Start()
     End Sub

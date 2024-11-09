@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerSteamVrSettings
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_STEAMVR_SETTINGS As String = "SteamVR Settings"
 
     Public Shared ReadOnly LOG_ISSUE_STEAMVR_DRIVER_LOAD_ISSUE As String = "SteamVR driver may not load properly"
 

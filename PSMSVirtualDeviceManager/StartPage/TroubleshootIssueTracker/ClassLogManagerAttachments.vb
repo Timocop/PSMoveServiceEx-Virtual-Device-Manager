@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerAttachments
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_CONTROLLER_ATTACHMENTS As String = "VDM Controller Attachments"
 
     Public Shared ReadOnly LOG_ISSUE_CONTROLLER_ATTACHMENT_ERROR As String = "Controller attachment encountered an error"
     Public Shared ReadOnly LOG_ISSUE_INVALID_ATTACHMENT_IDS As String = "Invalid controller attachment ids"

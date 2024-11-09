@@ -160,6 +160,7 @@ Public Class UCRemoteDevices
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
 
         g_mLocalAddressThread = New Threading.Thread(AddressOf LocalAddressThread)
+        g_mLocalAddressThread.Priority = Threading.ThreadPriority.Lowest
         g_mLocalAddressThread.IsBackground = True
         g_mLocalAddressThread.Start()
     End Sub

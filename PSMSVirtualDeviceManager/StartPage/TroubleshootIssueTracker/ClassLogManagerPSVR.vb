@@ -1,9 +1,10 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 Imports PSMSVirtualDeviceManager.UCPlaystationVR
 
 Public Class ClassLogManagerPSVR
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_PSVR As String = "VDM PlayStation VR"
 
     Public Shared ReadOnly LOG_ISSUE_PSVR_HDMI_ERROR As String = "PlayStation VR encountered an HDMI issue"
     Public Shared ReadOnly LOG_ISSUE_PSVR_USB_ERROR As String = "PlayStation VR encountered an USB issue"

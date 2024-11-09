@@ -16,6 +16,9 @@ Public Class UCStartPage
     Private g_mUpdateInstallThread As Threading.Thread = Nothing
     Private g_mUpdateInstallFormLoad As FormLoading = Nothing
 
+    Private g_mRuntimeDiagnostics As Threading.Thread = Nothing
+    Private g_bRuntimeDiagnosticsExecute As Boolean = False
+
     Private g_bIsServiceRunning As Boolean = False
     Private g_bIsServiceConnected As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
@@ -60,12 +63,19 @@ Public Class UCStartPage
         g_bInit = True
 
         g_mStatusThread = New Threading.Thread(AddressOf CheckConnection_Thread)
+        g_mStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mStatusThread.IsBackground = True
         g_mStatusThread.Start()
 
         g_mServiceDeviceStatusThread = New Threading.Thread(AddressOf ServiceDeviceStatusThread)
+        g_mServiceDeviceStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mServiceDeviceStatusThread.IsBackground = True
         g_mServiceDeviceStatusThread.Start()
+
+        g_mRuntimeDiagnostics = New Threading.Thread(AddressOf RuntimeDiagnostics_Thread)
+        g_mRuntimeDiagnostics.Priority = Threading.ThreadPriority.Lowest
+        g_mRuntimeDiagnostics.IsBackground = True
+        g_mRuntimeDiagnostics.Start()
     End Sub
 
     Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup
@@ -127,6 +137,114 @@ Public Class UCStartPage
         End SyncLock
     End Sub
 
+    Public Sub RunRuntimeDiagnostics()
+        SyncLock g_mThreadLock
+            g_bRuntimeDiagnosticsExecute = True
+        End SyncLock
+    End Sub
+
+    Private Sub RuntimeDiagnostics_Thread()
+        While True
+            Dim bShowIssuesPrompt As Boolean = False
+            Dim bOutdatedServiceLogs As Boolean = False
+
+            Try
+                ' Wait for the service to run
+                If (g_FormMain.g_mPSMoveServiceCAPI IsNot Nothing AndAlso Not g_FormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
+                    Threading.Thread.Sleep(1000)
+                    Continue While
+                End If
+
+                Dim mLogDiagnosticsContent As New ClassLogDiagnostics.ClassLogContent()
+                Dim mLogDiagnosticsJobs = ClassLogDiagnostics.GetAllJobs(g_FormMain, mLogDiagnosticsContent)
+                Dim mLogDiagnosticsIssues As New Dictionary(Of String, List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE))
+
+                ' Generate diagnostics report
+                For Each mJob In mLogDiagnosticsJobs
+                    Try
+                        mJob.Generate(True)
+                    Catch ex As Threading.ThreadAbortException
+                        Throw
+                    Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
+                    End Try
+                Next
+
+                ' Get all issues
+                For Each mJob In mLogDiagnosticsJobs
+                    Try
+                        Dim sJobTitle As String = mJob.GetActionTitle()
+
+                        mLogDiagnosticsIssues(sJobTitle) = New List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE)
+                        mLogDiagnosticsIssues(sJobTitle).AddRange(mJob.GetIssues())
+                    Catch ex As Threading.ThreadAbortException
+                        Throw
+                    Catch ex As Exception
+                        ClassAdvancedExceptionLogging.WriteToLog(ex)
+                    End Try
+                Next
+
+                ' Dont prompt when these issues are available. 
+                For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
+                    For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                        Select Case (sJobTitle)
+                            Case ClassLogService.SECTION_PSMOVESERVICEEX
+                                Select Case (mIssue.sMessage)
+                                    Case ClassLogService.LOG_ISSUE_EMPTY,
+                                         ClassLogService.LOG_ISSUE_SERVICE_LOG_INCOMPLETE
+
+                                        ' We have to make sure the service log is ready and also not empty. 
+                                        Threading.Thread.Sleep(1000)
+                                        Continue While
+
+                                    Case ClassLogService.LOG_ISSUE_SERVICE_LOG_OUTDATED
+                                        bOutdatedServiceLogs = True
+                                End Select
+                        End Select
+                    Next
+                Next
+
+                If (Not bOutdatedServiceLogs) Then
+                    ' Check for issues
+                    For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
+                        Select Case (sJobTitle)
+                            Case ClassLogDxdiag.SECTION_DXDIAG
+                                ' DirectX diagnostics are not available in silent mode
+                                Continue For
+                        End Select
+
+                        For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                            If (mIssue.iType = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR) Then
+                                bShowIssuesPrompt = True
+                                Exit For
+                            End If
+                        Next
+                    Next
+
+                    ClassUtils.AsyncInvoke(Sub()
+                                               Panel_VdmDiagnosticIssue.Visible = bShowIssuesPrompt
+                                           End Sub)
+                End If
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
+            End Try
+
+            While True
+                SyncLock g_mThreadLock
+                    If (g_bRuntimeDiagnosticsExecute) Then
+                        g_bRuntimeDiagnosticsExecute = False
+
+                        Exit While
+                    End If
+                End SyncLock
+
+                Threading.Thread.Sleep(1000)
+            End While
+        End While
+    End Sub
+
     Private Sub CheckConnection_Thread()
         While True
             Try
@@ -139,6 +257,9 @@ Public Class UCStartPage
                         g_bIsServiceRunning = bServiceRunning
 
                         ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
+
+                        ' Service updated, run diagnostics
+                        RunRuntimeDiagnostics()
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -156,6 +277,9 @@ Public Class UCStartPage
                         g_bIsServiceConnected = bIsConnected
 
                         ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
+
+                        ' Service updated, run diagnostics
+                        RunRuntimeDiagnostics()
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -599,6 +723,12 @@ Public Class UCStartPage
     End Sub
 
     Private Sub CleanUp()
+        If (g_mRuntimeDiagnostics IsNot Nothing AndAlso g_mRuntimeDiagnostics.IsAlive) Then
+            g_mRuntimeDiagnostics.Abort()
+            g_mRuntimeDiagnostics.Join()
+            g_mRuntimeDiagnostics = Nothing
+        End If
+
         If (g_mServiceDeviceStatusThread IsNot Nothing AndAlso g_mServiceDeviceStatusThread.IsAlive) Then
             g_mServiceDeviceStatusThread.Abort()
             g_mServiceDeviceStatusThread.Join()
@@ -1638,9 +1768,17 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
-        Using mLogs As New FormTroubleshootLogs(g_FormMain)
+        Using mLogs As New FormTroubleshootLogs(g_FormMain, False)
             mLogs.ShowDialog(g_FormMain)
         End Using
+    End Sub
+
+    Private Sub Button_VdmDiagnosticsOpen_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsOpen.Click
+        Using mLogs As New FormTroubleshootLogs(g_FormMain, True)
+            mLogs.ShowDialog(g_FormMain)
+        End Using
+
+        RunRuntimeDiagnostics()
     End Sub
 End Class
 

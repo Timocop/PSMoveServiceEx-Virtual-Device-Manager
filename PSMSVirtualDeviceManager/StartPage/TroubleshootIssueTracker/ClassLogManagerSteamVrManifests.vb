@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerSteamVrManifests
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_STEAMVR_MANIFESTS As String = "SteamVR Manifests"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent

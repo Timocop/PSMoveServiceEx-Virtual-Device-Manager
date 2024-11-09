@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManager
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_CONFIG As String = "VDM Configuration"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent

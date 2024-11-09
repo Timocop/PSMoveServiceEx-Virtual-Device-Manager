@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerSteamVrDrivers
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_STEAMVR_DRIVERS As String = "SteamVR Drivers"
 
     Public Shared ReadOnly LOG_ISSUE_NO_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR driver not installed"
     Public Shared ReadOnly LOG_ISSUE_BAD_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR driver is not properly installed"

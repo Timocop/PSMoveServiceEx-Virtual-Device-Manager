@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogDxdiag
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_DXDIAG As String = "DirectX Diagnostics"
 
     Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
     Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_BANDWIDTH_DEVICES As String = "Possible Bluetooth bandwidth issues"

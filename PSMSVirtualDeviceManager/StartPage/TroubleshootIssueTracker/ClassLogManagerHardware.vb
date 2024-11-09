@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerHardware
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_CONNECTED_HARDWARE As String = "Connected Hardware"
 
     Public Shared ReadOnly LOG_ISSUE_NO_DRIVERS_INSTALLED As String = "Required drivers not installed"
 

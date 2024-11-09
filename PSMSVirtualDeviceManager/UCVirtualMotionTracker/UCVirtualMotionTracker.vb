@@ -1387,6 +1387,7 @@ Public Class UCVirtualMotionTracker
             End If
 
             g_mDevicesThread = New Threading.Thread(AddressOf DevicesThread)
+            g_mDevicesThread.Priority = Threading.ThreadPriority.Lowest
             g_mDevicesThread.IsBackground = True
             g_mDevicesThread.Start()
         End Sub

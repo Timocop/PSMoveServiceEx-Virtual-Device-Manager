@@ -22,6 +22,7 @@
         CreateHandle()
 
         g_mUpdateThread = New Threading.Thread(AddressOf UpdaterThread)
+        g_mUpdateThread.Priority = Threading.ThreadPriority.Lowest
         g_mUpdateThread.IsBackground = True
         g_mUpdateThread.Start()
     End Sub
@@ -122,6 +123,7 @@
                                                                 End Try
                                                             End Sub)
 
+                                                        mDistortThread.Priority = Threading.ThreadPriority.Lowest
                                                         mDistortThread.IsBackground = True
                                                         mDistortThread.Start()
                                                         mDistortThreads.Add(mDistortThread)
@@ -165,6 +167,7 @@
                                         g.DrawString(text, font, brush, x, y)
                                     End Using
                                 End Sub)
+                            mPatternThread.Priority = Threading.ThreadPriority.Lowest
                             mPatternThread.IsBackground = True
                             mPatternThread.Start()
                             mPatternThreads.Add(mPatternThread)

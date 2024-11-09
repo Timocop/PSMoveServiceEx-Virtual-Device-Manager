@@ -1,8 +1,10 @@
 ﻿Imports System.Text.RegularExpressions
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogService
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_PSMOVESERVICEEX As String = "PSMoveServiceEx"
 
     Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
     Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_VERSION As String = "Outdated PSMoveServiceEx version"
@@ -19,7 +21,7 @@ Public Class ClassLogService
     Public Shared ReadOnly LOG_ISSUE_DEVICE_TIMEOUT As String = "Device timed out"
     Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_INCOMPLETE As String = "PSMoveServiceEx log incomplete"
     Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_OUTDATED As String = "Old PSMoveServiceEx diagnostics configuration detected"
-    Public Shared ReadOnly LOG_ISSUE_DEVICE_BAD_TRACKING As String = "Bad tracker deviations"
+    Public Shared ReadOnly LOG_ISSUE_DEVICE_BAD_TRACKING As String = "Bad device tracking deviations"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent

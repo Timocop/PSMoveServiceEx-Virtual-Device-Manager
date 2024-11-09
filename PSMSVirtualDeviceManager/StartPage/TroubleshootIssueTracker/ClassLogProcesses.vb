@@ -1,8 +1,9 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogProcesses
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_PROCESSES As String = "Running Processes"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent

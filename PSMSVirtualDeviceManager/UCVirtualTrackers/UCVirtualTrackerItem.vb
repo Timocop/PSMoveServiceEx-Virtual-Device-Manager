@@ -1005,6 +1005,7 @@ Public Class UCVirtualTrackerItem
             g_mUCVirtualTrackerItem.Enabled = False
 
             g_mInitThread = New Threading.Thread(AddressOf InitThread)
+            g_mInitThread.Priority = Threading.ThreadPriority.Lowest
             g_mInitThread.IsBackground = True
             g_mInitThread.Start()
         End Sub
@@ -1103,6 +1104,7 @@ Public Class UCVirtualTrackerItem
             End If
 
             g_mDeviceWatchdogThread = New Threading.Thread(AddressOf DeviceWatchdogThread)
+            g_mDeviceWatchdogThread.Priority = Threading.ThreadPriority.Lowest
             g_mDeviceWatchdogThread.IsBackground = True
             g_mDeviceWatchdogThread.Start()
         End Sub

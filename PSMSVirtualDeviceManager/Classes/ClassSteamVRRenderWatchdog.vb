@@ -49,6 +49,7 @@ Public Class ClassSteamVRRenderWatchdog
         g_bInit = True
 
         g_mActivateRenderWindowThread = New Threading.Thread(AddressOf ActivateRenderWindowThread)
+        g_mActivateRenderWindowThread.Priority = Threading.ThreadPriority.Lowest
         g_mActivateRenderWindowThread.IsBackground = True
         g_mActivateRenderWindowThread.Start()
     End Sub

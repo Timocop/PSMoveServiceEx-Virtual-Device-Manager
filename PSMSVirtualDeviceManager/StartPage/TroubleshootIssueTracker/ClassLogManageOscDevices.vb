@@ -1,9 +1,10 @@
 ﻿Imports System.Numerics
-Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManageOscDevices
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_OSC_DEVICES As String = "VDM OSC Devices"
 
     Enum ENUM_DEVICE_TYPE
         INVALID = 0

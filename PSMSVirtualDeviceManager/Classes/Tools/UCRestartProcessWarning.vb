@@ -61,6 +61,7 @@
 
                 If (g_mRestartThread Is Nothing OrElse Not g_mRestartThread.IsAlive) Then
                     g_mRestartThread = New Threading.Thread(AddressOf RestartThread)
+                    g_mRestartThread.Priority = Threading.ThreadPriority.Lowest
                     g_mRestartThread.IsBackground = True
                     g_mRestartThread.Start()
                 End If

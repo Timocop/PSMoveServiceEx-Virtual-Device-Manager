@@ -287,6 +287,7 @@ Public Class FormMain
                                 ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                             End Try
                         End Sub)
+                    g_mAutoCloseThread.Priority = Threading.ThreadPriority.Lowest
                     g_mAutoCloseThread.IsBackground = True
                     g_mAutoCloseThread.Start()
 
@@ -1097,6 +1098,7 @@ Public Class FormMain
             End If
 
             g_mUpdaterThread = New Threading.Thread(AddressOf UpdateCheckThread)
+            g_mUpdaterThread.Priority = Threading.ThreadPriority.Lowest
             g_mUpdaterThread.IsBackground = True
             g_mUpdaterThread.Start()
         End Sub

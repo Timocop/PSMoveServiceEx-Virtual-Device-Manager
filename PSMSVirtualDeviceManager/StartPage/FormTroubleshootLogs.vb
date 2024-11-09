@@ -1,6 +1,4 @@
-﻿Imports PSMSVirtualDeviceManager
-
-Public Class FormTroubleshootLogs
+﻿Public Class FormTroubleshootLogs
     ReadOnly SECTION_BUFFER As String = New String("#"c, 32)
 
     ReadOnly NOTHING_SELECTED As String = "Nothing selected. Refresh to generate or load a log, then click an entry above to show more details about the issue."
@@ -8,86 +6,17 @@ Public Class FormTroubleshootLogs
     Public Const SECTION_DETAILED_LOG_SUMMARY = "Detailed Log Summary"
     Public Const SECTION_DETAILED_LOG_EXCEPTIONS = "Log Generation Exceptions"
 
-    Public Const SECTION_DXDIAG = "DirectX Diagnostics"
-    Public Const SECTION_PSMOVESERVICEEX = "PSMoveServiceEx"
-    Public Const SECTION_PROCESSES = "Running Processes"
-    Public Const SECTION_VDM_CONFIG = "VDM Configuration"
-    Public Const SECTION_VDM_VMT_TRACKERS = "VDM VMT Trackers"
-    Public Const SECTION_VDM_OSC_DEVICES = "VDM OSC Devices"
-    Public Const SECTION_VDM_SERVICE_DEVICES = "VDM Service Devices"
-    Public Const SECTION_VDM_CONTROLLER_ATTACHMENTS = "VDM Controller Attachments"
-    Public Const SECTION_VDM_REMOTE_DEVICES = "VDM Remote Devices"
-    Public Const SECTION_VDM_PSVR = "VDM PlayStation VR"
-    Public Const SECTION_VDM_VIRTUAL_TRACKERS = "VDM Virtual Trackers"
-    Public Const SECTION_STEAMVR_DRIVERS = "SteamVR Drivers"
-    Public Const SECTION_STEAMVR_MANIFESTS = "SteamVR Manifests"
-    Public Const SECTION_STEAMVR_OVERRIDES = "SteamVR Overrides"
-    Public Const SECTION_STEAMVR_SETTINGS = "SteamVR Settings"
-    Public Const SECTION_CONNECTED_HARDWARE = "Connected Hardware"
-
     Private g_mThread As Threading.Thread = Nothing
-    Private g_mLogContent As New ClassLogContent()
+    Private g_mLogContent As New ClassLogDiagnostics.ClassLogContent()
     Private g_mProgress As FormLoading = Nothing
-
-    Private g_mLogJobs As New List(Of ILogAction)
+    Private g_mLogJobs As New List(Of ClassLogDiagnostics.ILogAction)
 
     Private g_mFormMain As FormMain = Nothing
+    Private g_bInitRefresh As Boolean = False
 
-    Class ClassLogContent
-        Private g_mThreadLock As New Object
-        Private g_mLogContent As New Dictionary(Of String, String)
-
-        ReadOnly Property m_Content As Dictionary(Of String, String)
-            Get
-                SyncLock g_mThreadLock
-                    Return g_mLogContent
-                End SyncLock
-            End Get
-        End Property
-
-        ReadOnly Property m_Lock As Object
-            Get
-                Return g_mThreadLock
-            End Get
-        End Property
-    End Class
-
-    Enum ENUM_LOG_ISSUE_TYPE
-        INFO
-        WARNING
-        [ERROR]
-    End Enum
-
-    Structure STRUC_LOG_ISSUE
-        Dim bValid As Boolean
-
-        Dim sMessage As String
-        Dim sDescription As String
-        Dim sSolution As String
-        Dim iType As ENUM_LOG_ISSUE_TYPE
-
-        Public Sub New(_Issue As STRUC_LOG_ISSUE)
-            Me.New(_Issue.sMessage, _Issue.sDescription, _Issue.sSolution, _Issue.iType)
-        End Sub
-
-        Public Sub New(_Message As String, _Description As String, _Solution As String, _Type As ENUM_LOG_ISSUE_TYPE)
-            bValid = True
-            sMessage = _Message
-            sDescription = _Description
-            sSolution = _Solution
-            iType = _Type
-        End Sub
-    End Structure
-
-    Public Interface ILogAction
-        Function GetActionTitle() As String
-        Sub Generate(bSilent As Boolean)
-        Function GetIssues() As STRUC_LOG_ISSUE()
-        Function GetSectionContent() As String
-    End Interface
-
-    Public Sub New(_FormMain As FormMain)
+    Public Sub New(_FormMain As FormMain, bRefresh As Boolean)
         g_mFormMain = _FormMain
+        g_bInitRefresh = bRefresh
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -100,27 +29,25 @@ Public Class FormTroubleshootLogs
         ImageList_Issues.Images.Add("Good", My.Resources.netshell_1610_32x32_32)
 
         g_mLogJobs.Clear()
-        g_mLogJobs.Add(New ClassLogDxdiag(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogService(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogProcesses(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManager(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerVmtTrackers(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManageOscDevices(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManageServiceDevices(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerAttachments(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerRemoteDevices(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerPSVR(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerVirtualTrackers(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerSteamVrDrivers(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerSteamVrManifests(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerSteamVrOverrides(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerSteamVrSettings(g_mFormMain, m_LogContent))
-        g_mLogJobs.Add(New ClassLogManagerHardware(g_mFormMain, m_LogContent))
+        g_mLogJobs.AddRange(ClassLogDiagnostics.GetAllJobs(g_mFormMain, m_LogContent))
 
         TextBox_IssueInfo.Text = NOTHING_SELECTED
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
+        RereshLogs()
+    End Sub
+
+    Private Sub FormTroubleshootLogs_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If (g_bInitRefresh) Then
+            Me.Visible = True
+            Me.Refresh()
+
+            RereshLogs()
+        End If
+    End Sub
+
+    Private Sub RereshLogs()
         If (g_mFormMain.g_mPSMoveServiceCAPI IsNot Nothing AndAlso Not g_mFormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
             Dim sMessage As New Text.StringBuilder
             sMessage.AppendLine("PSMoveServiceEx is not running!")
@@ -289,7 +216,7 @@ Public Class FormTroubleshootLogs
         Return mData
     End Function
 
-    ReadOnly Property m_LogContent As ClassLogContent
+    ReadOnly Property m_LogContent As ClassLogDiagnostics.ClassLogContent
         Get
             SyncLock g_mLogContent.m_Lock
                 Return g_mLogContent
@@ -381,7 +308,7 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub ThreadDoDiagnostics()
-        Dim mIssues As New List(Of KeyValuePair(Of String, STRUC_LOG_ISSUE))
+        Dim mIssues As New List(Of KeyValuePair(Of String, ClassLogDiagnostics.STRUC_LOG_ISSUE))
 
         For Each mJob In g_mLogJobs
             Dim sJobAction As String = String.Format("Checking {0}...", mJob.GetActionTitle())
@@ -397,16 +324,16 @@ Public Class FormTroubleshootLogs
                 If (Not String.IsNullOrEmpty(sContent) AndAlso sContent.Trim.StartsWith("EXCEPTION: ")) Then
                     Dim sException As String = sContent.Trim.Remove(0, "EXCEPTION: ".Length)
 
-                    Dim mException As New STRUC_LOG_ISSUE(
+                    Dim mException As New ClassLogDiagnostics.STRUC_LOG_ISSUE(
                         "Log generation exception",
                         sException,
                         "",
-                        ENUM_LOG_ISSUE_TYPE.ERROR
+                        ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR
                     )
-                    mIssues.Add(New KeyValuePair(Of String, STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mException))
+                    mIssues.Add(New KeyValuePair(Of String, ClassLogDiagnostics.STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mException))
                 Else
                     For Each mIssue In mJob.GetIssues()
-                        mIssues.Add(New KeyValuePair(Of String, STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mIssue))
+                        mIssues.Add(New KeyValuePair(Of String, ClassLogDiagnostics.STRUC_LOG_ISSUE)(mJob.GetActionTitle(), mIssue))
                     Next
                 End If
             Catch ex As NotImplementedException
@@ -434,11 +361,11 @@ Public Class FormTroubleshootLogs
                                            mNewItem.ImageIndex = 0
 
                                            Select Case (mItem.Value.iType)
-                                               Case ENUM_LOG_ISSUE_TYPE.INFO
+                                               Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.INFO
                                                    mNewItem.ImageKey = "Info"
-                                               Case ENUM_LOG_ISSUE_TYPE.WARNING
+                                               Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.WARNING
                                                    mNewItem.ImageKey = "Warn"
-                                               Case ENUM_LOG_ISSUE_TYPE.ERROR
+                                               Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR
                                                    mNewItem.ImageKey = "Error"
                                            End Select
 

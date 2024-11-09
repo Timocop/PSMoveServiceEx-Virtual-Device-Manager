@@ -1,8 +1,10 @@
 ﻿Imports System.Numerics
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManageServiceDevices
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_SERVICE_DEVICES As String = "VDM Service Devices"
 
     Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
     Public Shared ReadOnly LOG_ISSUE_LIMITED_TRACKING As String = "Very limited tracking quality"

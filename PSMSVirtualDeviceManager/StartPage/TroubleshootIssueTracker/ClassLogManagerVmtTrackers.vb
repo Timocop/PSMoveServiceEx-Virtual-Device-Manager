@@ -1,9 +1,10 @@
-﻿Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 Imports PSMSVirtualDeviceManager.UCVirtualMotionTrackerItem.ClassIO
 
 Public Class ClassLogManagerVmtTrackers
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_VMT_TRACKERS As String = "VDM VMT Trackers"
 
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_MOTION_TRACKER_ERROR As String = "Virtual motion tracker encountered an error"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_MOTION_TRACKER_BAD_IDS As String = "Invalid virtual motion tracker ids"

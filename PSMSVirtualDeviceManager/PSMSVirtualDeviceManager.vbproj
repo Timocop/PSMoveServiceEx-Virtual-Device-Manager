@@ -272,6 +272,7 @@
     <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogManageServiceDevices.vb" />
     <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogProcesses.vb" />
     <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogService.vb" />
+    <Compile Include="StartPage\TroubleshootIssueTracker\ClassLogDiagnostics.vb" />
     <Compile Include="StartPage\UCStartPage.Designer.vb">
       <DependentUpon>UCStartPage.vb</DependentUpon>
     </Compile>

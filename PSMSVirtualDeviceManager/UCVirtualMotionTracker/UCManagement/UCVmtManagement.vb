@@ -32,10 +32,12 @@ Public Class UCVmtManagement
         g_bInit = True
 
         g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
+        g_mOscStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mOscStatusThread.IsBackground = True
         g_mOscStatusThread.Start()
 
         g_mOscDeviceStatusThread = New Threading.Thread(AddressOf OscDeviceStatusThread)
+        g_mOscDeviceStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mOscDeviceStatusThread.IsBackground = True
         g_mOscDeviceStatusThread.Start()
     End Sub

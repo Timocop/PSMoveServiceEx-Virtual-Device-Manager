@@ -26,6 +26,7 @@
         AddHandler g_ClassUsbNotify.OnDeviceConnectionChanged, AddressOf OnDeviceChanged
 
         g_mHardwareChangeStatusThread = New Threading.Thread(AddressOf HardwareChangeStatusThread)
+        g_mHardwareChangeStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mHardwareChangeStatusThread.IsBackground = True
         g_mHardwareChangeStatusThread.Start()
     End Sub

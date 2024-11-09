@@ -123,6 +123,7 @@
                 If (value) Then
                     If (g_mLogThread Is Nothing OrElse Not g_mLogThread.IsAlive) Then
                         g_mLogThread = New Threading.Thread(AddressOf AutoFlushThread)
+                        g_mLogThread.Priority = Threading.ThreadPriority.Lowest
                         g_mLogThread.IsBackground = True
                         g_mLogThread.Start()
                     End If

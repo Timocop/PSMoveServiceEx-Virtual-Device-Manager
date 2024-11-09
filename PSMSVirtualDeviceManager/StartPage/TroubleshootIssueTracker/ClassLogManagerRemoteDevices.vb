@@ -1,9 +1,10 @@
 ﻿Imports System.Numerics
-Imports PSMSVirtualDeviceManager
-Imports PSMSVirtualDeviceManager.FormTroubleshootLogs
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogManagerRemoteDevices
     Implements ILogAction
+
+    Public Shared ReadOnly SECTION_VDM_REMOTE_DEVICES As String = "VDM Remote Devices"
 
     Public Shared ReadOnly LOG_ISSUE_REMOTE_DEVICE_ERROR As String = "Remote device encountered an error"
     Public Shared ReadOnly LOG_ISSUE_BAD_REMOTE_DEVICE_IDS As String = "Invalid remote device ids"
