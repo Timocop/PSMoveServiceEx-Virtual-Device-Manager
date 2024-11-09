@@ -2438,12 +2438,11 @@ Public Class UCVirtualMotionTrackerItem
             End If
 
             If (m_PlayspaceSettings.m_Valid) Then
-
                 Dim mCorrectedPointControllerBeginPos = m_PlayspaceSettings.m_PointControllerBeginPos
                 Dim mCorrectedPointControllerEndPos = m_PlayspaceSettings.m_PointControllerEndPos
 
                 ' Auto scale playspace by points distance difference
-                If (Not bEnableAutoScale AndAlso m_PlayspaceSettings.m_AutoScale) Then
+                If (bEnableAutoScale AndAlso m_PlayspaceSettings.m_AutoScale) Then
                     Dim iScale As Single = 1.0F
 
                     Dim iPointHmdDistance As Single = Vector3.Distance(m_PlayspaceSettings.m_PointHmdBeginPos, m_PlayspaceSettings.m_PointHmdEndPos)
