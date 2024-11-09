@@ -896,8 +896,9 @@ Public Class UCStartPage
 
             g_mFormRestart = New FormLoading
             g_mFormRestart.Text = "Restarting PSMoveServiceEx..."
-            g_mFormRestart.ProgressBar1.Style = ProgressBarStyle.Blocks
-            g_mFormRestart.ProgressBar1.Value = 0
+            g_mFormRestart.m_ProgressBar.Style = ProgressBarStyle.Blocks
+            g_mFormRestart.m_ProgressBar.Value = 0
+            g_mFormRestart.m_ProgressBar.Maximum = 100
             g_mFormRestart.Show(Me)
 
             Timer_RestartPsms.Enabled = True
@@ -913,8 +914,9 @@ Public Class UCStartPage
             Return
         End If
 
-        If (g_mFormRestart.ProgressBar1.Value < g_mFormRestart.ProgressBar1.Maximum) Then
-            g_mFormRestart.ProgressBar1.Value = Math.Min(g_mFormRestart.ProgressBar1.Value + 25, g_mFormRestart.ProgressBar1.Maximum)
+        If (g_mFormRestart.m_ProgressBar.Value < g_mFormRestart.m_ProgressBar.Maximum) Then
+            g_mFormRestart.m_ProgressBar.Increment(25)
+            g_mFormRestart.SkipProgressBarAnimation()
 
             Return
         End If

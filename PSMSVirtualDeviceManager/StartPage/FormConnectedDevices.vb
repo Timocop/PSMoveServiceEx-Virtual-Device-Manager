@@ -298,9 +298,9 @@ Public Class FormConnectedDevices
                     mUsbDevices(String.Format("{0}/{1}/{2}", mDevice.VID, mDevice.PID, If(mDevice.MM, "XX"))) = mDevice
                 Next
 
-                mFormLoading.ProgressBar1.Style = ProgressBarStyle.Blocks
-                mFormLoading.ProgressBar1.Minimum = 0
-                mFormLoading.ProgressBar1.Maximum = mUsbDevices.Count
+                mFormLoading.m_ProgressBar.Style = ProgressBarStyle.Blocks
+                mFormLoading.m_ProgressBar.Minimum = 0
+                mFormLoading.m_ProgressBar.Maximum = mUsbDevices.Count
                 mFormLoading.Show()
                 mFormLoading.Refresh()
 
@@ -315,12 +315,8 @@ Public Class FormConnectedDevices
                         Next
                     End If
 
-                    mFormLoading.ProgressBar1.Increment(1)
-
-                    ' Skip smooth animation
-                    Dim iOldVal = mFormLoading.ProgressBar1.Value
-                    mFormLoading.ProgressBar1.Increment(1)
-                    mFormLoading.ProgressBar1.Value = iOldVal
+                    mFormLoading.m_ProgressBar.Increment(1)
+                    mFormLoading.SkipProgressBarAnimation()
 
                     mFormLoading.Refresh()
                 Next

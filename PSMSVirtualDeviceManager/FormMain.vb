@@ -971,7 +971,7 @@ Public Class FormMain
     Private Sub FormMain_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
         Using mCloseForm As New FormLoading
             mCloseForm.Text = "Closing established connections and cleaning up..."
-            mCloseForm.ProgressBar1.Style = ProgressBarStyle.Continuous
+            mCloseForm.m_ProgressBar.Style = ProgressBarStyle.Continuous
             mCloseForm.Show(Me)
             mCloseForm.Refresh()
 
