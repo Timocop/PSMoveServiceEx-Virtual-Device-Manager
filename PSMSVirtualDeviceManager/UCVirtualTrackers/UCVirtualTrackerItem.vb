@@ -206,10 +206,6 @@ Public Class UCVirtualTrackerItem
         g_mMessageLabel.BringToFront()
         g_mMessageLabel.Show()
 
-        SetFpsText(0, 0)
-        SetUnsavedState(False)
-        SetRequireRestart(False)
-
         CreateControl()
 
         ' Hide timeout error
@@ -248,6 +244,10 @@ Public Class UCVirtualTrackerItem
         Finally
             g_bIgnoreUnsaved = False
         End Try
+
+        SetFpsText(0, 0)
+        SetUnsavedState(False)
+        SetRequireRestart(False)
 
         g_mClassCaptureLogic.StartInitThread(False)
     End Sub

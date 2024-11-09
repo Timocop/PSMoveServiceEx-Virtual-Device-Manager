@@ -145,8 +145,6 @@ Public Class UCRemoteDevices
         m_SocketPort = DEFAULT_SOCKET_PORT
         m_SocketAddress = "127.0.0.1"
 
-        SetStatus(False)
-
         CreateControl()
     End Sub
 
@@ -158,6 +156,8 @@ Public Class UCRemoteDevices
         g_bInit = True
 
         AddHandler g_mClassStrackerSocket.OnTrackerConnected, AddressOf OnTrackerConnected
+
+        SetStatus(False)
 
         g_mLocalAddressThread = New Threading.Thread(AddressOf LocalAddressThread)
         g_mLocalAddressThread.Priority = Threading.ThreadPriority.Lowest

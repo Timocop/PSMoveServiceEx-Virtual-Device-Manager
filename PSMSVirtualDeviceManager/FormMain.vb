@@ -192,8 +192,6 @@ Public Class FormMain
         Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
 
         CreateControl()
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
     End Sub
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -220,6 +218,8 @@ Public Class FormMain
 
         g_mClassUpdateChecker = New ClassUpdateChecker(Me)
         g_mClassUpdateChecker.StartUpdateCheck()
+
+        SelectPage(ENUM_PAGE.STARTPAGE)
 
         Try
             ProcessCommandline(True)

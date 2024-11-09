@@ -50,8 +50,6 @@ Public Class UCStartPage
         ToolStripComboBox_ChartSamples.Items.Add("1000")
         ToolStripComboBox_ChartSamples.SelectedIndex = 0
 
-        SetStatusServiceConnected()
-
         CreateControl()
     End Sub
 
@@ -61,6 +59,8 @@ Public Class UCStartPage
         End If
 
         g_bInit = True
+
+        SetStatusServiceConnected()
 
         g_mStatusThread = New Threading.Thread(AddressOf CheckConnection_Thread)
         g_mStatusThread.Priority = Threading.ThreadPriority.Lowest

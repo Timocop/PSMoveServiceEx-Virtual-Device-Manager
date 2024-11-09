@@ -163,8 +163,6 @@ Public Class UCVirtualMotionTrackerItem
         g_mDriverLastResponse.Start()
         g_mControllerLastResponse.Start()
 
-        SetUnsavedState(False)
-
         CreateControl()
 
         ' Hide timeout error
@@ -193,12 +191,11 @@ Public Class UCVirtualMotionTrackerItem
             End Try
 
             UpdateTrackerRoleComboBox()
-
-            SetUnsavedState(False)
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
 
+        SetUnsavedState(False)
         OnOscSuspendChanged()
     End Sub
 
