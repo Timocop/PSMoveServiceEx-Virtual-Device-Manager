@@ -2438,15 +2438,24 @@ Public Class UCVirtualMotionTrackerItem
             End If
 
             If (m_PlayspaceSettings.m_Valid) Then
-                Dim mCorrectedPointControllerBeginPos = m_PlayspaceSettings.m_PointControllerBeginPos
-                Dim mCorrectedPointControllerEndPos = m_PlayspaceSettings.m_PointControllerEndPos
+                Dim mScale = Vector3.One
+
+                Dim mPointHmdBeginPosXZ = m_PlayspaceSettings.m_PointHmdBeginPos
+                Dim mPointHmdEndPosXZ = m_PlayspaceSettings.m_PointHmdEndPos
+                Dim mPointControllerBeginPosXZ = m_PlayspaceSettings.m_PointControllerBeginPos
+                Dim mPointControllerEndPosXZ = m_PlayspaceSettings.m_PointControllerEndPos
+
+                mPointHmdBeginPosXZ.Y = 0.0
+                mPointHmdEndPosXZ.Y = 0.0
+                mPointControllerBeginPosXZ.Y = 0.0
+                mPointControllerEndPosXZ.Y = 0.0
 
                 ' Auto scale playspace by points distance difference
                 If (bEnableAutoScale AndAlso m_PlayspaceSettings.m_AutoScale) Then
                     Dim iScale As Single = 1.0F
 
-                    Dim iPointHmdDistance As Single = Math.Abs(Vector3.Distance(m_PlayspaceSettings.m_PointHmdBeginPos, m_PlayspaceSettings.m_PointHmdEndPos))
-                    Dim iPointControllerDistance As Single = Math.Abs(Vector3.Distance(mCorrectedPointControllerBeginPos, mCorrectedPointControllerEndPos))
+                    Dim iPointHmdDistance As Single = Math.Abs(Vector3.Distance(mPointHmdBeginPosXZ, mPointHmdEndPosXZ))
+                    Dim iPointControllerDistance As Single = Math.Abs(Vector3.Distance(mPointControllerBeginPosXZ, mPointControllerEndPosXZ))
                     If (iPointHmdDistance > Single.Epsilon AndAlso iPointControllerDistance > Single.Epsilon) Then
                         iScale = (iPointHmdDistance / iPointControllerDistance)
 
@@ -2459,11 +2468,7 @@ Public Class UCVirtualMotionTrackerItem
                         End If
                     End If
 
-                    Dim mScale = New Vector3(iScale, iScale, iScale)
-
-                    mCorrectedPointControllerBeginPos *= mScale
-                    mCorrectedPointControllerEndPos *= mScale
-                    mPosition *= mScale
+                    mScale = New Vector3(iScale, iScale, iScale)
                 End If
 
                 Dim mCalibrationForward As Quaternion
@@ -2475,7 +2480,7 @@ Public Class UCVirtualMotionTrackerItem
                     mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
                 Else
                     mCalibrationForward = ClassMathUtils.LookRotation(
-                        m_PlayspaceSettings.m_PointHmdEndPos - m_PlayspaceSettings.m_PointHmdBeginPos, Vector3.UnitY)
+                        mPointHmdEndPosXZ - mPointHmdBeginPosXZ, Vector3.UnitY)
                     mForward = Vector3.UnitY * m_PlayspaceSettings.m_ForwardOffset
                     mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
                 End If
@@ -2484,12 +2489,12 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mOffsetSideways = ClassMathUtils.RotateVector(mCalibrationForward, mSideways)
 
                 Dim mPlayspaceCalibPointsRotated = ClassMathUtils.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mCorrectedPointControllerBeginPos)
+                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), m_PlayspaceSettings.m_PointControllerBeginPos * mScale)
 
                 mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward + mOffsetSideways) - mPlayspaceCalibPointsRotated
 
                 Dim mPlayspaceRotated = ClassMathUtils.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition)
+                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition * mScale)
                 Dim mPlayspaceRotatedVelocity = ClassMathUtils.RotateVector(
                     Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPositionVelocity)
 
@@ -2568,16 +2573,22 @@ Public Class UCVirtualMotionTrackerItem
                                 iMinDistance = m_PlayspaceCalibration.m_MinDistance
                             End If
 
-                            If (bAllowFinishCalibration AndAlso
-                                    Math.Abs(Vector3.Distance(mControllerPosBegin, mControllerPosEnd)) > iMinDistance AndAlso
-                                    Math.Abs(Vector3.Distance(mFromDevicePosBegin, mFromDevicePosEnd)) > iMinDistance) Then
-                                mControllerPosBegin.Y = 0.0F
-                                mControllerPosEnd.Y = 0.0F
-                                mFromDevicePosBegin.Y = 0.0F
-                                mFromDevicePosEnd.Y = 0.0F
+                            Dim mControllerPosBeginXZ = mControllerPosBegin
+                            Dim mControllerPosEndXZ = mControllerPosEnd
+                            Dim mFromDevicePosBeginXZ = mFromDevicePosBegin
+                            Dim mFromDevicePosEndXZ = mFromDevicePosEnd
 
-                                Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerPosEnd - mControllerPosBegin, Vector3.UnitY)
-                                Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFromDevicePosEnd - mFromDevicePosBegin, Vector3.UnitY)
+                            mControllerPosBeginXZ.Y = 0.0F
+                            mControllerPosEndXZ.Y = 0.0F
+                            mFromDevicePosBeginXZ.Y = 0.0F
+                            mFromDevicePosEndXZ.Y = 0.0F
+
+                            If (bAllowFinishCalibration AndAlso
+                                    Math.Abs(Vector3.Distance(mControllerPosBeginXZ, mControllerPosEndXZ)) > iMinDistance AndAlso
+                                    Math.Abs(Vector3.Distance(mFromDevicePosBeginXZ, mFromDevicePosEndXZ)) > iMinDistance) Then
+
+                                Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerPosEndXZ - mControllerPosBeginXZ, Vector3.UnitY)
+                                Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFromDevicePosEndXZ - mFromDevicePosBeginXZ, Vector3.UnitY)
                                 Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
 
                                 mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mFromDevicePosEnd - mControllerPosEnd
