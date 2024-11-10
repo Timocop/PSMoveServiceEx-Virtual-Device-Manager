@@ -308,81 +308,48 @@ Public Class ClassLibusbDriver
     End Sub
 
     Public Function InstallPlaystation4CamDriver64() As ENUM_WDI_ERROR
-        ' We should disable all related devices.
-        ' If we dont, WDI takes its sweet ass time to install drivers for each device. 
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_KNOWN_CONFIGS
-            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, False)
-            Next
-        Next
-
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_WINUSB_CONFIGS
-            ' We should disable all related devices.
-            ' If we dont, WDI takes its sweet ass time to install drivers for each device.
+            'Remove device first so we speed up the driver installation using WDI
             For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, False)
+                RemoveDevice(mUsbInfo.sDeviceID, False)
             Next
 
             Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
             If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
                 Return iExitCode
             End If
-        Next
-
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_KNOWN_CONFIGS
-            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, True)
-            Next
         Next
 
         Return ENUM_WDI_ERROR.WDI_SUCCESS
     End Function
 
     Public Function InstallPlaystationEyeDriver64() As ENUM_WDI_ERROR
-        ' We should disable all related devices.
-        ' If we dont, WDI takes its sweet ass time to install drivers for each device. 
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_KNOWN_CONFIGS
-            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, False)
-            Next
-        Next
-
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_LIBUSB_CONFIGS
+            'Remove device first so we speed up the driver installation using WDI
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                RemoveDevice(mUsbInfo.sDeviceID, False)
+            Next
+
             Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
             If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
                 Return iExitCode
             End If
-        Next
-
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSEYE_KNOWN_CONFIGS
-            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, True)
-            Next
         Next
 
         Return ENUM_WDI_ERROR.WDI_SUCCESS
     End Function
 
     Public Function InstallPlaystationVrDrvier64() As ENUM_WDI_ERROR
-        ' We should disable all related devices.
-        ' If we dont, WDI takes its sweet ass time to install drivers for each device. 
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_KNOWN_CONFIGS
-            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, False)
-            Next
-        Next
-
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_LIBUSB_CONFIGS
+            'Remove device first so we speed up the driver installation using WDI
+            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
+                RemoveDevice(mUsbInfo.sDeviceID, False)
+            Next
+
             Dim iExitCode As ENUM_WDI_ERROR = InternalInstallDriver64(mConfig)
             If (iExitCode <> ENUM_WDI_ERROR.WDI_SUCCESS) Then
                 Return iExitCode
             End If
-        Next
-
-        For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PSVR_KNOWN_CONFIGS
-            For Each mUsbInfo In GetDeviceProviderUSB(mConfig)
-                DeviceSetState(mUsbInfo.sDeviceID, True)
-            Next
         Next
 
         Return ENUM_WDI_ERROR.WDI_SUCCESS

@@ -3,6 +3,9 @@
 Public Class UCStartPage
     Private Shared g_mThreadLock As New Object
 
+    Private ReadOnly DRIVER_INSTALLER_TIME As Integer = 60
+    Private ReadOnly DRIVER_INSTALLER_MULTI As Integer = 10
+
     Private g_FormMain As FormMain
     Private g_bIgnoreEvents As Boolean = False
     Private g_bInit As Boolean = False
@@ -12,6 +15,7 @@ Public Class UCStartPage
 
     Private g_mDriverInstallThread As Threading.Thread = Nothing
     Private g_mDriverInstallFormLoad As FormLoading = Nothing
+    Private g_mDriverInstallTimerThread As Threading.Thread = Nothing
 
     Private g_mUpdateInstallThread As Threading.Thread = Nothing
     Private g_mUpdateInstallFormLoad As FormLoading = Nothing
@@ -823,6 +827,12 @@ Public Class UCStartPage
     End Sub
 
     Private Sub CleanUp()
+        If (g_mDriverInstallTimerThread IsNot Nothing AndAlso g_mDriverInstallTimerThread.IsAlive) Then
+            g_mDriverInstallTimerThread.Abort()
+            g_mDriverInstallTimerThread.Join()
+            g_mDriverInstallTimerThread = Nothing
+        End If
+
         If (g_mRuntimeDiagnostics IsNot Nothing AndAlso g_mRuntimeDiagnostics.IsAlive) Then
             g_mRuntimeDiagnostics.Abort()
             g_mRuntimeDiagnostics.Join()
@@ -1151,10 +1161,17 @@ Public Class UCStartPage
 
                                                g_mDriverInstallFormLoad = New FormLoading
                                                g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Style = ProgressBarStyle.Blocks
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Maximum = (DRIVER_INSTALLER_TIME * ClassLibusbDriver.DRV_PSEYE_LIBUSB_CONFIGS.Length * DRIVER_INSTALLER_MULTI)
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Value = 0
                                                g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                            End Sub)
 
+                    SetDriverInstallerThread(True)
+
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSEYE_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
+
+                    SetDriverInstallerThread(False)
 
                     ' Verbose already shows errors messages
                     If (iExitCode = 0) Then
@@ -1165,6 +1182,8 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
+                    SetDriverInstallerThread(False)
+
                     ClassUtils.AsyncInvoke(Sub()
                                                If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
                                                    g_mDriverInstallFormLoad.Dispose()
@@ -1237,10 +1256,17 @@ Public Class UCStartPage
 
                                                g_mDriverInstallFormLoad = New FormLoading
                                                g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Style = ProgressBarStyle.Blocks
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Maximum = (DRIVER_INSTALLER_TIME * ClassLibusbDriver.DRV_PSVR_LIBUSB_CONFIGS.Length * DRIVER_INSTALLER_MULTI)
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Value = 0
                                                g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                            End Sub)
 
+                    SetDriverInstallerThread(True)
+
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PSVR_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
+
+                    SetDriverInstallerThread(False)
 
                     ' Verbose already shows errors messages
                     If (iExitCode = 0) Then
@@ -1251,6 +1277,8 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
+                    SetDriverInstallerThread(False)
+
                     ClassUtils.AsyncInvoke(Sub()
                                                If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
                                                    g_mDriverInstallFormLoad.Dispose()
@@ -1324,10 +1352,17 @@ Public Class UCStartPage
 
                                                g_mDriverInstallFormLoad = New FormLoading
                                                g_mDriverInstallFormLoad.Text = "Installing drivers..."
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Style = ProgressBarStyle.Blocks
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Maximum = (DRIVER_INSTALLER_TIME * ClassLibusbDriver.DRV_PS4CAM_WINUSB_CONFIGS.Length * DRIVER_INSTALLER_MULTI)
+                                               g_mDriverInstallFormLoad.m_ProgressBar.Value = 0
                                                g_mDriverInstallFormLoad.ShowDialog(g_FormMain)
                                            End Sub)
 
+                    SetDriverInstallerThread(True)
+
                     Dim iExitCode As Integer = ClassUtils.RunWithAdmin(New String() {FormMain.COMMANDLINE_INSTALL_PS4CAM_DRIVERS, FormMain.COMMANDLINE_VERBOSE})
+
+                    SetDriverInstallerThread(False)
 
                     ' Verbose already shows errors messages
                     If (iExitCode = 0) Then
@@ -1338,6 +1373,8 @@ Public Class UCStartPage
                 Catch ex As Exception
                     ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
                 Finally
+                    SetDriverInstallerThread(False)
+
                     ClassUtils.AsyncInvoke(Sub()
                                                If (g_mDriverInstallFormLoad IsNot Nothing AndAlso Not g_mDriverInstallFormLoad.IsDisposed) Then
                                                    g_mDriverInstallFormLoad.Dispose()
@@ -1613,6 +1650,62 @@ Public Class UCStartPage
             End Sub)
         g_mDriverInstallThread.IsBackground = True
         g_mDriverInstallThread.Start()
+    End Sub
+
+    Private Sub SetDriverInstallerThread(bEnabled As Boolean)
+        If (bEnabled) Then
+            If (g_mDriverInstallTimerThread IsNot Nothing AndAlso g_mDriverInstallTimerThread.IsAlive) Then
+                g_mDriverInstallTimerThread.Abort()
+                g_mDriverInstallTimerThread.Join()
+                g_mDriverInstallTimerThread = Nothing
+            End If
+            g_mDriverInstallTimerThread = New Threading.Thread(Sub()
+                                                                   Try
+                                                                       While True
+                                                                           If (Process.GetProcessesByName(IO.Path.GetFileNameWithoutExtension(ClassLibusbDriver.DRV_WDI_INSTALLER_NAME)).Count > 0) Then
+                                                                               ClassUtils.AsyncInvoke(Sub()
+                                                                                                          If (g_mDriverInstallFormLoad Is Nothing OrElse g_mDriverInstallFormLoad.IsDisposed) Then
+                                                                                                              Return
+                                                                                                          End If
+
+                                                                                                          If (g_mDriverInstallFormLoad.m_ProgressBar.Style = ProgressBarStyle.Blocks) Then
+                                                                                                              If (g_mDriverInstallFormLoad.m_ProgressBar.Value < (g_mDriverInstallFormLoad.m_ProgressBar.Maximum * 0.75)) Then
+                                                                                                                  g_mDriverInstallFormLoad.m_ProgressBar.Increment(DRIVER_INSTALLER_MULTI)
+                                                                                                              ElseIf (g_mDriverInstallFormLoad.m_ProgressBar.Value < (g_mDriverInstallFormLoad.m_ProgressBar.Maximum * 0.95)) Then
+                                                                                                                  g_mDriverInstallFormLoad.m_ProgressBar.Increment(CInt(DRIVER_INSTALLER_MULTI / 2))
+                                                                                                              End If
+                                                                                                          End If
+                                                                                                      End Sub)
+                                                                           End If
+
+                                                                           Threading.Thread.Sleep(1000)
+                                                                       End While
+                                                                   Catch ex As Threading.ThreadAbortException
+                                                                       Throw
+                                                                   Catch ex As Exception
+
+                                                                   End Try
+                                                               End Sub)
+            g_mDriverInstallTimerThread.Priority = Threading.ThreadPriority.Lowest
+            g_mDriverInstallTimerThread.IsBackground = True
+            g_mDriverInstallTimerThread.Start()
+        Else
+            If (g_mDriverInstallTimerThread IsNot Nothing AndAlso g_mDriverInstallTimerThread.IsAlive) Then
+                g_mDriverInstallTimerThread.Abort()
+                g_mDriverInstallTimerThread.Join()
+                g_mDriverInstallTimerThread = Nothing
+            End If
+
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (g_mDriverInstallFormLoad Is Nothing OrElse g_mDriverInstallFormLoad.IsDisposed) Then
+                                           Return
+                                       End If
+
+                                       If (g_mDriverInstallFormLoad.m_ProgressBar.Style = ProgressBarStyle.Blocks) Then
+                                           g_mDriverInstallFormLoad.m_ProgressBar.Value = g_mDriverInstallFormLoad.m_ProgressBar.Maximum
+                                       End If
+                                   End Sub)
+        End If
     End Sub
 
     Public Sub LinkLabel_ServiceFactory_Click()
