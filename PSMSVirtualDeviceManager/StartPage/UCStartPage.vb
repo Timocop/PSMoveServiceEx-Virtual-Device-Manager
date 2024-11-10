@@ -176,7 +176,7 @@ Public Class UCStartPage
                     End If
 
                     ' Dont check too frequently
-                    If (mLastServiceLogTimestamp + New TimeSpan(0, 0, 10) > Now) Then
+                    If (mLastServiceLogTimestamp + New TimeSpan(0, 1, 0) > Now) Then
                         Threading.Thread.Sleep(1000)
                         Continue While
                     End If
