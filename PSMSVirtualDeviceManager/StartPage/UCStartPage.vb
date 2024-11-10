@@ -1683,7 +1683,7 @@ Public Class UCStartPage
                                                                    Catch ex As Threading.ThreadAbortException
                                                                        Throw
                                                                    Catch ex As Exception
-
+                                                                       ClassAdvancedExceptionLogging.WriteToLog(ex)
                                                                    End Try
                                                                End Sub)
             g_mDriverInstallTimerThread.Priority = Threading.ThreadPriority.Lowest
