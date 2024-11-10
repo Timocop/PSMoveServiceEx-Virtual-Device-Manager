@@ -148,167 +148,197 @@ Public Class UCStartPage
     End Sub
 
     Private Sub RuntimeDiagnostics_Thread()
-        Dim mLastServiceLogTimestamp As Date = Now
+        Dim mLastFileTimestamps As New Dictionary(Of String, Date)
         Dim mConfig As New ClassServiceInfo
+        Dim bForceRun As Boolean = False
+
+        Dim sCheckFiles As New List(Of String)
+        sCheckFiles.Add(ClassConfigConst.PATH_CONFIG_SETTINGS)
+        sCheckFiles.Add(ClassConfigConst.PATH_CONFIG_ATTACHMENT)
+        sCheckFiles.Add(ClassConfigConst.PATH_CONFIG_REMOTE)
+        sCheckFiles.Add(ClassConfigConst.PATH_CONFIG_VMT)
+        sCheckFiles.Add(ClassConfigConst.PATH_CONFIG_DEVICES)
 
         While True
             Dim bShowIssuesPrompt As Boolean = False
             Dim bOutdatedServiceLogs As Boolean = False
-            Dim bForceRun As Boolean = False
+            Dim mFileTimestamps As New Dictionary(Of String, Date)
 
-            Try
+            While True
+                Try
+                    ' Just find the process, dont even bother to load from config
+                    If (True) Then
+                        mConfig.FindByProcess()  ' Check if the log has been updated
+
+                        If (mConfig.FileExist()) Then
+                            Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
+                            Dim sFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
+                            If (IO.File.Exists(sFile)) Then
+                                mFileTimestamps(sFile.ToLowerInvariant) = IO.File.GetLastWriteTime(sFile)
+                            End If
+                        End If
+                    End If
+
+                    ' Check VMT config files if they changed.
+                    If (True) Then
+                        For Each sFile In sCheckFiles
+                            If (IO.File.Exists(sFile)) Then
+                                mFileTimestamps(sFile.ToLowerInvariant) = IO.File.GetLastWriteTime(sFile)
+                            End If
+                        Next
+                    End If
+
+                    If (Not bForceRun) Then
+                        Dim bFileUpdated As Boolean = False
+
+                        For Each sFile As String In mFileTimestamps.Keys
+                            Dim sFileInvariant = sFile.ToLowerInvariant
+
+                            If (mLastFileTimestamps.ContainsKey(sFileInvariant)) Then
+                                If (mLastFileTimestamps(sFileInvariant) < mFileTimestamps(sFileInvariant)) Then
+                                    bFileUpdated = True
+                                End If
+                            Else
+                                bFileUpdated = True
+                            End If
+
+                            mLastFileTimestamps(sFileInvariant) = mFileTimestamps(sFileInvariant)
+                        Next
+
+                        If (Not bFileUpdated) Then
+                            Exit While
+                        End If
+                    End If
+
+                    bForceRun = False
+
+                    Dim mLogDiagnosticsContent As New ClassLogDiagnostics.ClassLogContent()
+                    Dim mLogDiagnosticsJobs = ClassLogDiagnostics.GetAllJobs(g_FormMain, mLogDiagnosticsContent)
+                    Dim mLogDiagnosticsIssues As New Dictionary(Of String, List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE))
+
+                    ' Generate diagnostics report
+                    For Each mJob In mLogDiagnosticsJobs
+                        Try
+                            mJob.Generate(True)
+                        Catch ex As NotImplementedException
+                            ' Ignore
+                        Catch ex As Threading.ThreadAbortException
+                            Throw
+                        Catch ex As Exception
+                            ClassAdvancedExceptionLogging.WriteToLog(ex)
+                        End Try
+                    Next
+
+                    ' Get all issues
+                    For Each mJob In mLogDiagnosticsJobs
+                        Try
+                            Dim sJobTitle As String = mJob.GetActionTitle()
+
+                            mLogDiagnosticsIssues(sJobTitle) = New List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE)
+                            mLogDiagnosticsIssues(sJobTitle).AddRange(mJob.GetIssues())
+                        Catch ex As NotImplementedException
+                            ' Ignore
+                        Catch ex As Threading.ThreadAbortException
+                            Throw
+                        Catch ex As Exception
+                            ClassAdvancedExceptionLogging.WriteToLog(ex)
+                        End Try
+                    Next
+
+                    ' Dont prompt when these issues are available. 
+                    Dim bServiceLogFound As Boolean = False
+                    Dim bServiceDevicesFound As Boolean = False
+
+                    For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
+                        Select Case (sJobTitle)
+                            Case ClassLogService.SECTION_PSMOVESERVICEEX
+                                bServiceLogFound = True
+
+                                For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                                    Select Case (mIssue.sMessage)
+                                        Case ClassLogService.LOG_ISSUE_EMPTY,
+                                             ClassLogService.LOG_ISSUE_SERVICE_LOG_INCOMPLETE
+
+                                            ' We have to make sure the service log is ready and also not empty. 
+                                            Exit While
+
+                                        Case ClassLogService.LOG_ISSUE_SERVICE_LOG_OUTDATED
+                                            bOutdatedServiceLogs = True
+                                    End Select
+                                Next
+
+
+                            Case ClassLogManageServiceDevices.SECTION_VDM_SERVICE_DEVICES
+                                bServiceDevicesFound = True
+
+                                For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                                    Select Case (mIssue.sMessage)
+                                        Case ClassLogManageServiceDevices.LOG_ISSUE_EMPTY
+
+                                            ' We have to make sure the service log is ready and also not empty. 
+                                            Exit While
+                                    End Select
+                                Next
+                        End Select
+                    Next
+
+                    If (bServiceLogFound AndAlso bServiceDevicesFound) Then
+                        ' Check for issues
+                        For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
+                            Select Case (sJobTitle)
+                                Case ClassLogDxdiag.SECTION_DXDIAG
+
+                                    ' DirectX diagnostics are not available in silent mode
+                                    Continue For
+                            End Select
+
+                            For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
+                                Select Case (mIssue.sMessage)
+                                    Case ClassLogService.LOG_ISSUE_EMPTY,
+                                         ClassLogManageServiceDevices.LOG_ISSUE_EMPTY,
+                                         ClassLogDxdiag.LOG_ISSUE_EMPTY
+
+                                        ' Not really an issue, skip it
+                                        Continue For
+                                End Select
+
+                                If (mIssue.iType = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR) Then
+                                    bShowIssuesPrompt = True
+                                    Exit For
+                                End If
+                            Next
+
+                            If (bShowIssuesPrompt) Then
+                                Exit For
+                            End If
+                        Next
+
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   Panel_VdmDiagnosticIssue.Visible = bShowIssuesPrompt
+                                               End Sub)
+                    End If
+                Catch ex As Threading.ThreadAbortException
+                    Throw
+                Catch ex As Exception
+                    ClassAdvancedExceptionLogging.WriteToLog(ex)
+                End Try
+
+                Exit While
+            End While
+
+            For i = 1 To 10
+                Threading.Thread.Sleep(1000)
+
                 SyncLock g_mThreadLock
                     If (g_bRuntimeDiagnosticsExecute) Then
                         g_bRuntimeDiagnosticsExecute = False
 
                         bForceRun = True
+                        Exit For
                     End If
                 End SyncLock
 
-                ' Just find the process, dont even bother to load from config
-                mConfig.FindByProcess()
-
-                If (Not bForceRun) Then
-                    ' Check if the log has been updated
-                    If (Not mConfig.FileExist()) Then
-                        Threading.Thread.Sleep(1000)
-                        Continue While
-                    End If
-
-                    ' Dont check too frequently
-                    If (mLastServiceLogTimestamp + New TimeSpan(0, 1, 0) > Now) Then
-                        Threading.Thread.Sleep(1000)
-                        Continue While
-                    End If
-
-                    Dim sServceDirectory As String = IO.Path.GetDirectoryName(mConfig.m_FileName)
-                    Dim sLogFile As String = IO.Path.Combine(sServceDirectory, "PSMoveServiceEx.log")
-                    If (Not IO.File.Exists(sLogFile)) Then
-                        Threading.Thread.Sleep(1000)
-                        Continue While
-                    End If
-
-                    Dim mServiceLogTimestamp = IO.File.GetLastWriteTime(sLogFile)
-                    If (mLastServiceLogTimestamp = mServiceLogTimestamp) Then
-                        Threading.Thread.Sleep(1000)
-                        Continue While
-                    End If
-
-                    mLastServiceLogTimestamp = mServiceLogTimestamp
-                End If
-
-                bForceRun = False
-
-                Dim mLogDiagnosticsContent As New ClassLogDiagnostics.ClassLogContent()
-                Dim mLogDiagnosticsJobs = ClassLogDiagnostics.GetAllJobs(g_FormMain, mLogDiagnosticsContent)
-                Dim mLogDiagnosticsIssues As New Dictionary(Of String, List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE))
-
-                ' Generate diagnostics report
-                For Each mJob In mLogDiagnosticsJobs
-                    Try
-                        mJob.Generate(True)
-                    Catch ex As NotImplementedException
-                        ' Ignore
-                    Catch ex As Threading.ThreadAbortException
-                        Throw
-                    Catch ex As Exception
-                        ClassAdvancedExceptionLogging.WriteToLog(ex)
-                    End Try
-                Next
-
-                ' Get all issues
-                For Each mJob In mLogDiagnosticsJobs
-                    Try
-                        Dim sJobTitle As String = mJob.GetActionTitle()
-
-                        mLogDiagnosticsIssues(sJobTitle) = New List(Of ClassLogDiagnostics.STRUC_LOG_ISSUE)
-                        mLogDiagnosticsIssues(sJobTitle).AddRange(mJob.GetIssues())
-                    Catch ex As NotImplementedException
-                        ' Ignore
-                    Catch ex As Threading.ThreadAbortException
-                        Throw
-                    Catch ex As Exception
-                        ClassAdvancedExceptionLogging.WriteToLog(ex)
-                    End Try
-                Next
-
-                ' Dont prompt when these issues are available. 
-                Dim bServiceLogFound As Boolean = False
-                Dim bServiceDevicesFound As Boolean = False
-
-                For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
-                    Select Case (sJobTitle)
-                        Case ClassLogService.SECTION_PSMOVESERVICEEX
-                            bServiceLogFound = True
-
-                            For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
-                                Select Case (mIssue.sMessage)
-                                    Case ClassLogService.LOG_ISSUE_EMPTY,
-                                         ClassLogService.LOG_ISSUE_SERVICE_LOG_INCOMPLETE
-
-                                        ' We have to make sure the service log is ready and also not empty. 
-                                        Threading.Thread.Sleep(1000)
-                                        Continue While
-
-                                    Case ClassLogService.LOG_ISSUE_SERVICE_LOG_OUTDATED
-                                        bOutdatedServiceLogs = True
-                                End Select
-                            Next
-
-
-                        Case ClassLogManageServiceDevices.SECTION_VDM_SERVICE_DEVICES
-                            bServiceDevicesFound = True
-
-                            For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
-                                Select Case (mIssue.sMessage)
-                                    Case ClassLogManageServiceDevices.LOG_ISSUE_EMPTY
-
-                                        ' We have to make sure the service log is ready and also not empty. 
-                                        Threading.Thread.Sleep(1000)
-                                        Continue While
-                                End Select
-                            Next
-                    End Select
-                Next
-
-                If (bServiceLogFound AndAlso bServiceDevicesFound) Then
-                    ' Check for issues
-                    For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
-                        Select Case (sJobTitle)
-                            Case ClassLogDxdiag.SECTION_DXDIAG
-
-                                ' DirectX diagnostics are not available in silent mode
-                                Continue For
-                        End Select
-
-                        For Each mIssue In mLogDiagnosticsIssues(sJobTitle)
-                            Select Case (mIssue.sMessage)
-                                Case ClassLogService.LOG_ISSUE_EMPTY,
-                                     ClassLogManageServiceDevices.LOG_ISSUE_EMPTY,
-                                     ClassLogDxdiag.LOG_ISSUE_EMPTY
-
-                                    ' Not really an issue, skip it
-                                    Continue For
-                            End Select
-
-                            If (mIssue.iType = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR) Then
-                                bShowIssuesPrompt = True
-                                Exit For
-                            End If
-                        Next
-                    Next
-
-                    ClassUtils.AsyncInvoke(Sub()
-                                               Panel_VdmDiagnosticIssue.Visible = bShowIssuesPrompt
-                                           End Sub)
-                End If
-            Catch ex As Threading.ThreadAbortException
-                Throw
-            Catch ex As Exception
-                ClassAdvancedExceptionLogging.WriteToLog(ex)
-            End Try
-
-            Threading.Thread.Sleep(1000)
+            Next
         End While
     End Sub
 
