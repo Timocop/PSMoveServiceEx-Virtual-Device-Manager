@@ -2445,8 +2445,8 @@ Public Class UCVirtualMotionTrackerItem
                 If (bEnableAutoScale AndAlso m_PlayspaceSettings.m_AutoScale) Then
                     Dim iScale As Single = 1.0F
 
-                    Dim iPointHmdDistance As Single = Vector3.Distance(m_PlayspaceSettings.m_PointHmdBeginPos, m_PlayspaceSettings.m_PointHmdEndPos)
-                    Dim iPointControllerDistance As Single = Vector3.Distance(mCorrectedPointControllerBeginPos, mCorrectedPointControllerEndPos)
+                    Dim iPointHmdDistance As Single = Math.Abs(Vector3.Distance(m_PlayspaceSettings.m_PointHmdBeginPos, m_PlayspaceSettings.m_PointHmdEndPos))
+                    Dim iPointControllerDistance As Single = Math.Abs(Vector3.Distance(mCorrectedPointControllerBeginPos, mCorrectedPointControllerEndPos))
                     If (iPointHmdDistance > Single.Epsilon AndAlso iPointControllerDistance > Single.Epsilon) Then
                         iScale = (iPointHmdDistance / iPointControllerDistance)
 
