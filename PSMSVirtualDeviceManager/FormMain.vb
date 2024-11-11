@@ -445,8 +445,28 @@ Public Class FormMain
                     Try
                         Dim mDriverInstaller As New ClassLibusbDriver
 
-                        ' Remove old drivers.
-                        mDriverInstaller.UninstallPlaystationVrDriver64()
+                        ' Unisntall drivers and device first
+                        If (True) Then
+                            Dim iRetries As Integer = 5
+                            While True
+                                ' Remove old drivers.
+                                mDriverInstaller.UninstallPlaystationVrDriver64()
+
+                                Threading.Thread.Sleep(5000)
+
+                                Dim iDriverStatus = mDriverInstaller.VerifyPlaystationVrDriver64()
+                                If (iDriverStatus <> ClassLibusbDriver.ENUM_DRIVER_STATE.NOT_INSTALLED) Then
+                                    If (iRetries > 0) Then
+                                        iRetries -= 1
+                                        Continue For
+                                    End If
+
+                                    Throw New ArgumentException(String.Format("Driver uninstallation failed with error: {0} - {1}", CInt(ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_OTHER), "Unable to uninstall drivers"))
+                                End If
+
+                                Exit While
+                            End While
+                        End If
 
                         ' Just uninstall
                         If (sCommand = COMMANDLINE_UNINSTALL_PSVR) Then
@@ -454,24 +474,26 @@ Public Class FormMain
                         End If
 
                         ' Install drivers
-                        Dim iRetries As Integer = 5
-                        While (True)
-                            Threading.Thread.Sleep(5000)
+                        If (True) Then
+                            Dim iRetries As Integer = 5
+                            While (True)
+                                Threading.Thread.Sleep(5000)
 
-                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationVrDrvier64()
+                                Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationVrDrvier64()
 
-                            ' Just in case Windows installs default drivers after uninstallation.
-                            If (iRetries > -1 AndAlso iDrvierInstallExitCode = ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_PENDING_INSTALLATION) Then
-                                iRetries -= 1
-                                Continue While
-                            End If
+                                ' Just in case Windows installs default drivers after uninstallation.
+                                If (iRetries > 0 AndAlso iDrvierInstallExitCode = ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_PENDING_INSTALLATION) Then
+                                    iRetries -= 1
+                                    Continue While
+                                End If
 
-                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
-                            End If
+                                If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                    Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                                End If
 
-                            Exit While
-                        End While
+                                Exit While
+                            End While
+                        End If
                     Catch ex As Exception
                         ClassAdvancedExceptionLogging.WriteToLog(ex)
 
@@ -493,8 +515,28 @@ Public Class FormMain
                     Try
                         Dim mDriverInstaller As New ClassLibusbDriver
 
-                        ' Remove old drivers.
-                        mDriverInstaller.UninstallPlaystationEyeDriver64()
+                        ' Unisntall drivers and device first
+                        If (True) Then
+                            Dim iRetries As Integer = 5
+                            While True
+                                ' Remove old drivers.
+                                mDriverInstaller.UninstallPlaystationEyeDriver64()
+
+                                Threading.Thread.Sleep(5000)
+
+                                Dim iDriverStatus = mDriverInstaller.VerifyPlaystationEyeDriver64()
+                                If (iDriverStatus <> ClassLibusbDriver.ENUM_DRIVER_STATE.NOT_INSTALLED) Then
+                                    If (iRetries > 0) Then
+                                        iRetries -= 1
+                                        Continue For
+                                    End If
+
+                                    Throw New ArgumentException(String.Format("Driver uninstallation failed with error: {0} - {1}", CInt(ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_OTHER), "Unable to uninstall drivers"))
+                                End If
+
+                                Exit While
+                            End While
+                        End If
 
                         ' Just uninstall
                         If (sCommand.ToLowerInvariant = COMMANDLINE_UNINSTALL_PSEYE) Then
@@ -502,24 +544,26 @@ Public Class FormMain
                         End If
 
                         ' Install drivers
-                        Dim iRetries As Integer = 5
-                        While (True)
-                            Threading.Thread.Sleep(5000)
+                        If (True) Then
+                            Dim iRetries As Integer = 5
+                            While (True)
+                                Threading.Thread.Sleep(5000)
 
-                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationEyeDriver64()
+                                Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystationEyeDriver64()
 
-                            ' Just in case Windows installs default drivers after uninstallation.
-                            If (iRetries > -1 AndAlso iDrvierInstallExitCode = ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_PENDING_INSTALLATION) Then
-                                iRetries -= 1
-                                Continue While
-                            End If
+                                ' Just in case Windows installs default drivers after uninstallation.
+                                If (iRetries > 0 AndAlso iDrvierInstallExitCode = ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_PENDING_INSTALLATION) Then
+                                    iRetries -= 1
+                                    Continue While
+                                End If
 
-                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
-                            End If
+                                If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                    Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                                End If
 
-                            Exit While
-                        End While
+                                Exit While
+                            End While
+                        End If
 
                     Catch ex As Exception
                         ClassAdvancedExceptionLogging.WriteToLog(ex)
@@ -542,8 +586,28 @@ Public Class FormMain
                     Try
                         Dim mDriverInstaller As New ClassLibusbDriver
 
-                        ' Remove old drivers.
-                        mDriverInstaller.UninstallPlaystation4CamDriver64()
+                        ' Unisntall drivers and device first
+                        If (True) Then
+                            Dim iRetries As Integer = 5
+                            While True
+                                ' Remove old drivers.
+                                mDriverInstaller.UninstallPlaystation4CamDriver64()
+
+                                Threading.Thread.Sleep(5000)
+
+                                Dim iDriverStatus = mDriverInstaller.VerifyPlaystation4CamDriver64()
+                                If (iDriverStatus <> ClassLibusbDriver.ENUM_DRIVER_STATE.NOT_INSTALLED) Then
+                                    If (iRetries > 0) Then
+                                        iRetries -= 1
+                                        Continue For
+                                    End If
+
+                                    Throw New ArgumentException(String.Format("Driver uninstallation failed with error: {0} - {1}", CInt(ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_OTHER), "Unable to uninstall drivers"))
+                                End If
+
+                                Exit While
+                            End While
+                        End If
 
                         ' Just uninstall
                         If (sCommand.ToLowerInvariant = COMMANDLINE_UNINSTALL_PS4CAM) Then
@@ -551,24 +615,26 @@ Public Class FormMain
                         End If
 
                         ' Install drivers
-                        Dim iRetries As Integer = 5
-                        While (True)
-                            Threading.Thread.Sleep(5000)
+                        If (True) Then
+                            Dim iRetries As Integer = 5
+                            While (True)
+                                Threading.Thread.Sleep(5000)
 
-                            Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystation4CamDriver64()
+                                Dim iDrvierInstallExitCode = mDriverInstaller.InstallPlaystation4CamDriver64()
 
-                            ' Just in case Windows installs default drivers after uninstallation.
-                            If (iRetries > -1 AndAlso iDrvierInstallExitCode = ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_PENDING_INSTALLATION) Then
-                                iRetries -= 1
-                                Continue While
-                            End If
+                                ' Just in case Windows installs default drivers after uninstallation.
+                                If (iRetries > 0 AndAlso iDrvierInstallExitCode = ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_PENDING_INSTALLATION) Then
+                                    iRetries -= 1
+                                    Continue While
+                                End If
 
-                            If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
-                                Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
-                            End If
+                                If (iDrvierInstallExitCode <> ClassLibusbDriver.ENUM_WDI_ERROR.WDI_SUCCESS) Then
+                                    Throw New ArgumentException(String.Format("Driver installation failed with error: {0} - {1}", CInt(iDrvierInstallExitCode), iDrvierInstallExitCode.ToString))
+                                End If
 
-                            Exit While
-                        End While
+                                Exit While
+                            End While
+                        End If
 
                         ' Upload firmware
                         Using mCameraFirmware As New ClassCameraFirmwareWatchdog

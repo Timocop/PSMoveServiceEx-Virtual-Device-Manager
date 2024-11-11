@@ -91,16 +91,28 @@
                 Dim iTries As Integer = 10
 
                 Dim mLibUsbDriver As New ClassLibusbDriver
-                While (mLibUsbDriver.VerifyPlaystation4CamDriver64() AndAlso
-                        mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID, mDevice.PID, Nothing, Nothing)))
+                While (True)
+                    ' Dont run firmware uploader if we dont ahve any drivers installed
+                    If (mLibUsbDriver.VerifyPlaystation4CamDriver64() <> ClassLibusbDriver.ENUM_DRIVER_STATE.INSTALLED) Then
+                        Exit While
+                    End If
+
+                    ' We dont have to run the firmware uploader if 'USB Boot' device is not connected
+                    If (Not mLibUsbDriver.IsUsbDeviceConnected(New ClassLibusbDriver.STRUC_DEVICE_DRIVER_INFO(Nothing, Nothing, mDevice.VID, mDevice.PID, Nothing, Nothing))) Then
+                        Exit While
+                    End If
 
                     RunFirmwareUploader()
 
-                    iTries -= 1
+                    If (iTries > 0) Then
+                        iTries -= 1
 
-                    If (iTries < 1) Then
-                        Throw New ArgumentException("Unable to upload firmware")
+                        Threading.Thread.Sleep(100)
+                        Continue While
                     End If
+
+                    Throw New ArgumentException("Unable to upload firmware")
+                    Exit While
                 End While
             Next
         End SyncLock

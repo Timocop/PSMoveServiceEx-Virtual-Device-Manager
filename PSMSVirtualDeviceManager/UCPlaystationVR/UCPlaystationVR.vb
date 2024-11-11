@@ -346,7 +346,7 @@
                     Dim mClassLibusbDriver As New ClassLibusbDriver
 
                     If (mClassLibusbDriver.IsPlaystationVrUsbDeviceConnected()) Then
-                        If (mClassLibusbDriver.VerifyPlaystationVrDriver64()) Then
+                        If (mClassLibusbDriver.VerifyPlaystationVrDriver64() = ClassLibusbDriver.ENUM_DRIVER_STATE.INSTALLED) Then
                             Dim bHmdFound As Boolean = False
 
                             For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_HMD_COUNT - 1

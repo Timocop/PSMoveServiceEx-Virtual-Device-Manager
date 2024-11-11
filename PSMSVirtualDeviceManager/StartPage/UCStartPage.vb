@@ -1144,7 +1144,7 @@ Public Class UCStartPage
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
-                    If (mDriverInstaller.VerifyPlaystationEyeDriver64()) Then
+                    If (mDriverInstaller.VerifyPlaystationEyeDriver64() = ClassLibusbDriver.ENUM_DRIVER_STATE.INSTALLED) Then
                         Dim sMessage As New Text.StringBuilder
                         sMessage.AppendLine("It seems like you already have all the necessary LibUSB drivers for PlayStation Eye Cameras installed!")
                         sMessage.AppendLine()
@@ -1239,7 +1239,7 @@ Public Class UCStartPage
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
-                    If (mDriverInstaller.VerifyPlaystationVrDriver64()) Then
+                    If (mDriverInstaller.VerifyPlaystationVrDriver64() = ClassLibusbDriver.ENUM_DRIVER_STATE.INSTALLED) Then
                         Dim sMessage As New Text.StringBuilder
                         sMessage.AppendLine("It seems like you already have all the necessary LibUSB drivers for PlayStation VR installed!")
                         sMessage.AppendLine()
@@ -1335,7 +1335,7 @@ Public Class UCStartPage
                         Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
                     End If
 
-                    If (mDriverInstaller.VerifyPlaystation4CamDriver64()) Then
+                    If (mDriverInstaller.VerifyPlaystation4CamDriver64() = ClassLibusbDriver.ENUM_DRIVER_STATE.INSTALLED) Then
                         Dim sMessage As New Text.StringBuilder
                         sMessage.AppendLine("It seems like you already have all the necessary WinUSB drivers for PlayStation Stereo Cameras installed!")
                         sMessage.AppendLine()
