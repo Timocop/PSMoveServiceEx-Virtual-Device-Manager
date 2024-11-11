@@ -354,9 +354,6 @@ Public Class UCStartPage
                         g_bIsServiceRunning = bServiceRunning
 
                         ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
-
-                        ' Service updated, run diagnostics
-                        RunRuntimeDiagnostics()
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
@@ -374,9 +371,6 @@ Public Class UCStartPage
                         g_bIsServiceConnected = bIsConnected
 
                         ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
-
-                        ' Service updated, run diagnostics
-                        RunRuntimeDiagnostics()
                     End If
                 End SyncLock
             Catch ex As Threading.ThreadAbortException
