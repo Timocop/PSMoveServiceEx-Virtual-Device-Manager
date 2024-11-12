@@ -517,9 +517,9 @@ Public Class ClassLibusbDriver
         End If
     End Function
 
+    ' $TODO Might not work properly due to difference devices.
     Public Function VerifyPlaystation4CamVideoDriver64() As ENUM_DRIVER_STATE
         Dim bDriversInstalled As Boolean = True
-        Dim bDriverDetected As Boolean = False
 
         For Each mInfo In DRV_PS4CAM_KNOWN_CONFIGS
             Dim bDeviceRegistered As Boolean = False
@@ -541,13 +541,11 @@ Public Class ClassLibusbDriver
                     bDriversInstalled = False
                 Else
                     If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
-                        bDriverDetected = True
                         Continue For
                     End If
 
                     If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
                         If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
-                            bDriverDetected = True
                             Continue For
                         End If
                     End If
@@ -563,8 +561,6 @@ Public Class ClassLibusbDriver
 
         If (bDriversInstalled) Then
             Return ENUM_DRIVER_STATE.INSTALLED
-        ElseIf (bDriverDetected) Then
-            Return ENUM_DRIVER_STATE.PARTIALLY_INSTALLED
         Else
             Return ENUM_DRIVER_STATE.NOT_INSTALLED
         End If
@@ -625,7 +621,9 @@ Public Class ClassLibusbDriver
 
     Public Function VerifyPlaystationVrDriver64() As ENUM_DRIVER_STATE
         Dim bDriversInstalled As Boolean = True
+        Dim bHidInstalled As Boolean = True
         Dim bDriverDetected As Boolean = False
+        Dim bHidDetected As Boolean = False
 
         For Each mInfo In DRV_PSVR_LIBUSB_CONFIGS
             Dim bDeviceRegistered As Boolean = False
@@ -684,30 +682,30 @@ Public Class ClassLibusbDriver
                 End If
 
                 If (Not mUsbInfo.HasDriverInstalled()) Then
-                    bDriversInstalled = False
+                    bHidInstalled = False
                 Else
                     If (String.IsNullOrEmpty(mUsbInfo.sService) AndAlso String.IsNullOrEmpty(mInfo.sService)) Then
-                        bDriverDetected = True
+                        bHidDetected = True
                         Continue For
                     End If
 
                     If (Not String.IsNullOrEmpty(mUsbInfo.sService) AndAlso Not String.IsNullOrEmpty(mInfo.sService)) Then
                         If (mUsbInfo.sService.ToUpperInvariant = mInfo.sService.ToUpperInvariant) Then
-                            bDriverDetected = True
+                            bHidDetected = True
                             Continue For
                         End If
                     End If
 
-                    bDriversInstalled = False
+                    bHidInstalled = False
                 End If
             Next
 
             If (Not bDeviceRegistered) Then
-                bDriversInstalled = False
+                bHidInstalled = False
             End If
         Next
 
-        If (bDriversInstalled) Then
+        If (bDriversInstalled AndAlso bHidInstalled) Then
             Return ENUM_DRIVER_STATE.INSTALLED
         ElseIf (bDriverDetected) Then
             Return ENUM_DRIVER_STATE.PARTIALLY_INSTALLED
