@@ -458,7 +458,7 @@ Public Class FormMain
                                 If (iDriverStatus <> ClassLibusbDriver.ENUM_DRIVER_STATE.NOT_INSTALLED) Then
                                     If (iRetries > 0) Then
                                         iRetries -= 1
-                                        Continue For
+                                        Continue While
                                     End If
 
                                     Throw New ArgumentException(String.Format("Driver uninstallation failed with error: {0} - {1}", CInt(ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_OTHER), "Unable to uninstall drivers"))
@@ -528,7 +528,7 @@ Public Class FormMain
                                 If (iDriverStatus <> ClassLibusbDriver.ENUM_DRIVER_STATE.NOT_INSTALLED) Then
                                     If (iRetries > 0) Then
                                         iRetries -= 1
-                                        Continue For
+                                        Continue While
                                     End If
 
                                     Throw New ArgumentException(String.Format("Driver uninstallation failed with error: {0} - {1}", CInt(ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_OTHER), "Unable to uninstall drivers"))
@@ -599,7 +599,7 @@ Public Class FormMain
                                 If (iDriverStatus <> ClassLibusbDriver.ENUM_DRIVER_STATE.NOT_INSTALLED) Then
                                     If (iRetries > 0) Then
                                         iRetries -= 1
-                                        Continue For
+                                        Continue While
                                     End If
 
                                     Throw New ArgumentException(String.Format("Driver uninstallation failed with error: {0} - {1}", CInt(ClassLibusbDriver.ENUM_WDI_ERROR.WDI_ERROR_OTHER), "Unable to uninstall drivers"))
