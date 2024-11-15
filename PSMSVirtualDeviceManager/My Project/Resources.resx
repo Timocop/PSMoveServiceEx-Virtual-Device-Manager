@@ -394,4 +394,10 @@
   <data name="EDID_PSVR2_6A04_MULTI" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EDID_PSVR2_6A04_MULTI.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="PSVR_View_Side" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PSVR_View_Side.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PSVR_View_Top" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PSVR_View_Top.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

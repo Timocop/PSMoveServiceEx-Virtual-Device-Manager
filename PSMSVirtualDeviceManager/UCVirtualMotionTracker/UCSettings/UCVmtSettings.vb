@@ -1,4 +1,5 @@
 ﻿
+Imports System.Numerics
 Imports System.Text.RegularExpressions
 
 Public Class UCVmtSettings
@@ -6,6 +7,8 @@ Public Class UCVmtSettings
 
     Private g_bIgnoreEvents As Boolean = True
     Private g_bInit As Boolean = False
+
+    Private g_bBulbOffsetPreviewTop As Boolean = False
 
     Structure STRUC_RENDER_RES_ITEM
         Public g_iScale As Single
@@ -209,6 +212,8 @@ Public Class UCVmtSettings
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
+
+        SetBulbOffsetPreview(False)
     End Sub
 
     Public Sub LoadSettings()
@@ -268,6 +273,9 @@ Public Class UCVmtSettings
             NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, mClassSettings.m_HmdSettings.m_VFov(True))))
             NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, mClassSettings.m_HmdSettings.m_IPD)))
             ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(mClassSettings.m_HmdSettings.m_RenderScale)
+            NumericUpDown_BulbOffsetX.Value = CDec(mClassSettings.m_HmdSettings.m_ViewOffset.X)
+            NumericUpDown_BulbOffsetY.Value = CDec(mClassSettings.m_HmdSettings.m_ViewOffset.Y)
+            NumericUpDown_BulbOffsetZ.Value = CDec(mClassSettings.m_HmdSettings.m_ViewOffset.Z)
 
             'Misc Settings
             CheckBox_DisableBasestations.Checked = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
@@ -970,5 +978,106 @@ Public Class UCVmtSettings
 
     Private Sub CleanUp()
 
+    End Sub
+
+    Private Sub NumericUpDown_BulbOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetX.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim iBulbOffset As New Vector3(
+            NumericUpDown_BulbOffsetX.Value,
+            NumericUpDown_BulbOffsetY.Value,
+            NumericUpDown_BulbOffsetZ.Value)
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewOffset = iBulbOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+        SetBulbOffsetPreview(True)
+    End Sub
+
+    Private Sub NumericUpDown_BulbOffsetY_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetY.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim iBulbOffset As New Vector3(
+            NumericUpDown_BulbOffsetX.Value,
+            NumericUpDown_BulbOffsetY.Value,
+            NumericUpDown_BulbOffsetZ.Value)
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewOffset = iBulbOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+        SetBulbOffsetPreview(False)
+    End Sub
+
+    Private Sub NumericUpDown_BulbOffsetZ_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetZ.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim iBulbOffset As New Vector3(
+            NumericUpDown_BulbOffsetX.Value,
+            NumericUpDown_BulbOffsetY.Value,
+            NumericUpDown_BulbOffsetZ.Value)
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewOffset = iBulbOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+        SetBulbOffsetPreview(g_bBulbOffsetPreviewTop)
+    End Sub
+
+    Private Sub NumericUpDown_BulbOffsetX_Click(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetX.Click
+        SetBulbOffsetPreview(True)
+    End Sub
+
+    Private Sub NumericUpDown_BulbOffsetY_Click(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetY.Click
+        SetBulbOffsetPreview(False)
+    End Sub
+
+    Private Sub NumericUpDown_BulbOffsetZ_Click(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetZ.Click
+        SetBulbOffsetPreview(g_bBulbOffsetPreviewTop)
+    End Sub
+
+    Private Sub SetBulbOffsetPreview(bTopView As Boolean)
+        g_bBulbOffsetPreviewTop = bTopView
+
+        If (bTopView) Then
+            PictureBoxQuality_HmdViewOffset.Image = My.Resources.PSVR_View_Top
+        Else
+            PictureBoxQuality_HmdViewOffset.Image = My.Resources.PSVR_View_Side
+        End If
+
+        Dim iScale As Single = 0.032F
+        Dim iBulbOffset As New Vector3(
+            NumericUpDown_BulbOffsetX.Value,
+            NumericUpDown_BulbOffsetY.Value,
+            NumericUpDown_BulbOffsetZ.Value)
+
+        If (bTopView) Then
+            Dim iTopCenter As New Vector2(
+                PictureBoxQuality_HmdViewOffset.Width * 0.5F,
+                PictureBoxQuality_HmdViewOffset.Height * 0.075F)
+
+            Dim mOffsetPoint = New Point(CInt(iTopCenter.X), CInt(iTopCenter.Y))
+            mOffsetPoint.X -= CInt(Panel_BulbOffset.Width / 2.0F)
+            mOffsetPoint.Y -= CInt(Panel_BulbOffset.Height / 2.0F)
+
+            mOffsetPoint.X += CInt((iBulbOffset.X * iScale) * PictureBoxQuality_HmdViewOffset.Width)
+            mOffsetPoint.Y += CInt((iBulbOffset.Z * iScale) * PictureBoxQuality_HmdViewOffset.Height)
+
+            Panel_BulbOffset.Location = mOffsetPoint
+        Else
+            Dim iSideCenter As New Vector2(
+                PictureBoxQuality_HmdViewOffset.Width * 0.925F,
+                PictureBoxQuality_HmdViewOffset.Height * 0.5F)
+
+            Dim mOffsetPoint = New Point(CInt(iSideCenter.X), CInt(iSideCenter.Y))
+            mOffsetPoint.X -= CInt(Panel_BulbOffset.Width / 2.0F)
+            mOffsetPoint.Y -= CInt(Panel_BulbOffset.Height / 2.0F)
+
+            mOffsetPoint.X -= CInt((iBulbOffset.Z * iScale) * PictureBoxQuality_HmdViewOffset.Width)
+            mOffsetPoint.Y -= CInt((iBulbOffset.Y * iScale) * PictureBoxQuality_HmdViewOffset.Height)
+
+            Panel_BulbOffset.Location = mOffsetPoint
+        End If
     End Sub
 End Class

@@ -536,12 +536,11 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1031{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset0 Calibri;}{\f2\fnil\fcharset2 Symbol;}}
-        '''{\colortbl ;\red79\green129\blue189;\red0\green0\blue255;\red0\green0\blue0;}
+        '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1031{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset1 Segoe UI Symbol;}{\f2\fnil\fcharset0 Calibri;}{\f3\fnil\fcharset2 Symbol;}}
+        '''{\colortbl ;\red79\green129\blue189;\red204\green204\blue204;\red0\green0\blue255;\red0\green0\blue0;}
         '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-        '''\pard\sa200\sl240\slmult1\cf1\b\f0\fs28\lang7{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
-        '''0100090000034a06000000002106000000000400000003010800050000000b0200000000050000
-        '''000c0220002000030000001e0004000000 [rest of string was truncated]&quot;;.
+        '''\pard\sl240\slmult1\cf1\b\f0\fs28\lang7{\pict{\*\picprop}\wmetafile8\picw847\pich847\picwgoal480\pichgoal480 
+        '''0100090000034a06000000002106000000000400000003010800050000 [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property HelpDirectModeSteamVR() As String
             Get
@@ -594,7 +593,7 @@ Namespace My.Resources
         
         '''<summary>
         '''  Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil\fcharset1 Segoe UI Symbol;}{\f2\fnil\fcharset2 Symbol;}}
-        '''{\colortbl ;\red79\green129\blue189;\red204\green204\blue204;\red155\green187\blue89;\red192\green80\blue77;}
+        '''{\colortbl ;\red79\green129\blue189;\red155\green187\blue89;\red192\green80\blue77;\red204\green204\blue204;}
         '''{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
         '''\pard\sl240\slmult1\cf1\b\f0\fs18\lang7{\pict{\*\picprop}\wmetafile8\picw6773\pich6773\picwgoal576\pichgoal576 
         '''0100090000034a80010000002180010000000400000003010800050000000b0200000000050000
@@ -852,6 +851,26 @@ Namespace My.Resources
         Friend ReadOnly Property Pin_16x16_32() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Pin_16x16-32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property PSVR_View_Side() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("PSVR_View_Side", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property PSVR_View_Top() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("PSVR_View_Top", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

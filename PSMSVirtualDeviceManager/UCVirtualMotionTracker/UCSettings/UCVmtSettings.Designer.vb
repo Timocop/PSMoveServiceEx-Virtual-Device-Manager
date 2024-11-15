@@ -73,6 +73,24 @@ Partial Class UCVmtSettings
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox_PsvrRenderResolution = New System.Windows.Forms.ComboBox()
+        Me.TabPage_SettingsHMD = New System.Windows.Forms.TabPage()
+        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel_BulbOffset = New System.Windows.Forms.Panel()
+        Me.PictureBoxQuality_HmdViewOffset = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_BulbOffsetZ = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig20 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.NumericUpDown_BulbOffsetY = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig19 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_BulbOffsetX = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig17 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.TabPage_SettingsPSmove = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.LinkLabel_HmdRecenterFromOverride = New System.Windows.Forms.LinkLabel()
@@ -122,6 +140,9 @@ Partial Class UCVmtSettings
         Me.ComboBox_JoystickMethod = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsPlayspace = New System.Windows.Forms.TabPage()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label28 = New System.Windows.Forms.Label()
         Me.CheckBox_PlayCalibAutoscale = New System.Windows.Forms.CheckBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.NumericUpDown_PlayCalibSideOffset = New System.Windows.Forms.NumericUpDown()
@@ -179,6 +200,16 @@ Partial Class UCVmtSettings
         Me.GroupBox4.SuspendLayout()
         CType(Me.NumericUpDown_PsvrIPD, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_PsvrIPD.SuspendLayout()
+        Me.TabPage_SettingsHMD.SuspendLayout()
+        Me.GroupBox8.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        CType(Me.PictureBoxQuality_HmdViewOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown_BulbOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_BulbOffsetZ.SuspendLayout()
+        CType(Me.NumericUpDown_BulbOffsetY, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_BulbOffsetY.SuspendLayout()
+        CType(Me.NumericUpDown_BulbOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_BulbOffsetX.SuspendLayout()
         Me.TabPage_SettingsPSmove.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -212,6 +243,7 @@ Partial Class UCVmtSettings
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPSVR)
+        Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsHMD)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPSmove)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsPlayspace)
         Me.TabControl_SettingsDevices.Controls.Add(Me.TabPage_SettingsOther)
@@ -769,6 +801,217 @@ Partial Class UCVmtSettings
         Me.ComboBox_PsvrRenderResolution.Size = New System.Drawing.Size(186, 21)
         Me.ComboBox_PsvrRenderResolution.TabIndex = 1
         Me.ToolTip_Default.SetToolTip(Me.ComboBox_PsvrRenderResolution, "Default: 130%; Recommended: 250%")
+        '
+        'TabPage_SettingsHMD
+        '
+        Me.TabPage_SettingsHMD.AutoScroll = True
+        Me.TabPage_SettingsHMD.Controls.Add(Me.GroupBox8)
+        Me.TabPage_SettingsHMD.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_SettingsHMD.Name = "TabPage_SettingsHMD"
+        Me.TabPage_SettingsHMD.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_SettingsHMD.Size = New System.Drawing.Size(786, 1093)
+        Me.TabPage_SettingsHMD.TabIndex = 4
+        Me.TabPage_SettingsHMD.Text = "Head-mounted Display"
+        Me.TabPage_SettingsHMD.UseVisualStyleBackColor = True
+        '
+        'GroupBox8
+        '
+        Me.GroupBox8.Controls.Add(Me.Label27)
+        Me.GroupBox8.Controls.Add(Me.Label24)
+        Me.GroupBox8.Controls.Add(Me.Label12)
+        Me.GroupBox8.Controls.Add(Me.Panel1)
+        Me.GroupBox8.Controls.Add(Me.Label9)
+        Me.GroupBox8.Controls.Add(Me.NumericUpDown_BulbOffsetZ)
+        Me.GroupBox8.Controls.Add(Me.NumericUpDown_BulbOffsetY)
+        Me.GroupBox8.Controls.Add(Me.Label7)
+        Me.GroupBox8.Controls.Add(Me.NumericUpDown_BulbOffsetX)
+        Me.GroupBox8.Controls.Add(Me.Label6)
+        Me.GroupBox8.Controls.Add(Me.Label2)
+        Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox8.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox8.Name = "GroupBox8"
+        Me.GroupBox8.Size = New System.Drawing.Size(780, 485)
+        Me.GroupBox8.TabIndex = 6
+        Me.GroupBox8.TabStop = False
+        Me.GroupBox8.Text = "View Point Offset"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(325, 122)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(21, 13)
+        Me.Label27.TabIndex = 58
+        Me.Label27.Text = "cm"
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(325, 94)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(21, 13)
+        Me.Label24.TabIndex = 57
+        Me.Label24.Text = "cm"
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(325, 66)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(21, 13)
+        Me.Label12.TabIndex = 56
+        Me.Label12.Text = "cm"
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.Panel_BulbOffset)
+        Me.Panel1.Controls.Add(Me.PictureBoxQuality_HmdViewOffset)
+        Me.Panel1.Location = New System.Drawing.Point(19, 161)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(300, 300)
+        Me.Panel1.TabIndex = 55
+        '
+        'Panel_BulbOffset
+        '
+        Me.Panel_BulbOffset.BackColor = System.Drawing.Color.Red
+        Me.Panel_BulbOffset.Location = New System.Drawing.Point(147, 145)
+        Me.Panel_BulbOffset.Name = "Panel_BulbOffset"
+        Me.Panel_BulbOffset.Size = New System.Drawing.Size(16, 16)
+        Me.Panel_BulbOffset.TabIndex = 54
+        '
+        'PictureBoxQuality_HmdViewOffset
+        '
+        Me.PictureBoxQuality_HmdViewOffset.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.PictureBoxQuality_HmdViewOffset.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PictureBoxQuality_HmdViewOffset.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.PSVR_View_Side
+        Me.PictureBoxQuality_HmdViewOffset.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBoxQuality_HmdViewOffset.m_HighQuality = True
+        Me.PictureBoxQuality_HmdViewOffset.Name = "PictureBoxQuality_HmdViewOffset"
+        Me.PictureBoxQuality_HmdViewOffset.Size = New System.Drawing.Size(300, 300)
+        Me.PictureBoxQuality_HmdViewOffset.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBoxQuality_HmdViewOffset.TabIndex = 53
+        Me.PictureBoxQuality_HmdViewOffset.TabStop = False
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(19, 122)
+        Me.Label9.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(156, 13)
+        Me.Label9.TabIndex = 52
+        Me.Label9.Text = "Tracking LED bulb location Z:"
+        '
+        'NumericUpDown_BulbOffsetZ
+        '
+        Me.NumericUpDown_BulbOffsetZ.Controls.Add(Me.UcNumericUpDownBig20)
+        Me.NumericUpDown_BulbOffsetZ.DecimalPlaces = 2
+        Me.NumericUpDown_BulbOffsetZ.Location = New System.Drawing.Point(196, 120)
+        Me.NumericUpDown_BulbOffsetZ.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_BulbOffsetZ.Name = "NumericUpDown_BulbOffsetZ"
+        Me.NumericUpDown_BulbOffsetZ.Size = New System.Drawing.Size(123, 22)
+        Me.NumericUpDown_BulbOffsetZ.TabIndex = 51
+        '
+        'UcNumericUpDownBig20
+        '
+        Me.UcNumericUpDownBig20.AutoSize = True
+        Me.UcNumericUpDownBig20.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig20.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig20.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig20.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig20.Location = New System.Drawing.Point(79, 0)
+        Me.UcNumericUpDownBig20.m_bDockOnControl = True
+        Me.UcNumericUpDownBig20.m_NumericUpDown = Me.NumericUpDown_BulbOffsetZ
+        Me.UcNumericUpDownBig20.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig20.m_ResetVisible = False
+        Me.UcNumericUpDownBig20.Name = "UcNumericUpDownBig20"
+        Me.UcNumericUpDownBig20.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig20.TabIndex = 27
+        '
+        'NumericUpDown_BulbOffsetY
+        '
+        Me.NumericUpDown_BulbOffsetY.Controls.Add(Me.UcNumericUpDownBig19)
+        Me.NumericUpDown_BulbOffsetY.DecimalPlaces = 2
+        Me.NumericUpDown_BulbOffsetY.Location = New System.Drawing.Point(196, 92)
+        Me.NumericUpDown_BulbOffsetY.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_BulbOffsetY.Name = "NumericUpDown_BulbOffsetY"
+        Me.NumericUpDown_BulbOffsetY.Size = New System.Drawing.Size(123, 22)
+        Me.NumericUpDown_BulbOffsetY.TabIndex = 50
+        '
+        'UcNumericUpDownBig19
+        '
+        Me.UcNumericUpDownBig19.AutoSize = True
+        Me.UcNumericUpDownBig19.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig19.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig19.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig19.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig19.Location = New System.Drawing.Point(79, 0)
+        Me.UcNumericUpDownBig19.m_bDockOnControl = True
+        Me.UcNumericUpDownBig19.m_NumericUpDown = Me.NumericUpDown_BulbOffsetY
+        Me.UcNumericUpDownBig19.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig19.m_ResetVisible = False
+        Me.UcNumericUpDownBig19.Name = "UcNumericUpDownBig19"
+        Me.UcNumericUpDownBig19.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig19.TabIndex = 27
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(19, 94)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(155, 13)
+        Me.Label7.TabIndex = 49
+        Me.Label7.Text = "Tracking LED bulb location Y:"
+        '
+        'NumericUpDown_BulbOffsetX
+        '
+        Me.NumericUpDown_BulbOffsetX.Controls.Add(Me.UcNumericUpDownBig17)
+        Me.NumericUpDown_BulbOffsetX.DecimalPlaces = 2
+        Me.NumericUpDown_BulbOffsetX.Location = New System.Drawing.Point(196, 64)
+        Me.NumericUpDown_BulbOffsetX.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
+        Me.NumericUpDown_BulbOffsetX.Name = "NumericUpDown_BulbOffsetX"
+        Me.NumericUpDown_BulbOffsetX.Size = New System.Drawing.Size(123, 22)
+        Me.NumericUpDown_BulbOffsetX.TabIndex = 48
+        '
+        'UcNumericUpDownBig17
+        '
+        Me.UcNumericUpDownBig17.AutoSize = True
+        Me.UcNumericUpDownBig17.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig17.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig17.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig17.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig17.Location = New System.Drawing.Point(79, 0)
+        Me.UcNumericUpDownBig17.m_bDockOnControl = True
+        Me.UcNumericUpDownBig17.m_NumericUpDown = Me.NumericUpDown_BulbOffsetX
+        Me.UcNumericUpDownBig17.m_ResetValue = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.UcNumericUpDownBig17.m_ResetVisible = False
+        Me.UcNumericUpDownBig17.Name = "UcNumericUpDownBig17"
+        Me.UcNumericUpDownBig17.Size = New System.Drawing.Size(44, 22)
+        Me.UcNumericUpDownBig17.TabIndex = 27
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(19, 66)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(156, 13)
+        Me.Label6.TabIndex = 47
+        Me.Label6.Text = "Tracking LED bulb location X:"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
+        Me.Label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label2.Location = New System.Drawing.Point(19, 21)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(622, 26)
+        Me.Label2.TabIndex = 46
+        Me.Label2.Text = resources.GetString("Label2.Text")
         '
         'TabPage_SettingsPSmove
         '
@@ -1400,6 +1643,9 @@ Partial Class UCVmtSettings
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.Label31)
+        Me.GroupBox3.Controls.Add(Me.Label30)
+        Me.GroupBox3.Controls.Add(Me.Label28)
         Me.GroupBox3.Controls.Add(Me.CheckBox_PlayCalibAutoscale)
         Me.GroupBox3.Controls.Add(Me.Label17)
         Me.GroupBox3.Controls.Add(Me.NumericUpDown_PlayCalibSideOffset)
@@ -1418,6 +1664,33 @@ Partial Class UCVmtSettings
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Playspace Calibration Settings"
         '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Location = New System.Drawing.Point(272, 90)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(21, 13)
+        Me.Label31.TabIndex = 87
+        Me.Label31.Text = "cm"
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Location = New System.Drawing.Point(272, 62)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(21, 13)
+        Me.Label30.TabIndex = 86
+        Me.Label30.Text = "cm"
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(272, 34)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(21, 13)
+        Me.Label28.TabIndex = 85
+        Me.Label28.Text = "cm"
+        '
         'CheckBox_PlayCalibAutoscale
         '
         Me.CheckBox_PlayCalibAutoscale.AutoSize = True
@@ -1435,9 +1708,9 @@ Partial Class UCVmtSettings
         Me.Label17.Location = New System.Drawing.Point(16, 62)
         Me.Label17.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(88, 13)
+        Me.Label17.Size = New System.Drawing.Size(65, 13)
         Me.Label17.TabIndex = 82
-        Me.Label17.Text = "Side offset (cm):"
+        Me.Label17.Text = "Side offset:"
         '
         'NumericUpDown_PlayCalibSideOffset
         '
@@ -1472,9 +1745,9 @@ Partial Class UCVmtSettings
         Me.Label26.Location = New System.Drawing.Point(16, 34)
         Me.Label26.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(109, 13)
+        Me.Label26.Size = New System.Drawing.Size(86, 13)
         Me.Label26.TabIndex = 76
-        Me.Label26.Text = "Forward offset (cm):"
+        Me.Label26.Text = "Forward offset:"
         '
         'ComboBox_PlayCalibForwardMethod
         '
@@ -1545,9 +1818,9 @@ Partial Class UCVmtSettings
         Me.Label29.Location = New System.Drawing.Point(16, 90)
         Me.Label29.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(101, 13)
+        Me.Label29.Size = New System.Drawing.Size(78, 13)
         Me.Label29.TabIndex = 78
-        Me.Label29.Text = "Height offset (cm):"
+        Me.Label29.Text = "Height offset:"
         '
         'NumericUpDown_PlayCalibForwardOffset
         '
@@ -1912,6 +2185,20 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_PsvrIPD, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_PsvrIPD.ResumeLayout(False)
         Me.NumericUpDown_PsvrIPD.PerformLayout()
+        Me.TabPage_SettingsHMD.ResumeLayout(False)
+        Me.GroupBox8.ResumeLayout(False)
+        Me.GroupBox8.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        CType(Me.PictureBoxQuality_HmdViewOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown_BulbOffsetZ, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_BulbOffsetZ.ResumeLayout(False)
+        Me.NumericUpDown_BulbOffsetZ.PerformLayout()
+        CType(Me.NumericUpDown_BulbOffsetY, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_BulbOffsetY.ResumeLayout(False)
+        Me.NumericUpDown_BulbOffsetY.PerformLayout()
+        CType(Me.NumericUpDown_BulbOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_BulbOffsetX.ResumeLayout(False)
+        Me.NumericUpDown_BulbOffsetX.PerformLayout()
         Me.TabPage_SettingsPSmove.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
@@ -2085,4 +2372,25 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_EnableVelocityTrackers As CheckBox
     Friend WithEvents CheckBox_EnableVelocityControllers As CheckBox
     Friend WithEvents CheckBox_EnableManualVelocity As CheckBox
+    Friend WithEvents TabPage_SettingsHMD As TabPage
+    Friend WithEvents GroupBox8 As GroupBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label9 As Label
+    Friend WithEvents NumericUpDown_BulbOffsetZ As NumericUpDown
+    Friend WithEvents UcNumericUpDownBig20 As UCNumericUpDownBig
+    Friend WithEvents NumericUpDown_BulbOffsetY As NumericUpDown
+    Friend WithEvents UcNumericUpDownBig19 As UCNumericUpDownBig
+    Friend WithEvents Label7 As Label
+    Friend WithEvents NumericUpDown_BulbOffsetX As NumericUpDown
+    Friend WithEvents UcNumericUpDownBig17 As UCNumericUpDownBig
+    Friend WithEvents Label6 As Label
+    Friend WithEvents PictureBoxQuality_HmdViewOffset As ClassPictureBoxQuality
+    Friend WithEvents Panel_BulbOffset As Panel
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label24 As Label
+    Friend WithEvents Label12 As Label
+    Friend WithEvents Label31 As Label
+    Friend WithEvents Label30 As Label
+    Friend WithEvents Label28 As Label
 End Class

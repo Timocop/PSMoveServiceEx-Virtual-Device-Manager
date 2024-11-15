@@ -49,6 +49,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ComboBox_SteamTrackerRole = New System.Windows.Forms.ComboBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ComboBox_HmdViewPointOffset = New System.Windows.Forms.ComboBox()
         Me.Label_TrackerName = New System.Windows.Forms.Label()
         Me.Button_TrackerRecenter = New System.Windows.Forms.Button()
         Me.ContextMenuStrip_TrackerRecenter = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -57,6 +58,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItem_TrackerRecenterClear = New System.Windows.Forms.ToolStripMenuItem()
         Me.Timer_RecenterTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip_TrackerRecenter.SuspendLayout()
@@ -259,7 +261,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(324, 102)
+        Me.Label4.Location = New System.Drawing.Point(319, 102)
         Me.Label4.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(117, 13)
@@ -288,6 +290,20 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ToolTip1.ReshowDelay = 20
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Information"
+        '
+        'ComboBox_HmdViewPointOffset
+        '
+        Me.ComboBox_HmdViewPointOffset.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_HmdViewPointOffset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdViewPointOffset.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdViewPointOffset.FormattingEnabled = True
+        Me.ComboBox_HmdViewPointOffset.Location = New System.Drawing.Point(451, 69)
+        Me.ComboBox_HmdViewPointOffset.Name = "ComboBox_HmdViewPointOffset"
+        Me.ComboBox_HmdViewPointOffset.Size = New System.Drawing.Size(150, 21)
+        Me.ComboBox_HmdViewPointOffset.TabIndex = 45
+        Me.ToolTip1.SetToolTip(Me.ComboBox_HmdViewPointOffset, "When enabled, this device uses the head-mounted display view point offsets from t" &
+        "he head-mounted display settings." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This is only useful if you are using this tra" &
+        "cker as a head-mounted display tracker.")
         '
         'Label_TrackerName
         '
@@ -348,12 +364,25 @@ Partial Class UCVirtualMotionTrackerItem
         'Timer_RecenterTimer
         '
         '
+        'Label1
+        '
+        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(319, 72)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(126, 13)
+        Me.Label1.TabIndex = 44
+        Me.Label1.Text = "HMD view point offset:"
+        '
         'UCVirtualMotionTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.ComboBox_HmdViewPointOffset)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Button_TrackerRecenter)
         Me.Controls.Add(Me.Label_TrackerName)
         Me.Controls.Add(Me.ComboBox_SteamTrackerRole)
@@ -409,4 +438,6 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents Timer_RecenterTimer As Timer
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents ToolStripMenuItem_TrackerRecenterClear As ToolStripMenuItem
+    Friend WithEvents Label1 As Label
+    Friend WithEvents ComboBox_HmdViewPointOffset As ComboBox
 End Class

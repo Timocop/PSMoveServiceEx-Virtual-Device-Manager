@@ -532,6 +532,8 @@
   <ItemGroup>
     <Content Include="bootux_1021.ico" />
     <Content Include="PSMSX-Icon.ico" />
+    <None Include="Resources\PSVR_View_Top.png" />
+    <None Include="Resources\PSVR_View_Side.png" />
     <None Include="Resources\EDID_PSVR1_5504_DIRECT.bin" />
     <None Include="Resources\EDID_PSVR1_5504_MULTI.bin" />
     <None Include="Resources\EDID_PSVR1_B403_DIRECT.bin" />

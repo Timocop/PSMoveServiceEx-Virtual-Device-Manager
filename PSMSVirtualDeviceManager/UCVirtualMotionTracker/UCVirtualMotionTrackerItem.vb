@@ -90,6 +90,23 @@ Public Class UCVirtualMotionTrackerItem
         Try
             g_bIgnoreEvents = True
 
+            ComboBox_HmdViewPointOffset.Items.Clear()
+            ComboBox_HmdViewPointOffset.Items.Add("Yes")
+            ComboBox_HmdViewPointOffset.Items.Add("No")
+
+            If (bIsHMD) Then
+                ComboBox_HmdViewPointOffset.SelectedIndex = 0
+                ComboBox_HmdViewPointOffset.Enabled = False
+            Else
+                ComboBox_HmdViewPointOffset.SelectedIndex = 1
+            End If
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
             ComboBox_VMTTrackerID.Items.Clear()
 
             If (bIsHMD) Then
@@ -456,6 +473,21 @@ Public Class UCVirtualMotionTrackerItem
         g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
     End Sub
 
+    Private Sub ComboBox_HmdViewPointOffset_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdViewPointOffset.SelectedIndexChanged
+        UpdateTrackerTitle()
+
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        If (g_bIsHMD) Then
+            Return
+        End If
+
+        g_mClassIO.m_UsbHmdViewPointOffset = (ComboBox_HmdViewPointOffset.SelectedIndex > 0)
+        SetUnsavedState(True)
+    End Sub
+
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
         Try
             g_mClassConfig.SaveConfig()
@@ -801,6 +833,7 @@ Public Class UCVirtualMotionTrackerItem
         Private g_bIsHMD As Boolean = False
         Private g_iVmtTracker As Integer = -1
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
+        Private g_bUsbHmdViewPointOffset As Boolean = False
         Private g_mOscThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As Vector3 = Vector3.Zero
@@ -1095,6 +1128,23 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
+        Property m_UsbHmdViewPointOffset As Boolean
+            Get
+                SyncLock g_mThreadLock
+                    If (g_bIsHMD) Then
+                        Return True
+                    End If
+
+                    Return g_bUsbHmdViewPointOffset
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock g_mThreadLock
+                    g_bUsbHmdViewPointOffset = value
+                End SyncLock
+            End Set
+        End Property
+
         Public Sub Enable()
             If (g_iIndex < 0) Then
                 Return
@@ -1374,6 +1424,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov(bUseCustomDistortion)
                         Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
                         Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
+                        Dim mViewOffset = mClassSettings.m_HmdSettings.m_ViewOffset
 
                         ' Get misc settings
                         Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
@@ -1434,6 +1485,8 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPositionVelocity = mCalibratedPositionVelocity
                                         Dim mOrientationVelocity = mCalibratedOrientationVelocity
+
+                                        InternalApplyViewPOintOffsetLogic(mViewOffset, mPosition, mOrientation)
 
                                         mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
                                         mOscDataPack.mOrientation = mOrientation
@@ -1531,8 +1584,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         mVelocityOrientation = mOscDataPack.mOrientationVelocity
 
                                                         InternalCalculateVelocity(
-                                                            mCalcPosition, mCalcOrientation,
+                                                            mRawPosition, mRawOrientation,
                                                             mVelocityLastPosition, mVelocityLastOrientation,
+                                                            mCalcPosition, mCalcOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
                                                             mLastPositionTime, mLastOrientationTime,
                                                             mNormalizedPositionDelta, mNormalizedOrientationDelta,
@@ -1675,6 +1729,10 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mPositionVelocity = mCalibratedPositionVelocity
                                         Dim mOrientationVelocity = mCalibratedOrientationVelocity
 
+                                        If (m_UsbHmdViewPointOffset) Then
+                                            InternalApplyViewPOintOffsetLogic(mViewOffset, mPosition, mOrientation)
+                                        End If
+
                                         mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
                                         mOscDataPack.mOrientation = mOrientation
                                         mOscDataPack.mPositionVelocity = mPositionVelocity * CSng(PSM_CENTIMETERS_TO_METERS)
@@ -1815,8 +1873,9 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation = mOscDataPack.mOrientationVelocity
 
                                                             InternalCalculateVelocity(
-                                                                mCalcPosition, mCalcOrientation,
+                                                                mRawPosition, mRawOrientation,
                                                                 mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
                                                                 mLastPositionTime, mLastOrientationTime,
                                                                 mNormalizedPositionDelta, mNormalizedOrientationDelta,
@@ -1924,8 +1983,9 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation = mOscDataPack.mOrientationVelocity
 
                                                             InternalCalculateVelocity(
-                                                                mCalcPosition, mCalcOrientation,
+                                                                mRawPosition, mRawOrientation,
                                                                 mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
                                                                 mLastPositionTime, mLastOrientationTime,
                                                                 mNormalizedPositionDelta, mNormalizedOrientationDelta,
@@ -1989,8 +2049,9 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation = mOscDataPack.mOrientationVelocity
 
                                                             InternalCalculateVelocity(
-                                                                mCalcPosition, mCalcOrientation,
+                                                                mRawPosition, mRawOrientation,
                                                                 mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
                                                                 mLastPositionTime, mLastOrientationTime,
                                                                 mNormalizedPositionDelta, mNormalizedOrientationDelta,
@@ -2104,8 +2165,9 @@ Public Class UCVirtualMotionTrackerItem
                                                             mVelocityOrientation = mOscDataPack.mOrientationVelocity
 
                                                             InternalCalculateVelocity(
-                                                                mCalcPosition, mCalcOrientation,
+                                                                mRawPosition, mRawOrientation,
                                                                 mVelocityLastPosition, mVelocityLastOrientation,
+                                                                mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
                                                                 mLastPositionTime, mLastOrientationTime,
                                                                 mNormalizedPositionDelta, mNormalizedOrientationDelta,
@@ -2300,12 +2362,13 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Private Sub InternalCalculateVelocity(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
-                                                      ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
-                                                      ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
-                                                      ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
-                                                      ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
-                                                      ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
+        Private Sub InternalCalculateVelocity(ByRef mRawPosition As Vector3, ByRef mRawOrientation As Quaternion,
+                                                ByRef mLastRawPosition As Vector3, ByRef mLastRawOrientation As Quaternion,
+                                                ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
+                                                ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
+                                                ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
+                                                ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
+                                                ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
             Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
             Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
 
@@ -2316,7 +2379,7 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mDelta As TimeSpan = (mNow - mLastPositionTime)
                 Dim iDeltaTime As Double = mDelta.TotalSeconds
 
-                If (mPosition <> mLastPosition) Then
+                If (mLastRawPosition <> mRawPosition) Then
                     mLastPositionTime = mNow
 
                     mNormalizedPositionDelta.Enqueue(iDeltaTime)
@@ -2325,7 +2388,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                     Dim iAvgDeltaTime = mNormalizedPositionDelta.Average()
 
-                    mLastPosition = mPosition
+                    mLastRawPosition = mRawPosition
                     iVelocityPositionDelta = iAvgDeltaTime
                 End If
 
@@ -2345,7 +2408,7 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mDelta As TimeSpan = (mNow - mLastOrientationTime)
                 Dim iDeltaTime As Double = mDelta.TotalSeconds
 
-                If (mOrientation <> mLastOrientation) Then
+                If (mLastRawOrientation <> mRawOrientation) Then
                     mLastOrientationTime = mNow
 
                     mNormalizedOrientationDelta.Enqueue(iDeltaTime)
@@ -2354,7 +2417,7 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                     Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
 
-                    mLastOrientation = mOrientation
+                    mLastRawOrientation = mRawOrientation
                     iVelocityOrientationDelta = iAvgDeltaTime
                 End If
 
@@ -2423,6 +2486,14 @@ Public Class UCVirtualMotionTrackerItem
                     g_mHeptic.Clear()
                 End SyncLock
             End If
+        End Sub
+
+        Private Sub InternalApplyViewPOintOffsetLogic(ByRef mViewOffset As Vector3,
+                                                        ByRef mPosition As Vector3,
+                                                        ByRef mOrientation As Quaternion)
+            Dim mOffsetForward = ClassMathUtils.RotateVector(mOrientation, -mViewOffset)
+
+            mPosition += mOffsetForward
         End Sub
 
         Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
@@ -3357,6 +3428,7 @@ Public Class UCVirtualMotionTrackerItem
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "HmdViewPointOffset", CStr(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset.SelectedIndex)))
 
                             mIni.WriteKeyValue(mIniContent.ToArray)
                         End Using
@@ -3392,6 +3464,7 @@ Public Class UCVirtualMotionTrackerItem
                         Using mIni As New ClassIni(mStream)
                             SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
                             SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+                            SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset, CInt(mIni.ReadKeyValue(sDevicePath, "HmdViewPointOffset", "1")))
                         End Using
                     End Using
                 End If

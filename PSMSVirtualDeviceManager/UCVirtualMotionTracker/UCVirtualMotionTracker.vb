@@ -309,6 +309,7 @@ Public Class UCVirtualMotionTracker
             Private g_iVFov As Single = DISPLAY_VFOV
             Private g_iIPD As Single = 67.0F
             Private g_iRenderScale As Single = 1.3F '130% for 0.7 distortion scale compensation
+            Private g_mViewOFfset As Vector3 = Vector3.Zero
 
             Public Property m_UseCustomDistortion As Boolean
                 Get
@@ -518,6 +519,17 @@ Public Class UCVirtualMotionTracker
                     End If
 
                     g_iRenderScale = value
+                End Set
+            End Property
+
+            Public Property m_ViewOffset As Vector3
+                Get
+                    Return g_mViewOFfset
+                End Get
+                Set(value As Vector3)
+                    g_mViewOFfset.X = Math.Max(-100.0F, Math.Min(100.0F, value.X))
+                    g_mViewOFfset.Y = Math.Max(-100.0F, Math.Min(100.0F, value.Y))
+                    g_mViewOFfset.Z = Math.Max(-100.0F, Math.Min(100.0F, value.Z))
                 End Set
             End Property
         End Class
@@ -1097,6 +1109,12 @@ Public Class UCVirtualMotionTracker
                         m_HmdSettings.m_RenderScale =
                             Single.Parse(mIni.ReadKeyValue("HmdSettings", "RenderScale", "1.3"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
+                        tmpVec3 = Vector3.Zero
+                        tmpVec3.X = Single.Parse(mIni.ReadKeyValue("HmdSettings", "ViewOffsetX", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Y = Single.Parse(mIni.ReadKeyValue("HmdSettings", "ViewOffsetY", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("HmdSettings", "ViewOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                        m_HmdSettings.m_ViewOffset = tmpVec3
+
                         ' Misc Settings 
                         g_mMiscSettings.m_DisableBaseStationSpawning =
                             (mIni.ReadKeyValue("MiscSettings", "DisableBaseStationSpawning", "false") = "true")
@@ -1239,6 +1257,10 @@ Public Class UCVirtualMotionTracker
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "IPD", m_HmdSettings.m_IPD.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "RenderScale", m_HmdSettings.m_RenderScale.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "ViewOffsetX", m_HmdSettings.m_ViewOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "ViewOffsetY", m_HmdSettings.m_ViewOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "ViewOffsetZ", m_HmdSettings.m_ViewOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "DisableBaseStationSpawning", If(g_mMiscSettings.m_DisableBaseStationSpawning, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))
