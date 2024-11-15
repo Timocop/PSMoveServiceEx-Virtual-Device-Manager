@@ -157,7 +157,6 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -2083,7 +2082,6 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_EnableVelocityHmd As CheckBox
     Friend WithEvents CheckBox_HybridGripToggle As CheckBox
     Friend WithEvents GroupBox7 As GroupBox
-    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents CheckBox_EnableVelocityTrackers As CheckBox
     Friend WithEvents CheckBox_EnableVelocityControllers As CheckBox
     Friend WithEvents CheckBox_EnableManualVelocity As CheckBox

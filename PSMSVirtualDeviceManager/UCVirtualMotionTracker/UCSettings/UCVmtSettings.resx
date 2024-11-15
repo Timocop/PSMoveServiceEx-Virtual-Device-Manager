@@ -146,7 +146,4 @@ This may not be optimal because the PSMoveServiceEx velocity is already included
 If you are using numerous devices, consider disabling emulated Base Station spawning to free up slots for trackers. 
 It's important to note that exceeding the 16-device limit could result in some devices not being detected in games!</value>
   </data>
-  <metadata name="BackgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>529, 25</value>
-  </metadata>
 </root>
