@@ -1317,14 +1317,6 @@ Public Class UCVirtualMotionTrackerItem
             Dim mRecenterHmdData As New STRUC_RECENTER_HMD_DATA
             Dim mJoystickEmulationData As New STRUC_JOYSTICK_EMULATION_DATA
             Dim mButtonsData As New STRUC_BUTTONS_DATA
-            mCalculateVelocityManualData.Reset()
-            mCalculateVelocityData.Reset()
-            mHepticFeedbackData.Reset()
-            mPlayspaceRecenterData.Reset()
-            mRecenterControllerData.Reset()
-            mRecenterHmdData.Reset()
-            mJoystickEmulationData.Reset()
-            mButtonsData.Reset()
 
             Dim mRecenterQuat = Quaternion.Identity
 
@@ -2228,21 +2220,19 @@ Public Class UCVirtualMotionTrackerItem
             End While
         End Sub
 
-        Structure STRUC_CALCULATE_VELOCITY_MANUAL_DATA
-            Dim mLastPosition As Vector3
-            Dim mLastOrientation As Quaternion
-            Dim mLastVelocityPosition As Vector3
-            Dim mLastVelocityOrientation As Vector3
-            Dim mLastPositionTime As Date
-            Dim mLastOrientationTime As Date
-            Dim mNormalizedPositionDelta As Queue(Of Double)
-            Dim mNormalizedOrientationDelta As Queue(Of Double)
-            Dim iVelocityPositionDelta As Double
-            Dim iVelocityOrientationDelta As Double
+        Class STRUC_CALCULATE_VELOCITY_MANUAL_DATA
+            Public mLastPosition As Vector3
+            Public mLastOrientation As Quaternion
+            Public mLastVelocityPosition As Vector3
+            Public mLastVelocityOrientation As Vector3
+            Public mLastPositionTime As Date
+            Public mLastOrientationTime As Date
+            Public mNormalizedPositionDelta As Queue(Of Double)
+            Public mNormalizedOrientationDelta As Queue(Of Double)
+            Public iVelocityPositionDelta As Double
+            Public iVelocityOrientationDelta As Double
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 mLastPosition = Vector3.Zero
                 mLastOrientation = Quaternion.Identity
                 mLastVelocityPosition = Vector3.Zero
@@ -2253,10 +2243,8 @@ Public Class UCVirtualMotionTrackerItem
                 mNormalizedOrientationDelta = New Queue(Of Double)
                 iVelocityPositionDelta = 0.0
                 iVelocityOrientationDelta = 0.0
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalCalculateVelocityManual(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
                                                     ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
@@ -2338,21 +2326,19 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_CALCULATE_VELOCITY_DATA
-            Dim mLastRawPosition As Vector3
-            Dim mLastRawOrientation As Quaternion
-            Dim mLastVelocityPosition As Vector3
-            Dim mLastVelocityOrientation As Vector3
-            Dim mLastPositionTime As Date
-            Dim mLastOrientationTime As Date
-            Dim mNormalizedPositionDelta As Queue(Of Double)
-            Dim mNormalizedOrientationDelta As Queue(Of Double)
-            Dim iVelocityPositionDelta As Double
-            Dim iVelocityOrientationDelta As Double
+        Class STRUC_CALCULATE_VELOCITY_DATA
+            Public mLastRawPosition As Vector3
+            Public mLastRawOrientation As Quaternion
+            Public mLastVelocityPosition As Vector3
+            Public mLastVelocityOrientation As Vector3
+            Public mLastPositionTime As Date
+            Public mLastOrientationTime As Date
+            Public mNormalizedPositionDelta As Queue(Of Double)
+            Public mNormalizedOrientationDelta As Queue(Of Double)
+            Public iVelocityPositionDelta As Double
+            Public iVelocityOrientationDelta As Double
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 mLastRawPosition = Vector3.Zero
                 mLastRawOrientation = Quaternion.Identity
                 mLastVelocityPosition = Vector3.Zero
@@ -2363,10 +2349,8 @@ Public Class UCVirtualMotionTrackerItem
                 mNormalizedOrientationDelta = New Queue(Of Double)
                 iVelocityPositionDelta = 0.0
                 iVelocityOrientationDelta = 0.0
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalCalculateVelocity(ByRef mRawPosition As Vector3, ByRef mRawOrientation As Quaternion,
                                                 ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
@@ -2433,19 +2417,15 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_HEPTIC_FEEDBACK_DATA
-            Dim mRumbleLastTimeSendValid As Boolean
-            Dim mRumbleLastTimeSend As Date
+        Class STRUC_HEPTIC_FEEDBACK_DATA
+            Public mRumbleLastTimeSendValid As Boolean
+            Public mRumbleLastTimeSend As Date
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 mRumbleLastTimeSendValid = False
                 mRumbleLastTimeSend = Now
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalHepticFeedbackLogic(ByRef bEnableHepticFeedback As Boolean,
                                                 ByRef mServiceClient As ClassServiceClient,
@@ -2594,25 +2574,21 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_PLAYSPACE_RECENTER_DATA
-            Dim mPlayspaceRecenterButtonPressed As Boolean
-            Dim mPlayspaceRecenterButtonHolding As Boolean
-            Dim mLastPlayspaceRecenterTime As Stopwatch
-            Dim mPlayspaceRecenterLastHmdSerial As String
-            Dim mPlayspaceRecenterCalibrationSave As Boolean
+        Class STRUC_PLAYSPACE_RECENTER_DATA
+            Public mPlayspaceRecenterButtonPressed As Boolean
+            Public mPlayspaceRecenterButtonHolding As Boolean
+            Public mLastPlayspaceRecenterTime As Stopwatch
+            Public mPlayspaceRecenterLastHmdSerial As String
+            Public mPlayspaceRecenterCalibrationSave As Boolean
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 mPlayspaceRecenterButtonPressed = False
                 mPlayspaceRecenterButtonHolding = False
                 mLastPlayspaceRecenterTime = New Stopwatch
                 mPlayspaceRecenterLastHmdSerial = ""
                 mPlayspaceRecenterCalibrationSave = False
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalPlayspaceRecenterLogic(ByRef bEnabledPlayspaceRecenter As Boolean,
                                                   ByRef bHoldingRecenterButtons As Boolean,
@@ -2737,19 +2713,15 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_RECENTER_CONTROLLER_DATA
-            Dim mRecenterButtonPressed As Boolean
-            Dim mLastRecenterTime As Stopwatch
+        Class STRUC_RECENTER_CONTROLLER_DATA
+            Public mRecenterButtonPressed As Boolean
+            Public mLastRecenterTime As Stopwatch
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 mRecenterButtonPressed = False
                 mLastRecenterTime = New Stopwatch
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalRecenterControllerLogic(ByRef bEnableControllerRecenter As Boolean,
                                                     ByRef bHoldingRecenterButtons As Boolean,
@@ -2829,19 +2801,15 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_RECENTER_HMD_DATA
-            Dim mHmdRecenterButtonPressed As Boolean
-            Dim mLastHmdRecenterTime As Stopwatch
+        Class STRUC_RECENTER_HMD_DATA
+            Public mHmdRecenterButtonPressed As Boolean
+            Public mLastHmdRecenterTime As Stopwatch
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 mHmdRecenterButtonPressed = False
                 mLastHmdRecenterTime = New Stopwatch
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalRecenterHmd(ByRef bEnableHmdRecenter As Boolean,
                                         ByRef mServiceClient As ClassServiceClient,
@@ -2972,25 +2940,21 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_JOYSTICK_EMULATION_DATA
-            Dim bJoystickButtonPressed As Boolean
-            Dim mJoystickPressedLastOrientation As Quaternion
-            Dim mJoystickPostion As Vector3
-            Dim mJoystickPressedLastPosition As Vector3
-            Dim mJoystickShortcuts As Dictionary(Of Integer, Vector2)
+        Class STRUC_JOYSTICK_EMULATION_DATA
+            Public bJoystickButtonPressed As Boolean
+            Public mJoystickPressedLastOrientation As Quaternion
+            Public mJoystickPostion As Vector3
+            Public mJoystickPressedLastPosition As Vector3
+            Public mJoystickShortcuts As Dictionary(Of Integer, Vector2)
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 bJoystickButtonPressed = False
                 mJoystickPressedLastOrientation = Quaternion.Identity
                 mJoystickPostion = Vector3.Zero
                 mJoystickPressedLastPosition = Vector3.Zero
                 mJoystickShortcuts = New Dictionary(Of Integer, Vector2)
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalJoystickEmulationLogic(ByRef mOscDataPack As STRUC_OSC_DATA_PACK,
                                                    ByRef bJoystickTrigger As Boolean,
@@ -3149,21 +3113,17 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Structure STRUC_BUTTONS_DATA
-            Dim bGripButtonPressed As Boolean
-            Dim bGripToggled As Boolean
-            Dim mGripPressTime As Stopwatch
+        Class STRUC_BUTTONS_DATA
+            Public bGripButtonPressed As Boolean
+            Public bGripToggled As Boolean
+            Public mGripPressTime As Stopwatch
 
-            Private bValid As Boolean
-
-            Public Sub Reset()
+            Public Sub New()
                 bGripButtonPressed = False
                 bGripToggled = False
                 mGripPressTime = New Stopwatch
-
-                bValid = True
             End Sub
-        End Structure
+        End Class
 
         Private Sub InternalButtonsLogic(ByRef mOscDataPack As STRUC_OSC_DATA_PACK,
                                          ByRef mButtons As Boolean(),
