@@ -831,9 +831,9 @@ Public Class ClassLogService
             Dim iBadCount As Integer = CInt(mDevice("bad_count"))
             Dim iTotalBadCount As Integer = CInt(mDevice("total_bad_count"))
 
-            If (iBadCount > 0) Then
+            If (iTotalBadCount > 0) Then
                 Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceType, iDeviceId, iTrackerId, iTotalBadCount)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId, iTotalBadCount)
                 mIssues.Add(mNewIssue)
             End If
         Next
