@@ -1289,25 +1289,8 @@ Public Class UCVirtualMotionTrackerItem
             Dim mEnforcePosePacketUpdate As New Stopwatch
             Dim mEnforceInputPacketUpdate As New Stopwatch
 
-            ' Controller
-            Dim bJoystickButtonPressed As Boolean = False
-            Dim bGripButtonPressed As Boolean = False
-            Dim mJoystickPressedLastOrientation As Quaternion = Quaternion.Identity
-            Dim mJoystickPostion As Vector3 = Vector3.Zero
-            Dim mJoystickPressedLastPosition As Vector3 = Vector3.Zero
-            Dim mJoystickShortcuts As New Dictionary(Of Integer, Vector2)
-            Dim bGripToggled As Boolean = False
-            Dim mGripPressTime As New Stopwatch
+            ' Controller  
             Dim mLastBatteryReport As New Stopwatch
-            Dim mLastRecenterTime As New Stopwatch
-            Dim mLastHmdRecenterTime As New Stopwatch
-            Dim mLastPlayspaceRecenterTime As New Stopwatch
-            Dim mRecenterButtonPressed As Boolean = False
-            Dim mHmdRecenterButtonPressed As Boolean = False
-            Dim mPlayspaceRecenterButtonPressed As Boolean = False
-            Dim mPlayspaceRecenterButtonHolding As Boolean = False
-            Dim mPlayspaceRecenterLastHmdSerial As String = ""
-            Dim mPlayspaceRecenterCalibrationSave As Boolean = False
 
             Dim iDisplayX As Integer = 0
             Dim iDisplayY As Integer = 0
@@ -1326,19 +1309,22 @@ Public Class UCVirtualMotionTrackerItem
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
 
-            Dim mRumbleLastTimeSend As Date = Now
-            Dim mRumbleLastTimeSendValid As Boolean = False
-
-            Dim mLastPositionTime As Date = Now
-            Dim mLastOrientationTime As Date = Now
-            Dim mVelocityLastPosition As Vector3 = Vector3.Zero
-            Dim mVelocityLastOrientation As Quaternion = Quaternion.Identity
-            Dim mVelocityLastVelPosition As Vector3 = Vector3.Zero
-            Dim mVelocityLastVelOrientation As Vector3 = Vector3.Zero
-            Dim mNormalizedPositionDelta As New Queue(Of Double)
-            Dim mNormalizedOrientationDelta As New Queue(Of Double)
-            Dim iVelocityPositionDelta As Double = 0.0
-            Dim iVelocityOrientationDelta As Double = 0.0
+            Dim mCalculateVelocityManualData As New STRUC_CALCULATE_VELOCITY_MANUAL_DATA
+            Dim mCalculateVelocityData As New STRUC_CALCULATE_VELOCITY_DATA
+            Dim mHepticFeedbackData As New STRUC_HEPTIC_FEEDBACK_DATA
+            Dim mPlayspaceRecenterData As New STRUC_PLAYSPACE_RECENTER_DATA
+            Dim mRecenterControllerData As New STRUC_RECENTER_CONTROLLER_DATA
+            Dim mRecenterHmdData As New STRUC_RECENTER_HMD_DATA
+            Dim mJoystickEmulationData As New STRUC_JOYSTICK_EMULATION_DATA
+            Dim mButtonsData As New STRUC_BUTTONS_DATA
+            mCalculateVelocityManualData.Reset()
+            mCalculateVelocityData.Reset()
+            mHepticFeedbackData.Reset()
+            mPlayspaceRecenterData.Reset()
+            mRecenterControllerData.Reset()
+            mRecenterHmdData.Reset()
+            mJoystickEmulationData.Reset()
+            mButtonsData.Reset()
 
             Dim mRecenterQuat = Quaternion.Identity
 
@@ -1500,8 +1486,6 @@ Public Class UCVirtualMotionTrackerItem
                                         'Do Hmd/remote recenter 
                                         InternalRecenterHmd(bEnableHmdRecenter,
                                                             mServiceClient,
-                                                            mHmdRecenterButtonPressed,
-                                                            mLastHmdRecenterTime,
                                                             iRecenterButtonTimeMs,
                                                             iHmdRecenterMethod,
                                                             sHmdRecenterFromDeviceName,
@@ -1510,7 +1494,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             mRecenterQuat,
                                                             mUCVirtualMotionTracker,
                                                             True,
-                                                            mClassSettings)
+                                                            mClassSettings,
+                                                            mRecenterHmdData)
 
                                         If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
                                             Dim bSetPack As Boolean = False
@@ -1574,12 +1559,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     If (bEnableManualVelocity) Then
                                                         InternalCalculateVelocityManual(
                                                             mCalcPosition, mCalcOrientation,
-                                                            mVelocityLastPosition, mVelocityLastOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
-                                                            mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                            mLastPositionTime, mLastOrientationTime,
-                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                            iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            iVelocityTimeOffset,
+                                                            mCalculateVelocityManualData
                                                         )
                                                     Else
                                                         mVelocityPosition = mOscDataPack.mPositionVelocity
@@ -1587,12 +1569,10 @@ Public Class UCVirtualMotionTrackerItem
 
                                                         InternalCalculateVelocity(
                                                             mRawPosition, mRawOrientation,
-                                                            mVelocityLastPosition, mVelocityLastOrientation,
                                                             mCalcPosition, mCalcOrientation,
                                                             mVelocityPosition, mVelocityOrientation,
-                                                            mLastPositionTime, mLastOrientationTime,
-                                                            mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                            iVelocityPositionDelta, iVelocityOrientationDelta
+                                                            iVelocityTimeOffset,
+                                                            mCalculateVelocityData
                                                         )
                                                     End If
                                                 End If
@@ -1694,9 +1674,8 @@ Public Class UCVirtualMotionTrackerItem
                                 Select Case (True)
                                     Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
                                         InternalHepticFeedbackLogic(bEnableHepticFeedback,
-                                                                mRumbleLastTimeSendValid,
-                                                                mRumbleLastTimeSend,
-                                                                mServiceClient)
+                                                                    mServiceClient,
+                                                                    mHepticFeedbackData)
                                 End Select
 
                                 ' We got any new data?
@@ -1761,20 +1740,14 @@ Public Class UCVirtualMotionTrackerItem
                                                 InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
                                                                                 m_PSMoveData.m_SelectButton AndAlso m_PSMoveData.m_StartButton,
                                                                                 mRawPosition,
-                                                                                mPlayspaceRecenterButtonPressed,
-                                                                                mPlayspaceRecenterButtonHolding,
-                                                                                mLastPlayspaceRecenterTime,
                                                                                 iRecenterButtonTimeMs,
-                                                                                mPlayspaceRecenterLastHmdSerial,
-                                                                                mPlayspaceRecenterCalibrationSave,
                                                                                 mClassSettings,
-                                                                                mUCVirtualMotionTracker)
+                                                                                mUCVirtualMotionTracker,
+                                                                                mPlayspaceRecenterData)
 
                                                 'Do controller recenter
                                                 InternalRecenterControllerLogic(bEnableControllerRecenter,
                                                                                 m_PSMoveData.m_SelectButton AndAlso Not m_PSMoveData.m_StartButton,
-                                                                                mRecenterButtonPressed,
-                                                                                mLastRecenterTime,
                                                                                 iRecenterButtonTimeMs,
                                                                                 iControllerRecenterMethod,
                                                                                 sControllerRecenterFromDeviceName,
@@ -1782,13 +1755,12 @@ Public Class UCVirtualMotionTrackerItem
                                                                                 mCalibratedPosition,
                                                                                 mCalibratedOrientation,
                                                                                 mUCVirtualMotionTracker,
-                                                                                mClassSettings)
+                                                                                mClassSettings,
+                                                                                mRecenterControllerData)
 
                                                 'Do Hmd/remote recenter
                                                 InternalRecenterHmd(bEnableHmdRecenter,
                                                                     mServiceClient,
-                                                                    mHmdRecenterButtonPressed,
-                                                                    mLastHmdRecenterTime,
                                                                     iRecenterButtonTimeMs,
                                                                     iHmdRecenterMethod,
                                                                     sHmdRecenterFromDeviceName,
@@ -1797,7 +1769,8 @@ Public Class UCVirtualMotionTrackerItem
                                                                     mRecenterQuat,
                                                                     mUCVirtualMotionTracker,
                                                                     False,
-                                                                    mClassSettings)
+                                                                    mClassSettings,
+                                                                    mRecenterHmdData)
 
                                                 'Send buttons
                                                 InternalButtonsLogic(mOscDataPack,
@@ -1805,31 +1778,25 @@ Public Class UCVirtualMotionTrackerItem
                                                                     m_PSMoveData,
                                                                     bJoystickTrigger,
                                                                     iHtcGripButtonMethod,
-                                                                    bGripButtonPressed,
-                                                                    bGripToggled,
                                                                     iHtcTouchpadEmulationClickMethod,
                                                                     bOculusGripToggle,
                                                                     iOculusButtonMethod,
                                                                     bHybridGripToggle,
-                                                                    mGripPressTime)
+                                                                    mButtonsData)
 
                                                 'Joystick emulation
                                                 InternalJoystickEmulationLogic(mOscDataPack,
                                                                         bJoystickTrigger,
                                                                         iControllerJoystickMethod,
-                                                                        bJoystickButtonPressed,
-                                                                        mJoystickPressedLastOrientation,
                                                                         mRecenterQuat,
                                                                         m_PSMoveData,
-                                                                        mJoystickPostion,
-                                                                        mJoystickPressedLastPosition,
                                                                         iControllerJoystickAreaCm,
                                                                         iTouchpadClickDeadzone,
                                                                         iHtcTouchpadEmulationClickMethod,
                                                                         bHtcTouchpadShortcutBinding,
                                                                         mButtons,
-                                                                        mJoystickShortcuts,
-                                                                        bHtcTouchpadShortcutTouchpadClick)
+                                                                        bHtcTouchpadShortcutTouchpadClick,
+                                                                        mJoystickEmulationData)
                                         End Select
 
                                         'Send battery level to
@@ -1863,12 +1830,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         If (bEnableManualVelocity) Then
                                                             InternalCalculateVelocityManual(
                                                                 mCalcPosition, mCalcOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityManualData
                                                             )
                                                         Else
                                                             mVelocityPosition = mOscDataPack.mPositionVelocity
@@ -1876,12 +1840,10 @@ Public Class UCVirtualMotionTrackerItem
 
                                                             InternalCalculateVelocity(
                                                                 mRawPosition, mRawOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityData
                                                             )
                                                         End If
                                                     End If
@@ -1973,12 +1935,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         If (bEnableManualVelocity) Then
                                                             InternalCalculateVelocityManual(
                                                                 mCalcPosition, mCalcOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityManualData
                                                             )
                                                         Else
                                                             mVelocityPosition = mOscDataPack.mPositionVelocity
@@ -1986,12 +1945,10 @@ Public Class UCVirtualMotionTrackerItem
 
                                                             InternalCalculateVelocity(
                                                                 mRawPosition, mRawOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityData
                                                             )
                                                         End If
                                                     End If
@@ -2039,12 +1996,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         If (bEnableManualVelocity) Then
                                                             InternalCalculateVelocityManual(
                                                                 mCalcPosition, mCalcOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityManualData
                                                             )
                                                         Else
                                                             mVelocityPosition = mOscDataPack.mPositionVelocity
@@ -2052,12 +2006,10 @@ Public Class UCVirtualMotionTrackerItem
 
                                                             InternalCalculateVelocity(
                                                                 mRawPosition, mRawOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityData
                                                             )
                                                         End If
                                                     End If
@@ -2155,12 +2107,9 @@ Public Class UCVirtualMotionTrackerItem
                                                         If (bEnableManualVelocity) Then
                                                             InternalCalculateVelocityManual(
                                                                 mCalcPosition, mCalcOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mVelocityLastVelPosition, mVelocityLastVelOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityManualData
                                                             )
                                                         Else
                                                             mVelocityPosition = mOscDataPack.mPositionVelocity
@@ -2168,12 +2117,10 @@ Public Class UCVirtualMotionTrackerItem
 
                                                             InternalCalculateVelocity(
                                                                 mRawPosition, mRawOrientation,
-                                                                mVelocityLastPosition, mVelocityLastOrientation,
                                                                 mCalcPosition, mCalcOrientation,
                                                                 mVelocityPosition, mVelocityOrientation,
-                                                                mLastPositionTime, mLastOrientationTime,
-                                                                mNormalizedPositionDelta, mNormalizedOrientationDelta,
-                                                                iVelocityPositionDelta, iVelocityOrientationDelta
+                                                                iVelocityTimeOffset,
+                                                                mCalculateVelocityData
                                                             )
                                                         End If
                                                     End If
@@ -2281,13 +2228,40 @@ Public Class UCVirtualMotionTrackerItem
             End While
         End Sub
 
+        Structure STRUC_CALCULATE_VELOCITY_MANUAL_DATA
+            Dim mLastPosition As Vector3
+            Dim mLastOrientation As Quaternion
+            Dim mLastVelocityPosition As Vector3
+            Dim mLastVelocityOrientation As Vector3
+            Dim mLastPositionTime As Date
+            Dim mLastOrientationTime As Date
+            Dim mNormalizedPositionDelta As Queue(Of Double)
+            Dim mNormalizedOrientationDelta As Queue(Of Double)
+            Dim iVelocityPositionDelta As Double
+            Dim iVelocityOrientationDelta As Double
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                mLastPosition = Vector3.Zero
+                mLastOrientation = Quaternion.Identity
+                mLastVelocityPosition = Vector3.Zero
+                mLastVelocityOrientation = Vector3.Zero
+                mLastPositionTime = Now
+                mLastOrientationTime = Now
+                mNormalizedPositionDelta = New Queue(Of Double)
+                mNormalizedOrientationDelta = New Queue(Of Double)
+                iVelocityPositionDelta = 0.0
+                iVelocityOrientationDelta = 0.0
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalCalculateVelocityManual(ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
-                                                  ByRef mLastPosition As Vector3, ByRef mLastOrientation As Quaternion,
-                                                  ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
-                                                  ByRef mLastVelocityPosition As Vector3, ByRef mLastVelocityOrientation As Vector3,
-                                                  ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
-                                                  ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
-                                                  ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
+                                                    ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
+                                                    ByRef iVelocityTimeOffset As Single,
+                                                    ByRef mData As STRUC_CALCULATE_VELOCITY_MANUAL_DATA)
             Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
             Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
             Const VELOCITY_POSITION_SMOOTHING = 0.4
@@ -2297,80 +2271,108 @@ Public Class UCVirtualMotionTrackerItem
 
             ' Linear Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mLastPositionTime)
+                Dim mDelta As TimeSpan = (mNow - mData.mLastPositionTime)
                 Dim iDeltaTime As Double = mDelta.TotalSeconds
 
-                If (mPosition <> mLastPosition) Then
-                    mLastPositionTime = mNow
+                If (mPosition <> mData.mLastPosition) Then
+                    mData.mLastPositionTime = mNow
 
-                    mNormalizedPositionDelta.Enqueue(iDeltaTime)
-                    If (mNormalizedPositionDelta.Count > 30) Then
-                        mNormalizedPositionDelta.Dequeue()
+                    mData.mNormalizedPositionDelta.Enqueue(iDeltaTime)
+                    If (mData.mNormalizedPositionDelta.Count > 30) Then
+                        mData.mNormalizedPositionDelta.Dequeue()
                     End If
-                    Dim iAvgiDeltaTime = mNormalizedPositionDelta.Average()
+                    Dim iAvgiDeltaTime = mData.mNormalizedPositionDelta.Average()
 
                     If (iAvgiDeltaTime > MAX_VELOCITY_FREQ AndAlso iAvgiDeltaTime <= MIN_VELOCITY_FREQ) Then
                         Dim mNewVelocity = New Vector3(
-                            CSng((mPosition.X - mLastPosition.X) / iAvgiDeltaTime),
-                            CSng((mPosition.Y - mLastPosition.Y) / iAvgiDeltaTime),
-                            CSng((mPosition.Z - mLastPosition.Z) / iAvgiDeltaTime)
+                            CSng((mPosition.X - mData.mLastPosition.X) / iAvgiDeltaTime),
+                            CSng((mPosition.Y - mData.mLastPosition.Y) / iAvgiDeltaTime),
+                            CSng((mPosition.Z - mData.mLastPosition.Z) / iAvgiDeltaTime)
                         )
-                        mLastVelocityPosition = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mLastVelocityPosition)
+                        mData.mLastVelocityPosition = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mData.mLastVelocityPosition)
                     End If
 
-                    mLastPosition = mPosition
-                    iVelocityPositionDelta = iAvgiDeltaTime
+                    mData.mLastPosition = mPosition
+                    mData.iVelocityPositionDelta = iAvgiDeltaTime
                 End If
 
-                If (iVelocityPositionDelta > Double.Epsilon AndAlso iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
-                    mVelocityPosition = mLastVelocityPosition
+                If (mData.iVelocityPositionDelta > Double.Epsilon AndAlso mData.iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    mVelocityPosition = mData.mLastVelocityPosition
                     mPosition = New Vector3(
-                        CSng(mPosition.X - (mVelocityPosition.X * iVelocityPositionDelta)),
-                        CSng(mPosition.Y - (mVelocityPosition.Y * iVelocityPositionDelta)),
-                        CSng(mPosition.Z - (mVelocityPosition.Z * iVelocityPositionDelta))
+                        CSng(mPosition.X - (mVelocityPosition.X * mData.iVelocityPositionDelta)),
+                        CSng(mPosition.Y - (mVelocityPosition.Y * mData.iVelocityPositionDelta)),
+                        CSng(mPosition.Z - (mVelocityPosition.Z * mData.iVelocityPositionDelta))
                     )
                 End If
             End If
 
             ' Angular Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mLastOrientationTime)
+                Dim mDelta As TimeSpan = (mNow - mData.mLastOrientationTime)
                 Dim iDeltaTime As Double = mDelta.TotalSeconds
 
-                If (mOrientation <> mLastOrientation) Then
-                    mLastOrientationTime = mNow
+                If (mOrientation <> mData.mLastOrientation) Then
+                    mData.mLastOrientationTime = mNow
 
-                    mNormalizedOrientationDelta.Enqueue(iDeltaTime)
-                    If (mNormalizedOrientationDelta.Count > 30) Then
-                        mNormalizedOrientationDelta.Dequeue()
+                    mData.mNormalizedOrientationDelta.Enqueue(iDeltaTime)
+                    If (mData.mNormalizedOrientationDelta.Count > 30) Then
+                        mData.mNormalizedOrientationDelta.Dequeue()
                     End If
-                    Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
+                    Dim iAvgDeltaTime = mData.mNormalizedOrientationDelta.Average()
 
                     If (iAvgDeltaTime > MAX_VELOCITY_FREQ AndAlso iAvgDeltaTime <= MIN_VELOCITY_FREQ) Then
                         Dim mNewVelocity = ClassMathUtils.AngularVelocityBetweenQuats(
-                            mLastOrientation, mOrientation, iAvgDeltaTime
+                            mData.mLastOrientation, mOrientation, iAvgDeltaTime
                         )
-                        mLastVelocityOrientation = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mLastVelocityOrientation)
+                        mData.mLastVelocityOrientation = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mData.mLastVelocityOrientation)
                     End If
 
-                    mLastOrientation = mOrientation
-                    iVelocityOrientationDelta = iAvgDeltaTime
+                    mData.mLastOrientation = mOrientation
+                    mData.iVelocityOrientationDelta = iAvgDeltaTime
                 End If
 
-                If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
-                    mVelocityOrientation = mLastVelocityOrientation
-                    mOrientation = mOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
+                If (mData.iVelocityOrientationDelta > Double.Epsilon AndAlso mData.iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    mVelocityOrientation = mData.mLastVelocityOrientation
+                    mOrientation = mOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, mData.iVelocityOrientationDelta))
                 End If
             End If
         End Sub
 
+        Structure STRUC_CALCULATE_VELOCITY_DATA
+            Dim mLastRawPosition As Vector3
+            Dim mLastRawOrientation As Quaternion
+            Dim mLastVelocityPosition As Vector3
+            Dim mLastVelocityOrientation As Vector3
+            Dim mLastPositionTime As Date
+            Dim mLastOrientationTime As Date
+            Dim mNormalizedPositionDelta As Queue(Of Double)
+            Dim mNormalizedOrientationDelta As Queue(Of Double)
+            Dim iVelocityPositionDelta As Double
+            Dim iVelocityOrientationDelta As Double
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                mLastRawPosition = Vector3.Zero
+                mLastRawOrientation = Quaternion.Identity
+                mLastVelocityPosition = Vector3.Zero
+                mLastVelocityOrientation = Vector3.Zero
+                mLastPositionTime = Now
+                mLastOrientationTime = Now
+                mNormalizedPositionDelta = New Queue(Of Double)
+                mNormalizedOrientationDelta = New Queue(Of Double)
+                iVelocityPositionDelta = 0.0
+                iVelocityOrientationDelta = 0.0
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalCalculateVelocity(ByRef mRawPosition As Vector3, ByRef mRawOrientation As Quaternion,
-                                                ByRef mLastRawPosition As Vector3, ByRef mLastRawOrientation As Quaternion,
                                                 ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
                                                 ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
-                                                ByRef mLastPositionTime As Date, ByRef mLastOrientationTime As Date,
-                                                ByRef mNormalizedPositionDelta As Queue(Of Double), ByRef mNormalizedOrientationDelta As Queue(Of Double),
-                                                ByRef iVelocityPositionDelta As Double, ByRef iVelocityOrientationDelta As Double)
+                                                ByRef iVelocityTimeOffset As Single,
+                                                ByRef mData As STRUC_CALCULATE_VELOCITY_DATA)
             Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
             Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
 
@@ -2378,27 +2380,27 @@ Public Class UCVirtualMotionTrackerItem
 
             ' Linear Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mLastPositionTime)
+                Dim mDelta As TimeSpan = (mNow - mData.mLastPositionTime)
                 Dim iDeltaTime As Double = mDelta.TotalSeconds
 
-                If (mLastRawPosition <> mRawPosition) Then
-                    mLastPositionTime = mNow
+                If (mData.mLastRawPosition <> mRawPosition) Then
+                    mData.mLastPositionTime = mNow
 
-                    mNormalizedPositionDelta.Enqueue(iDeltaTime)
-                    If (mNormalizedPositionDelta.Count > 30) Then
-                        mNormalizedPositionDelta.Dequeue()
+                    mData.mNormalizedPositionDelta.Enqueue(iDeltaTime)
+                    If (mData.mNormalizedPositionDelta.Count > 30) Then
+                        mData.mNormalizedPositionDelta.Dequeue()
                     End If
-                    Dim iAvgDeltaTime = mNormalizedPositionDelta.Average()
+                    Dim iAvgDeltaTime = mData.mNormalizedPositionDelta.Average()
 
-                    mLastRawPosition = mRawPosition
-                    iVelocityPositionDelta = iAvgDeltaTime
+                    mData.mLastRawPosition = mRawPosition
+                    mData.iVelocityPositionDelta = iAvgDeltaTime
                 End If
 
-                If (iVelocityPositionDelta > Double.Epsilon AndAlso iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
+                If (mData.iVelocityPositionDelta > Double.Epsilon AndAlso mData.iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                     mPosition = New Vector3(
-                        CSng(mPosition.X - (mVelocityPosition.X * iVelocityPositionDelta)),
-                        CSng(mPosition.Y - (mVelocityPosition.Y * iVelocityPositionDelta)),
-                        CSng(mPosition.Z - (mVelocityPosition.Z * iVelocityPositionDelta))
+                        CSng(mPosition.X - (mVelocityPosition.X * mData.iVelocityPositionDelta)),
+                        CSng(mPosition.Y - (mVelocityPosition.Y * mData.iVelocityPositionDelta)),
+                        CSng(mPosition.Z - (mVelocityPosition.Z * mData.iVelocityPositionDelta))
                     )
                 Else
                     mVelocityPosition = Vector3.Zero
@@ -2407,34 +2409,47 @@ Public Class UCVirtualMotionTrackerItem
 
             ' Angular Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mLastOrientationTime)
+                Dim mDelta As TimeSpan = (mNow - mData.mLastOrientationTime)
                 Dim iDeltaTime As Double = mDelta.TotalSeconds
 
-                If (mLastRawOrientation <> mRawOrientation) Then
-                    mLastOrientationTime = mNow
+                If (mData.mLastRawOrientation <> mRawOrientation) Then
+                    mData.mLastOrientationTime = mNow
 
-                    mNormalizedOrientationDelta.Enqueue(iDeltaTime)
-                    If (mNormalizedOrientationDelta.Count > 30) Then
-                        mNormalizedOrientationDelta.Dequeue()
+                    mData.mNormalizedOrientationDelta.Enqueue(iDeltaTime)
+                    If (mData.mNormalizedOrientationDelta.Count > 30) Then
+                        mData.mNormalizedOrientationDelta.Dequeue()
                     End If
-                    Dim iAvgDeltaTime = mNormalizedOrientationDelta.Average()
+                    Dim iAvgDeltaTime = mData.mNormalizedOrientationDelta.Average()
 
-                    mLastRawOrientation = mRawOrientation
-                    iVelocityOrientationDelta = iAvgDeltaTime
+                    mData.mLastRawOrientation = mRawOrientation
+                    mData.iVelocityOrientationDelta = iAvgDeltaTime
                 End If
 
-                If (iVelocityOrientationDelta > Double.Epsilon AndAlso iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
-                    mOrientation = mOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, iVelocityOrientationDelta))
+                If (mData.iVelocityOrientationDelta > Double.Epsilon AndAlso mData.iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
+                    mOrientation = mOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, mData.iVelocityOrientationDelta))
                 Else
                     mVelocityOrientation = Vector3.Zero
                 End If
             End If
         End Sub
 
+        Structure STRUC_HEPTIC_FEEDBACK_DATA
+            Dim mRumbleLastTimeSendValid As Boolean
+            Dim mRumbleLastTimeSend As Date
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                mRumbleLastTimeSendValid = False
+                mRumbleLastTimeSend = Now
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalHepticFeedbackLogic(ByRef bEnableHepticFeedback As Boolean,
-                                                ByRef mRumbleLastTimeSendValid As Boolean,
-                                                ByRef mRumbleLastTimeSend As Date,
-                                                ByRef mServiceClient As ClassServiceClient)
+                                                ByRef mServiceClient As ClassServiceClient,
+                                                ByRef mData As STRUC_HEPTIC_FEEDBACK_DATA)
             If (bEnableHepticFeedback) Then
                 Const MAX_RUMBLE_UPODATE_RATE As Single = 33.0F
                 Const MAX_PULSE_MICROSECONDS As Single = 5000.0F
@@ -2451,8 +2466,8 @@ Public Class UCVirtualMotionTrackerItem
 
                 Dim bTimoutElapsed As Boolean = True
 
-                If (mRumbleLastTimeSendValid) Then
-                    Dim mLastSend As TimeSpan = (Now - mRumbleLastTimeSend)
+                If (mData.mRumbleLastTimeSendValid) Then
+                    Dim mLastSend As TimeSpan = (Now - mData.mRumbleLastTimeSend)
 
                     bTimoutElapsed = (mLastSend.TotalMilliseconds > MAX_RUMBLE_UPODATE_RATE)
                 End If
@@ -2476,8 +2491,8 @@ Public Class UCVirtualMotionTrackerItem
 
                     mServiceClient.SetControllerRumble(g_iIndex, fRumble)
 
-                    mRumbleLastTimeSend = Now
-                    mRumbleLastTimeSendValid = True
+                    mData.mRumbleLastTimeSend = Now
+                    mData.mRumbleLastTimeSendValid = True
 
                     SyncLock g_mThreadLock
                         g_mHeptic.Clear()
@@ -2498,7 +2513,7 @@ Public Class UCVirtualMotionTrackerItem
             mPosition += mOffsetForward
         End Sub
 
-        Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef m_PlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
+        Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef mPlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
                                                            ByRef mPosition As Vector3,
                                                            ByRef mOrientation As Quaternion,
                                                            ByRef mPositionVelocity As Vector3,
@@ -2510,13 +2525,13 @@ Public Class UCVirtualMotionTrackerItem
                 Return
             End If
 
-            If (m_PlayspaceSettings.m_Valid) Then
+            If (mPlayspaceSettings.m_Valid) Then
                 Dim mScale = Vector3.One
 
-                Dim mPointHmdBeginPosXZ = m_PlayspaceSettings.m_PointHmdBeginPos
-                Dim mPointHmdEndPosXZ = m_PlayspaceSettings.m_PointHmdEndPos
-                Dim mPointControllerBeginPosXZ = m_PlayspaceSettings.m_PointControllerBeginPos
-                Dim mPointControllerEndPosXZ = m_PlayspaceSettings.m_PointControllerEndPos
+                Dim mPointHmdBeginPosXZ = mPlayspaceSettings.m_PointHmdBeginPos
+                Dim mPointHmdEndPosXZ = mPlayspaceSettings.m_PointHmdEndPos
+                Dim mPointControllerBeginPosXZ = mPlayspaceSettings.m_PointControllerBeginPos
+                Dim mPointControllerEndPosXZ = mPlayspaceSettings.m_PointControllerEndPos
 
                 mPointHmdBeginPosXZ.Y = 0.0
                 mPointHmdEndPosXZ.Y = 0.0
@@ -2524,7 +2539,7 @@ Public Class UCVirtualMotionTrackerItem
                 mPointControllerEndPosXZ.Y = 0.0
 
                 ' Auto scale playspace by points distance difference
-                If (bEnableAutoScale AndAlso m_PlayspaceSettings.m_AutoScale) Then
+                If (bEnableAutoScale AndAlso mPlayspaceSettings.m_AutoScale) Then
                     Dim iScale As Single = 1.0F
 
                     Dim iPointHmdDistance As Single = Math.Abs(Vector3.Distance(mPointHmdBeginPosXZ, mPointHmdEndPosXZ))
@@ -2547,62 +2562,78 @@ Public Class UCVirtualMotionTrackerItem
                 Dim mCalibrationForward As Quaternion
                 Dim mForward As Vector3
                 Dim mSideways As Vector3
-                If (m_PlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
-                    mCalibrationForward = ClassMathUtils.ExtractYawQuaternion(m_PlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
-                    mForward = Vector3.UnitZ * m_PlayspaceSettings.m_ForwardOffset
-                    mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
+                If (mPlayspaceSettings.m_ForwardMethod = UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS.ENUM_FORWARD_METHOD.USE_HMD_FORWARD) Then
+                    mCalibrationForward = ClassMathUtils.ExtractYawQuaternion(mPlayspaceSettings.m_HmdAngOffset, -Vector3.UnitZ)
+                    mForward = Vector3.UnitZ * mPlayspaceSettings.m_ForwardOffset
+                    mSideways = Vector3.UnitX * mPlayspaceSettings.m_SideOffset
                 Else
                     mCalibrationForward = ClassMathUtils.LookRotation(
                         mPointHmdEndPosXZ - mPointHmdBeginPosXZ, Vector3.UnitY)
-                    mForward = Vector3.UnitY * m_PlayspaceSettings.m_ForwardOffset
-                    mSideways = Vector3.UnitX * m_PlayspaceSettings.m_SideOffset
+                    mForward = Vector3.UnitY * mPlayspaceSettings.m_ForwardOffset
+                    mSideways = Vector3.UnitX * mPlayspaceSettings.m_SideOffset
                 End If
 
                 Dim mOffsetForward = ClassMathUtils.RotateVector(mCalibrationForward, mForward)
                 Dim mOffsetSideways = ClassMathUtils.RotateVector(mCalibrationForward, mSideways)
 
                 Dim mPlayspaceCalibPointsRotated = ClassMathUtils.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), m_PlayspaceSettings.m_PointControllerBeginPos * mScale)
+                    Quaternion.Conjugate(mPlayspaceSettings.m_AngOffset), mPlayspaceSettings.m_PointControllerBeginPos * mScale)
 
-                mPlayspaceCalibPointsRotated = (m_PlayspaceSettings.m_PointHmdBeginPos + mOffsetForward + mOffsetSideways) - mPlayspaceCalibPointsRotated
+                mPlayspaceCalibPointsRotated = (mPlayspaceSettings.m_PointHmdBeginPos + mOffsetForward + mOffsetSideways) - mPlayspaceCalibPointsRotated
 
                 Dim mPlayspaceRotated = ClassMathUtils.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPosition * mScale)
+                    Quaternion.Conjugate(mPlayspaceSettings.m_AngOffset), mPosition * mScale)
                 Dim mPlayspaceRotatedVelocity = ClassMathUtils.RotateVector(
-                    Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset), mPositionVelocity)
+                    Quaternion.Conjugate(mPlayspaceSettings.m_AngOffset), mPositionVelocity)
 
-                Dim mOffsetHeight = New Vector3(0.0F, m_PlayspaceSettings.m_HeightOffset, 0.0F)
+                Dim mOffsetHeight = New Vector3(0.0F, mPlayspaceSettings.m_HeightOffset, 0.0F)
 
                 mPosition = mPlayspaceRotated + mPlayspaceCalibPointsRotated + mOffsetHeight
                 mPositionVelocity = mPlayspaceRotatedVelocity
-                mOrientation = Quaternion.Conjugate(m_PlayspaceSettings.m_AngOffset) * mOrientation
+                mOrientation = Quaternion.Conjugate(mPlayspaceSettings.m_AngOffset) * mOrientation
             End If
         End Sub
+
+        Structure STRUC_PLAYSPACE_RECENTER_DATA
+            Dim mPlayspaceRecenterButtonPressed As Boolean
+            Dim mPlayspaceRecenterButtonHolding As Boolean
+            Dim mLastPlayspaceRecenterTime As Stopwatch
+            Dim mPlayspaceRecenterLastHmdSerial As String
+            Dim mPlayspaceRecenterCalibrationSave As Boolean
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                mPlayspaceRecenterButtonPressed = False
+                mPlayspaceRecenterButtonHolding = False
+                mLastPlayspaceRecenterTime = New Stopwatch
+                mPlayspaceRecenterLastHmdSerial = ""
+                mPlayspaceRecenterCalibrationSave = False
+
+                bValid = True
+            End Sub
+        End Structure
 
         Private Sub InternalPlayspaceRecenterLogic(ByRef bEnabledPlayspaceRecenter As Boolean,
                                                   ByRef bHoldingRecenterButtons As Boolean,
                                                   ByRef mRawPosition As Vector3,
-                                                  ByRef mPlayspaceRecenterButtonPressed As Boolean,
-                                                  ByRef mPlayspaceRecenterButtonHolding As Boolean,
-                                                  ByRef mLastPlayspaceRecenterTime As Stopwatch,
                                                   ByRef iRecenterButtonTimeMs As Long,
-                                                  ByRef mPlayspaceRecenterLastHmdSerial As String,
-                                                  ByRef mPlayspaceRecenterCalibrationSave As Boolean,
                                                   ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings,
-                                                  ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker)
+                                                  ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
+                                                  ByRef mData As STRUC_PLAYSPACE_RECENTER_DATA)
             If ((bEnabledPlayspaceRecenter AndAlso bHoldingRecenterButtons) OrElse
                     m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
-                If (Not mPlayspaceRecenterButtonPressed) Then
-                    mPlayspaceRecenterButtonPressed = True
-                    mPlayspaceRecenterButtonHolding = False
+                If (Not mData.mPlayspaceRecenterButtonPressed) Then
+                    mData.mPlayspaceRecenterButtonPressed = True
+                    mData.mPlayspaceRecenterButtonHolding = False
 
-                    mLastPlayspaceRecenterTime.Restart()
+                    mData.mLastPlayspaceRecenterTime.Restart()
                 End If
 
-                If (mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs OrElse
+                If (mData.mLastPlayspaceRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs OrElse
                         m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
-                    If (Not mPlayspaceRecenterButtonHolding) Then
-                        mPlayspaceRecenterButtonHolding = True
+                    If (Not mData.mPlayspaceRecenterButtonHolding) Then
+                        mData.mPlayspaceRecenterButtonHolding = True
 
                         ' If caibration is not triggered by manual calibration. Change to calibration via psmove.
                         If (m_PlayspaceCalibration.GetStatus() <> STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
@@ -2610,7 +2641,7 @@ Public Class UCVirtualMotionTrackerItem
                         End If
 
                         mClassControllerSettings.m_PlayspaceSettings.Reset()
-                        mPlayspaceRecenterLastHmdSerial = ""
+                        mData.mPlayspaceRecenterLastHmdSerial = ""
 
                         Dim sCurrentRecenterDeviceName As String = ""
 
@@ -2624,14 +2655,14 @@ Public Class UCVirtualMotionTrackerItem
                         If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(sCurrentRecenterDeviceName, mFoundDevice)) Then
                             mClassControllerSettings.m_PlayspaceSettings.m_PointControllerBeginPos = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
                             mClassControllerSettings.m_PlayspaceSettings.m_PointHmdBeginPos = mFoundDevice.GetPosCm()
-                            mPlayspaceRecenterLastHmdSerial = sCurrentRecenterDeviceName
+                            mData.mPlayspaceRecenterLastHmdSerial = sCurrentRecenterDeviceName
                         End If
                     End If
 
                     ' Do not allow playspace recenter on itself
-                    If (Not String.IsNullOrEmpty(mPlayspaceRecenterLastHmdSerial) AndAlso Not mPlayspaceRecenterLastHmdSerial.StartsWith(ClassVmtConst.VMT_DEVICE_NAME)) Then
+                    If (Not String.IsNullOrEmpty(mData.mPlayspaceRecenterLastHmdSerial) AndAlso Not mData.mPlayspaceRecenterLastHmdSerial.StartsWith(ClassVmtConst.VMT_DEVICE_NAME)) Then
                         Dim mFoundDevice As UCVirtualMotionTracker.ClassOscDevices.STRUC_DEVICE = Nothing
-                        If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(mPlayspaceRecenterLastHmdSerial, mFoundDevice)) Then
+                        If (mUCVirtualMotionTracker.g_ClassOscDevices.GetDeviceBySerial(mData.mPlayspaceRecenterLastHmdSerial, mFoundDevice)) Then
                             Dim mControllerPosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.m_PointControllerBeginPos
                             Dim mControllerPosEnd As Vector3 = mRawPosition ' Dont use calibrated position. It can cause bad offsets.
                             Dim mFromDevicePosBegin As Vector3 = mClassControllerSettings.m_PlayspaceSettings.m_PointHmdBeginPos
@@ -2673,7 +2704,7 @@ Public Class UCVirtualMotionTrackerItem
                                 mClassControllerSettings.m_PlayspaceSettings.m_Valid = True
 
                                 'Save settings after calibration is done 
-                                mPlayspaceRecenterCalibrationSave = True
+                                mData.mPlayspaceRecenterCalibrationSave = True
 
                                 ' Stop when manual calibration when done. PSmove calibration should continue when the button is stopped pressed.
                                 If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
@@ -2688,17 +2719,17 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
             Else
-                If (mPlayspaceRecenterButtonPressed) Then
-                    mPlayspaceRecenterButtonPressed = False
+                If (mData.mPlayspaceRecenterButtonPressed) Then
+                    mData.mPlayspaceRecenterButtonPressed = False
                 End If
-                If (mPlayspaceRecenterButtonHolding) Then
-                    mPlayspaceRecenterButtonHolding = False
+                If (mData.mPlayspaceRecenterButtonHolding) Then
+                    mData.mPlayspaceRecenterButtonHolding = False
                 End If
                 If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.PSMOVE_RUNNING) Then
                     m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.INACTIVE
                 End If
-                If (mPlayspaceRecenterCalibrationSave) Then
-                    mPlayspaceRecenterCalibrationSave = False
+                If (mData.mPlayspaceRecenterCalibrationSave) Then
+                    mData.mPlayspaceRecenterCalibrationSave = False
 
                     'Save settings after calibration is done
                     mClassControllerSettings.SaveSettings(UCVirtualMotionTracker.ENUM_SETTINGS_SAVE_TYPE_FLAGS.PLAYSPACE_CALIBRATION)
@@ -2706,10 +2737,22 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
+        Structure STRUC_RECENTER_CONTROLLER_DATA
+            Dim mRecenterButtonPressed As Boolean
+            Dim mLastRecenterTime As Stopwatch
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                mRecenterButtonPressed = False
+                mLastRecenterTime = New Stopwatch
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalRecenterControllerLogic(ByRef bEnableControllerRecenter As Boolean,
                                                     ByRef bHoldingRecenterButtons As Boolean,
-                                                    ByRef mRecenterButtonPressed As Boolean,
-                                                    ByRef mLastRecenterTime As Stopwatch,
                                                     ByRef iRecenterButtonTimeMs As Long,
                                                     ByRef iRecenterMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD,
                                                     ByRef sRecenterFromDeviceName As String,
@@ -2717,17 +2760,18 @@ Public Class UCVirtualMotionTrackerItem
                                                     ByRef mCalibratedPosition As Vector3,
                                                     ByRef mCalibratedOrientation As Quaternion,
                                                     ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
-                                                    ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
+                                                    ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings,
+                                                    ByRef mData As STRUC_RECENTER_CONTROLLER_DATA)
             If ((bEnableControllerRecenter AndAlso bHoldingRecenterButtons) OrElse g_bManualControllerRecenter) Then
-                If (Not mRecenterButtonPressed) Then
-                    mRecenterButtonPressed = True
+                If (Not mData.mRecenterButtonPressed) Then
+                    mData.mRecenterButtonPressed = True
 
-                    mLastRecenterTime.Restart()
+                    mData.mLastRecenterTime.Restart()
                 End If
 
-                If (g_bManualControllerRecenter OrElse mLastRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
-                    mLastRecenterTime.Stop()
-                    mLastRecenterTime.Reset()
+                If (g_bManualControllerRecenter OrElse mData.mLastRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                    mData.mLastRecenterTime.Stop()
+                    mData.mLastRecenterTime.Reset()
 
                     g_bManualControllerRecenter = False
 
@@ -2779,16 +2823,28 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
             Else
-                If (mRecenterButtonPressed) Then
-                    mRecenterButtonPressed = False
+                If (mData.mRecenterButtonPressed) Then
+                    mData.mRecenterButtonPressed = False
                 End If
             End If
         End Sub
 
+        Structure STRUC_RECENTER_HMD_DATA
+            Dim mHmdRecenterButtonPressed As Boolean
+            Dim mLastHmdRecenterTime As Stopwatch
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                mHmdRecenterButtonPressed = False
+                mLastHmdRecenterTime = New Stopwatch
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalRecenterHmd(ByRef bEnableHmdRecenter As Boolean,
                                         ByRef mServiceClient As ClassServiceClient,
-                                        ByRef mHmdRecenterButtonPressed As Boolean,
-                                        ByRef mLastHmdRecenterTime As Stopwatch,
                                         ByRef iRecenterButtonTimeMs As Long,
                                         ByRef iHmdRecenterMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_DEVICE_RECENTER_METHOD,
                                         ByRef sHmdRecenterFromDeviceName As String,
@@ -2797,7 +2853,8 @@ Public Class UCVirtualMotionTrackerItem
                                         ByRef mRecenterQuat As Quaternion,
                                         ByRef mUCVirtualMotionTracker As UCVirtualMotionTracker,
                                         ByRef bIsHmd As Boolean,
-                                        ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings)
+                                        ByRef mClassControllerSettings As UCVirtualMotionTracker.ClassSettings,
+                                        ByRef mData As STRUC_RECENTER_HMD_DATA)
             Dim bOtherControllerRecenterButtonPressed As Boolean = False
             Dim bOtherControllerPos As Vector3 = Vector3.Zero
 
@@ -2830,15 +2887,15 @@ Public Class UCVirtualMotionTrackerItem
             End If
 
             If ((bEnableHmdRecenter AndAlso bOtherControllerRecenterButtonPressed) OrElse g_bManualHmdRecenter) Then
-                If (Not mHmdRecenterButtonPressed) Then
-                    mHmdRecenterButtonPressed = True
+                If (Not mData.mHmdRecenterButtonPressed) Then
+                    mData.mHmdRecenterButtonPressed = True
 
-                    mLastHmdRecenterTime.Restart()
+                    mData.mLastHmdRecenterTime.Restart()
                 End If
 
-                If (g_bManualHmdRecenter OrElse mLastHmdRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
-                    mLastHmdRecenterTime.Stop()
-                    mLastHmdRecenterTime.Reset()
+                If (g_bManualHmdRecenter OrElse mData.mLastHmdRecenterTime.ElapsedMilliseconds > iRecenterButtonTimeMs) Then
+                    mData.mLastHmdRecenterTime.Stop()
+                    mData.mLastHmdRecenterTime.Reset()
 
                     g_bManualHmdRecenter = False
 
@@ -2909,28 +2966,44 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
             Else
-                If (mHmdRecenterButtonPressed) Then
-                    mHmdRecenterButtonPressed = False
+                If (mData.mHmdRecenterButtonPressed) Then
+                    mData.mHmdRecenterButtonPressed = False
                 End If
             End If
         End Sub
 
+        Structure STRUC_JOYSTICK_EMULATION_DATA
+            Dim bJoystickButtonPressed As Boolean
+            Dim mJoystickPressedLastOrientation As Quaternion
+            Dim mJoystickPostion As Vector3
+            Dim mJoystickPressedLastPosition As Vector3
+            Dim mJoystickShortcuts As Dictionary(Of Integer, Vector2)
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                bJoystickButtonPressed = False
+                mJoystickPressedLastOrientation = Quaternion.Identity
+                mJoystickPostion = Vector3.Zero
+                mJoystickPressedLastPosition = Vector3.Zero
+                mJoystickShortcuts = New Dictionary(Of Integer, Vector2)
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalJoystickEmulationLogic(ByRef mOscDataPack As STRUC_OSC_DATA_PACK,
                                                    ByRef bJoystickTrigger As Boolean,
                                                    ByRef iControllerJoystickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD,
-                                                   ByRef bJoystickButtonPressed As Boolean,
-                                                   ByRef mJoystickPressedLastOrientation As Quaternion,
                                                    ByRef mRecenterQuat As Quaternion,
-                                                   ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
-                                                   ByRef mJoystickPostion As Vector3,
-                                                   ByRef mJoystickPressedLastPosition As Vector3,
+                                                   ByRef mPSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
                                                    ByRef iControllerJoystickAreaCm As Single,
                                                    ByRef iTouchpadClickDeadzone As Single,
                                                    ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD,
                                                    ByRef bHtcTouchpadShortcutBinding As Boolean,
                                                    ByRef mButtons As Boolean(),
-                                                   ByRef mJoystickShortcuts As Dictionary(Of Integer, Vector2),
-                                                   ByRef bHtcTouchpadShortcutTouchpadClick As Boolean)
+                                                   ByRef bHtcTouchpadShortcutTouchpadClick As Boolean,
+                                                   ByRef mData As STRUC_JOYSTICK_EMULATION_DATA)
 
             If (bJoystickTrigger) Then
                 'This should not be possible. Just in case
@@ -2944,53 +3017,53 @@ Public Class UCVirtualMotionTrackerItem
                 End If
 
                 If (True) Then
-                    Dim mCurrentOrientation = mRecenterQuat * m_PSMoveData.m_Orientation
+                    Dim mCurrentOrientation = mRecenterQuat * mPSMoveData.m_Orientation
                     Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0, 0, -1))
                     Dim mCurrentOrientationRelative = Quaternion.Conjugate(mControllerYaw) * mCurrentOrientation
 
                     If (iControllerJoystickMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION) Then
 
-                        If (Not bJoystickButtonPressed) Then
-                            bJoystickButtonPressed = True
+                        If (Not mData.bJoystickButtonPressed) Then
+                            mData.bJoystickButtonPressed = True
 
-                            mJoystickPostion = Vector3.Zero
+                            mData.mJoystickPostion = Vector3.Zero
 
-                            mJoystickPressedLastOrientation = mCurrentOrientationRelative
-                            mJoystickPressedLastPosition = Vector3.Zero
+                            mData.mJoystickPressedLastOrientation = mCurrentOrientationRelative
+                            mData.mJoystickPressedLastPosition = Vector3.Zero
                         End If
 
-                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(Quaternion.Conjugate(mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
+                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(Quaternion.Conjugate(mData.mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
 
-                        mJoystickPostion = mJoystickPostion - (mNewJoystickPosition / (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
+                        mData.mJoystickPostion = mData.mJoystickPostion - (mNewJoystickPosition / (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
 
-                        mJoystickPressedLastOrientation = mCurrentOrientationRelative
-                        mJoystickPressedLastPosition = mNewJoystickPosition
+                        mData.mJoystickPressedLastOrientation = mCurrentOrientationRelative
+                        mData.mJoystickPressedLastPosition = mNewJoystickPosition
 
                     Else
-                        If (Not bJoystickButtonPressed) Then
-                            bJoystickButtonPressed = True
+                        If (Not mData.bJoystickButtonPressed) Then
+                            mData.bJoystickButtonPressed = True
 
-                            mJoystickPostion = Vector3.Zero
+                            mData.mJoystickPostion = Vector3.Zero
 
-                            mJoystickPressedLastOrientation = mCurrentOrientation
-                            mJoystickPressedLastPosition = m_PSMoveData.m_Position
+                            mData.mJoystickPressedLastOrientation = mCurrentOrientation
+                            mData.mJoystickPressedLastPosition = mPSMoveData.m_Position
                         End If
 
-                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(mJoystickPressedLastOrientation, m_PSMoveData.m_Position - mJoystickPressedLastPosition)
+                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(mData.mJoystickPressedLastOrientation, mPSMoveData.m_Position - mData.mJoystickPressedLastPosition)
 
-                        mJoystickPostion = mJoystickPostion - (mNewJoystickPosition / iControllerJoystickAreaCm)
+                        mData.mJoystickPostion = mData.mJoystickPostion - (mNewJoystickPosition / iControllerJoystickAreaCm)
 
-                        mJoystickPressedLastOrientation = mCurrentOrientation
-                        mJoystickPressedLastPosition = m_PSMoveData.m_Position
+                        mData.mJoystickPressedLastOrientation = mCurrentOrientation
+                        mData.mJoystickPressedLastPosition = mPSMoveData.m_Position
                     End If
                 End If
 
-                mJoystickPostion.X = Math.Min(Math.Max(mJoystickPostion.X, -1.0F), 1.0F)
-                mJoystickPostion.Z = Math.Min(Math.Max(mJoystickPostion.Z, -1.0F), 1.0F)
+                mData.mJoystickPostion.X = Math.Min(Math.Max(mData.mJoystickPostion.X, -1.0F), 1.0F)
+                mData.mJoystickPostion.Z = Math.Min(Math.Max(mData.mJoystickPostion.Z, -1.0F), 1.0F)
 
                 Dim mJoystickVec = New Vector2(
-                    -mJoystickPostion.X,
-                    mJoystickPostion.Z
+                    -mData.mJoystickPostion.X,
+                    mData.mJoystickPostion.Z
                 )
 
                 mOscDataPack.mJoyStick = mJoystickVec
@@ -3005,48 +3078,48 @@ Public Class UCVirtualMotionTrackerItem
 
                             Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
                                 If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                    If (m_PSMoveData.m_TriangleButton) Then
+                                    If (mPSMoveData.m_TriangleButton) Then
                                         mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                     End If
                                 Else
-                                    If (m_PSMoveData.m_SquareButton) Then
+                                    If (mPSMoveData.m_SquareButton) Then
                                         mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                     End If
                                 End If
 
                             Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
-                                If (m_PSMoveData.m_SquareButton) Then
+                                If (mPSMoveData.m_SquareButton) Then
                                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                 End If
 
                             Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
-                                If (m_PSMoveData.m_TriangleButton) Then
+                                If (mPSMoveData.m_TriangleButton) Then
                                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = True
                                 End If
                         End Select
                     End If
 
-                    If (bHtcTouchpadShortcutBinding AndAlso m_PSMoveData.m_MoveButton) Then
+                    If (bHtcTouchpadShortcutBinding AndAlso mPSMoveData.m_MoveButton) Then
                         ' Record joystick shortcut while MOVE button is pressed 
                         ' Also skip MOVE button
                         For i = 1 To mButtons.Length - 1
                             If (mButtons(i)) Then
                                 If (Math.Abs(mJoystickVec.X) < 0.5F AndAlso Math.Abs(mJoystickVec.Y) < 0.5F) Then
                                     ' Remove shortcut
-                                    If (mJoystickShortcuts.ContainsKey(i)) Then
-                                        mJoystickShortcuts.Remove(i)
+                                    If (mData.mJoystickShortcuts.ContainsKey(i)) Then
+                                        mData.mJoystickShortcuts.Remove(i)
                                     End If
                                 Else
                                     ' Create shortcut
-                                    mJoystickShortcuts(i) = mOscDataPack.mJoyStick
+                                    mData.mJoystickShortcuts(i) = mOscDataPack.mJoyStick
                                 End If
                             End If
                         Next
                     End If
                 End If
             Else
-                If (bJoystickButtonPressed) Then
-                    bJoystickButtonPressed = False
+                If (mData.bJoystickButtonPressed) Then
+                    mData.bJoystickButtonPressed = False
                 End If
 
                 mOscDataPack.mJoyStick = Vector2.Zero
@@ -3057,8 +3130,8 @@ Public Class UCVirtualMotionTrackerItem
                         ' Record joystick shortcut while MOVE button is pressed
                         For i = 1 To mButtons.Length - 1
                             If (mButtons(i)) Then
-                                If (mJoystickShortcuts.ContainsKey(i)) Then
-                                    mOscDataPack.mJoyStick = mJoystickShortcuts(i)
+                                If (mData.mJoystickShortcuts.ContainsKey(i)) Then
+                                    mOscDataPack.mJoyStick = mData.mJoystickShortcuts(i)
 
                                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = True
 
@@ -3076,18 +3149,32 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
+        Structure STRUC_BUTTONS_DATA
+            Dim bGripButtonPressed As Boolean
+            Dim bGripToggled As Boolean
+            Dim mGripPressTime As Stopwatch
+
+            Private bValid As Boolean
+
+            Public Sub Reset()
+                bGripButtonPressed = False
+                bGripToggled = False
+                mGripPressTime = New Stopwatch
+
+                bValid = True
+            End Sub
+        End Structure
+
         Private Sub InternalButtonsLogic(ByRef mOscDataPack As STRUC_OSC_DATA_PACK,
                                          ByRef mButtons As Boolean(),
-                                         ByRef m_PSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
+                                         ByRef mPSMoveData As ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA,
                                          ByRef bJoystickTrigger As Boolean,
                                          ByRef iHtcGripButtonMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD,
-                                         ByRef bGripButtonPressed As Boolean,
-                                         ByRef bGripToggled As Boolean,
                                          ByRef iHtcTouchpadEmulationClickMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD,
                                          ByRef bOculusGripToggle As Boolean,
                                          ByRef iOculusButtonMethod As UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD,
                                          ByRef bHybridGripToggle As Boolean,
-                                         ByRef mGripPressTime As Stopwatch)
+                                         ByRef mData As STRUC_BUTTONS_DATA)
             Select Case (m_VmtTrackerRole)
                 Case ENUM_TRACKER_ROLE.GENERIC_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.GENERIC_RIGHT_CONTROLLER
                     For i = 0 To mButtons.Length - 1
@@ -3095,11 +3182,11 @@ Public Class UCVirtualMotionTrackerItem
                     Next
 
                 Case ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER, ENUM_TRACKER_ROLE.HTC_VIVE_RIGHT_CONTROLLER
-                    mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
-                    mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
+                    mOscDataPack.mButtons(HTC_VIVE_BUTTON_SYSTEM_CLICK) = mPSMoveData.m_StartButton
+                    mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRIGGER_CLICK) = ((mPSMoveData.m_TriggerValue / 255.0F) > 0.75F)
                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_TOUCH) = bJoystickTrigger
                     mOscDataPack.mButtons(HTC_VIVE_BUTTON_TRACKPAD_CLICK) = False
-                    mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = m_PSMoveData.m_PSButton
+                    mOscDataPack.mButtons(HTC_VIVE_BUTTON_MENU_CLICK) = mPSMoveData.m_PSButton
 
                     ' Do grip button
                     Dim bGripJustPressed As Boolean = False
@@ -3108,33 +3195,33 @@ Public Class UCVirtualMotionTrackerItem
                     Select Case (iHtcGripButtonMethod)
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_MIRRORED
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                bGripJustPressed = m_PSMoveData.m_CircleButton
+                                bGripJustPressed = mPSMoveData.m_CircleButton
                             Else
-                                bGripJustPressed = m_PSMoveData.m_CrossButton
+                                bGripJustPressed = mPSMoveData.m_CrossButton
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CIRCLE
-                            bGripJustPressed = m_PSMoveData.m_CircleButton
+                            bGripJustPressed = mPSMoveData.m_CircleButton
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_HOLDING_STRICT_CROSS
-                            bGripJustPressed = m_PSMoveData.m_CrossButton
+                            bGripJustPressed = mPSMoveData.m_CrossButton
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_MIRRORED
                             bIsGripToggle = True
 
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                bGripJustPressed = m_PSMoveData.m_CircleButton
+                                bGripJustPressed = mPSMoveData.m_CircleButton
                             Else
-                                bGripJustPressed = m_PSMoveData.m_CrossButton
+                                bGripJustPressed = mPSMoveData.m_CrossButton
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CIRCLE
                             bIsGripToggle = True
-                            bGripJustPressed = m_PSMoveData.m_CircleButton
+                            bGripJustPressed = mPSMoveData.m_CircleButton
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_GRIP_BUTTON_METHOD.BUTTON_TOGGLE_STRICT_CROSS
                             bIsGripToggle = True
-                            bGripJustPressed = m_PSMoveData.m_CrossButton
+                            bGripJustPressed = mPSMoveData.m_CrossButton
 
                     End Select
 
@@ -3143,49 +3230,49 @@ Public Class UCVirtualMotionTrackerItem
                     ' Hybrid grip toggle 
                     If (bHybridGripToggle AndAlso bIsGripToggle) Then
                         If (bGripJustPressed) Then
-                            If (Not mGripPressTime.IsRunning) Then
-                                mGripPressTime.Restart()
+                            If (Not mData.mGripPressTime.IsRunning) Then
+                                mData.mGripPressTime.Restart()
                             End If
 
-                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                            If (mData.mGripPressTime.ElapsedMilliseconds > 500) Then
                                 mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = True
 
                                 bHybridGrip = True
                             End If
                         Else
-                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                            If (mData.mGripPressTime.ElapsedMilliseconds > 500) Then
                                 mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = False
 
                                 bHybridGrip = True
                             End If
 
-                            mGripPressTime.Reset()
+                            mData.mGripPressTime.Reset()
                         End If
                     Else
-                        mGripPressTime.Reset()
+                        mData.mGripPressTime.Reset()
                     End If
 
                     ' Grip toggle
                     If (bHybridGrip) Then
-                        bGripToggled = False
-                        bGripButtonPressed = False
+                        mData.bGripToggled = False
+                        mData.bGripButtonPressed = False
                     Else
                         If (Not bIsGripToggle) Then
                             mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripJustPressed
                         Else
                             If (bGripJustPressed) Then
-                                If (Not bGripButtonPressed) Then
-                                    bGripButtonPressed = True
+                                If (Not mData.bGripButtonPressed) Then
+                                    mData.bGripButtonPressed = True
 
-                                    bGripToggled = Not bGripToggled
+                                    mData.bGripToggled = Not mData.bGripToggled
                                 End If
                             Else
-                                If (bGripButtonPressed) Then
-                                    bGripButtonPressed = False
+                                If (mData.bGripButtonPressed) Then
+                                    mData.bGripButtonPressed = False
                                 End If
                             End If
 
-                            mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = bGripToggled
+                            mOscDataPack.mButtons(HTC_VIVE_BUTTON_GRIP_CLICK) = mData.bGripToggled
                         End If
                     End If
 
@@ -3193,22 +3280,22 @@ Public Class UCVirtualMotionTrackerItem
                     Select Case (iHtcTouchpadEmulationClickMethod)
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_MIRRORED
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.HTC_VIVE_LEFT_CONTROLLER) Then
-                                If (m_PSMoveData.m_TriangleButton) Then
+                                If (mPSMoveData.m_TriangleButton) Then
                                     bJoystickTrigger = True
                                 End If
                             Else
-                                If (m_PSMoveData.m_SquareButton) Then
+                                If (mPSMoveData.m_SquareButton) Then
                                     bJoystickTrigger = True
                                 End If
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_SQUARE
-                            If (m_PSMoveData.m_SquareButton) Then
+                            If (mPSMoveData.m_SquareButton) Then
                                 bJoystickTrigger = True
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_HTC_TOUCHPAD_CLICK_METHOD.BUTTON_STRICT_TRIANGLE
-                            If (m_PSMoveData.m_TriangleButton) Then
+                            If (mPSMoveData.m_TriangleButton) Then
                                 bJoystickTrigger = True
                             End If
                     End Select
@@ -3219,59 +3306,59 @@ Public Class UCVirtualMotionTrackerItem
                     Select Case (iOculusButtonMethod)
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CIRCLE_TRIANGLE_CROSS_SQUARE
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER) Then
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CircleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CircleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_TriangleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_TriangleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_SquareButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_SquareButton
-                                bGripJustPressed = m_PSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = mPSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = mPSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = mPSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = mPSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = mPSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_SquareButton
+                                bGripJustPressed = mPSMoveData.m_CrossButton
                             Else
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CrossButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CrossButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_SquareButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_SquareButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_TriangleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_TriangleButton
-                                bGripJustPressed = m_PSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = mPSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = mPSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = mPSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = mPSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = mPSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_TriangleButton
+                                bGripJustPressed = mPSMoveData.m_CircleButton
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_LEFT_CROSS_SQUARE_CIRCLE_TRIANGLE
                             If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER) Then
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CrossButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CrossButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_SquareButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_SquareButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_TriangleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_TriangleButton
-                                bGripJustPressed = m_PSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = mPSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = mPSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = mPSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = mPSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = mPSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_TriangleButton
+                                bGripJustPressed = mPSMoveData.m_CircleButton
                             Else
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CircleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CircleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_TriangleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_TriangleButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_SquareButton
-                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_SquareButton
-                                bGripJustPressed = m_PSMoveData.m_CrossButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = mPSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = mPSMoveData.m_CircleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = mPSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = mPSMoveData.m_TriangleButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = mPSMoveData.m_SquareButton
+                                mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_SquareButton
+                                bGripJustPressed = mPSMoveData.m_CrossButton
                             End If
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_BOTH_CIRCLE_TRIANGLE_CROSS_SQUARE
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CircleButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CircleButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_TriangleButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_TriangleButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_SquareButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_SquareButton
-                            bGripJustPressed = m_PSMoveData.m_CrossButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = mPSMoveData.m_CircleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = mPSMoveData.m_CircleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = mPSMoveData.m_TriangleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = mPSMoveData.m_TriangleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = mPSMoveData.m_SquareButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_SquareButton
+                            bGripJustPressed = mPSMoveData.m_CrossButton
 
                         Case UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_OCULUS_BUTTON_METHOD.BUTTON_BOTH_CROSS_SQUARE_CIRCLE_TRIANGLE
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = m_PSMoveData.m_CrossButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = m_PSMoveData.m_CrossButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = m_PSMoveData.m_SquareButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = m_PSMoveData.m_SquareButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = m_PSMoveData.m_TriangleButton
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_TriangleButton
-                            bGripJustPressed = m_PSMoveData.m_CircleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_CLICK) = mPSMoveData.m_CrossButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_AX_TOUCH) = mPSMoveData.m_CrossButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_CLICK) = mPSMoveData.m_SquareButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_BY_TOUCH) = mPSMoveData.m_SquareButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_CLICK) = mPSMoveData.m_TriangleButton
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_TriangleButton
+                            bGripJustPressed = mPSMoveData.m_CircleButton
 
                     End Select
 
@@ -3280,11 +3367,11 @@ Public Class UCVirtualMotionTrackerItem
                     ' Hybrid grip toggle 
                     If (bHybridGripToggle AndAlso bOculusGripToggle) Then
                         If (bGripJustPressed) Then
-                            If (Not mGripPressTime.IsRunning) Then
-                                mGripPressTime.Restart()
+                            If (Not mData.mGripPressTime.IsRunning) Then
+                                mData.mGripPressTime.Restart()
                             End If
 
-                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                            If (mData.mGripPressTime.ElapsedMilliseconds > 500) Then
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = True
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = True
                                 mOscDataPack.mTrigger(1) = 1.0F
@@ -3292,7 +3379,7 @@ Public Class UCVirtualMotionTrackerItem
                                 bHybridGrip = True
                             End If
                         Else
-                            If (mGripPressTime.ElapsedMilliseconds > 500) Then
+                            If (mData.mGripPressTime.ElapsedMilliseconds > 500) Then
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = False
                                 mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = False
                                 mOscDataPack.mTrigger(1) = 0.0F
@@ -3300,16 +3387,16 @@ Public Class UCVirtualMotionTrackerItem
                                 bHybridGrip = True
                             End If
 
-                            mGripPressTime.Reset()
+                            mData.mGripPressTime.Reset()
                         End If
                     Else
-                        mGripPressTime.Reset()
+                        mData.mGripPressTime.Reset()
                     End If
 
                     ' Grip toggle
                     If (bHybridGrip) Then
-                        bGripToggled = False
-                        bGripButtonPressed = False
+                        mData.bGripToggled = False
+                        mData.bGripButtonPressed = False
                     Else
                         If (Not bOculusGripToggle) Then
                             mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripJustPressed
@@ -3317,38 +3404,38 @@ Public Class UCVirtualMotionTrackerItem
                             mOscDataPack.mTrigger(1) = If(bGripJustPressed, 1.0F, 0.0F)
                         Else
                             If (bGripJustPressed) Then
-                                If (Not bGripButtonPressed) Then
-                                    bGripButtonPressed = True
+                                If (Not mData.bGripButtonPressed) Then
+                                    mData.bGripButtonPressed = True
 
-                                    bGripToggled = Not bGripToggled
+                                    mData.bGripToggled = Not mData.bGripToggled
                                 End If
                             Else
-                                If (bGripButtonPressed) Then
-                                    bGripButtonPressed = False
+                                If (mData.bGripButtonPressed) Then
+                                    mData.bGripButtonPressed = False
                                 End If
                             End If
 
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = bGripToggled
-                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = bGripToggled
-                            mOscDataPack.mTrigger(1) = If(bGripToggled, 1.0F, 0.0F)
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_CLICK) = mData.bGripToggled
+                            mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_GRIP_TOUCH) = mData.bGripToggled
+                            mOscDataPack.mTrigger(1) = If(mData.bGripToggled, 1.0F, 0.0F)
                         End If
                     End If
 
-                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = m_PSMoveData.m_MoveButton
+                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_JOYSTICK_TOUCH) = mPSMoveData.m_MoveButton
 
                     ' System click only works on the left controller
                     If (m_VmtTrackerRole = ENUM_TRACKER_ROLE.OCULUS_TOUCH_LEFT_CONTROLLER) Then
-                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_SYSTEM_CLICK) = m_PSMoveData.m_StartButton
+                        mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_SYSTEM_CLICK) = mPSMoveData.m_StartButton
                     Else
                         mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_SYSTEM_CLICK) = False
                     End If
 
-                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_START_CLICK) = m_PSMoveData.m_PSButton
-                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_TRIGGER_CLICK) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.75F)
-                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_TRIGGER_TOUCH) = ((m_PSMoveData.m_TriggerValue / 255.0F) > 0.25F)
+                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_START_CLICK) = mPSMoveData.m_PSButton
+                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_TRIGGER_CLICK) = ((mPSMoveData.m_TriggerValue / 255.0F) > 0.75F)
+                    mOscDataPack.mButtons(OCULUS_TOUCH_BUTTON_TRIGGER_TOUCH) = ((mPSMoveData.m_TriggerValue / 255.0F) > 0.25F)
             End Select
 
-            mOscDataPack.mTrigger(0) = (m_PSMoveData.m_TriggerValue / 255.0F)
+            mOscDataPack.mTrigger(0) = (mPSMoveData.m_TriggerValue / 255.0F)
 
         End Sub
 
