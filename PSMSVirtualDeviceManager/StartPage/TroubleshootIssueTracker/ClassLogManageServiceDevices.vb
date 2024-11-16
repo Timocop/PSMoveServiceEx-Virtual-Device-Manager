@@ -679,8 +679,8 @@ Public Class ClassLogManageServiceDevices
 
                     If (CInt(mColorConfig.iSaturationRange) < 64 OrElse CInt(mColorConfig.iValueRange) < 64) Then
                         Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-                        mIssue.sDescription = String.Format(mIssue.sDescription, iIndex, sDeviceType, mColorConfig.iDeviceId)
-                        mIssue.sSolution = String.Format(mIssue.sSolution, iIndex, sDeviceType, mColorConfig.iDeviceId)
+                        mIssue.sDescription = String.Format(mIssue.sDescription, sDeviceType, mColorConfig.iDeviceId, iIndex)
+                        mIssue.sSolution = String.Format(mIssue.sSolution, sDeviceType, mColorConfig.iDeviceId, iIndex)
                         mIssues.Add(mIssue)
                     End If
                 Next
