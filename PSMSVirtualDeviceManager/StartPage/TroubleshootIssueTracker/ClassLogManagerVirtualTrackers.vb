@@ -419,7 +419,7 @@ Public Class ClassLogManagerVirtualTrackers
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS,
             "The video input device {0} ({1}) framerate ({2} fps) is lower than the configured framerate ({3} fps) of the virtual tracker. An unstable framerate can cause unpredictable bad tracking.",
-            "Lower your virtual tracker settings for video input device id {0} ({1}) to reach the target framerate.",
+            "Lower your settings for video input device id {0} ({1}) to reach the target framerate.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
