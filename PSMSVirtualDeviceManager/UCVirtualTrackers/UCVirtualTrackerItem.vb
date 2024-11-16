@@ -2003,7 +2003,9 @@ Public Class UCVirtualTrackerItem
                                     Dim mBitmap As Bitmap = Nothing
 
                                     Using mStream As New IO.MemoryStream
-                                        Dim iByte As Byte() = mFrame.ImEncode()
+                                        Dim iByte As Byte() = mFrame.ImEncode(
+                                            ".jpg",
+                                            New OpenCvSharp.ImageEncodingParam(OpenCvSharp.ImwriteFlags.JpegQuality, 50))
 
                                         mStream.Write(iByte, 0, iByte.Length)
 
