@@ -15,6 +15,7 @@ Public Class ClassLogManagerVirtualTrackers
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RESOLUTION_MISMATCH As String = "Virtual tracker and video input device resolution mismatch"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_CODEC As String = "Virtual tracker bad codec set"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_OPTIMAL_CODEC As String = "Virtual tracker set optimal codec"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS As String = "Virtual tracker bad framrate"
 
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
@@ -33,6 +34,8 @@ Public Class ClassLogManagerVirtualTrackers
         Dim bUseMJPG As Boolean
         Dim bHasStatusError As Boolean
         Dim sHasStatusErrorMessage As String
+        Dim iFpsCaptureCounter As Integer
+        Dim iFpsPipeCounter As Integer
     End Structure
 
     Private g_mFormMain As FormMain
@@ -72,6 +75,8 @@ Public Class ClassLogManagerVirtualTrackers
                                       sTrackersList.AppendFormat("ShowCaptureImage={0}", mItem.g_mClassCaptureLogic.m_ShowCaptureImage).AppendLine()
                                       sTrackersList.AppendFormat("Supersampling={0}", mItem.g_mClassCaptureLogic.m_Supersampling).AppendLine()
                                       sTrackersList.AppendFormat("UseMJPG={0}", mItem.g_mClassCaptureLogic.m_UseMJPG).AppendLine()
+                                      sTrackersList.AppendFormat("FpsCaptureCounter={0}", mItem.g_mClassCaptureLogic.m_FpsCaptureCounter).AppendLine()
+                                      sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassCaptureLogic.m_FpsPipeCounter).AppendLine()
 
                                       sTrackersList.AppendLine()
                                   Next
@@ -92,6 +97,7 @@ Public Class ClassLogManagerVirtualTrackers
         mIssues.AddRange(CheckTooDemanding())
         mIssues.AddRange(CheckIncompatibleResolution())
         mIssues.AddRange(CheckCodec())
+        mIssues.AddRange(CheckFps())
         Return mIssues.ToArray
     End Function
 
@@ -404,6 +410,33 @@ Public Class ClassLogManagerVirtualTrackers
         Return mIssues.ToArray
     End Function
 
+    Public Function CheckFps() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS,
+            "The video input device {0} ({1}) framerate ({2} fps) is lower than the configured framerate ({3} fps) of the virtual tracker. An unstable framerate can cause unpredictable bad tracking.",
+            "Lower your virtual tracker settings for video input device id {0} ({1}) to reach the target framerate.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iFpsCaptureCounter < (mDevice.iCameraFramerate - 3)) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath, mDevice.iFpsCaptureCounter, mDevice.iCameraFramerate)
+                mIssue.sSolution = String.Format(mIssue.sSolution, mDevice.iDeviceIndex, mDevice.sPath)
+                mIssues.Add(mIssue)
+            End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
         Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
@@ -506,6 +539,18 @@ Public Class ClassLogManagerVirtualTrackers
 
                     If (mDevoceProp.ContainsKey("HasStatusErrorMessage")) Then
                         mNewDevice.sHasStatusErrorMessage = mDevoceProp("HasStatusErrorMessage")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("FpsCaptureCounter")) Then
+                        mNewDevice.iFpsCaptureCounter = CInt(mDevoceProp("FpsCaptureCounter"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
+                        mNewDevice.iFpsPipeCounter = CInt(mDevoceProp("FpsPipeCounter"))
                     Else
                         Exit While
                     End If
