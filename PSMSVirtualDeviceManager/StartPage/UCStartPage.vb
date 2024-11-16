@@ -118,14 +118,7 @@ Public Class UCStartPage
             bIsServiceConnected = g_bIsServiceConnected
         End SyncLock
 
-        If (bIsServiceRunning AndAlso Not bIsServiceConnected) Then
-            Label_PsmsxStatus.Text = "Connecting to Service..."
-            Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
-
-            ' Label Status in MainForm
-            g_FormMain.Label_ServiceStatus.Text = "Connecting to Service..."
-            g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
-        Else
+        If (bIsServiceRunning) Then
             If (bIsServiceConnected) Then
                 Label_PsmsxStatus.Text = "Service Connected"
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
@@ -133,15 +126,21 @@ Public Class UCStartPage
                 ' Label Status in MainForm
                 g_FormMain.Label_ServiceStatus.Text = "Service Connected"
                 g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_GREEN_16
-
             Else
-                Label_PsmsxStatus.Text = "Service Disconnected"
-                Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
+                Label_PsmsxStatus.Text = "Connecting to Service..."
+                Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_ServiceStatus.Text = "Service Disconnected"
-                g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_RED_16
+                g_FormMain.Label_ServiceStatus.Text = "Connecting to Service..."
+                g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
             End If
+        Else
+            Label_PsmsxStatus.Text = "Service Disconnected"
+            Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
+
+            ' Label Status in MainForm
+            g_FormMain.Label_ServiceStatus.Text = "Service Disconnected"
+            g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_RED_16
         End If
 
         If (bIsServiceRunning) Then
