@@ -1281,6 +1281,38 @@ Public Class UCVirtualMotionTrackerItem
             g_mOscThread = Nothing
         End Sub
 
+        Class STRUC_HMD_DISPLAY_DATA
+            Public iDisplayX As Integer
+            Public iDisplayY As Integer
+            Public iDisplayW As Integer
+            Public iDisplayH As Integer
+            Public iRenderW As Integer
+            Public iRenderH As Integer
+            Public iFrameRate As Integer
+            Public bDirectMode As Boolean
+            Public iVendorId As Integer
+            Public iProductId As Integer
+            Public bDisplaySuccess As Boolean
+            Public mDisplayNextUpdate As Stopwatch
+            Public mDisplaySetupUpdate As Stopwatch
+
+            Public Sub New()
+                iDisplayX = 0
+                iDisplayY = 0
+                iDisplayW = 0
+                iDisplayH = 0
+                iRenderW = 0
+                iRenderH = 0
+                iFrameRate = 0
+                bDirectMode = False
+                iVendorId = 0
+                iProductId = 0
+                bDisplaySuccess = False
+                mDisplayNextUpdate = New Stopwatch
+                mDisplaySetupUpdate = New Stopwatch
+            End Sub
+        End Class
+
         Private Sub ThreadOsc()
             Dim iLastOutputSeqNum As Integer = 0
             Dim iLastOutputSeqNumFailures As Integer = 0
@@ -1292,23 +1324,11 @@ Public Class UCVirtualMotionTrackerItem
             ' Controller  
             Dim mLastBatteryReport As New Stopwatch
 
-            Dim iDisplayX As Integer = 0
-            Dim iDisplayY As Integer = 0
-            Dim iDisplayW As Integer = 0
-            Dim iDisplayH As Integer = 0
-            Dim iRenderW As Integer = 0
-            Dim iRenderH As Integer = 0
-            Dim iFrameRate As Integer = 0
-            Dim bDirectMode As Boolean = False
-            Dim iVendorId As Integer = 0
-            Dim iProductId As Integer = 0
-            Dim bDisplaySuccess As Boolean = False
-            Dim mDisplayNextUpdate As New Stopwatch
-            Dim mDisplaySetupUpdate As New Stopwatch
 
             Dim bFirstEnabled As Boolean = False
             Dim mTrackerDataUpdate As New Stopwatch
 
+            Dim mHmdDisplayData As New STRUC_HMD_DISPLAY_DATA
             Dim mCalculateVelocityManualData As New STRUC_CALCULATE_VELOCITY_MANUAL_DATA
             Dim mCalculateVelocityData As New STRUC_CALCULATE_VELOCITY_DATA
             Dim mHepticFeedbackData As New STRUC_HEPTIC_FEEDBACK_DATA
@@ -1489,33 +1509,33 @@ Public Class UCVirtualMotionTrackerItem
                                                             mClassSettings,
                                                             mRecenterHmdData)
 
-                                        If (bDisplaySuccess AndAlso iDisplayW > 0 AndAlso iDisplayH > 0) Then
+                                        If (mHmdDisplayData.bDisplaySuccess AndAlso mHmdDisplayData.iDisplayW > 0 AndAlso mHmdDisplayData.iDisplayH > 0) Then
                                             Dim bSetPack As Boolean = False
 
                                             ' Setup the HMD
                                             ' $TODO Make this less retarded. Get status from the driver if something isnt set up properly.
-                                            If (Not mDisplaySetupUpdate.IsRunning OrElse mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
-                                                mDisplaySetupUpdate.Restart()
+                                            If (Not mHmdDisplayData.mDisplaySetupUpdate.IsRunning OrElse mHmdDisplayData.mDisplaySetupUpdate.ElapsedMilliseconds > 500) Then
+                                                mHmdDisplayData.mDisplaySetupUpdate.Restart()
 
-                                                If (bDirectMode) Then
+                                                If (mHmdDisplayData.bDirectMode) Then
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/HMD/SetupDisplayDirect",
-                                                            iDisplayX, iDisplayY,
-                                                            iDisplayW, iDisplayH,
-                                                            iRenderW, iRenderH,
-                                                            iFrameRate,
-                                                            iVendorId, iProductId
+                                                            mHmdDisplayData.iDisplayX, mHmdDisplayData.iDisplayY,
+                                                            mHmdDisplayData.iDisplayW, mHmdDisplayData.iDisplayH,
+                                                            mHmdDisplayData.iRenderW, mHmdDisplayData.iRenderH,
+                                                            mHmdDisplayData.iFrameRate,
+                                                            mHmdDisplayData.iVendorId, mHmdDisplayData.iProductId
                                                         ))
                                                     AddFpsOscCounter()
                                                 Else
                                                     mUCVirtualMotionTracker.g_ClassOscServer.Send(
                                                         New OscMessage(
                                                             "/VMT/HMD/SetupDisplay",
-                                                            iDisplayX, iDisplayY,
-                                                            iDisplayW, iDisplayH,
-                                                            iRenderW, iRenderH,
-                                                            iFrameRate
+                                                            mHmdDisplayData.iDisplayX, mHmdDisplayData.iDisplayY,
+                                                            mHmdDisplayData.iDisplayW, mHmdDisplayData.iDisplayH,
+                                                            mHmdDisplayData.iRenderW, mHmdDisplayData.iRenderH,
+                                                            mHmdDisplayData.iFrameRate
                                                         ))
                                                     AddFpsOscCounter()
                                                 End If
@@ -1597,8 +1617,8 @@ Public Class UCVirtualMotionTrackerItem
                                         End If
 
                                         ' May cause thread delay, put this in the end so we send pose without delay just in case.
-                                        If (Not mDisplayNextUpdate.IsRunning OrElse mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
-                                            mDisplayNextUpdate.Restart()
+                                        If (Not mHmdDisplayData.mDisplayNextUpdate.IsRunning OrElse mHmdDisplayData.mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
+                                            mHmdDisplayData.mDisplayNextUpdate.Restart()
 
                                             Dim mClassMonitor As New ClassMonitor
                                             Dim mDevMode As ClassMonitor.DEVMODE = Nothing
@@ -1610,16 +1630,16 @@ Public Class UCVirtualMotionTrackerItem
 
                                                     If (Not String.IsNullOrEmpty(mDevMode.dmDeviceName)) Then
                                                         If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_MULTI) Then
-                                                            iDisplayX = mDevMode.dmPositionX
-                                                            iDisplayY = mDevMode.dmPositionY
-                                                            iDisplayW = mDevMode.dmPelsWidth
-                                                            iDisplayH = mDevMode.dmPelsHeight
-                                                            iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
-                                                            iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                            iFrameRate = mDevMode.dmDisplayFrequency
-                                                            bDirectMode = False
+                                                            mHmdDisplayData.iDisplayX = mDevMode.dmPositionX
+                                                            mHmdDisplayData.iDisplayY = mDevMode.dmPositionY
+                                                            mHmdDisplayData.iDisplayW = mDevMode.dmPelsWidth
+                                                            mHmdDisplayData.iDisplayH = mDevMode.dmPelsHeight
+                                                            mHmdDisplayData.iRenderW = CInt((mHmdDisplayData.iDisplayW * iHmdRenderScale) / 2)
+                                                            mHmdDisplayData.iRenderH = CInt((mHmdDisplayData.iDisplayH * iHmdRenderScale))
+                                                            mHmdDisplayData.iFrameRate = mDevMode.dmDisplayFrequency
+                                                            mHmdDisplayData.bDirectMode = False
 
-                                                            bDisplaySuccess = True
+                                                            mHmdDisplayData.bDisplaySuccess = True
                                                         End If
                                                     End If
 
@@ -1628,14 +1648,14 @@ Public Class UCVirtualMotionTrackerItem
                                                     ' If display is not active or not found, its probably direct-mode
                                                     If (mClassMonitor.IsPlaystationVrMonitorPatched() = ClassMonitor.ENUM_PATCHED_RESGITRY_STATE.PATCHED_DIRECT) Then
                                                         '$TODO: Use settings to adjust properties like framerate.
-                                                        iDisplayX = 0
-                                                        iDisplayY = 0
-                                                        iDisplayW = 1920
-                                                        iDisplayH = 1080
-                                                        iRenderW = CInt((iDisplayW * iHmdRenderScale) / 2)
-                                                        iRenderH = CInt((iDisplayH * iHmdRenderScale))
-                                                        iFrameRate = HMD_DIRECT_MODE_FRAMERATE
-                                                        bDirectMode = True
+                                                        mHmdDisplayData.iDisplayX = 0
+                                                        mHmdDisplayData.iDisplayY = 0
+                                                        mHmdDisplayData.iDisplayW = 1920
+                                                        mHmdDisplayData.iDisplayH = 1080
+                                                        mHmdDisplayData.iRenderW = CInt((mHmdDisplayData.iDisplayW * iHmdRenderScale) / 2)
+                                                        mHmdDisplayData.iRenderH = CInt((mHmdDisplayData.iDisplayH * iHmdRenderScale))
+                                                        mHmdDisplayData.iFrameRate = HMD_DIRECT_MODE_FRAMERATE
+                                                        mHmdDisplayData.bDirectMode = True
 
                                                         Dim sMonitorName As String = mClassMonitor.GetPlaystationVrInstalledMonitorName()
 
@@ -1643,10 +1663,10 @@ Public Class UCVirtualMotionTrackerItem
                                                             Dim mPsvrMonitor = ClassMonitor.PSVR_MONITOR_IDS(l)
 
                                                             If (mPsvrMonitor.GetMonitorNameLong().ToUpperInvariant.EndsWith(sMonitorName.ToUpperInvariant)) Then
-                                                                iVendorId = mPsvrMonitor.GetVID()
-                                                                iProductId = mPsvrMonitor.GetPID()
+                                                                mHmdDisplayData.iVendorId = mPsvrMonitor.GetVID()
+                                                                mHmdDisplayData.iProductId = mPsvrMonitor.GetPID()
 
-                                                                bDisplaySuccess = True
+                                                                mHmdDisplayData.bDisplaySuccess = True
                                                             End If
                                                         Next
                                                     End If
