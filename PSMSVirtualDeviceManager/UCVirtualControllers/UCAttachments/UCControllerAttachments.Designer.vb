@@ -57,7 +57,7 @@ Partial Class UCControllerAttachments
         '
         Me.Panel_Attachments.AutoSize = True
         Me.Panel_Attachments.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel_Attachments.Location = New System.Drawing.Point(0, 340)
+        Me.Panel_Attachments.Location = New System.Drawing.Point(0, 300)
         Me.Panel_Attachments.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_Attachments.MinimumSize = New System.Drawing.Size(0, 32)
         Me.Panel_Attachments.Name = "Panel_Attachments"
@@ -77,7 +77,7 @@ Partial Class UCControllerAttachments
         Me.ListView_Attachments.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_Attachments.MultiSelect = False
         Me.ListView_Attachments.Name = "ListView_Attachments"
-        Me.ListView_Attachments.Size = New System.Drawing.Size(766, 160)
+        Me.ListView_Attachments.Size = New System.Drawing.Size(766, 120)
         Me.ListView_Attachments.TabIndex = 0
         Me.ListView_Attachments.UseCompatibleStateImageBehavior = False
         Me.ListView_Attachments.View = System.Windows.Forms.View.Details
@@ -191,7 +191,7 @@ Partial Class UCControllerAttachments
         Me.Panel_AvailableAttachments.Location = New System.Drawing.Point(16, 120)
         Me.Panel_AvailableAttachments.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableAttachments.Name = "Panel_AvailableAttachments"
-        Me.Panel_AvailableAttachments.Size = New System.Drawing.Size(768, 204)
+        Me.Panel_AvailableAttachments.Size = New System.Drawing.Size(768, 164)
         Me.Panel_AvailableAttachments.TabIndex = 22
         '
         'Panel8
@@ -239,7 +239,7 @@ Partial Class UCControllerAttachments
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(800, 340)
+        Me.Panel1.Size = New System.Drawing.Size(800, 300)
         Me.Panel1.TabIndex = 23
         '
         'UCControllerAttachments

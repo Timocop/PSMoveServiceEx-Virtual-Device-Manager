@@ -74,7 +74,7 @@ Public Class UCControllerAttachmentsItem
 
         ' Hide timeout error
         Panel_Status.Visible = False
-        g_iStatusHideHeight = (Me.Height - Panel_Status.Height)
+        g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
         g_iStatusShowHeight = Me.Height
         Me.Height = g_iStatusHideHeight
     End Sub

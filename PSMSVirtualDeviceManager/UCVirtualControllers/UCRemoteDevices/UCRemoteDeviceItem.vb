@@ -72,7 +72,7 @@ Public Class UCRemoteDeviceItem
 
         ' Hide timeout error
         Panel_Status.Visible = False
-        g_iStatusHideHeight = (Me.Height - Panel_Status.Height)
+        g_iStatusHideHeight = (Me.Height - Panel_Status.Height - Panel_Status.Margin.Top)
         g_iStatusShowHeight = Me.Height
         Me.Height = g_iStatusHideHeight
     End Sub
@@ -280,19 +280,28 @@ Public Class UCRemoteDeviceItem
 
         AddFpsOrientationCounter()
 
-        If (g_mRotationWait.ElapsedMilliseconds > 100) Then
-            g_mRotationWait.Restart()
+        Dim bNewStatus As Boolean = False
+        SyncLock g_mThreadLock
+            If (g_mRotationWait.ElapsedMilliseconds > 100) Then
+                g_mRotationWait.Restart()
 
+                bNewStatus = True
+            End If
+        End SyncLock
+
+        If (bNewStatus) Then
             Dim mAngle As Vector3 = ClassMathUtils.FromQ(New Quaternion(iX, iY, iZ, iW))
             Dim mResetAngle As Vector3 = ClassMathUtils.FromQ(g_mClassIO.m_ResetOrientation)
-            Dim iOffsetAngle As Integer = +g_mClassIO.m_YawOrientationOffset
+            Dim iOffsetAngle As Integer = g_mClassIO.m_YawOrientationOffset
 
             mAngle = ClassMathUtils.NormalizeAngles(New Vector3(mAngle.X - mResetAngle.X, mAngle.Y - mResetAngle.Y, mAngle.Z - mResetAngle.Z - iOffsetAngle))
 
-            ClassUtils.AsyncInvoke(Sub() TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z)))
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (Me.Visible) Then
+                                           TextBox_Axis.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, Math.Round(mAngle.X), Math.Round(mAngle.Y), Math.Round(mAngle.Z))
+                                       End If
+                                   End Sub)
         End If
-
-
     End Sub
 
     Private Sub OnTrackerGyro(mTracker As ClassTracker, iX As Single, iY As Single, iZ As Single)
@@ -302,10 +311,21 @@ Public Class UCRemoteDeviceItem
 
         'g_mClassIO.m_Orientation = g_mClassIO.m_Orientation * ClassQuaternionTools.ToQ(iY, iX, iZ)
 
-        If (g_mGyroWait.ElapsedMilliseconds > 100) Then
-            g_mGyroWait.Restart()
+        Dim bNewStatus As Boolean = False
+        SyncLock g_mThreadLock
+            If (g_mGyroWait.ElapsedMilliseconds > 100) Then
+                g_mGyroWait.Restart()
 
-            ClassUtils.AsyncInvoke(Sub() TextBox_Gyro.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, iX.ToString(Globalization.CultureInfo.InvariantCulture), iY.ToString(Globalization.CultureInfo.InvariantCulture), iZ.ToString(Globalization.CultureInfo.InvariantCulture)))
+                bNewStatus = True
+            End If
+        End SyncLock
+
+        If (bNewStatus) Then
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (Me.Visible) Then
+                                           TextBox_Gyro.Text = String.Format("X: {1}{0}Y: {2}{0}Z: {3}", Environment.NewLine, iX.ToString(Globalization.CultureInfo.InvariantCulture), iY.ToString(Globalization.CultureInfo.InvariantCulture), iZ.ToString(Globalization.CultureInfo.InvariantCulture))
+                                       End If
+                                   End Sub)
         End If
 
 
@@ -324,9 +344,21 @@ Public Class UCRemoteDeviceItem
             Return
         End If
 
-        If (g_mBatteryWait.ElapsedMilliseconds > 1000) Then
-            g_mBatteryWait.Restart()
-            ClassUtils.AsyncInvoke(Sub() TextBox_Battery.Text = String.Format("Battery: {0}%", iBatteryPercent))
+        Dim bNewStatus As Boolean = False
+        SyncLock g_mThreadLock
+            If (g_mBatteryWait.ElapsedMilliseconds > 100) Then
+                g_mBatteryWait.Restart()
+
+                bNewStatus = True
+            End If
+        End SyncLock
+
+        If (bNewStatus) Then
+            ClassUtils.AsyncInvoke(Sub()
+                                       If (Me.Visible) Then
+                                           TextBox_Battery.Text = String.Format("Battery: {0}%", iBatteryPercent)
+                                       End If
+                                   End Sub)
         End If
     End Sub
 

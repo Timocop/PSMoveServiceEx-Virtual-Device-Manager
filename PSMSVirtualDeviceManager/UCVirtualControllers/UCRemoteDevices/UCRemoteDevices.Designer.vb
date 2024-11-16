@@ -62,7 +62,7 @@ Partial Class UCRemoteDevices
         '
         Me.Panel_RemoteDevices.AutoSize = True
         Me.Panel_RemoteDevices.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(0, 337)
+        Me.Panel_RemoteDevices.Location = New System.Drawing.Point(0, 297)
         Me.Panel_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_RemoteDevices.MinimumSize = New System.Drawing.Size(0, 32)
         Me.Panel_RemoteDevices.Name = "Panel_RemoteDevices"
@@ -165,7 +165,7 @@ Partial Class UCRemoteDevices
         Me.ListView_RemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_RemoteDevices.MultiSelect = False
         Me.ListView_RemoteDevices.Name = "ListView_RemoteDevices"
-        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(766, 154)
+        Me.ListView_RemoteDevices.Size = New System.Drawing.Size(766, 114)
         Me.ListView_RemoteDevices.TabIndex = 20
         Me.ListView_RemoteDevices.UseCompatibleStateImageBehavior = False
         Me.ListView_RemoteDevices.View = System.Windows.Forms.View.Details
@@ -203,7 +203,7 @@ Partial Class UCRemoteDevices
         Me.Panel_AvailableRemoteDevices.Location = New System.Drawing.Point(16, 123)
         Me.Panel_AvailableRemoteDevices.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_AvailableRemoteDevices.Name = "Panel_AvailableRemoteDevices"
-        Me.Panel_AvailableRemoteDevices.Size = New System.Drawing.Size(768, 198)
+        Me.Panel_AvailableRemoteDevices.Size = New System.Drawing.Size(768, 158)
         Me.Panel_AvailableRemoteDevices.TabIndex = 21
         '
         'Panel8
@@ -254,7 +254,7 @@ Partial Class UCRemoteDevices
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(800, 337)
+        Me.Panel1.Size = New System.Drawing.Size(800, 297)
         Me.Panel1.TabIndex = 22
         '
         'UCRemoteDevices

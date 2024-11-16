@@ -118,10 +118,10 @@ Partial Class UCControllerAttachmentsItem
         '
         'Button_SaveSettings
         '
-        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_SaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_SaveSettings.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16761_16x16_32
-        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 325)
-        Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16)
+        Me.Button_SaveSettings.Location = New System.Drawing.Point(481, 264)
+        Me.Button_SaveSettings.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.Button_SaveSettings.Name = "Button_SaveSettings"
         Me.Button_SaveSettings.Size = New System.Drawing.Size(120, 23)
         Me.Button_SaveSettings.TabIndex = 7
@@ -366,11 +366,10 @@ Partial Class UCControllerAttachmentsItem
         '
         'TextBox_Fps
         '
-        Me.TextBox_Fps.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.TextBox_Fps.BackColor = System.Drawing.Color.White
         Me.TextBox_Fps.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox_Fps.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 330)
+        Me.TextBox_Fps.Location = New System.Drawing.Point(16, 269)
         Me.TextBox_Fps.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TextBox_Fps.Name = "TextBox_Fps"
         Me.TextBox_Fps.ReadOnly = True
@@ -380,10 +379,10 @@ Partial Class UCControllerAttachmentsItem
         '
         'CheckBox_JointOnly
         '
-        Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox_JointOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_JointOnly.AutoSize = True
         Me.CheckBox_JointOnly.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 328)
+        Me.CheckBox_JointOnly.Location = New System.Drawing.Point(359, 267)
         Me.CheckBox_JointOnly.Name = "CheckBox_JointOnly"
         Me.CheckBox_JointOnly.Size = New System.Drawing.Size(115, 18)
         Me.CheckBox_JointOnly.TabIndex = 33
@@ -426,15 +425,14 @@ Partial Class UCControllerAttachmentsItem
         '
         'Panel_Status
         '
-        Me.Panel_Status.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Panel_Status.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_Status.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.Panel_Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_Status.Controls.Add(Me.PictureBox1)
         Me.Panel_Status.Controls.Add(Me.Label_StatusMessage)
         Me.Panel_Status.Controls.Add(Me.Label_StatusTitle)
-        Me.Panel_Status.Location = New System.Drawing.Point(16, 267)
+        Me.Panel_Status.Location = New System.Drawing.Point(16, 294)
         Me.Panel_Status.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.Panel_Status.Name = "Panel_Status"
         Me.Panel_Status.Size = New System.Drawing.Size(585, 54)
