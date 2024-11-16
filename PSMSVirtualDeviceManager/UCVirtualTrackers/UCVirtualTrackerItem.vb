@@ -305,11 +305,6 @@ Public Class UCVirtualTrackerItem
 
                             Dim mLastWriteTime = IO.File.GetLastWriteTime(sConfigFile)
 
-                            ' Dont instantly access the file
-                            If (mLastWriteTime + New TimeSpan(0, 0, 1) > Date.Now) Then
-                                Continue For
-                            End If
-
                             ' Only check if the file changed since last time 
                             If (Not bTrackerIdChanged) Then
                                 If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
@@ -363,23 +358,33 @@ Public Class UCVirtualTrackerItem
                                     End If
                                 Else
                                     ' Check for general cameras if they have been calibrated or not
-                                    If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE, mConstCameraDistortion)) Then
-                                        Dim bCorrectDistort As Boolean = (
-                                                CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
-                                                CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
-                                                CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
-                                                CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
-                                                CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
-                                                CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
-                                                CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
-                                                CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
-                                                CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
+                                    Dim bCorrectDistort As Boolean = False
+                                    Dim iBadTypes = {
+                                        ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE,
+                                        ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM
+                                    }
+                                    For Each iType In iBadTypes
+                                        ' Dont allow PSEye and PS4Cam calibrations
+                                        If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(iType, mConstCameraDistortion)) Then
+                                            bCorrectDistort = (
+                                                    CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
+                                                    CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
+                                                    CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
+                                                    CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
+                                                    CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
+                                                    CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
+                                                    CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
+                                                    CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
+                                                    CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
 
-                                        If (bCorrectDistort) Then
-                                            g_bStatusDistortionWarning = True
-                                        Else
-                                            g_bStatusDistortionWarning = False
+                                            If (bCorrectDistort) Then
+                                                Exit For
+                                            End If
                                         End If
+                                    Next
+
+                                    If (bCorrectDistort) Then
+                                        g_bStatusDistortionWarning = True
                                     Else
                                         g_bStatusDistortionWarning = False
                                     End If
