@@ -31,7 +31,6 @@ Partial Class FormMain
         Me.Panel_Pages = New System.Windows.Forms.Panel()
         Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
         Me.LinkLabel_RestartPSMS = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_StopPSMS = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -81,7 +80,7 @@ Partial Class FormMain
         Me.LinkLabel_RestartPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RestartPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RestartPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(48, 178)
+        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(48, 151)
         Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RestartPSMS.Name = "LinkLabel_RestartPSMS"
         Me.LinkLabel_RestartPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -91,28 +90,6 @@ Partial Class FormMain
         Me.LinkLabel_RestartPSMS.Text = "Restart Service"
         Me.ToolTip_Service.SetToolTip(Me.LinkLabel_RestartPSMS, "ToolTip")
         Me.LinkLabel_RestartPSMS.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel_StopPSMS
-        '
-        Me.LinkLabel_StopPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_StopPSMS.AutoSize = True
-        Me.LinkLabel_StopPSMS.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_StopPSMS.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_StopPSMS.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StopPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5337_16x16_32
-        Me.LinkLabel_StopPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_StopPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_StopPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StopPSMS.Location = New System.Drawing.Point(48, 151)
-        Me.LinkLabel_StopPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_StopPSMS.Name = "LinkLabel_StopPSMS"
-        Me.LinkLabel_StopPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_StopPSMS.Size = New System.Drawing.Size(87, 19)
-        Me.LinkLabel_StopPSMS.TabIndex = 15
-        Me.LinkLabel_StopPSMS.TabStop = True
-        Me.LinkLabel_StopPSMS.Text = "Stop Service"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_StopPSMS, "ToolTip")
-        Me.LinkLabel_StopPSMS.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_RunPSMSTool
         '
@@ -125,7 +102,7 @@ Partial Class FormMain
         Me.LinkLabel_RunPSMSTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RunPSMSTool.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RunPSMSTool.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(48, 205)
+        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(48, 178)
         Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RunPSMSTool.Name = "LinkLabel_RunPSMSTool"
         Me.LinkLabel_RunPSMSTool.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -175,7 +152,6 @@ Partial Class FormMain
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMSTool)
         Me.Panel1.Controls.Add(Me.LinkLabel_StartPage)
-        Me.Panel1.Controls.Add(Me.LinkLabel_StopPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunSteamVR)
         Me.Panel1.Controls.Add(Me.LinkLabel_RestartPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_RemoteStartSocket)
@@ -206,7 +182,7 @@ Partial Class FormMain
         Me.LinkLabel_PlayCalibStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
         Me.LinkLabel_PlayCalibStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_PlayCalibStatus.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 526)
+        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 499)
         Me.LinkLabel_PlayCalibStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_PlayCalibStatus.Name = "LinkLabel_PlayCalibStatus"
         Me.LinkLabel_PlayCalibStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -226,7 +202,7 @@ Partial Class FormMain
         Me.LinkLabel_PlayCalibStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_PlayCalibStart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_PlayCalibStart.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 553)
+        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 526)
         Me.LinkLabel_PlayCalibStart.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_PlayCalibStart.Name = "LinkLabel_PlayCalibStart"
         Me.LinkLabel_PlayCalibStart.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -248,7 +224,7 @@ Partial Class FormMain
         Me.Label_PsvrStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
         Me.Label_PsvrStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.Label_PsvrStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_PsvrStatus.Location = New System.Drawing.Point(32, 267)
+        Me.Label_PsvrStatus.Location = New System.Drawing.Point(32, 240)
         Me.Label_PsvrStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.Label_PsvrStatus.Name = "Label_PsvrStatus"
         Me.Label_PsvrStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -269,7 +245,7 @@ Partial Class FormMain
         Me.Label_RemoteDeviceStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
         Me.Label_RemoteDeviceStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.Label_RemoteDeviceStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_RemoteDeviceStatus.Location = New System.Drawing.Point(32, 329)
+        Me.Label_RemoteDeviceStatus.Location = New System.Drawing.Point(32, 302)
         Me.Label_RemoteDeviceStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.Label_RemoteDeviceStatus.Name = "Label_RemoteDeviceStatus"
         Me.Label_RemoteDeviceStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -310,7 +286,7 @@ Partial Class FormMain
         Me.LinkLabel_PSVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_PSVR.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_PSVR.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PSVR.Location = New System.Drawing.Point(17, 240)
+        Me.LinkLabel_PSVR.Location = New System.Drawing.Point(17, 213)
         Me.LinkLabel_PSVR.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_PSVR.Name = "LinkLabel_PSVR"
         Me.LinkLabel_PSVR.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -332,7 +308,7 @@ Partial Class FormMain
         Me.Label_VmtStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
         Me.Label_VmtStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.Label_VmtStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_VmtStatus.Location = New System.Drawing.Point(32, 472)
+        Me.Label_VmtStatus.Location = New System.Drawing.Point(32, 445)
         Me.Label_VmtStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.Label_VmtStatus.Name = "Label_VmtStatus"
         Me.Label_VmtStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -352,7 +328,7 @@ Partial Class FormMain
         Me.LinkLabel_VMT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VMT.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 445)
+        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 418)
         Me.LinkLabel_VMT.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_VMT.Name = "LinkLabel_VMT"
         Me.LinkLabel_VMT.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -416,7 +392,7 @@ Partial Class FormMain
         Me.LinkLabel_RemoteStartSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_RemoteStartSocket.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_RemoteStartSocket.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(48, 356)
+        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(48, 329)
         Me.LinkLabel_RemoteStartSocket.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_RemoteStartSocket.Name = "LinkLabel_RemoteStartSocket"
         Me.LinkLabel_RemoteStartSocket.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -437,7 +413,7 @@ Partial Class FormMain
         Me.LinkLabel_VMTStartOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_VMTStartOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VMTStartOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(48, 499)
+        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(48, 472)
         Me.LinkLabel_VMTStartOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_VMTStartOscServer.Name = "LinkLabel_VMTStartOscServer"
         Me.LinkLabel_VMTStartOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -515,7 +491,7 @@ Partial Class FormMain
         Me.LinkLabel_Trackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Trackers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_Trackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 418)
+        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 391)
         Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
         Me.LinkLabel_Trackers.Name = "LinkLabel_Trackers"
         Me.LinkLabel_Trackers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -536,7 +512,7 @@ Partial Class FormMain
         Me.LinkLabel_HMDs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_HMDs.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_HMDs.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 391)
+        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 364)
         Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
         Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -566,7 +542,7 @@ Partial Class FormMain
         Me.LinkLabel_Controllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 302)
+        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 275)
         Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
         Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
         Me.LinkLabel_Controllers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -619,7 +595,6 @@ Partial Class FormMain
     Friend WithEvents LinkLabel_RunPSMS As LinkLabel
     Friend WithEvents LinkLabel_RunPSMSTool As LinkLabel
     Friend WithEvents LinkLabel_RestartPSMS As LinkLabel
-    Friend WithEvents LinkLabel_StopPSMS As LinkLabel
     Friend WithEvents ToolTip_Service As ToolTip
     Friend WithEvents LinkLabel_Github As LinkLabel
     Friend WithEvents LinkLabel_Updates As LinkLabel

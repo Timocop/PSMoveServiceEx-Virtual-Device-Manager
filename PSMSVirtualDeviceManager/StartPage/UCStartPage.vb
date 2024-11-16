@@ -110,19 +110,23 @@ Public Class UCStartPage
     End Sub
 
     Private Sub SetStatusServiceConnected()
+        Dim bIsServiceRunning As Boolean
+        Dim bIsServiceConnected As Boolean
+
         SyncLock g_mThreadLock
-            If (g_bIsServiceRunning And Not g_bIsServiceConnected) Then
-                Label_PsmsxStatus.Text = "Connecting to Service..."
-                Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
+            bIsServiceRunning = g_bIsServiceRunning
+            bIsServiceConnected = g_bIsServiceConnected
+        End SyncLock
 
-                ' Label Status in MainForm
-                g_FormMain.Label_ServiceStatus.Text = "Connecting to Service..."
-                g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
+        If (bIsServiceRunning AndAlso Not bIsServiceConnected) Then
+            Label_PsmsxStatus.Text = "Connecting to Service..."
+            Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
-                Return
-            End If
-
-            If (g_bIsServiceConnected) Then
+            ' Label Status in MainForm
+            g_FormMain.Label_ServiceStatus.Text = "Connecting to Service..."
+            g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
+        Else
+            If (bIsServiceConnected) Then
                 Label_PsmsxStatus.Text = "Service Connected"
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
 
@@ -138,7 +142,15 @@ Public Class UCStartPage
                 g_FormMain.Label_ServiceStatus.Text = "Service Disconnected"
                 g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_RED_16
             End If
-        End SyncLock
+        End If
+
+        If (bIsServiceRunning) Then
+            g_FormMain.LinkLabel_RunPSMS.Text = "Stop Service"
+            g_FormMain.LinkLabel_RunPSMS.Image = My.Resources.imageres_5337_16x16_32
+        Else
+            g_FormMain.LinkLabel_RunPSMS.Text = "Run Service"
+            g_FormMain.LinkLabel_RunPSMS.Image = My.Resources.imageres_5341_16x16_32
+        End If
     End Sub
 
     Public Sub RunRuntimeDiagnostics()

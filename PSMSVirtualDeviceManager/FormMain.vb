@@ -230,6 +230,26 @@ Public Class FormMain
         g_bAllowRestartPrompt = True
     End Sub
 
+    Private Sub OnServiceDetectionThread()
+        Dim mServiceInfo As New ClassServiceInfo
+
+        While True
+            Try
+                If (mServiceInfo.IsServiceRunning <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE) Then
+
+                Else
+
+                End If
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
+            End Try
+
+            Threading.Thread.Sleep(1000)
+        End While
+    End Sub
+
     Public Sub PromptRestartPSMoveService()
         If (Not g_bAllowRestartPrompt) Then
             Return
@@ -883,16 +903,13 @@ Public Class FormMain
         End If
 
         SelectPage(ENUM_PAGE.STARTPAGE)
-        g_mUCStartPage.LinkLabel_ServiceRun_Click()
-    End Sub
 
-    Public Sub LinkLabel_StopPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StopPSMS.LinkClicked
-        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
-            Return
+        Dim mServiceInfo As New ClassServiceInfo
+        If (mServiceInfo.IsServiceRunning <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE) Then
+            g_mUCStartPage.LinkLabel_ServiceStop_Click()
+        Else
+            g_mUCStartPage.LinkLabel_ServiceRun_Click()
         End If
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
-        g_mUCStartPage.LinkLabel_ServiceStop_Click()
     End Sub
 
     Public Sub LinkLabel_RestartPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RestartPSMS.LinkClicked
