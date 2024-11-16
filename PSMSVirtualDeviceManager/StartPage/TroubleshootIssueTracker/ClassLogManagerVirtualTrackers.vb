@@ -12,7 +12,9 @@ Public Class ClassLogManagerVirtualTrackers
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_COUNT_LOW As String = "Virtual tracker slot count too low"
     Public Shared ReadOnly LOG_ISSUE_BAD_VIRTUAL_TRACKER_COUNT As String = "More virtual tracker slots than video input devices"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RESSOURCE_HEAVY As String = "Virtual tracker too ressource intensive"
-    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RRESOLUTION_MISMATCH As String = "Virtual tracker and video input device resolution mismatch"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RESOLUTION_MISMATCH As String = "Virtual tracker and video input device resolution mismatch"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_CODEC As String = "Virtual tracker bad codec set"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_OPTIMAL_CODEC As String = "Virtual tracker set optimal codec"
 
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
@@ -89,6 +91,7 @@ Public Class ClassLogManagerVirtualTrackers
         mIssues.AddRange(CheckBadTrackerCount())
         mIssues.AddRange(CheckTooDemanding())
         mIssues.AddRange(CheckIncompatibleResolution())
+        mIssues.AddRange(CheckCodec())
         Return mIssues.ToArray
     End Function
 
@@ -291,7 +294,7 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-            LOG_ISSUE_VIRTUAL_TRACKER_RRESOLUTION_MISMATCH,
+            LOG_ISSUE_VIRTUAL_TRACKER_RESOLUTION_MISMATCH,
             "The video input device {0} ({1}) resolution and PSMoveServiceEx resolution for virtual tracker id {2} do not match. This will result in a 'Tracker timed out.' error.",
             "Match the resolution of video input device id {0} ({1}) with the PSMoveServiceEx virtual tracker {2} in color calibration inside the config tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
@@ -348,6 +351,54 @@ Public Class ClassLogManagerVirtualTrackers
                     Exit For
                 Next
             Next
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckCodec() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_VIRTUAL_TRACKER_BAD_CODEC,
+            "The video input device {0} ({1}) resolution is too high for the currently set codec YUY2 and may cause stuttering and freezing image stream.",
+            "Set the codec to MJPG for video input device id {0} ({1}).",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mOptimizedTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_VIRTUAL_TRACKER_OPTIMAL_CODEC,
+            "The video input device {0} ({1}) is currently using codec MJPG. This codec uses compression and therefore adds latency and requires a bit more processing power.",
+            "Disable the MJPG codec for video input device id {0} ({1}). Ignore this if YUY2 is not working.",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.bIsPlayStationCamera) Then
+                Continue For
+            End If
+
+            ' YUY2 does not like high resolutions
+            If (mDevice.iCameraResolution = ENUM_RESOLUTION.HD OrElse mDevice.bSupersampling) Then
+                If (Not mDevice.bUseMJPG) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath)
+                    mIssue.sSolution = String.Format(mIssue.sSolution, mDevice.iDeviceIndex, mDevice.sPath)
+                    mIssues.Add(mIssue)
+                End If
+            Else
+                If (mDevice.bUseMJPG) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mOptimizedTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath)
+                    mIssue.sSolution = String.Format(mIssue.sSolution, mDevice.iDeviceIndex, mDevice.sPath)
+                    mIssues.Add(mIssue)
+                End If
+            End If
         Next
 
         Return mIssues.ToArray
