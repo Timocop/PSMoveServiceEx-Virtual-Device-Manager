@@ -31,6 +31,8 @@ Public Class UCVmtManagement
 
         g_bInit = True
 
+        SetOscServerStatus(ENUM_OSC_CONNECTION_STATUS.DISCONNETED)
+
         g_mOscStatusThread = New Threading.Thread(AddressOf OscStatusThread)
         g_mOscStatusThread.Priority = Threading.ThreadPriority.Lowest
         g_mOscStatusThread.IsBackground = True
@@ -229,6 +231,16 @@ Public Class UCVmtManagement
                 g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Timeout"
                 g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
 
+        End Select
+
+        Select Case (i)
+            Case ENUM_OSC_CONNECTION_STATUS.CONNECTED, ENUM_OSC_CONNECTION_STATUS.TIMEOUT
+                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Text = "Pause OSC Server"
+                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Image = My.Resources.imageres_5315_16x16_32
+
+            Case Else
+                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Text = "Start OSC Server"
+                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Image = My.Resources.imageres_5341_16x16_32
         End Select
     End Sub
 

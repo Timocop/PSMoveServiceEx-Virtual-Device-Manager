@@ -846,13 +846,22 @@ Public Class FormMain
             Return
         End If
 
+        If (g_mUCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
+            Return
+        End If
+
         SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
         g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
 
-        g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscRun_Click()
+        If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+            g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscPause_Click()
+        Else
+            g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscRun_Click()
+        End If
+
     End Sub
 
-    Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1LinkLabel_VMTPauseOscServer.LinkClicked
+    Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
         If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
             Return
         End If

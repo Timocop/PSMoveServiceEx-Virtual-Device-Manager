@@ -45,7 +45,6 @@ Partial Class FormMain
         Me.LinkLabel_VMT = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_StartPage = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RunSteamVR = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_RemoteStartSocket = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_VMTStartOscServer = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
@@ -179,7 +178,6 @@ Partial Class FormMain
         Me.Panel1.Controls.Add(Me.LinkLabel_StopPSMS)
         Me.Panel1.Controls.Add(Me.LinkLabel_RunSteamVR)
         Me.Panel1.Controls.Add(Me.LinkLabel_RestartPSMS)
-        Me.Panel1.Controls.Add(Me.LinkLabel1LinkLabel_VMTPauseOscServer)
         Me.Panel1.Controls.Add(Me.LinkLabel_RemoteStartSocket)
         Me.Panel1.Controls.Add(Me.LinkLabel_VMTStartOscServer)
         Me.Panel1.Controls.Add(Me.LinkLabel_Updates)
@@ -208,7 +206,7 @@ Partial Class FormMain
         Me.LinkLabel_PlayCalibStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
         Me.LinkLabel_PlayCalibStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_PlayCalibStatus.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 553)
+        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 526)
         Me.LinkLabel_PlayCalibStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
         Me.LinkLabel_PlayCalibStatus.Name = "LinkLabel_PlayCalibStatus"
         Me.LinkLabel_PlayCalibStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -228,7 +226,7 @@ Partial Class FormMain
         Me.LinkLabel_PlayCalibStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LinkLabel_PlayCalibStart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_PlayCalibStart.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 580)
+        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 553)
         Me.LinkLabel_PlayCalibStart.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
         Me.LinkLabel_PlayCalibStart.Name = "LinkLabel_PlayCalibStart"
         Me.LinkLabel_PlayCalibStart.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
@@ -406,27 +404,6 @@ Partial Class FormMain
         Me.LinkLabel_RunSteamVR.TabStop = True
         Me.LinkLabel_RunSteamVR.Text = "Launch SteamVR"
         Me.LinkLabel_RunSteamVR.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel1LinkLabel_VMTPauseOscServer
-        '
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.AutoSize = True
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5315_16x16_32
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Location = New System.Drawing.Point(48, 526)
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Name = "LinkLabel1LinkLabel_VMTPauseOscServer"
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Size = New System.Drawing.Size(114, 19)
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.TabIndex = 22
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.TabStop = True
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.Text = "Pause OSC Server"
-        Me.LinkLabel1LinkLabel_VMTPauseOscServer.VisitedLinkColor = System.Drawing.Color.Navy
         '
         'LinkLabel_RemoteStartSocket
         '
@@ -651,7 +628,6 @@ Partial Class FormMain
     Friend WithEvents LinkLabel_StartPage As LinkLabel
     Friend WithEvents LinkLabel_VMT As LinkLabel
     Friend WithEvents Label_VmtStatus As LinkLabel
-    Friend WithEvents LinkLabel1LinkLabel_VMTPauseOscServer As LinkLabel
     Friend WithEvents LinkLabel_VMTStartOscServer As LinkLabel
     Friend WithEvents LinkLabel_PSVR As LinkLabel
     Friend WithEvents Label_RemoteDeviceStatus As LinkLabel
