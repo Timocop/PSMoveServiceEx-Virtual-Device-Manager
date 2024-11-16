@@ -230,26 +230,6 @@ Public Class FormMain
         g_bAllowRestartPrompt = True
     End Sub
 
-    Private Sub OnServiceDetectionThread()
-        Dim mServiceInfo As New ClassServiceInfo
-
-        While True
-            Try
-                If (mServiceInfo.IsServiceRunning <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE) Then
-
-                Else
-
-                End If
-            Catch ex As Threading.ThreadAbortException
-                Throw
-            Catch ex As Exception
-                ClassAdvancedExceptionLogging.WriteToLog(ex)
-            End Try
-
-            Threading.Thread.Sleep(1000)
-        End While
-    End Sub
-
     Public Sub PromptRestartPSMoveService()
         If (Not g_bAllowRestartPrompt) Then
             Return
