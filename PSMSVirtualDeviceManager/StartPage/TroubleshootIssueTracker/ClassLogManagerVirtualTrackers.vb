@@ -370,8 +370,8 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_VIRTUAL_TRACKER_BAD_CODEC,
-            "The video input device {0} ({1}) resolution is too high for the currently set codec YUY2 and may cause stuttering and freezing image stream.",
-            "Set the codec to MJPG for video input device id {0} ({1}).",
+            "The video input device {0} ({1}) resolution is too high for the currently set YUY2 codec and may cause stuttering and freezing image stream.",
+            "Enable the MJPG codec for video input device id {0} ({1}).",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
