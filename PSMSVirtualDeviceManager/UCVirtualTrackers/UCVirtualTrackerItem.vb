@@ -34,9 +34,6 @@ Public Class UCVirtualTrackerItem
     Public g_bIgnoreUnsaved As Boolean = False
     Private g_bInit As Boolean = False
 
-    Private g_iCaptureFps As Integer = 0
-    Private g_iPipeFps As Integer = 0
-
     Structure STRUC_CAMERA_TRACKER_ID_ITEM
         Dim iTrackerId_1 As Integer
         Dim iTrackerId_2 As Integer
@@ -245,7 +242,7 @@ Public Class UCVirtualTrackerItem
             g_bIgnoreUnsaved = False
         End Try
 
-        SetFpsText(0, 0)
+        SetFpsText(0, 0, 30)
         SetUnsavedState(False)
         SetRequireRestart(False)
 
@@ -501,6 +498,16 @@ Public Class UCVirtualTrackerItem
         End Try
 
         Timer_Status.Start()
+    End Sub
+
+    Private Sub Timer_FpsCounter_Tick(sender As Object, e As EventArgs) Handles Timer_FpsCounter.Tick
+        Timer_FpsCounter.Stop()
+
+        If (g_mClassCaptureLogic IsNot Nothing) Then
+            SetFpsText(g_mClassCaptureLogic.m_FpsCaptureCounter, g_mClassCaptureLogic.m_FpsPipeCounter, g_mClassCaptureLogic.m_CameraFramerate)
+        End If
+
+        Timer_FpsCounter.Start()
     End Sub
 
     ReadOnly Property m_HasStatusError As Boolean
@@ -880,24 +887,16 @@ Public Class UCVirtualTrackerItem
         SetUnsavedState(True)
     End Sub
 
-    Public Sub SetFpsText(iCaptureFps As Integer, iPipeFps As Integer)
-        If (iCaptureFps > -1) Then
-            g_iCaptureFps = iCaptureFps
-        End If
-
-        If (iPipeFps > -1) Then
-            g_iPipeFps = iPipeFps
-        End If
-
-        If (g_iCaptureFps < 20 OrElse g_iPipeFps < 20) Then
+    Public Sub SetFpsText(iCaptureFps As Integer, iPipeFps As Integer, iTargetFps As Integer)
+        If (iCaptureFps < (iTargetFps - 7) OrElse iPipeFps < (iTargetFps - 7)) Then
             TextBox_Fps.ForeColor = Color.Red
-        ElseIf (g_iCaptureFps < 27 OrElse g_iPipeFps < 27) Then
+        ElseIf (iCaptureFps < (iTargetFps - 3) OrElse iPipeFps < (iTargetFps - 3)) Then
             TextBox_Fps.ForeColor = Color.DarkOrange
         Else
             TextBox_Fps.ForeColor = Color.Black
         End If
 
-        TextBox_Fps.Text = String.Format("FPS: {0}, I/O FPS: {1}", g_iCaptureFps, g_iPipeFps)
+        TextBox_Fps.Text = String.Format("FPS: {0}, I/O FPS: {1}", iCaptureFps, iPipeFps)
     End Sub
 
     Private Sub CleanUp()
@@ -920,6 +919,8 @@ Public Class UCVirtualTrackerItem
         Private g_mCapture As OpenCvSharp.VideoCapture = Nothing
         Private g_mCaptureFrame As OpenCvSharp.Mat() = {Nothing, Nothing}
         Private g_mPipEvent As Threading.AutoResetEvent() = {Nothing, Nothing}
+        Private g_mFpsCaptureCounter As New Queue(Of Date)
+        Private g_mFpsPipeCounter As New Queue(Of Date)
 
         Private g_mThreadLock As New Object
         Private g_mThreadInitLock As New Object
@@ -1398,6 +1399,56 @@ Public Class UCVirtualTrackerItem
 
             Return -1
         End Function
+
+        ReadOnly Property m_FpsCaptureCounter As Integer
+            Get
+                SyncLock g_mThreadLock
+                    Dim mNow As Date = Now
+
+                    While (g_mFpsCaptureCounter.Count > 0)
+                        If (g_mFpsCaptureCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                            g_mFpsCaptureCounter.Dequeue()
+                        Else
+                            Exit While
+                        End If
+                    End While
+
+                    Return g_mFpsCaptureCounter.Count
+                End SyncLock
+            End Get
+        End Property
+
+        Public Sub AddFpsCaptureCounter()
+            SyncLock g_mThreadLock
+                g_mFpsCaptureCounter.Enqueue(Now)
+            End SyncLock
+        End Sub
+
+        ReadOnly Property m_FpsPipeCounter As Integer
+            Get
+                SyncLock g_mThreadLock
+                    Dim mNow As Date = Now
+
+                    While (g_mFpsPipeCounter.Count > 0)
+                        If (g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
+                            g_mFpsPipeCounter.Dequeue()
+                        Else
+                            Exit While
+                        End If
+                    End While
+
+                    Return g_mFpsPipeCounter.Count
+                End SyncLock
+            End Get
+        End Property
+
+        Public Sub AddFpsPipeCounter()
+            SyncLock g_mThreadLock
+                g_mFpsPipeCounter.Enqueue(Now)
+            End SyncLock
+        End Sub
+
+
 
         Private Sub InitThread()
             Dim mCapture As OpenCvSharp.VideoCapture = Nothing
@@ -1879,11 +1930,7 @@ Public Class UCVirtualTrackerItem
 
         Private Sub CaptureThread()
             Dim mFrameImage As New Stopwatch
-            Dim mFramePrint As New Stopwatch
             mFrameImage.Start()
-            mFramePrint.Start()
-
-            Dim iFpsCount As Integer = 0
 
             Try
                 Using mFrame As New OpenCvSharp.Mat()
@@ -1905,19 +1952,6 @@ Public Class UCVirtualTrackerItem
 
                             If (mFrame.Empty) Then
                                 Throw New ArgumentException("Frame empty.")
-                            End If
-
-                            ' Calculate FPS
-                            If (True) Then
-                                iFpsCount += 1
-                                If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                                    Dim iNewFpsCount As Integer = iFpsCount
-
-                                    ClassUtils.AsyncInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(iNewFpsCount, -1))
-
-                                    mFramePrint.Restart()
-                                    iFpsCount = 0
-                                End If
                             End If
 
                             ' Copy to global frame
@@ -1957,6 +1991,8 @@ Public Class UCVirtualTrackerItem
                             For i = 0 To g_mPipEvent.Length - 1
                                 g_mPipEvent(i).Set()
                             Next
+
+                            AddFpsCaptureCounter()
 
                             ' Preview captured image
                             ' $TODO: Quite performance heavy, find a better way.
@@ -1998,13 +2034,6 @@ Public Class UCVirtualTrackerItem
                         Catch ex As Exception
                             bExceptionSleep = True
                             ClassAdvancedExceptionLogging.WriteToLog(ex)
-
-                            If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                                ClassUtils.AsyncInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(0, -1))
-
-                                mFramePrint.Restart()
-                                iFpsCount = 0
-                            End If
                         End Try
 
                         ' Thread.Abort will not trigger inside a Try/Catch
@@ -2034,11 +2063,7 @@ Public Class UCVirtualTrackerItem
                 Dim iBytes = New Byte() {}
 
                 Dim mFrameImage As New Stopwatch
-                Dim mFramePrint As New Stopwatch
                 mFrameImage.Start()
-                mFramePrint.Start()
-
-                Dim iFpsCount As Integer = 0
 
                 While True
                     Dim bExceptionSleep As Boolean = False
@@ -2057,23 +2082,6 @@ Public Class UCVirtualTrackerItem
                             mPipe.Connect(5000)
 
                             While True
-                                ' Calculate FPS
-                                If (True) Then
-                                    iFpsCount += 1
-
-                                    If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                                        ' $TODO Add for each pipe
-                                        If (iPipeID = 0) Then
-                                            Dim iNewFpsCount As Integer = iFpsCount
-
-                                            ClassUtils.AsyncInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, iNewFpsCount))
-                                        End If
-
-                                        mFramePrint.Restart()
-                                        iFpsCount = 0
-                                    End If
-                                End If
-
                                 g_mPipEvent(iPipeID).WaitOne(New TimeSpan(0, 0, 5))
 
                                 Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame(iPipeID).Height * m_CaptureFrame(iPipeID).Width * 3)
@@ -2091,6 +2099,8 @@ Public Class UCVirtualTrackerItem
                                 SyncLock g_mThreadLock
                                     g_bPipeConnected(iPipeID) = True
                                 End SyncLock
+
+                                AddFpsPipeCounter()
                             End While
                         End Using
                     Catch ex As Threading.ThreadAbortException
@@ -2102,16 +2112,6 @@ Public Class UCVirtualTrackerItem
                         SyncLock g_mThreadLock
                             g_bPipeConnected(iPipeID) = False
                         End SyncLock
-
-                        If (mFramePrint.ElapsedMilliseconds > 1000) Then
-                            ' $TODO Add for each pipe
-                            If (iPipeID = 0) Then
-                                ClassUtils.AsyncInvoke(Sub() g_mUCVirtualTrackerItem.SetFpsText(-1, 0))
-                            End If
-
-                            mFramePrint.Restart()
-                            iFpsCount = 0
-                        End If
                     End Try
 
                     ' Thread.Abort will not trigger inside a Try/Catch

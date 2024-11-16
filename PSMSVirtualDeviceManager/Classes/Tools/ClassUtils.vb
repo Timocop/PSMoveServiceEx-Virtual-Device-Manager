@@ -241,28 +241,64 @@ Public Class ClassUtils
 
     ' Reads file by copy. This wont block file access and uses last flushed cache if file handle is open.
     Public Shared Function FileReadAllTextSafe(sFile As String) As String
-        Dim sTmp As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
-        Try
-            IO.File.Copy(sFile, sTmp, True)
-
-            Return IO.File.ReadAllText(sTmp)
-        Finally
-            ' Remove any attributes, for example read-only so we can properly dispose the file.
-            IO.File.SetAttributes(sTmp, IO.FileAttributes.Normal)
-            IO.File.Delete(sTmp)
-        End Try
+        Using mSafeCopy As New ClassSafeCopy(sFile)
+            Return IO.File.ReadAllText(mSafeCopy.m_TemporaryFile)
+        End Using
     End Function
 
     Public Shared Function FileReadAllTextSafe(sFile As String, iEncoding As System.Text.Encoding) As String
-        Dim sTmp As String = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
-        Try
-            IO.File.Copy(sFile, sTmp, True)
-
-            Return IO.File.ReadAllText(sTmp, iEncoding)
-        Finally
-            ' Remove any attributes, for example read-only so we can properly dispose the file.
-            IO.File.SetAttributes(sTmp, IO.FileAttributes.Normal)
-            IO.File.Delete(sTmp)
-        End Try
+        Using mSafeCopy As New ClassSafeCopy(sFile)
+            Return IO.File.ReadAllText(mSafeCopy.m_TemporaryFile, iEncoding)
+        End Using
     End Function
+
+    Class ClassSafeCopy
+        Implements IDisposable
+
+        ReadOnly Property m_TemporaryFile As String = Nothing
+
+        Public Sub New(sFile As String)
+            m_TemporaryFile = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
+
+            IO.File.Copy(sFile, m_TemporaryFile, True)
+        End Sub
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+
+                    If (Not String.IsNullOrEmpty(m_TemporaryFile) AndAlso IO.File.Exists(m_TemporaryFile)) Then
+                        ' Remove any attributes, for example read-only so we can properly dispose the file.
+                        IO.File.SetAttributes(m_TemporaryFile, IO.FileAttributes.Normal)
+                        IO.File.Delete(m_TemporaryFile)
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
 End Class

@@ -147,4 +147,7 @@ Using more advanced interpolation methods can lead to decreased performance but 
   <metadata name="Timer_Status.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>128, 19</value>
   </metadata>
+  <metadata name="Timer_FpsCounter.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>241, 19</value>
+  </metadata>
 </root>
