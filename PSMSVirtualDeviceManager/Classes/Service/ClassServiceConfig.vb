@@ -101,7 +101,9 @@ Public Class ClassServiceConfig
 
         Dim sContent As String
         If (bSafeRead) Then
-            sContent = ClassUtils.FileReadAllTextSafe(g_sPath)
+            Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(g_sPath)
+                sContent = IO.File.ReadAllText(mSafeCopy.m_TemporaryFile)
+            End Using
         Else
             sContent = IO.File.ReadAllText(g_sPath)
         End If

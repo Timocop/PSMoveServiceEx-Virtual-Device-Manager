@@ -325,14 +325,18 @@ Public Class UCVirtualTrackerItem
                             ' Get camera calibrated pose
                             If (True) Then
                                 Dim mConfigPose As New ClassSerivceConst.ClassCameraPose.STRUC_CAMERA_POSE_ITEM
-                                mConfigPose.LoadFromConfig(sConfigFile)
+                                Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(sConfigFile)
+                                    mConfigPose.LoadFromConfig(mSafeCopy.m_TemporaryFile)
+                                End Using
                                 g_mStatusBadPoseQuatentions(sConfigFile.ToLowerInvariant) = mConfigPose.mOrientation
                             End If
 
                             ' Check camera distortion values
                             If (True) Then
                                 Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
-                                mConfigCameraDistortion.LoadFromConfig(sConfigFile)
+                                Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(sConfigFile)
+                                    mConfigCameraDistortion.LoadFromConfig(mSafeCopy.m_TemporaryFile)
+                                End Using
 
                                 ' The PS4 Cam requires precomputed distortion.
                                 Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing

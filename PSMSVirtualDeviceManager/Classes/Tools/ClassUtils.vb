@@ -239,28 +239,24 @@ Public Class ClassUtils
         End If
     End Sub
 
-    ' Reads file by copy. This wont block file access and uses last flushed cache if file handle is open.
-    Public Shared Function FileReadAllTextSafe(sFile As String) As String
-        Using mSafeCopy As New ClassSafeCopy(sFile)
-            Return IO.File.ReadAllText(mSafeCopy.m_TemporaryFile)
-        End Using
-    End Function
-
-    Public Shared Function FileReadAllTextSafe(sFile As String, iEncoding As System.Text.Encoding) As String
-        Using mSafeCopy As New ClassSafeCopy(sFile)
-            Return IO.File.ReadAllText(mSafeCopy.m_TemporaryFile, iEncoding)
-        End Using
-    End Function
-
-    Class ClassSafeCopy
+    ' Class for non-blocking file reading.
+    Class ClassSafeFileCopy
         Implements IDisposable
 
         ReadOnly Property m_TemporaryFile As String = Nothing
+        Private g_sFile As String = Nothing
 
         Public Sub New(sFile As String)
+            g_sFile = sFile
             m_TemporaryFile = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
 
             IO.File.Copy(sFile, m_TemporaryFile, True)
+        End Sub
+
+        Public Sub SaveToOriginal()
+            If (Not String.IsNullOrEmpty(m_TemporaryFile) AndAlso IO.File.Exists(m_TemporaryFile)) Then
+                IO.File.Copy(m_TemporaryFile, g_sFile, True)
+            End If
         End Sub
 
 #Region "IDisposable Support"

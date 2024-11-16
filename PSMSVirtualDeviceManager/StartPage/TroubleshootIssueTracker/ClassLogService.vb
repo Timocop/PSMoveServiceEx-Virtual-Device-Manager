@@ -52,7 +52,9 @@ Public Class ClassLogService
             Throw New ArgumentException("Could not find PSMoveServiceEx logs")
         End If
 
-        g_ClassLogContent.m_Content(GetActionTitle()) = ClassUtils.FileReadAllTextSafe(sLogFile)
+        Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(sLogFile)
+            g_ClassLogContent.m_Content(GetActionTitle()) = IO.File.ReadAllText(mSafeCopy.m_TemporaryFile)
+        End Using
     End Sub
 
     Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
