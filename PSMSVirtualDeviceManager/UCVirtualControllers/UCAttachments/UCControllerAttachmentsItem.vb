@@ -556,12 +556,8 @@ Public Class UCControllerAttachmentsItem
                 SyncLock _ThreadLock
                     Dim mNow As Date = Now
 
-                    While (g_iFpsPipeCounter.Count > 0)
-                        If (g_iFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                            g_iFpsPipeCounter.Dequeue()
-                        Else
-                            Exit While
-                        End If
+                    While (g_iFpsPipeCounter.Count > 0 AndAlso g_iFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                        g_iFpsPipeCounter.Dequeue()
                     End While
 
                     Return g_iFpsPipeCounter.Count
@@ -571,7 +567,13 @@ Public Class UCControllerAttachmentsItem
 
         Public Sub AddFpsPipeCounter()
             SyncLock _ThreadLock
-                g_iFpsPipeCounter.Enqueue(Now)
+                Dim mNow As Date = Now
+
+                While (g_iFpsPipeCounter.Count > 0 AndAlso g_iFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_iFpsPipeCounter.Dequeue()
+                End While
+
+                g_iFpsPipeCounter.Enqueue(mNow)
             End SyncLock
         End Sub
 

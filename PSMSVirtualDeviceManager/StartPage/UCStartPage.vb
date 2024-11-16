@@ -456,6 +456,11 @@ Public Class UCStartPage
                                 mFpsCountDic(mDevice.m_Serial) = New Queue(Of KeyValuePair(Of Date, Integer))
                             End If
 
+                            ' Remove old
+                            While (mFpsCountDic(mDevice.m_Serial).Count > 0 AndAlso mFpsCountDic(mDevice.m_Serial).Peek().Key + New TimeSpan(0, 0, 1) < mNow)
+                                mFpsCountDic(mDevice.m_Serial).Dequeue()
+                            End While
+
                             ' Store fps sequence
                             If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
                                 Dim iSeqFps = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
@@ -464,15 +469,6 @@ Public Class UCStartPage
                             End If
 
                             mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
-
-                            ' Remove old
-                            While (mFpsCountDic(mDevice.m_Serial).Count > 0)
-                                If (mFpsCountDic(mDevice.m_Serial).Peek().Key + New TimeSpan(0, 0, 1) < mNow) Then
-                                    mFpsCountDic(mDevice.m_Serial).Dequeue()
-                                Else
-                                    Exit While
-                                End If
-                            End While
 
                             ' Calc FPS
                             For Each mFps In mFpsCountDic(mDevice.m_Serial)
@@ -588,6 +584,11 @@ Public Class UCStartPage
                                 mFpsCountDic(mDevice.m_Serial) = New Queue(Of KeyValuePair(Of Date, Integer))
                             End If
 
+                            ' Remove old
+                            While (mFpsCountDic(mDevice.m_Serial).Count > 0 AndAlso mFpsCountDic(mDevice.m_Serial).Peek().Key + New TimeSpan(0, 0, 1) < mNow)
+                                mFpsCountDic(mDevice.m_Serial).Dequeue()
+                            End While
+
                             ' Store fps sequence
                             If (mLastSeqNumDic.ContainsKey(mDevice.m_Serial) AndAlso mLastSeqNumDic(mDevice.m_Serial) <> 0) Then
                                 Dim iSeqFps = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Serial), 0)
@@ -596,15 +597,6 @@ Public Class UCStartPage
                             End If
 
                             mLastSeqNumDic(mDevice.m_Serial) = iSeqNum
-
-                            ' Remove old
-                            While (mFpsCountDic(mDevice.m_Serial).Count > 0)
-                                If (mFpsCountDic(mDevice.m_Serial).Peek().Key + New TimeSpan(0, 0, 1) < mNow) Then
-                                    mFpsCountDic(mDevice.m_Serial).Dequeue()
-                                Else
-                                    Exit While
-                                End If
-                            End While
 
                             ' Calc FPS
                             For Each mFps In mFpsCountDic(mDevice.m_Serial)
@@ -707,6 +699,11 @@ Public Class UCStartPage
                                 mFpsCountDic(mDevice.m_Path) = New Queue(Of KeyValuePair(Of Date, Integer))
                             End If
 
+                            ' Remove old
+                            While (mFpsCountDic(mDevice.m_Path).Count > 0 AndAlso mFpsCountDic(mDevice.m_Path).Peek().Key + New TimeSpan(0, 0, 1) < mNow)
+                                mFpsCountDic(mDevice.m_Path).Dequeue()
+                            End While
+
                             ' Store fps sequence
                             If (mLastSeqNumDic.ContainsKey(mDevice.m_Path) AndAlso mLastSeqNumDic(mDevice.m_Path) <> 0) Then
                                 Dim iSeqFps = Math.Max(iSeqNum - mLastSeqNumDic(mDevice.m_Path), 0)
@@ -715,15 +712,6 @@ Public Class UCStartPage
                             End If
 
                             mLastSeqNumDic(mDevice.m_Path) = iSeqNum
-
-                            ' Remove old
-                            While (mFpsCountDic(mDevice.m_Path).Count > 0)
-                                If (mFpsCountDic(mDevice.m_Path).Peek().Key + New TimeSpan(0, 0, 1) < mNow) Then
-                                    mFpsCountDic(mDevice.m_Path).Dequeue()
-                                Else
-                                    Exit While
-                                End If
-                            End While
 
                             ' Calc FPS
                             For Each mFps In mFpsCountDic(mDevice.m_Path)

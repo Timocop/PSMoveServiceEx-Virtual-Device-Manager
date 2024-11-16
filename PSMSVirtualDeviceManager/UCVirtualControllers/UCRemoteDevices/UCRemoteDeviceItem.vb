@@ -412,12 +412,8 @@ Public Class UCRemoteDeviceItem
             SyncLock g_mThreadLock
                 Dim mNow As Date = Now
 
-                While (g_mFpsPacketCounter.Count > 0)
-                    If (g_mFpsPacketCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                        g_mFpsPacketCounter.Dequeue()
-                    Else
-                        Exit While
-                    End If
+                While (g_mFpsPacketCounter.Count > 0 AndAlso g_mFpsPacketCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_mFpsPacketCounter.Dequeue()
                 End While
 
                 Return g_mFpsPacketCounter.Count
@@ -427,6 +423,12 @@ Public Class UCRemoteDeviceItem
 
     Private Sub AddFpsPacketCounter()
         SyncLock g_mThreadLock
+            Dim mNow As Date = Now
+
+            While (g_mFpsPacketCounter.Count > 0 AndAlso g_mFpsPacketCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                g_mFpsPacketCounter.Dequeue()
+            End While
+
             g_mFpsPacketCounter.Enqueue(Now)
         End SyncLock
     End Sub
@@ -436,12 +438,8 @@ Public Class UCRemoteDeviceItem
             SyncLock g_mThreadLock
                 Dim mNow As Date = Now
 
-                While (g_mFpsOrientationCounter.Count > 0)
-                    If (g_mFpsOrientationCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                        g_mFpsOrientationCounter.Dequeue()
-                    Else
-                        Exit While
-                    End If
+                While (g_mFpsOrientationCounter.Count > 0 AndAlso g_mFpsOrientationCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_mFpsOrientationCounter.Dequeue()
                 End While
 
                 Return g_mFpsOrientationCounter.Count
@@ -451,7 +449,13 @@ Public Class UCRemoteDeviceItem
 
     Private Sub AddFpsOrientationCounter()
         SyncLock g_mThreadLock
-            g_mFpsOrientationCounter.Enqueue(Now)
+            Dim mNow As Date = Now
+
+            While (g_mFpsOrientationCounter.Count > 0 AndAlso g_mFpsOrientationCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                g_mFpsOrientationCounter.Dequeue()
+            End While
+
+            g_mFpsOrientationCounter.Enqueue(mNow)
         End SyncLock
     End Sub
 
@@ -569,12 +573,8 @@ Public Class UCRemoteDeviceItem
                 SyncLock _ThreadLock
                     Dim mNow As Date = Now
 
-                    While (g_mFpsPipeCounter.Count > 0)
-                        If (g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                            g_mFpsPipeCounter.Dequeue()
-                        Else
-                            Exit While
-                        End If
+                    While (g_mFpsPipeCounter.Count > 0 AndAlso g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                        g_mFpsPipeCounter.Dequeue()
                     End While
 
                     Return g_mFpsPipeCounter.Count
@@ -584,7 +584,13 @@ Public Class UCRemoteDeviceItem
 
         Public Sub AddFpsPipeCounter()
             SyncLock _ThreadLock
-                g_mFpsPipeCounter.Enqueue(Now)
+                Dim mNow As Date = Now
+
+                While (g_mFpsPipeCounter.Count > 0 AndAlso g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_mFpsPipeCounter.Dequeue()
+                End While
+
+                g_mFpsPipeCounter.Enqueue(mNow)
             End SyncLock
         End Sub
 

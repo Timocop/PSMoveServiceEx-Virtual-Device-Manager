@@ -1164,12 +1164,8 @@ Public Class UCVirtualMotionTrackerItem
                 SyncLock g_mThreadLock
                     Dim mNow As Date = Now
 
-                    While (g_mFpsOscCounter.Count > 0)
-                        If (g_mFpsOscCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                            g_mFpsOscCounter.Dequeue()
-                        Else
-                            Exit While
-                        End If
+                    While (g_mFpsOscCounter.Count > 0 AndAlso g_mFpsOscCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                        g_mFpsOscCounter.Dequeue()
                     End While
 
                     Return g_mFpsOscCounter.Count
@@ -1179,7 +1175,13 @@ Public Class UCVirtualMotionTrackerItem
 
         Public Sub AddFpsOscCounter()
             SyncLock g_mThreadLock
-                g_mFpsOscCounter.Enqueue(Now)
+                Dim mNow As Date = Now
+
+                While (g_mFpsOscCounter.Count > 0 AndAlso g_mFpsOscCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_mFpsOscCounter.Dequeue()
+                End While
+
+                g_mFpsOscCounter.Enqueue(mNow)
             End SyncLock
         End Sub
 

@@ -1409,12 +1409,8 @@ Public Class UCVirtualTrackerItem
                 SyncLock g_mThreadLock
                     Dim mNow As Date = Now
 
-                    While (g_mFpsCaptureCounter.Count > 0)
-                        If (g_mFpsCaptureCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                            g_mFpsCaptureCounter.Dequeue()
-                        Else
-                            Exit While
-                        End If
+                    While (g_mFpsCaptureCounter.Count > 0 AndAlso g_mFpsCaptureCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                        g_mFpsCaptureCounter.Dequeue()
                     End While
 
                     Return g_mFpsCaptureCounter.Count
@@ -1424,7 +1420,13 @@ Public Class UCVirtualTrackerItem
 
         Public Sub AddFpsCaptureCounter()
             SyncLock g_mThreadLock
-                g_mFpsCaptureCounter.Enqueue(Now)
+                Dim mNow As Date = Now
+
+                While (g_mFpsCaptureCounter.Count > 0 AndAlso g_mFpsCaptureCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_mFpsCaptureCounter.Dequeue()
+                End While
+
+                g_mFpsCaptureCounter.Enqueue(mNow)
             End SyncLock
         End Sub
 
@@ -1433,12 +1435,8 @@ Public Class UCVirtualTrackerItem
                 SyncLock g_mThreadLock
                     Dim mNow As Date = Now
 
-                    While (g_mFpsPipeCounter.Count > 0)
-                        If (g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow) Then
-                            g_mFpsPipeCounter.Dequeue()
-                        Else
-                            Exit While
-                        End If
+                    While (g_mFpsPipeCounter.Count > 0 AndAlso g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                        g_mFpsPipeCounter.Dequeue()
                     End While
 
                     Return g_mFpsPipeCounter.Count
@@ -1448,7 +1446,13 @@ Public Class UCVirtualTrackerItem
 
         Public Sub AddFpsPipeCounter()
             SyncLock g_mThreadLock
-                g_mFpsPipeCounter.Enqueue(Now)
+                Dim mNow As Date = Now
+
+                While (g_mFpsPipeCounter.Count > 0 AndAlso g_mFpsPipeCounter.Peek() + New TimeSpan(0, 0, 1) < mNow)
+                    g_mFpsPipeCounter.Dequeue()
+                End While
+
+                g_mFpsPipeCounter.Enqueue(mNow)
             End SyncLock
         End Sub
 
