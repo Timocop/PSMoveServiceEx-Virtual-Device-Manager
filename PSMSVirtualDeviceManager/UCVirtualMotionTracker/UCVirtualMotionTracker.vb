@@ -200,7 +200,7 @@ Public Class UCVirtualMotionTracker
             End Get
         End Property
 
-        Public Sub Send(mPacket As OscPacket)
+        Private Sub Send(mPacket As OscPacket)
             If (m_SuspendRequests) Then
                 Return
             End If
@@ -236,6 +236,150 @@ Public Class UCVirtualMotionTracker
             End SyncLock
 
             RaiseEvent OnOscProcessMessage(mMessage)
+        End Sub
+
+        Public Sub SendHmdPose(iSeq As Integer,
+                               iTimeoffset As Double,
+                               mPosition As Vector3,
+                               mOrientation As Quaternion,
+                               mLinearVelocity As Vector3,
+                               mAngularVelocity As Vector3)
+            Send(New OscMessage(
+                "/VMT/HMD/Room/Driver",
+                iSeq, iTimeoffset,
+                CDbl(mPosition.X),
+                CDbl(mPosition.Y),
+                CDbl(mPosition.Z),
+                CDbl(mOrientation.X),
+                CDbl(mOrientation.Y),
+                CDbl(mOrientation.Z),
+                CDbl(mOrientation.W),
+                CDbl(mLinearVelocity.X),
+                CDbl(mLinearVelocity.Y),
+                CDbl(mLinearVelocity.Z),
+                CDbl(mAngularVelocity.X),
+                CDbl(mAngularVelocity.Y),
+                CDbl(mAngularVelocity.Z)
+            ))
+        End Sub
+
+        Public Sub SendHmdSetupDisplayDirect(iDisplayX As Integer, iDisplayY As Integer,
+                                             iDisplayW As Integer, iDisplayH As Integer,
+                                             iRenderW As Integer, iRenderH As Integer,
+                                             iFrameRate As Integer,
+                                             iVendorId As Integer, iProductId As Integer)
+            Send(New OscMessage(
+                "/VMT/HMD/SetupDisplayDirect",
+                iDisplayX, iDisplayY,
+                iDisplayW, iDisplayH,
+                iRenderW, iRenderH,
+                iFrameRate,
+                iVendorId, iProductId
+            ))
+        End Sub
+
+        Public Sub SendHmdSetupDisplay(iDisplayX As Integer, iDisplayY As Integer,
+                                        iDisplayW As Integer, iDisplayH As Integer,
+                                        iRenderW As Integer, iRenderH As Integer,
+                                        iFrameRate As Integer)
+            Send(New OscMessage(
+                "/VMT/HMD/SetupDisplay",
+                iDisplayX, iDisplayY,
+                iDisplayW, iDisplayH,
+                iRenderW, iRenderH,
+                iFrameRate
+            ))
+        End Sub
+
+        Public Sub SendHmdSetupRender(iHmdDistortK0 As Single, iHmdDistortK1 As Single, iHmdDistortScale As Single,
+                                        iHmdDistortRedOffset As Single, iHmdDistortGreenOffset As Single, iHmdDistortBlueOffset As Single,
+                                        iHmdHFov As Single, iHmdVFov As Single)
+            Send(New OscMessage(
+                "/VMT/HMD/SetupRender",
+                iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
+                -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
+                iHmdHFov, iHmdVFov
+            ))
+        End Sub
+
+        Public Sub SendHmdSetIpdMeters(iHmdIPD As Single)
+            Send(New OscMessage(
+                "/VMT/HMD/SetIpdMeters",
+                iHmdIPD
+            ))
+        End Sub
+
+        Public Sub SendDeviceBattery(iVmtId As Integer, iBatteryValue As Single)
+            Send(New OscMessage(
+                "/VMT/Property/Battery",
+                iVmtId,
+                iBatteryValue
+            ))
+        End Sub
+
+        Public Sub SendDevicePose(iSeq As Integer, iVmtId As Integer, iVmtType As Integer,
+                                    iTimeoffset As Double,
+                                    mPosition As Vector3,
+                                    mOrientation As Quaternion,
+                                    mLinearVelocity As Vector3,
+                                    mAngularVelocity As Vector3)
+            Send(New OscMessage(
+                "/VMT/Room/Driver",
+                iSeq,
+                iVmtId, iVmtType, iTimeoffset,
+                CDbl(mPosition.X),
+                CDbl(mPosition.Y),
+                CDbl(mPosition.Z),
+                CDbl(mOrientation.X),
+                CDbl(mOrientation.Y),
+                CDbl(mOrientation.Z),
+                CDbl(mOrientation.W),
+                CDbl(mLinearVelocity.X),
+                CDbl(mLinearVelocity.Y),
+                CDbl(mLinearVelocity.Z),
+                CDbl(mAngularVelocity.X),
+                CDbl(mAngularVelocity.Y),
+                CDbl(mAngularVelocity.Z)
+            ))
+        End Sub
+
+        Public Sub SendDeviceInputButton(iVmtId As Integer, iButtonId As Integer, bPressed As Boolean)
+            Send(New OscMessage(
+                "/VMT/Input/Button",
+                iVmtId, iButtonId, CDbl(0.0), CInt(bPressed)
+            ))
+        End Sub
+
+        Public Sub SendDeviceInputTrigger(iVmtId As Integer, iTriggerId As Integer, iValue As Single)
+            Send(New OscMessage(
+                "/VMT/Input/Trigger",
+                iVmtId, iTriggerId, CDbl(0.0), iValue
+            ))
+        End Sub
+
+        Public Sub SendDeviceInputJoystick(iVmtId As Integer, iJoystickId As Integer, iX As Single, iY As Single)
+            Send(New OscMessage(
+                "/VMT/Input/Joystick",
+                iVmtId, iJoystickId, CDbl(0.0), iX, iY
+            ))
+        End Sub
+
+        Public Sub SendRoomMatrixIdentity()
+            Send(New OscMessage(
+                 "/VMT/SetRoomMatrix", New Object() {
+                    1.0F, 0F, 0F, 0F,
+                    0F, 1.0F, 0F, 0F,
+                    0F, 0F, 1.0F, 0F
+                }
+            ))
+        End Sub
+
+        Public Sub SendDevicesGetList()
+            Send(New OscMessage("/VMT/GetDevicesList"))
+        End Sub
+
+        Public Sub SendDeviceGetPoseBySerial(sSerial As String)
+            Send(New OscMessage("/VMT/GetDevicePose", New Object() {sSerial}))
         End Sub
 
 #Region "IDisposable Support"
@@ -1435,13 +1579,13 @@ Public Class UCVirtualMotionTracker
                         If (mLastDeviceListTimespan.TotalMilliseconds > 1000) Then
                             mLastDeviceList = Now
 
-                            g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicesList"))
+                            g_UCVirtualMotionTracker.g_ClassOscServer.SendDevicesGetList()
                         End If
 
                         ' Request Device Pose 
                         SyncLock g_mThreadLock
                             For Each mDevice In g_mDevicesDic
-                                g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage("/VMT/GetDevicePose", New Object() {mDevice.Value.sSerial}))
+                                g_UCVirtualMotionTracker.g_ClassOscServer.SendDeviceGetPoseBySerial(mDevice.Value.sSerial)
                             Next
                         End SyncLock
                     End If

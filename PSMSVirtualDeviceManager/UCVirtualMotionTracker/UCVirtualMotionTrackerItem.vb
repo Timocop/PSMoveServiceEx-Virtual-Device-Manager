@@ -312,12 +312,7 @@ Public Class UCVirtualMotionTrackerItem
                     Select Case (iCode)
                         Case 1 'Room matrix not setup
                             If (g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning) Then
-                                g_UCVirtualMotionTracker.g_ClassOscServer.Send(New OscMessage(
-                                    "/VMT/SetRoomMatrix", New Object() {
-                                        1.0F, 0F, 0F, 0F,
-                                        0F, 1.0F, 0F, 0F,
-                                        0F, 0F, 1.0F, 0F
-                                    }))
+                                g_UCVirtualMotionTracker.g_ClassOscServer.SendRoomMatrixIdentity()
                             End If
                     End Select
 
@@ -1518,42 +1513,29 @@ Public Class UCVirtualMotionTrackerItem
                                                 mHmdDisplayData.mDisplaySetupUpdate.Restart()
 
                                                 If (mHmdDisplayData.bDirectMode) Then
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/HMD/SetupDisplayDirect",
-                                                            mHmdDisplayData.iDisplayX, mHmdDisplayData.iDisplayY,
-                                                            mHmdDisplayData.iDisplayW, mHmdDisplayData.iDisplayH,
-                                                            mHmdDisplayData.iRenderW, mHmdDisplayData.iRenderH,
-                                                            mHmdDisplayData.iFrameRate,
-                                                            mHmdDisplayData.iVendorId, mHmdDisplayData.iProductId
-                                                        ))
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendHmdSetupDisplayDirect(
+                                                        mHmdDisplayData.iDisplayX, mHmdDisplayData.iDisplayY,
+                                                        mHmdDisplayData.iDisplayW, mHmdDisplayData.iDisplayH,
+                                                        mHmdDisplayData.iRenderW, mHmdDisplayData.iRenderH,
+                                                        mHmdDisplayData.iFrameRate,
+                                                        mHmdDisplayData.iVendorId, mHmdDisplayData.iProductId)
                                                     AddFpsOscCounter()
                                                 Else
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/HMD/SetupDisplay",
-                                                            mHmdDisplayData.iDisplayX, mHmdDisplayData.iDisplayY,
-                                                            mHmdDisplayData.iDisplayW, mHmdDisplayData.iDisplayH,
-                                                            mHmdDisplayData.iRenderW, mHmdDisplayData.iRenderH,
-                                                            mHmdDisplayData.iFrameRate
-                                                        ))
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendHmdSetupDisplay(
+                                                        mHmdDisplayData.iDisplayX, mHmdDisplayData.iDisplayY,
+                                                        mHmdDisplayData.iDisplayW, mHmdDisplayData.iDisplayH,
+                                                        mHmdDisplayData.iRenderW, mHmdDisplayData.iRenderH,
+                                                        mHmdDisplayData.iFrameRate)
                                                     AddFpsOscCounter()
                                                 End If
 
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/HMD/SetupRender",
-                                                        iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
-                                                        -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
-                                                        iHmdHFov, iHmdVFov
-                                                    ))
+                                                mUCVirtualMotionTracker.g_ClassOscServer.SendHmdSetupRender(
+                                                    iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
+                                                    -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
+                                                    iHmdHFov, iHmdVFov)
                                                 AddFpsOscCounter()
 
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/HMD/SetIpdMeters",
-                                                        iHmdIPD
-                                                    ))
+                                                mUCVirtualMotionTracker.g_ClassOscServer.SendHmdSetIpdMeters(iHmdIPD)
                                                 AddFpsOscCounter()
                                             End If
 
@@ -1589,24 +1571,10 @@ Public Class UCVirtualMotionTrackerItem
                                                     End If
                                                 End If
 
-                                                mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                    New OscMessage(
-                                                        "/VMT/HMD/Room/Driver",
-                                                        iLastOutputSeqNum, 0.0F,
-                                                        mCalcPosition.X,
-                                                        mCalcPosition.Y,
-                                                        mCalcPosition.Z,
-                                                        mCalcOrientation.X,
-                                                        mCalcOrientation.Y,
-                                                        mCalcOrientation.Z,
-                                                        mCalcOrientation.W,
-                                                        mVelocityPosition.X,
-                                                        mVelocityPosition.Y,
-                                                        mVelocityPosition.Z,
-                                                        mVelocityOrientation.X,
-                                                        mVelocityOrientation.Y,
-                                                        mVelocityOrientation.Z
-                                                    ))
+                                                mUCVirtualMotionTracker.g_ClassOscServer.SendHmdPose(
+                                                    iLastOutputSeqNum, 0.0,
+                                                    mCalcPosition,
+                                                    mCalcOrientation, mVelocityPosition, mVelocityOrientation)
                                                 AddFpsOscCounter()
                                                 bSetPack = True
                                             End If
@@ -1815,12 +1783,9 @@ Public Class UCVirtualMotionTrackerItem
                                         If (mLastBatteryReport.Elapsed > New TimeSpan(0, 0, 1)) Then
                                             mLastBatteryReport.Restart()
 
-                                            mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                New OscMessage(
-                                                    "/VMT/Property/Battery",
+                                            mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceBattery(
                                                     m_VmtTracker,
-                                                    iBatteryValue
-                                                ))
+                                                    iBatteryValue)
                                             AddFpsOscCounter()
                                         End If
 
@@ -1860,25 +1825,13 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Room/Driver",
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
                                                             iLastOutputSeqNum,
                                                             m_VmtTracker, ENABLE_GENERIC_TRACKER, iVelocityTimeOffset,
-                                                            mCalcPosition.X,
-                                                            mCalcPosition.Y,
-                                                            mCalcPosition.Z,
-                                                            mCalcOrientation.X,
-                                                            mCalcOrientation.Y,
-                                                            mCalcOrientation.Z,
-                                                            mCalcOrientation.W,
-                                                            mVelocityPosition.X,
-                                                            mVelocityPosition.Y,
-                                                            mVelocityPosition.Z,
-                                                            mVelocityOrientation.X,
-                                                            mVelocityOrientation.Y,
-                                                            mVelocityOrientation.Z
-                                                        ))
+                                                            mCalcPosition,
+                                                            mCalcOrientation,
+                                                            mVelocityPosition,
+                                                            mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -1904,30 +1857,22 @@ Public Class UCVirtualMotionTrackerItem
                                                     mEnforceInputPacketUpdate.Restart()
 
                                                     For Each mButton In mOscDataPack.mButtons
-                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                            New OscMessage(
-                                                                "/VMT/Input/Button",
-                                                                m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
-                                                            ))
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceInputButton(
+                                                                m_VmtTracker, mButton.Key, mButton.Value)
                                                         AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
                                                     For Each mTrigger In mOscDataPack.mTrigger
-                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                           New OscMessage(
-                                                               "/VMT/Input/Trigger",
-                                                               m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
-                                                           ))
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceInputTrigger(
+                                                               m_VmtTracker, mTrigger.Key, mTrigger.Value)
                                                         AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Input/Joystick",
-                                                            m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
-                                                        ))
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceInputJoystick(
+                                                        m_VmtTracker, 0,
+                                                        mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
 
@@ -1965,24 +1910,13 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Room/Driver",
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
+                                                            iLastOutputSeqNum,
                                                             m_VmtTracker, iController, iVelocityTimeOffset,
-                                                            mCalcPosition.X,
-                                                            mCalcPosition.Y,
-                                                            mCalcPosition.Z,
-                                                            mCalcOrientation.X,
-                                                            mCalcOrientation.Y,
-                                                            mCalcOrientation.Z,
-                                                            mCalcOrientation.W,
-                                                            mVelocityPosition.X,
-                                                            mVelocityPosition.Y,
-                                                            mVelocityPosition.Z,
-                                                            mVelocityOrientation.X,
-                                                            mVelocityOrientation.Y,
-                                                            mVelocityOrientation.Z
-                                                        ))
+                                                            mCalcPosition,
+                                                            mCalcOrientation,
+                                                            mVelocityPosition,
+                                                            mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -2026,25 +1960,13 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Room/Driver",
-                                                            iLastOutputSeqNum,
-                                                            m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, iVelocityTimeOffset,
-                                                            mCalcPosition.X,
-                                                            mCalcPosition.Y,
-                                                            mCalcPosition.Z,
-                                                            mCalcOrientation.X,
-                                                            mCalcOrientation.Y,
-                                                            mCalcOrientation.Z,
-                                                            mCalcOrientation.W,
-                                                            mVelocityPosition.X,
-                                                            mVelocityPosition.Y,
-                                                            mVelocityPosition.Z,
-                                                            mVelocityOrientation.X,
-                                                            mVelocityOrientation.Y,
-                                                            mVelocityOrientation.Z
-                                                        ))
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
+                                                        iLastOutputSeqNum,
+                                                        m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, iVelocityTimeOffset,
+                                                        mCalcPosition,
+                                                        mCalcOrientation,
+                                                        mVelocityPosition,
+                                                        mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -2077,30 +1999,22 @@ Public Class UCVirtualMotionTrackerItem
                                                     mEnforceInputPacketUpdate.Restart()
 
                                                     For Each mButton In mOscDataPack.mButtons
-                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                            New OscMessage(
-                                                                "/VMT/Input/Button",
-                                                                m_VmtTracker, mButton.Key, 0.0F, CInt(mButton.Value)
-                                                            ))
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceInputButton(
+                                                            m_VmtTracker, mButton.Key, mButton.Value)
                                                         AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
                                                     For Each mTrigger In mOscDataPack.mTrigger
-                                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                           New OscMessage(
-                                                                "/VMT/Input/Trigger",
-                                                                m_VmtTracker, mTrigger.Key, 0.0F, mTrigger.Value
-                                                           ))
+                                                        mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceInputTrigger(
+                                                            m_VmtTracker, mTrigger.Key, mTrigger.Value)
                                                         AddFpsOscCounter()
                                                         bSetPack = True
                                                     Next
 
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Input/Joystick",
-                                                            m_VmtTracker, 0, 0.0F, mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y
-                                                        ))
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendDeviceInputJoystick(
+                                                        m_VmtTracker, 0,
+                                                        mOscDataPack.mJoyStick.X, mOscDataPack.mJoyStick.Y)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -2137,25 +2051,13 @@ Public Class UCVirtualMotionTrackerItem
                                                         End If
                                                     End If
 
-                                                    mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                                        New OscMessage(
-                                                            "/VMT/Room/Driver",
-                                                            iLastOutputSeqNum,
-                                                            m_VmtTracker, iController, iVelocityTimeOffset,
-                                                            mCalcPosition.X,
-                                                            mCalcPosition.Y,
-                                                            mCalcPosition.Z,
-                                                            mCalcOrientation.X,
-                                                            mCalcOrientation.Y,
-                                                            mCalcOrientation.Z,
-                                                            mCalcOrientation.W,
-                                                            mVelocityPosition.X,
-                                                            mVelocityPosition.Y,
-                                                            mVelocityPosition.Z,
-                                                            mVelocityOrientation.X,
-                                                            mVelocityOrientation.Y,
-                                                            mVelocityOrientation.Z
-                                                        ))
+                                                    mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
+                                                        iLastOutputSeqNum,
+                                                        m_VmtTracker, iController, iVelocityTimeOffset,
+                                                        mCalcPosition,
+                                                        mCalcOrientation,
+                                                        mVelocityPosition,
+                                                        mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -2203,21 +2105,13 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mFlippedQ As Quaternion = mOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
 
                                         'Use Right-Handed space for SteamVR 
-                                        mUCVirtualMotionTracker.g_ClassOscServer.Send(
-                                            New OscMessage(
-                                                "/VMT/Room/Driver",
-                                                iLastOutputSeqNum,
-                                                VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
-                                                mPosition.X,
-                                                mPosition.Y,
-                                                mPosition.Z,
-                                                mFlippedQ.X,
-                                                mFlippedQ.Y,
-                                                mFlippedQ.Z,
-                                                mFlippedQ.W,
-                                                0.0F, 0.0F, 0.0F,
-                                                0.0F, 0.0F, 0.0F
-                                            ))
+                                        mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
+                                            iLastOutputSeqNum,
+                                            VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
+                                            mPosition,
+                                            mFlippedQ,
+                                            Vector3.Zero,
+                                            Vector3.Zero)
                                     End If
                                 Next
                             End If
