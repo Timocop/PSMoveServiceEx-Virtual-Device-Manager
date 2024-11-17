@@ -479,7 +479,7 @@ Public Class UCVirtualMotionTrackerItem
             Return
         End If
 
-        g_mClassIO.m_UsbHmdViewPointOffset = (ComboBox_HmdViewPointOffset.SelectedIndex > 0)
+        g_mClassIO.m_UsbHmdViewPointOffset = (ComboBox_HmdViewPointOffset.SelectedIndex = 0)
         SetUnsavedState(True)
     End Sub
 
