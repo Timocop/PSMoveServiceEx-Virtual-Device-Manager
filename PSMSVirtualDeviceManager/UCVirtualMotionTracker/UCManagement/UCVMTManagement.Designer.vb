@@ -30,6 +30,7 @@ Partial Class UCVmtManagement
         Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
+        Dim Title2 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
         Me.Panel_AvailableDevices = New System.Windows.Forms.Panel()
         Me.ListView_OscDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -491,7 +492,16 @@ Partial Class UCVmtManagement
         Title1.Alignment = System.Drawing.ContentAlignment.MiddleRight
         Title1.Name = "Title1"
         Title1.Text = "OSC device packets per second"
+        Title2.Alignment = System.Drawing.ContentAlignment.MiddleLeft
+        Title2.Name = "Title_Latency"
+        Title2.Position.Auto = False
+        Title2.Position.Height = 4.202586!
+        Title2.Position.Width = 94.0!
+        Title2.Position.X = 3.0!
+        Title2.Position.Y = 3.0!
+        Title2.Text = "Recorded latency: Unknown"
         Me.Chart_VmtPerformance.Titles.Add(Title1)
+        Me.Chart_VmtPerformance.Titles.Add(Title2)
         '
         'Panel25
         '

@@ -271,6 +271,7 @@ Public Class UCVmtManagement
 
                 If (bRunning) Then
                     Dim iAxisX As Integer = iFrameCount
+                    Dim iLatencyMs As Double = g_UCVirtualMotionTracker.g_ClassOscServer.m_Latency
 
                     ClassUtils.AsyncInvoke(Sub()
                                                Dim mDevices = g_UCVirtualMotionTracker.g_UCVmtTrackers.GetVmtTrackers()
@@ -296,6 +297,9 @@ Public Class UCVmtManagement
                                                        AddChartValues(sTargetName, iFPS, iAxisX, iMaxCount)
                                                    End If
                                                Next
+
+                                               ' Set the recorded latency 
+                                               Chart_VmtPerformance.Titles("Title_Latency").Text = String.Format("Recorded latency: {0} ms", CInt(iLatencyMs))
                                            End Sub)
 
                 End If

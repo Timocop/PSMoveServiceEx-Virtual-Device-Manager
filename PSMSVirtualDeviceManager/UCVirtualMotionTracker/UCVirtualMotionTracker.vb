@@ -153,7 +153,7 @@ Public Class UCVirtualMotionTracker
         Private g_bSuspendRequest As Boolean = False
         Private g_mLastResponse As Date
         Private g_mReceivedResponseDate As New Queue(Of Date)
-        Private g_mPing As Double = 0.0
+        Private g_mLatency As Double = 0.0
 
         Public Sub New()
         End Sub
@@ -201,10 +201,10 @@ Public Class UCVirtualMotionTracker
             End Get
         End Property
 
-        ReadOnly Property m_Ping As Double
+        ReadOnly Property m_Latency As Double
             Get
                 SyncLock _ThreadLock
-                    Return g_mPing
+                    Return g_mLatency
                 End SyncLock
             End Get
         End Property
@@ -244,7 +244,7 @@ Public Class UCVirtualMotionTracker
                 Case "/VMT/Out/Alive"
                     ' Calculate the ping using the known packet rate.
                     SyncLock _ThreadLock
-                        g_mPing = MeasureJitter()
+                        g_mLatency = MeasureJitter()
                     End SyncLock
             End Select
 
