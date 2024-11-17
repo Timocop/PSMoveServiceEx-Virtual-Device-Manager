@@ -297,7 +297,7 @@ Public Class UCVirtualMotionTracker
             Send(New OscMessage(
                 "/VMT/HMD/SetupRender",
                 iHmdDistortK0, iHmdDistortK1, iHmdDistortScale,
-                -iHmdDistortRedOffset, -iHmdDistortGreenOffset, -iHmdDistortBlueOffset,
+                iHmdDistortRedOffset, iHmdDistortGreenOffset, iHmdDistortBlueOffset,
                 iHmdHFov, iHmdVFov
             ))
         End Sub
