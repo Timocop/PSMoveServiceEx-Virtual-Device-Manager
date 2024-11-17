@@ -1483,9 +1483,9 @@ Public Class UCVirtualMotionTrackerItem
 
                                         InternalApplyViewPOintOffsetLogic(mViewOffset, mPosition, mOrientation)
 
-                                        mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mPosition = mPosition
                                         mOscDataPack.mOrientation = mOrientation
-                                        mOscDataPack.mPositionVelocity = mPositionVelocity * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mPositionVelocity = mPositionVelocity
                                         mOscDataPack.mOrientationVelocity = mOrientationVelocity
 
                                         ' $TODO Do something cool?
@@ -1573,8 +1573,10 @@ Public Class UCVirtualMotionTrackerItem
 
                                                 mUCVirtualMotionTracker.g_ClassOscServer.SendHmdPose(
                                                     iLastOutputSeqNum, 0.0,
-                                                    mCalcPosition,
-                                                    mCalcOrientation, mVelocityPosition, mVelocityOrientation)
+                                                    mCalcPosition * PSM_CENTIMETERS_TO_METERS,
+                                                    mCalcOrientation,
+                                                    mVelocityPosition * PSM_CENTIMETERS_TO_METERS,
+                                                    mVelocityOrientation)
                                                 AddFpsOscCounter()
                                                 bSetPack = True
                                             End If
@@ -1694,9 +1696,9 @@ Public Class UCVirtualMotionTrackerItem
                                             InternalApplyViewPOintOffsetLogic(mViewOffset, mPosition, mOrientation)
                                         End If
 
-                                        mOscDataPack.mPosition = mPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mPosition = mPosition
                                         mOscDataPack.mOrientation = mOrientation
-                                        mOscDataPack.mPositionVelocity = mPositionVelocity * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        mOscDataPack.mPositionVelocity = mPositionVelocity
                                         mOscDataPack.mOrientationVelocity = mOrientationVelocity
 
                                         Select Case (True)
@@ -1826,12 +1828,12 @@ Public Class UCVirtualMotionTrackerItem
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
-                                                            iLastOutputSeqNum,
-                                                            m_VmtTracker, ENABLE_GENERIC_TRACKER, iVelocityTimeOffset,
-                                                            mCalcPosition,
-                                                            mCalcOrientation,
-                                                            mVelocityPosition,
-                                                            mVelocityOrientation)
+                                                        iLastOutputSeqNum,
+                                                        m_VmtTracker, ENABLE_GENERIC_TRACKER, iVelocityTimeOffset,
+                                                        mCalcPosition * PSM_CENTIMETERS_TO_METERS,
+                                                        mCalcOrientation,
+                                                        mVelocityPosition * PSM_CENTIMETERS_TO_METERS,
+                                                        mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -1911,12 +1913,12 @@ Public Class UCVirtualMotionTrackerItem
                                                     End If
 
                                                     mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
-                                                            iLastOutputSeqNum,
-                                                            m_VmtTracker, iController, iVelocityTimeOffset,
-                                                            mCalcPosition,
-                                                            mCalcOrientation,
-                                                            mVelocityPosition,
-                                                            mVelocityOrientation)
+                                                        iLastOutputSeqNum,
+                                                        m_VmtTracker, iController, iVelocityTimeOffset,
+                                                        mCalcPosition * PSM_CENTIMETERS_TO_METERS,
+                                                        mCalcOrientation,
+                                                        mVelocityPosition * PSM_CENTIMETERS_TO_METERS,
+                                                        mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
                                                 End If
@@ -1963,9 +1965,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
                                                         iLastOutputSeqNum,
                                                         m_VmtTracker, ENABLE_HTC_VIVE_TRACKER, iVelocityTimeOffset,
-                                                        mCalcPosition,
+                                                        mCalcPosition * PSM_CENTIMETERS_TO_METERS,
                                                         mCalcOrientation,
-                                                        mVelocityPosition,
+                                                        mVelocityPosition * PSM_CENTIMETERS_TO_METERS,
                                                         mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
@@ -2054,9 +2056,9 @@ Public Class UCVirtualMotionTrackerItem
                                                     mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
                                                         iLastOutputSeqNum,
                                                         m_VmtTracker, iController, iVelocityTimeOffset,
-                                                        mCalcPosition,
+                                                        mCalcPosition * PSM_CENTIMETERS_TO_METERS,
                                                         mCalcOrientation,
-                                                        mVelocityPosition,
+                                                        mVelocityPosition * PSM_CENTIMETERS_TO_METERS,
                                                         mVelocityOrientation)
                                                     AddFpsOscCounter()
                                                     bSetPack = True
@@ -2099,7 +2101,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                                False)
 
                                         Dim mOrientation As Quaternion = mCalibratedOrientation
-                                        Dim mPosition As Vector3 = mCalibratedPosition * CSng(PSM_CENTIMETERS_TO_METERS)
+                                        Dim mPosition As Vector3 = mCalibratedPosition
 
                                         ' Cameras are flipped, flip them correctly
                                         Dim mFlippedQ As Quaternion = mOrientation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180.0F * (Math.PI / 180.0F))
@@ -2108,7 +2110,7 @@ Public Class UCVirtualMotionTrackerItem
                                         mUCVirtualMotionTracker.g_ClassOscServer.SendDevicePose(
                                             iLastOutputSeqNum,
                                             VMT_LIGHTHOUSE_BEGIN_INDEX + i, ENABLE_HTC_VIVE_LIGHTHOUSE, 0.0F,
-                                            mPosition,
+                                            mPosition * PSM_CENTIMETERS_TO_METERS,
                                             mFlippedQ,
                                             Vector3.Zero,
                                             Vector3.Zero)
