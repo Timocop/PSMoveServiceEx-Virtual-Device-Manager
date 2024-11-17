@@ -973,11 +973,6 @@ Public Class UCVmtSettings
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
-
-    End Sub
-
-    Private Sub CleanUp()
-
     End Sub
 
     Private Sub NumericUpDown_BulbOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetX.ValueChanged
@@ -1079,5 +1074,16 @@ Public Class UCVmtSettings
 
             Panel_BulbOffset.Location = mOffsetPoint
         End If
+    End Sub
+
+    Private Sub LinkLabel_EnableVelocityPerFrame_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EnableVelocityPerFrame.LinkClicked
+        TabControl_SettingsDevices.SelectedTab = TabPage_SettingsOther
+
+        CheckBox_EnableManualVelocity.Focus()
+        CheckBox_EnableManualVelocity.Checked = True
+    End Sub
+
+    Private Sub CleanUp()
+
     End Sub
 End Class
