@@ -934,7 +934,8 @@ Public Class UCVirtualMotionTrackerItem
         End Class
 
         Class STRUC_OSC_DATA_PACK
-            Const EQUAL_TOLERANCE As Single = 0.0001F
+            Const POS_EQUAL_TOLERANCE As Single = 0.01F
+            Const ROT_EQUAL_TOLERANCE As Single = 0.0001F
 
             Public mPosition As Vector3 = Vector3.Zero
             Public mOrientation As Quaternion = Quaternion.Identity
@@ -964,9 +965,9 @@ Public Class UCVirtualMotionTrackerItem
             End Function
 
             Public Function IsPositionEqual(vec As Vector3) As Boolean
-                If (Math.Abs(mPosition.X - vec.X) < EQUAL_TOLERANCE AndAlso
-                        Math.Abs(mPosition.Y - vec.Y) < EQUAL_TOLERANCE AndAlso
-                        Math.Abs(mPosition.Z - vec.Z) < EQUAL_TOLERANCE) Then
+                If (Math.Abs(mPosition.X - vec.X) < POS_EQUAL_TOLERANCE AndAlso
+                        Math.Abs(mPosition.Y - vec.Y) < POS_EQUAL_TOLERANCE AndAlso
+                        Math.Abs(mPosition.Z - vec.Z) < POS_EQUAL_TOLERANCE) Then
                     Return True
                 End If
 
@@ -978,10 +979,10 @@ Public Class UCVirtualMotionTrackerItem
             End Function
 
             Public Function IsQuaternionEqual(quat As Quaternion) As Boolean
-                If (Math.Abs(mOrientation.X - quat.X) < EQUAL_TOLERANCE AndAlso
-                        Math.Abs(mOrientation.Y - quat.Y) < EQUAL_TOLERANCE AndAlso
-                        Math.Abs(mOrientation.Z - quat.Z) < EQUAL_TOLERANCE AndAlso
-                        Math.Abs(mOrientation.W - quat.W) < EQUAL_TOLERANCE) Then
+                If (Math.Abs(mOrientation.X - quat.X) < ROT_EQUAL_TOLERANCE AndAlso
+                        Math.Abs(mOrientation.Y - quat.Y) < ROT_EQUAL_TOLERANCE AndAlso
+                        Math.Abs(mOrientation.Z - quat.Z) < ROT_EQUAL_TOLERANCE AndAlso
+                        Math.Abs(mOrientation.W - quat.W) < ROT_EQUAL_TOLERANCE) Then
                     Return True
                 End If
 
