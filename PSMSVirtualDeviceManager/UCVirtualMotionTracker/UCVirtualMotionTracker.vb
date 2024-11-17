@@ -152,8 +152,9 @@ Public Class UCVirtualMotionTracker
 
         Private g_bSuspendRequest As Boolean = False
         Private g_mLastResponse As Date
-        Private g_mReceivedResponseDate As New Queue(Of Date)
-        Private g_mLatency As Double = 0.0
+        Private g_mReceivedResponse As New Queue(Of Long)
+        Private g_iJitter As Double = 0.0
+        Private g_iLatency As Double = 0.0
 
         Public Sub New()
         End Sub
@@ -201,10 +202,18 @@ Public Class UCVirtualMotionTracker
             End Get
         End Property
 
+        ReadOnly Property m_Jitter As Double
+            Get
+                SyncLock _ThreadLock
+                    Return g_iJitter
+                End SyncLock
+            End Get
+        End Property
+
         ReadOnly Property m_Latency As Double
             Get
                 SyncLock _ThreadLock
-                    Return g_mLatency
+                    Return g_iLatency
                 End SyncLock
             End Get
         End Property
@@ -242,10 +251,24 @@ Public Class UCVirtualMotionTracker
 
             Select Case (mMessage.Address)
                 Case "/VMT/Out/Alive"
-                    ' Calculate the ping using the known packet rate.
+                    ' Calculate the ping using the known packet rate. 
                     SyncLock _ThreadLock
-                        g_mLatency = MeasureJitter()
+                        If (mMessage.Count > 2) Then
+                            Dim iTimeSinceEpoch As Long = CLng(mMessage(2))
+
+                            If (iTimeSinceEpoch <> 0) Then
+                                g_iLatency = MeasureLatency(iTimeSinceEpoch)
+                                g_iJitter = MeasureJitter(iTimeSinceEpoch)
+                            Else
+                                g_iLatency = 0
+                                g_iJitter = 0
+                            End If
+                        Else
+                            g_iLatency = 0
+                            g_iJitter = 0
+                        End If
                     End SyncLock
+
             End Select
 
             SyncLock _ThreadLock
@@ -255,23 +278,30 @@ Public Class UCVirtualMotionTracker
             RaiseEvent OnOscProcessMessage(mMessage)
         End Sub
 
-        Private Function MeasureJitter() As Double
+        Private Function MeasureLatency(iTimePacketMs As Long) As Double
+            Dim mUnixEpoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            Dim iDurationMs As Long = CLng((Date.UtcNow.ToUniversalTime() - mUnixEpoch).TotalMilliseconds)
+
+            Return Math.Max(0, iDurationMs - iTimePacketMs)
+        End Function
+
+        Private Function MeasureJitter(iTimePacketMs As Long) As Double
             Const MAX_HISTORY = 10
-            Dim iJitterSum As Double = 0
+            Dim iJitterSum As Long = 0
 
-            g_mReceivedResponseDate.Enqueue(Now)
+            g_mReceivedResponse.Enqueue(iTimePacketMs)
 
-            If (g_mReceivedResponseDate.Count > MAX_HISTORY) Then
-                g_mReceivedResponseDate.Dequeue()
+            If (g_mReceivedResponse.Count > MAX_HISTORY) Then
+                g_mReceivedResponse.Dequeue()
             End If
 
-            If (g_mReceivedResponseDate.Count < 2) Then
+            If (g_mReceivedResponse.Count < 2) Then
                 Return 0.0
             End If
 
-            Dim iPrevInterval As Double = 0
-            For i = 1 To g_mReceivedResponseDate.Count - 1
-                Dim iInterval As Double = (g_mReceivedResponseDate(i) - g_mReceivedResponseDate(i - 1)).TotalMilliseconds
+            Dim iPrevInterval As Long = 0
+            For i = 1 To g_mReceivedResponse.Count - 1
+                Dim iInterval As Long = (g_mReceivedResponse(i) - g_mReceivedResponse(i - 1))
 
                 If (i > 1) Then
                     iJitterSum += Math.Abs(iInterval - iPrevInterval)
@@ -280,7 +310,7 @@ Public Class UCVirtualMotionTracker
                 iPrevInterval = iInterval
             Next
 
-            Return iJitterSum / (g_mReceivedResponseDate.Count - 1)
+            Return iJitterSum / (g_mReceivedResponse.Count - 1)
         End Function
 
 

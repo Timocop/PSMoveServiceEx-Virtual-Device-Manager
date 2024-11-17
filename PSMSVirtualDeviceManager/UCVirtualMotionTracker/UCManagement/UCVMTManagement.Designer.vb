@@ -499,7 +499,7 @@ Partial Class UCVmtManagement
         Title2.Position.Width = 94.0!
         Title2.Position.X = 3.0!
         Title2.Position.Y = 3.0!
-        Title2.Text = "Recorded latency: Unknown"
+        Title2.Text = "Latency: 0 ms; Jitter: 0 ms"
         Me.Chart_VmtPerformance.Titles.Add(Title1)
         Me.Chart_VmtPerformance.Titles.Add(Title2)
         '
