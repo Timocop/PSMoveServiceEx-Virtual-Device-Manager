@@ -274,7 +274,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_HmdViewPointOffset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdViewPointOffset.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdViewPointOffset.FormattingEnabled = True
-        Me.ComboBox_HmdViewPointOffset.Location = New System.Drawing.Point(138, 6)
+        Me.ComboBox_HmdViewPointOffset.Location = New System.Drawing.Point(157, 6)
         Me.ComboBox_HmdViewPointOffset.Name = "ComboBox_HmdViewPointOffset"
         Me.ComboBox_HmdViewPointOffset.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_HmdViewPointOffset.TabIndex = 45
@@ -361,9 +361,9 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label1.Location = New System.Drawing.Point(6, 9)
         Me.Label1.Margin = New System.Windows.Forms.Padding(3)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(126, 13)
+        Me.Label1.Size = New System.Drawing.Size(145, 13)
         Me.Label1.TabIndex = 44
-        Me.Label1.Text = "HMD view point offset:"
+        Me.Label1.Text = "Use HMD viewpoint offset:"
         '
         'TabControl1
         '
