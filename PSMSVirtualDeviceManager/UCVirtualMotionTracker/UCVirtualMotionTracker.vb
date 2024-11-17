@@ -1559,25 +1559,26 @@ Public Class UCVirtualMotionTracker
         End Sub
 
         Private Sub DevicesThread()
-            Dim mLastDeviceList As Date = Now
+            Dim mLastDeviceList As New Stopwatch
+            mLastDeviceList.Restart()
 
             Dim mClampedExecution As New ClassPrecisionSleep.ClassFrameTimed()
 
             While True
                 Try
                     If (mClampedExecution.CanExecute()) Then
-                        mClampedExecution.m_Framerate = g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscMaxThreadFps
+                        ' Avoid sending too much packets, 60 fps is enough
+                        mClampedExecution.m_Framerate = 60
+                        'mClampedExecution.m_Framerate = g_UCVirtualMotionTracker.g_ClassSettings.m_ControllerSettings.m_OscMaxThreadFps
 
                         If (Not g_UCVirtualMotionTracker.g_ClassOscServer.IsRunning OrElse g_UCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
                             Threading.Thread.Sleep(1000)
                             Continue While
                         End If
 
-                        ' Request Device List
-                        Dim mLastDeviceListTimespan = Now - mLastDeviceList
-
-                        If (mLastDeviceListTimespan.TotalMilliseconds > 1000) Then
-                            mLastDeviceList = Now
+                        ' Request Device List 
+                        If (mLastDeviceList.ElapsedMilliseconds > 1000) Then
+                            mLastDeviceList.Restart()
 
                             g_UCVirtualMotionTracker.g_ClassOscServer.SendDevicesGetList()
                         End If
