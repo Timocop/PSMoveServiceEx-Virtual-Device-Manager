@@ -1835,13 +1835,13 @@ Partial Class UCVmtSettings
         Me.LinkLabel_EnableVelocityPerFrame.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_EnableVelocityPerFrame.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_EnableVelocityPerFrame.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_EnableVelocityPerFrame.Location = New System.Drawing.Point(19, 455)
-        Me.LinkLabel_EnableVelocityPerFrame.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
+        Me.LinkLabel_EnableVelocityPerFrame.Location = New System.Drawing.Point(39, 455)
+        Me.LinkLabel_EnableVelocityPerFrame.Margin = New System.Windows.Forms.Padding(36, 3, 3, 0)
         Me.LinkLabel_EnableVelocityPerFrame.Name = "LinkLabel_EnableVelocityPerFrame"
-        Me.LinkLabel_EnableVelocityPerFrame.Size = New System.Drawing.Size(234, 13)
+        Me.LinkLabel_EnableVelocityPerFrame.Size = New System.Drawing.Size(75, 13)
         Me.LinkLabel_EnableVelocityPerFrame.TabIndex = 72
         Me.LinkLabel_EnableVelocityPerFrame.TabStop = True
-        Me.LinkLabel_EnableVelocityPerFrame.Text = "Enable ""Calculate velocity per frame instead"""
+        Me.LinkLabel_EnableVelocityPerFrame.Text = "Go to setting"
         Me.LinkLabel_EnableVelocityPerFrame.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'UcNumericUpDownBig14

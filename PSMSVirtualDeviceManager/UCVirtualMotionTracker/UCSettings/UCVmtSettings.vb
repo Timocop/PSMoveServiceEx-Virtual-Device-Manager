@@ -1080,7 +1080,6 @@ Public Class UCVmtSettings
         TabControl_SettingsDevices.SelectedTab = TabPage_SettingsOther
 
         CheckBox_EnableManualVelocity.Focus()
-        CheckBox_EnableManualVelocity.Checked = True
     End Sub
 
     Private Sub CleanUp()
