@@ -16,6 +16,7 @@ Public Class ClassLogManagerVirtualTrackers
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_CODEC As String = "Virtual tracker bad codec set"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_OPTIMAL_CODEC As String = "Virtual tracker set optimal codec"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS As String = "Virtual tracker bad framrate"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_AUTO_SETTINGS As String = "Video input device properties set manually"
 
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
@@ -36,6 +37,7 @@ Public Class ClassLogManagerVirtualTrackers
         Dim sHasStatusErrorMessage As String
         Dim iFpsCaptureCounter As Integer
         Dim iFpsPipeCounter As Integer
+        Dim bAutoDetectSettings As Boolean
     End Structure
 
     Private g_mFormMain As FormMain
@@ -77,6 +79,7 @@ Public Class ClassLogManagerVirtualTrackers
                                       sTrackersList.AppendFormat("UseMJPG={0}", mItem.g_mClassCaptureLogic.m_UseMJPG).AppendLine()
                                       sTrackersList.AppendFormat("FpsCaptureCounter={0}", mItem.g_mClassCaptureLogic.m_FpsCaptureCounter).AppendLine()
                                       sTrackersList.AppendFormat("FpsPipeCounter={0}", mItem.g_mClassCaptureLogic.m_FpsPipeCounter).AppendLine()
+                                      sTrackersList.AppendFormat("AutoDetectSettings={0}", mItem.g_mClassCaptureLogic.m_AutoDetectSettings).AppendLine()
 
                                       sTrackersList.AppendLine()
                                   Next
@@ -98,6 +101,7 @@ Public Class ClassLogManagerVirtualTrackers
         mIssues.AddRange(CheckIncompatibleResolution())
         mIssues.AddRange(CheckCodec())
         mIssues.AddRange(CheckFps())
+        mIssues.AddRange(CheckAutoDetectSettings())
         Return mIssues.ToArray
     End Function
 
@@ -219,7 +223,8 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mNoMatchTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_VIRTUAL_TRACKER_COUNT,
-            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. You currently dont have enough video input devices to fill all those available slots. Having unused virtual trackers will reduce performance.",
+            "Virtual tracker slot count for PSMoveServiceEx is {0} but there are currently {1} available video input devices. " &
+                "You currently dont have enough video input devices to fill all those available slots. Having unused virtual trackers will reduce performance.",
             "Set the virtual tracker count to the available video input device count.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
@@ -437,6 +442,34 @@ Public Class ClassLogManagerVirtualTrackers
         Return mIssues.ToArray
     End Function
 
+    Public Function CheckAutoDetectSettings() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_VIRTUAL_TRACKER_AUTO_SETTINGS,
+            "The video input device {0} ({1}) properties are set manually and do not automatically synchronize with PSMoveServiceEx virtual tracker settings. " &
+                "This may cause problems when using color calibration in PSMoveServiceEx Config Tool.",
+            "Enable 'Automatically detect settings' for video input device id {0} ({1}).",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        For Each mDevice In GetDevices()
+            If (Not mDevice.bAutoDetectSettings) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iDeviceIndex, mDevice.sPath)
+                mIssue.sSolution = String.Format(mIssue.sSolution, mDevice.iDeviceIndex, mDevice.sPath)
+                mIssues.Add(mIssue)
+            End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
         Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
@@ -551,6 +584,12 @@ Public Class ClassLogManagerVirtualTrackers
 
                     If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
                         mNewDevice.iFpsPipeCounter = CInt(mDevoceProp("FpsPipeCounter"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDevoceProp.ContainsKey("AutoDetectSettings")) Then
+                        mNewDevice.bAutoDetectSettings = (mDevoceProp("AutoDetectSettings").ToLowerInvariant = "true")
                     Else
                         Exit While
                     End If
