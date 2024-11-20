@@ -638,7 +638,8 @@ Public Class ClassLogManageServiceDevices
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PS4CAM_COLOR_SENSTIVITY,
-            "{0} id {1} color detection sensitivity on tracker id {2} is too low. The PlayStation 4 stereo camera requires higher color detection sensitivity compared to other cameras due the edges of the image are darker than the center.",
+            "{0} id {1} color detection sensitivity on tracker id {2} is too low. " &
+                "The PlayStation 4 stereo camera requires higher color detection sensitivity compared to other cameras due the edges of the image are darker than the center.",
             "Redo color calibration with higher color detection sensitivity for {0} id {1} on tracker id {2}.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )

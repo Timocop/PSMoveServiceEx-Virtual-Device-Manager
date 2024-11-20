@@ -186,14 +186,16 @@ Public Class ClassLogManagerRemoteDevices
 
         Dim mVirtualTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_NO_PSMOVE_EMULATION,
-            "To orientate the controller id {0} using external sources such as remote devices, PlayStation Move emulation must be enabled. Otherwise, orientation data will not be transmitted via the protocol.",
+            "To orientate the controller id {0} using external sources such as remote devices, PlayStation Move emulation must be enabled. " &
+                "Otherwise, orientation data will not be transmitted via the protocol.",
             "Enable PlayStation Move emulation for this controller.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mFilterTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_ORIENTATION_FILTER,
-            "To orientate the controller id {0} using external sources such as remote devices, filter 'OrientationExternal' must be used. Otherwise, orientation data will not be transmitted via the protocol.",
+            "To orientate the controller id {0} using external sources such as remote devices, filter 'OrientationExternal' must be used. " &
+                "Otherwise, orientation data will not be transmitted via the protocol.",
             "Switch to the 'OrientationExternal' orientation filter.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
