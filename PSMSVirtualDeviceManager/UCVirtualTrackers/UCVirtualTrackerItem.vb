@@ -908,6 +908,20 @@ Public Class UCVirtualTrackerItem
         TextBox_Fps.Text = String.Format("FPS: {0}, I/O FPS: {1}", iCaptureFps, iPipeFps)
     End Sub
 
+    Private Sub CheckBox_AutoDetectSettings_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_AutoDetectSettings.CheckedChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_mClassCaptureLogic.m_AutoDetectSettings = CheckBox_AutoDetectSettings.Checked
+        SetUnsavedState(True)
+
+        ' Config is currently loading, dont show messagebox
+        If (g_bIgnoreUnsaved) Then
+            Return
+        End If
+    End Sub
+
     Private Sub CleanUp()
         If (g_mClassCaptureLogic IsNot Nothing) Then
             g_mClassCaptureLogic.Dispose()
@@ -947,6 +961,7 @@ Public Class UCVirtualTrackerItem
         Private g_bUseMJPG As Boolean = False
         Private g_bSupersampling As Boolean = False
         Private g_iCameraFramerate As Integer = 30
+        Private g_bAutoDetectSettings As Boolean = True
 
         Enum ENUM_INTERPOLATION
             NEARST_NEIGHBOR
@@ -1373,6 +1388,19 @@ Public Class UCVirtualTrackerItem
 
                 SyncLock g_mThreadLock
                     g_iCameraFramerate = value
+                End SyncLock
+            End Set
+        End Property
+
+        Public Property m_AutoDetectSettings As Boolean
+            Get
+                SyncLock g_mThreadLock
+                    Return g_bAutoDetectSettings
+                End SyncLock
+            End Get
+            Set(value As Boolean)
+                SyncLock g_mThreadLock
+                    g_bAutoDetectSettings = value
                 End SyncLock
             End Set
         End Property
@@ -2074,6 +2102,9 @@ Public Class UCVirtualTrackerItem
         End Sub
 
         Private Sub DoPipeLogic(iPipeID As Integer)
+            Dim iLastExposure As Integer = -1
+            Dim iLastGain As Integer = -1
+
             Try
                 Dim iBytes = New Byte() {}
 
@@ -2098,6 +2129,87 @@ Public Class UCVirtualTrackerItem
 
                             While True
                                 g_mPipEvent(iPipeID).WaitOne(New TimeSpan(0, 0, 5))
+
+                                ' Detect settings from PSMoveServiceEx
+                                If (m_AutoDetectSettings) Then
+                                    ' Always override the secondary tracker settings if its a PS4 Camera.
+                                    Dim mTracker = g_mUCVirtualTrackerItem.g_mUCVirtualTrackers.g_mFormMain.g_mPSMoveServiceCAPI.m_TrackerData(iPipeIndex)
+
+                                    If (mTracker IsNot Nothing) Then
+                                        If (iLastExposure <> mTracker.m_Exposure) Then
+                                            Dim iCurrentValue = mTracker.m_Exposure
+
+                                            ClassUtils.AsyncInvoke(Sub()
+                                                                       If (g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Enabled) Then
+                                                                           ' Config Tool changes in 8 steps 
+                                                                           Dim iValuePercent = ((iCurrentValue / 8) / (128 / 8))
+
+                                                                           Dim iMin = g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Minimum
+                                                                           Dim iMax = g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Maximum
+                                                                           Dim iValue = g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value
+                                                                           Dim iRealMin = 0
+                                                                           Dim iRealMax = iMax - iMin
+                                                                           Dim iRealValue = iValue - iMin
+
+                                                                           Dim iNewValue = (iRealMax * iValuePercent) + iMin
+                                                                           If (iNewValue < iMin) Then
+                                                                               iNewValue = iMin
+                                                                           End If
+                                                                           If (iNewValue > iMax) Then
+                                                                               iNewValue = iMax
+                                                                           End If
+
+                                                                           Try
+                                                                               g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                                                                               g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Floor(iNewValue))
+                                                                           Finally
+                                                                               g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                           End Try
+                                                                       End If
+                                                                   End Sub)
+
+                                            iLastExposure = iCurrentValue
+                                        End If
+
+                                        If (iLastGain <> mTracker.m_Exposure) Then
+                                            Dim iCurrentValue = mTracker.m_Gain
+
+                                            ClassUtils.AsyncInvoke(Sub()
+                                                                       If (g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Enabled) Then
+                                                                           ' Config Tool changes in 8 steps
+                                                                           Dim iValuePercent = ((iCurrentValue / 8) / (128 / 8))
+
+                                                                           Dim iMin = g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Minimum
+                                                                           Dim iMax = g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Maximum
+                                                                           Dim iValue = g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value
+                                                                           Dim iRealMin = 0
+                                                                           Dim iRealMax = iMax - iMin
+                                                                           Dim iRealValue = iValue - iMin
+
+                                                                           Dim iNewValue = (iRealMax * iValuePercent) + iMin
+                                                                           If (iNewValue < iMin) Then
+                                                                               iNewValue = iMin
+                                                                           End If
+                                                                           If (iNewValue > iMax) Then
+                                                                               iNewValue = iMax
+                                                                           End If
+
+                                                                           Try
+                                                                               g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = True
+                                                                               g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Floor(iNewValue))
+                                                                           Finally
+                                                                               g_mUCVirtualTrackerItem.g_bIgnoreUnsaved = False
+                                                                           End Try
+                                                                       End If
+                                                                   End Sub)
+
+                                            iLastGain = iCurrentValue
+                                        End If
+                                    End If
+                                Else
+                                    iLastExposure = -1
+                                    iLastGain = -1
+                                End If
 
                                 Dim VIRT_BUFFER_SIZE As Integer = (m_CaptureFrame(iPipeID).Height * m_CaptureFrame(iPipeID).Width * 3)
                                 If (iBytes.Length - 1 <> VIRT_BUFFER_SIZE) Then
@@ -2216,6 +2328,7 @@ Public Class UCVirtualTrackerItem
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Supersampling", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked, "True", "False")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Resolution", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraResolution.SelectedIndex)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Framerate", CStr(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.ComboBox_CameraFramerate.SelectedIndex)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "AutoDetectSettings", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_AutoDetectSettings.Checked, "True", "False")))
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Autostart", If(g_mClassCaptureLogic.g_mUCVirtualTrackerItem.CheckBox_Autostart.Checked, "True", "False")))
 
@@ -2245,6 +2358,7 @@ Public Class UCVirtualTrackerItem
                             mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
                             SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ENUM_RESOLUTION.SD))))
                             SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraFramerate, CInt(mIni.ReadKeyValue(sDevicePath, "Framerate", "0")))
+                            mUCVirtualTrackerItem.CheckBox_AutoDetectSettings.Checked = (mIni.ReadKeyValue(sDevicePath, "AutoDetectSettings", "True") = "True")
 
                             mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
                         End Using
@@ -2261,7 +2375,7 @@ Public Class UCVirtualTrackerItem
                 End If
 
                 If (bAdjustRange) Then
-                    If (CInt(iValue) < mControl.Minimum) Then
+                    If (CInt(iValue) <mControl.Minimum) Then
                         mControl.Minimum = CInt(iValue)
                     End If
 

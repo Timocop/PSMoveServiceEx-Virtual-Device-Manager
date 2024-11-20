@@ -74,6 +74,10 @@ Public Class ClassServiceClient
         Property m_Position As Vector3
         Property m_Orientation As Quaternion
 
+        Property m_Exposure As Integer
+        Property m_Gain As Integer
+        Property m_Width As Integer
+
         Property m_OutputSeqNum As Integer
 
         Property m_LastTimeStamp As Date
@@ -129,6 +133,10 @@ Public Class ClassServiceClient
         Public Property m_OutputSeqNum As Integer Implements ITrackerData.m_OutputSeqNum
 
         Public Property m_LastTimeStamp As Date Implements ITrackerData.m_LastTimeStamp
+
+        Public Property m_Exposure As Integer Implements ITrackerData.m_Exposure
+        Public Property m_Gain As Integer Implements ITrackerData.m_Gain
+        Public Property m_Width As Integer Implements ITrackerData.m_Width
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
             Return ClassMathUtils.FromQ(m_Orientation)
@@ -819,6 +827,10 @@ Public Class ClassServiceClient
 
                                         mData.m_OutputSeqNum = mTracker.m_Info.m_Stats.m_SequenceNum
                                         mData.m_LastTimeStamp = Now
+
+                                        mData.m_Exposure = mTracker.m_Info.m_Stats.m_TrackerExposure
+                                        mData.m_Gain = mTracker.m_Info.m_Stats.m_TrackerGain
+                                        mData.m_Width = mTracker.m_Info.m_Stats.m_TrackerWidth
 
                                         If (mTracker.m_Info.IsPoseValid) Then
                                             mData.m_Position = New Vector3(

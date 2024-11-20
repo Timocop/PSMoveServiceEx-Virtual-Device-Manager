@@ -46,6 +46,7 @@ Partial Class UCVirtualTrackerItem
         Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
+        Me.CheckBox_AutoDetectSettings = New System.Windows.Forms.CheckBox()
         Me.LinkLabel_MiscSettings = New System.Windows.Forms.LinkLabel()
         Me.Label_DeviceResolution = New System.Windows.Forms.Label()
         Me.Label_DeviceCodec = New System.Windows.Forms.Label()
@@ -126,8 +127,8 @@ Partial Class UCVirtualTrackerItem
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(6, 9)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label3.Location = New System.Drawing.Point(9, 9)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(57, 13)
         Me.Label3.TabIndex = 5
@@ -147,8 +148,8 @@ Partial Class UCVirtualTrackerItem
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(6, 31)
-        Me.Label4.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label4.Location = New System.Drawing.Point(9, 31)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(34, 13)
         Me.Label4.TabIndex = 7
@@ -168,8 +169,8 @@ Partial Class UCVirtualTrackerItem
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(6, 9)
-        Me.Label6.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label6.Location = New System.Drawing.Point(9, 9)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(59, 13)
         Me.Label6.TabIndex = 10
@@ -200,8 +201,8 @@ Partial Class UCVirtualTrackerItem
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(6, 53)
-        Me.Label7.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label7.Location = New System.Drawing.Point(9, 53)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(48, 13)
         Me.Label7.TabIndex = 14
@@ -234,8 +235,8 @@ Partial Class UCVirtualTrackerItem
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(6, 75)
-        Me.Label8.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label8.Location = New System.Drawing.Point(9, 75)
+        Me.Label8.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(59, 13)
         Me.Label8.TabIndex = 17
@@ -282,6 +283,7 @@ Partial Class UCVirtualTrackerItem
         'TabPage_DeviceProperties
         '
         Me.TabPage_DeviceProperties.BackColor = System.Drawing.Color.White
+        Me.TabPage_DeviceProperties.Controls.Add(Me.CheckBox_AutoDetectSettings)
         Me.TabPage_DeviceProperties.Controls.Add(Me.LinkLabel_MiscSettings)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceResolution)
         Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceCodec)
@@ -299,6 +301,19 @@ Partial Class UCVirtualTrackerItem
         Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(460, 200)
         Me.TabPage_DeviceProperties.TabIndex = 0
         Me.TabPage_DeviceProperties.Text = "Device Properties"
+        '
+        'CheckBox_AutoDetectSettings
+        '
+        Me.CheckBox_AutoDetectSettings.AutoSize = True
+        Me.CheckBox_AutoDetectSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_AutoDetectSettings.Location = New System.Drawing.Point(9, 138)
+        Me.CheckBox_AutoDetectSettings.Margin = New System.Windows.Forms.Padding(6, 3, 3, 3)
+        Me.CheckBox_AutoDetectSettings.Name = "CheckBox_AutoDetectSettings"
+        Me.CheckBox_AutoDetectSettings.Size = New System.Drawing.Size(180, 18)
+        Me.CheckBox_AutoDetectSettings.TabIndex = 22
+        Me.CheckBox_AutoDetectSettings.Text = "Automatically detect settings"
+        Me.ToolTip_Info.SetToolTip(Me.CheckBox_AutoDetectSettings, resources.GetString("CheckBox_AutoDetectSettings.ToolTip"))
+        Me.CheckBox_AutoDetectSettings.UseVisualStyleBackColor = True
         '
         'LinkLabel_MiscSettings
         '
@@ -319,8 +334,8 @@ Partial Class UCVirtualTrackerItem
         'Label_DeviceResolution
         '
         Me.Label_DeviceResolution.AutoSize = True
-        Me.Label_DeviceResolution.Location = New System.Drawing.Point(6, 119)
-        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label_DeviceResolution.Location = New System.Drawing.Point(9, 119)
+        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label_DeviceResolution.Name = "Label_DeviceResolution"
         Me.Label_DeviceResolution.Size = New System.Drawing.Size(120, 13)
         Me.Label_DeviceResolution.TabIndex = 20
@@ -329,8 +344,8 @@ Partial Class UCVirtualTrackerItem
         'Label_DeviceCodec
         '
         Me.Label_DeviceCodec.AutoSize = True
-        Me.Label_DeviceCodec.Location = New System.Drawing.Point(6, 97)
-        Me.Label_DeviceCodec.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label_DeviceCodec.Location = New System.Drawing.Point(9, 97)
+        Me.Label_DeviceCodec.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label_DeviceCodec.Name = "Label_DeviceCodec"
         Me.Label_DeviceCodec.Size = New System.Drawing.Size(96, 13)
         Me.Label_DeviceCodec.TabIndex = 19
@@ -365,8 +380,8 @@ Partial Class UCVirtualTrackerItem
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(6, 144)
-        Me.Label12.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label12.Location = New System.Drawing.Point(9, 144)
+        Me.Label12.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(61, 13)
         Me.Label12.TabIndex = 24
@@ -400,8 +415,8 @@ Partial Class UCVirtualTrackerItem
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(4, 171)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label1.Location = New System.Drawing.Point(7, 171)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(142, 13)
         Me.Label1.TabIndex = 21
@@ -423,8 +438,8 @@ Partial Class UCVirtualTrackerItem
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(6, 119)
-        Me.Label11.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label11.Location = New System.Drawing.Point(9, 119)
+        Me.Label11.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(66, 13)
         Me.Label11.TabIndex = 19
@@ -447,8 +462,8 @@ Partial Class UCVirtualTrackerItem
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(6, 97)
-        Me.Label10.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label10.Location = New System.Drawing.Point(9, 97)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(87, 13)
         Me.Label10.TabIndex = 17
@@ -471,8 +486,8 @@ Partial Class UCVirtualTrackerItem
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(6, 75)
-        Me.Label9.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label9.Location = New System.Drawing.Point(9, 75)
+        Me.Label9.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(159, 13)
         Me.Label9.TabIndex = 15
@@ -494,8 +509,8 @@ Partial Class UCVirtualTrackerItem
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(6, 53)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label5.Location = New System.Drawing.Point(9, 53)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(112, 13)
         Me.Label5.TabIndex = 13
@@ -517,8 +532,8 @@ Partial Class UCVirtualTrackerItem
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 31)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
+        Me.Label2.Location = New System.Drawing.Point(9, 31)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(127, 13)
         Me.Label2.TabIndex = 11
@@ -713,4 +728,5 @@ Partial Class UCVirtualTrackerItem
     Friend WithEvents Label_StatusTitle As Label
     Friend WithEvents Timer_Status As Timer
     Friend WithEvents Timer_FpsCounter As Timer
+    Friend WithEvents CheckBox_AutoDetectSettings As CheckBox
 End Class
