@@ -13,10 +13,15 @@
 
     Private g_mFormMain As FormMain
     Private g_bInitRefresh As Boolean = False
+    Private g_bSilentRefresh As Boolean = False
 
-    Public Sub New(_FormMain As FormMain, bRefresh As Boolean)
+    Public Sub New(_FormMain As FormMain, bRefresh As Boolean, bSilentRefresh As Boolean)
         g_mFormMain = _FormMain
         g_bInitRefresh = bRefresh
+
+        If (bRefresh) Then
+            g_bSilentRefresh = bSilentRefresh
+        End If
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -35,7 +40,7 @@
     End Sub
 
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
-        RereshLogs()
+        RereshLogs(False)
     End Sub
 
     Private Sub FormTroubleshootLogs_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -43,27 +48,29 @@
             Me.Visible = True
             Me.Refresh()
 
-            RereshLogs()
+            RereshLogs(g_bSilentRefresh)
         End If
     End Sub
 
-    Private Sub RereshLogs()
-        If (g_mFormMain.g_mPSMoveServiceCAPI IsNot Nothing AndAlso Not g_mFormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
-            Dim sMessage As New Text.StringBuilder
-            sMessage.AppendLine("PSMoveServiceEx is not running!")
-            sMessage.AppendLine("To generate all diagnostic information, PSMoveServiceEx must be running.")
-            sMessage.AppendLine("If PSMoveServiceEx is not running, some diagnostic information may be missing or displayed incorrectly.")
-            sMessage.AppendLine("It's recommended to run PSMoveServiceEx before generating diagnostics information!")
-            sMessage.AppendLine("")
-            sMessage.AppendLine("Click OK to ignore this warning and generate diagnostic information without PSMovServiceEx running.")
-            sMessage.AppendLine("Otherwise click CANCEL to abort.")
+    Private Sub RereshLogs(bSilent As Boolean)
+        If (Not bSilent) Then
+            If (g_mFormMain.g_mPSMoveServiceCAPI IsNot Nothing AndAlso Not g_mFormMain.g_mPSMoveServiceCAPI.m_IsServiceConnected) Then
+                Dim sMessage As New Text.StringBuilder
+                sMessage.AppendLine("PSMoveServiceEx is not running!")
+                sMessage.AppendLine("To generate all diagnostic information, PSMoveServiceEx must be running.")
+                sMessage.AppendLine("If PSMoveServiceEx is not running, some diagnostic information may be missing or displayed incorrectly.")
+                sMessage.AppendLine("It's recommended to run PSMoveServiceEx before generating diagnostics information!")
+                sMessage.AppendLine("")
+                sMessage.AppendLine("Click OK to ignore this warning and generate diagnostic information without PSMovServiceEx running.")
+                sMessage.AppendLine("Otherwise click CANCEL to abort.")
 
-            If (MessageBox.Show(sMessage.ToString, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
-                Return
+                If (MessageBox.Show(sMessage.ToString, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                    Return
+                End If
             End If
         End If
 
-        StartLogAnalysis(True, True, True, True)
+        StartLogAnalysis(True, True, True, True, bSilent)
     End Sub
 
     Private Sub Button_LogCopy_Click(sender As Object, e As EventArgs) Handles Button_LogCopy.Click
@@ -122,7 +129,7 @@
                     End Using
 
 
-                    StartLogAnalysis(False, True, True, True)
+                    StartLogAnalysis(False, True, True, True, False)
                 End If
             End Using
         Catch ex As Exception
@@ -224,17 +231,17 @@
         End Get
     End Property
 
-    Public Sub StartLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean)
+    Public Sub StartLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean, bSilent As Boolean)
         If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
             Return
         End If
 
-        g_mThread = New Threading.Thread(Sub() ThreadLogAnalysis(bGenerateLogs, bDiagnostics, bRefreshDisplayLogs, bRefreshDevices))
+        g_mThread = New Threading.Thread(Sub() ThreadLogAnalysis(bGenerateLogs, bDiagnostics, bRefreshDisplayLogs, bRefreshDevices, bSilent))
         g_mThread.IsBackground = True
         g_mThread.Start()
     End Sub
 
-    Private Sub ThreadLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean)
+    Private Sub ThreadLogAnalysis(bGenerateLogs As Boolean, bDiagnostics As Boolean, bRefreshDisplayLogs As Boolean, bRefreshDevices As Boolean, bSilent As Boolean)
         Try
             ClassUtils.AsyncInvoke(Sub()
                                        If (g_mProgress IsNot Nothing AndAlso Not g_mProgress.IsDisposed) Then
@@ -262,7 +269,7 @@
             End If
 
             If (bGenerateLogs) Then
-                ThreadDoGenerateLogs(iTotalJobs)
+                ThreadDoGenerateLogs(iTotalJobs, bSilent)
             End If
 
             If (bDiagnostics) Then
@@ -291,7 +298,7 @@
         End Try
     End Sub
 
-    Private Sub ThreadDoGenerateLogs(iTotalJobs As Integer)
+    Private Sub ThreadDoGenerateLogs(iTotalJobs As Integer, bSilent As Boolean)
         m_LogContent.m_Content.Clear()
 
         Dim sLogExceptions As New List(Of String)
@@ -312,7 +319,7 @@
                                    End Sub)
 
             Try
-                mJob.Generate(False)
+                mJob.Generate(bSilent)
             Catch ex As Threading.ThreadAbortException
                 Throw
             Catch ex As Exception

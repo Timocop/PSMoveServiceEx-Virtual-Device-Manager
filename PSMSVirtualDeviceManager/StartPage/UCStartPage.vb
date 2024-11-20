@@ -1982,7 +1982,7 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
-        Using mLogs As New FormTroubleshootLogs(g_FormMain, False)
+        Using mLogs As New FormTroubleshootLogs(g_FormMain, False, False)
             mLogs.ShowDialog(g_FormMain)
         End Using
 
@@ -1990,7 +1990,7 @@ Public Class UCStartPage
     End Sub
 
     Private Sub Button_VdmDiagnosticsOpen_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsOpen.Click
-        Using mLogs As New FormTroubleshootLogs(g_FormMain, True)
+        Using mLogs As New FormTroubleshootLogs(g_FormMain, True, True)
             mLogs.ShowDialog(g_FormMain)
         End Using
 
