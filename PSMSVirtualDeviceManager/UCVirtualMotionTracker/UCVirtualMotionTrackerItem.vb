@@ -2923,7 +2923,9 @@ Public Class UCVirtualMotionTrackerItem
                             mData.mJoystickPressedLastPosition = Vector3.Zero
                         End If
 
-                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(Quaternion.Conjugate(mData.mJoystickPressedLastOrientation) * mCurrentOrientationRelative, New Vector3(0, -1, 0))
+                        Dim mNewJoystickPosition = ClassMathUtils.RotateVector(
+                            Quaternion.Conjugate(Quaternion.Conjugate(mData.mJoystickPressedLastOrientation) * mCurrentOrientationRelative),
+                            New Vector3(0, -1, 0))
 
                         mData.mJoystickPostion = mData.mJoystickPostion - (mNewJoystickPosition / (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
 
@@ -2940,7 +2942,9 @@ Public Class UCVirtualMotionTrackerItem
                             mData.mJoystickPressedLastPosition = mPSMoveData.m_Position
                         End If
 
-                        Dim mNewJoystickPosition = ClassMathUtils.GetPositionInRotationSpace(mData.mJoystickPressedLastOrientation, mPSMoveData.m_Position - mData.mJoystickPressedLastPosition)
+                        Dim mNewJoystickPosition = ClassMathUtils.RotateVector(
+                            Quaternion.Conjugate(mData.mJoystickPressedLastOrientation),
+                            mPSMoveData.m_Position - mData.mJoystickPressedLastPosition)
 
                         mData.mJoystickPostion = mData.mJoystickPostion - (mNewJoystickPosition / iControllerJoystickAreaCm)
 

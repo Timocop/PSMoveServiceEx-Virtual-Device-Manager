@@ -81,10 +81,6 @@ Public Class ClassMathUtils
                             2 * q.X * q.Z * v.X + 2 * q.Y * q.Z * v.Y + q.Z * q.Z * v.Z - 2 * q.W * q.Y * v.X - q.Y * q.Y * v.Z + 2 * q.W * q.X * v.Y - q.X * q.X * v.Z + q.W * q.W * v.Z)
     End Function
 
-    Public Shared Function GetPositionInRotationSpace(mRotation As Quaternion, mPosition As Vector3) As Vector3
-        Return RotateVector(Quaternion.Conjugate(mRotation), mPosition)
-    End Function
-
     Public Shared Function FromVectorToVector(mFrom As Vector3, mTo As Vector3) As Quaternion
         Return LookRotation(mTo - mFrom, Vector3.UnitY)
     End Function
