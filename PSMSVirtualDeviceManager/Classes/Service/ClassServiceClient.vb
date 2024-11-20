@@ -493,9 +493,7 @@ Public Class ClassServiceClient
                                                 End If
 
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
-                                                If (Single.IsNaN(mData.m_Position.X) OrElse
-                                                        Single.IsNaN(mData.m_Position.Y) OrElse
-                                                        Single.IsNaN(mData.m_Position.Z)) Then
+                                                If (IsNaN(mData.m_Position)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_Position = g_mControllerPool(mController.m_Info.m_ControllerId).m_Position
@@ -505,10 +503,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_Orientation.X) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.Y) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.Z) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.W)) Then
+                                                If (IsNaN(mData.m_Orientation)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_Orientation = g_mControllerPool(mController.m_Info.m_ControllerId).m_Orientation
@@ -518,9 +513,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
-                                                        Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
-                                                        Single.IsNaN(mData.m_PositionVelocity.Z)) Then
+                                                If (IsNaN(mData.m_PositionVelocity)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_PositionVelocity = g_mControllerPool(mController.m_Info.m_ControllerId).m_PositionVelocity
@@ -530,9 +523,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
-                                                        Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
-                                                        Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
+                                                If (IsNaN(mData.m_OrientationVelocity)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mControllerPool.ContainsKey(mController.m_Info.m_ControllerId)) Then
                                                             mData.m_OrientationVelocity = g_mControllerPool(mController.m_Info.m_ControllerId).m_OrientationVelocity
@@ -641,9 +632,7 @@ Public Class ClassServiceClient
                                                 End If
 
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
-                                                If (Single.IsNaN(mData.m_Position.X) OrElse
-                                                        Single.IsNaN(mData.m_Position.Y) OrElse
-                                                        Single.IsNaN(mData.m_Position.Z)) Then
+                                                If (IsNaN(mData.m_Position)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
@@ -653,10 +642,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_Orientation.X) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.Y) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.Z) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.W)) Then
+                                                If (IsNaN(mData.m_Orientation)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
@@ -666,9 +652,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
-                                                        Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
-                                                        Single.IsNaN(mData.m_PositionVelocity.Z)) Then
+                                                If (IsNaN(mData.m_PositionVelocity)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_PositionVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_PositionVelocity
@@ -678,9 +662,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
-                                                        Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
-                                                        Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
+                                                If (IsNaN(mData.m_OrientationVelocity)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_OrientationVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_OrientationVelocity
@@ -732,9 +714,7 @@ Public Class ClassServiceClient
                                                 End If
 
                                                 'Santiy check, for some reason it can sometimes prodcuce NaN?
-                                                If (Single.IsNaN(mData.m_Position.X) OrElse
-                                                        Single.IsNaN(mData.m_Position.Y) OrElse
-                                                        Single.IsNaN(mData.m_Position.Z)) Then
+                                                If (IsNaN(mData.m_Position)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Position = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Position
@@ -744,10 +724,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_Orientation.X) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.Y) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.Z) OrElse
-                                                        Single.IsNaN(mData.m_Orientation.W)) Then
+                                                If (IsNaN(mData.m_Orientation)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_Orientation = g_mHmdPool(mHmd.m_Info.m_HmdId).m_Orientation
@@ -757,9 +734,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_PositionVelocity.X) OrElse
-                                                        Single.IsNaN(mData.m_PositionVelocity.Y) OrElse
-                                                        Single.IsNaN(mData.m_PositionVelocity.Z)) Then
+                                                If (IsNaN(mData.m_PositionVelocity)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_PositionVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_PositionVelocity
@@ -769,9 +744,7 @@ Public Class ClassServiceClient
                                                     End SyncLock
                                                 End If
 
-                                                If (Single.IsNaN(mData.m_OrientationVelocity.X) OrElse
-                                                        Single.IsNaN(mData.m_OrientationVelocity.Y) OrElse
-                                                        Single.IsNaN(mData.m_OrientationVelocity.Z)) Then
+                                                If (IsNaN(mData.m_OrientationVelocity)) Then
                                                     SyncLock g_mDataLock
                                                         If (g_mHmdPool.ContainsKey(mHmd.m_Info.m_HmdId)) Then
                                                             mData.m_OrientationVelocity = g_mHmdPool(mHmd.m_Info.m_HmdId).m_OrientationVelocity
@@ -897,6 +870,14 @@ Public Class ClassServiceClient
             ClassAdvancedExceptionLogging.WriteToLog(ex)
         End Try
     End Sub
+
+    Private Function IsNaN(mValue As Vector3) As Boolean
+        Return (Single.IsNaN(mValue.X) OrElse Single.IsNaN(mValue.Y) OrElse Single.IsNaN(mValue.Z))
+    End Function
+
+    Private Function IsNaN(mValue As Quaternion) As Boolean
+        Return (Single.IsNaN(mValue.X) OrElse Single.IsNaN(mValue.Y) OrElse Single.IsNaN(mValue.Z) OrElse Single.IsNaN(mValue.W))
+    End Function
 
     Public Sub SetControllerRecenter(iIndex As Integer, mOrientation As Quaternion)
         SyncLock g_mClientLock
