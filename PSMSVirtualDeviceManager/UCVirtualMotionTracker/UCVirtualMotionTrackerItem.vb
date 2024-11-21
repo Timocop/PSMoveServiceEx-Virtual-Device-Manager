@@ -1478,16 +1478,16 @@ Public Class UCVirtualMotionTrackerItem
                                                                                mCalibratedOrientationVelocity,
                                                                                True)
 
+                                        InternalApplyViewPointOffsetLogic(mViewPositionOffset,
+                                                                          mViewRotationOffset,
+                                                                          mCalibratedPosition,
+                                                                          mCalibratedOrientation,
+                                                                          mCalibratedOrientationVelocity)
+
                                         Dim mPosition = mCalibratedPosition
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPositionVelocity = mCalibratedPositionVelocity
                                         Dim mOrientationVelocity = mCalibratedOrientationVelocity
-
-                                        InternalApplyViewPointOffsetLogic(mViewPositionOffset,
-                                                                          mViewRotationOffset,
-                                                                          mPosition,
-                                                                          mOrientation,
-                                                                          mOrientationVelocity)
 
                                         mOscDataPack.mPosition = mPosition
                                         mOscDataPack.mOrientation = mOrientation
@@ -1693,18 +1693,18 @@ Public Class UCVirtualMotionTrackerItem
                                                                                mCalibratedOrientationVelocity,
                                                                                True)
 
+                                        If (m_UsbHmdViewPointOffset) Then
+                                            InternalApplyViewPointOffsetLogic(mViewPositionOffset,
+                                                                          mViewRotationOffset,
+                                                                          mCalibratedPosition,
+                                                                          mCalibratedOrientation,
+                                                                          mCalibratedOrientationVelocity)
+                                        End If
+
                                         Dim mPosition = mCalibratedPosition
                                         Dim mOrientation = mRecenterQuat * mCalibratedOrientation
                                         Dim mPositionVelocity = mCalibratedPositionVelocity
                                         Dim mOrientationVelocity = mCalibratedOrientationVelocity
-
-                                        If (m_UsbHmdViewPointOffset) Then
-                                            InternalApplyViewPointOffsetLogic(mViewPositionOffset,
-                                                                          mViewRotationOffset,
-                                                                          mPosition,
-                                                                          mOrientation,
-                                                                          mOrientationVelocity)
-                                        End If
 
                                         mOscDataPack.mPosition = mPosition
                                         mOscDataPack.mOrientation = mOrientation
