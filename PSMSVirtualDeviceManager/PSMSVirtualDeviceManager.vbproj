@@ -201,6 +201,12 @@
     <Compile Include="Classes\ClassUpdate.vb" />
     <Compile Include="Classes\Tools\ClassUtils.vb" />
     <Compile Include="Classes\Service\ClassVmtConst.vb" />
+    <Compile Include="Classes\Tools\FormDebugGraph.Designer.vb">
+      <DependentUpon>FormDebugGraph.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Tools\FormDebugGraph.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Classes\Tools\FormLoading.Designer.vb">
       <DependentUpon>FormLoading.vb</DependentUpon>
     </Compile>
@@ -419,6 +425,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Classes\Tools\FormDebugGraph.resx">
+      <DependentUpon>FormDebugGraph.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Classes\Tools\FormLoading.resx">
       <DependentUpon>FormLoading.vb</DependentUpon>
     </EmbeddedResource>
