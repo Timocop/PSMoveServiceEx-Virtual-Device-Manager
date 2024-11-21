@@ -273,9 +273,13 @@ Public Class UCVmtSettings
             NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, mClassSettings.m_HmdSettings.m_VFov(True))))
             NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, mClassSettings.m_HmdSettings.m_IPD)))
             ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(mClassSettings.m_HmdSettings.m_RenderScale)
-            NumericUpDown_BulbOffsetX.Value = CDec(mClassSettings.m_HmdSettings.m_ViewOffset.X)
-            NumericUpDown_BulbOffsetY.Value = CDec(mClassSettings.m_HmdSettings.m_ViewOffset.Y)
-            NumericUpDown_BulbOffsetZ.Value = CDec(mClassSettings.m_HmdSettings.m_ViewOffset.Z)
+            NumericUpDown_BulbOffsetX.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewPositionOffset.X, NumericUpDown_BulbOffsetX)
+            NumericUpDown_BulbOffsetY.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewPositionOffset.Y, NumericUpDown_BulbOffsetY)
+            NumericUpDown_BulbOffsetZ.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewPositionOffset.Z, NumericUpDown_BulbOffsetZ)
+            NumericUpDown_HmdViewOffsetX.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewRotationOffset.X, NumericUpDown_HmdViewOffsetX)
+            NumericUpDown_HmdViewOffsetY.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewRotationOffset.Y, NumericUpDown_HmdViewOffsetY)
+            NumericUpDown_HmdViewOffsetZ.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewRotationOffset.Z, NumericUpDown_HmdViewOffsetZ)
+            ' $TODO Replace all with ClampValue()
 
             'Misc Settings
             CheckBox_DisableBasestations.Checked = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
@@ -985,7 +989,7 @@ Public Class UCVmtSettings
             NumericUpDown_BulbOffsetY.Value,
             NumericUpDown_BulbOffsetZ.Value)
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewOffset = iBulbOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewPositionOffset = iBulbOffset
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
         SetBulbOffsetPreview(True)
     End Sub
@@ -1000,7 +1004,7 @@ Public Class UCVmtSettings
             NumericUpDown_BulbOffsetY.Value,
             NumericUpDown_BulbOffsetZ.Value)
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewOffset = iBulbOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewPositionOffset = iBulbOffset
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
         SetBulbOffsetPreview(False)
     End Sub
@@ -1015,9 +1019,51 @@ Public Class UCVmtSettings
             NumericUpDown_BulbOffsetY.Value,
             NumericUpDown_BulbOffsetZ.Value)
 
-        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewOffset = iBulbOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewPositionOffset = iBulbOffset
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
         SetBulbOffsetPreview(g_bBulbOffsetPreviewTop)
+    End Sub
+
+    Private Sub NumericUpDown_HmdViewOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_HmdViewOffsetX.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim mOffset As New Vector3(
+            NumericUpDown_HmdViewOffsetX.Value,
+            NumericUpDown_HmdViewOffsetY.Value,
+            NumericUpDown_HmdViewOffsetZ.Value)
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewRotationOffset = mOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_HmdViewOffsetY_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_HmdViewOffsetY.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim mOffset As New Vector3(
+            NumericUpDown_HmdViewOffsetX.Value,
+            NumericUpDown_HmdViewOffsetY.Value,
+            NumericUpDown_HmdViewOffsetZ.Value)
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewRotationOffset = mOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub NumericUpDown_HmdViewOffsetZ_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_HmdViewOffsetZ.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim mOffset As New Vector3(
+            NumericUpDown_HmdViewOffsetX.Value,
+            NumericUpDown_HmdViewOffsetY.Value,
+            NumericUpDown_HmdViewOffsetZ.Value)
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_ViewRotationOffset = mOffset
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub NumericUpDown_BulbOffsetX_Click(sender As Object, e As EventArgs) Handles NumericUpDown_BulbOffsetX.Click
@@ -1084,5 +1130,27 @@ Public Class UCVmtSettings
 
     Private Sub CleanUp()
 
+    End Sub
+
+    Private Sub Button_HmdViewOffsets_Click(sender As Object, e As EventArgs) Handles Button_HmdViewOffsets.Click
+        ContextMenuStrip_HmdViewOffsets.Show(Button_HmdViewOffsets, New Point(0, Button_HmdViewOffsets.Height))
+    End Sub
+
+    Private Sub ToolStripMenuItem_HmdViewOffsetPhoneL_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_HmdViewOffsetPhoneL.Click
+        NumericUpDown_HmdViewOffsetX.Value = -90
+        NumericUpDown_HmdViewOffsetY.Value = -90
+        NumericUpDown_HmdViewOffsetZ.Value = 0
+    End Sub
+
+    Private Sub ToolStripMenuItem_HmdViewOffsetPhoneR_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_HmdViewOffsetPhoneR.Click
+        NumericUpDown_HmdViewOffsetX.Value = 90
+        NumericUpDown_HmdViewOffsetY.Value = -90
+        NumericUpDown_HmdViewOffsetZ.Value = 0
+    End Sub
+
+    Private Sub ToolStripMenuItem_HmdViewOffsetRotClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_HmdViewOffsetRotClear.Click
+        NumericUpDown_HmdViewOffsetX.Value = 0
+        NumericUpDown_HmdViewOffsetY.Value = 0
+        NumericUpDown_HmdViewOffsetZ.Value = 0
     End Sub
 End Class

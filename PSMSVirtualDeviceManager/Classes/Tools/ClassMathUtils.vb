@@ -209,4 +209,26 @@ Public Class ClassMathUtils
                             (alpha * valNew.Y) + ((1.0F - alpha) * valOld.Y),
                             (alpha * valNew.Z) + ((1.0F - alpha) * valOld.Z))
     End Function
+
+    Public Shared Function ClampValue(iValue As Single, iMin As Single, iMax As Single) As Single
+        Return Math.Min(iMax, Math.Max(iMin, iValue))
+    End Function
+
+    Public Shared Function ClampValue(iValue As Double, iMin As Double, iMax As Double) As Double
+        Return Math.Min(iMax, Math.Max(iMin, iValue))
+    End Function
+
+    Public Shared Function ClampValue(iValue As Vector3, iMin As Vector3, iMax As Vector3) As Vector3
+        Return New Vector3(Math.Min(iMax.X, Math.Max(iMin.X, iValue.X)),
+                            Math.Min(iMax.Y, Math.Max(iMin.Y, iValue.Y)),
+                            Math.Min(iMax.Z, Math.Max(iMin.Z, iValue.Z)))
+    End Function
+
+    Public Shared Function ClampValue(iValue As Decimal, mNumberic As NumericUpDown) As Decimal
+        Return Math.Min(mNumberic.Maximum, Math.Max(mNumberic.Minimum, iValue))
+    End Function
+
+    Public Shared Function ClampValue(iValue As Single, mNumberic As NumericUpDown) As Decimal
+        Return CDec(Math.Min(mNumberic.Maximum, Math.Max(mNumberic.Minimum, iValue)))
+    End Function
 End Class

@@ -1420,7 +1420,8 @@ Public Class UCVirtualMotionTrackerItem
                         Dim iHmdVFov = mClassSettings.m_HmdSettings.m_VFov(bUseCustomDistortion)
                         Dim iHmdIPD = (mClassSettings.m_HmdSettings.m_IPD / 1000.0F) ' To meters
                         Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
-                        Dim mViewOffset = mClassSettings.m_HmdSettings.m_ViewOffset
+                        Dim mViewPositionOffset = mClassSettings.m_HmdSettings.m_ViewPositionOffset
+                        Dim mViewRotationOffset = mClassSettings.m_HmdSettings.m_ViewRotationOffset
 
                         ' Get misc settings
                         Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
@@ -1482,7 +1483,11 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mPositionVelocity = mCalibratedPositionVelocity
                                         Dim mOrientationVelocity = mCalibratedOrientationVelocity
 
-                                        InternalApplyViewPOintOffsetLogic(mViewOffset, mPosition, mOrientation)
+                                        InternalApplyViewPointOffsetLogic(mViewPositionOffset,
+                                                                          mViewRotationOffset,
+                                                                          mPosition,
+                                                                          mOrientation,
+                                                                          mOrientationVelocity)
 
                                         mOscDataPack.mPosition = mPosition
                                         mOscDataPack.mOrientation = mOrientation
@@ -1694,7 +1699,11 @@ Public Class UCVirtualMotionTrackerItem
                                         Dim mOrientationVelocity = mCalibratedOrientationVelocity
 
                                         If (m_UsbHmdViewPointOffset) Then
-                                            InternalApplyViewPOintOffsetLogic(mViewOffset, mPosition, mOrientation)
+                                            InternalApplyViewPointOffsetLogic(mViewPositionOffset,
+                                                                          mViewRotationOffset,
+                                                                          mPosition,
+                                                                          mOrientation,
+                                                                          mOrientationVelocity)
                                         End If
 
                                         mOscDataPack.mPosition = mPosition
@@ -2412,12 +2421,41 @@ Public Class UCVirtualMotionTrackerItem
             End If
         End Sub
 
-        Private Sub InternalApplyViewPOintOffsetLogic(ByRef mViewOffset As Vector3,
-                                                        ByRef mPosition As Vector3,
-                                                        ByRef mOrientation As Quaternion)
-            Dim mOffsetForward = ClassMathUtils.RotateVector(mOrientation, -mViewOffset)
+        Private Sub InternalApplyViewPointOffsetLogic(ByRef mViewPositionOffset As Vector3,
+                                                      ByRef mViewRotationOffset As Vector3,
+                                                      ByRef mPosition As Vector3,
+                                                      ByRef mOrientation As Quaternion,
+                                                      ByRef mOrientationVelocity As Vector3)
 
+            Dim mRotationOffsetDeg = mViewRotationOffset
+            While (mRotationOffsetDeg.X < 0.0F)
+                mRotationOffsetDeg.X += 360.0F
+            End While
+
+            While (mRotationOffsetDeg.Y < 0.0F)
+                mRotationOffsetDeg.Y += 360.0F
+            End While
+
+            While (mRotationOffsetDeg.Z < 0.0F)
+                mRotationOffsetDeg.Z += 360.0F
+            End While
+
+            Dim mRotationOffsetRad = New Vector3(
+                CSng(mViewRotationOffset.X * (Math.PI / 180.0F)),
+                CSng(mViewRotationOffset.Y * (Math.PI / 180.0F)),
+                CSng(mViewRotationOffset.Z * (Math.PI / 180.0F)))
+
+            ' Adjut orientation
+            Dim mOffsetQuat = Quaternion.CreateFromYawPitchRoll(mRotationOffsetRad.Z, mRotationOffsetRad.Y, mRotationOffsetRad.X)
+            mOrientation = mOrientation * mOffsetQuat
+
+            ' Adjust orientation velocity
+            mOrientationVelocity = ClassMathUtils.RotateVector(Quaternion.Conjugate(mOffsetQuat), mOrientationVelocity)
+
+            ' Adjust position
+            Dim mOffsetForward = ClassMathUtils.RotateVector(mOrientation, -mViewPositionOffset)
             mPosition += mOffsetForward
+
         End Sub
 
         Private Sub InternalApplyPlayspaceCalibrationLogic(ByRef mPlayspaceSettings As UCVirtualMotionTracker.ClassSettings.STRUC_PLAYSPACE_SETTINGS,
