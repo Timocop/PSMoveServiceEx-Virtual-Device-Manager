@@ -34,7 +34,6 @@ Partial Class UCNumericUpDownBig
         '
         Me.Button_NumDown.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_NumDown.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_NumDown.Location = New System.Drawing.Point(0, 0)
         Me.Button_NumDown.Margin = New System.Windows.Forms.Padding(0)
         Me.Button_NumDown.Name = "Button_NumDown"
@@ -47,7 +46,6 @@ Partial Class UCNumericUpDownBig
         '
         Me.Button_NumUp.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_NumUp.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_NumUp.Location = New System.Drawing.Point(22, 0)
         Me.Button_NumUp.Margin = New System.Windows.Forms.Padding(0)
         Me.Button_NumUp.Name = "Button_NumUp"
@@ -66,7 +64,6 @@ Partial Class UCNumericUpDownBig
         '
         Me.Button_Reset.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button_Reset.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.Button_Reset.Location = New System.Drawing.Point(44, 0)
         Me.Button_Reset.Margin = New System.Windows.Forms.Padding(0)
         Me.Button_Reset.Name = "Button_Reset"

@@ -170,9 +170,10 @@ Partial Class FormConnectedDevices
         '
         Me.CheckBox_ShowDisconnectedDevices.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_ShowDisconnectedDevices.AutoSize = True
-        Me.CheckBox_ShowDisconnectedDevices.Location = New System.Drawing.Point(12, 549)
+        Me.CheckBox_ShowDisconnectedDevices.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_ShowDisconnectedDevices.Location = New System.Drawing.Point(12, 548)
         Me.CheckBox_ShowDisconnectedDevices.Name = "CheckBox_ShowDisconnectedDevices"
-        Me.CheckBox_ShowDisconnectedDevices.Size = New System.Drawing.Size(167, 17)
+        Me.CheckBox_ShowDisconnectedDevices.Size = New System.Drawing.Size(173, 18)
         Me.CheckBox_ShowDisconnectedDevices.TabIndex = 5
         Me.CheckBox_ShowDisconnectedDevices.Text = "Show disconnected devices"
         Me.CheckBox_ShowDisconnectedDevices.UseVisualStyleBackColor = True

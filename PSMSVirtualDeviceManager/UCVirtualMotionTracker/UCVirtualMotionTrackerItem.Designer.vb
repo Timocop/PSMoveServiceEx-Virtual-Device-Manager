@@ -380,6 +380,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         'TabPage1
         '
+        Me.TabPage1.BackColor = System.Drawing.Color.White
         Me.TabPage1.Controls.Add(Me.Label4)
         Me.TabPage1.Controls.Add(Me.ComboBox_SteamTrackerRole)
         Me.TabPage1.Controls.Add(Me.Label_DeviceID)
@@ -394,7 +395,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TabPage1.Size = New System.Drawing.Size(577, 91)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Tracker Properties"
-        Me.TabPage1.UseVisualStyleBackColor = True
         '
         'Label4
         '
@@ -409,6 +409,7 @@ Partial Class UCVirtualMotionTrackerItem
         '
         'TabPage2
         '
+        Me.TabPage2.BackColor = System.Drawing.Color.White
         Me.TabPage2.Controls.Add(Me.Label1)
         Me.TabPage2.Controls.Add(Me.ComboBox_HmdViewPointOffset)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
@@ -417,7 +418,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TabPage2.Size = New System.Drawing.Size(577, 91)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Advanced Settings"
-        Me.TabPage2.UseVisualStyleBackColor = True
         '
         'UCVirtualMotionTrackerItem
         '
