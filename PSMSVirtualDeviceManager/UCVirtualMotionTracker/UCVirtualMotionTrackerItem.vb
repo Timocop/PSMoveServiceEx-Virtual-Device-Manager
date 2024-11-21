@@ -2149,8 +2149,6 @@ Public Class UCVirtualMotionTrackerItem
         Class STRUC_CALCULATE_VELOCITY_MANUAL_DATA
             Public mLastPosition As Vector3
             Public mLastOrientation As Quaternion
-            Public mRecordedPosition As Vector3
-            Public mRecordedOrientation As Quaternion
             Public mLastVelocityPosition As Vector3
             Public mLastVelocityOrientation As Vector3
             Public mLastPositionTime As Date
@@ -2163,8 +2161,6 @@ Public Class UCVirtualMotionTrackerItem
             Public Sub New()
                 mLastPosition = Vector3.Zero
                 mLastOrientation = Quaternion.Identity
-                mRecordedPosition = Vector3.Zero
-                mRecordedOrientation = Quaternion.Identity
                 mLastVelocityPosition = Vector3.Zero
                 mLastVelocityOrientation = Vector3.Zero
                 mLastPositionTime = Now
@@ -2194,7 +2190,6 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (mPosition <> mData.mLastPosition) Then
                     mData.mLastPositionTime = mNow
-                    mData.mRecordedPosition = mPosition
 
                     mData.mNormalizedPositionDelta.Enqueue(iDeltaTime)
                     If (mData.mNormalizedPositionDelta.Count > 30) Then
@@ -2203,13 +2198,13 @@ Public Class UCVirtualMotionTrackerItem
                     Dim iAvgiDeltaTime = mData.mNormalizedPositionDelta.Average()
 
                     Dim mNewVelocity = New Vector3(
-                        mData.mRecordedPosition.X - mData.mLastPosition.X,
-                        mData.mRecordedPosition.Y - mData.mLastPosition.Y,
-                        mData.mRecordedPosition.Z - mData.mLastPosition.Z
+                        mPosition.X - mData.mLastPosition.X,
+                        mPosition.Y - mData.mLastPosition.Y,
+                        mPosition.Z - mData.mLastPosition.Z
                     )
                     mData.mLastVelocityPosition = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mData.mLastVelocityPosition)
 
-                    mData.mLastPosition = mData.mRecordedPosition
+                    mData.mLastPosition = mPosition
                     mData.iVelocityPositionDelta = iAvgiDeltaTime
                 End If
 
@@ -2220,9 +2215,9 @@ Public Class UCVirtualMotionTrackerItem
                         CSng(mData.mLastVelocityPosition.Z / mData.iVelocityPositionDelta)
                     )
                     mPosition = New Vector3(
-                        CSng(mData.mRecordedPosition.X - (mVelocityPosition.X * mData.iVelocityPositionDelta)),
-                        CSng(mData.mRecordedPosition.Y - (mVelocityPosition.Y * mData.iVelocityPositionDelta)),
-                        CSng(mData.mRecordedPosition.Z - (mVelocityPosition.Z * mData.iVelocityPositionDelta))
+                        CSng(mData.mLastPosition.X - (mVelocityPosition.X * mData.iVelocityPositionDelta)),
+                        CSng(mData.mLastPosition.Y - (mVelocityPosition.Y * mData.iVelocityPositionDelta)),
+                        CSng(mData.mLastPosition.Z - (mVelocityPosition.Z * mData.iVelocityPositionDelta))
                     )
                 End If
             End If
@@ -2234,7 +2229,6 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (mOrientation <> mData.mLastOrientation) Then
                     mData.mLastOrientationTime = mNow
-                    mData.mRecordedOrientation = mOrientation
 
                     mData.mNormalizedOrientationDelta.Enqueue(iDeltaTime)
                     If (mData.mNormalizedOrientationDelta.Count > 30) Then
@@ -2243,21 +2237,21 @@ Public Class UCVirtualMotionTrackerItem
                     Dim iAvgDeltaTime = mData.mNormalizedOrientationDelta.Average()
 
                     Dim mNewVelocity = ClassMathUtils.AngularVelocityBetweenQuats(
-                        mData.mLastOrientation, mData.mRecordedOrientation, 1.0F
+                        mData.mLastOrientation, mOrientation, 1.0F
                     )
                     mData.mLastVelocityOrientation = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_ORIENTATION_SMOOTHING, mNewVelocity, mData.mLastVelocityOrientation)
 
-                    mData.mLastOrientation = mData.mRecordedOrientation
+                    mData.mLastOrientation = mOrientation
                     mData.iVelocityOrientationDelta = iAvgDeltaTime
                 End If
 
                 If (mData.iVelocityOrientationDelta > Double.Epsilon AndAlso mData.iVelocityOrientationDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                     mVelocityOrientation = New Vector3(
-                        CSng(mData.mLastVelocityOrientation.X / mData.iVelocityPositionDelta),
-                        CSng(mData.mLastVelocityOrientation.Y / mData.iVelocityPositionDelta),
-                        CSng(mData.mLastVelocityOrientation.Z / mData.iVelocityPositionDelta)
+                        CSng(mData.mLastVelocityOrientation.X / mData.iVelocityOrientationDelta),
+                        CSng(mData.mLastVelocityOrientation.Y / mData.iVelocityOrientationDelta),
+                        CSng(mData.mLastVelocityOrientation.Z / mData.iVelocityOrientationDelta)
                     )
-                    mOrientation = mData.mRecordedOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, mData.iVelocityOrientationDelta))
+                    mOrientation = mData.mLastOrientation * Quaternion.Conjugate(ClassMathUtils.QuaternionFromAngularVelocity(mVelocityOrientation, mData.iVelocityOrientationDelta))
                 End If
             End If
         End Sub
