@@ -229,56 +229,56 @@ Public Class UCVmtSettings
             ' Htc
             CheckBox_HtcTouchpadShortcuts.Checked = mClassSettings.m_ControllerSettings.m_HtcTouchpadShortcutBinding
             CheckBox_HtcTouchpadShortcutClick.Checked = mClassSettings.m_ControllerSettings.m_HtcTouchpadShortcutTouchpadClick
-            NumericUpDown_HtcTouchpadClickDeadzone.Value = CDec(Math.Max(NumericUpDown_HtcTouchpadClickDeadzone.Minimum, Math.Min(NumericUpDown_HtcTouchpadClickDeadzone.Maximum, mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone)))
-            ComboBox_HtcTouchpadClickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HtcTouchpadClickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod))
-            ComboBox_HtcGrabButtonMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HtcGrabButtonMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HtcTouchpadClickDeadzone, mClassSettings.m_ControllerSettings.m_HtcTouchpadClickDeadzone)
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HtcTouchpadClickMethod, mClassSettings.m_ControllerSettings.m_HtcTouchpadEmulationClickMethod)
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HtcGrabButtonMethod, mClassSettings.m_ControllerSettings.m_HtcGripButtonMethod)
 
-            'Oculus
-            ComboBox_OculusButtonLayout.SelectedIndex = Math.Max(0, Math.Min(ComboBox_OculusButtonLayout.Items.Count - 1, mClassSettings.m_ControllerSettings.m_OculusButtonMethod))
+            'Oculus 
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_OculusButtonLayout, mClassSettings.m_ControllerSettings.m_OculusButtonMethod)
             CheckBox_OculusGripToggle.Checked = mClassSettings.m_ControllerSettings.m_OculusGripToggle
             CheckBox_HybridGripToggle.Checked = mClassSettings.m_ControllerSettings.m_HybridGripToggle
 
-            'Misc
-            ComboBox_JoystickMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_JoystickMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod))
-            NumericUpDown_JoystickArea.Value = CDec(Math.Max(NumericUpDown_JoystickArea.Minimum, Math.Min(NumericUpDown_JoystickArea.Maximum, mClassSettings.m_ControllerSettings.m_ControllerJoystickAreaCm)))
+            'Misc 
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_JoystickMethod, mClassSettings.m_ControllerSettings.m_ControllerJoystickMethod)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_JoystickArea, mClassSettings.m_ControllerSettings.m_ControllerJoystickAreaCm)
 
             CheckBox_ControllerRecenterEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnableControllerRecenter
-            ComboBox_RecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_RecenterMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod))
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_RecenterMethod, mClassSettings.m_ControllerSettings.m_ControllerRecenterMethod)
 
             ComboBox_RecenterFromDevice.Items.Clear()
             ComboBox_RecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(mClassSettings.m_ControllerSettings.m_ControllerRecenterFromDeviceName))
             ComboBox_RecenterFromDevice.SelectedIndex = 0
 
             CheckBox_HmdRecenterEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnableHmdRecenter
-            ComboBox_HmdRecenterMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_HmdRecenterMethod.Items.Count - 1, mClassSettings.m_ControllerSettings.m_HmdRecenterMethod))
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HmdRecenterMethod, mClassSettings.m_ControllerSettings.m_HmdRecenterMethod)
 
             ComboBox_HmdRecenterFromDevice.Items.Clear()
             ComboBox_HmdRecenterFromDevice.Items.Add(New ClassRecenterDeviceItem(mClassSettings.m_ControllerSettings.m_HmdRecenterFromDeviceName))
             ComboBox_HmdRecenterFromDevice.SelectedIndex = 0
 
-            NumericUpDown_RecenterButtonTime.Value = Math.Max(NumericUpDown_RecenterButtonTime.Minimum, Math.Min(NumericUpDown_RecenterButtonTime.Maximum, mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs))
-            NumericUpDown_OscThreadSleep.Value = Math.Max(NumericUpDown_OscThreadSleep.Minimum, Math.Min(NumericUpDown_OscThreadSleep.Maximum, mClassSettings.m_ControllerSettings.m_OscThreadSleepMs))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_RecenterButtonTime, mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_OscThreadSleep, mClassSettings.m_ControllerSettings.m_OscThreadSleepMs)
 
             CheckBox_PlayCalibEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
 
             ' Hmd Settings
             CheckBox_ShowDistSettings.Checked = mClassSettings.m_HmdSettings.m_UseCustomDistortion
-            NumericUpDown_PsvrDistK0.Value = CDec(Math.Max(NumericUpDown_PsvrDistK0.Minimum, Math.Min(NumericUpDown_PsvrDistK0.Maximum, mClassSettings.m_HmdSettings.m_DistortionK0(True))))
-            NumericUpDown_PsvrDistK1.Value = CDec(Math.Max(NumericUpDown_PsvrDistK1.Minimum, Math.Min(NumericUpDown_PsvrDistK1.Maximum, mClassSettings.m_HmdSettings.m_DistortionK1(True))))
-            NumericUpDown_PsvrDistScale.Value = CDec(Math.Max(NumericUpDown_PsvrDistScale.Minimum, Math.Min(NumericUpDown_PsvrDistScale.Maximum, mClassSettings.m_HmdSettings.m_DistortionScale(True))))
-            NumericUpDown_PsvrDistRedOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistRedOffset.Minimum, Math.Min(NumericUpDown_PsvrDistRedOffset.Maximum, mClassSettings.m_HmdSettings.m_DistortionRedOffset(True))))
-            NumericUpDown_PsvrDistGreenOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistGreenOffset.Minimum, Math.Min(NumericUpDown_PsvrDistGreenOffset.Maximum, mClassSettings.m_HmdSettings.m_DistortionGreenOffset(True))))
-            NumericUpDown_PsvrDistBlueOffset.Value = CDec(Math.Max(NumericUpDown_PsvrDistBlueOffset.Minimum, Math.Min(NumericUpDown_PsvrDistBlueOffset.Maximum, mClassSettings.m_HmdSettings.m_DistortionBlueOffset(True))))
-            NumericUpDown_PsvrHFov.Value = CDec(Math.Max(NumericUpDown_PsvrHFov.Minimum, Math.Min(NumericUpDown_PsvrHFov.Maximum, mClassSettings.m_HmdSettings.m_HFov(True))))
-            NumericUpDown_PsvrVFov.Value = CDec(Math.Max(NumericUpDown_PsvrVFov.Minimum, Math.Min(NumericUpDown_PsvrVFov.Maximum, mClassSettings.m_HmdSettings.m_VFov(True))))
-            NumericUpDown_PsvrIPD.Value = CDec(Math.Max(NumericUpDown_PsvrIPD.Minimum, Math.Min(NumericUpDown_PsvrIPD.Maximum, mClassSettings.m_HmdSettings.m_IPD)))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrDistK0, mClassSettings.m_HmdSettings.m_DistortionK0(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrDistK1, mClassSettings.m_HmdSettings.m_DistortionK1(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrDistScale, mClassSettings.m_HmdSettings.m_DistortionScale(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrDistRedOffset, mClassSettings.m_HmdSettings.m_DistortionRedOffset(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrDistGreenOffset, mClassSettings.m_HmdSettings.m_DistortionGreenOffset(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrDistBlueOffset, mClassSettings.m_HmdSettings.m_DistortionBlueOffset(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrHFov, mClassSettings.m_HmdSettings.m_HFov(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrVFov, mClassSettings.m_HmdSettings.m_VFov(True))
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PsvrIPD, mClassSettings.m_HmdSettings.m_IPD)
             ComboBox_PsvrRenderResolution.SelectedItem = New STRUC_RENDER_RES_ITEM(mClassSettings.m_HmdSettings.m_RenderScale)
-            NumericUpDown_BulbOffsetX.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewPositionOffset.X, NumericUpDown_BulbOffsetX)
-            NumericUpDown_BulbOffsetY.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewPositionOffset.Y, NumericUpDown_BulbOffsetY)
-            NumericUpDown_BulbOffsetZ.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewPositionOffset.Z, NumericUpDown_BulbOffsetZ)
-            NumericUpDown_HmdViewOffsetX.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewRotationOffset.X, NumericUpDown_HmdViewOffsetX)
-            NumericUpDown_HmdViewOffsetY.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewRotationOffset.Y, NumericUpDown_HmdViewOffsetY)
-            NumericUpDown_HmdViewOffsetZ.Value = ClassMathUtils.ClampValue(mClassSettings.m_HmdSettings.m_ViewRotationOffset.Z, NumericUpDown_HmdViewOffsetZ)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_BulbOffsetX, mClassSettings.m_HmdSettings.m_ViewPositionOffset.X)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_BulbOffsetY, mClassSettings.m_HmdSettings.m_ViewPositionOffset.Y)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_BulbOffsetZ, mClassSettings.m_HmdSettings.m_ViewPositionOffset.Z)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetX, mClassSettings.m_HmdSettings.m_ViewRotationOffset.X)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetY, mClassSettings.m_HmdSettings.m_ViewRotationOffset.Y)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetZ, mClassSettings.m_HmdSettings.m_ViewRotationOffset.Z)
             ' $TODO Replace all with ClampValue()
 
             'Misc Settings
@@ -292,12 +292,12 @@ Public Class UCVmtSettings
             CheckBox_EnableManualVelocity.Checked = mClassSettings.m_MiscSettings.m_EnableManualVelocity
             TextBox_OscRemoteIP.Text = mClassSettings.m_MiscSettings.m_OscRemoteIP
 
-            ' Playspace Settings
-            NumericUpDown_PlayCalibForwardOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibForwardOffset.Minimum, Math.Min(NumericUpDown_PlayCalibForwardOffset.Maximum, mClassSettings.m_PlayspaceSettings.m_ForwardOffset)))
-            NumericUpDown_PlayCalibSideOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibSideOffset.Minimum, Math.Min(NumericUpDown_PlayCalibSideOffset.Maximum, mClassSettings.m_PlayspaceSettings.m_SideOffset)))
-            NumericUpDown_PlayCalibHeightOffset.Value = CDec(Math.Max(NumericUpDown_PlayCalibHeightOffset.Minimum, Math.Min(NumericUpDown_PlayCalibHeightOffset.Maximum, mClassSettings.m_PlayspaceSettings.m_HeightOffset)))
-            ComboBox_PlayCalibForwardMethod.SelectedIndex = Math.Max(0, Math.Min(ComboBox_PlayCalibForwardMethod.Items.Count - 1, mClassSettings.m_PlayspaceSettings.m_ForwardMethod))
-            mUCVmtPlayspaceCalib.ComboBox_PlayCalibControllerID.SelectedIndex = Math.Max(0, Math.Min(mUCVmtPlayspaceCalib.ComboBox_PlayCalibControllerID.Items.Count - 1, mClassSettings.m_PlayspaceSettings.m_CalibrationControllerId))
+            ' Playspace Settings 
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PlayCalibForwardOffset, mClassSettings.m_PlayspaceSettings.m_ForwardOffset)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PlayCalibSideOffset, mClassSettings.m_PlayspaceSettings.m_SideOffset)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_PlayCalibHeightOffset, mClassSettings.m_PlayspaceSettings.m_HeightOffset)
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_PlayCalibForwardMethod, mClassSettings.m_PlayspaceSettings.m_ForwardMethod)
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(mUCVmtPlayspaceCalib.ComboBox_PlayCalibControllerID, mClassSettings.m_PlayspaceSettings.m_CalibrationControllerId)
             CheckBox_PlayCalibAutoscale.Checked = mClassSettings.m_PlayspaceSettings.m_AutoScale
 
             mClassSettings.SetUnsavedState(False)

@@ -123,7 +123,7 @@
             End Try
 
             If (ComboBox_PSmoveEmu.Items.Count > 0 AndAlso iSelectedIndex <> ComboBox_PSmoveEmu.SelectedIndex) Then
-                ComboBox_PSmoveEmu.SelectedIndex = Math.Min(iSelectedIndex, ComboBox_PSmoveEmu.Items.Count - 1)
+                ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_PSmoveEmu, iSelectedIndex)
             End If
 
         Catch ex As Exception
@@ -184,22 +184,10 @@
             Dim mConfig As New ClassServiceConfig(GetConfig())
             mConfig.LoadConfig()
 
-            SetComboBoxValueClamp(ComboBox_VirtualControllerCount, mConfig.GetValue(Of Integer)("", "virtual_controller_count", 0))
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_VirtualControllerCount, mConfig.GetValue(Of Integer)("", "virtual_controller_count", 0))
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
-
-    Private Sub SetNumericUpDownValueClamp(mControl As NumericUpDown, iValue As Decimal)
-        mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue))
-    End Sub
-
-    Private Sub SetComboBoxValueClamp(mControl As ComboBox, iValue As Integer)
-        If (mControl.Items.Count = 0) Then
-            Return
-        End If
-
-        mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iValue))
     End Sub
 
     Private Sub CleanUp()

@@ -76,17 +76,9 @@
             Dim mTrackerConfig As New ClassServiceConfig(GetConfig())
             mTrackerConfig.LoadConfig()
 
-            SetComboBoxValueClamp(ComboBox_VirtualHMDCount, mTrackerConfig.GetValue(Of Integer)("", "virtual_hmd_count", 0))
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_VirtualHMDCount, mTrackerConfig.GetValue(Of Integer)("", "virtual_hmd_count", 0))
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
-
-    Private Sub SetComboBoxValueClamp(mControl As ComboBox, iValue As Integer)
-        If (mControl.Items.Count = 0) Then
-            Return
-        End If
-
-        mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iValue))
     End Sub
 End Class

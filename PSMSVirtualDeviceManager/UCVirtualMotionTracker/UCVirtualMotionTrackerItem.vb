@@ -386,7 +386,7 @@ Public Class UCVirtualMotionTrackerItem
                     Return
                 End If
 
-                ComboBox_SteamTrackerRole.SelectedIndex = mConfig.m_ClassTrackerRoles.GetTrackerRoleFromName(sTrackerRole) + 1
+                ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_SteamTrackerRole, mConfig.m_ClassTrackerRoles.GetTrackerRoleFromName(sTrackerRole) + 1)
             Else
                 ComboBox_SteamTrackerRole.SelectedIndex = 0
             End If
@@ -2985,8 +2985,8 @@ Public Class UCVirtualMotionTrackerItem
                     End If
                 End If
 
-                mData.mJoystickPostion.X = Math.Min(Math.Max(mData.mJoystickPostion.X, -1.0F), 1.0F)
-                mData.mJoystickPostion.Z = Math.Min(Math.Max(mData.mJoystickPostion.Z, -1.0F), 1.0F)
+                mData.mJoystickPostion.X = ClassMathUtils.ClampValue(mData.mJoystickPostion.X, -1.0F, 1.0F)
+                mData.mJoystickPostion.Z = ClassMathUtils.ClampValue(mData.mJoystickPostion.Z, -1.0F, 1.0F)
 
                 Dim mJoystickVec = New Vector2(
                     -mData.mJoystickPostion.X,
@@ -3474,25 +3474,13 @@ Public Class UCVirtualMotionTrackerItem
 
                     Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                         Using mIni As New ClassIni(mStream)
-                            SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
-                            SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
-                            SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset, CInt(mIni.ReadKeyValue(sDevicePath, "HmdViewPointOffset", "1")))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset, CInt(mIni.ReadKeyValue(sDevicePath, "HmdViewPointOffset", "1")))
                         End Using
                     End Using
                 End If
             End SyncLock
-        End Sub
-
-        Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Single)
-            mControl.Value = CDec(Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue)))
-        End Sub
-
-        Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
-            If (mControl.Items.Count = 0) Then
-                Return
-            End If
-
-            mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
         End Sub
     End Class
 

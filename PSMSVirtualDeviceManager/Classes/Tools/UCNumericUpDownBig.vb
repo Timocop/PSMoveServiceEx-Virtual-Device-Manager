@@ -77,7 +77,7 @@
             Return
         End If
 
-        g_mNumericUpDown.Value = Math.Min(Math.Max(g_mNumericUpDown.Value + g_mNumericUpDown.Increment, g_mNumericUpDown.Minimum), g_mNumericUpDown.Maximum)
+        ClassMathUtils.SetNumericUpDownValueClamp(g_mNumericUpDown, g_mNumericUpDown.Value + g_mNumericUpDown.Increment)
     End Sub
 
     Private Sub Button_NumDown_Click(sender As Object, e As EventArgs) Handles Button_NumDown.Click
@@ -85,7 +85,7 @@
             Return
         End If
 
-        g_mNumericUpDown.Value = Math.Min(Math.Max(g_mNumericUpDown.Value - g_mNumericUpDown.Increment, g_mNumericUpDown.Minimum), g_mNumericUpDown.Maximum)
+        ClassMathUtils.SetNumericUpDownValueClamp(g_mNumericUpDown, g_mNumericUpDown.Value - g_mNumericUpDown.Increment)
     End Sub
 
     Private Sub Button_NumUp_MouseDown(sender As Object, e As MouseEventArgs) Handles Button_NumUp.MouseDown
@@ -113,7 +113,7 @@
             Return
         End If
 
-        g_mNumericUpDown.Value = Math.Min(Math.Max(g_mNumericUpDown.Value + g_mNumericUpDown.Increment, g_mNumericUpDown.Minimum), g_mNumericUpDown.Maximum)
+        ClassMathUtils.SetNumericUpDownValueClamp(g_mNumericUpDown, g_mNumericUpDown.Value + g_mNumericUpDown.Increment)
     End Sub
 
     Private Sub Timer_Down_Tick(sender As Object, e As EventArgs) Handles Timer_Down.Tick
@@ -123,7 +123,7 @@
             Return
         End If
 
-        g_mNumericUpDown.Value = Math.Min(Math.Max(g_mNumericUpDown.Value - g_mNumericUpDown.Increment, g_mNumericUpDown.Minimum), g_mNumericUpDown.Maximum)
+        ClassMathUtils.SetNumericUpDownValueClamp(g_mNumericUpDown, g_mNumericUpDown.Value - g_mNumericUpDown.Increment)
     End Sub
 
     Private Sub Button_Reset_Click(sender As Object, e As EventArgs) Handles Button_Reset.Click
@@ -131,7 +131,7 @@
             Return
         End If
 
-        g_mNumericUpDown.Value = Math.Min(Math.Max(g_iResetValue, g_mNumericUpDown.Minimum), g_mNumericUpDown.Maximum)
+        ClassMathUtils.SetNumericUpDownValueClamp(g_mNumericUpDown, g_iResetValue)
     End Sub
 
     Private Sub UCNumericUpDownBig_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged

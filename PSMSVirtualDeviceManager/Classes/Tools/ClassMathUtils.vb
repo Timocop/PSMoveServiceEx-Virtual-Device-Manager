@@ -218,10 +218,20 @@ Public Class ClassMathUtils
         Return Math.Min(iMax, Math.Max(iMin, iValue))
     End Function
 
+    Public Shared Function ClampValue(iValue As Integer, iMin As Integer, iMax As Integer) As Integer
+        Return Math.Min(iMax, Math.Max(iMin, iValue))
+    End Function
+
     Public Shared Function ClampValue(iValue As Vector3, iMin As Vector3, iMax As Vector3) As Vector3
         Return New Vector3(Math.Min(iMax.X, Math.Max(iMin.X, iValue.X)),
                             Math.Min(iMax.Y, Math.Max(iMin.Y, iValue.Y)),
                             Math.Min(iMax.Z, Math.Max(iMin.Z, iValue.Z)))
+    End Function
+
+    Public Shared Function ClampValue(iValue As Vector3, iMin As Single, iMax As Single) As Vector3
+        Return New Vector3(Math.Min(iMax, Math.Max(iMin, iValue.X)),
+                            Math.Min(iMax, Math.Max(iMin, iValue.Y)),
+                            Math.Min(iMax, Math.Max(iMin, iValue.Z)))
     End Function
 
     Public Shared Function ClampValue(iValue As Decimal, mNumberic As NumericUpDown) As Decimal
@@ -229,6 +239,38 @@ Public Class ClassMathUtils
     End Function
 
     Public Shared Function ClampValue(iValue As Single, mNumberic As NumericUpDown) As Decimal
-        Return CDec(Math.Min(mNumberic.Maximum, Math.Max(mNumberic.Minimum, iValue)))
+        Return Math.Min(mNumberic.Maximum, Math.Max(mNumberic.Minimum, CDec(iValue)))
     End Function
+
+    Public Shared Function ClampValue(iValue As Integer, mNumberic As TrackBar) As Integer
+        Return Math.Min(mNumberic.Maximum, Math.Max(mNumberic.Minimum, iValue))
+    End Function
+
+    Public Shared Function ClampValue(iValue As Double, mNumberic As TrackBar) As Integer
+        Return Math.Min(mNumberic.Maximum, Math.Max(mNumberic.Minimum, CInt(iValue)))
+    End Function
+
+    Public Shared Sub SetNumericUpDownValueClamp(mControl As NumericUpDown, iValue As Integer)
+        mControl.Value = ClampValue(iValue, mControl)
+    End Sub
+
+    Public Shared Sub SetNumericUpDownValueClamp(mControl As NumericUpDown, iValue As Single)
+        mControl.Value = ClampValue(iValue, mControl)
+    End Sub
+
+    Public Shared Sub SetComboBoxSelectedIndexClamp(mControl As ComboBox, iIndex As Integer)
+        If (mControl.Items.Count = 0) Then
+            Return
+        End If
+
+        mControl.SelectedIndex = ClampValue(iIndex, 0, mControl.Items.Count - 1)
+    End Sub
+
+    Public Shared Sub SetTrackBarValueClamp(mControl As TrackBar, iValue As Integer)
+        mControl.Value = ClampValue(iValue, mControl)
+    End Sub
+
+    Public Shared Sub SetTrackBarValueClamp(mControl As TrackBar, iValue As Double)
+        mControl.Value = ClampValue(CInt(iValue), mControl)
+    End Sub
 End Class

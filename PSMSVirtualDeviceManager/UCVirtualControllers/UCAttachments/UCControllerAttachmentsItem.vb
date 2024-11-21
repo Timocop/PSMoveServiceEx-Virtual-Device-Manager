@@ -42,7 +42,7 @@ Public Class UCControllerAttachmentsItem
             ComboBox_ControllerID.SelectedIndex = 0
 
             If (iControllerID > -1) Then
-                ComboBox_ControllerID.SelectedIndex = iControllerID + 1
+                ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_ControllerID, iControllerID + 1)
             End If
         Finally
             g_bIgnoreEvents = False
@@ -781,17 +781,17 @@ Public Class UCControllerAttachmentsItem
                         Dim iControllerYawCorrection As Integer = Integer.Parse(mIni.ReadKeyValue(sDevicePath, "ControllerYawCorrection", "0"))
                         Dim bOnlyJointOffset As Boolean = (mIni.ReadKeyValue(sDevicePath, "OnlyJointOffset", "False") = "True")
 
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetZ, iJointZ)
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointYawCorrection, iJointYawCorrection)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetX, iJointX)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetY, iJointY)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointOffsetZ, iJointZ)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_JointYawCorrection, iJointYawCorrection)
 
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetX, iControllerX)
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetY, iControllerY)
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetZ, iControllerZ)
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerYawCorrection, iControllerYawCorrection)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetX, iControllerX)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetY, iControllerY)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerOffsetZ, iControllerZ)
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_ControllerYawCorrection, iControllerYawCorrection)
 
-                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
+                        ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ParentControllerID", "-1")))
 
                         g_mUCRemoteDeviceItem.CheckBox_JointOnly.Checked = bOnlyJointOffset
 
@@ -799,18 +799,6 @@ Public Class UCControllerAttachmentsItem
                     End Using
                 End Using
             End SyncLock
-        End Sub
-
-        Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Single)
-            mControl.Value = CDec(Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue)))
-        End Sub
-
-        Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
-            If (mControl.Items.Count = 0) Then
-                Return
-            End If
-
-            mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
         End Sub
     End Class
 End Class

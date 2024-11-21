@@ -748,9 +748,7 @@ Public Class UCVirtualMotionTracker
                     Return g_mViewPositionOffset
                 End Get
                 Set(value As Vector3)
-                    g_mViewPositionOffset.X = Math.Max(-100.0F, Math.Min(100.0F, value.X))
-                    g_mViewPositionOffset.Y = Math.Max(-100.0F, Math.Min(100.0F, value.Y))
-                    g_mViewPositionOffset.Z = Math.Max(-100.0F, Math.Min(100.0F, value.Z))
+                    g_mViewPositionOffset = ClassMathUtils.ClampValue(value, -100.0F, 100.0F)
                 End Set
             End Property
 
@@ -759,9 +757,7 @@ Public Class UCVirtualMotionTracker
                     Return g_mViewRotationOffset
                 End Get
                 Set(value As Vector3)
-                    g_mViewRotationOffset.X = Math.Max(-180.0F, Math.Min(180.0F, value.X))
-                    g_mViewRotationOffset.Y = Math.Max(-180.0F, Math.Min(180.0F, value.Y))
-                    g_mViewRotationOffset.Z = Math.Max(-180.0F, Math.Min(180.0F, value.Z))
+                    g_mViewRotationOffset = ClassMathUtils.ClampValue(value, -180.0F, 180.0F)
                 End Set
             End Property
         End Class

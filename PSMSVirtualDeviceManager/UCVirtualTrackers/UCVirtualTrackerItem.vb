@@ -1820,7 +1820,7 @@ Public Class UCVirtualTrackerItem
 
                                               ' Has a value been set?
                                               If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Tag)) Then
-                                                  g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Value = CInt(Math.Max(iExposureMin, Math.Min(iExposureMax, iExposureDefault)))
+                                                  ClassMathUtils.SetTrackBarValueClamp(g_mUCVirtualTrackerItem.TrackBar_DeviceExposure, iExposureDefault)
                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceExposure.Tag = True
                                               End If
 
@@ -1853,7 +1853,7 @@ Public Class UCVirtualTrackerItem
                                               g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Maximum = CInt(iGainMax)
 
                                               If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Tag)) Then
-                                                  g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Value = CInt(Math.Max(iGainMin, Math.Min(iGainMax, iGainDefault)))
+                                                  ClassMathUtils.SetTrackBarValueClamp(g_mUCVirtualTrackerItem.TrackBar_DeviceGain, iGainDefault)
                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceGain.Tag = True
                                               End If
 
@@ -1886,7 +1886,7 @@ Public Class UCVirtualTrackerItem
                                               g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Maximum = CInt(iGammaMax)
 
                                               If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Tag)) Then
-                                                  g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Value = CInt(Math.Max(iGammaMin, Math.Min(iGammaMax, iGammaDefault)))
+                                                  ClassMathUtils.SetTrackBarValueClamp(g_mUCVirtualTrackerItem.TrackBar_DeviceGamma, iGammaDefault)
                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceGamma.Tag = True
                                               End If
 
@@ -1919,7 +1919,7 @@ Public Class UCVirtualTrackerItem
                                               g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Maximum = CInt(iContrastMax)
 
                                               If (Not CBool(g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Tag)) Then
-                                                  g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Value = CInt(Math.Max(iContrastMin, Math.Min(iContrastMax, iContrastDefault)))
+                                                  ClassMathUtils.SetTrackBarValueClamp(g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast, iContrastDefault)
                                                   g_mUCVirtualTrackerItem.TrackBar_DeviceConstrast.Tag = True
                                               End If
 
@@ -2346,18 +2346,18 @@ Public Class UCVirtualTrackerItem
 
                     Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_DEVICES, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                         Using mIni As New ClassIni(mStream)
-                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True, True)
-                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True, True)
-                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True, True)
-                            SetTrackBarClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True, True)
+                            SetTrackBarValueClamp(mUCVirtualTrackerItem.TrackBar_DeviceExposure, mIni.ReadKeyValue(sDevicePath, "DeviceExposure", Nothing), True, True)
+                            SetTrackBarValueClamp(mUCVirtualTrackerItem.TrackBar_DeviceGain, mIni.ReadKeyValue(sDevicePath, "DeviceGain", Nothing), True, True)
+                            SetTrackBarValueClamp(mUCVirtualTrackerItem.TrackBar_DeviceGamma, mIni.ReadKeyValue(sDevicePath, "DeviceGamma", Nothing), True, True)
+                            SetTrackBarValueClamp(mUCVirtualTrackerItem.TrackBar_DeviceConstrast, mIni.ReadKeyValue(sDevicePath, "DeviceContrast", Nothing), True, True)
 
-                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(mUCVirtualTrackerItem.ComboBox_DeviceTrackerId, CInt(mIni.ReadKeyValue(sDevicePath, "TrackerId", "0")))
                             mUCVirtualTrackerItem.CheckBox_FlipHorizontal.Checked = (mIni.ReadKeyValue(sDevicePath, "FlipImageHorizontal", "True") = "True")
-                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ENUM_INTERPOLATION.BILINEAR))))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(mUCVirtualTrackerItem.ComboBox_ImageInterpolation, CInt(mIni.ReadKeyValue(sDevicePath, "ImageInterpolation", CStr(ENUM_INTERPOLATION.BILINEAR))))
                             mUCVirtualTrackerItem.CheckBox_UseMjpg.Checked = (mIni.ReadKeyValue(sDevicePath, "UseMJPG", "False") = "True")
                             mUCVirtualTrackerItem.CheckBox_DeviceSupersampling.Checked = (mIni.ReadKeyValue(sDevicePath, "Supersampling", "False") = "True")
-                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ENUM_RESOLUTION.SD))))
-                            SetComboBoxClamp(mUCVirtualTrackerItem.ComboBox_CameraFramerate, CInt(mIni.ReadKeyValue(sDevicePath, "Framerate", "0")))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(mUCVirtualTrackerItem.ComboBox_CameraResolution, CInt(mIni.ReadKeyValue(sDevicePath, "Resolution", CStr(ENUM_RESOLUTION.SD))))
+                            ClassMathUtils.SetComboBoxSelectedIndexClamp(mUCVirtualTrackerItem.ComboBox_CameraFramerate, CInt(mIni.ReadKeyValue(sDevicePath, "Framerate", "0")))
                             mUCVirtualTrackerItem.CheckBox_AutoDetectSettings.Checked = (mIni.ReadKeyValue(sDevicePath, "AutoDetectSettings", "True") = "True")
 
                             mUCVirtualTrackerItem.CheckBox_Autostart.Checked = (mIni.ReadKeyValue(sDevicePath, "Autostart", "False") = "True")
@@ -2368,14 +2368,14 @@ Public Class UCVirtualTrackerItem
                 End SyncLock
             End Sub
 
-            Private Sub SetTrackBarClamp(mControl As TrackBar, iValue As String, bTagFalseIfNothing As Boolean, bAdjustRange As Boolean)
+            Private Sub SetTrackBarValueClamp(mControl As TrackBar, iValue As String, bTagFalseIfNothing As Boolean, bAdjustRange As Boolean)
                 If (bTagFalseIfNothing AndAlso iValue Is Nothing) Then
                     mControl.Tag = False
                     Return
                 End If
 
                 If (bAdjustRange) Then
-                    If (CInt(iValue) <mControl.Minimum) Then
+                    If (CInt(iValue) < mControl.Minimum) Then
                         mControl.Minimum = CInt(iValue)
                     End If
 
@@ -2384,16 +2384,8 @@ Public Class UCVirtualTrackerItem
                     End If
                 End If
 
-                mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, CInt(iValue)))
+                mControl.Value = ClassMathUtils.ClampValue(CInt(iValue), mControl)
                 mControl.Tag = True
-            End Sub
-
-            Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
-                If (mControl.Items.Count = 0) Then
-                    Return
-                End If
-
-                mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
             End Sub
         End Class
 

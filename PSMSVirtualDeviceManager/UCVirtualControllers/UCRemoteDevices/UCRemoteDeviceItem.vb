@@ -759,24 +759,12 @@ Public Class UCRemoteDeviceItem
 
                         g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation = New Quaternion(iX, iY, iZ, iW)
 
-                        SetNumericUpDownClamp(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset, CInt(mIni.ReadKeyValue(sDevicePath, "YawOffset", "0")))
-                        SetComboBoxClamp(g_mUCRemoteDeviceItem.ComboBox_ControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ControllerID", "0")))
+                        ClassMathUtils.SetNumericUpDownValueClamp(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset, CInt(mIni.ReadKeyValue(sDevicePath, "YawOffset", "0")))
+                        ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_ControllerID, CInt(mIni.ReadKeyValue(sDevicePath, "ControllerID", "0")))
                         g_mUCRemoteDeviceItem.m_Nickname = CStr(mIni.ReadKeyValue(sDevicePath, "Nickname", ""))
                     End Using
                 End Using
             End SyncLock
-        End Sub
-
-        Private Sub SetNumericUpDownClamp(mControl As NumericUpDown, iValue As Integer)
-            mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue))
-        End Sub
-
-        Private Sub SetComboBoxClamp(mControl As ComboBox, iIndex As Integer)
-            If (mControl.Items.Count = 0) Then
-                Return
-            End If
-
-            mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iIndex))
         End Sub
     End Class
 End Class

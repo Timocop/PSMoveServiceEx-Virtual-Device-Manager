@@ -259,22 +259,10 @@
             Dim mConfig As New ClassServiceConfig(GetConfig())
             mConfig.LoadConfig()
 
-            SetComboBoxValueClamp(ComboBox_VirtualTrackerCount, mConfig.GetValue(Of Integer)("", "virtual_tracker_count", 0))
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_VirtualTrackerCount, mConfig.GetValue(Of Integer)("", "virtual_tracker_count", 0))
         Finally
             g_bIgnoreEvents = False
         End Try
-    End Sub
-
-    Private Sub SetNumericUpDownValueClamp(mControl As NumericUpDown, iValue As Decimal)
-        mControl.Value = Math.Max(mControl.Minimum, Math.Min(mControl.Maximum, iValue))
-    End Sub
-
-    Private Sub SetComboBoxValueClamp(mControl As ComboBox, iValue As Integer)
-        If (mControl.Items.Count = 0) Then
-            Return
-        End If
-
-        mControl.SelectedIndex = Math.Max(0, Math.Min(mControl.Items.Count - 1, iValue))
     End Sub
 
     Private Sub ComboBox_Devices_DropDown(sender As Object, e As EventArgs) Handles ComboBox_Devices.DropDown
@@ -293,7 +281,7 @@
 
             ' Nothing found? We better not set the index otherwise we error.
             If (ComboBox_Devices.Items.Count > 0) Then
-                ComboBox_Devices.SelectedIndex = Math.Max(0, Math.Min(ComboBox_Devices.Items.Count - 1, iPrevIndex))
+                ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_Devices, iPrevIndex)
             End If
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)

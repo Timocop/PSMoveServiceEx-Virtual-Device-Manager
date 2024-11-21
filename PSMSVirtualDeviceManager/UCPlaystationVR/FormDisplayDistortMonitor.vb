@@ -255,8 +255,8 @@
                 Dim newY = centerY + newRadius * Math.Sin(theta)
 
                 ' Ensure that the new coordinates are within bounds
-                newX = Math.Max(0, Math.Min(width - 1, newX))
-                newY = Math.Max(0, Math.Min(height - 1, newY))
+                newX = ClassMathUtils.ClampValue(newX, 0, width - 1)
+                newY = ClassMathUtils.ClampValue(newY, 0, height - 1)
 
                 ' Get the color from the original image
                 Dim pixelColor As Color = inputImage.GetPixel(CInt(newX), CInt(newY))
@@ -315,8 +315,8 @@
                 Dim yDistorted As Integer = CInt(fV * height)
 
                 ' Ensure that the distorted coordinates are within bounds
-                xDistorted = Math.Max(0, Math.Min(width - 1, xDistorted))
-                yDistorted = Math.Max(0, Math.Min(height - 1, yDistorted))
+                xDistorted = ClassMathUtils.ClampValue(xDistorted, 0, width - 1)
+                yDistorted = ClassMathUtils.ClampValue(yDistorted, 0, height - 1)
 
                 ' Get the color from the original image
                 Dim pixelColor As Color = inputImage.GetPixel(xDistorted, yDistorted)
