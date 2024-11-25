@@ -847,7 +847,7 @@ Public Class UCVirtualTrackerItem
                     Throw New ArgumentException("Config path does not exist")
                 End If
 
-                Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json.json", iTrackerID))
+                Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
 
                 mDistort.mDistort.SaveToConfig(sConfigFile)
             Next
