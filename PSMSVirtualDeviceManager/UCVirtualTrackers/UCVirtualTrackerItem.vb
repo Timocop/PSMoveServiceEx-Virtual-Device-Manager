@@ -320,18 +320,15 @@ Public Class UCVirtualTrackerItem
                             ' Get camera calibrated pose
                             If (True) Then
                                 Dim mConfigPose As New ClassSerivceConst.ClassCameraPose.STRUC_CAMERA_POSE_ITEM
-                                Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(sConfigFile)
-                                    mConfigPose.LoadFromConfig(mSafeCopy.m_TemporaryFile)
-                                End Using
+                                mConfigPose.LoadFromConfig(sConfigFile)
+
                                 g_mStatusBadPoseQuatentions(sConfigFile.ToLowerInvariant) = mConfigPose.mOrientation
                             End If
 
                             ' Check camera distortion values
                             If (True) Then
                                 Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
-                                Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(sConfigFile)
-                                    mConfigCameraDistortion.LoadFromConfig(mSafeCopy.m_TemporaryFile)
-                                End Using
+                                mConfigCameraDistortion.LoadFromConfig(sConfigFile)
 
                                 ' The PS4 Cam requires precomputed distortion.
                                 Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
@@ -850,7 +847,7 @@ Public Class UCVirtualTrackerItem
                     Throw New ArgumentException("Config path does not exist")
                 End If
 
-                Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
+                Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json.json", iTrackerID))
 
                 mDistort.mDistort.SaveToConfig(sConfigFile)
             Next

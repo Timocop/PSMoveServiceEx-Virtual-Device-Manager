@@ -240,61 +240,94 @@ Public Class ClassUtils
     End Sub
 
     ' Class for non-blocking file reading.
-    Class ClassSafeFileCopy
-        Implements IDisposable
+    Class ClassSafeFileRead
+        Class ClassWin32
+            ' Constants for CreateFile
+            Public Const GENERIC_READ As UInteger = &H80000000UI
+            Public Const OPEN_EXISTING As UInteger = 3
+            Public Const FILE_SHARE_READ As UInteger = &H1
+            Public Const FILE_SHARE_WRITE As UInteger = &H2
 
-        ReadOnly Property m_TemporaryFile As String = Nothing
-        Private g_sFile As String = Nothing
+            ' Error codes
+            Public Shared ReadOnly INVALID_HANDLE_VALUE As IntPtr = New IntPtr(-1)
 
-        Public Sub New(sFile As String)
-            g_sFile = sFile
-            m_TemporaryFile = IO.Path.Combine(IO.Path.GetTempPath(), IO.Path.GetRandomFileName())
+            <DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+            Public Shared Function CreateFile(
+                    lpFileName As String,
+                    dwDesiredAccess As UInteger,
+                    dwShareMode As UInteger,
+                    lpSecurityAttributes As IntPtr,
+                    dwCreationDisposition As UInteger,
+                    dwFlagsAndAttributes As UInteger,
+                    hTemplateFile As IntPtr
+                ) As IntPtr
+            End Function
 
-            IO.File.Copy(sFile, m_TemporaryFile, True)
-        End Sub
+            <DllImport("kernel32.dll", SetLastError:=True)>
+            Public Shared Function ReadFile(
+                    hFile As IntPtr,
+                    lpBuffer As Byte(),
+                    nNumberOfBytesToRead As UInteger,
+                    ByRef lpNumberOfBytesRead As UInteger,
+                    lpOverlapped As IntPtr
+                ) As Boolean
+            End Function
 
-        Public Sub SaveToOriginal()
-            If (Not String.IsNullOrEmpty(m_TemporaryFile) AndAlso IO.File.Exists(m_TemporaryFile)) Then
-                IO.File.Copy(m_TemporaryFile, g_sFile, True)
+            <DllImport("kernel32.dll", SetLastError:=True)>
+            Public Shared Function CloseHandle(hObject As IntPtr) As Boolean
+            End Function
+        End Class
+
+        Public Shared Function ReadFile(sFile As String) As String
+            Return ReadFile(sFile, Text.Encoding.UTF8)
+        End Function
+
+        Public Shared Function ReadFile(sFile As String, mEncoding As Text.Encoding) As String
+            Dim mFile As IntPtr = ClassWin32.CreateFile(
+                sFile,
+                ClassWin32.GENERIC_READ,
+                ClassWin32.FILE_SHARE_READ Or ClassWin32.FILE_SHARE_WRITE,
+                IntPtr.Zero,
+                ClassWin32.OPEN_EXISTING,
+                0,
+                IntPtr.Zero
+            )
+
+            If (mFile = ClassWin32.INVALID_HANDLE_VALUE) Then
+                Throw New ArgumentException(String.Format("Unable to open file '{0}'", sFile))
             End If
-        End Sub
 
-#Region "IDisposable Support"
-        Private disposedValue As Boolean ' To detect redundant calls
+            Try
+                Dim iBufferSize As Integer = 4096
+                Dim iBuffer(iBufferSize - 1) As Byte
+                Dim iBytesRead As UInteger
 
-        ' IDisposable
-        Protected Overridable Sub Dispose(disposing As Boolean)
-            If Not disposedValue Then
-                If disposing Then
-                    ' TODO: dispose managed state (managed objects).
+                Using mMemStream As New IO.MemoryStream
+                    mMemStream.Seek(0, IO.SeekOrigin.Begin)
 
-                    If (Not String.IsNullOrEmpty(m_TemporaryFile) AndAlso IO.File.Exists(m_TemporaryFile)) Then
-                        ' Remove any attributes, for example read-only so we can properly dispose the file.
-                        IO.File.SetAttributes(m_TemporaryFile, IO.FileAttributes.Normal)
-                        IO.File.Delete(m_TemporaryFile)
-                    End If
-                End If
+                    While True
+                        Dim bSuccess As Boolean = ClassWin32.ReadFile(mFile, iBuffer, CType(iBuffer.Length, UInteger), iBytesRead, IntPtr.Zero)
+                        If (Not bSuccess) Then
+                            Throw New ArgumentException(String.Format("Unable to read file '{0}'", sFile))
+                        End If
 
-                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                ' TODO: set large fields to null.
-            End If
-            disposedValue = True
-        End Sub
+                        If (iBytesRead = 0) Then
+                            Exit While
+                        End If
 
-        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
-        'Protected Overrides Sub Finalize()
-        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
-        '    Dispose(False)
-        '    MyBase.Finalize()
-        'End Sub
+                        mMemStream.Write(iBuffer, 0, CType(iBytesRead, Integer))
+                    End While
 
-        ' This code added by Visual Basic to correctly implement the disposable pattern.
-        Public Sub Dispose() Implements IDisposable.Dispose
-            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
-            Dispose(True)
-            ' TODO: uncomment the following line if Finalize() is overridden above.
-            ' GC.SuppressFinalize(Me)
-        End Sub
-#End Region
+                    ' Detect encoding
+                    Using mMemReader As New IO.StreamReader(mMemStream, mEncoding)
+                        mMemStream.Seek(0, IO.SeekOrigin.Begin)
+
+                        Return mMemReader.ReadToEnd()
+                    End Using
+                End Using
+            Finally
+                ClassWin32.CloseHandle(mFile)
+            End Try
+        End Function
     End Class
 End Class

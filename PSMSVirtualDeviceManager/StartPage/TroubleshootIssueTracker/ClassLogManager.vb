@@ -27,9 +27,7 @@ Public Class ClassLogManager
                 Continue For
             End If
 
-            Using mSafeCopy As New ClassUtils.ClassSafeFileCopy(mItem.Value)
-                g_ClassLogContent.m_Content(mItem.Key) = IO.File.ReadAllText(mSafeCopy.m_TemporaryFile)
-            End Using
+            g_ClassLogContent.m_Content(mItem.Key) = ClassUtils.ClassSafeFileRead.ReadFile(mItem.Value)
         Next
     End Sub
 
