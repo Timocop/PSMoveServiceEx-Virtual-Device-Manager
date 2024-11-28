@@ -6,6 +6,16 @@ Public Class ClassOpenVRConfig
     Private g_bConfigLoaded As Boolean = False
     Private g_mConfig As New Dictionary(Of String, Object)
 
+    Structure STRUC_DRIVER_ITEM
+        Dim sDriverName As String
+        Dim sDriverPath As String
+
+        Public Sub New(_DriverName As String, _DriverPath As String)
+            sDriverName = _DriverName
+            sDriverPath = _DriverPath
+        End Sub
+    End Structure
+
     Public Sub New()
     End Sub
 
@@ -55,7 +65,7 @@ Public Class ClassOpenVRConfig
         Next
     End Sub
 
-    Public Function GetDrivers() As String()
+    Public Function GetDrivers(Optional bSafeRead As Boolean = True) As STRUC_DRIVER_ITEM()
         ValidateExternalDrivers()
 
         Dim mExternalDrivers = TryCast(g_mConfig("external_drivers"), ArrayList)
@@ -63,13 +73,34 @@ Public Class ClassOpenVRConfig
             Throw New ArgumentException("Could not cast external_drivers as ArrayList")
         End If
 
-        Dim mDrivers As New List(Of String)
+        Dim mDrivers As New List(Of STRUC_DRIVER_ITEM)
         For i = 0 To mExternalDrivers.Count - 1
             If (mExternalDrivers(i) Is Nothing) Then
                 Continue For
             End If
 
-            mDrivers.Add(CStr(mExternalDrivers(i)))
+            Dim sDriverName As String = Nothing
+            Dim sDriverPath As String = CStr(mExternalDrivers(i))
+            If (True) Then
+                Dim sManifest As String = IO.Path.GetFullPath(IO.Path.Combine(sDriverPath, "driver.vrdrivermanifest"))
+                If (IO.File.Exists(sManifest)) Then
+                    Dim sContent As String
+                    If (bSafeRead) Then
+                        sContent = ClassUtils.FileReadAllTextSafe(sManifest)
+                    Else
+                        sContent = IO.File.ReadAllText(sManifest)
+                    End If
+
+                    Dim mManifest = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+                    If (mManifest IsNot Nothing) Then
+                        If (mManifest.ContainsKey("name")) Then
+                            sDriverName = CStr(mManifest("name"))
+                        End If
+                    End If
+                End If
+            End If
+
+            mDrivers.Add(New STRUC_DRIVER_ITEM(sDriverName, sDriverPath))
         Next
 
         Return mDrivers.ToArray
