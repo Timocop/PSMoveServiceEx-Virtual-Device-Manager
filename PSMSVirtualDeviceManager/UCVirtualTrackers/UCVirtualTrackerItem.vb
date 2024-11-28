@@ -2168,7 +2168,7 @@ Public Class UCVirtualTrackerItem
                                             iLastExposure = iCurrentValue
                                         End If
 
-                                        If (iLastGain <> mTracker.m_Exposure) Then
+                                        If (iLastGain <> mTracker.m_Gain) Then
                                             Dim iCurrentValue = mTracker.m_Gain
 
                                             ClassUtils.AsyncInvoke(Sub()
