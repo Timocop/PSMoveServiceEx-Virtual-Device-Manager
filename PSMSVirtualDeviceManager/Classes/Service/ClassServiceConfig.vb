@@ -70,6 +70,9 @@ Public Class ClassServiceConfig
     Public Sub LoadFromString(sContent As String)
         Dim mTmp As Object = Nothing
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+        If (g_mConfig Is Nothing) Then
+            g_mConfig = New Dictionary(Of String, Object)
+        End If
 
         g_sPath = Nothing
         g_bConfigLoaded = True
@@ -107,6 +110,9 @@ Public Class ClassServiceConfig
         End If
 
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+        If (g_mConfig Is Nothing) Then
+            g_mConfig = New Dictionary(Of String, Object)
+        End If
 
         g_bFromString = False
         g_bConfigLoaded = True

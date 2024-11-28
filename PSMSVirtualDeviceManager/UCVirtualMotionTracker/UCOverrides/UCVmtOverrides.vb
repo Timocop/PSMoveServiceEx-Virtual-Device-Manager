@@ -29,7 +29,6 @@
     Private Sub Button_Add_Click(sender As Object, e As EventArgs) Handles Button_Add.Click
         Try
             Dim mConfig As New ClassSteamVRConfig
-            mConfig.LoadConfig()
             If (Not mConfig.LoadConfig()) Then
                 Throw New ArgumentException("Unable to load SteamVR configs")
             End If

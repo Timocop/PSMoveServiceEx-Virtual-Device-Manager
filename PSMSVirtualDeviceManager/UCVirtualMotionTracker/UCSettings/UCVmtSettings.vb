@@ -951,7 +951,9 @@ Public Class UCVmtSettings
     Private Sub LinkLabel_HmdRecenterFromOverride_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HmdRecenterFromOverride.LinkClicked
         Try
             Dim mConfig As New ClassSteamVRConfig
-            mConfig.LoadConfig()
+            If (Not mConfig.LoadConfig()) Then
+                Throw New ArgumentException("Unable to load SteamVR configs")
+            End If
 
             For Each mOverride In mConfig.m_ClassOverrides.GetOverrides()
                 If (mConfig.m_ClassOverrides.GetOverrideTypeFromName(mOverride.Value) <> ClassSteamVRConfig.ClassOverrides.ENUM_OVERRIDE_TYPE.HEAD) Then

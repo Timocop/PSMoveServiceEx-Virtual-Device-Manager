@@ -39,17 +39,18 @@ Public Class ClassLogManagerSteamVrDrivers
         Dim sTrackersList As New Text.StringBuilder
 
         Dim mConfig As New ClassSteamVRConfig
-        mConfig.LoadConfig()
+        If (mConfig.LoadConfig()) Then
+            For Each mDriver In mConfig.m_ClassDrivers.GetDrivers()
+                sTrackersList.AppendFormat("[{0}]", mDriver.sDriverPath).AppendLine()
 
-        For Each mDriver In mConfig.m_ClassDrivers.GetDrivers()
-            sTrackersList.AppendFormat("[{0}]", mDriver.sDriverPath).AppendLine()
+                If (Not String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                    sTrackersList.AppendFormat("DriverName={0}", mDriver.sDriverName).AppendLine()
+                    sTrackersList.AppendFormat("Enabled={0}", mConfig.m_ClassDrivers.m_DriverEnabled(mDriver.sDriverName)).AppendLine()
+                    sTrackersList.AppendFormat("Blocked={0}", mConfig.m_ClassDrivers.m_DriverBlocked(mDriver.sDriverName)).AppendLine()
+                End If
+            Next
+        End If
 
-            If (Not String.IsNullOrEmpty(mDriver.sDriverName)) Then
-                sTrackersList.AppendFormat("DriverName={0}", mDriver.sDriverName).AppendLine()
-                sTrackersList.AppendFormat("Enabled={0}", mConfig.m_ClassDrivers.m_DriverEnabled(mDriver.sDriverName)).AppendLine()
-                sTrackersList.AppendFormat("Blocked={0}", mConfig.m_ClassDrivers.m_DriverBlocked(mDriver.sDriverName)).AppendLine()
-            End If
-        Next
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub

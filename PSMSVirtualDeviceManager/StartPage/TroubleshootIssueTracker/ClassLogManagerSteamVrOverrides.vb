@@ -33,12 +33,12 @@ Public Class ClassLogManagerSteamVrOverrides
         Dim sTrackersList As New Text.StringBuilder
 
         Dim mConfig As New ClassSteamVRConfig
-        mConfig.LoadConfig()
-
-        For Each sOverrides In mConfig.m_ClassOverrides.GetOverrides
-            sTrackersList.AppendFormat("[{0}]", sOverrides.Key).AppendLine()
-            sTrackersList.AppendFormat("Override={0}", sOverrides.Value).AppendLine()
-        Next
+        If (mConfig.LoadConfig()) Then
+            For Each sOverrides In mConfig.m_ClassOverrides.GetOverrides
+                sTrackersList.AppendFormat("[{0}]", sOverrides.Key).AppendLine()
+                sTrackersList.AppendFormat("Override={0}", sOverrides.Value).AppendLine()
+            Next
+        End If
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub

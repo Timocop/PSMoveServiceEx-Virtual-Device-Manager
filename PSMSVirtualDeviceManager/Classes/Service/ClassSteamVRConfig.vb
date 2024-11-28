@@ -899,7 +899,6 @@ Public Class ClassSteamVRConfig
                 End Set
             End Property
 
-
             Private Function InternalGetFirstApplication() As Dictionary(Of String, Object)
                 If (Not m_IsValid()) Then
                     Throw New ArgumentException("Only build-in manifests are supported")
@@ -917,9 +916,6 @@ Public Class ClassSteamVRConfig
                 Return TryCast(mApplications(0), Dictionary(Of String, Object))
             End Function
 
-
-
-
             Public Sub ParseFromFile(sFile As String, Optional bSafeRead As Boolean = True)
                 Dim sContent As String
                 If (bSafeRead) Then
@@ -929,6 +925,9 @@ Public Class ClassSteamVRConfig
                 End If
 
                 g_mManifest = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+                If (g_mManifest Is Nothing) Then
+                    g_mManifest = New Dictionary(Of String, Object)
+                End If
 
                 g_sManifestPath = sFile
             End Sub
@@ -1064,6 +1063,9 @@ Public Class ClassSteamVRConfig
             End If
 
             g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+            If (g_mConfig Is Nothing) Then
+                g_mConfig = New Dictionary(Of String, Object)
+            End If
 
             g_bConfigLoaded = True
             Return True
@@ -1138,6 +1140,9 @@ Public Class ClassSteamVRConfig
         End If
 
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+        If (g_mConfig Is Nothing) Then
+            g_mConfig = New Dictionary(Of String, Object)
+        End If
 
         g_bConfigLoaded = True
         Return True

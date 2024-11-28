@@ -17,12 +17,13 @@ Public Class ClassLogManagerSteamVrManifests
         Dim sTrackersList As New Text.StringBuilder
 
         Dim mConfig As New ClassSteamVRConfig
-        mConfig.LoadConfig()
-
-        mConfig.m_ClassManifests.LoadConfig()
-        For Each sManifest In mConfig.m_ClassManifests.GetManifests
-            sTrackersList.AppendFormat("[{0}]", sManifest).AppendLine()
-        Next
+        If (mConfig.LoadConfig()) Then
+            If (mConfig.m_ClassManifests.LoadConfig()) Then
+                For Each sManifest In mConfig.m_ClassManifests.GetManifests
+                    sTrackersList.AppendFormat("[{0}]", sManifest).AppendLine()
+                Next
+            End If
+        End If
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
     End Sub

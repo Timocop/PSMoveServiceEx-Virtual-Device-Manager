@@ -125,6 +125,9 @@ Public Class ClassOpenVRConfig
         End If
 
         g_mConfig = (New JavaScriptSerializer).Deserialize(Of Dictionary(Of String, Object))(sContent)
+        If (g_mConfig Is Nothing) Then
+            g_mConfig = New Dictionary(Of String, Object)
+        End If
 
         g_bConfigLoaded = True
         Return True
