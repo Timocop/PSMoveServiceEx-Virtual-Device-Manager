@@ -8,6 +8,26 @@ Public Class ClassLogProcesses
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
 
+    Private ReadOnly g_sIgnoreProcessNames As String() = {
+        "svchost",
+        "dwm",
+        "csrss",
+        "smss",
+        "winlogon",
+        "taskhostw",
+        "WmiPrvSE",
+        "WUDFHost",
+        "Idle",
+        "System",
+        "services",
+        "wininit",
+        "Registry",
+        "conhost",
+        "lsass",
+        "LsaIso",
+        "spoolsv"
+    }
+
     Structure STRUC_PROCESS_ITEM
         Dim iId As Integer
         Dim sName As String
@@ -26,6 +46,18 @@ Public Class ClassLogProcesses
 
         For Each mProcess In Process.GetProcesses
             Try
+                Dim bIgnore As Boolean = False
+                For i = 0 To g_sIgnoreProcessNames.Length - 1
+                    If (mProcess.ProcessName.ToLowerInvariant = g_sIgnoreProcessNames(i).ToLowerInvariant) Then
+                        bIgnore = True
+                        Exit For
+                    End If
+                Next
+
+                If (bIgnore) Then
+                    Continue For
+                End If
+
                 sProcessLog.AppendFormat("[ProcessID_{0}]", mProcess.Id).AppendLine()
                 sProcessLog.AppendFormat("ProcessName={0}", mProcess.ProcessName).AppendLine()
             Catch ex As Threading.ThreadAbortException
