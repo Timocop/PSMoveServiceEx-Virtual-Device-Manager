@@ -17,7 +17,8 @@ Public Class ClassLogService
     Public Shared ReadOnly LOG_ISSUE_DEVICE_SLOT_MAX As String = "Device slot limit reached"
     Public Shared ReadOnly LOG_ISSUE_PSVR_FAIL As String = "Failed to open PlayStation VR Head-mounted Display"
     Public Shared ReadOnly LOG_ISSUE_NO_BLUETOOTH As String = "Failed to find bluetooth device"
-    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_PAIRING As String = "Multiple bluetooth pairing issues"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_PAIRING As String = "Bluetooth device encountered pairing issues"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_NOT_FOUND As String = "Bluetooth device could not be found"
     Public Shared ReadOnly LOG_ISSUE_DEVICE_TIMEOUT As String = "Device timed out"
     Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_INCOMPLETE As String = "PSMoveServiceEx log incomplete"
     Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_OUTDATED As String = "Old PSMoveServiceEx diagnostics configuration detected"
@@ -534,14 +535,19 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BLUETOOTH_PAIRING,
-            "PSMoveServiceEx encountered multiple bluetooth pairing issues. See logs for more details.",
-            "",
+            "PSMoveServiceEx encountered multiple bluetooth pairing issues with bluetooth device '{0}' with the following reason: {1}",
+            "See logs for more details.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
+        Dim mTemplateNotFound As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BLUETOOTH_NOT_FOUND,
+            "PSMoveServiceEx could not find bluetooth device '{0}'.",
+            "Make sure Bluetooth has been enabled in the Windows settings and your bluetooth device is in pairing mode.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
         Dim sTotalFailures As String() = {
-                "No Bluetooth device found matching the given address",
-                "Failed to get registry value",
                 "Failed to set 'VirtuallyCabled'",
                 "Failed to build registry subkey",
                 "Failed to create registry key",
@@ -567,6 +573,19 @@ Public Class ClassLogService
                 "Failed to enable HID service"
             }
 
+        Const PAIR_IDLE = 0
+        Const PAIR_PROGRESS = 1
+        Const PAIR_DONE = 2
+
+        Dim bPairCanceled As Boolean = False
+        Dim bFoundDevice As Boolean = False
+        Dim bDeviceFailure As Boolean = False
+        Dim sDeviceSerial As String = ""
+        Dim mFailureReason As New List(Of String)
+        Dim mIssuesPerDevice As New Dictionary(Of String, List(Of STRUC_LOG_ISSUE))
+
+        Dim iPairState As Integer = PAIR_IDLE
+
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
             Dim sLine As String = sLines(i)
@@ -575,24 +594,105 @@ Public Class ClassLogService
                 Continue For
             End If
 
-            If (Not sLine.Contains("Bluetooth")) Then
-                Continue For
-            End If
+            Select Case (iPairState)
+                Case PAIR_IDLE
+                    If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("started.")) Then
+                        iPairState = PAIR_PROGRESS
 
-            Dim bFailed As Boolean = False
-            For Each sFailure As String In sTotalFailures
-                If (sLine.Contains(sFailure)) Then
-                    bFailed = True
-                    Exit For
-                End If
-            Next
+                        bPairCanceled = False
+                        bFoundDevice = False
+                        bDeviceFailure = False
+                        sDeviceSerial = ""
+                        mFailureReason.Clear()
+                    End If
+
+                Case PAIR_PROGRESS
+                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest") OrElse sLine.Contains("ServerRequestHandler")) Then
+                        For Each sFailure As String In sTotalFailures
+                            If (sLine.Contains(sFailure)) Then
+                                bDeviceFailure = True
+
+                                Dim sReason As String = sLine.Remove(0, sLine.IndexOf(sFailure)).Trim
+                                If (Not mFailureReason.Contains(sReason)) Then
+                                    mFailureReason.Add(sReason)
+                                End If
+
+                                Exit For
+                            End If
+                        Next
+                    End If
 
 
-            If (bFailed) Then
-                mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - Bluetooth device found matching the given address")) Then
+                        bFoundDevice = True
+                        sDeviceSerial = ""
 
-                Exit For
-            End If
+                        Dim sMatch As String = "matching the given address:"
+                        If (sLine.IndexOf(sMatch) > -1) Then
+                            sDeviceSerial = sLine.Remove(0, sLine.IndexOf(sMatch) + sMatch.Length).Trim
+                        End If
+                    End If
+
+                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - No Bluetooth device found matching the given address")) Then
+                        bFoundDevice = False
+                        sDeviceSerial = ""
+
+                        Dim sMatch As String = "matching the given address:"
+                        If (sLine.IndexOf(sMatch) > -1) Then
+                            sDeviceSerial = sLine.Remove(0, sLine.IndexOf(sMatch) + sMatch.Length).Trim
+                        End If
+                    End If
+
+                    If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("Canceled.")) Then
+                        bPairCanceled = True
+                    End If
+
+                    If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("failed!")) Then
+                        iPairState = PAIR_DONE
+                        bDeviceFailure = True
+                    End If
+
+                    If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("completed.")) Then
+                        iPairState = PAIR_DONE
+                    End If
+
+                Case PAIR_DONE
+                    iPairState = PAIR_IDLE
+
+                    If (Not String.IsNullOrEmpty(sDeviceSerial) AndAlso sDeviceSerial.Trim.Length > 0) Then
+                        If (Not mIssuesPerDevice.ContainsKey(sDeviceSerial)) Then
+                            mIssuesPerDevice(sDeviceSerial) = New List(Of STRUC_LOG_ISSUE)
+                        End If
+
+                        If (bDeviceFailure) Then
+                            If (mFailureReason.Count > 0) Then
+                                For Each sReason In mFailureReason
+                                    Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                                    mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceSerial, sReason)
+                                    mIssuesPerDevice(sDeviceSerial).Add(mNewIssue)
+                                Next
+                            Else
+                                Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceSerial, "Unknown")
+                                mIssuesPerDevice(sDeviceSerial).Add(mNewIssue)
+                            End If
+                        Else
+                            ' Good pair, clear issues.
+                            mIssuesPerDevice(sDeviceSerial).Clear()
+                        End If
+
+                        If (Not bFoundDevice) Then
+                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplateNotFound)
+                            mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceSerial)
+                            mIssuesPerDevice(sDeviceSerial).Add(mNewIssue)
+                        End If
+                    End If
+
+            End Select
+        Next
+
+        For Each sSerial In mIssuesPerDevice.Keys
+            mIssues.AddRange(mIssuesPerDevice(sSerial).ToArray)
         Next
 
         Return mIssues.ToArray
