@@ -239,95 +239,15 @@ Public Class ClassUtils
         End If
     End Sub
 
-    ' Class for non-blocking file reading.
-    Class ClassSafeFileRead
-        Class ClassWin32
-            ' Constants for CreateFile
-            Public Const GENERIC_READ As UInteger = &H80000000UI
-            Public Const OPEN_EXISTING As UInteger = 3
-            Public Const FILE_SHARE_READ As UInteger = &H1
-            Public Const FILE_SHARE_WRITE As UInteger = &H2
+    Public Shared Function FileReadAllTextSafe(sFile As String) As String
+        Return FileReadAllTextSafe(sFile, Text.Encoding.UTF8)
+    End Function
 
-            ' Error codes
-            Public Shared ReadOnly INVALID_HANDLE_VALUE As IntPtr = New IntPtr(-1)
-
-            <DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
-            Public Shared Function CreateFile(
-                    lpFileName As String,
-                    dwDesiredAccess As UInteger,
-                    dwShareMode As UInteger,
-                    lpSecurityAttributes As IntPtr,
-                    dwCreationDisposition As UInteger,
-                    dwFlagsAndAttributes As UInteger,
-                    hTemplateFile As IntPtr
-                ) As IntPtr
-            End Function
-
-            <DllImport("kernel32.dll", SetLastError:=True)>
-            Public Shared Function ReadFile(
-                    hFile As IntPtr,
-                    lpBuffer As Byte(),
-                    nNumberOfBytesToRead As UInteger,
-                    ByRef lpNumberOfBytesRead As UInteger,
-                    lpOverlapped As IntPtr
-                ) As Boolean
-            End Function
-
-            <DllImport("kernel32.dll", SetLastError:=True)>
-            Public Shared Function CloseHandle(hObject As IntPtr) As Boolean
-            End Function
-        End Class
-
-        Public Shared Function ReadFile(sFile As String) As String
-            Return ReadFile(sFile, Text.Encoding.UTF8)
-        End Function
-
-        Public Shared Function ReadFile(sFile As String, mEncoding As Text.Encoding) As String
-            Dim mFile As IntPtr = ClassWin32.CreateFile(
-                sFile,
-                ClassWin32.GENERIC_READ,
-                ClassWin32.FILE_SHARE_READ Or ClassWin32.FILE_SHARE_WRITE,
-                IntPtr.Zero,
-                ClassWin32.OPEN_EXISTING,
-                0,
-                IntPtr.Zero
-            )
-
-            If (mFile = ClassWin32.INVALID_HANDLE_VALUE) Then
-                Throw New ArgumentException(String.Format("Unable to open file '{0}'", sFile))
-            End If
-
-            Try
-                Dim iBufferSize As Integer = 4096
-                Dim iBuffer(iBufferSize - 1) As Byte
-                Dim iBytesRead As UInteger
-
-                Using mMemStream As New IO.MemoryStream
-                    mMemStream.Seek(0, IO.SeekOrigin.Begin)
-
-                    While True
-                        Dim bSuccess As Boolean = ClassWin32.ReadFile(mFile, iBuffer, CType(iBuffer.Length, UInteger), iBytesRead, IntPtr.Zero)
-                        If (Not bSuccess) Then
-                            Throw New ArgumentException(String.Format("Unable to read file '{0}'", sFile))
-                        End If
-
-                        If (iBytesRead = 0) Then
-                            Exit While
-                        End If
-
-                        mMemStream.Write(iBuffer, 0, CType(iBytesRead, Integer))
-                    End While
-
-                    ' Detect encoding
-                    Using mMemReader As New IO.StreamReader(mMemStream, mEncoding)
-                        mMemStream.Seek(0, IO.SeekOrigin.Begin)
-
-                        Return mMemReader.ReadToEnd()
-                    End Using
-                End Using
-            Finally
-                ClassWin32.CloseHandle(mFile)
-            End Try
-        End Function
-    End Class
+    Public Shared Function FileReadAllTextSafe(sFile As String, mEncoding As Text.Encoding) As String
+        Using mStream As New IO.FileStream(sFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.ReadWrite, 4069, IO.FileOptions.SequentialScan)
+            Using mReader As New IO.StreamReader(mStream, mEncoding)
+                Return mReader.ReadToEnd
+            End Using
+        End Using
+    End Function
 End Class

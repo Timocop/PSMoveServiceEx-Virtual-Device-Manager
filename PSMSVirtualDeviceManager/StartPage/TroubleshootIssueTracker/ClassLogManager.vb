@@ -27,7 +27,7 @@ Public Class ClassLogManager
                 Continue For
             End If
 
-            g_ClassLogContent.m_Content(mItem.Key) = ClassUtils.ClassSafeFileRead.ReadFile(mItem.Value)
+            g_ClassLogContent.m_Content(mItem.Key) = ClassUtils.FileReadAllTextSafe(mItem.Value)
         Next
     End Sub
 

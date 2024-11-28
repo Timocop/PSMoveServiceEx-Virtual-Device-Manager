@@ -845,7 +845,7 @@ Public Class ClassSteamVRConfig
             Public Sub ParseFromFile(sFile As String, Optional bSafeRead As Boolean = True)
                 Dim sContent As String
                 If (bSafeRead) Then
-                    sContent = ClassUtils.ClassSafeFileRead.ReadFile(sFile)
+                    sContent = ClassUtils.FileReadAllTextSafe(sFile)
                 Else
                     sContent = IO.File.ReadAllText(sFile)
                 End If
@@ -980,7 +980,7 @@ Public Class ClassSteamVRConfig
 
             Dim sContent As String
             If (bSafeRead) Then
-                sContent = ClassUtils.ClassSafeFileRead.ReadFile(sConfigPath)
+                sContent = ClassUtils.FileReadAllTextSafe(sConfigPath)
             Else
                 sContent = IO.File.ReadAllText(sConfigPath)
             End If
@@ -1054,7 +1054,7 @@ Public Class ClassSteamVRConfig
 
         Dim sContent As String
         If (bSafeRead) Then
-            sContent = ClassUtils.ClassSafeFileRead.ReadFile(sConfigPath)
+            sContent = ClassUtils.FileReadAllTextSafe(sConfigPath)
         Else
             sContent = IO.File.ReadAllText(sConfigPath)
         End If

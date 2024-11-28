@@ -101,7 +101,7 @@ Public Class ClassServiceConfig
 
         Dim sContent As String
         If (bSafeRead) Then
-            sContent = ClassUtils.ClassSafeFileRead.ReadFile(g_sPath)
+            sContent = ClassUtils.FileReadAllTextSafe(g_sPath)
         Else
             sContent = IO.File.ReadAllText(g_sPath)
         End If

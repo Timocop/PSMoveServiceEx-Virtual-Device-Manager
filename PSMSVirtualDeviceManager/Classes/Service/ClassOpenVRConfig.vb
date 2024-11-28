@@ -88,7 +88,7 @@ Public Class ClassOpenVRConfig
 
         Dim sContent As String
         If (bSafeRead) Then
-            sContent = ClassUtils.ClassSafeFileRead.ReadFile(sConfigPath)
+            sContent = ClassUtils.FileReadAllTextSafe(sConfigPath)
         Else
             sContent = IO.File.ReadAllText(sConfigPath)
         End If
