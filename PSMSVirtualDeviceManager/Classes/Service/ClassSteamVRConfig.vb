@@ -7,6 +7,7 @@ Public Class ClassSteamVRConfig
     Private g_ClassTrackerRoles As ClassTrackerRoles
     Private g_ClassSettings As ClassSettings
     Private g_ClassManifests As ClassManifests
+    Private g_ClassDrivers As ClassDrivers
 
     Private g_bConfigLoaded As Boolean = False
     Private g_mConfig As New Dictionary(Of String, Object)
@@ -16,6 +17,7 @@ Public Class ClassSteamVRConfig
         g_ClassTrackerRoles = New ClassTrackerRoles(Me)
         g_ClassSettings = New ClassSettings(Me)
         g_ClassManifests = New ClassManifests(Me)
+        g_ClassDrivers = New ClassDrivers(Me)
     End Sub
 
     ReadOnly Property m_SteamPath As String
@@ -50,6 +52,12 @@ Public Class ClassSteamVRConfig
     ReadOnly Property m_ClassManifests As ClassManifests
         Get
             Return g_ClassManifests
+        End Get
+    End Property
+
+    ReadOnly Property m_ClassDrivers As ClassDrivers
+        Get
+            Return g_ClassDrivers
         End Get
     End Property
 
@@ -363,9 +371,6 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("driver_null"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("enable")) Then
-                    mScansDic("enable") = False
-                End If
 
                 mScansDic("enable") = value
             End Set
@@ -390,9 +395,6 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("activateMultipleDrivers")) Then
-                    mScansDic("activateMultipleDrivers") = False
-                End If
 
                 mScansDic("activateMultipleDrivers") = value
             End Set
@@ -417,9 +419,6 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("forcedDriver")) Then
-                    mScansDic("forcedDriver") = ""
-                End If
 
                 mScansDic("forcedDriver") = value
             End Set
@@ -444,9 +443,6 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("enableHomeApp")) Then
-                    mScansDic("enableHomeApp") = True
-                End If
 
                 mScansDic("enableHomeApp") = value
             End Set
@@ -471,9 +467,6 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("showMirrorView")) Then
-                    mScansDic("showMirrorView") = False
-                End If
 
                 mScansDic("showMirrorView") = value
             End Set
@@ -498,9 +491,6 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("showPerfGraph")) Then
-                    mScansDic("showPerfGraph") = False
-                End If
 
                 mScansDic("showPerfGraph") = value
             End Set
@@ -525,14 +515,90 @@ Public Class ClassSteamVRConfig
                 End If
 
                 Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig("steamvr"), Dictionary(Of String, Object))
-                If (Not mScansDic.ContainsKey("requireHmd")) Then
-                    mScansDic("requireHmd") = True
-                End If
 
                 mScansDic("requireHmd") = value
             End Set
         End Property
 
+    End Class
+
+    Class ClassDrivers
+        ''' <summary>
+        ''' Default Settings
+        ''' C:\Program Files (x86)\Steam\steamapps\common\SteamVR\resources\settings\default.vrsettings
+        ''' </summary>
+
+        Private g_ClassSteamVRConfig As ClassSteamVRConfig
+
+
+        Public Sub New(_ClassSteamVRConfig As ClassSteamVRConfig)
+            g_ClassSteamVRConfig = _ClassSteamVRConfig
+        End Sub
+
+        Property m_DriverEnabled(sDriverName As String) As Boolean
+            Get
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
+                    Return True
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig(sKeyDriverName), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("enable")) Then
+                    Return True
+                End If
+
+                Return CBool(mScansDic("enable"))
+            End Get
+            Set(value As Boolean)
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
+                    g_ClassSteamVRConfig.g_mConfig(sKeyDriverName) = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig(sKeyDriverName), Dictionary(Of String, Object))
+
+                mScansDic("enable") = value
+            End Set
+        End Property
+
+        Property m_DriverBlocked(sDriverName As String) As Boolean
+            Get
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
+                    Return False
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig(sKeyDriverName), Dictionary(Of String, Object))
+                If (Not mScansDic.ContainsKey("blocked_by_safe_mode")) Then
+                    Return False
+                End If
+
+                Return CBool(mScansDic("blocked_by_safe_mode"))
+            End Get
+            Set(value As Boolean)
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+
+                If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
+                    g_ClassSteamVRConfig.g_mConfig(sKeyDriverName) = New Dictionary(Of String, Object)
+                End If
+
+                Dim mScansDic = TryCast(g_ClassSteamVRConfig.g_mConfig(sKeyDriverName), Dictionary(Of String, Object))
+
+                mScansDic("blocked_by_safe_mode") = value
+            End Set
+        End Property
+
+        Public Function GetDrivers() As ClassOpenVRConfig.STRUC_DRIVER_ITEM()
+            Dim mConfig As New ClassOpenVRConfig()
+            If (mConfig.LoadConfig()) Then
+                Return mConfig.GetDrivers()
+            End If
+
+            Return {}
+        End Function
     End Class
 
     Class ClassManifests
