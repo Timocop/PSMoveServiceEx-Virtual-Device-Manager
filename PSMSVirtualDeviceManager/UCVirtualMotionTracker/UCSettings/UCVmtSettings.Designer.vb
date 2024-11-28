@@ -94,7 +94,6 @@ Partial Class UCVmtSettings
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox9 = New System.Windows.Forms.GroupBox()
-        Me.Button_HmdViewOffsets = New System.Windows.Forms.Button()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
@@ -196,11 +195,7 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ContextMenuStrip_HmdViewOffsets = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneL = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneR = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripMenuItem_HmdViewOffsetRotClear = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComboBox_HmdViewOffsetPreset = New System.Windows.Forms.ComboBox()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -265,7 +260,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_OscMaxThreadFps.SuspendLayout()
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_OscThreadSleep.SuspendLayout()
-        Me.ContextMenuStrip_HmdViewOffsets.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl_SettingsDevices
@@ -1077,7 +1071,7 @@ Partial Class UCVmtSettings
         '
         'GroupBox9
         '
-        Me.GroupBox9.Controls.Add(Me.Button_HmdViewOffsets)
+        Me.GroupBox9.Controls.Add(Me.ComboBox_HmdViewOffsetPreset)
         Me.GroupBox9.Controls.Add(Me.Label41)
         Me.GroupBox9.Controls.Add(Me.Label34)
         Me.GroupBox9.Controls.Add(Me.Label35)
@@ -1096,16 +1090,6 @@ Partial Class UCVmtSettings
         Me.GroupBox9.TabIndex = 7
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "Viewpoint Orientation Offset"
-        '
-        'Button_HmdViewOffsets
-        '
-        Me.Button_HmdViewOffsets.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button_HmdViewOffsets.Location = New System.Drawing.Point(196, 174)
-        Me.Button_HmdViewOffsets.Name = "Button_HmdViewOffsets"
-        Me.Button_HmdViewOffsets.Size = New System.Drawing.Size(123, 23)
-        Me.Button_HmdViewOffsets.TabIndex = 74
-        Me.Button_HmdViewOffsets.Text = "Presets..."
-        Me.Button_HmdViewOffsets.UseVisualStyleBackColor = True
         '
         'Label41
         '
@@ -2400,35 +2384,15 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
-        'ContextMenuStrip_HmdViewOffsets
+        'ComboBox_HmdViewOffsetPreset
         '
-        Me.ContextMenuStrip_HmdViewOffsets.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_HmdViewOffsetPhoneL, Me.ToolStripMenuItem_HmdViewOffsetPhoneR, Me.ToolStripSeparator1, Me.ToolStripMenuItem_HmdViewOffsetRotClear})
-        Me.ContextMenuStrip_HmdViewOffsets.Name = "ContextMenuStrip_HmdViewOffsets"
-        Me.ContextMenuStrip_HmdViewOffsets.Size = New System.Drawing.Size(199, 76)
-        '
-        'ToolStripMenuItem_HmdViewOffsetPhoneL
-        '
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneL.Name = "ToolStripMenuItem_HmdViewOffsetPhoneL"
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneL.Size = New System.Drawing.Size(198, 22)
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneL.Text = "PhoneVR Left (Phone)"
-        '
-        'ToolStripMenuItem_HmdViewOffsetPhoneR
-        '
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneR.Name = "ToolStripMenuItem_HmdViewOffsetPhoneR"
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneR.Size = New System.Drawing.Size(198, 22)
-        Me.ToolStripMenuItem_HmdViewOffsetPhoneR.Text = "PhoneVR Right (Phone)"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(195, 6)
-        '
-        'ToolStripMenuItem_HmdViewOffsetRotClear
-        '
-        Me.ToolStripMenuItem_HmdViewOffsetRotClear.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5305_16x16_32
-        Me.ToolStripMenuItem_HmdViewOffsetRotClear.Name = "ToolStripMenuItem_HmdViewOffsetRotClear"
-        Me.ToolStripMenuItem_HmdViewOffsetRotClear.Size = New System.Drawing.Size(198, 22)
-        Me.ToolStripMenuItem_HmdViewOffsetRotClear.Text = "Clear"
+        Me.ComboBox_HmdViewOffsetPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdViewOffsetPreset.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdViewOffsetPreset.FormattingEnabled = True
+        Me.ComboBox_HmdViewOffsetPreset.Location = New System.Drawing.Point(196, 174)
+        Me.ComboBox_HmdViewOffsetPreset.Name = "ComboBox_HmdViewOffsetPreset"
+        Me.ComboBox_HmdViewOffsetPreset.Size = New System.Drawing.Size(177, 21)
+        Me.ComboBox_HmdViewOffsetPreset.TabIndex = 74
         '
         'UCVmtSettings
         '
@@ -2539,7 +2503,6 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_OscThreadSleep, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_OscThreadSleep.ResumeLayout(False)
         Me.NumericUpDown_OscThreadSleep.PerformLayout()
-        Me.ContextMenuStrip_HmdViewOffsets.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -2711,10 +2674,5 @@ Partial Class UCVmtSettings
     Friend WithEvents UcNumericUpDownBig23 As UCNumericUpDownBig
     Friend WithEvents Label39 As Label
     Friend WithEvents Label41 As Label
-    Friend WithEvents Button_HmdViewOffsets As Button
-    Friend WithEvents ContextMenuStrip_HmdViewOffsets As ContextMenuStrip
-    Friend WithEvents ToolStripMenuItem_HmdViewOffsetPhoneL As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem_HmdViewOffsetPhoneR As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents ToolStripMenuItem_HmdViewOffsetRotClear As ToolStripMenuItem
+    Friend WithEvents ComboBox_HmdViewOffsetPreset As ComboBox
 End Class

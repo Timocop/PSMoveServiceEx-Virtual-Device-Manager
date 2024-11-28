@@ -10,6 +10,27 @@ Public Class UCVmtSettings
 
     Private g_bBulbOffsetPreviewTop As Boolean = False
 
+    Structure STRUC_VIEWPOINT_OFFSET_ITEM
+        Dim sName As String
+        Dim iX As Single
+        Dim iY As Single
+        Dim iZ As Single
+
+        Dim bValid As Boolean
+
+        Public Sub New(_Name As String, _Offset As Vector3)
+            sName = _Name
+            iX = _Offset.X
+            iY = _Offset.Y
+            iZ = _Offset.Z
+            bValid = True
+        End Sub
+
+        Public Overrides Function ToString() As String
+            Return sName
+        End Function
+    End Structure
+
     Structure STRUC_RENDER_RES_ITEM
         Public g_iScale As Single
 
@@ -166,6 +187,20 @@ Public Class UCVmtSettings
             ComboBox_PlayCalibForwardMethod.Items.Add("Use Calibrated Playspace Forward")
 
             ComboBox_PlayCalibForwardMethod.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_HmdViewOffsetPreset.Items.Clear()
+            ComboBox_HmdViewOffsetPreset.Items.Add("Select viewpoint preset...")
+            ComboBox_HmdViewOffsetPreset.Items.Add(New STRUC_VIEWPOINT_OFFSET_ITEM("PhoneVR HMD Left", New Vector3(-90, -90, 0)))
+            ComboBox_HmdViewOffsetPreset.Items.Add(New STRUC_VIEWPOINT_OFFSET_ITEM("PhoneVR HMD Right", New Vector3(90, -90, 0)))
+            ComboBox_HmdViewOffsetPreset.Items.Add(New STRUC_VIEWPOINT_OFFSET_ITEM("Default", New Vector3(0, 0, 0)))
+
+            ComboBox_HmdViewOffsetPreset.SelectedIndex = 0
         Finally
             g_bIgnoreEvents = False
         End Try
@@ -1128,29 +1163,23 @@ Public Class UCVmtSettings
         CheckBox_EnableManualVelocity.Focus()
     End Sub
 
+    Private Sub ComboBox_HmdViewOffsetPreset_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdViewOffsetPreset.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        If (TypeOf ComboBox_HmdViewOffsetPreset.SelectedItem IsNot STRUC_VIEWPOINT_OFFSET_ITEM) Then
+            Return
+        End If
+
+        Dim mViewpointOffset = DirectCast(ComboBox_HmdViewOffsetPreset.SelectedItem, STRUC_VIEWPOINT_OFFSET_ITEM)
+
+        NumericUpDown_HmdViewOffsetX.Value = CDec(mViewpointOffset.iX)
+        NumericUpDown_HmdViewOffsetY.Value = CDec(mViewpointOffset.iY)
+        NumericUpDown_HmdViewOffsetZ.Value = CDec(mViewpointOffset.iZ)
+    End Sub
+
     Private Sub CleanUp()
 
-    End Sub
-
-    Private Sub Button_HmdViewOffsets_Click(sender As Object, e As EventArgs) Handles Button_HmdViewOffsets.Click
-        ContextMenuStrip_HmdViewOffsets.Show(Button_HmdViewOffsets, New Point(0, Button_HmdViewOffsets.Height))
-    End Sub
-
-    Private Sub ToolStripMenuItem_HmdViewOffsetPhoneL_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_HmdViewOffsetPhoneL.Click
-        NumericUpDown_HmdViewOffsetX.Value = -90
-        NumericUpDown_HmdViewOffsetY.Value = -90
-        NumericUpDown_HmdViewOffsetZ.Value = 0
-    End Sub
-
-    Private Sub ToolStripMenuItem_HmdViewOffsetPhoneR_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_HmdViewOffsetPhoneR.Click
-        NumericUpDown_HmdViewOffsetX.Value = 90
-        NumericUpDown_HmdViewOffsetY.Value = -90
-        NumericUpDown_HmdViewOffsetZ.Value = 0
-    End Sub
-
-    Private Sub ToolStripMenuItem_HmdViewOffsetRotClear_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_HmdViewOffsetRotClear.Click
-        NumericUpDown_HmdViewOffsetX.Value = 0
-        NumericUpDown_HmdViewOffsetY.Value = 0
-        NumericUpDown_HmdViewOffsetZ.Value = 0
     End Sub
 End Class

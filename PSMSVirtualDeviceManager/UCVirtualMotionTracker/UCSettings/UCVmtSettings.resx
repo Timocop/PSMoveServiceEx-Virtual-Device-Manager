@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Label2.Text" xml:space="preserve">
-    <value>        Adjust your viewpoint when tracking your head-mounted display with custom tracking LED bulbs.
-        Set the custom tracking LED bulb to the position located on your head-mounted display to correct your view point.</value>
-  </data>
   <data name="Label33.Text" xml:space="preserve">
     <value>        Adjust your viewing angle orientation if your viewing angle does not match what is displayed
         on your head-mounted display.
@@ -130,6 +126,10 @@
   <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>156, 27</value>
   </metadata>
+  <data name="Label2.Text" xml:space="preserve">
+    <value>        Adjust your viewpoint when tracking your head-mounted display with custom tracking LED bulbs.
+        Set the custom tracking LED bulb to the position located on your head-mounted display to correct your view point.</value>
+  </data>
   <data name="Label25.Text" xml:space="preserve">
     <value>        Holding the SELECT+START button on the PSmove controller while moving both the
         head-mounted display and controller forward, will recenter the playspace to the head-mounted display. 
@@ -161,8 +161,5 @@ It's important to note that exceeding the 16-device limit could result in some d
   </metadata>
   <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>156, 27</value>
-  </metadata>
-  <metadata name="ContextMenuStrip_HmdViewOffsets.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>293, 27</value>
   </metadata>
 </root>
