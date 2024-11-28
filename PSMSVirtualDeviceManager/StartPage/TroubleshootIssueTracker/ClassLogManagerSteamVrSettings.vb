@@ -139,8 +139,12 @@ Public Class ClassLogManagerSteamVrSettings
 
         Dim bDriverExist As Boolean = False
         Dim mDrviers As New ClassLogManagerSteamVrDrivers(g_mFormMain, g_ClassLogContent)
-        For Each sDriver In mDrviers.GetDrivers()
-            If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+        For Each mDriver In mDrviers.GetDrivers()
+            If (String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                Continue For
+            End If
+
+            If (mDriver.sDriverName.ToLowerInvariant <> ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant) Then
                 Continue For
             End If
 

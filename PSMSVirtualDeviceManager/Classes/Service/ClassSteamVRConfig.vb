@@ -537,8 +537,11 @@ Public Class ClassSteamVRConfig
 
         Property m_DriverEnabled(sDriverName As String) As Boolean
             Get
-                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+                If (String.IsNullOrEmpty(sDriverName)) Then
+                    Throw New ArgumentException("Driver name can not be empty")
+                End If
 
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
                 If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
                     Return True
                 End If
@@ -551,8 +554,11 @@ Public Class ClassSteamVRConfig
                 Return CBool(mScansDic("enable"))
             End Get
             Set(value As Boolean)
-                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+                If (String.IsNullOrEmpty(sDriverName)) Then
+                    Throw New ArgumentException("Driver name can not be empty")
+                End If
 
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
                 If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
                     g_ClassSteamVRConfig.g_mConfig(sKeyDriverName) = New Dictionary(Of String, Object)
                 End If
@@ -565,8 +571,11 @@ Public Class ClassSteamVRConfig
 
         Property m_DriverBlocked(sDriverName As String) As Boolean
             Get
-                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+                If (String.IsNullOrEmpty(sDriverName)) Then
+                    Throw New ArgumentException("Driver name can not be empty")
+                End If
 
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
                 If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
                     Return False
                 End If
@@ -579,8 +588,11 @@ Public Class ClassSteamVRConfig
                 Return CBool(mScansDic("blocked_by_safe_mode"))
             End Get
             Set(value As Boolean)
-                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
+                If (String.IsNullOrEmpty(sDriverName)) Then
+                    Throw New ArgumentException("Driver name can not be empty")
+                End If
 
+                Dim sKeyDriverName As String = String.Format("driver_{0}", sDriverName)
                 If (Not g_ClassSteamVRConfig.g_mConfig.ContainsKey(sKeyDriverName)) Then
                     g_ClassSteamVRConfig.g_mConfig(sKeyDriverName) = New Dictionary(Of String, Object)
                 End If

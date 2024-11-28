@@ -7,6 +7,7 @@ Public Class ClassLogManagerSteamVrDrivers
 
     Public Shared ReadOnly LOG_ISSUE_NO_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR driver not installed"
     Public Shared ReadOnly LOG_ISSUE_BAD_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR driver is not properly installed"
+    Public Shared ReadOnly LOG_ISSUE_DISABLED_STEAMVR_DRIVER As String = "Virtual motion tracker SteamVR drivers is disabled or blocked"
     Public Shared ReadOnly LOG_ISSUE_THIRD_PARTY_DRIVER As String = "Third-party SteamVR driver detected"
     Public Shared ReadOnly LOG_ISSUE_CONFLICT_THIRD_PARTY_DRIVER As String = "Conflicting third-party SteamVR driver detected"
 
@@ -18,8 +19,16 @@ Public Class ClassLogManagerSteamVrDrivers
         "psmove",       'Legacy PSMoveService VRBridge. Its dead and unsupported. VDM SteamVR driver is the successor.
         "trinuspsvr",   'TrinusVR. Conflicts with PSVR hardware access.
         "driver4vr",    'Driver4VR. PSVR support dropped. Conflicts with PS4 Camera and PSVR hardware access.
-        "iVRy"          'iVRy. PSVR support outdated and PSMS module broken? Conflicts with PSVR and PS4 Camera hardware access.
+        "ivry"          'iVRy. PSVR support outdated and PSMS module broken? Conflicts with PSVR and PS4 Camera hardware access.
     }
+
+    Structure STRUC_DRIVER_ITEM
+        Dim sDriverPath As String
+        Dim sDriverName As String
+
+        Dim bEnabled As Boolean
+        Dim bBlocked As Boolean
+    End Structure
 
     Public Sub New(_FormMain As FormMain, _ClassLogContent As ClassLogContent)
         g_mFormMain = _FormMain
@@ -29,11 +38,17 @@ Public Class ClassLogManagerSteamVrDrivers
     Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
         Dim sTrackersList As New Text.StringBuilder
 
-        Dim mConfig As New ClassOpenVRConfig
+        Dim mConfig As New ClassSteamVRConfig
         mConfig.LoadConfig()
 
-        For Each sDriver In mConfig.GetDrivers()
-            sTrackersList.AppendFormat("[{0}]", sDriver).AppendLine()
+        For Each mDriver In mConfig.m_ClassDrivers.GetDrivers()
+            sTrackersList.AppendFormat("[{0}]", mDriver.sDriverPath).AppendLine()
+
+            If (Not String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                sTrackersList.AppendFormat("DriverName={0}", mDriver.sDriverName).AppendLine()
+                sTrackersList.AppendFormat("Enabled={0}", mConfig.m_ClassDrivers.m_DriverEnabled(mDriver.sDriverName)).AppendLine()
+                sTrackersList.AppendFormat("Blocked={0}", mConfig.m_ClassDrivers.m_DriverBlocked(mDriver.sDriverName)).AppendLine()
+            End If
         Next
 
         g_ClassLogContent.m_Content(GetActionTitle()) = sTrackersList.ToString
@@ -65,7 +80,7 @@ Public Class ClassLogManagerSteamVrDrivers
         End If
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
-           LOG_ISSUE_NO_STEAMVR_DRIVER,
+            LOG_ISSUE_NO_STEAMVR_DRIVER,
             "Virtual motion trackers are set up but the SteamVR driver has not been registered yet.",
             "Register the SteamVR driver to use the virtual motion trackers in SteamVR. If you dont use SteamVR ignore this warning.",
             ENUM_LOG_ISSUE_TYPE.WARNING
@@ -78,10 +93,18 @@ Public Class ClassLogManagerSteamVrDrivers
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
+        Dim mDisabledTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_DISABLED_STEAMVR_DRIVER,
+            "The SteamVR driver has been disabled or is blocked by SteamVR due to a recent crash.",
+            "Go to the SteamVR settings and re-enable the '{0}' driver.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
         Dim mLogVmt As New ClassLogManagerVmtTrackers(g_mFormMain, g_ClassLogContent)
         Dim bDriverExist As Boolean = False
+        Dim bDriverDisabled As Boolean = False
         Dim bDriverPathCorrect As Boolean = False
         Dim sDriverPath As String = ""
 
@@ -102,12 +125,20 @@ Public Class ClassLogManagerSteamVrDrivers
         Dim sCorrectDriverPath As String = IO.Path.Combine(sApplicationDirectory, ClassVmtConst.VMT_DRIVER_ROOT_PATH)
 
         If (mLogVmt.GetDevices().Length > 0) Then
-            For Each sDriver In GetDrivers()
-                If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
-                    bDriverExist = True
-                    sDriverPath = sDriver
+            For Each mDriver In GetDrivers()
+                If (String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                    Continue For
+                End If
 
-                    If (sDriver.ToLowerInvariant.StartsWith(sCorrectDriverPath.ToLowerInvariant)) Then
+                If (mDriver.sDriverName.ToLowerInvariant = ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant) Then
+                    bDriverExist = True
+                    sDriverPath = mDriver.sDriverPath
+
+                    If (Not mDriver.bEnabled OrElse mDriver.bBlocked) Then
+                        bDriverDisabled = True
+                    End If
+
+                    If (mDriver.sDriverPath.ToLowerInvariant.StartsWith(sCorrectDriverPath.ToLowerInvariant)) Then
                         bDriverPathCorrect = True
                     End If
 
@@ -124,6 +155,12 @@ Public Class ClassLogManagerSteamVrDrivers
                     mIssue.sDescription = String.Format(mIssue.sDescription, sDriverPath, sCorrectDriverPath)
                     mIssues.Add(mIssue)
                 End If
+
+                If (bDriverDisabled) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mDisabledTemplate)
+                    mIssue.sSolution = String.Format(mIssue.sSolution, ClassVmtConst.VMT_DRIVER_NAME)
+                    mIssues.Add(mIssue)
+                End If
             End If
         End If
 
@@ -138,14 +175,14 @@ Public Class ClassLogManagerSteamVrDrivers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_THIRD_PARTY_DRIVER,
-            "A third-party SteamVR driver '{0}' has been detected. Make sure its configured to work properly with the virtual motion tracker SteamVR driver to avoid issues and crashes.",
+            "A third-party SteamVR driver '{0}' in '{1}' has been detected. Make sure its configured to work properly with the virtual motion tracker SteamVR driver to avoid issues and crashes.",
             "",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
 
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_CONFLICT_THIRD_PARTY_DRIVER,
-            "The third-party SteamVR driver '{0}' is not compatible with the virtual motion tracker SteamVR driver or may causes issues or crashes when activated.",
+            "The third-party SteamVR driver '{0}' in '{1}' is not compatible with the virtual motion tracker SteamVR driver or may causes issues or crashes when activated.",
             "Uninstall or deactivate the conflicting third-party SteamVR driver '{0}'.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -156,26 +193,38 @@ Public Class ClassLogManagerSteamVrDrivers
         Dim bDriverExist As Boolean = False
 
         If (mLogVmt.GetDevices().Length > 0) Then
-            For Each sDriver In GetDrivers()
-                If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+            For Each mDriver In GetDrivers()
+                If (String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                    Continue For
+                End If
+
+                If (mDriver.sDriverName.ToLowerInvariant = ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant) Then
                     bDriverExist = True
                     Exit For
                 End If
             Next
 
             If (bDriverExist) Then
-                For Each sDriver In GetDrivers()
+                For Each mDriver In GetDrivers()
                     Dim bBadFound As Boolean = False
 
-                    If (sDriver.ToLowerInvariant.EndsWith(ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant)) Then
+                    If (String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                        Continue For
+                    End If
+
+                    If (mDriver.sDriverName.ToLowerInvariant = ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant) Then
                         Continue For
                     End If
 
                     For Each sBadDriver In g_mBadDrivers
-                        If (sDriver.ToLowerInvariant.EndsWith(sBadDriver.ToLowerInvariant)) Then
+                        If (String.IsNullOrEmpty(mDriver.sDriverName)) Then
+                            Continue For
+                        End If
+
+                        If (mDriver.sDriverName.ToLowerInvariant = sBadDriver.ToLowerInvariant) Then
                             Dim mIssue As New STRUC_LOG_ISSUE(mBadTemplate)
-                            mIssue.sDescription = String.Format(mIssue.sDescription, sDriver)
-                            mIssue.sSolution = String.Format(mIssue.sSolution, sDriver)
+                            mIssue.sDescription = String.Format(mIssue.sDescription, mDriver.sDriverName, mDriver.sDriverPath)
+                            mIssue.sSolution = String.Format(mIssue.sSolution, mDriver.sDriverName)
                             mIssues.Add(mIssue)
 
                             bBadFound = True
@@ -184,7 +233,7 @@ Public Class ClassLogManagerSteamVrDrivers
 
                     If (Not bBadFound) Then
                         Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-                        mIssue.sDescription = String.Format(mIssue.sDescription, sDriver)
+                        mIssue.sDescription = String.Format(mIssue.sDescription, mDriver.sDriverName, mDriver.sDriverPath)
                         mIssues.Add(mIssue)
                     End If
                 Next
@@ -194,26 +243,63 @@ Public Class ClassLogManagerSteamVrDrivers
         Return mIssues.ToArray
     End Function
 
-    Public Function GetDrivers() As String()
+    Public Function GetDrivers() As STRUC_DRIVER_ITEM()
         Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
             Return {}
         End If
 
-        Dim sDriverList As New List(Of String)
+        Dim sDriverList As New List(Of STRUC_DRIVER_ITEM)
+        Dim mDriverProp As New Dictionary(Of String, String)
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = sLines.Length - 1 To 0 Step -1
             Dim sLine As String = sLines(i).Trim
 
             If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
-                Dim sDriverPath As String = sLine.Substring(1, sLine.Length - 2)
+                Dim sDevicePath As String = sLine.Substring(1, sLine.Length - 2)
 
-                sDriverList.Add(sDriverPath)
+                Dim mNewDevice As New STRUC_DRIVER_ITEM
+
+                ' Required
+                While True
+                    mNewDevice.sDriverPath = sDevicePath
+
+                    If (mDriverProp.ContainsKey("DriverName")) Then
+                        mNewDevice.sDriverName = CStr(mDriverProp("DriverName"))
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDriverProp.ContainsKey("Enabled")) Then
+                        mNewDevice.bEnabled = (mDriverProp("Enabled").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    If (mDriverProp.ContainsKey("Blocked")) Then
+                        mNewDevice.bBlocked = (mDriverProp("Blocked").ToLowerInvariant = "true")
+                    Else
+                        Exit While
+                    End If
+
+                    sDriverList.Add(mNewDevice)
+                    Exit While
+                End While
+
+                mDriverProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mDriverProp(sKey) = sValue
             End If
         Next
 
         Return sDriverList.ToArray
     End Function
+
 End Class
 
