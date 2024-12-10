@@ -850,6 +850,13 @@ Public Class ClassLogService
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
+        Dim mWarnTemplate As New STRUC_LOG_ISSUE(
+            mTemplate.sMessage,
+            mTemplate.sDescription,
+            mTemplate.sSolution,
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
         Dim mBadDeviation As New Dictionary(Of String, Dictionary(Of String, Object))
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
@@ -929,8 +936,13 @@ Public Class ClassLogService
             Dim iBadCount As Integer = CInt(mDevice("bad_count"))
             Dim iTotalBadCount As Integer = CInt(mDevice("total_bad_count"))
 
-            If (iTotalBadCount > 0) Then
+            If (iTotalBadCount > 10) Then
                 Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId, iTotalBadCount)
+                mIssues.Add(mNewIssue)
+
+            ElseIf (iTotalBadCount > 0) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mWarnTemplate)
                 mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId, iTotalBadCount)
                 mIssues.Add(mNewIssue)
             End If
