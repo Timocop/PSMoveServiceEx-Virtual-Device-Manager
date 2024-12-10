@@ -161,23 +161,23 @@ Public Class ClassUtils
                 ElseIf (Not bQuotes) Then
                     If (iChar = ","c) Then
                         mText.Append(iChar)
-                        mText.Append(vbCrLf)
-                        mText.Append(CChar(vbTab), iInt)
+                        mText.AppendLine()
+                        mText.Append(vbTab(0), iInt)
                     ElseIf iChar = "["c OrElse iChar = "{"c Then
                         iInt += 1
 
                         mText.Append(iChar)
-                        mText.Append(vbCrLf)
-                        mText.Append(CChar(vbTab), iInt)
+                        mText.AppendLine()
+                        mText.Append(vbTab(0), iInt)
                     ElseIf (iChar = "]"c) OrElse (iChar = "}"c) Then
                         iInt -= 1
 
-                        mText.Append(vbCrLf)
-                        mText.Append(CChar(vbTab), iInt)
+                        mText.AppendLine()
+                        mText.Append(vbTab(0), iInt)
                         mText.Append(iChar)
                     ElseIf (iChar = ":"c) Then
                         mText.Append(iChar)
-                        mText.Append(vbTab)
+                        mText.Append(" "c)
                     ElseIf (Not Char.IsWhiteSpace(iChar)) Then
                         mText.Append(iChar)
                     End If

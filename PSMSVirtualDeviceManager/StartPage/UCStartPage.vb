@@ -172,7 +172,6 @@ Public Class UCStartPage
 
         While True
             Dim bShowIssuesPrompt As Boolean = False
-            Dim bOutdatedServiceLogs As Boolean = False
             Dim mFileTimestamps As New Dictionary(Of String, Date)
 
             While True
@@ -272,9 +271,6 @@ Public Class UCStartPage
 
                                             ' We have to make sure the service log is ready and also not empty. 
                                             Exit While
-
-                                        Case ClassLogService.LOG_ISSUE_SERVICE_LOG_OUTDATED
-                                            bOutdatedServiceLogs = True
                                     End Select
                                 Next
 

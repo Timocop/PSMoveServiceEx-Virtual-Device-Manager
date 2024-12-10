@@ -21,7 +21,6 @@ Public Class ClassLogService
     Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_NOT_FOUND As String = "Bluetooth device could not be found"
     Public Shared ReadOnly LOG_ISSUE_DEVICE_TIMEOUT As String = "Device timed out"
     Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_INCOMPLETE As String = "PSMoveServiceEx log incomplete"
-    Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_OUTDATED As String = "Old PSMoveServiceEx diagnostics configuration detected"
     Public Shared ReadOnly LOG_ISSUE_DEVICE_BAD_TRACKING As String = "Bad device tracking deviations"
 
     Private g_mFormMain As FormMain
@@ -53,7 +52,60 @@ Public Class ClassLogService
             Throw New ArgumentException("Could not find PSMoveServiceEx logs")
         End If
 
-        g_ClassLogContent.m_Content(GetActionTitle()) = ClassUtils.FileReadAllTextSafe(sLogFile)
+        Dim sLogContent As String = ClassUtils.FileReadAllTextSafe(sLogFile)
+
+        ' Post process logs.
+        PostProcessLogs(sLogContent)
+
+        g_ClassLogContent.m_Content(GetActionTitle()) = sLogContent
+    End Sub
+
+    Private Sub PostProcessLogs(ByRef sLogContent As String)
+        Dim mConfigs As New Dictionary(Of String, KeyValuePair(Of String, String))
+        Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+        If (String.IsNullOrEmpty(sConfigPath)) Then
+            Return
+        End If
+
+        ' Get all changed config files
+        Dim sLines As String() = sLogContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            ' We only want changed files.
+            If (sLine.StartsWith("["c) AndAlso sLine.EndsWith(".json - Configuration saved!")) Then
+                Dim sSplitPath As String() = sLine.Split("\"c)
+                If (sSplitPath.Length > 0) Then
+                    Dim sFileName As String = sSplitPath(sSplitPath.Length - 1)
+                    sFileName = sFileName.Substring(0, sFileName.LastIndexOf(".json")) & ".json"
+                    sFileName = IO.Path.GetFileName(sFileName)
+
+                    Dim sConfigFile As String = IO.Path.Combine(sConfigPath, sFileName)
+                    If (IO.File.Exists(sConfigFile)) Then
+                        Dim sConfigContent As String = ClassUtils.FileReadAllTextSafe(sConfigFile)
+
+                        mConfigs(sFileName.ToLowerInvariant) = New KeyValuePair(Of String, String)(
+                            sConfigFile,
+                            ClassUtils.FormatJsonOutput(sConfigContent)
+                        )
+                    End If
+                End If
+            End If
+        Next
+
+        ' Append all changed config files
+        Dim sLogContentBuilder As New Text.StringBuilder(sLogContent)
+        Dim mNow As Date = Now
+        Dim iNowMilliseconds As Integer = mNow.Millisecond
+        Dim sFormattedTime As String = String.Format("[{0:yyyy-MM-dd HH:mm:ss}.{1:D3}]: ", mNow, iNowMilliseconds)
+        For Each mItem In mConfigs
+            Dim sFilePath As String = IO.Path.GetFullPath(mItem.Value.Key)
+
+            sLogContentBuilder.AppendFormat("{0} {1} - Configuration changed!", sFormattedTime, sFilePath).AppendLine()
+            sLogContentBuilder.AppendFormat("{0} {1} - {2}", sFormattedTime, sFilePath, mItem.Value.Value).AppendLine()
+        Next
+
+        sLogContent = sLogContentBuilder.ToString
     End Sub
 
     Public Function GetActionTitle() As String Implements ILogAction.GetActionTitle
@@ -76,7 +128,6 @@ Public Class ClassLogService
         mIssues.AddRange(CheckBluetoothPairingFail())
         mIssues.AddRange(CheckDeviceTimeout())
         mIssues.AddRange(CheckIncomplete())
-        mIssues.AddRange(CheckOboleteConfiguration())
         mIssues.AddRange(CheckBadDeviations())
         Return mIssues.ToArray
     End Function
@@ -799,42 +850,6 @@ Public Class ClassLogService
         Return mIssues.ToArray
     End Function
 
-    Public Function CheckOboleteConfiguration() As STRUC_LOG_ISSUE()
-        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
-
-        Dim sContent As String = GetSectionContent()
-        If (sContent Is Nothing) Then
-            Return mIssues.ToArray
-        End If
-
-        Dim mTimedoutDevices As New List(Of Integer)
-
-        Dim mTemplate As New STRUC_LOG_ISSUE(
-            LOG_ISSUE_SERVICE_LOG_OUTDATED,
-            "Some of the PSMoveServiceEx configurations have been subsequently changed, but the diagnostics still use the old PSMoveServiceEx configuration, which may lead to incorrect diagnostic results.",
-            "Restart PSMoveServiceEx and refresh diagnostics to parse the new PSMoveServiceEx configurations.",
-            ENUM_LOG_ISSUE_TYPE.WARNING
-        )
-
-        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
-        For i = 0 To sLines.Length - 1
-            Dim sLine As String = sLines(i)
-
-            If (Not sLine.StartsWith("[")) Then
-                Continue For
-            End If
-
-            If (sLine.EndsWith(".json - Configuration saved!")) Then
-                Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                mIssues.Add(mNewIssue)
-
-                Exit For
-            End If
-        Next
-
-        Return mIssues.ToArray
-    End Function
-
     Public Function CheckBadDeviations() As STRUC_LOG_ISSUE()
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
@@ -1034,14 +1049,18 @@ Public Class ClassLogService
 
                     Dim sSplitPath As String() = sLine.Split("\"c)
                     If (sSplitPath.Length > 0) Then
-                        Dim sFileName As String = sSplitPath(sSplitPath.Length - 1).Split("-"c)(0)
+                        Dim sFileName As String = sSplitPath(sSplitPath.Length - 1)
+                        sFileName = sFileName.Substring(0, sFileName.LastIndexOf(".json")) & ".json"
+
                         Dim sFileNameNoExt As String = IO.Path.GetFileNameWithoutExtension(sFileName)
 
-                        ' Attempt to load parsed config
-                        Dim mParsedConfig As New ClassServiceConfig()
-                        mParsedConfig.LoadFromString(sConfigContent)
+                        If (Not mConfigs.ContainsKey(sFileNameNoExt)) Then
+                            ' Attempt to load parsed config
+                            Dim mParsedConfig As New ClassServiceConfig()
+                            mParsedConfig.LoadFromString(sConfigContent)
 
-                        mConfigs(sFileNameNoExt) = mParsedConfig
+                            mConfigs(sFileNameNoExt) = mParsedConfig
+                        End If
                     End If
                 Catch ex As Exception
                     'Ignore any issues.
