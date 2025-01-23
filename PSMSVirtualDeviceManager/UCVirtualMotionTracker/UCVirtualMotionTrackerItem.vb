@@ -1596,6 +1596,8 @@ Public Class UCVirtualMotionTrackerItem
                                         If (Not mHmdDisplayData.mDisplayNextUpdate.IsRunning OrElse mHmdDisplayData.mDisplayNextUpdate.ElapsedMilliseconds > 5000) Then
                                             mHmdDisplayData.mDisplayNextUpdate.Restart()
 
+                                            mHmdDisplayData.bDisplaySuccess = False
+
                                             Dim mClassMonitor As New ClassMonitor
                                             Dim mDevMode As ClassMonitor.DEVMODE = Nothing
                                             Dim mDisplayInfo As KeyValuePair(Of ClassMonitor.DISPLAY_DEVICE, ClassMonitor.MONITOR_DEVICE) = Nothing
@@ -1639,8 +1641,8 @@ Public Class UCVirtualMotionTrackerItem
                                                             Dim mPsvrMonitor = ClassMonitor.PSVR_MONITOR_IDS(l)
 
                                                             If (mPsvrMonitor.GetMonitorNameLong().ToUpperInvariant.EndsWith(sMonitorName.ToUpperInvariant)) Then
-                                                                mHmdDisplayData.iVendorId = mPsvrMonitor.GetVID()
-                                                                mHmdDisplayData.iProductId = mPsvrMonitor.GetPID()
+                                                                mHmdDisplayData.iVendorId = mPsvrMonitor.GetEdidVID()
+                                                                mHmdDisplayData.iProductId = mPsvrMonitor.GetEdidPID()
 
                                                                 mHmdDisplayData.bDisplaySuccess = True
                                                             End If

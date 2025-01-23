@@ -41,13 +41,17 @@ Public Class ClassMonitor
     Structure STRUC_MONITOR_IDS
         Dim sVID As String
         Dim sPID As String
+        Dim iEdidVID As Integer
+        Dim iEdidPID As Integer
         Dim iGen As Integer
         Dim iEdid As Byte()
         Dim iEdidDirect As Byte()
 
-        Sub New(_VID As String, _PID As String, _Gen As Integer, _Edid As Byte(), _EdidDirect As Byte())
+        Sub New(_VID As String, _PID As String, _EdidVID As Integer, _EdidPID As Integer, _Gen As Integer, _Edid As Byte(), _EdidDirect As Byte())
             sVID = _VID
             sPID = _PID
+            iEdidVID = _EdidVID
+            iEdidPID = _EdidPID
             iGen = _Gen
             iEdid = _Edid
             iEdidDirect = _EdidDirect
@@ -65,12 +69,12 @@ Public Class ClassMonitor
             Return String.Format("{0}{1}", sVID, sPID)
         End Function
 
-        Public Function GetVID() As Integer
-            Return Convert.ToInt32(sVID, 16)
+        Public Function GetEdidVID() As Integer
+            Return iEdidVID
         End Function
 
-        Public Function GetPID() As Integer
-            Return Convert.ToInt32(sPID, 16)
+        Public Function GetEdidPID() As Integer
+            Return iEdidPID
         End Function
 
         Public Function IsEqual(sMonitorName As String) As Boolean
@@ -79,9 +83,9 @@ Public Class ClassMonitor
     End Structure
 
     Public Shared ReadOnly PSVR_MONITOR_IDS As STRUC_MONITOR_IDS() = {
-        New STRUC_MONITOR_IDS("SNY", "B403", 1, My.Resources.EDID_PSVR1_B403_MULTI, My.Resources.EDID_PSVR1_B403_DIRECT),
-        New STRUC_MONITOR_IDS("SNY", "5504", 1, My.Resources.EDID_PSVR1_5504_MULTI, My.Resources.EDID_PSVR1_5504_DIRECT),
-        New STRUC_MONITOR_IDS("SNY", "6A04", 2, My.Resources.EDID_PSVR2_6A04_MULTI, My.Resources.EDID_PSVR2_6A04_DIRECT)
+        New STRUC_MONITOR_IDS("SNY", "B403", &HD94D, &HB403, 1, My.Resources.EDID_PSVR1_B403_MULTI, My.Resources.EDID_PSVR1_B403_DIRECT),
+        New STRUC_MONITOR_IDS("SNY", "5504", &HD94D, &H5504, 1, My.Resources.EDID_PSVR1_5504_MULTI, My.Resources.EDID_PSVR1_5504_DIRECT),
+        New STRUC_MONITOR_IDS("SNY", "6A04", &HD94D, &H6A04, 2, My.Resources.EDID_PSVR2_6A04_MULTI, My.Resources.EDID_PSVR2_6A04_DIRECT)
     }
 
     <Flags>
