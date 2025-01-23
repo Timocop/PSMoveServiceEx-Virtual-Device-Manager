@@ -293,6 +293,7 @@ Public Class UCVmtSettings
 
             ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_RecenterButtonTime, mClassSettings.m_ControllerSettings.m_RecenterButtonTimeMs)
             ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_OscThreadSleep, mClassSettings.m_ControllerSettings.m_OscThreadSleepMs)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_OscMaxThreadFps, mClassSettings.m_ControllerSettings.m_OscMaxThreadFps)
 
             CheckBox_PlayCalibEnabled.Checked = mClassSettings.m_ControllerSettings.m_EnablePlayspaceRecenter
 
