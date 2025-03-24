@@ -912,11 +912,6 @@ Public Class UCVirtualTrackerItem
 
         g_mClassCaptureLogic.m_AutoDetectSettings = CheckBox_AutoDetectSettings.Checked
         SetUnsavedState(True)
-
-        ' Config is currently loading, dont show messagebox
-        If (g_bIgnoreUnsaved) Then
-            Return
-        End If
     End Sub
 
     Private Sub CleanUp()
