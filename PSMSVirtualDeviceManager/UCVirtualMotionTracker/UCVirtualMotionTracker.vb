@@ -518,6 +518,12 @@ Public Class UCVirtualMotionTracker
         Public Const DISPLAY_VFOV As Single = 110.0F
 
         Class STRUC_HMD_SETTINGS
+            Enum ENUM_POSE_OVERRIDE_TYPE
+                POSITION_ORIENTATION
+                POSITION
+                ORIENTATION
+            End Enum
+
             Private g_bUseCustomDistortion As Boolean = False
             Private g_iDistortionK0 As Single = DISPLAY_DISTORTION_K0
             Private g_iDistortionK1 As Single = DISPLAY_DISTORTION_K1
@@ -531,6 +537,9 @@ Public Class UCVirtualMotionTracker
             Private g_iRenderScale As Single = 1.3F '130% for 0.7 distortion scale compensation
             Private g_mViewPositionOffset As Vector3 = Vector3.Zero
             Private g_mViewRotationOffset As Vector3 = Vector3.Zero
+            Private g_iHmdPoseOverrideControllerId As Integer = -1
+            Private g_iHmdPoseOverrideType As ENUM_POSE_OVERRIDE_TYPE = ENUM_POSE_OVERRIDE_TYPE.POSITION_ORIENTATION
+
 
             Public Property m_UseCustomDistortion As Boolean
                 Get
@@ -760,6 +769,25 @@ Public Class UCVirtualMotionTracker
                     g_mViewRotationOffset = ClassMathUtils.ClampValue(value, -180.0F, 180.0F)
                 End Set
             End Property
+
+            Public Property m_HmdPoseOverrideControllerId As Integer
+                Get
+                    Return g_iHmdPoseOverrideControllerId
+                End Get
+                Set(value As Integer)
+                    g_iHmdPoseOverrideControllerId = ClassMathUtils.ClampValue(value, -1, ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1)
+                End Set
+            End Property
+
+            Public Property m_HmdPoseOverrideType As ENUM_POSE_OVERRIDE_TYPE
+                Get
+                    Return g_iHmdPoseOverrideType
+                End Get
+                Set(value As ENUM_POSE_OVERRIDE_TYPE)
+                    g_iHmdPoseOverrideType = value
+                End Set
+            End Property
+
         End Class
 
         Class STRUC_PLAYSPACE_SETTINGS
@@ -1349,6 +1377,11 @@ Public Class UCVirtualMotionTracker
                         tmpVec3.Z = Single.Parse(mIni.ReadKeyValue("HmdSettings", "ViewRotOffsetZ", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                         m_HmdSettings.m_ViewRotationOffset = tmpVec3
 
+                        m_HmdSettings.m_HmdPoseOverrideControllerId =
+                            Integer.Parse(mIni.ReadKeyValue("HmdSettings", "HmdPoseOverrideControllerId", "-1"))
+                        m_HmdSettings.m_HmdPoseOverrideType =
+                            CType(Integer.Parse(mIni.ReadKeyValue("HmdSettings", "HmdPoseOverrideType", CStr(CInt(STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE.POSITION_ORIENTATION)))), STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE)
+
                         ' Misc Settings 
                         g_mMiscSettings.m_DisableBaseStationSpawning =
                             (mIni.ReadKeyValue("MiscSettings", "DisableBaseStationSpawning", "false") = "true")
@@ -1499,6 +1532,9 @@ Public Class UCVirtualMotionTracker
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "ViewRotOffsetX", m_HmdSettings.m_ViewRotationOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "ViewRotOffsetY", m_HmdSettings.m_ViewRotationOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "ViewRotOffsetZ", m_HmdSettings.m_ViewRotationOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HmdPoseOverrideControllerId", CStr(m_HmdSettings.m_HmdPoseOverrideControllerId)))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HmdPoseOverrideType", CStr(CInt(m_HmdSettings.m_HmdPoseOverrideType))))
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "DisableBaseStationSpawning", If(g_mMiscSettings.m_DisableBaseStationSpawning, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))

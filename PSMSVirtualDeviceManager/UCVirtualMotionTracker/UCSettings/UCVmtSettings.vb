@@ -232,6 +232,31 @@ Public Class UCVmtSettings
             g_bIgnoreEvents = False
         End Try
 
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_HmdPoseOverridesControllerId.Items.Clear()
+            ComboBox_HmdPoseOverridesControllerId.Items.Add("Disabled")
+            For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
+                ComboBox_HmdPoseOverridesControllerId.Items.Add(CStr(i))
+            Next
+            ComboBox_HmdPoseOverridesControllerId.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
+        Try
+            g_bIgnoreEvents = True
+
+            ComboBox_HmdPoseOverrideType.Items.Clear()
+            ComboBox_HmdPoseOverrideType.Items.Add("Position + Orientation")
+            ComboBox_HmdPoseOverrideType.Items.Add("Position")
+            ComboBox_HmdPoseOverrideType.Items.Add("Orientation")
+            ComboBox_HmdPoseOverridesControllerId.SelectedIndex = 0
+        Finally
+            g_bIgnoreEvents = False
+        End Try
+
         CreateControl()
     End Sub
 
@@ -315,6 +340,8 @@ Public Class UCVmtSettings
             ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetX, mClassSettings.m_HmdSettings.m_ViewRotationOffset.X)
             ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetY, mClassSettings.m_HmdSettings.m_ViewRotationOffset.Y)
             ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetZ, mClassSettings.m_HmdSettings.m_ViewRotationOffset.Z)
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HmdPoseOverridesControllerId, mClassSettings.m_HmdSettings.m_HmdPoseOverrideControllerId + 1)
+            ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HmdPoseOverrideType, mClassSettings.m_HmdSettings.m_HmdPoseOverrideType)
             ' $TODO Replace all with ClampValue()
 
             'Misc Settings
@@ -1180,6 +1207,24 @@ Public Class UCVmtSettings
         NumericUpDown_HmdViewOffsetX.Value = CDec(mViewpointOffset.iX)
         NumericUpDown_HmdViewOffsetY.Value = CDec(mViewpointOffset.iY)
         NumericUpDown_HmdViewOffsetZ.Value = CDec(mViewpointOffset.iZ)
+    End Sub
+
+    Private Sub ComboBox_HmdPoseOverridesControllerId_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdPoseOverridesControllerId.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_HmdPoseOverrideControllerId = ComboBox_HmdPoseOverridesControllerId.SelectedIndex - 1
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub ComboBox_HmdPoseOverrideType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_HmdPoseOverrideType.SelectedIndexChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_HmdPoseOverrideType = CType(ComboBox_HmdPoseOverrideType.SelectedIndex, UCVirtualMotionTracker.ClassSettings.STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE)
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
     Private Sub CleanUp()

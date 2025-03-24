@@ -62,6 +62,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.LinkLabel_HmdViewPointOffset = New System.Windows.Forms.LinkLabel()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip_TrackerRecenter.SuspendLayout()
@@ -410,6 +411,7 @@ Partial Class UCVirtualMotionTrackerItem
         'TabPage2
         '
         Me.TabPage2.BackColor = System.Drawing.Color.White
+        Me.TabPage2.Controls.Add(Me.LinkLabel_HmdViewPointOffset)
         Me.TabPage2.Controls.Add(Me.Label1)
         Me.TabPage2.Controls.Add(Me.ComboBox_HmdViewPointOffset)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
@@ -418,6 +420,21 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TabPage2.Size = New System.Drawing.Size(577, 91)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Advanced Settings"
+        '
+        'LinkLabel_HmdViewPointOffset
+        '
+        Me.LinkLabel_HmdViewPointOffset.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_HmdViewPointOffset.AutoSize = True
+        Me.LinkLabel_HmdViewPointOffset.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_HmdViewPointOffset.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_HmdViewPointOffset.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_HmdViewPointOffset.Location = New System.Drawing.Point(313, 9)
+        Me.LinkLabel_HmdViewPointOffset.Name = "LinkLabel_HmdViewPointOffset"
+        Me.LinkLabel_HmdViewPointOffset.Size = New System.Drawing.Size(75, 13)
+        Me.LinkLabel_HmdViewPointOffset.TabIndex = 73
+        Me.LinkLabel_HmdViewPointOffset.TabStop = True
+        Me.LinkLabel_HmdViewPointOffset.Text = "Go to setting"
+        Me.LinkLabel_HmdViewPointOffset.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'UCVirtualMotionTrackerItem
         '
@@ -483,4 +500,5 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents Label4 As Label
     Friend WithEvents ComboBox_SteamTrackerRole As ComboBox
+    Friend WithEvents LinkLabel_HmdViewPointOffset As LinkLabel
 End Class

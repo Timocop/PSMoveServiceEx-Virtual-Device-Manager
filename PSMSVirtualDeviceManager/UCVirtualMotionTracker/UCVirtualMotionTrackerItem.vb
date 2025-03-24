@@ -479,8 +479,15 @@ Public Class UCVirtualMotionTrackerItem
             Return
         End If
 
-        g_mClassIO.m_UsbHmdViewPointOffset = (ComboBox_HmdViewPointOffset.SelectedIndex = 0)
+        g_mClassIO.m_UseHmdViewPointOffset = (ComboBox_HmdViewPointOffset.SelectedIndex = 0)
         SetUnsavedState(True)
+    End Sub
+
+    Private Sub LinkLabel_HmdViewPointOffset_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HmdViewPointOffset.LinkClicked
+        g_UCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_UCVirtualMotionTracker.TabPage_Settings
+        g_UCVirtualMotionTracker.g_UCVmtSettings.TabControl_SettingsDevices.SelectedTab = g_UCVirtualMotionTracker.g_UCVmtSettings.TabPage_SettingsHMD
+
+        g_UCVirtualMotionTracker.g_UCVmtSettings.GroupBox_HmdViewOrientationOffset.Focus()
     End Sub
 
     Private Sub Button_SaveSettings_Click(sender As Object, e As EventArgs) Handles Button_SaveSettings.Click
@@ -828,7 +835,7 @@ Public Class UCVirtualMotionTrackerItem
         Private g_bIsHMD As Boolean = False
         Private g_iVmtTracker As Integer = -1
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
-        Private g_bUsbHmdViewPointOffset As Boolean = False
+        Private g_bUseHmdViewPointOffset As Boolean = False
         Private g_mOscThread As Threading.Thread = Nothing
 
         Private g_mJointOffset As Vector3 = Vector3.Zero
@@ -1124,19 +1131,19 @@ Public Class UCVirtualMotionTrackerItem
             End Set
         End Property
 
-        Property m_UsbHmdViewPointOffset As Boolean
+        Property m_UseHmdViewPointOffset As Boolean
             Get
                 SyncLock g_mThreadLock
                     If (g_bIsHMD) Then
                         Return True
                     End If
 
-                    Return g_bUsbHmdViewPointOffset
+                    Return g_bUseHmdViewPointOffset
                 End SyncLock
             End Get
             Set(value As Boolean)
                 SyncLock g_mThreadLock
-                    g_bUsbHmdViewPointOffset = value
+                    g_bUseHmdViewPointOffset = value
                 End SyncLock
             End Set
         End Property
@@ -1422,6 +1429,8 @@ Public Class UCVirtualMotionTrackerItem
                         Dim iHmdRenderScale = mClassSettings.m_HmdSettings.m_RenderScale
                         Dim mViewPositionOffset = mClassSettings.m_HmdSettings.m_ViewPositionOffset
                         Dim mViewRotationOffset = mClassSettings.m_HmdSettings.m_ViewRotationOffset
+                        Dim iPoseOverrideControllerId = mClassSettings.m_HmdSettings.m_HmdPoseOverrideControllerId
+                        Dim iPoseOverrideType = mClassSettings.m_HmdSettings.m_HmdPoseOverrideType
 
                         ' Get misc settings
                         Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
@@ -1447,23 +1456,49 @@ Public Class UCVirtualMotionTrackerItem
                         End If
 
                         Dim mServiceClient = mUCVirtualMotionTracker.g_mFormMain.g_mPSMoveServiceCAPI
-
+                        Dim iOutputSeqNum As Integer = 0
 
                         If (m_IsHMD) Then
                             ' Get hmd data
                             g_mHmdData = mServiceClient.m_HmdData(m_Index)
 
+                            Dim mHmdOverrideControllerData As ClassServiceClient.IControllerData = Nothing
+                            If (iPoseOverrideControllerId > -1) Then
+                                ' Do we care about output sequence number later on?
+                                mHmdOverrideControllerData = mServiceClient.m_ControllerData(iPoseOverrideControllerId)
+                            End If
+
                             If (g_mHmdData IsNot Nothing) Then
+                                iOutputSeqNum = g_mHmdData.m_OutputSeqNum
+
                                 ' We got any new data?
-                                If (iLastOutputSeqNumFailures > 250 OrElse iLastOutputSeqNum < g_mHmdData.m_OutputSeqNum) Then
+                                If (iLastOutputSeqNumFailures > 250 OrElse iLastOutputSeqNum < iOutputSeqNum) Then
                                     iLastOutputSeqNumFailures = 0
-                                    iLastOutputSeqNum = g_mHmdData.m_OutputSeqNum
+                                    iLastOutputSeqNum = iOutputSeqNum
 
                                     SyncLock g_mThreadLock
                                         Dim mRawPosition = g_mHmdData.m_Position
                                         Dim mRawOrientation = g_mHmdData.m_Orientation
                                         Dim mRawPositionVelocity = g_mHmdData.m_PositionVelocity
                                         Dim mRawOrientationVelocity = g_mHmdData.m_OrientationVelocity
+
+                                        If (mHmdOverrideControllerData IsNot Nothing) Then
+                                            Select Case (iPoseOverrideType)
+                                                Case UCVirtualMotionTracker.ClassSettings.STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE.POSITION_ORIENTATION
+                                                    mRawPosition = mHmdOverrideControllerData.m_Position
+                                                    mRawOrientation = mHmdOverrideControllerData.m_Orientation
+                                                    mRawPositionVelocity = mHmdOverrideControllerData.m_PositionVelocity
+                                                    mRawOrientationVelocity = mHmdOverrideControllerData.m_OrientationVelocity
+
+                                                Case UCVirtualMotionTracker.ClassSettings.STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE.POSITION
+                                                    mRawPosition = mHmdOverrideControllerData.m_Position
+                                                    mRawPositionVelocity = mHmdOverrideControllerData.m_PositionVelocity
+
+                                                Case UCVirtualMotionTracker.ClassSettings.STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE.ORIENTATION
+                                                    mRawOrientation = mHmdOverrideControllerData.m_Orientation
+                                                    mRawOrientationVelocity = mHmdOverrideControllerData.m_OrientationVelocity
+                                            End Select
+                                        End If
 
                                         Dim mCalibratedPosition = mRawPosition
                                         Dim mCalibratedOrientation = mRawOrientation
@@ -1651,15 +1686,17 @@ Public Class UCVirtualMotionTrackerItem
                                             End Select
                                         End If
                                     End SyncLock
-                                ElseIf (iLastOutputSeqNum <> g_mHmdData.m_OutputSeqNum) Then
+                                ElseIf (iLastOutputSeqNum <> iOutputSeqNum) Then
                                     iLastOutputSeqNumFailures += 1
                                 End If
                             End If
                         Else
-                            ' Get controller data
-                            m_ControllerData = mServiceClient.m_ControllerData(m_Index)
+                                ' Get controller data
+                                m_ControllerData = mServiceClient.m_ControllerData(m_Index)
 
                             If (m_ControllerData IsNot Nothing) Then
+                                iOutputSeqNum = m_ControllerData.m_OutputSeqNum
+
                                 ' Set controller rumble
                                 Select Case (True)
                                     Case (TypeOf m_ControllerData Is ClassServiceClient.STRUC_PSMOVE_CONTROLLER_DATA)
@@ -1669,9 +1706,9 @@ Public Class UCVirtualMotionTrackerItem
                                 End Select
 
                                 ' We got any new data?
-                                If (iLastOutputSeqNumFailures > 250 OrElse iLastOutputSeqNum < m_ControllerData.m_OutputSeqNum) Then
+                                If (iLastOutputSeqNumFailures > 250 OrElse iLastOutputSeqNum < iOutputSeqNum) Then
                                     iLastOutputSeqNumFailures = 0
-                                    iLastOutputSeqNum = m_ControllerData.m_OutputSeqNum
+                                    iLastOutputSeqNum = iOutputSeqNum
 
                                     Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
                                     Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
@@ -1695,7 +1732,7 @@ Public Class UCVirtualMotionTrackerItem
                                                                                mCalibratedOrientationVelocity,
                                                                                True)
 
-                                        If (m_UsbHmdViewPointOffset) Then
+                                        If (m_UseHmdViewPointOffset) Then
                                             InternalApplyViewPointOffsetLogic(mViewPositionOffset,
                                                                           mViewRotationOffset,
                                                                           mCalibratedPosition,
@@ -2082,7 +2119,7 @@ Public Class UCVirtualMotionTrackerItem
 
                                         End Select
                                     End SyncLock
-                                ElseIf (iLastOutputSeqNum <> m_ControllerData.m_OutputSeqNum) Then
+                                ElseIf (iLastOutputSeqNum <> iOutputSeqNum) Then
                                     iLastOutputSeqNumFailures += 1
                                 End If
                             End If

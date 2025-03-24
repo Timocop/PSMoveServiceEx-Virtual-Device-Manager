@@ -74,7 +74,7 @@ Partial Class UCVmtSettings
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox_PsvrRenderResolution = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsHMD = New System.Windows.Forms.TabPage()
-        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox_HmdViewPositionOffset = New System.Windows.Forms.GroupBox()
         Me.LinkLabel_EnableVelocityPerFrame = New System.Windows.Forms.LinkLabel()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -93,7 +93,8 @@ Partial Class UCVmtSettings
         Me.UcNumericUpDownBig17 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox_HmdViewOrientationOffset = New System.Windows.Forms.GroupBox()
+        Me.ComboBox_HmdViewOffsetPreset = New System.Windows.Forms.ComboBox()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
@@ -108,6 +109,11 @@ Partial Class UCVmtSettings
         Me.UcNumericUpDownBig23 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label39 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
+        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.ComboBox_HmdPoseOverrideType = New System.Windows.Forms.ComboBox()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.ComboBox_HmdPoseOverridesControllerId = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsPSmove = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.LinkLabel_HmdRecenterFromOverride = New System.Windows.Forms.LinkLabel()
@@ -195,7 +201,6 @@ Partial Class UCVmtSettings
         Me.Button_SaveControllerSettings = New System.Windows.Forms.Button()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ComboBox_HmdViewOffsetPreset = New System.Windows.Forms.ComboBox()
         Me.TabControl_SettingsDevices.SuspendLayout()
         Me.TabPage_SettingsPSVR.SuspendLayout()
         Me.GroupBox_Distortion.SuspendLayout()
@@ -219,7 +224,7 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_PsvrIPD, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_PsvrIPD.SuspendLayout()
         Me.TabPage_SettingsHMD.SuspendLayout()
-        Me.GroupBox8.SuspendLayout()
+        Me.GroupBox_HmdViewPositionOffset.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBoxQuality_HmdViewOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_BulbOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -228,13 +233,14 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_BulbOffsetY.SuspendLayout()
         CType(Me.NumericUpDown_BulbOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_BulbOffsetX.SuspendLayout()
-        Me.GroupBox9.SuspendLayout()
+        Me.GroupBox_HmdViewOrientationOffset.SuspendLayout()
         CType(Me.NumericUpDown_HmdViewOffsetZ, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_HmdViewOffsetZ.SuspendLayout()
         CType(Me.NumericUpDown_HmdViewOffsetY, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_HmdViewOffsetY.SuspendLayout()
         CType(Me.NumericUpDown_HmdViewOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_HmdViewOffsetX.SuspendLayout()
+        Me.GroupBox8.SuspendLayout()
         Me.TabPage_SettingsPSmove.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -832,8 +838,9 @@ Partial Class UCVmtSettings
         '
         Me.TabPage_SettingsHMD.AutoScroll = True
         Me.TabPage_SettingsHMD.BackColor = System.Drawing.Color.White
+        Me.TabPage_SettingsHMD.Controls.Add(Me.GroupBox_HmdViewPositionOffset)
+        Me.TabPage_SettingsHMD.Controls.Add(Me.GroupBox_HmdViewOrientationOffset)
         Me.TabPage_SettingsHMD.Controls.Add(Me.GroupBox8)
-        Me.TabPage_SettingsHMD.Controls.Add(Me.GroupBox9)
         Me.TabPage_SettingsHMD.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_SettingsHMD.Name = "TabPage_SettingsHMD"
         Me.TabPage_SettingsHMD.Padding = New System.Windows.Forms.Padding(3)
@@ -841,28 +848,28 @@ Partial Class UCVmtSettings
         Me.TabPage_SettingsHMD.TabIndex = 4
         Me.TabPage_SettingsHMD.Text = "Head-mounted Display"
         '
-        'GroupBox8
+        'GroupBox_HmdViewPositionOffset
         '
-        Me.GroupBox8.Controls.Add(Me.LinkLabel_EnableVelocityPerFrame)
-        Me.GroupBox8.Controls.Add(Me.Label32)
-        Me.GroupBox8.Controls.Add(Me.Label27)
-        Me.GroupBox8.Controls.Add(Me.Label24)
-        Me.GroupBox8.Controls.Add(Me.Label12)
-        Me.GroupBox8.Controls.Add(Me.Panel1)
-        Me.GroupBox8.Controls.Add(Me.Label9)
-        Me.GroupBox8.Controls.Add(Me.NumericUpDown_BulbOffsetZ)
-        Me.GroupBox8.Controls.Add(Me.NumericUpDown_BulbOffsetY)
-        Me.GroupBox8.Controls.Add(Me.Label7)
-        Me.GroupBox8.Controls.Add(Me.NumericUpDown_BulbOffsetX)
-        Me.GroupBox8.Controls.Add(Me.Label6)
-        Me.GroupBox8.Controls.Add(Me.Label2)
-        Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox8.Location = New System.Drawing.Point(3, 241)
-        Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(780, 482)
-        Me.GroupBox8.TabIndex = 6
-        Me.GroupBox8.TabStop = False
-        Me.GroupBox8.Text = "Viewpoint Position Offset"
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.LinkLabel_EnableVelocityPerFrame)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label32)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label27)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label24)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label12)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Panel1)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label9)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.NumericUpDown_BulbOffsetZ)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.NumericUpDown_BulbOffsetY)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label7)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.NumericUpDown_BulbOffsetX)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label6)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label2)
+        Me.GroupBox_HmdViewPositionOffset.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox_HmdViewPositionOffset.Location = New System.Drawing.Point(3, 327)
+        Me.GroupBox_HmdViewPositionOffset.Name = "GroupBox_HmdViewPositionOffset"
+        Me.GroupBox_HmdViewPositionOffset.Size = New System.Drawing.Size(780, 482)
+        Me.GroupBox_HmdViewPositionOffset.TabIndex = 6
+        Me.GroupBox_HmdViewPositionOffset.TabStop = False
+        Me.GroupBox_HmdViewPositionOffset.Text = "Viewpoint Position Offset"
         '
         'LinkLabel_EnableVelocityPerFrame
         '
@@ -897,7 +904,7 @@ Partial Class UCVmtSettings
         'Label27
         '
         Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(325, 122)
+        Me.Label27.Location = New System.Drawing.Point(330, 122)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(21, 13)
         Me.Label27.TabIndex = 58
@@ -906,7 +913,7 @@ Partial Class UCVmtSettings
         'Label24
         '
         Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(325, 94)
+        Me.Label24.Location = New System.Drawing.Point(330, 94)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(21, 13)
         Me.Label24.TabIndex = 57
@@ -915,7 +922,7 @@ Partial Class UCVmtSettings
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(325, 66)
+        Me.Label12.Location = New System.Drawing.Point(330, 66)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(21, 13)
         Me.Label12.TabIndex = 56
@@ -965,7 +972,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_BulbOffsetZ
         '
         Me.NumericUpDown_BulbOffsetZ.Controls.Add(Me.UcNumericUpDownBig20)
-        Me.NumericUpDown_BulbOffsetZ.Location = New System.Drawing.Point(196, 120)
+        Me.NumericUpDown_BulbOffsetZ.Location = New System.Drawing.Point(201, 120)
         Me.NumericUpDown_BulbOffsetZ.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
         Me.NumericUpDown_BulbOffsetZ.Name = "NumericUpDown_BulbOffsetZ"
         Me.NumericUpDown_BulbOffsetZ.Size = New System.Drawing.Size(123, 22)
@@ -990,7 +997,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_BulbOffsetY
         '
         Me.NumericUpDown_BulbOffsetY.Controls.Add(Me.UcNumericUpDownBig19)
-        Me.NumericUpDown_BulbOffsetY.Location = New System.Drawing.Point(196, 92)
+        Me.NumericUpDown_BulbOffsetY.Location = New System.Drawing.Point(201, 92)
         Me.NumericUpDown_BulbOffsetY.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
         Me.NumericUpDown_BulbOffsetY.Name = "NumericUpDown_BulbOffsetY"
         Me.NumericUpDown_BulbOffsetY.Size = New System.Drawing.Size(123, 22)
@@ -1025,7 +1032,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_BulbOffsetX
         '
         Me.NumericUpDown_BulbOffsetX.Controls.Add(Me.UcNumericUpDownBig17)
-        Me.NumericUpDown_BulbOffsetX.Location = New System.Drawing.Point(196, 64)
+        Me.NumericUpDown_BulbOffsetX.Location = New System.Drawing.Point(201, 64)
         Me.NumericUpDown_BulbOffsetX.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
         Me.NumericUpDown_BulbOffsetX.Name = "NumericUpDown_BulbOffsetX"
         Me.NumericUpDown_BulbOffsetX.Size = New System.Drawing.Size(123, 22)
@@ -1069,27 +1076,37 @@ Partial Class UCVmtSettings
         Me.Label2.TabIndex = 46
         Me.Label2.Text = resources.GetString("Label2.Text")
         '
-        'GroupBox9
+        'GroupBox_HmdViewOrientationOffset
         '
-        Me.GroupBox9.Controls.Add(Me.ComboBox_HmdViewOffsetPreset)
-        Me.GroupBox9.Controls.Add(Me.Label41)
-        Me.GroupBox9.Controls.Add(Me.Label34)
-        Me.GroupBox9.Controls.Add(Me.Label35)
-        Me.GroupBox9.Controls.Add(Me.Label36)
-        Me.GroupBox9.Controls.Add(Me.Label37)
-        Me.GroupBox9.Controls.Add(Me.NumericUpDown_HmdViewOffsetZ)
-        Me.GroupBox9.Controls.Add(Me.NumericUpDown_HmdViewOffsetY)
-        Me.GroupBox9.Controls.Add(Me.Label38)
-        Me.GroupBox9.Controls.Add(Me.NumericUpDown_HmdViewOffsetX)
-        Me.GroupBox9.Controls.Add(Me.Label39)
-        Me.GroupBox9.Controls.Add(Me.Label33)
-        Me.GroupBox9.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox9.Location = New System.Drawing.Point(3, 3)
-        Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(780, 238)
-        Me.GroupBox9.TabIndex = 7
-        Me.GroupBox9.TabStop = False
-        Me.GroupBox9.Text = "Viewpoint Orientation Offset"
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.ComboBox_HmdViewOffsetPreset)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label41)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label34)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label35)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label36)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label37)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.NumericUpDown_HmdViewOffsetZ)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.NumericUpDown_HmdViewOffsetY)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label38)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.NumericUpDown_HmdViewOffsetX)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label39)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label33)
+        Me.GroupBox_HmdViewOrientationOffset.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox_HmdViewOrientationOffset.Location = New System.Drawing.Point(3, 89)
+        Me.GroupBox_HmdViewOrientationOffset.Name = "GroupBox_HmdViewOrientationOffset"
+        Me.GroupBox_HmdViewOrientationOffset.Size = New System.Drawing.Size(780, 238)
+        Me.GroupBox_HmdViewOrientationOffset.TabIndex = 7
+        Me.GroupBox_HmdViewOrientationOffset.TabStop = False
+        Me.GroupBox_HmdViewOrientationOffset.Text = "Viewpoint Orientation Offset"
+        '
+        'ComboBox_HmdViewOffsetPreset
+        '
+        Me.ComboBox_HmdViewOffsetPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdViewOffsetPreset.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdViewOffsetPreset.FormattingEnabled = True
+        Me.ComboBox_HmdViewOffsetPreset.Location = New System.Drawing.Point(201, 174)
+        Me.ComboBox_HmdViewOffsetPreset.Name = "ComboBox_HmdViewOffsetPreset"
+        Me.ComboBox_HmdViewOffsetPreset.Size = New System.Drawing.Size(177, 21)
+        Me.ComboBox_HmdViewOffsetPreset.TabIndex = 74
         '
         'Label41
         '
@@ -1108,7 +1125,7 @@ Partial Class UCVmtSettings
         'Label34
         '
         Me.Label34.AutoSize = True
-        Me.Label34.Location = New System.Drawing.Point(325, 148)
+        Me.Label34.Location = New System.Drawing.Point(330, 148)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(48, 13)
         Me.Label34.TabIndex = 67
@@ -1117,7 +1134,7 @@ Partial Class UCVmtSettings
         'Label35
         '
         Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(325, 120)
+        Me.Label35.Location = New System.Drawing.Point(330, 120)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(48, 13)
         Me.Label35.TabIndex = 66
@@ -1126,7 +1143,7 @@ Partial Class UCVmtSettings
         'Label36
         '
         Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(325, 92)
+        Me.Label36.Location = New System.Drawing.Point(330, 92)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(48, 13)
         Me.Label36.TabIndex = 65
@@ -1146,7 +1163,7 @@ Partial Class UCVmtSettings
         '
         Me.NumericUpDown_HmdViewOffsetZ.Controls.Add(Me.UcNumericUpDownBig21)
         Me.NumericUpDown_HmdViewOffsetZ.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.NumericUpDown_HmdViewOffsetZ.Location = New System.Drawing.Point(196, 146)
+        Me.NumericUpDown_HmdViewOffsetZ.Location = New System.Drawing.Point(201, 146)
         Me.NumericUpDown_HmdViewOffsetZ.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.NumericUpDown_HmdViewOffsetZ.Minimum = New Decimal(New Integer() {180, 0, 0, -2147483648})
         Me.NumericUpDown_HmdViewOffsetZ.Name = "NumericUpDown_HmdViewOffsetZ"
@@ -1173,7 +1190,7 @@ Partial Class UCVmtSettings
         '
         Me.NumericUpDown_HmdViewOffsetY.Controls.Add(Me.UcNumericUpDownBig22)
         Me.NumericUpDown_HmdViewOffsetY.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.NumericUpDown_HmdViewOffsetY.Location = New System.Drawing.Point(196, 118)
+        Me.NumericUpDown_HmdViewOffsetY.Location = New System.Drawing.Point(201, 118)
         Me.NumericUpDown_HmdViewOffsetY.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.NumericUpDown_HmdViewOffsetY.Minimum = New Decimal(New Integer() {180, 0, 0, -2147483648})
         Me.NumericUpDown_HmdViewOffsetY.Name = "NumericUpDown_HmdViewOffsetY"
@@ -1210,7 +1227,7 @@ Partial Class UCVmtSettings
         '
         Me.NumericUpDown_HmdViewOffsetX.Controls.Add(Me.UcNumericUpDownBig23)
         Me.NumericUpDown_HmdViewOffsetX.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.NumericUpDown_HmdViewOffsetX.Location = New System.Drawing.Point(196, 90)
+        Me.NumericUpDown_HmdViewOffsetX.Location = New System.Drawing.Point(201, 90)
         Me.NumericUpDown_HmdViewOffsetX.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.NumericUpDown_HmdViewOffsetX.Minimum = New Decimal(New Integer() {180, 0, 0, -2147483648})
         Me.NumericUpDown_HmdViewOffsetX.Name = "NumericUpDown_HmdViewOffsetX"
@@ -1254,6 +1271,60 @@ Partial Class UCVmtSettings
         Me.Label33.Size = New System.Drawing.Size(611, 52)
         Me.Label33.TabIndex = 47
         Me.Label33.Text = resources.GetString("Label33.Text")
+        '
+        'GroupBox8
+        '
+        Me.GroupBox8.Controls.Add(Me.ComboBox_HmdPoseOverrideType)
+        Me.GroupBox8.Controls.Add(Me.Label43)
+        Me.GroupBox8.Controls.Add(Me.Label42)
+        Me.GroupBox8.Controls.Add(Me.ComboBox_HmdPoseOverridesControllerId)
+        Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox8.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox8.Name = "GroupBox8"
+        Me.GroupBox8.Size = New System.Drawing.Size(780, 86)
+        Me.GroupBox8.TabIndex = 8
+        Me.GroupBox8.TabStop = False
+        Me.GroupBox8.Text = "Settings"
+        '
+        'ComboBox_HmdPoseOverrideType
+        '
+        Me.ComboBox_HmdPoseOverrideType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdPoseOverrideType.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdPoseOverrideType.FormattingEnabled = True
+        Me.ComboBox_HmdPoseOverrideType.Location = New System.Drawing.Point(201, 50)
+        Me.ComboBox_HmdPoseOverrideType.Name = "ComboBox_HmdPoseOverrideType"
+        Me.ComboBox_HmdPoseOverrideType.Size = New System.Drawing.Size(186, 21)
+        Me.ComboBox_HmdPoseOverrideType.TabIndex = 5
+        '
+        'Label43
+        '
+        Me.Label43.AutoSize = True
+        Me.Label43.Location = New System.Drawing.Point(51, 53)
+        Me.Label43.Margin = New System.Windows.Forms.Padding(48, 8, 3, 3)
+        Me.Label43.Name = "Label43"
+        Me.Label43.Size = New System.Drawing.Size(79, 13)
+        Me.Label43.TabIndex = 4
+        Me.Label43.Text = "Override type:"
+        '
+        'Label42
+        '
+        Me.Label42.AutoSize = True
+        Me.Label42.Location = New System.Drawing.Point(19, 26)
+        Me.Label42.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label42.Name = "Label42"
+        Me.Label42.Size = New System.Drawing.Size(174, 13)
+        Me.Label42.TabIndex = 2
+        Me.Label42.Text = "Override pose with controller id:"
+        '
+        'ComboBox_HmdPoseOverridesControllerId
+        '
+        Me.ComboBox_HmdPoseOverridesControllerId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_HmdPoseOverridesControllerId.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ComboBox_HmdPoseOverridesControllerId.FormattingEnabled = True
+        Me.ComboBox_HmdPoseOverridesControllerId.Location = New System.Drawing.Point(201, 23)
+        Me.ComboBox_HmdPoseOverridesControllerId.Name = "ComboBox_HmdPoseOverridesControllerId"
+        Me.ComboBox_HmdPoseOverridesControllerId.Size = New System.Drawing.Size(186, 21)
+        Me.ComboBox_HmdPoseOverridesControllerId.TabIndex = 3
         '
         'TabPage_SettingsPSmove
         '
@@ -2384,16 +2455,6 @@ Partial Class UCVmtSettings
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
-        'ComboBox_HmdViewOffsetPreset
-        '
-        Me.ComboBox_HmdViewOffsetPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_HmdViewOffsetPreset.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ComboBox_HmdViewOffsetPreset.FormattingEnabled = True
-        Me.ComboBox_HmdViewOffsetPreset.Location = New System.Drawing.Point(196, 174)
-        Me.ComboBox_HmdViewOffsetPreset.Name = "ComboBox_HmdViewOffsetPreset"
-        Me.ComboBox_HmdViewOffsetPreset.Size = New System.Drawing.Size(177, 21)
-        Me.ComboBox_HmdViewOffsetPreset.TabIndex = 74
-        '
         'UCVmtSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2439,8 +2500,8 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_PsvrIPD.ResumeLayout(False)
         Me.NumericUpDown_PsvrIPD.PerformLayout()
         Me.TabPage_SettingsHMD.ResumeLayout(False)
-        Me.GroupBox8.ResumeLayout(False)
-        Me.GroupBox8.PerformLayout()
+        Me.GroupBox_HmdViewPositionOffset.ResumeLayout(False)
+        Me.GroupBox_HmdViewPositionOffset.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         CType(Me.PictureBoxQuality_HmdViewOffset, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_BulbOffsetZ, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2452,8 +2513,8 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_BulbOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_BulbOffsetX.ResumeLayout(False)
         Me.NumericUpDown_BulbOffsetX.PerformLayout()
-        Me.GroupBox9.ResumeLayout(False)
-        Me.GroupBox9.PerformLayout()
+        Me.GroupBox_HmdViewOrientationOffset.ResumeLayout(False)
+        Me.GroupBox_HmdViewOrientationOffset.PerformLayout()
         CType(Me.NumericUpDown_HmdViewOffsetZ, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_HmdViewOffsetZ.ResumeLayout(False)
         Me.NumericUpDown_HmdViewOffsetZ.PerformLayout()
@@ -2463,6 +2524,8 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_HmdViewOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_HmdViewOffsetX.ResumeLayout(False)
         Me.NumericUpDown_HmdViewOffsetX.PerformLayout()
+        Me.GroupBox8.ResumeLayout(False)
+        Me.GroupBox8.PerformLayout()
         Me.TabPage_SettingsPSmove.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
@@ -2637,7 +2700,7 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_EnableVelocityControllers As CheckBox
     Friend WithEvents CheckBox_EnableManualVelocity As CheckBox
     Friend WithEvents TabPage_SettingsHMD As TabPage
-    Friend WithEvents GroupBox8 As GroupBox
+    Friend WithEvents GroupBox_HmdViewPositionOffset As GroupBox
     Friend WithEvents Label2 As Label
     Friend WithEvents Label9 As Label
     Friend WithEvents NumericUpDown_BulbOffsetZ As NumericUpDown
@@ -2659,7 +2722,7 @@ Partial Class UCVmtSettings
     Friend WithEvents Label28 As Label
     Friend WithEvents Label32 As Label
     Friend WithEvents LinkLabel_EnableVelocityPerFrame As LinkLabel
-    Friend WithEvents GroupBox9 As GroupBox
+    Friend WithEvents GroupBox_HmdViewOrientationOffset As GroupBox
     Friend WithEvents Label33 As Label
     Friend WithEvents Label34 As Label
     Friend WithEvents Label35 As Label
@@ -2675,4 +2738,9 @@ Partial Class UCVmtSettings
     Friend WithEvents Label39 As Label
     Friend WithEvents Label41 As Label
     Friend WithEvents ComboBox_HmdViewOffsetPreset As ComboBox
+    Friend WithEvents GroupBox8 As GroupBox
+    Friend WithEvents ComboBox_HmdPoseOverrideType As ComboBox
+    Friend WithEvents Label43 As Label
+    Friend WithEvents Label42 As Label
+    Friend WithEvents ComboBox_HmdPoseOverridesControllerId As ComboBox
 End Class
