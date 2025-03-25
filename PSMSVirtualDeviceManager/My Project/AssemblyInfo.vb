@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("PSMoveServiceEx Virtual Device Manager")>
-<Assembly: AssemblyCopyright("Copyright © Externet 2024")>
+<Assembly: AssemblyCopyright("Copyright © Externet 2025")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("13.13.5.0")>
-<Assembly: AssemblyFileVersion("13.13.5.0")>
+<Assembly: AssemblyVersion("13.13.6.0")>
+<Assembly: AssemblyFileVersion("13.13.6.0")>
