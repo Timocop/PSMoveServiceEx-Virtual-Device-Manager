@@ -83,14 +83,14 @@ Public Class ClassLogManagerSteamVrDrivers
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_NO_STEAMVR_DRIVER,
             "Virtual motion trackers are set up but the SteamVR driver has not been registered yet.",
-            "Register the SteamVR driver to use the virtual motion trackers in SteamVR. If you dont use SteamVR ignore this warning.",
+            "Register the SteamVR driver in 'Virtual Motion Tracker' to use the virtual motion trackers in SteamVR. If you dont use SteamVR ignore this warning.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mBadPathTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_STEAMVR_DRIVER,
             "The SteamVR driver may not work properly because the driver is registered under an incorrect path '{0}' but should be in '{1}'.",
-            "Re-register the SteamVR driver to fix the registered driver path.",
+            "Re-register the SteamVR driver in 'Virtual Motion Tracker' to fix the registered driver path.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 

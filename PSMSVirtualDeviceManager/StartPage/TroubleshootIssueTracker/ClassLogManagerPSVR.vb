@@ -97,30 +97,56 @@ Public Class ClassLogManagerPSVR
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
 
+        Dim mHdmiStatusSolution As New Dictionary(Of ENUM_DEVICE_HDMI_STATUS, String)
+        Dim mUsbStatusSolution As New Dictionary(Of ENUM_DEVICE_USB_STATUS, String)
+        Dim mDisplayStatusSolution As New Dictionary(Of ENUM_DEVICE_DISPLAY_STATUS, String)
+
+        mUsbStatusSolution(ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE) = "Install the PlayStation VR drivers found in 'PlayStation VR Management'."
+        mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD) = "PlayStation VR display configuration has been changed. Restart the PlayStation VR or re-plug the HDMI cable."
+        mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY) = "Increase the PlayStation VR display frequency found in 'PlayStation VR Management'."
+        mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.DISABLED) = "Enable the PlayStation VR display in the Windows display settings and set it to 'Extended'."
+        mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.MIRRROED) = "Set the PlayStation VR display in the Windows display settings to 'Extended'."
+        mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.UNSUPPORTED) = "Contact support."
+
         Select Case (iHdmiStatus)
             Case ENUM_DEVICE_HDMI_STATUS.CONNECTED, ENUM_DEVICE_HDMI_STATUS.DIRECT_MODE
                 ' Good
             Case Else
                 Dim mIssue As New STRUC_LOG_ISSUE(mHdmiTemplate)
                 mIssue.sDescription = String.Format(mIssue.sDescription, iHdmiStatus.ToString)
+
+                If (mHdmiStatusSolution.ContainsKey(iHdmiStatus)) Then
+                    mIssue.sSolution = mHdmiStatusSolution(iHdmiStatus)
+                End If
+
                 mIssues.Add(mIssue)
         End Select
 
         Select Case (iUsbStatus)
             Case ENUM_DEVICE_USB_STATUS.CONNECTED
-                ' Good
+                ' Good 
             Case Else
                 Dim mIssue As New STRUC_LOG_ISSUE(mUsbTemplate)
                 mIssue.sDescription = String.Format(mIssue.sDescription, iUsbStatus.ToString)
+
+                If (mUsbStatusSolution.ContainsKey(iUsbStatus)) Then
+                    mIssue.sSolution = mUsbStatusSolution(iUsbStatus)
+                End If
+
                 mIssues.Add(mIssue)
         End Select
 
         Select Case (iDisplayStatus)
             Case ENUM_DEVICE_DISPLAY_STATUS.CONFIGURED_MULTI, ENUM_DEVICE_DISPLAY_STATUS.DIRECT_MODE
-                ' Good
+                ' Good 
             Case Else
                 Dim mIssue As New STRUC_LOG_ISSUE(mDisplayTemplate)
                 mIssue.sDescription = String.Format(mIssue.sDescription, iDisplayStatus.ToString)
+
+                If (mDisplayStatusSolution.ContainsKey(iDisplayStatus)) Then
+                    mIssue.sSolution = mDisplayStatusSolution(iDisplayStatus)
+                End If
+
                 mIssues.Add(mIssue)
         End Select
 

@@ -274,7 +274,7 @@ Public Class ClassLogManageServiceDevices
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_VIRTUAL_HMD_DEPRICATED,
-            "You are using virtual head-mounted displays. Those types of virtual devices are deprecated due to limited functionality and will only be used for backwards protocol compatibility.",
+            "You are using virtual head-mounted displays. Those types of virtual devices are deprecated due to limited functionality and will only be used for backwards compatibility.",
             "Do not use virtual head-mounted displays and use virtual controllers to track your head-mounted display instead. Unless the third-party application does not support controllers for Head-mounted Display tracking.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
@@ -362,21 +362,21 @@ Public Class ClassLogManageServiceDevices
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_COLOR_CALIBRATION,
             "Color calibration for {0} id {1} is not properly set on tracker id {2} which may cause tracking issues.",
-            "Properly calibrate color for this device.",
+            "Properly calibrate color for this device using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mColorCollisionTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_COLOR_COLLISION,
             "{0} id {1} has possible color collisions with {2} id {3} on tracker id {4} which may cause tracking issues.",
-            "Properly calibrate color for this device or enable 'Prevent color collisions' setting in color calibration before sampling colors.",
+            "Properly calibrate color for this device or enable 'Prevent color collisions' setting in color calibration before sampling colors using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mWrongColorTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_TRACKING_COLOR,
             "The tracking color of {0} id {1} on tracker id {2} not match the selected tracking color ({3}) that is set for this device.",
-            "Properly calibrate color for this device.",
+            "Properly calibrate color for this device using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -639,8 +639,8 @@ Public Class ClassLogManageServiceDevices
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PS4CAM_COLOR_SENSTIVITY,
             "{0} id {1} color detection sensitivity on tracker id {2} is too low. " &
-                "The PlayStation 4 stereo camera requires higher color detection sensitivity compared to other cameras due the edges of the image are darker than the center.",
-            "Redo color calibration with higher color detection sensitivity for {0} id {1} on tracker id {2}.",
+                "The PlayStation 4 stereo camera requires higher color detection sensitivity compared to other cameras due the edges of the image being darker than the center.",
+            "Redo color calibration with higher color detection sensitivity for {0} id {1} on tracker id {2} using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 

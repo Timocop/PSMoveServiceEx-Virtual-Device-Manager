@@ -70,7 +70,7 @@ Public Class ClassLogManagerSteamVrOverrides
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_OVERRIDES,
             "Virtual motion tracker id {0} ({1}) collides with the SteamVR tracker overrides ({2}). This can cause tracking issues or tracking not working at all.",
-            "Remove the SteamVR override that is associated with the virtual motion tracker id.",
+            "Remove the SteamVR override that is associated with the virtual motion tracker id using 'Virtual Motion Tracker > SteamVR Tracker Overrides'.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
