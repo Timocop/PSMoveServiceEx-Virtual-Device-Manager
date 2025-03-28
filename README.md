@@ -2,6 +2,8 @@
 A virtual device manager for PSMoveServiceEx.
 With this program you can control any virtual device in PSMoveServiceEx and even use them in SteamVR or other services!
 
+[Join the official PSMoveServiceEx Discord Server.](https://discord.gg/mSk9ua7exg)
+
  ## ℹ️  Important Notice
 
  > ### ℹ️ Virtual Device Manager will slowly replace PSMoveService VRBridge!
