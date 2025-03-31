@@ -762,7 +762,7 @@ Public Class ClassLogService
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_TIMEOUT,
             "PSMoveServiceEx had to close device {0} that timed out. This happens when PSMoveServiceEx does not receive any data from the device for example due to connection issues.",
-            "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too mandy devices and are in range of the bluetooth adapter.",
+            "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too many devices and are in range of the bluetooth adapter.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
