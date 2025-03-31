@@ -317,7 +317,7 @@ Public Class ClassLogManageServiceDevices
         Dim mManyTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_MULTIPLE_HMDS,
             "There are currently {0} head-mounted displays available but some applications may only support {1} at the time.",
-            "Its recommended to reduce the number of head-mounted displays to {0}.",
+            "Its recommended to reduce the number of head-mounted displays to a single device.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
@@ -344,8 +344,8 @@ Public Class ClassLogManageServiceDevices
         ElseIf (iHmds > 1) Then
             Dim mNewIssue As New STRUC_LOG_ISSUE(mManyTemplate)
 
-            mNewIssue.sDescription = String.Format(mNewIssue.sDescription, iHmds, "1")
-            mNewIssue.sSolution = String.Format(mNewIssue.sSolution, "1")
+            mNewIssue.sDescription = String.Format(mNewIssue.sDescription, iHmds)
+            mNewIssue.sSolution = mNewIssue.sSolution
 
             mIssues.Add(mNewIssue)
         End If
@@ -484,7 +484,7 @@ Public Class ClassLogManageServiceDevices
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_MAGNETOMETER,
             "The controller id {0} does not have a magnetometer or is not yet calibrated, which may cause orientation yaw drift over time.",
-            "Calibrate the controllers magnetometer if available. Ignore this warning if the magnetometer is not available.",
+            "Calibrate the controllers magnetometer using PSMoveServiceEx Config Tool if available. Ignore this warning if the magnetometer is not available.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
@@ -542,14 +542,14 @@ Public Class ClassLogManageServiceDevices
         Dim mBadGyroTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_GYROSCOPE,
             "The {0} id {1} gyroscope has not been calibrated yet, which may cause orientation drift.",
-            "Calibrate the {0} gyroscope.",
+            "Calibrate the {0} gyroscope using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mBadAccelTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_ACCELEROMETER,
             "The {0} id {1} accelerometer has not been calibrated yet, which may cause orientation drift.",
-            "Calibrate the {0} accelerometer.",
+            "Calibrate the {0} accelerometer using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 

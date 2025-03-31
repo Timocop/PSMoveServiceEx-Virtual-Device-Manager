@@ -861,7 +861,7 @@ Public Class ClassLogService
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_BAD_TRACKING,
             "{0} id {1} on tracker id {2} stopped tracking due to bad tracking deviations ({3} cases in total). Usually this is a result of color noise/collisions, bad pose calibration or the trackers have been moved after pose calibration has been done.",
-            "Redo pose calibration and check for color noise and collisions in color calibration.",
+            "Redo pose calibration and check for color noise and collisions in color calibration using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
