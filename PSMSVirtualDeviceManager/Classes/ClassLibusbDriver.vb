@@ -259,6 +259,30 @@ Public Class ClassLibusbDriver
         End Function
     End Structure
 
+    Structure STRUC_DEVICE_BLUETOOTH
+        Dim sDeviceID As String
+        Dim iConfigFlags As DEVICE_CONFIG_FLAGS
+        Dim sFriendlyName As String
+
+        Dim mDriverProvider As STRUC_DEVICE_PROVIDER
+
+        Public Function IsEnabled() As Boolean
+            Return ((iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_DISABLED) = 0)
+        End Function
+
+        Public Function IsRemoved() As Boolean
+            Return ((iConfigFlags And DEVICE_CONFIG_FLAGS.CONFIGFLAG_REMOVED) <> 0)
+        End Function
+
+        Public Function FullDevicePath() As String
+            If (sDeviceID Is Nothing) Then
+                Return Nothing
+            End If
+
+            Return String.Format("{0}\{1}", "BTHENUM", sDeviceID)
+        End Function
+    End Structure
+
     Structure STRUC_DEVICE_DRIVER_INFO
         Dim sName As String
         Dim sManufacture As String
@@ -1048,6 +1072,78 @@ Public Class ClassLibusbDriver
 
                     mProviderList.Add(mInfo)
                 End If
+            Next
+        Next
+
+        Return mProviderList.ToArray
+    End Function
+
+    Public Function GetAllDevicesBluetooth() As STRUC_DEVICE_BLUETOOTH()
+        Dim mProviderList As New List(Of STRUC_DEVICE_BLUETOOTH)
+
+        Dim mDeviceEnumKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\BTHENUM", False)
+        If (mDeviceEnumKey Is Nothing) Then
+            Return mProviderList.ToArray
+        End If
+
+        For Each sDeviceName As String In mDeviceEnumKey.GetSubKeyNames()
+            Dim mDeviceNameKey As RegistryKey = mDeviceEnumKey.OpenSubKey(sDeviceName, False)
+            If (mDeviceNameKey Is Nothing) Then
+                Continue For
+            End If
+
+            For Each sDeviceSerialName As String In mDeviceNameKey.GetSubKeyNames()
+                Dim mDeviceSerialKey As RegistryKey = mDeviceNameKey.OpenSubKey(sDeviceSerialName, False)
+                If (mDeviceSerialKey Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sDeviceID As String = String.Format("{0}\{1}", sDeviceName, sDeviceSerialName)
+
+                Dim sDriverLocation As String = TryCast(mDeviceSerialKey.GetValue("Driver"), String)
+                Dim sService As String = TryCast(mDeviceSerialKey.GetValue("Service"), String)
+                Dim sConfigFlags As DEVICE_CONFIG_FLAGS = CType(mDeviceSerialKey.GetValue("ConfigFlags", 0), DEVICE_CONFIG_FLAGS)
+                Dim sFriendlyName As String = TryCast(mDeviceSerialKey.GetValue("FriendlyName", Nothing), String)
+
+                Dim mInfo As New STRUC_DEVICE_PROVIDER
+
+                If (sDriverLocation IsNot Nothing) Then
+                    Dim mDriverKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\" & sDriverLocation, False)
+                    If (mDriverKey Is Nothing) Then
+                        Continue For
+                    End If
+
+                    Dim sProviderName As String = TryCast(mDriverKey.GetValue("ProviderName"), String)
+                    Dim sProviderVersion As String = TryCast(mDriverKey.GetValue("DriverVersion"), String)
+                    Dim sProviderDescription As String = TryCast(mDriverKey.GetValue("DriverDesc"), String)
+                    Dim sDriverInfPath As String = TryCast(mDriverKey.GetValue("InfPath"), String)
+
+                    mInfo.sDeviceID = sDeviceID
+                    mInfo.iConfigFlags = sConfigFlags
+                    mInfo.sService = sService
+                    mInfo.sProviderName = sProviderName
+                    mInfo.sProviderVersion = sProviderVersion
+                    mInfo.sProviderDescription = sProviderDescription
+                    mInfo.sDriverInfPath = sDriverInfPath
+                Else
+                    ' No driver installed 
+                    mInfo.sDeviceID = sDeviceID
+                    mInfo.iConfigFlags = sConfigFlags
+                    mInfo.sService = sService
+                    mInfo.sProviderName = Nothing
+                    mInfo.sProviderVersion = Nothing
+                    mInfo.sProviderDescription = Nothing
+                    mInfo.sDriverInfPath = Nothing
+                End If
+
+
+                Dim mBtInfo As New STRUC_DEVICE_BLUETOOTH
+                mBtInfo.sDeviceID = sDeviceID
+                mBtInfo.iConfigFlags = sConfigFlags
+                mBtInfo.sFriendlyName = sFriendlyName
+                mBtInfo.mDriverProvider = mInfo
+
+                mProviderList.Add(mBtInfo)
             Next
         Next
 

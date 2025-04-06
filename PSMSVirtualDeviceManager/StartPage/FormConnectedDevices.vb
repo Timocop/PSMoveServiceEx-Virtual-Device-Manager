@@ -3,6 +3,7 @@ Imports System.Xml.Serialization
 
 Public Class FormConnectedDevices
     Private g_ClassTreeViewManager As ClassTreeViewManager
+    Private g_ClassListViewManager As ClassListViewManager
 
     Public Sub New()
 
@@ -21,6 +22,7 @@ Public Class FormConnectedDevices
         ImageList_Devices.Images.Add("Bluetooth", My.Resources.bthci_201_16x16_32)
 
         g_ClassTreeViewManager = New ClassTreeViewManager(TreeView_ConnectedDevices)
+        g_ClassListViewManager = New ClassListViewManager(ListView_BluetoothDevices)
     End Sub
 
     Class TreeViewSerialization
@@ -54,8 +56,8 @@ Public Class FormConnectedDevices
             Dim mModeData As New TreeNodeData()
             mModeData.sText = mNode.Text
 
-            If (TypeOf mNode Is STRUC_LISTVIEW_NODE_DEVICE_ITEM) Then
-                Dim mDeviceNode = DirectCast(mNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+            If (TypeOf mNode Is STRUC_TREEVIEW_NODE_DEVICE_ITEM) Then
+                Dim mDeviceNode = DirectCast(mNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
                 mModeData.sDeviceID = mDeviceNode.m_Device.sDeviceID
                 mModeData.iConfigFlags = mDeviceNode.m_Device.iConfigFlags
                 mModeData.sService = mDeviceNode.m_Device.sService
@@ -73,7 +75,7 @@ Public Class FormConnectedDevices
         End Function
     End Class
 
-    Class STRUC_LISTVIEW_NODE_DEVICE_ITEM
+    Class STRUC_TREEVIEW_NODE_DEVICE_ITEM
         Inherits TreeNode
 
         Private g_bReadOnly As Boolean = False
@@ -135,9 +137,31 @@ Public Class FormConnectedDevices
         End Property
     End Class
 
+    Class STRUC_LISTVIEW_ITEM_DEVICE_ITEM
+        Inherits ListViewItem
+
+        Private g_mDevice As ClassLibusbDriver.STRUC_DEVICE_BLUETOOTH = Nothing
+
+        Public Sub New(_Device As ClassLibusbDriver.STRUC_DEVICE_BLUETOOTH)
+            If (_Device.sFriendlyName Is Nothing) Then
+                Me.Text = "<Unknown Device>"
+            Else
+                Me.Text = _Device.sFriendlyName
+            End If
+
+            g_mDevice = _Device
+        End Sub
+
+        Public ReadOnly Property m_Device As ClassLibusbDriver.STRUC_DEVICE_BLUETOOTH
+            Get
+                Return g_mDevice
+            End Get
+        End Property
+    End Class
+
     Class ClassTreeViewManager
         Private g_mTreeView As TreeView
-        Private g_mTreeViewNodes As New Dictionary(Of String, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+        Private g_mTreeViewNodes As New Dictionary(Of String, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
 
         Public Sub New(_TreeView As TreeView)
             g_mTreeView = _TreeView
@@ -167,7 +191,7 @@ Public Class FormConnectedDevices
                 End If
 
                 If (mTreeNode Is Nothing) Then
-                    mTreeNode = New STRUC_LISTVIEW_NODE_DEVICE_ITEM(mDevice, True)
+                    mTreeNode = New STRUC_TREEVIEW_NODE_DEVICE_ITEM(mDevice, True)
 
                     mTreeNode.ImageKey = "Normal"
 
@@ -189,7 +213,7 @@ Public Class FormConnectedDevices
 
                     mTreeNode.SelectedImageKey = mTreeNode.ImageKey
 
-                    g_mTreeViewNodes(mDevice.sDeviceID) = CType(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+                    g_mTreeViewNodes(mDevice.sDeviceID) = CType(mTreeNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
                     mLastTreeNodeCollection.Add(mTreeNode)
                 End If
 
@@ -199,8 +223,8 @@ Public Class FormConnectedDevices
             If (mTreeNode IsNot Nothing) Then
                 Dim sName As String = _DriverInfo.sName
 
-                DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_DeviceName = sName
-                DirectCast(mTreeNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = False
+                DirectCast(mTreeNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM).m_DeviceName = sName
+                DirectCast(mTreeNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM).m_IsReadOnly = False
 
                 Dim bConnected As Boolean = mLibusbDriver.IsUsbDeviceConnected(_DriverInfo.VID, _DriverInfo.PID, _Device.sInterface, _Device.sDeviceSerial)
 
@@ -233,6 +257,38 @@ Public Class FormConnectedDevices
         End Sub
     End Class
 
+    Class ClassListViewManager
+        Private g_mListView As ListView
+        Private g_mListViewNodes As New Dictionary(Of String, ClassLibusbDriver.STRUC_DEVICE_BLUETOOTH)
+
+        Public Sub New(_ListView As ListView)
+            g_mListView = _ListView
+        End Sub
+
+        ReadOnly Property m_ListView As ListView
+            Get
+                Return g_mListView
+            End Get
+        End Property
+
+        Public Sub AddDevice(_Device As ClassLibusbDriver.STRUC_DEVICE_BLUETOOTH)
+            If (g_mListViewNodes.ContainsKey(_Device.sDeviceID)) Then
+                Return
+            End If
+
+            Dim mItem As New STRUC_LISTVIEW_ITEM_DEVICE_ITEM(_Device)
+            mItem.ImageKey = "Bluetooth"
+
+            g_mListView.Items.Add(mItem)
+            g_mListViewNodes(_Device.sDeviceID) = _Device
+        End Sub
+
+        Public Sub Clear()
+            g_mListView.Items.Clear()
+            g_mListViewNodes.Clear()
+        End Sub
+    End Class
+
     Private Sub FormConnectedDevices_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Visible = True
         Me.Refresh()
@@ -248,7 +304,9 @@ Public Class FormConnectedDevices
         Try
             Using mFormLoading As New FormLoading
                 g_ClassTreeViewManager.m_TreeView.BeginUpdate()
+                g_ClassListViewManager.m_ListView.BeginUpdate()
                 g_ClassTreeViewManager.Clear()
+                g_ClassListViewManager.Clear()
 
                 Dim mLibusbDriver As New ClassLibusbDriver
 
@@ -298,9 +356,22 @@ Public Class FormConnectedDevices
                     mUsbDevices(String.Format("{0}/{1}/{2}", mDevice.VID, mDevice.PID, If(mDevice.MM, "XX"))) = mDevice
                 Next
 
+                Dim mBtDevices As New Dictionary(Of String, ClassLibusbDriver.STRUC_DEVICE_BLUETOOTH)
+                For Each mDevice In mLibusbDriver.GetAllDevicesBluetooth
+                    If (String.IsNullOrEmpty(mDevice.sFriendlyName)) Then
+                        Continue For
+                    End If
+
+                    If (Not mDevice.sDeviceID.StartsWith("Dev_")) Then
+                        Continue For
+                    End If
+
+                    mBtDevices(mDevice.sDeviceID) = mDevice
+                Next
+
                 mFormLoading.m_ProgressBar.Style = ProgressBarStyle.Blocks
                 mFormLoading.m_ProgressBar.Minimum = 0
-                mFormLoading.m_ProgressBar.Maximum = mUsbDevices.Count
+                mFormLoading.m_ProgressBar.Maximum = mUsbDevices.Count + mBtDevices.Count
                 mFormLoading.Show()
                 mFormLoading.Refresh()
 
@@ -323,11 +394,31 @@ Public Class FormConnectedDevices
 
                 g_ClassTreeViewManager.m_TreeView.Sort()
                 g_ClassTreeViewManager.m_TreeView.ExpandAll()
+
+                For Each mItem In mBtDevices
+                    Dim sFriendlyName As String = mItem.Value.sFriendlyName
+                    If (String.IsNullOrEmpty(sFriendlyName)) Then
+                        sFriendlyName = "<Unknown Device>"
+                    End If
+
+                    mFormLoading.Text = String.Format("Loading... ({0})", sFriendlyName)
+                    mFormLoading.Refresh()
+
+                    g_ClassListViewManager.AddDevice(mItem.Value)
+
+                    mFormLoading.m_ProgressBar.Increment(1)
+                    mFormLoading.SkipProgressBarAnimation()
+
+                    mFormLoading.Refresh()
+                Next
+
+                g_ClassListViewManager.m_ListView.Sort()
             End Using
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
             g_ClassTreeViewManager.m_TreeView.EndUpdate()
+            g_ClassListViewManager.m_ListView.EndUpdate()
         End Try
     End Sub
 
@@ -338,7 +429,7 @@ Public Class FormConnectedDevices
                 Return
             End If
 
-            Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+            Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
 
             Try
                 ListView_DeviceInfo.BeginUpdate()
@@ -366,7 +457,7 @@ Public Class FormConnectedDevices
                 Return
             End If
 
-            Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+            Dim mDevice = DirectCast(g_ClassTreeViewManager.m_TreeView.SelectedNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
             Dim sDeviceId As String = mDevice.m_Device.sDeviceID
             If (mDevice.m_IsReadOnly) Then
                 Throw New ArgumentException("Device can not be changed.")
@@ -381,7 +472,7 @@ Public Class FormConnectedDevices
                 sText.AppendLine("Do you want to enable the following device?")
                 sText.AppendLine()
                 sText.AppendLine(mDevice.m_DeviceName)
-                sText.AppendLine(mDevice.m_Device.sDeviceID.ToUpperInvariant)
+                sText.AppendLine(sDeviceId.ToUpperInvariant)
 
                 If (MessageBox.Show(sText.ToString, "Enable Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                     Return
@@ -403,7 +494,7 @@ Public Class FormConnectedDevices
                 Return
             End If
 
-            Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+            Dim mDevice = DirectCast(g_ClassTreeViewManager.m_TreeView.SelectedNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
             Dim sDeviceId As String = mDevice.m_Device.sDeviceID
             If (mDevice.m_IsReadOnly) Then
                 Throw New ArgumentException("Device can not be changed.")
@@ -418,7 +509,7 @@ Public Class FormConnectedDevices
                 sText.AppendLine("Do you want to disable the following device?")
                 sText.AppendLine()
                 sText.AppendLine(mDevice.m_DeviceName)
-                sText.AppendLine(mDevice.m_Device.sDeviceID.ToUpperInvariant)
+                sText.AppendLine(sDeviceId.ToUpperInvariant)
 
                 If (MessageBox.Show(sText.ToString, "Disable Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                     Return
@@ -440,7 +531,7 @@ Public Class FormConnectedDevices
                 Return
             End If
 
-            Dim mDevice = DirectCast(TreeView_ConnectedDevices.SelectedNode, STRUC_LISTVIEW_NODE_DEVICE_ITEM)
+            Dim mDevice = DirectCast(g_ClassTreeViewManager.m_TreeView.SelectedNode, STRUC_TREEVIEW_NODE_DEVICE_ITEM)
             Dim sDeviceId As String = mDevice.m_Device.sDeviceID
             If (mDevice.m_IsReadOnly) Then
                 Throw New ArgumentException("Device can not be changed.")
@@ -455,7 +546,7 @@ Public Class FormConnectedDevices
                 sText.AppendLine("Do you want to uninstall the following device?")
                 sText.AppendLine()
                 sText.AppendLine(mDevice.m_DeviceName)
-                sText.AppendLine(mDevice.m_Device.sDeviceID.ToUpperInvariant)
+                sText.AppendLine(sDeviceId.ToUpperInvariant)
 
                 If (MessageBox.Show(sText.ToString, "Uninstall Device", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.No) Then
                     Return
@@ -508,5 +599,16 @@ Public Class FormConnectedDevices
         End If
 
         TreeView_ConnectedDevices.SelectedNode = e.Node
+    End Sub
+
+    Private Sub ToolStripMenuItem_BluetoothRefresh_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_BluetoothRefresh.Click
+        Try
+            Dim mLibUSB As New ClassLibusbDriver
+            mLibUSB.ScanDevices()
+
+            UpdateDevices()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 End Class
