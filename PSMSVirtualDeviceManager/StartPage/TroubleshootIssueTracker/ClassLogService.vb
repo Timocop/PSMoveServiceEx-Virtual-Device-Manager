@@ -641,12 +641,20 @@ Public Class ClassLogService
         For i = 0 To sLines.Length - 1
             Dim sLine As String = sLines(i)
 
-            If (Not sLine.StartsWith("[")) Then
-                Continue For
+            ' We hit the end of the logs
+            If (i = sLines.Length - 1) Then
+                If (iPairState <> PAIR_IDLE) Then
+                    iPairState = PAIR_DONE
+                    bDeviceFailure = True
+                End If
             End If
 
             Select Case (iPairState)
                 Case PAIR_IDLE
+                    If (Not sLine.StartsWith("[")) Then
+                        Continue For
+                    End If
+
                     If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("started.")) Then
                         iPairState = PAIR_PROGRESS
 
@@ -658,23 +666,24 @@ Public Class ClassLogService
                     End If
 
                 Case PAIR_PROGRESS
-                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest") OrElse sLine.Contains("ServerRequestHandler")) Then
-                        For Each sFailure As String In sTotalFailures
-                            If (sLine.Contains(sFailure)) Then
-                                bDeviceFailure = True
-
-                                Dim sReason As String = sLine.Remove(0, sLine.IndexOf(sFailure)).Trim
-                                If (Not mFailureReason.Contains(sReason)) Then
-                                    mFailureReason.Add(sReason)
-                                End If
-
-                                Exit For
-                            End If
-                        Next
+                    If (Not sLine.StartsWith("[")) Then
+                        Continue For
                     End If
 
+                    For Each sFailure As String In sTotalFailures
+                        If (sLine.Contains(sFailure)) Then
+                            bDeviceFailure = True
 
-                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - Bluetooth device found matching the given address")) Then
+                            Dim sReason As String = sLine.Remove(0, sLine.IndexOf(sFailure)).Trim
+                            If (Not mFailureReason.Contains(sReason)) Then
+                                mFailureReason.Add(sReason)
+                            End If
+
+                            Exit For
+                        End If
+                    Next
+
+                    If (sLine.Contains("Bluetooth device found matching the given address")) Then
                         bFoundDevice = True
                         sDeviceSerial = ""
 
@@ -684,7 +693,7 @@ Public Class ClassLogService
                         End If
                     End If
 
-                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - No Bluetooth device found matching the given address")) Then
+                    If (sLine.Contains("No Bluetooth device found matching the given address")) Then
                         bFoundDevice = False
                         sDeviceSerial = ""
 
@@ -695,6 +704,7 @@ Public Class ClassLogService
                     End If
 
                     If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("Canceled.")) Then
+                        iPairState = PAIR_DONE
                         bPairCanceled = True
                     End If
 
@@ -705,6 +715,8 @@ Public Class ClassLogService
 
                     If (sLine.Contains("Async bluetooth request([Pair]") AndAlso sLine.EndsWith("completed.")) Then
                         iPairState = PAIR_DONE
+                        bDeviceFailure = False
+                        bPairCanceled = False
                     End If
 
                 Case PAIR_DONE
