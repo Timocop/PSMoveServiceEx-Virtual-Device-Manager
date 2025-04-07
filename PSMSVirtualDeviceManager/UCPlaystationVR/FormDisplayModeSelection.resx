@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label2.Text" xml:space="preserve">
-    <value>Use Direct Mode for the best performance. In this mode, the display is exclusively controlled by the compositor, enabling additional features to enhance your experience. 
+    <value>For optimal performance, use Direct Mode. In this mode, the compositor has exclusive control over the display, unlocking enhanced features for a smoother experience.
 
-Please note that this feature is currently only supported by AMD and Intel graphics cards.</value>
+Note: Direct Mode is currently only supported on AMD and Intel graphics cards, and requires SteamVR to function.</value>
   </data>
   <data name="Label3.Text" xml:space="preserve">
-    <value>Using Virtual Mode, the display functions as an additional desktop for tasks like video playback and image viewing. However, compositors can not directly interact with the display, potentially decreasing performance and causing other issues.
+    <value>In Virtual Mode, the display acts as an extended desktop, making it ideal for tasks like video playback, image viewing, and general use—while ensuring broader compatibility.
 
-Only use Virtual Mode if Direct Mode is not functioning properly.</value>
+Unlike Direct Mode, Virtual Mode supports all graphics cards. However, since compositors cannot interact directly with the display, you may experience reduced performance and some functional limitations.</value>
   </data>
 </root>

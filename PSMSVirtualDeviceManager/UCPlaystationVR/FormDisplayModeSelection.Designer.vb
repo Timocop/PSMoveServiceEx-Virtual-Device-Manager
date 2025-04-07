@@ -92,7 +92,7 @@ Partial Class FormDisplayModeSelection
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.RadioButton_ModeDirect)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 82)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 195)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(529, 105)
         Me.GroupBox1.TabIndex = 2
@@ -111,14 +111,12 @@ Partial Class FormDisplayModeSelection
         'RadioButton_ModeDirect
         '
         Me.RadioButton_ModeDirect.AutoSize = True
-        Me.RadioButton_ModeDirect.Checked = True
         Me.RadioButton_ModeDirect.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton_ModeDirect.Location = New System.Drawing.Point(6, 0)
         Me.RadioButton_ModeDirect.Name = "RadioButton_ModeDirect"
-        Me.RadioButton_ModeDirect.Size = New System.Drawing.Size(179, 17)
+        Me.RadioButton_ModeDirect.Size = New System.Drawing.Size(90, 17)
         Me.RadioButton_ModeDirect.TabIndex = 0
-        Me.RadioButton_ModeDirect.TabStop = True
-        Me.RadioButton_ModeDirect.Text = "Direct-Mode (Recommended)"
+        Me.RadioButton_ModeDirect.Text = "Direct-Mode"
         Me.RadioButton_ModeDirect.UseVisualStyleBackColor = True
         '
         'GroupBox2
@@ -127,7 +125,7 @@ Partial Class FormDisplayModeSelection
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox2.Controls.Add(Me.Label3)
         Me.GroupBox2.Controls.Add(Me.RadioButton_ModeVirtual)
-        Me.GroupBox2.Location = New System.Drawing.Point(12, 193)
+        Me.GroupBox2.Location = New System.Drawing.Point(12, 82)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(529, 107)
         Me.GroupBox2.TabIndex = 3
@@ -146,13 +144,14 @@ Partial Class FormDisplayModeSelection
         'RadioButton_ModeVirtual
         '
         Me.RadioButton_ModeVirtual.AutoSize = True
+        Me.RadioButton_ModeVirtual.Checked = True
         Me.RadioButton_ModeVirtual.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton_ModeVirtual.Location = New System.Drawing.Point(6, 0)
         Me.RadioButton_ModeVirtual.Name = "RadioButton_ModeVirtual"
-        Me.RadioButton_ModeVirtual.Size = New System.Drawing.Size(94, 17)
+        Me.RadioButton_ModeVirtual.Size = New System.Drawing.Size(183, 17)
         Me.RadioButton_ModeVirtual.TabIndex = 1
         Me.RadioButton_ModeVirtual.TabStop = True
-        Me.RadioButton_ModeVirtual.Text = "Virtual-Mode"
+        Me.RadioButton_ModeVirtual.Text = "Virtual-Mode (Recommended)"
         Me.RadioButton_ModeVirtual.UseVisualStyleBackColor = True
         '
         'Label1
