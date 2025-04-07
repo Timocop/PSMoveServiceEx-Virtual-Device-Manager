@@ -122,7 +122,8 @@
   </metadata>
   <data name="CheckBox_AutoDetectSettings.ToolTip" xml:space="preserve">
     <value>When enabled, Virtual Device Manager will automatically adjust the video input device properties using PSMoveServiceEx tracker settings.
-Use PSMoveServiceEx Config Tool to change device properties instead.</value>
+Use PSMoveServiceEx Config Tool to change device properties instead.
+(Its recommended to keep this enabled)</value>
   </data>
   <data name="ComboBox_CameraFramerate.ToolTip" xml:space="preserve">
     <value>Select the target framerate at which you want the video input device to run.
