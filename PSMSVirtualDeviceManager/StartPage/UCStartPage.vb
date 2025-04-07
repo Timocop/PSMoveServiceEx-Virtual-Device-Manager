@@ -919,26 +919,6 @@ Public Class UCStartPage
         End Try
     End Sub
 
-    Private Sub LinkLabel_ServiceRunCmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceRunCmd.LinkClicked
-        If (g_mFormRestart IsNot Nothing AndAlso Not g_mFormRestart.IsDisposed) Then
-            Return
-        End If
-
-        Try
-            RunService(False)
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-    End Sub
-
-    Private Sub LinkLabel_ConfigToolRunCmd_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ConfigToolRunCmd.LinkClicked
-        Try
-            RunServiceConfigTool(False)
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
-        End Try
-    End Sub
-
     Public Sub LinkLabel_ServiceRestart_Click()
         LinkLabel_ServiceRestart_LinkClicked(Nothing, Nothing)
     End Sub

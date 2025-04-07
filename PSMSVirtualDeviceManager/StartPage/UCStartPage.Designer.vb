@@ -28,9 +28,9 @@ Partial Class UCStartPage
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCStartPage))
-        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Title2 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
+        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
@@ -39,7 +39,6 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceLog = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceFactory = New System.Windows.Forms.LinkLabel()
         Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_ServiceRunCmd = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServicePath = New System.Windows.Forms.LinkLabel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -47,7 +46,6 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceRestart = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ServiceStop = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_ConfigToolRunCmd = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_ConfigToolClose = New System.Windows.Forms.LinkLabel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality2 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -279,7 +277,6 @@ Partial Class UCStartPage
         '
         'Panel4
         '
-        Me.Panel4.Controls.Add(Me.LinkLabel_ServiceRunCmd)
         Me.Panel4.Controls.Add(Me.LinkLabel_ServicePath)
         Me.Panel4.Controls.Add(Me.Label1)
         Me.Panel4.Controls.Add(Me.ClassPictureBoxQuality1)
@@ -293,23 +290,6 @@ Partial Class UCStartPage
         Me.Panel4.Size = New System.Drawing.Size(429, 131)
         Me.Panel4.TabIndex = 1
         '
-        'LinkLabel_ServiceRunCmd
-        '
-        Me.LinkLabel_ServiceRunCmd.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ServiceRunCmd.AutoSize = True
-        Me.LinkLabel_ServiceRunCmd.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceRunCmd.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ServiceRunCmd.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceRunCmd.Location = New System.Drawing.Point(103, 59)
-        Me.LinkLabel_ServiceRunCmd.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_ServiceRunCmd.Name = "LinkLabel_ServiceRunCmd"
-        Me.LinkLabel_ServiceRunCmd.Size = New System.Drawing.Size(80, 13)
-        Me.LinkLabel_ServiceRunCmd.TabIndex = 20
-        Me.LinkLabel_ServiceRunCmd.TabStop = True
-        Me.LinkLabel_ServiceRunCmd.Text = "Debug Service"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ServiceRunCmd, "Tooltip")
-        Me.LinkLabel_ServiceRunCmd.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
         'LinkLabel_ServicePath
         '
         Me.LinkLabel_ServicePath.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -317,7 +297,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServicePath.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServicePath.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServicePath.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 113)
+        Me.LinkLabel_ServicePath.Location = New System.Drawing.Point(103, 97)
         Me.LinkLabel_ServicePath.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
         Me.LinkLabel_ServicePath.Name = "LinkLabel_ServicePath"
         Me.LinkLabel_ServicePath.Size = New System.Drawing.Size(96, 13)
@@ -374,7 +354,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceRestart.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceRestart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceRestart.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceRestart.Location = New System.Drawing.Point(103, 75)
+        Me.LinkLabel_ServiceRestart.Location = New System.Drawing.Point(103, 59)
         Me.LinkLabel_ServiceRestart.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceRestart.Name = "LinkLabel_ServiceRestart"
         Me.LinkLabel_ServiceRestart.Size = New System.Drawing.Size(81, 13)
@@ -391,7 +371,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ServiceStop.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ServiceStop.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ServiceStop.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ServiceStop.Location = New System.Drawing.Point(103, 91)
+        Me.LinkLabel_ServiceStop.Location = New System.Drawing.Point(103, 75)
         Me.LinkLabel_ServiceStop.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ServiceStop.Name = "LinkLabel_ServiceStop"
         Me.LinkLabel_ServiceStop.Size = New System.Drawing.Size(69, 13)
@@ -403,7 +383,6 @@ Partial Class UCStartPage
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolRunCmd)
         Me.Panel2.Controls.Add(Me.LinkLabel_ConfigToolClose)
         Me.Panel2.Controls.Add(Me.Label2)
         Me.Panel2.Controls.Add(Me.ClassPictureBoxQuality2)
@@ -415,23 +394,6 @@ Partial Class UCStartPage
         Me.Panel2.Size = New System.Drawing.Size(430, 131)
         Me.Panel2.TabIndex = 0
         '
-        'LinkLabel_ConfigToolRunCmd
-        '
-        Me.LinkLabel_ConfigToolRunCmd.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ConfigToolRunCmd.AutoSize = True
-        Me.LinkLabel_ConfigToolRunCmd.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigToolRunCmd.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_ConfigToolRunCmd.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigToolRunCmd.Location = New System.Drawing.Point(103, 59)
-        Me.LinkLabel_ConfigToolRunCmd.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.LinkLabel_ConfigToolRunCmd.Name = "LinkLabel_ConfigToolRunCmd"
-        Me.LinkLabel_ConfigToolRunCmd.Size = New System.Drawing.Size(105, 13)
-        Me.LinkLabel_ConfigToolRunCmd.TabIndex = 25
-        Me.LinkLabel_ConfigToolRunCmd.TabStop = True
-        Me.LinkLabel_ConfigToolRunCmd.Text = "Debug Config Tool"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_ConfigToolRunCmd, "Tooltip")
-        Me.LinkLabel_ConfigToolRunCmd.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
         'LinkLabel_ConfigToolClose
         '
         Me.LinkLabel_ConfigToolClose.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -439,7 +401,7 @@ Partial Class UCStartPage
         Me.LinkLabel_ConfigToolClose.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_ConfigToolClose.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_ConfigToolClose.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 75)
+        Me.LinkLabel_ConfigToolClose.Location = New System.Drawing.Point(103, 59)
         Me.LinkLabel_ConfigToolClose.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_ConfigToolClose.Name = "LinkLabel_ConfigToolClose"
         Me.LinkLabel_ConfigToolClose.Size = New System.Drawing.Size(98, 13)
@@ -1198,21 +1160,21 @@ Partial Class UCStartPage
         '
         'Chart_ServicePerformance
         '
-        ChartArea2.Name = "ChartArea1"
-        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea2)
+        ChartArea1.Name = "ChartArea1"
+        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea1)
         Me.Chart_ServicePerformance.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend2.Name = "Legend1"
-        Me.Chart_ServicePerformance.Legends.Add(Legend2)
+        Legend1.Name = "Legend1"
+        Me.Chart_ServicePerformance.Legends.Add(Legend1)
         Me.Chart_ServicePerformance.Location = New System.Drawing.Point(0, 42)
         Me.Chart_ServicePerformance.Name = "Chart_ServicePerformance"
         Me.Chart_ServicePerformance.Size = New System.Drawing.Size(859, 320)
         Me.Chart_ServicePerformance.TabIndex = 1
         Me.Chart_ServicePerformance.Text = "Chart1"
-        Title2.Alignment = System.Drawing.ContentAlignment.MiddleRight
-        Title2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Title2.Name = "Title1"
-        Title2.Text = "Service device frames per second"
-        Me.Chart_ServicePerformance.Titles.Add(Title2)
+        Title1.Alignment = System.Drawing.ContentAlignment.MiddleRight
+        Title1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Title1.Name = "Title1"
+        Title1.Text = "Service device frames per second"
+        Me.Chart_ServicePerformance.Titles.Add(Title1)
         '
         'Panel25
         '
@@ -1545,8 +1507,6 @@ Partial Class UCStartPage
     Friend WithEvents Button_VdmUpdateIgnore As Button
     Friend WithEvents ColumnHeader_ID As ColumnHeader
     Friend WithEvents ColumnHeader_Color As ColumnHeader
-    Friend WithEvents LinkLabel_ServiceRunCmd As LinkLabel
-    Friend WithEvents LinkLabel_ConfigToolRunCmd As LinkLabel
     Friend WithEvents Timer_RestartPsms As Timer
     Friend WithEvents LinkLabel_UninstallPSEyeDrivers As LinkLabel
     Friend WithEvents LinkLabel_ServiceLog As LinkLabel
