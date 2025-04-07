@@ -25,6 +25,7 @@ Public Class UCStartPage
 
     Private g_bIsServiceRunning As Boolean = False
     Private g_bIsServiceConnected As Boolean = False
+    Private g_bHasDiagnosticsIssues As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
 
     Private ReadOnly g_sServiceProcesses As String() = {
@@ -112,20 +113,31 @@ Public Class UCStartPage
     Private Sub SetStatusServiceConnected()
         Dim bIsServiceRunning As Boolean
         Dim bIsServiceConnected As Boolean
+        Dim bHasDiagnosticsIssues As Boolean
 
         SyncLock g_mThreadLock
             bIsServiceRunning = g_bIsServiceRunning
             bIsServiceConnected = g_bIsServiceConnected
+            bHasDiagnosticsIssues = g_bHasDiagnosticsIssues
         End SyncLock
 
         If (bIsServiceRunning) Then
             If (bIsServiceConnected) Then
-                Label_PsmsxStatus.Text = "Service Connected"
-                Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
+                If (bHasDiagnosticsIssues) Then
+                    Label_PsmsxStatus.Text = "Service Connected with issues"
+                    Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
-                ' Label Status in MainForm
-                g_FormMain.Label_ServiceStatus.Text = "Service Connected"
-                g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_GREEN_16
+                    ' Label Status in MainForm
+                    g_FormMain.Label_ServiceStatus.Text = "Service Connected with issues"
+                    g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
+                Else
+                    Label_PsmsxStatus.Text = "Service Connected"
+                    Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
+
+                    ' Label Status in MainForm
+                    g_FormMain.Label_ServiceStatus.Text = "Service Connected"
+                    g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_GREEN_16
+                End If
             Else
                 Label_PsmsxStatus.Text = "Connecting to Service..."
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
@@ -173,7 +185,6 @@ Public Class UCStartPage
         sCheckFiles.Add(ClassConfigConst.PATH_CONFIG_DEVICES)
 
         While True
-            Dim bShowIssuesPrompt As Boolean = False
             Dim mFileTimestamps As New Dictionary(Of String, Date)
 
             While True
@@ -292,6 +303,8 @@ Public Class UCStartPage
                     Next
 
                     If (bServiceLogFound AndAlso bServiceDevicesFound) Then
+                        Dim bIssuesDetected As Boolean = False
+
                         ' Check for issues
                         For Each sJobTitle As String In mLogDiagnosticsIssues.Keys
                             Select Case (sJobTitle)
@@ -312,19 +325,24 @@ Public Class UCStartPage
                                 End Select
 
                                 If (mIssue.iType = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR) Then
-                                    bShowIssuesPrompt = True
+                                    bIssuesDetected = True
                                     Exit For
                                 End If
                             Next
 
-                            If (bShowIssuesPrompt) Then
+                            If (bIssuesDetected) Then
                                 Exit For
                             End If
                         Next
 
-                        ClassUtils.AsyncInvoke(Sub()
-                                                   Panel_VdmDiagnosticIssue.Visible = bShowIssuesPrompt
-                                               End Sub)
+                        SyncLock g_mThreadLock
+                            If (g_bHasDiagnosticsIssues <> bIssuesDetected) Then
+                                g_bHasDiagnosticsIssues = bIssuesDetected
+
+                                ClassUtils.AsyncInvoke(Sub() Panel_VdmDiagnosticIssue.Visible = bIssuesDetected)
+                                ClassUtils.AsyncInvoke(Sub() SetStatusServiceConnected())
+                            End If
+                        End SyncLock
                     End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
