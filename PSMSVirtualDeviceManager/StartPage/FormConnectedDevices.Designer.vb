@@ -274,7 +274,7 @@ Partial Class FormConnectedDevices
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "FormConnectedDevices"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Device Manager"
         Me.ContextMenuStrip_Devices.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)

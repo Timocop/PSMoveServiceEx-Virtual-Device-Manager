@@ -323,7 +323,7 @@ Partial Class FormTroubleshootLogs
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "FormTroubleshootLogs"
         Me.ShowIcon = False
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Logs and Diagnostics"
         Me.Panel1.ResumeLayout(False)
         Me.TabControl_Diagnostic.ResumeLayout(False)

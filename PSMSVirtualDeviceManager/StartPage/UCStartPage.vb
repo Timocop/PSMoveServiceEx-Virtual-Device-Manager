@@ -27,6 +27,8 @@ Public Class UCStartPage
     Private g_bIsServiceConnected As Boolean = False
     Private g_bHasDiagnosticsIssues As Boolean = False
     Private g_mFormRestart As FormLoading = Nothing
+    Private g_mFormTroubleshootLogs As FormTroubleshootLogs = Nothing
+    Private g_mFormConnectedDevices As FormConnectedDevices = Nothing
 
     Private ReadOnly g_sServiceProcesses As String() = {
         "PSMoveService.exe",
@@ -866,6 +868,16 @@ Public Class UCStartPage
     End Sub
 
     Private Sub CleanUp()
+        If (g_mFormTroubleshootLogs IsNot Nothing AndAlso Not g_mFormTroubleshootLogs.IsDisposed) Then
+            g_mFormTroubleshootLogs.Dispose()
+            g_mFormTroubleshootLogs = Nothing
+        End If
+
+        If (g_mFormConnectedDevices IsNot Nothing AndAlso Not g_mFormConnectedDevices.IsDisposed) Then
+            g_mFormConnectedDevices.Dispose()
+            g_mFormConnectedDevices = Nothing
+        End If
+
         If (g_mDriverInstallTimerThread IsNot Nothing AndAlso g_mDriverInstallTimerThread.IsAlive) Then
             g_mDriverInstallTimerThread.Abort()
             g_mDriverInstallTimerThread.Join()
@@ -1778,9 +1790,12 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_ManageConnectedDevices_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ManageConnectedDevices.LinkClicked
         Try
-            Using mForm As New FormConnectedDevices
-                mForm.ShowDialog(g_FormMain)
-            End Using
+            If (g_mFormConnectedDevices Is Nothing OrElse g_mFormConnectedDevices.IsDisposed) Then
+                g_mFormConnectedDevices = New FormConnectedDevices
+                g_mFormConnectedDevices.Show(g_FormMain)
+            Else
+                g_mFormConnectedDevices.WindowState = FormWindowState.Normal
+            End If
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -1978,19 +1993,33 @@ Public Class UCStartPage
     End Sub
 
     Private Sub LinkLabel_ServiceLog_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ServiceLog.LinkClicked
-        Using mLogs As New FormTroubleshootLogs(g_FormMain, False, False)
-            mLogs.ShowDialog(g_FormMain)
-        End Using
+        Try
+            If (g_mFormTroubleshootLogs Is Nothing OrElse g_mFormTroubleshootLogs.IsDisposed) Then
+                g_mFormTroubleshootLogs = New FormTroubleshootLogs(g_FormMain, False, False)
+                g_mFormTroubleshootLogs.Show(g_FormMain)
+            Else
+                g_mFormTroubleshootLogs.WindowState = FormWindowState.Normal
+            End If
 
-        RunRuntimeDiagnostics()
+            RunRuntimeDiagnostics()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub Button_VdmDiagnosticsOpen_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsOpen.Click
-        Using mLogs As New FormTroubleshootLogs(g_FormMain, True, True)
-            mLogs.ShowDialog(g_FormMain)
-        End Using
+        Try
+            If (g_mFormTroubleshootLogs Is Nothing OrElse g_mFormTroubleshootLogs.IsDisposed) Then
+                g_mFormTroubleshootLogs = New FormTroubleshootLogs(g_FormMain, True, True)
+                g_mFormTroubleshootLogs.Show(g_FormMain)
+            Else
+                g_mFormTroubleshootLogs.WindowState = FormWindowState.Normal
+            End If
 
-        RunRuntimeDiagnostics()
+            RunRuntimeDiagnostics()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub Button_VdmDiagnosticsRestartService_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsRestartService.Click
