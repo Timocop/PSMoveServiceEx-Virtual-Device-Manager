@@ -159,6 +159,8 @@ Public Class UCStartPage
     End Sub
 
     Private Sub RuntimeDiagnostics_Thread()
+        Const THREAD_TIMEOUT_SECONDS As Integer = 10
+
         Dim mLastFileTimestamps As New Dictionary(Of String, Date)
         Dim mConfig As New ClassServiceInfo
         Dim bForceRun As Boolean = False
@@ -333,7 +335,7 @@ Public Class UCStartPage
                 Exit While
             End While
 
-            For i = 1 To 10
+            For i = 1 To THREAD_TIMEOUT_SECONDS
                 Threading.Thread.Sleep(1000)
 
                 SyncLock g_mThreadLock
@@ -1995,6 +1997,14 @@ Public Class UCStartPage
 
     Private Sub Button_VdmDiagnosticsRestartService_Click(sender As Object, e As EventArgs) Handles Button_VdmDiagnosticsRestartService.Click
         LinkLabel_ServiceRestart_LinkClicked(Nothing, Nothing)
+    End Sub
+
+    Private Sub UCStartPage_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged
+        If (Not Me.Visible) Then
+            Return
+        End If
+
+        RunRuntimeDiagnostics()
     End Sub
 End Class
 
