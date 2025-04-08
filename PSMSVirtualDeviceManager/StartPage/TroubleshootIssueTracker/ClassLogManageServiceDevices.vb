@@ -214,7 +214,7 @@ Public Class ClassLogManageServiceDevices
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_EMPTY,
-            "Some diagnostic details are unavailable due to missing log information.",
+            "Some diagnostic details are unavailable due to missing log data.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )

@@ -147,7 +147,7 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_EMPTY,
-            "Some diagnostic details are unavailable due to missing log information.",
+            "Some diagnostic details are unavailable due to missing log data.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -336,7 +336,7 @@ Public Class ClassLogService
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BLUETOOTH_FAIL,
             "PSMoveServiceEx is unable to retrieve any bluetooth adapter information.",
-            "",
+            "Ensure your computer has an active Bluetooth radio connection.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -490,7 +490,7 @@ Public Class ClassLogService
         Dim mDiabledTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PSVR_FAIL,
             "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display device (Morpheus) because it has been disabled.",
-            "",
+            "Enable the PlayStation VR Head-mounted Display (Morpheus) in 'PSMoveServiceEx Config Tool - Advanced Settings - Head-Mounted Display Settings'.",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
 
@@ -529,7 +529,7 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_NO_BLUETOOTH,
-            "PSMoveServiceEx could not find the target bluetooth device ({0}) for pairing.",
+            "PSMoveServiceEx failed to locate the target Bluetooth device ({0}) for pairing.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -542,7 +542,7 @@ Public Class ClassLogService
                 Continue For
             End If
 
-            If (sLine.Contains("No Bluetooth device found matching the given address")) Then
+            If (sLine.Contains("AsyncBluetoothPairDeviceRequest - No Bluetooth device found matching the given address")) Then
                 Dim mMatch As Match = Regex.Match(sLine, "No Bluetooth device found matching the given address\: (?<Address>(..\:..\:..\:..\:..\:..))", RegexOptions.IgnoreCase)
 
                 If (mMatch.Success AndAlso mMatch.Groups("Address").Success) Then
@@ -555,7 +555,7 @@ Public Class ClassLogService
             End If
 
             ' Remove found devices.
-            If (sLine.Contains("Bluetooth device found matching the given address")) Then
+            If (sLine.Contains("AsyncBluetoothPairDeviceRequest - Bluetooth device found matching the given address")) Then
                 Dim mMatch As Match = Regex.Match(sLine, "Bluetooth device found matching the given address\: (?<Address>(..\:..\:..\:..\:..\:..))", RegexOptions.IgnoreCase)
 
                 If (mMatch.Success AndAlso mMatch.Groups("Address").Success) Then
@@ -586,15 +586,15 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BLUETOOTH_PAIRING,
-            "PSMoveServiceEx encountered multiple bluetooth pairing issues with bluetooth device '{0}' with the following reason: {1}",
+            "PSMoveServiceEx experienced multiple Bluetooth pairing failures with device '{0}' with the following reason: {1}",
             "See logs for more details.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mTemplateNotFound As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BLUETOOTH_NOT_FOUND,
-            "PSMoveServiceEx could not find bluetooth device '{0}'.",
-            "Make sure Bluetooth has been enabled in the Windows settings and your bluetooth device is in pairing mode.",
+            "PSMoveServiceEx failed to detect Bluetooth device '{0}'.",
+            "Ensure Bluetooth is enabled in Windows settings and that your Bluetooth device is in pairing mode.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
@@ -683,7 +683,7 @@ Public Class ClassLogService
                         End If
                     Next
 
-                    If (sLine.Contains("Bluetooth device found matching the given address")) Then
+                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - Bluetooth device found matching the given address")) Then
                         bFoundDevice = True
                         sDeviceSerial = ""
 
@@ -693,7 +693,7 @@ Public Class ClassLogService
                         End If
                     End If
 
-                    If (sLine.Contains("No Bluetooth device found matching the given address")) Then
+                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - No Bluetooth device found matching the given address")) Then
                         bFoundDevice = False
                         sDeviceSerial = ""
 
@@ -773,8 +773,8 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_TIMEOUT,
-            "PSMoveServiceEx had to close device {0} that timed out. This happens when PSMoveServiceEx does not receive any data from the device for example due to connection issues.",
-            "Check your connection to the device. If the device is connected via bluetooth, make sure you didnt connected too many devices and are in range of the bluetooth adapter.",
+            "PSMoveServiceEx closed device {0} due to timeout (no data received), typically caused by connection issues.",
+            "Check your connection to the device. If the device is connected via Bluetooth, ensure you are within range and that you haven't connected too many devices simultaneously.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -816,8 +816,8 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_SERVICE_LOG_INCOMPLETE,
-            "The PSMoveServiceEx log is incomplete and has missing logging details. Some diagnostic details are unavailable due to missing log information.",
-            "Let PSMoveServiceEx finish initalizing.",
+            "The PSMoveServiceEx log is incomplete, resulting in missing diagnostic details due to insufficient log data.",
+            "Allow PSMoveServiceEx to complete initialization.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -872,8 +872,8 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_BAD_TRACKING,
-            "{0} id {1} on tracker id {2} stopped tracking due to bad tracking deviations ({3} cases in total). Usually this is a result of color noise/collisions, bad pose calibration or the trackers have been moved after pose calibration has been done.",
-            "Redo pose calibration and check for color noise and collisions in color calibration using PSMoveServiceEx Config Tool.",
+            "{0} id {1} lost tracking on Tracker id {2} due to excessive deviations ({3} instances). Common causes: color noise/collisions, improper calibration, or tracker movement after pose calibration.",
+            "Redo the pose calibration and check for color noise or collisions in the color calibration using the PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 

@@ -87,7 +87,7 @@ Public Class ClassLogDxdiag
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_EMPTY,
-            "Some diagnostic details are unavailable due to missing log information.",
+            "Some diagnostic details are unavailable due to missing log data.",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -109,8 +109,8 @@ Public Class ClassLogDxdiag
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BLUETOOTH_BANDWIDTH_DEVICES,
-            "Having multiple bluetooth devices connected, such as '{0}', could cause bandwidth issues if you want to use bluetooth devices such as PlayStation Move controllers.",
-            "If you encounter issues with connected controllers, reduce the amount of devices connected to your bluetooth adapter.",
+            "Having multiple Bluetooth devices connected (like '{0}') may cause bandwidth issues when using PlayStation Move controllers or other Bluetooth peripherals.",
+            "If you experience controller connection issues, try reducing the number of devices connected to your Bluetooth adapter.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
