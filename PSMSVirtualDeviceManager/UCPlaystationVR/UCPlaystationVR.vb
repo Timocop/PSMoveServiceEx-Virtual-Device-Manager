@@ -227,7 +227,7 @@
                 Panel_PSVRStatus.BackColor = Color.FromArgb(0, 192, 0)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Connected"
+                g_FormMain.Label_PsvrStatus.Text = Label_PSVRStatus.Text
                 g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_GREEN_16
 
             Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.NOT_CONNECTED AndAlso
@@ -238,7 +238,7 @@
                 Panel_PSVRStatus.BackColor = Color.FromArgb(224, 224, 224)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Disconnected"
+                g_FormMain.Label_PsvrStatus.Text = Label_PSVRStatus.Text
                 g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_WHITE_16
 
             Case (iUsbStatus = ENUM_DEVICE_USB_STATUS.NOT_CONNECTED OrElse
@@ -258,7 +258,7 @@
                 Panel_PSVRStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Issues Detected"
+                g_FormMain.Label_PsvrStatus.Text = Label_PSVRStatus.Text
                 g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_YELLOW_16
 
             Case (iHdmiStatus = ENUM_DEVICE_HDMI_STATUS.GENERAL_ISSUE OrElse
@@ -269,7 +269,7 @@
                 Panel_PSVRStatus.BackColor = Color.FromArgb(192, 0, 0)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Error"
+                g_FormMain.Label_PsvrStatus.Text = Label_PSVRStatus.Text
                 g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_RED_16
 
             Case Else
@@ -278,7 +278,7 @@
                 Panel_PSVRStatus.BackColor = Color.FromArgb(224, 224, 224)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_PsvrStatus.Text = "PlayStation VR Unknown Status"
+                g_FormMain.Label_PsvrStatus.Text = Label_PSVRStatus.Text
                 g_FormMain.Label_PsvrStatus.Image = My.Resources.Status_WHITE_16
 
         End Select

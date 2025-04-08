@@ -126,18 +126,18 @@ Public Class UCStartPage
         If (bIsServiceRunning) Then
             If (bIsServiceConnected) Then
                 If (bHasDiagnosticsIssues) Then
-                    Label_PsmsxStatus.Text = "Service Connected with issues"
+                    Label_PsmsxStatus.Text = "Service Connected with Issues"
                     Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                     ' Label Status in MainForm
-                    g_FormMain.Label_ServiceStatus.Text = "Service Connected with issues"
+                    g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
                     g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
                 Else
                     Label_PsmsxStatus.Text = "Service Connected"
                     Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
 
                     ' Label Status in MainForm
-                    g_FormMain.Label_ServiceStatus.Text = "Service Connected"
+                    g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
                     g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_GREEN_16
                 End If
             Else
@@ -145,7 +145,7 @@ Public Class UCStartPage
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_ServiceStatus.Text = "Connecting to Service..."
+                g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
                 g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
             End If
         Else
@@ -153,7 +153,7 @@ Public Class UCStartPage
             Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
 
             ' Label Status in MainForm
-            g_FormMain.Label_ServiceStatus.Text = "Service Disconnected"
+            g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
             g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_RED_16
         End If
 
