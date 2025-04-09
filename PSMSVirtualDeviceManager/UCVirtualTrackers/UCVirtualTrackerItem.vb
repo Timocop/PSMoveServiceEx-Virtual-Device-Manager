@@ -399,8 +399,7 @@ Public Class UCVirtualTrackerItem
 
                                         Dim iAngleDiff = ClassMathUtils.CalculateAngleDegreesDifference(mPose1, mPose2)
 
-                                        If (iAngleDiff > PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION OrElse
-                                            (mPose1 = Quaternion.Identity OrElse mPose2 = Quaternion.Identity)) Then
+                                        If (iAngleDiff > PS4_TRACKER_POSE_ANGLE_MAX_DIVIATION) Then
                                             g_bStatusDistortionAngle = iAngleDiff
                                             g_bStatusBadPoseError = True
                                         Else
