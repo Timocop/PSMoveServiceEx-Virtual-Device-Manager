@@ -104,6 +104,11 @@ Public Class ClassLogManageServiceDevices
         End If
 
         Dim sTrackersList As New Text.StringBuilder
+        sTrackersList.Append("[Service]").AppendLine()
+        sTrackersList.AppendFormat("ControllerCount={0}", g_mFormMain.g_mPSMoveServiceCAPI.GetControllersData.Length).AppendLine()
+        sTrackersList.AppendFormat("HmdCount={0}", g_mFormMain.g_mPSMoveServiceCAPI.GetHmdsData.Length).AppendLine()
+        sTrackersList.AppendFormat("TrackerCount={0}", g_mFormMain.g_mPSMoveServiceCAPI.GetTrackersData.Length).AppendLine()
+        sTrackersList.AppendLine()
 
         Dim mControllers = g_mFormMain.g_mPSMoveServiceCAPI.GetControllersData
         For Each mItem In mControllers
