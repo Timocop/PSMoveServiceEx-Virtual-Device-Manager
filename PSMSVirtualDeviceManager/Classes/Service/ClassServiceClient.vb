@@ -42,6 +42,7 @@ Public Class ClassServiceClient
         Property m_OutputSeqNum As Integer
         Property m_BatteryLevel As Single
         Property m_TrackingColor As PSMTrackingColorType
+        Property m_AverageFps As Integer
 
         Property m_LastTimeStamp As Date
 
@@ -61,6 +62,7 @@ Public Class ClassServiceClient
         Property m_OrientationVelocity As Vector3
 
         Property m_OutputSeqNum As Integer
+        Property m_AverageFps As Integer
 
         Property m_LastTimeStamp As Date
 
@@ -79,9 +81,9 @@ Public Class ClassServiceClient
         Property m_Width As Integer
 
         Property m_OutputSeqNum As Integer
+        Property m_AverageFps As Integer
 
         Property m_LastTimeStamp As Date
-        Property m_AverageFps As Integer
 
         Function GetOrientationEuler() As Vector3
     End Interface
@@ -117,6 +119,8 @@ Public Class ClassServiceClient
 
         Public Property m_LastTimeStamp As Date Implements IControllerData.m_LastTimeStamp
 
+        Public Property m_AverageFps As Integer Implements IControllerData.m_AverageFps
+
         Private Function IControllerData_GetOrientationEuler() As Vector3 Implements IControllerData.GetOrientationEuler
             Return ClassMathUtils.FromQ(m_Orientation)
         End Function
@@ -132,13 +136,13 @@ Public Class ClassServiceClient
         Public Property m_Orientation As Quaternion Implements ITrackerData.m_Orientation
 
         Public Property m_OutputSeqNum As Integer Implements ITrackerData.m_OutputSeqNum
+        Public Property m_AverageFps As Integer Implements ITrackerData.m_AverageFps
 
         Public Property m_LastTimeStamp As Date Implements ITrackerData.m_LastTimeStamp
 
         Public Property m_Exposure As Integer Implements ITrackerData.m_Exposure
         Public Property m_Gain As Integer Implements ITrackerData.m_Gain
         Public Property m_Width As Integer Implements ITrackerData.m_Width
-        Public Property m_AverageFps As Integer Implements ITrackerData.m_AverageFps
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
             Return ClassMathUtils.FromQ(m_Orientation)
@@ -160,7 +164,9 @@ Public Class ClassServiceClient
         Public Property m_OrientationVelocity As Vector3 Implements IHmdData.m_OrientationVelocity
 
         Public Property m_OutputSeqNum As Integer Implements IHmdData.m_OutputSeqNum
+        Public Property m_AverageFps As Integer Implements IHmdData.m_AverageFps
         Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
+
 
         Public Function GetOrientationEuler() As Vector3 Implements IHmdData.GetOrientationEuler
             Return ClassMathUtils.FromQ(m_Orientation)
@@ -182,7 +188,9 @@ Public Class ClassServiceClient
         Public Property m_OrientationVelocity As Vector3 Implements IHmdData.m_OrientationVelocity
 
         Public Property m_OutputSeqNum As Integer Implements IHmdData.m_OutputSeqNum
+        Public Property m_AverageFps As Integer Implements IHmdData.m_AverageFps
         Public Property m_LastTimeStamp As Date Implements IHmdData.m_LastTimeStamp
+
 
         Public Function GetOrientationEuler() As Vector3 Implements IHmdData.GetOrientationEuler
             Return ClassMathUtils.FromQ(m_Orientation)
@@ -429,6 +437,7 @@ Public Class ClassServiceClient
                                                 mData.m_Id = mController.m_Info.m_ControllerId
                                                 mData.m_Serial = mController.m_Info.m_ControllerSerial
                                                 mData.m_LastTimeStamp = Now
+                                                mData.m_AverageFps = CInt(mController.m_Info.m_DataFrameAverageFPS)
 
                                                 If (mData.m_Serial.StartsWith("VirtualController")) Then
                                                     mData.m_Serial &= String.Format("_{0}", mController.m_Info.m_ControllerId)
@@ -603,6 +612,7 @@ Public Class ClassServiceClient
                                                 mData.m_Id = mHmd.m_Info.m_HmdId
                                                 mData.m_Serial = mHmd.m_Info.m_HmdSerial
                                                 mData.m_LastTimeStamp = Now
+                                                mData.m_AverageFps = CInt(mHmd.m_Info.m_DataFrameAverageFPS)
 
                                                 If (mHmd.m_Info.IsStateValid) Then
                                                     mData.m_IsTracking = mHmd.m_Info.m_PSMorpheusState.m_IsCurrentlyTracking
@@ -685,6 +695,7 @@ Public Class ClassServiceClient
                                                 mData.m_Id = mHmd.m_Info.m_HmdId
                                                 mData.m_Serial = mHmd.m_Info.m_HmdSerial
                                                 mData.m_LastTimeStamp = Now
+                                                mData.m_AverageFps = CInt(mHmd.m_Info.m_DataFrameAverageFPS)
 
                                                 If (mHmd.m_Info.IsStateValid) Then
                                                     mData.m_IsTracking = mHmd.m_Info.m_PSMorpheusState.m_IsCurrentlyTracking
