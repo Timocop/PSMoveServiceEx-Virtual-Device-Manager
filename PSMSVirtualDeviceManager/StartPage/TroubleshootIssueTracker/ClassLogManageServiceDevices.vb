@@ -323,7 +323,7 @@ Public Class ClassLogManageServiceDevices
         )
         Dim mManyTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_MULTIPLE_HMDS,
-            "There are currently {0} head-mounted displays available but some applications may only support {1} at the time.",
+            "There are currently {0} head-mounted displays available but some applications may only support a single device.",
             "Its recommended to reduce the number of head-mounted displays to a single device.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
