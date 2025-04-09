@@ -369,7 +369,7 @@ Public Class ClassLogManageServiceDevices
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_COLOR_CALIBRATION,
             "Color calibration for {0} id {1} is not properly set on tracker id {2} which may cause tracking issues.",
-            "Properly calibrate color for this device using PSMoveServiceEx Config Tool.",
+            "Properly calibrate tracking colors for this device using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -383,7 +383,7 @@ Public Class ClassLogManageServiceDevices
         Dim mWrongColorTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_TRACKING_COLOR,
             "The tracking color of {0} id {1} on tracker id {2} not match the selected tracking color ({3}) that is set for this device.",
-            "Properly calibrate color for this device using PSMoveServiceEx Config Tool.",
+            "Properly calibrate tracking colors for this device using PSMoveServiceEx Config Tool.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
