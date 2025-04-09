@@ -33,7 +33,7 @@ Public Class ClassLogDxdiag
 
         Using mProcess As New Process
             mProcess.StartInfo.FileName = sDxDiagExecutable
-            mProcess.StartInfo.Arguments = String.Format("/whql:off /t ""{0}""", sOutputFile)
+            mProcess.StartInfo.Arguments = String.Format("/whql:off /dontskip /t ""{0}""", sOutputFile)
             mProcess.StartInfo.WorkingDirectory = IO.Path.GetDirectoryName(sDxDiagExecutable)
             mProcess.StartInfo.CreateNoWindow = True
             mProcess.StartInfo.UseShellExecute = True
