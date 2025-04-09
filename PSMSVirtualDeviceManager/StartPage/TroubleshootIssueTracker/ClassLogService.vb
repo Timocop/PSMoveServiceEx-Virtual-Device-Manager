@@ -769,14 +769,18 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
-        Dim mTimedoutDevices As New List(Of Integer)
-
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_TIMEOUT,
-            "PSMoveServiceEx closed device {0} due to timeout (no data received), typically caused by connection issues.",
+            "PSMoveServiceEx closed {0} id {1} due to timeout (no data received), typically caused by connection issues.",
             "Check your connection to the device. If the device is connected via Bluetooth, ensure you are within range and that you haven't connected too many devices simultaneously.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
+
+        Const CONST_SEARCH_CLOSED_DEVICE = 0
+        Const CONST_SEARCH_CLOSED_DEVICE_TYPE = 1
+
+        Dim iState As Integer = 0
+        Dim iStateDeviceId As Integer = -1
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = 0 To sLines.Length - 1
@@ -786,21 +790,35 @@ Public Class ClassLogService
                 Continue For
             End If
 
-            If (sLine.Contains("Device id") AndAlso sLine.Contains("closing due to no data")) Then
-                Dim mMatch As Match = Regex.Match(sLine, "Device id (?<ID>\d+) closing due to no data", RegexOptions.IgnoreCase)
+            Select Case (iState)
+                Case CONST_SEARCH_CLOSED_DEVICE
+                    iStateDeviceId = -1
 
-                If (mMatch.Success AndAlso mMatch.Groups("ID").Success) Then
-                    Dim iDeviceId As Integer = CInt(mMatch.Groups("ID").Value)
+                    If (sLine.Contains("Device id") AndAlso sLine.Contains("closing due to no data")) Then
+                        Dim mMatch As Match = Regex.Match(sLine, "Device id (?<ID>\d+) closing due to no data", RegexOptions.IgnoreCase)
 
-                    If (Not mTimedoutDevices.Contains(iDeviceId)) Then
-                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                        mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceId)
-                        mIssues.Add(mNewIssue)
+                        If (mMatch.Success AndAlso mMatch.Groups("ID").Success) Then
+                            Dim iDeviceId As Integer = CInt(mMatch.Groups("ID").Value)
 
-                        mTimedoutDevices.Add(iDeviceId)
+                            iState = CONST_SEARCH_CLOSED_DEVICE_TYPE
+                            iStateDeviceId = iDeviceId
+                        End If
                     End If
-                End If
-            End If
+
+                Case CONST_SEARCH_CLOSED_DEVICE_TYPE
+                    If (sLine.Contains("Closing")) Then
+                        Dim mMatch As Match = Regex.Match(sLine, "close \- Closing \b(?<Type>[a-zA-Z0-9_]+)\b", RegexOptions.IgnoreCase)
+                        If (mMatch.Success AndAlso mMatch.Groups("Type").Success) Then
+                            Dim sDeviceType As String = mMatch.Groups("Type").Value
+
+                            iState = CONST_SEARCH_CLOSED_DEVICE
+
+                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceType, iStateDeviceId)
+                            mIssues.Add(mNewIssue)
+                        End If
+                    End If
+            End Select
         Next
 
         Return mIssues.ToArray
