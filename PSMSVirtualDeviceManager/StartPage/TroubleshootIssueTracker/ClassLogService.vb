@@ -490,7 +490,7 @@ Public Class ClassLogService
         Dim mDiabledTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PSVR_FAIL,
             "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) because it has been disabled.",
-            "Enable the PlayStation VR Head-mounted Display (Morpheus) in 'PSMoveServiceEx Config Tool - Advanced Settings - Head-Mounted Display Settings'.",
+            "Enable the PlayStation VR Head-mounted Display (Morpheus) in 'PSMoveServiceEx Config Tool > Advanced Settings > Head-Mounted Display Settings'.",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
 
@@ -542,7 +542,7 @@ Public Class ClassLogService
                 Continue For
             End If
 
-            If (sLine.Contains("AsyncBluetoothPairDeviceRequest - No Bluetooth device found matching the given address")) Then
+            If (sLine.Contains("- No Bluetooth device found matching the given address")) Then
                 Dim mMatch As Match = Regex.Match(sLine, "No Bluetooth device found matching the given address\: (?<Address>(..\:..\:..\:..\:..\:..))", RegexOptions.IgnoreCase)
 
                 If (mMatch.Success AndAlso mMatch.Groups("Address").Success) Then
@@ -555,7 +555,7 @@ Public Class ClassLogService
             End If
 
             ' Remove found devices.
-            If (sLine.Contains("AsyncBluetoothPairDeviceRequest - Bluetooth device found matching the given address")) Then
+            If (sLine.Contains("- Bluetooth device found matching the given address")) Then
                 Dim mMatch As Match = Regex.Match(sLine, "Bluetooth device found matching the given address\: (?<Address>(..\:..\:..\:..\:..\:..))", RegexOptions.IgnoreCase)
 
                 If (mMatch.Success AndAlso mMatch.Groups("Address").Success) Then
@@ -683,7 +683,7 @@ Public Class ClassLogService
                         End If
                     Next
 
-                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - Bluetooth device found matching the given address")) Then
+                    If (sLine.Contains("- Bluetooth device found matching the given address")) Then
                         bFoundDevice = True
                         sDeviceSerial = ""
 
@@ -693,7 +693,7 @@ Public Class ClassLogService
                         End If
                     End If
 
-                    If (sLine.Contains("AsyncBluetoothPairDeviceRequest - No Bluetooth device found matching the given address")) Then
+                    If (sLine.Contains("- No Bluetooth device found matching the given address")) Then
                         bFoundDevice = False
                         sDeviceSerial = ""
 
