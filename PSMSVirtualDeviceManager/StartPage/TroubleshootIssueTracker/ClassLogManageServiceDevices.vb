@@ -21,6 +21,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_BAD_ACCELEROMETER As String = "Uncalibrated accelerometer"
     Public Shared ReadOnly LOG_ISSUE_PS4CAM_COLOR_SENSTIVITY As String = "Unoptimal color detection sensitivity"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_RESOLUTION_PSVR As String = "Tracker resolution too low for Head-mounted Display"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_FPS As String = "Tracker bad framrate"
 
 
     Enum ENUM_DEVICE_TYPE
@@ -40,6 +41,8 @@ Public Class ClassLogManageServiceDevices
 
         Dim bOrientationValid As Boolean
         Dim mOrientation As Vector3
+
+        Dim iAverageFps As Integer
     End Structure
 
     Structure STRUC_DEVICE_COLOR_CALIBRATION
@@ -165,6 +168,7 @@ Public Class ClassLogManageServiceDevices
             sTrackersList.AppendFormat("[Tracker_{0}]", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("ID={0}", mItem.m_Id).AppendLine()
             sTrackersList.AppendFormat("Path={0}", mItem.m_Path).AppendLine()
+            sTrackersList.AppendFormat("AverageFps={0}", mItem.m_AverageFps).AppendLine()
             sTrackersList.AppendFormat("OutputSeqNum={0}", mItem.m_OutputSeqNum).AppendLine()
             sTrackersList.AppendFormat("Position={0}", String.Format("{0}, {1}, {2}",
                                                                         mPos.X.ToString(Globalization.CultureInfo.InvariantCulture),
@@ -198,6 +202,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckGyroAndAccel())
         mIssues.AddRange(CheckPs4CameraColorSensitivity())
         mIssues.AddRange(CheckTrackerResolutionWithPSVR())
+        mIssues.AddRange(CheckFps())
         Return mIssues.ToArray
     End Function
 
@@ -782,6 +787,63 @@ Public Class ClassLogManageServiceDevices
         Return mIssues.ToArray
     End Function
 
+    Public Function CheckFps() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_TRACKER_BAD_FPS,
+            "The tracker id {0} framerate ({1} fps) is lower than the configured framerate ({2} fps). An unstable framerate may cause poor tracking performance.",
+            "Check for connection issues and ensure all trackers are running at the same framerate.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                Continue For
+            End If
+
+            If (mDevice.sSerial.StartsWith("VirtualTracker")) Then
+                Continue For
+            End If
+
+            ' Not available
+            If (mDevice.iAverageFps < 0) Then
+                Continue For
+            End If
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+
+            Dim sConfigFramerate As String = mDeviceConfig.GetValue(Of String)("", "frame_rate", "")
+            If (String.IsNullOrEmpty(sConfigFramerate) OrElse sConfigFramerate.Trim.Length = 0) Then
+                Continue For
+            End If
+
+            Dim iConfigFramerate As Integer = CInt(sConfigFramerate)
+
+            If (mDevice.iAverageFps < iConfigFramerate - 3) Then
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDevice.iAverageFps, iConfigFramerate)
+                mIssues.Add(mIssue)
+            End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
     Private Function IsHueInRange(iTarget As Integer, iCenter As Integer, iRange As Integer) As Boolean
         Dim iLower As Integer = (iCenter - iRange + 180) Mod 180
         Dim iUpper As Integer = (iCenter + iRange) Mod 180
@@ -830,6 +892,12 @@ Public Class ClassLogManageServiceDevices
                         Single.Parse(mAng(2), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                     )
                     mNewDevice.bOrientationValid = True
+                End If
+
+                If (mDeviceProp.ContainsKey("AverageFps")) Then
+                    mNewDevice.iAverageFps = CInt(mDeviceProp("AverageFps"))
+                Else
+                    mNewDevice.iAverageFps = -1
                 End If
 
                 ' Required

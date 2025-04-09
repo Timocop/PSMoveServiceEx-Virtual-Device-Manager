@@ -81,6 +81,7 @@ Public Class ClassServiceClient
         Property m_OutputSeqNum As Integer
 
         Property m_LastTimeStamp As Date
+        Property m_AverageFps As Integer
 
         Function GetOrientationEuler() As Vector3
     End Interface
@@ -137,6 +138,7 @@ Public Class ClassServiceClient
         Public Property m_Exposure As Integer Implements ITrackerData.m_Exposure
         Public Property m_Gain As Integer Implements ITrackerData.m_Gain
         Public Property m_Width As Integer Implements ITrackerData.m_Width
+        Public Property m_AverageFps As Integer Implements ITrackerData.m_AverageFps
 
         Public Function GetOrientationEuler() As Vector3 Implements ITrackerData.GetOrientationEuler
             Return ClassMathUtils.FromQ(m_Orientation)
@@ -804,6 +806,7 @@ Public Class ClassServiceClient
                                         mData.m_Exposure = mTracker.m_Info.m_Stats.m_TrackerExposure
                                         mData.m_Gain = mTracker.m_Info.m_Stats.m_TrackerGain
                                         mData.m_Width = mTracker.m_Info.m_Stats.m_TrackerWidth
+                                        mData.m_AverageFps = CInt(mTracker.m_Info.m_Stats.m_DataFrameAverageFps)
 
                                         If (mTracker.m_Info.IsPoseValid) Then
                                             mData.m_Position = New Vector3(
