@@ -28,12 +28,13 @@ Partial Class UCStartPage
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCStartPage))
-        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Title2 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
+        Dim ChartArea3 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend3 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Title3 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_VdmReinstall = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel_VdmFactory = New System.Windows.Forms.LinkLabel()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
@@ -135,6 +136,7 @@ Partial Class UCStartPage
         Me.Panel29 = New System.Windows.Forms.Panel()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.Panel30 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_PsmsReinstall = New System.Windows.Forms.LinkLabel()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel7.SuspendLayout()
@@ -209,6 +211,8 @@ Partial Class UCStartPage
         '
         'Panel7
         '
+        Me.Panel7.Controls.Add(Me.LinkLabel_PsmsReinstall)
+        Me.Panel7.Controls.Add(Me.LinkLabel_VdmReinstall)
         Me.Panel7.Controls.Add(Me.LinkLabel_VdmFactory)
         Me.Panel7.Controls.Add(Me.Label7)
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
@@ -221,6 +225,22 @@ Partial Class UCStartPage
         Me.Panel7.Size = New System.Drawing.Size(430, 141)
         Me.Panel7.TabIndex = 7
         '
+        'LinkLabel_VdmReinstall
+        '
+        Me.LinkLabel_VdmReinstall.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_VdmReinstall.AutoSize = True
+        Me.LinkLabel_VdmReinstall.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_VdmReinstall.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_VdmReinstall.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_VdmReinstall.Location = New System.Drawing.Point(103, 116)
+        Me.LinkLabel_VdmReinstall.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabel_VdmReinstall.Name = "LinkLabel_VdmReinstall"
+        Me.LinkLabel_VdmReinstall.Size = New System.Drawing.Size(173, 13)
+        Me.LinkLabel_VdmReinstall.TabIndex = 33
+        Me.LinkLabel_VdmReinstall.TabStop = True
+        Me.LinkLabel_VdmReinstall.Text = "Reinstall Virutal Device Manager"
+        Me.LinkLabel_VdmReinstall.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'LinkLabel_VdmFactory
         '
         Me.LinkLabel_VdmFactory.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -229,7 +249,7 @@ Partial Class UCStartPage
         Me.LinkLabel_VdmFactory.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_VdmFactory.LinkColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_VdmFactory.Location = New System.Drawing.Point(103, 78)
-        Me.LinkLabel_VdmFactory.Margin = New System.Windows.Forms.Padding(3)
+        Me.LinkLabel_VdmFactory.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.LinkLabel_VdmFactory.Name = "LinkLabel_VdmFactory"
         Me.LinkLabel_VdmFactory.Size = New System.Drawing.Size(197, 13)
         Me.LinkLabel_VdmFactory.TabIndex = 32
@@ -1178,21 +1198,21 @@ Partial Class UCStartPage
         '
         'Chart_ServicePerformance
         '
-        ChartArea2.Name = "ChartArea1"
-        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea2)
+        ChartArea3.Name = "ChartArea1"
+        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea3)
         Me.Chart_ServicePerformance.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend2.Name = "Legend1"
-        Me.Chart_ServicePerformance.Legends.Add(Legend2)
+        Legend3.Name = "Legend1"
+        Me.Chart_ServicePerformance.Legends.Add(Legend3)
         Me.Chart_ServicePerformance.Location = New System.Drawing.Point(0, 42)
         Me.Chart_ServicePerformance.Name = "Chart_ServicePerformance"
         Me.Chart_ServicePerformance.Size = New System.Drawing.Size(859, 320)
         Me.Chart_ServicePerformance.TabIndex = 1
         Me.Chart_ServicePerformance.Text = "Chart1"
-        Title2.Alignment = System.Drawing.ContentAlignment.MiddleRight
-        Title2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Title2.Name = "Title1"
-        Title2.Text = "Service device frames per second"
-        Me.Chart_ServicePerformance.Titles.Add(Title2)
+        Title3.Alignment = System.Drawing.ContentAlignment.MiddleRight
+        Title3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Title3.Name = "Title1"
+        Title3.Text = "Service device frames per second"
+        Me.Chart_ServicePerformance.Titles.Add(Title3)
         '
         'Panel25
         '
@@ -1393,6 +1413,22 @@ Partial Class UCStartPage
         Me.Panel30.Size = New System.Drawing.Size(859, 1)
         Me.Panel30.TabIndex = 0
         '
+        'LinkLabel_PsmsReinstall
+        '
+        Me.LinkLabel_PsmsReinstall.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_PsmsReinstall.AutoSize = True
+        Me.LinkLabel_PsmsReinstall.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_PsmsReinstall.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_PsmsReinstall.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_PsmsReinstall.Location = New System.Drawing.Point(103, 100)
+        Me.LinkLabel_PsmsReinstall.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
+        Me.LinkLabel_PsmsReinstall.Name = "LinkLabel_PsmsReinstall"
+        Me.LinkLabel_PsmsReinstall.Size = New System.Drawing.Size(140, 13)
+        Me.LinkLabel_PsmsReinstall.TabIndex = 34
+        Me.LinkLabel_PsmsReinstall.TabStop = True
+        Me.LinkLabel_PsmsReinstall.Text = "Reinstall PSMoveServiceEx"
+        Me.LinkLabel_PsmsReinstall.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
         'UCStartPage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -1565,4 +1601,6 @@ Partial Class UCStartPage
     Friend WithEvents Panel30 As Panel
     Friend WithEvents Button_VdmDiagnosticsRestartService As Button
     Friend WithEvents LinkLabel_VdmFactory As LinkLabel
+    Friend WithEvents LinkLabel_VdmReinstall As LinkLabel
+    Friend WithEvents LinkLabel_PsmsReinstall As LinkLabel
 End Class

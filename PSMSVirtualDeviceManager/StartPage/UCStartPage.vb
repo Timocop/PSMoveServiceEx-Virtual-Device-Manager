@@ -1801,6 +1801,16 @@ Public Class UCStartPage
         End Try
     End Sub
 
+    Private Sub LinkLabel_PsmsReinstall_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PsmsReinstall.LinkClicked
+        'Just redownload
+        StartPsmsxUpdateDownload()
+    End Sub
+
+    Private Sub LinkLabel_VdmReinstall_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VdmReinstall.LinkClicked
+        'Just redownload
+        StartVdmUpdateDownload()
+    End Sub
+
     Public Sub LinkLabel_ServicePath_Click()
         LinkLabel_ServicePath_LinkClicked(Nothing, Nothing)
     End Sub
@@ -1831,7 +1841,7 @@ Public Class UCStartPage
         End Try
     End Sub
 
-    Private Sub Button_PsmsxUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxUpdateDownload.Click
+    Public Sub StartPsmsxUpdateDownload()
         If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
             Return
         End If
@@ -1883,7 +1893,11 @@ Public Class UCStartPage
         g_mUpdateInstallThread.Start()
     End Sub
 
-    Private Sub Button_VdmUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateDownload.Click
+    Private Sub Button_PsmsxUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxUpdateDownload.Click
+        StartPsmsxUpdateDownload()
+    End Sub
+
+    Public Sub StartVdmUpdateDownload()
         If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
             Return
         End If
@@ -1924,6 +1938,10 @@ Public Class UCStartPage
         g_mUpdateInstallThread.Start()
     End Sub
 
+    Private Sub Button_VdmUpdateDownload_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateDownload.Click
+        StartVdmUpdateDownload()
+    End Sub
+
     Private Sub Button_VdmUpdateIgnore_Click(sender As Object, e As EventArgs) Handles Button_VdmUpdateIgnore.Click
         Panel_VdmUpdate.Visible = False
     End Sub
@@ -1932,7 +1950,7 @@ Public Class UCStartPage
         Panel_PsmsxUpdate.Visible = False
     End Sub
 
-    Private Sub Button_PsmsxInstallDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxInstallDownload.Click
+    Public Sub StartPsmsxInstallDownload()
         If (g_mUpdateInstallThread IsNot Nothing AndAlso g_mUpdateInstallThread.IsAlive) Then
             Return
         End If
@@ -1981,6 +1999,10 @@ Public Class UCStartPage
             End Sub)
         g_mUpdateInstallThread.IsBackground = True
         g_mUpdateInstallThread.Start()
+    End Sub
+
+    Private Sub Button_PsmsxInstallDownload_Click(sender As Object, e As EventArgs) Handles Button_PsmsxInstallDownload.Click
+        StartPsmsxInstallDownload()
     End Sub
 
     Private Sub Button_PsmsInstallBrowse_Click(sender As Object, e As EventArgs) Handles Button_PsmsInstallBrowse.Click
