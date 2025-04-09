@@ -20,6 +20,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_BAD_GYROSCOPE As String = "Uncalibrated gyroscope"
     Public Shared ReadOnly LOG_ISSUE_BAD_ACCELEROMETER As String = "Uncalibrated accelerometer"
     Public Shared ReadOnly LOG_ISSUE_PS4CAM_COLOR_SENSTIVITY As String = "Unoptimal color detection sensitivity"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_RESOLUTION_PSVR As String = "Tracker resolution too low for Head-mounted Display"
 
 
     Enum ENUM_DEVICE_TYPE
@@ -196,6 +197,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckMagnetometer())
         mIssues.AddRange(CheckGyroAndAccel())
         mIssues.AddRange(CheckPs4CameraColorSensitivity())
+        mIssues.AddRange(CheckTrackerResolutionWithPSVR())
         Return mIssues.ToArray
     End Function
 
@@ -685,6 +687,95 @@ Public Class ClassLogManageServiceDevices
                         mIssues.Add(mIssue)
                     End If
                 Next
+            Next
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckTrackerResolutionWithPSVR() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_TRACKER_BAD_RESOLUTION_PSVR,
+            "The PlayStation VR head-mounted display (Morpheus) id {0} built-in tracking lights may not be tracked properly by tracker id {1} due to its low resolution.",
+            "To ensure proper tracking, increase the resolution of tracker id {1}. Alternatively use a different/bigger tracking bulb for the PlayStation VR head-mounted display (Morpheus) id {0} to allow tracking on lower tracker resolutions.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.HMD) Then
+                Continue For
+            End If
+
+            If (Not mDevice.sSerial.StartsWith("MorpheusHMD")) Then
+                Continue For
+            End If
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim sUsingCustomTracking As String = mDeviceConfig.GetValue(Of String)("", "use_custom_optical_tracking", "")
+            If (String.IsNullOrEmpty(sUsingCustomTracking) OrElse sUsingCustomTracking.Trim.Length = 0) Then
+                Continue For
+            End If
+
+            Dim sOverrideTrackingLights As String = mDeviceConfig.GetValue(Of String)("", "override_custom_tracking_leds", "")
+            If (String.IsNullOrEmpty(sOverrideTrackingLights) OrElse sOverrideTrackingLights.Trim.Length = 0) Then
+                Continue For
+            End If
+
+            If (sUsingCustomTracking = "true") Then
+                Dim iOverrideTrackingLights As Integer = CInt(sOverrideTrackingLights)
+                If (iOverrideTrackingLights > 0) Then
+                    ' Build-in LEDs
+                Else
+                    Continue For
+                End If
+            Else
+                ' Build-in LEDs
+            End If
+
+            For Each mOtherDevice In GetDevices()
+                If (mOtherDevice.iId < 0) Then
+                    Continue For
+                End If
+
+                If (mOtherDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                    Continue For
+                End If
+
+                Dim mOtherDeviceConfig = mServiceLog.FindConfigFromSerial(mOtherDevice.sSerial)
+                If (mOtherDeviceConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                Dim sResolutionWidth As String = mOtherDeviceConfig.GetValue("", "frame_width", "")
+                If (String.IsNullOrEmpty(sResolutionWidth)) Then
+                    Continue For
+                End If
+
+                Dim iResolutionWidth As Integer = CInt(sResolutionWidth)
+                If (iResolutionWidth >= 1920) Then
+                    Continue For
+                End If
+
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mOtherDevice.iId)
+                mIssue.sSolution = String.Format(mIssue.sSolution, mDevice.iId, mOtherDevice.iId)
+                mIssues.Add(mIssue)
             Next
         Next
 

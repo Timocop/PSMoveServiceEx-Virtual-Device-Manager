@@ -482,14 +482,14 @@ Public Class ClassLogService
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PSVR_FAIL,
-            "Due to an error, PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) device.",
+            "Due to an error, PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus).",
             "",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
         Dim mDiabledTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PSVR_FAIL,
-            "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display device (Morpheus) because it has been disabled.",
+            "PSMoveServiceEx could not open the PlayStation VR Head-mounted Display (Morpheus) because it has been disabled.",
             "Enable the PlayStation VR Head-mounted Display (Morpheus) in 'PSMoveServiceEx Config Tool - Advanced Settings - Head-Mounted Display Settings'.",
             ENUM_LOG_ISSUE_TYPE.INFO
         )
@@ -999,7 +999,7 @@ Public Class ClassLogService
         End If
 
         ' Virtual Trackers
-        If (sSerial.ToUpperInvariant.StartsWith("VirtualTracker".ToUpperInvariant)) Then
+        If (sSerial.StartsWith("VirtualTracker")) Then
             Dim sPathEnd As String = sSerial.Replace("VirtualTracker_", "virtual_")
 
             For Each mConfig In mConfigs
