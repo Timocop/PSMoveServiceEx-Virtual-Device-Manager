@@ -1771,6 +1771,36 @@ Public Class UCStartPage
         End Try
     End Sub
 
+    Private Sub LinkLabel_VdmFactory_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VdmFactory.LinkClicked
+        Try
+            Dim mServiceInfo As New ClassServiceInfo
+            If (mServiceInfo.IsServiceRunning() <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE) Then
+                Throw New ArgumentException("PSMoveServiceEx is running. Please close PSMoveServiceEx!")
+            End If
+
+            Dim sMessage As New Text.StringBuilder
+            sMessage.AppendLine("You are about to remove all Virtual Device Manager configurations.")
+            sMessage.AppendLine("THIS CAN NOT BE UNDONE!")
+            sMessage.AppendLine()
+            sMessage.AppendLine("Virtual Device Manager will be closed. Do you want to continue?")
+            If (MessageBox.Show(sMessage.ToString, "Factory Reset", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.Cancel) Then
+                Return
+            End If
+
+            IO.File.Delete(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
+            IO.File.Delete(ClassConfigConst.PATH_CONFIG_SETTINGS)
+            IO.File.Delete(ClassConfigConst.PATH_CONFIG_ATTACHMENT)
+            IO.File.Delete(ClassConfigConst.PATH_CONFIG_REMOTE)
+            IO.File.Delete(ClassConfigConst.PATH_CONFIG_VMT)
+            IO.File.Delete(ClassConfigConst.PATH_CONFIG_DEVICES)
+
+            Environment.Exit(0)
+            End
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
+
     Public Sub LinkLabel_ServicePath_Click()
         LinkLabel_ServicePath_LinkClicked(Nothing, Nothing)
     End Sub

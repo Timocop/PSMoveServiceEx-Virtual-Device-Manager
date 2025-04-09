@@ -28,12 +28,13 @@ Partial Class UCStartPage
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCStartPage))
-        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
+        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Title2 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.LinkLabel_VdmFactory = New System.Windows.Forms.LinkLabel()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ClassPictureBoxQuality4 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.LinkLabel_ServiceLog = New System.Windows.Forms.LinkLabel()
@@ -208,6 +209,7 @@ Partial Class UCStartPage
         '
         'Panel7
         '
+        Me.Panel7.Controls.Add(Me.LinkLabel_VdmFactory)
         Me.Panel7.Controls.Add(Me.Label7)
         Me.Panel7.Controls.Add(Me.ClassPictureBoxQuality4)
         Me.Panel7.Controls.Add(Me.LinkLabel_ServiceLog)
@@ -218,6 +220,22 @@ Partial Class UCStartPage
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(430, 141)
         Me.Panel7.TabIndex = 7
+        '
+        'LinkLabel_VdmFactory
+        '
+        Me.LinkLabel_VdmFactory.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_VdmFactory.AutoSize = True
+        Me.LinkLabel_VdmFactory.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_VdmFactory.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_VdmFactory.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_VdmFactory.Location = New System.Drawing.Point(103, 78)
+        Me.LinkLabel_VdmFactory.Margin = New System.Windows.Forms.Padding(3)
+        Me.LinkLabel_VdmFactory.Name = "LinkLabel_VdmFactory"
+        Me.LinkLabel_VdmFactory.Size = New System.Drawing.Size(197, 13)
+        Me.LinkLabel_VdmFactory.TabIndex = 32
+        Me.LinkLabel_VdmFactory.TabStop = True
+        Me.LinkLabel_VdmFactory.Text = "Factory Reset Virutal Device Manager"
+        Me.LinkLabel_VdmFactory.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'Label7
         '
@@ -1160,21 +1178,21 @@ Partial Class UCStartPage
         '
         'Chart_ServicePerformance
         '
-        ChartArea1.Name = "ChartArea1"
-        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea1)
+        ChartArea2.Name = "ChartArea1"
+        Me.Chart_ServicePerformance.ChartAreas.Add(ChartArea2)
         Me.Chart_ServicePerformance.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend1.Name = "Legend1"
-        Me.Chart_ServicePerformance.Legends.Add(Legend1)
+        Legend2.Name = "Legend1"
+        Me.Chart_ServicePerformance.Legends.Add(Legend2)
         Me.Chart_ServicePerformance.Location = New System.Drawing.Point(0, 42)
         Me.Chart_ServicePerformance.Name = "Chart_ServicePerformance"
         Me.Chart_ServicePerformance.Size = New System.Drawing.Size(859, 320)
         Me.Chart_ServicePerformance.TabIndex = 1
         Me.Chart_ServicePerformance.Text = "Chart1"
-        Title1.Alignment = System.Drawing.ContentAlignment.MiddleRight
-        Title1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Title1.Name = "Title1"
-        Title1.Text = "Service device frames per second"
-        Me.Chart_ServicePerformance.Titles.Add(Title1)
+        Title2.Alignment = System.Drawing.ContentAlignment.MiddleRight
+        Title2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Title2.Name = "Title1"
+        Title2.Text = "Service device frames per second"
+        Me.Chart_ServicePerformance.Titles.Add(Title2)
         '
         'Panel25
         '
@@ -1546,4 +1564,5 @@ Partial Class UCStartPage
     Friend WithEvents Label17 As Label
     Friend WithEvents Panel30 As Panel
     Friend WithEvents Button_VdmDiagnosticsRestartService As Button
+    Friend WithEvents LinkLabel_VdmFactory As LinkLabel
 End Class
