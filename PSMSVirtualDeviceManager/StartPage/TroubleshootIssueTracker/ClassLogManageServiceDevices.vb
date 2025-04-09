@@ -242,13 +242,13 @@ Public Class ClassLogManageServiceDevices
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         Dim mOneTrackerTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_LIMITED_TRACKING,
-            "You are using only one tracker for optical tracking. Triangulation is not available for singular trackers and tracking quality is greatly redcued.",
+            "You are using only one tracker for optical tracking. Triangulation is not possible with a single tracker, and tracking quality is significantly reduced.",
             "Add more trackers, such as an additional PlayStation Eye, Webcam or PlayStation 4 Stereo Camera.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
         Dim mNoTrackerTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_NO_OPTICAL_TRACKING,
-            "You have no trackers and are unable to track your devices optically.",
+            "No trackers are detected, so optical device tracking is unavailable.",
             "Add trackers such as PlayStation Eyes, Webcams or PlayStation 4 Stereo Cameras to enable optical tracking.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
