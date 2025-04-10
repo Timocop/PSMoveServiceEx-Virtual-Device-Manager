@@ -22,6 +22,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_PS4CAM_COLOR_SENSTIVITY As String = "Unoptimal color detection sensitivity"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_RESOLUTION_PSVR As String = "Tracker resolution too low for Head-mounted Display"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_FPS As String = "Tracker bad framrate"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_TIMEOUT As String = "Tracker possible timeout"
 
 
     Enum ENUM_DEVICE_TYPE
@@ -803,7 +804,14 @@ Public Class ClassLogManageServiceDevices
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_TRACKER_BAD_FPS,
             "The tracker id {0} framerate ({1} fps) is lower than the configured framerate ({2} fps). An unstable framerate may cause poor tracking performance.",
-            "Check for connection issues and ensure all trackers are running at the same framerate.",
+            "Check for connection issues and ensure all trackers are running at the same framerate. If bandwidth issues persist, try reducing the framerate.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mTimeoutTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_TRACKER_BAD_TIMEOUT,
+            "Tracker id {0} may have timed out and is no longer receiving data.",
+            "Check for connection issues and ensure all trackers are running at the same framerate. If bandwidth issues persist, try reducing the framerate.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 
@@ -844,6 +852,12 @@ Public Class ClassLogManageServiceDevices
             If (mDevice.iAverageFps < iConfigFramerate - 3) Then
                 Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
                 mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDevice.iAverageFps, iConfigFramerate)
+                mIssues.Add(mIssue)
+
+            ElseIf (mDevice.iAverageFps > iConfigFramerate + 7) Then
+                ' PSEyes run at maximum thread fps when connection has lost. So jsut check for increased fps.
+                Dim mIssue As New STRUC_LOG_ISSUE(mTimeoutTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId)
                 mIssues.Add(mIssue)
             End If
         Next
