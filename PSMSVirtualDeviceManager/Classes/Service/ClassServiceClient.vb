@@ -273,6 +273,10 @@ Public Class ClassServiceClient
             Dim bConnected As Boolean = False
             Dim bDisconnected As Boolean = False
 
+            Dim mControllerFps As New Dictionary(Of Integer, Queue(Of Date))
+            Dim mHmdFps As New Dictionary(Of Integer, Queue(Of Date))
+            Dim mTrackerFps As New Dictionary(Of Integer, Queue(Of Date))
+
             Try
                 While True
                     Dim bExceptionSleep As Boolean = False
@@ -427,6 +431,18 @@ Public Class ClassServiceClient
                                     End SyncLock
 
                                     If (bNewData) Then
+                                        If (True) Then
+                                            If (Not mControllerFps.ContainsKey(mController.m_Info.m_ControllerId)) Then
+                                                mControllerFps(mController.m_Info.m_ControllerId) = New Queue(Of Date)
+                                            End If
+
+                                            While (mControllerFps(mController.m_Info.m_ControllerId).Count > 0 AndAlso mControllerFps(mController.m_Info.m_ControllerId).Peek() + New TimeSpan(0, 0, 1) < Now)
+                                                mControllerFps(mController.m_Info.m_ControllerId).Dequeue()
+                                            End While
+
+                                            mControllerFps(mController.m_Info.m_ControllerId).Enqueue(Now)
+                                        End If
+
                                         Select Case (mController.m_Info.m_ControllerType)
                                             Case PSMControllerType.PSMController_Move
                                                 Dim bIsVirtual As Boolean = False
@@ -437,7 +453,7 @@ Public Class ClassServiceClient
                                                 mData.m_Id = mController.m_Info.m_ControllerId
                                                 mData.m_Serial = mController.m_Info.m_ControllerSerial
                                                 mData.m_LastTimeStamp = Now
-                                                mData.m_AverageFps = CInt(mController.m_Info.m_DataFrameAverageFPS)
+                                                mData.m_AverageFps = mControllerFps(mController.m_Info.m_ControllerId).Count
 
                                                 If (mData.m_Serial.StartsWith("VirtualController")) Then
                                                     mData.m_Serial &= String.Format("_{0}", mController.m_Info.m_ControllerId)
@@ -604,6 +620,18 @@ Public Class ClassServiceClient
                                     End SyncLock
 
                                     If (bNewData) Then
+                                        If (True) Then
+                                            If (Not mHmdFps.ContainsKey(mHmd.m_Info.m_HmdId)) Then
+                                                mHmdFps(mHmd.m_Info.m_HmdId) = New Queue(Of Date)
+                                            End If
+
+                                            While (mHmdFps(mHmd.m_Info.m_HmdId).Count > 0 AndAlso mHmdFps(mHmd.m_Info.m_HmdId).Peek() + New TimeSpan(0, 0, 1) < Now)
+                                                mHmdFps(mHmd.m_Info.m_HmdId).Dequeue()
+                                            End While
+
+                                            mHmdFps(mHmd.m_Info.m_HmdId).Enqueue(Now)
+                                        End If
+
                                         Select Case (mHmd.m_Info.m_HmdType)
                                             Case PSMHmdType.PSMHmd_Morpheus
                                                 Dim mData As New STRUC_MORPHEUS_HMD_DATA
@@ -612,7 +640,7 @@ Public Class ClassServiceClient
                                                 mData.m_Id = mHmd.m_Info.m_HmdId
                                                 mData.m_Serial = mHmd.m_Info.m_HmdSerial
                                                 mData.m_LastTimeStamp = Now
-                                                mData.m_AverageFps = CInt(mHmd.m_Info.m_DataFrameAverageFPS)
+                                                mData.m_AverageFps = mHmdFps(mHmd.m_Info.m_HmdId).Count
 
                                                 If (mHmd.m_Info.IsStateValid) Then
                                                     mData.m_IsTracking = mHmd.m_Info.m_PSMorpheusState.m_IsCurrentlyTracking
@@ -807,6 +835,18 @@ Public Class ClassServiceClient
                                     End SyncLock
 
                                     If (bNewData) Then
+                                        If (True) Then
+                                            If (Not mTrackerFps.ContainsKey(mTracker.m_Info.m_TrackerId)) Then
+                                                mTrackerFps(mTracker.m_Info.m_TrackerId) = New Queue(Of Date)
+                                            End If
+
+                                            While (mTrackerFps(mTracker.m_Info.m_TrackerId).Count > 0 AndAlso mTrackerFps(mTracker.m_Info.m_TrackerId).Peek() + New TimeSpan(0, 0, 1) < Now)
+                                                mTrackerFps(mTracker.m_Info.m_TrackerId).Dequeue()
+                                            End While
+
+                                            mTrackerFps(mTracker.m_Info.m_TrackerId).Enqueue(Now)
+                                        End If
+
                                         Dim mData As New STRUC_TRACKER_DATA
                                         mData.m_Id = mTracker.m_Info.m_TrackerId
                                         mData.m_Path = mTracker.m_Info.m_DevicePath
@@ -817,7 +857,7 @@ Public Class ClassServiceClient
                                         mData.m_Exposure = mTracker.m_Info.m_Stats.m_TrackerExposure
                                         mData.m_Gain = mTracker.m_Info.m_Stats.m_TrackerGain
                                         mData.m_Width = mTracker.m_Info.m_Stats.m_TrackerWidth
-                                        mData.m_AverageFps = CInt(mTracker.m_Info.m_Stats.m_DataFrameAverageFps)
+                                        mData.m_AverageFps = mTrackerFps(mTracker.m_Info.m_TrackerId).Count
 
                                         If (mTracker.m_Info.IsPoseValid) Then
                                             mData.m_Position = New Vector3(
