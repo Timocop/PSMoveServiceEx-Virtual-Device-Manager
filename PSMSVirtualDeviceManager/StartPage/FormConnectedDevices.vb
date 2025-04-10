@@ -611,4 +611,12 @@ Public Class FormConnectedDevices
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
     End Sub
+
+    Private Sub ToolStripMenuItem_BluetoothOpenSystem_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem_BluetoothOpenSystem.Click
+        Try
+            Process.Start("control", "bthprops.cpl")
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
 End Class

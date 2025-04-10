@@ -47,6 +47,8 @@ Partial Class FormConnectedDevices
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Bluetooth = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem_BluetoothRefresh = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripMenuItem_BluetoothOpenSystem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip_Devices.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -250,16 +252,28 @@ Partial Class FormConnectedDevices
         '
         'ContextMenuStrip_Bluetooth
         '
-        Me.ContextMenuStrip_Bluetooth.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_BluetoothRefresh})
+        Me.ContextMenuStrip_Bluetooth.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_BluetoothRefresh, Me.ToolStripSeparator3, Me.ToolStripMenuItem_BluetoothOpenSystem})
         Me.ContextMenuStrip_Bluetooth.Name = "ContextMenuStrip_Devices"
-        Me.ContextMenuStrip_Bluetooth.Size = New System.Drawing.Size(179, 26)
+        Me.ContextMenuStrip_Bluetooth.Size = New System.Drawing.Size(256, 76)
         '
         'ToolStripMenuItem_BluetoothRefresh
         '
         Me.ToolStripMenuItem_BluetoothRefresh.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
         Me.ToolStripMenuItem_BluetoothRefresh.Name = "ToolStripMenuItem_BluetoothRefresh"
-        Me.ToolStripMenuItem_BluetoothRefresh.Size = New System.Drawing.Size(178, 22)
+        Me.ToolStripMenuItem_BluetoothRefresh.Size = New System.Drawing.Size(255, 22)
         Me.ToolStripMenuItem_BluetoothRefresh.Text = "Refresh Plug && Play"
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(252, 6)
+        '
+        'ToolStripMenuItem_BluetoothOpenSystem
+        '
+        Me.ToolStripMenuItem_BluetoothOpenSystem.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.bthci_201_16x16_32
+        Me.ToolStripMenuItem_BluetoothOpenSystem.Name = "ToolStripMenuItem_BluetoothOpenSystem"
+        Me.ToolStripMenuItem_BluetoothOpenSystem.Size = New System.Drawing.Size(255, 22)
+        Me.ToolStripMenuItem_BluetoothOpenSystem.Text = "Open Windows Bluetooth Settings"
         '
         'FormConnectedDevices
         '
@@ -313,4 +327,6 @@ Partial Class FormConnectedDevices
     Friend WithEvents ContextMenuStrip_Bluetooth As ContextMenuStrip
     Friend WithEvents ToolStripMenuItem_BluetoothRefresh As ToolStripMenuItem
     Friend WithEvents ColumnHeader3 As ColumnHeader
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents ToolStripMenuItem_BluetoothOpenSystem As ToolStripMenuItem
 End Class
