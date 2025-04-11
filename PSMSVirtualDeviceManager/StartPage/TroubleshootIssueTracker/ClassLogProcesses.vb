@@ -4,6 +4,7 @@ Public Class ClassLogProcesses
     Implements ILogAction
 
     Public Shared ReadOnly SECTION_PROCESSES As String = "Running Processes"
+    Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_PATH As String = "PSMoveServiceEx not installed using Virtual Device Manager"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
@@ -69,7 +70,9 @@ Public Class ClassLogProcesses
     End Function
 
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
-        Throw New NotImplementedException()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        mIssues.AddRange(CheckServicePath())
+        Return mIssues.ToArray
     End Function
 
     Public Function GetSectionContent() As String Implements ILogAction.GetSectionContent
@@ -78,6 +81,53 @@ Public Class ClassLogProcesses
         End If
 
         Return g_ClassLogContent.m_Content(GetActionTitle())
+    End Function
+
+    Public Function CheckServicePath() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BAD_SERVICE_PATH,
+            "PSMoveServiceEx which is located in '{0}' has not been installed using Virtual Device Manager. Installing PSMoveServiceEx in a different location than the Virtual Device Manager directory may cause log-reading errors and are harder to manage.",
+            "Uninstall any existing PSMoveServiceEx installations (such as '{0}') and reinstall it via Virtual Device Manager using: Service Management > Reinstall PSMoveServiceEx.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim sManagerPath As String = ""
+        Dim sServicePath As String = ""
+
+        For Each mProcess In GetProcesses()
+            Select Case (mProcess.sName.ToLowerInvariant)
+                Case "PSMSVirtualDeviceManager".ToLowerInvariant
+
+                    sManagerPath = mProcess.sPath
+                Case "PSMoveService".ToLowerInvariant,
+                     "PSMoveServiceAdmin".ToLowerInvariant
+
+                    sServicePath = mProcess.sPath
+            End Select
+        Next
+
+
+
+        If (Not String.IsNullOrEmpty(sManagerPath) AndAlso sManagerPath.TrimEnd.Length > 0 AndAlso
+            Not String.IsNullOrEmpty(sServicePath) AndAlso sServicePath.TrimEnd.Length > 0) Then
+
+            Dim sManagerDirectory As String = IO.Path.GetDirectoryName(sManagerPath)
+            Dim sExpectedPath As String = IO.Path.Combine(sManagerDirectory, "PSMoveServiceEx")
+
+            If (Not sServicePath.ToLowerInvariant.StartsWith(sExpectedPath.ToLowerInvariant)) Then
+                Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mNewIssue.sDescription = String.Format(mTemplate.sDescription, sServicePath)
+                mNewIssue.sSolution = String.Format(mTemplate.sSolution, sServicePath)
+
+                mIssues.Add(mNewIssue)
+            End If
+        End If
+
+            Return mIssues.ToArray
     End Function
 
     Public Function GetProcesses() As STRUC_PROCESS_ITEM()
