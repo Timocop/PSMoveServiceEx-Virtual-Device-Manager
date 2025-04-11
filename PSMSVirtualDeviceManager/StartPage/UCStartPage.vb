@@ -1803,7 +1803,7 @@ Public Class UCStartPage
 
     Private Sub LinkLabel_PsmsReinstall_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PsmsReinstall.LinkClicked
         'Just redownload
-        StartPsmsxUpdateDownload()
+        StartPsmsxInstallDownload()
     End Sub
 
     Private Sub LinkLabel_VdmReinstall_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VdmReinstall.LinkClicked
