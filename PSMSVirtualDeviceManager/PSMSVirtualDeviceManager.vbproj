@@ -176,6 +176,7 @@
   <ItemGroup>
     <Compile Include="Classes\ClassCameraFirmwareWatchdog.vb" />
     <Compile Include="Classes\ClassDevicesNotify.vb" />
+    <Compile Include="Classes\ClassKeyboardHook.vb" />
     <Compile Include="Classes\ClassMonitor.vb" />
     <Compile Include="Classes\ClassSteamVRRenderWatchdog.vb" />
     <Compile Include="Classes\ClassVideoInputDevices.vb" />
