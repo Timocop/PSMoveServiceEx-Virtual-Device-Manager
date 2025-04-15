@@ -103,16 +103,16 @@
             Label_PlayCalibTitle.Text = "Playspace Calibration Failed"
             Panel_PlayCalibStatus.BackColor = Color.FromArgb(192, 0, 0)
 
-            g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Failed"
-            g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_RED_16
+            g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Text = "Playspace Calibration Failed"
+            g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Image = My.Resources.Status_RED_16
         Else
             Select Case (iStatus)
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.IDLE
                     Label_PlayCalibTitle.Text = "Playspace Calibration Not Started"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(224, 224, 224)
 
-                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Idle"
-                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_WHITE_16
+                    g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Text = "Playspace Calibration Idle"
+                    g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Image = My.Resources.Status_WHITE_16
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.PREPARE,
                         ENUM_PLAYSPACE_CALIBRATION_STATUS.SAMPLE_START,
@@ -121,16 +121,16 @@
                     Label_PlayCalibTitle.Text = "Playspace Calibration Running"
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
 
-                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Running"
-                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_GREEN_16
+                    g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Text = "Playspace Calibration Running"
+                    g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Image = My.Resources.Status_GREEN_16
 
                 Case ENUM_PLAYSPACE_CALIBRATION_STATUS.COMPLETED
                     Label_PlayCalibTitle.Text = "Playspace Calibration Completed"
                     'Panel_PlayCalibStatus.BackColor = Color.FromArgb(0, 192, 0)
                     Panel_PlayCalibStatus.BackColor = Color.FromArgb(224, 224, 224)
 
-                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Idle"
-                    g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_PlayCalibStatus.Image = My.Resources.Status_WHITE_16
+                    g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Text = "Playspace Calibration Idle"
+                    g_UCVirtualMotionTracker.g_mFormMain.Button_NavPlayCalibStatus.Image = My.Resources.Status_WHITE_16
             End Select
         End If
 

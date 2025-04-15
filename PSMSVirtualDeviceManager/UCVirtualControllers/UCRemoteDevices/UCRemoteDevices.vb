@@ -271,14 +271,14 @@ Public Class UCRemoteDevices
             LinkLabel_EditPort.Enabled = False
 
             ' Label Status in MainForm
-            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Text = "Remote Devices Enabled"
-            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Image = My.Resources.Status_GREEN_16
+            g_mUCVirtualControllers.g_mFormMain.Button_NavRemoteDeviceStatus.Text = "Remote Devices Enabled"
+            g_mUCVirtualControllers.g_mFormMain.Button_NavRemoteDeviceStatus.Image = My.Resources.Status_GREEN_16
         Else
             LinkLabel_EditPort.Enabled = True
 
             ' Label Status in MainForm
-            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Text = "Remote Devices Disabled"
-            g_mUCVirtualControllers.g_mFormMain.Label_RemoteDeviceStatus.Image = My.Resources.Status_WHITE_16
+            g_mUCVirtualControllers.g_mFormMain.Button_NavRemoteDeviceStatus.Text = "Remote Devices Disabled"
+            g_mUCVirtualControllers.g_mFormMain.Button_NavRemoteDeviceStatus.Image = My.Resources.Status_WHITE_16
         End If
 
     End Sub

@@ -130,39 +130,39 @@ Public Class UCStartPage
                     Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                     ' Label Status in MainForm
-                    g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
-                    g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
+                    g_FormMain.Button_NavServiceStatus.Text = Label_PsmsxStatus.Text
+                    g_FormMain.Button_NavServiceStatus.Image = My.Resources.Status_YELLOW_16
                 Else
                     Label_PsmsxStatus.Text = "Service Connected"
                     Panel_PsmsxStatus.BackColor = Color.FromArgb(0, 192, 0)
 
                     ' Label Status in MainForm
-                    g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
-                    g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_GREEN_16
+                    g_FormMain.Button_NavServiceStatus.Text = Label_PsmsxStatus.Text
+                    g_FormMain.Button_NavServiceStatus.Image = My.Resources.Status_GREEN_16
                 End If
             Else
                 Label_PsmsxStatus.Text = "Connecting to Service..."
                 Panel_PsmsxStatus.BackColor = Color.FromArgb(255, 128, 0)
 
                 ' Label Status in MainForm
-                g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
-                g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_YELLOW_16
+                g_FormMain.Button_NavServiceStatus.Text = Label_PsmsxStatus.Text
+                g_FormMain.Button_NavServiceStatus.Image = My.Resources.Status_YELLOW_16
             End If
         Else
             Label_PsmsxStatus.Text = "Service Disconnected"
             Panel_PsmsxStatus.BackColor = Color.FromArgb(192, 0, 0)
 
             ' Label Status in MainForm
-            g_FormMain.Label_ServiceStatus.Text = Label_PsmsxStatus.Text
-            g_FormMain.Label_ServiceStatus.Image = My.Resources.Status_RED_16
+            g_FormMain.Button_NavServiceStatus.Text = Label_PsmsxStatus.Text
+            g_FormMain.Button_NavServiceStatus.Image = My.Resources.Status_RED_16
         End If
 
         If (bIsServiceRunning) Then
-            g_FormMain.LinkLabel_RunPSMS.Text = "Stop Service"
-            g_FormMain.LinkLabel_RunPSMS.Image = My.Resources.imageres_5337_16x16_32
+            g_FormMain.Button_NavRunService.Text = "Stop Service"
+            g_FormMain.Button_NavRunService.Image = My.Resources.imageres_5337_16x16_32
         Else
-            g_FormMain.LinkLabel_RunPSMS.Text = "Run Service"
-            g_FormMain.LinkLabel_RunPSMS.Image = My.Resources.imageres_5341_16x16_32
+            g_FormMain.Button_NavRunService.Text = "Run Service"
+            g_FormMain.Button_NavRunService.Image = My.Resources.imageres_5341_16x16_32
         End If
     End Sub
 

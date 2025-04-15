@@ -30,30 +30,35 @@ Partial Class FormMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
         Me.Panel_Pages = New System.Windows.Forms.Panel()
         Me.ToolTip_Service = New System.Windows.Forms.ToolTip(Me.components)
-        Me.LinkLabel_RestartPSMS = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_RunPSMSTool = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_RunPSMS = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_PlayCalibStatus = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_PlayCalibStart = New System.Windows.Forms.LinkLabel()
-        Me.Label_PsvrStatus = New System.Windows.Forms.LinkLabel()
-        Me.Label_RemoteDeviceStatus = New System.Windows.Forms.LinkLabel()
-        Me.Label_ServiceStatus = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_PSVR = New System.Windows.Forms.LinkLabel()
-        Me.Label_VmtStatus = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_VMT = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_StartPage = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_RunSteamVR = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_RemoteStartSocket = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_VMTStartOscServer = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_Updates = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_Github = New System.Windows.Forms.LinkLabel()
-        Me.Label_Version = New System.Windows.Forms.Label()
-        Me.LinkLabel_Trackers = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_HMDs = New System.Windows.Forms.LinkLabel()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.LinkLabel_Controllers = New System.Windows.Forms.LinkLabel()
+        Me.Button_NavStartPlayCalib = New System.Windows.Forms.Button()
+        Me.Button_NavPlayCalibStatus = New System.Windows.Forms.Button()
+        Me.Button_NavStartOsc = New System.Windows.Forms.Button()
+        Me.Button_NavOscStatus = New System.Windows.Forms.Button()
+        Me.Button_NavVirtualMotionTrackers = New System.Windows.Forms.Button()
+        Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.Button_NavVirtualTrackers = New System.Windows.Forms.Button()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Button_NavHeadMountedDisplay = New System.Windows.Forms.Button()
+        Me.Button_NavStartRemoteSocket = New System.Windows.Forms.Button()
+        Me.Button_NavRemoteDeviceStatus = New System.Windows.Forms.Button()
+        Me.Button_NavVirtualControllers = New System.Windows.Forms.Button()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.Button_NavPsvrStatus = New System.Windows.Forms.Button()
+        Me.Button_NavPsvrManagement = New System.Windows.Forms.Button()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Button_NavRunServiceConfigTool = New System.Windows.Forms.Button()
+        Me.Button_NavRestartService = New System.Windows.Forms.Button()
+        Me.Button_NavRunService = New System.Windows.Forms.Button()
+        Me.Button_NavServiceStatus = New System.Windows.Forms.Button()
+        Me.Button_NavServiceManagement = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.Button_NavVersion = New System.Windows.Forms.Button()
+        Me.Button_NavUpdate = New System.Windows.Forms.Button()
+        Me.Button_NavGitHub = New System.Windows.Forms.Button()
+        Me.Button_NavRunSteamVR = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -63,464 +68,449 @@ Partial Class FormMain
         Me.Panel_Pages.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel_Pages.Location = New System.Drawing.Point(229, 0)
         Me.Panel_Pages.Name = "Panel_Pages"
-        Me.Panel_Pages.Size = New System.Drawing.Size(826, 761)
+        Me.Panel_Pages.Size = New System.Drawing.Size(830, 761)
         Me.Panel_Pages.TabIndex = 1
         '
         'ToolTip_Service
         '
         '
-        'LinkLabel_RestartPSMS
-        '
-        Me.LinkLabel_RestartPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_RestartPSMS.AutoSize = True
-        Me.LinkLabel_RestartPSMS.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_RestartPSMS.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_RestartPSMS.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RestartPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
-        Me.LinkLabel_RestartPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_RestartPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_RestartPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RestartPSMS.Location = New System.Drawing.Point(48, 151)
-        Me.LinkLabel_RestartPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_RestartPSMS.Name = "LinkLabel_RestartPSMS"
-        Me.LinkLabel_RestartPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_RestartPSMS.Size = New System.Drawing.Size(99, 19)
-        Me.LinkLabel_RestartPSMS.TabIndex = 16
-        Me.LinkLabel_RestartPSMS.TabStop = True
-        Me.LinkLabel_RestartPSMS.Text = "Restart Service"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_RestartPSMS, "ToolTip")
-        Me.LinkLabel_RestartPSMS.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel_RunPSMSTool
-        '
-        Me.LinkLabel_RunPSMSTool.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_RunPSMSTool.AutoSize = True
-        Me.LinkLabel_RunPSMSTool.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_RunPSMSTool.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_RunPSMSTool.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMSTool.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_16x16_32
-        Me.LinkLabel_RunPSMSTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_RunPSMSTool.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_RunPSMSTool.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMSTool.Location = New System.Drawing.Point(48, 178)
-        Me.LinkLabel_RunPSMSTool.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_RunPSMSTool.Name = "LinkLabel_RunPSMSTool"
-        Me.LinkLabel_RunPSMSTool.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_RunPSMSTool.Size = New System.Drawing.Size(147, 19)
-        Me.LinkLabel_RunPSMSTool.TabIndex = 10
-        Me.LinkLabel_RunPSMSTool.TabStop = True
-        Me.LinkLabel_RunPSMSTool.Text = "Run Service Config Tool"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_RunPSMSTool, "ToolTip")
-        Me.LinkLabel_RunPSMSTool.VisitedLinkColor = System.Drawing.Color.Navy
-        '
-        'LinkLabel_RunPSMS
-        '
-        Me.LinkLabel_RunPSMS.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_RunPSMS.AutoSize = True
-        Me.LinkLabel_RunPSMS.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_RunPSMS.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_RunPSMS.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMS.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.LinkLabel_RunPSMS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_RunPSMS.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_RunPSMS.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunPSMS.Location = New System.Drawing.Point(48, 124)
-        Me.LinkLabel_RunPSMS.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_RunPSMS.Name = "LinkLabel_RunPSMS"
-        Me.LinkLabel_RunPSMS.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_RunPSMS.Size = New System.Drawing.Size(84, 19)
-        Me.LinkLabel_RunPSMS.TabIndex = 8
-        Me.LinkLabel_RunPSMS.TabStop = True
-        Me.LinkLabel_RunPSMS.Text = "Run Service"
-        Me.ToolTip_Service.SetToolTip(Me.LinkLabel_RunPSMS, "ToolTip")
-        Me.LinkLabel_RunPSMS.VisitedLinkColor = System.Drawing.Color.Navy
-        '
         'Panel1
         '
         Me.Panel1.AutoScroll = True
-        Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 750)
+        Me.Panel1.AutoScrollMinSize = New System.Drawing.Size(0, 550)
         Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.Panel1.Controls.Add(Me.LinkLabel_PlayCalibStatus)
-        Me.Panel1.Controls.Add(Me.LinkLabel_PlayCalibStart)
-        Me.Panel1.Controls.Add(Me.Label_PsvrStatus)
-        Me.Panel1.Controls.Add(Me.Label_RemoteDeviceStatus)
-        Me.Panel1.Controls.Add(Me.Label_ServiceStatus)
-        Me.Panel1.Controls.Add(Me.LinkLabel_PSVR)
-        Me.Panel1.Controls.Add(Me.Label_VmtStatus)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VMT)
-        Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMS)
-        Me.Panel1.Controls.Add(Me.LinkLabel_RunPSMSTool)
-        Me.Panel1.Controls.Add(Me.LinkLabel_StartPage)
-        Me.Panel1.Controls.Add(Me.LinkLabel_RunSteamVR)
-        Me.Panel1.Controls.Add(Me.LinkLabel_RestartPSMS)
-        Me.Panel1.Controls.Add(Me.LinkLabel_RemoteStartSocket)
-        Me.Panel1.Controls.Add(Me.LinkLabel_VMTStartOscServer)
-        Me.Panel1.Controls.Add(Me.LinkLabel_Updates)
-        Me.Panel1.Controls.Add(Me.LinkLabel_Github)
-        Me.Panel1.Controls.Add(Me.Label_Version)
-        Me.Panel1.Controls.Add(Me.LinkLabel_Trackers)
-        Me.Panel1.Controls.Add(Me.LinkLabel_HMDs)
-        Me.Panel1.Controls.Add(Me.Panel3)
-        Me.Panel1.Controls.Add(Me.LinkLabel_Controllers)
+        Me.Panel1.Controls.Add(Me.Button_NavRunSteamVR)
+        Me.Panel1.Controls.Add(Me.Button_NavGitHub)
+        Me.Panel1.Controls.Add(Me.Button_NavUpdate)
+        Me.Panel1.Controls.Add(Me.Button_NavVersion)
+        Me.Panel1.Controls.Add(Me.Button_NavStartPlayCalib)
+        Me.Panel1.Controls.Add(Me.Button_NavPlayCalibStatus)
+        Me.Panel1.Controls.Add(Me.Button_NavStartOsc)
+        Me.Panel1.Controls.Add(Me.Button_NavOscStatus)
+        Me.Panel1.Controls.Add(Me.Button_NavVirtualMotionTrackers)
+        Me.Panel1.Controls.Add(Me.Panel6)
+        Me.Panel1.Controls.Add(Me.Button_NavVirtualTrackers)
+        Me.Panel1.Controls.Add(Me.Panel5)
+        Me.Panel1.Controls.Add(Me.Button_NavHeadMountedDisplay)
+        Me.Panel1.Controls.Add(Me.Panel7)
+        Me.Panel1.Controls.Add(Me.Button_NavStartRemoteSocket)
+        Me.Panel1.Controls.Add(Me.Button_NavRemoteDeviceStatus)
+        Me.Panel1.Controls.Add(Me.Button_NavVirtualControllers)
+        Me.Panel1.Controls.Add(Me.Panel4)
+        Me.Panel1.Controls.Add(Me.Button_NavPsvrStatus)
+        Me.Panel1.Controls.Add(Me.Button_NavPsvrManagement)
+        Me.Panel1.Controls.Add(Me.Panel2)
+        Me.Panel1.Controls.Add(Me.Button_NavRunServiceConfigTool)
+        Me.Panel1.Controls.Add(Me.Button_NavRestartService)
+        Me.Panel1.Controls.Add(Me.Button_NavRunService)
+        Me.Panel1.Controls.Add(Me.Button_NavServiceStatus)
+        Me.Panel1.Controls.Add(Me.Button_NavServiceManagement)
         Me.Panel1.Controls.Add(Me.Label2)
+        Me.Panel1.Controls.Add(Me.Panel3)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(229, 761)
         Me.Panel1.TabIndex = 2
         '
-        'LinkLabel_PlayCalibStatus
+        'Button_NavStartPlayCalib
         '
-        Me.LinkLabel_PlayCalibStatus.ActiveLinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.AutoSize = True
-        Me.LinkLabel_PlayCalibStatus.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_PlayCalibStatus.DisabledLinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.ForeColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
-        Me.LinkLabel_PlayCalibStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_PlayCalibStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
-        Me.LinkLabel_PlayCalibStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_PlayCalibStatus.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel_PlayCalibStatus.Location = New System.Drawing.Point(32, 499)
-        Me.LinkLabel_PlayCalibStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.LinkLabel_PlayCalibStatus.Name = "LinkLabel_PlayCalibStatus"
-        Me.LinkLabel_PlayCalibStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_PlayCalibStatus.Size = New System.Drawing.Size(169, 19)
-        Me.LinkLabel_PlayCalibStatus.TabIndex = 36
-        Me.LinkLabel_PlayCalibStatus.Text = "Playspace Calibration Status"
-        Me.LinkLabel_PlayCalibStatus.VisitedLinkColor = System.Drawing.Color.Black
+        Me.Button_NavStartPlayCalib.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavStartPlayCalib.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavStartPlayCalib.FlatAppearance.BorderSize = 0
+        Me.Button_NavStartPlayCalib.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavStartPlayCalib.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavStartPlayCalib.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavStartPlayCalib.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavStartPlayCalib.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.Button_NavStartPlayCalib.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavStartPlayCalib.Location = New System.Drawing.Point(0, 493)
+        Me.Button_NavStartPlayCalib.Name = "Button_NavStartPlayCalib"
+        Me.Button_NavStartPlayCalib.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
+        Me.Button_NavStartPlayCalib.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavStartPlayCalib.TabIndex = 57
+        Me.Button_NavStartPlayCalib.Text = "Start Calibration"
+        Me.Button_NavStartPlayCalib.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavStartPlayCalib.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavStartPlayCalib.UseVisualStyleBackColor = True
         '
-        'LinkLabel_PlayCalibStart
+        'Button_NavPlayCalibStatus
         '
-        Me.LinkLabel_PlayCalibStart.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_PlayCalibStart.AutoSize = True
-        Me.LinkLabel_PlayCalibStart.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_PlayCalibStart.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_PlayCalibStart.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PlayCalibStart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.LinkLabel_PlayCalibStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_PlayCalibStart.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_PlayCalibStart.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PlayCalibStart.Location = New System.Drawing.Point(48, 526)
-        Me.LinkLabel_PlayCalibStart.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_PlayCalibStart.Name = "LinkLabel_PlayCalibStart"
-        Me.LinkLabel_PlayCalibStart.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_PlayCalibStart.Size = New System.Drawing.Size(109, 19)
-        Me.LinkLabel_PlayCalibStart.TabIndex = 35
-        Me.LinkLabel_PlayCalibStart.TabStop = True
-        Me.LinkLabel_PlayCalibStart.Text = "Start Calibration"
-        Me.LinkLabel_PlayCalibStart.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavPlayCalibStatus.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavPlayCalibStatus.FlatAppearance.BorderSize = 0
+        Me.Button_NavPlayCalibStatus.FlatAppearance.MouseDownBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavPlayCalibStatus.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavPlayCalibStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavPlayCalibStatus.ForeColor = System.Drawing.Color.Gray
+        Me.Button_NavPlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Button_NavPlayCalibStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavPlayCalibStatus.Location = New System.Drawing.Point(0, 469)
+        Me.Button_NavPlayCalibStatus.Name = "Button_NavPlayCalibStatus"
+        Me.Button_NavPlayCalibStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
+        Me.Button_NavPlayCalibStatus.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavPlayCalibStatus.TabIndex = 56
+        Me.Button_NavPlayCalibStatus.Text = "Playspace Calibration Status"
+        Me.Button_NavPlayCalibStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavPlayCalibStatus.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavPlayCalibStatus.UseVisualStyleBackColor = True
         '
-        'Label_PsvrStatus
+        'Button_NavStartOsc
         '
-        Me.Label_PsvrStatus.ActiveLinkColor = System.Drawing.Color.Black
-        Me.Label_PsvrStatus.AutoSize = True
-        Me.Label_PsvrStatus.BackColor = System.Drawing.Color.GhostWhite
-        Me.Label_PsvrStatus.DisabledLinkColor = System.Drawing.Color.Black
-        Me.Label_PsvrStatus.ForeColor = System.Drawing.Color.Black
-        Me.Label_PsvrStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
-        Me.Label_PsvrStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label_PsvrStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
-        Me.Label_PsvrStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.Label_PsvrStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_PsvrStatus.Location = New System.Drawing.Point(32, 240)
-        Me.Label_PsvrStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.Label_PsvrStatus.Name = "Label_PsvrStatus"
-        Me.Label_PsvrStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.Label_PsvrStatus.Size = New System.Drawing.Size(128, 19)
-        Me.Label_PsvrStatus.TabIndex = 34
-        Me.Label_PsvrStatus.Text = "Management Status"
-        Me.Label_PsvrStatus.VisitedLinkColor = System.Drawing.Color.Black
+        Me.Button_NavStartOsc.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavStartOsc.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavStartOsc.FlatAppearance.BorderSize = 0
+        Me.Button_NavStartOsc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavStartOsc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavStartOsc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavStartOsc.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavStartOsc.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.Button_NavStartOsc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavStartOsc.Location = New System.Drawing.Point(0, 445)
+        Me.Button_NavStartOsc.Name = "Button_NavStartOsc"
+        Me.Button_NavStartOsc.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
+        Me.Button_NavStartOsc.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavStartOsc.TabIndex = 55
+        Me.Button_NavStartOsc.Text = "Start Socket"
+        Me.Button_NavStartOsc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavStartOsc.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavStartOsc.UseVisualStyleBackColor = True
         '
-        'Label_RemoteDeviceStatus
+        'Button_NavOscStatus
         '
-        Me.Label_RemoteDeviceStatus.ActiveLinkColor = System.Drawing.Color.Black
-        Me.Label_RemoteDeviceStatus.AutoSize = True
-        Me.Label_RemoteDeviceStatus.BackColor = System.Drawing.Color.GhostWhite
-        Me.Label_RemoteDeviceStatus.DisabledLinkColor = System.Drawing.Color.Black
-        Me.Label_RemoteDeviceStatus.ForeColor = System.Drawing.Color.Black
-        Me.Label_RemoteDeviceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
-        Me.Label_RemoteDeviceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label_RemoteDeviceStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
-        Me.Label_RemoteDeviceStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.Label_RemoteDeviceStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_RemoteDeviceStatus.Location = New System.Drawing.Point(32, 302)
-        Me.Label_RemoteDeviceStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.Label_RemoteDeviceStatus.Name = "Label_RemoteDeviceStatus"
-        Me.Label_RemoteDeviceStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.Label_RemoteDeviceStatus.Size = New System.Drawing.Size(140, 19)
-        Me.Label_RemoteDeviceStatus.TabIndex = 33
-        Me.Label_RemoteDeviceStatus.Text = "Remote Devices Status"
-        Me.Label_RemoteDeviceStatus.VisitedLinkColor = System.Drawing.Color.Black
+        Me.Button_NavOscStatus.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavOscStatus.FlatAppearance.BorderSize = 0
+        Me.Button_NavOscStatus.FlatAppearance.MouseDownBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavOscStatus.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavOscStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavOscStatus.ForeColor = System.Drawing.Color.Gray
+        Me.Button_NavOscStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Button_NavOscStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavOscStatus.Location = New System.Drawing.Point(0, 421)
+        Me.Button_NavOscStatus.Name = "Button_NavOscStatus"
+        Me.Button_NavOscStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
+        Me.Button_NavOscStatus.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavOscStatus.TabIndex = 54
+        Me.Button_NavOscStatus.Text = "OSC Status"
+        Me.Button_NavOscStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavOscStatus.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavOscStatus.UseVisualStyleBackColor = True
         '
-        'Label_ServiceStatus
+        'Button_NavVirtualMotionTrackers
         '
-        Me.Label_ServiceStatus.ActiveLinkColor = System.Drawing.Color.Black
-        Me.Label_ServiceStatus.AutoSize = True
-        Me.Label_ServiceStatus.BackColor = System.Drawing.Color.GhostWhite
-        Me.Label_ServiceStatus.DisabledLinkColor = System.Drawing.Color.Black
-        Me.Label_ServiceStatus.ForeColor = System.Drawing.Color.Black
-        Me.Label_ServiceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
-        Me.Label_ServiceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label_ServiceStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
-        Me.Label_ServiceStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.Label_ServiceStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_ServiceStatus.Location = New System.Drawing.Point(32, 97)
-        Me.Label_ServiceStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.Label_ServiceStatus.Name = "Label_ServiceStatus"
-        Me.Label_ServiceStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.Label_ServiceStatus.Size = New System.Drawing.Size(128, 19)
-        Me.Label_ServiceStatus.TabIndex = 32
-        Me.Label_ServiceStatus.Text = "Management Status"
-        Me.Label_ServiceStatus.VisitedLinkColor = System.Drawing.Color.Black
+        Me.Button_NavVirtualMotionTrackers.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavVirtualMotionTrackers.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavVirtualMotionTrackers.FlatAppearance.BorderSize = 0
+        Me.Button_NavVirtualMotionTrackers.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavVirtualMotionTrackers.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavVirtualMotionTrackers.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavVirtualMotionTrackers.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavVirtualMotionTrackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.Button_NavVirtualMotionTrackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVirtualMotionTrackers.Location = New System.Drawing.Point(0, 393)
+        Me.Button_NavVirtualMotionTrackers.Name = "Button_NavVirtualMotionTrackers"
+        Me.Button_NavVirtualMotionTrackers.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavVirtualMotionTrackers.Size = New System.Drawing.Size(228, 28)
+        Me.Button_NavVirtualMotionTrackers.TabIndex = 53
+        Me.Button_NavVirtualMotionTrackers.Text = "Virtual Motion Trackers"
+        Me.Button_NavVirtualMotionTrackers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVirtualMotionTrackers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavVirtualMotionTrackers.UseVisualStyleBackColor = True
         '
-        'LinkLabel_PSVR
+        'Panel6
         '
-        Me.LinkLabel_PSVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_PSVR.AutoSize = True
-        Me.LinkLabel_PSVR.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_PSVR.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_PSVR.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PSVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_PSVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_PSVR.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_PSVR.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_PSVR.Location = New System.Drawing.Point(17, 213)
-        Me.LinkLabel_PSVR.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
-        Me.LinkLabel_PSVR.Name = "LinkLabel_PSVR"
-        Me.LinkLabel_PSVR.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_PSVR.Size = New System.Drawing.Size(170, 19)
-        Me.LinkLabel_PSVR.TabIndex = 31
-        Me.LinkLabel_PSVR.TabStop = True
-        Me.LinkLabel_PSVR.Text = "PlayStation VR Management"
-        Me.LinkLabel_PSVR.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel6.Location = New System.Drawing.Point(0, 385)
+        Me.Panel6.Name = "Panel6"
+        Me.Panel6.Size = New System.Drawing.Size(228, 8)
+        Me.Panel6.TabIndex = 52
         '
-        'Label_VmtStatus
+        'Button_NavVirtualTrackers
         '
-        Me.Label_VmtStatus.ActiveLinkColor = System.Drawing.Color.Black
-        Me.Label_VmtStatus.AutoSize = True
-        Me.Label_VmtStatus.BackColor = System.Drawing.Color.GhostWhite
-        Me.Label_VmtStatus.DisabledLinkColor = System.Drawing.Color.Black
-        Me.Label_VmtStatus.ForeColor = System.Drawing.Color.Black
-        Me.Label_VmtStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
-        Me.Label_VmtStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label_VmtStatus.LinkArea = New System.Windows.Forms.LinkArea(0, 0)
-        Me.Label_VmtStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.Label_VmtStatus.LinkColor = System.Drawing.Color.Black
-        Me.Label_VmtStatus.Location = New System.Drawing.Point(32, 445)
-        Me.Label_VmtStatus.Margin = New System.Windows.Forms.Padding(32, 8, 3, 0)
-        Me.Label_VmtStatus.Name = "Label_VmtStatus"
-        Me.Label_VmtStatus.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.Label_VmtStatus.Size = New System.Drawing.Size(82, 19)
-        Me.Label_VmtStatus.TabIndex = 26
-        Me.Label_VmtStatus.Text = "OSC Status"
-        Me.Label_VmtStatus.VisitedLinkColor = System.Drawing.Color.Black
+        Me.Button_NavVirtualTrackers.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavVirtualTrackers.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavVirtualTrackers.FlatAppearance.BorderSize = 0
+        Me.Button_NavVirtualTrackers.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavVirtualTrackers.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavVirtualTrackers.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavVirtualTrackers.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavVirtualTrackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.Button_NavVirtualTrackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVirtualTrackers.Location = New System.Drawing.Point(0, 357)
+        Me.Button_NavVirtualTrackers.Name = "Button_NavVirtualTrackers"
+        Me.Button_NavVirtualTrackers.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavVirtualTrackers.Size = New System.Drawing.Size(228, 28)
+        Me.Button_NavVirtualTrackers.TabIndex = 50
+        Me.Button_NavVirtualTrackers.Text = "Virtual Trackers"
+        Me.Button_NavVirtualTrackers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVirtualTrackers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavVirtualTrackers.UseVisualStyleBackColor = True
         '
-        'LinkLabel_VMT
+        'Panel5
         '
-        Me.LinkLabel_VMT.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VMT.AutoSize = True
-        Me.LinkLabel_VMT.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_VMT.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VMT.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMT.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_VMT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VMT.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VMT.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMT.Location = New System.Drawing.Point(17, 418)
-        Me.LinkLabel_VMT.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel_VMT.Name = "LinkLabel_VMT"
-        Me.LinkLabel_VMT.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VMT.Size = New System.Drawing.Size(139, 19)
-        Me.LinkLabel_VMT.TabIndex = 25
-        Me.LinkLabel_VMT.TabStop = True
-        Me.LinkLabel_VMT.Text = "Virtual Motion Tracker"
-        Me.LinkLabel_VMT.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel5.Location = New System.Drawing.Point(0, 349)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(228, 8)
+        Me.Panel5.TabIndex = 51
         '
-        'LinkLabel_StartPage
+        'Button_NavHeadMountedDisplay
         '
-        Me.LinkLabel_StartPage.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_StartPage.AutoSize = True
-        Me.LinkLabel_StartPage.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_StartPage.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_StartPage.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StartPage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_StartPage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_StartPage.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_StartPage.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_StartPage.Location = New System.Drawing.Point(17, 70)
-        Me.LinkLabel_StartPage.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
-        Me.LinkLabel_StartPage.Name = "LinkLabel_StartPage"
-        Me.LinkLabel_StartPage.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_StartPage.Size = New System.Drawing.Size(131, 19)
-        Me.LinkLabel_StartPage.TabIndex = 24
-        Me.LinkLabel_StartPage.TabStop = True
-        Me.LinkLabel_StartPage.Text = "Service Management"
-        Me.LinkLabel_StartPage.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavHeadMountedDisplay.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavHeadMountedDisplay.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavHeadMountedDisplay.FlatAppearance.BorderSize = 0
+        Me.Button_NavHeadMountedDisplay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavHeadMountedDisplay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavHeadMountedDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavHeadMountedDisplay.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavHeadMountedDisplay.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.Button_NavHeadMountedDisplay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavHeadMountedDisplay.Location = New System.Drawing.Point(0, 321)
+        Me.Button_NavHeadMountedDisplay.Name = "Button_NavHeadMountedDisplay"
+        Me.Button_NavHeadMountedDisplay.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavHeadMountedDisplay.Size = New System.Drawing.Size(228, 28)
+        Me.Button_NavHeadMountedDisplay.TabIndex = 49
+        Me.Button_NavHeadMountedDisplay.Text = "Virtual Head-Mounted Displays"
+        Me.Button_NavHeadMountedDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavHeadMountedDisplay.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavHeadMountedDisplay.UseVisualStyleBackColor = True
         '
-        'LinkLabel_RunSteamVR
+        'Button_NavStartRemoteSocket
         '
-        Me.LinkLabel_RunSteamVR.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_RunSteamVR.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_RunSteamVR.AutoSize = True
-        Me.LinkLabel_RunSteamVR.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_RunSteamVR.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_RunSteamVR.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunSteamVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5323_16x16_32
-        Me.LinkLabel_RunSteamVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_RunSteamVR.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_RunSteamVR.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RunSteamVR.Location = New System.Drawing.Point(17, 654)
-        Me.LinkLabel_RunSteamVR.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
-        Me.LinkLabel_RunSteamVR.Name = "LinkLabel_RunSteamVR"
-        Me.LinkLabel_RunSteamVR.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_RunSteamVR.Size = New System.Drawing.Size(110, 19)
-        Me.LinkLabel_RunSteamVR.TabIndex = 23
-        Me.LinkLabel_RunSteamVR.TabStop = True
-        Me.LinkLabel_RunSteamVR.Text = "Launch SteamVR"
-        Me.LinkLabel_RunSteamVR.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavStartRemoteSocket.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavStartRemoteSocket.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavStartRemoteSocket.FlatAppearance.BorderSize = 0
+        Me.Button_NavStartRemoteSocket.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavStartRemoteSocket.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavStartRemoteSocket.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavStartRemoteSocket.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavStartRemoteSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.Button_NavStartRemoteSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavStartRemoteSocket.Location = New System.Drawing.Point(0, 289)
+        Me.Button_NavStartRemoteSocket.Name = "Button_NavStartRemoteSocket"
+        Me.Button_NavStartRemoteSocket.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
+        Me.Button_NavStartRemoteSocket.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavStartRemoteSocket.TabIndex = 48
+        Me.Button_NavStartRemoteSocket.Text = "Start Socket"
+        Me.Button_NavStartRemoteSocket.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavStartRemoteSocket.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavStartRemoteSocket.UseVisualStyleBackColor = True
         '
-        'LinkLabel_RemoteStartSocket
+        'Button_NavRemoteDeviceStatus
         '
-        Me.LinkLabel_RemoteStartSocket.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_RemoteStartSocket.AutoSize = True
-        Me.LinkLabel_RemoteStartSocket.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_RemoteStartSocket.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_RemoteStartSocket.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RemoteStartSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.LinkLabel_RemoteStartSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_RemoteStartSocket.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_RemoteStartSocket.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_RemoteStartSocket.Location = New System.Drawing.Point(48, 329)
-        Me.LinkLabel_RemoteStartSocket.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_RemoteStartSocket.Name = "LinkLabel_RemoteStartSocket"
-        Me.LinkLabel_RemoteStartSocket.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_RemoteStartSocket.Size = New System.Drawing.Size(86, 19)
-        Me.LinkLabel_RemoteStartSocket.TabIndex = 21
-        Me.LinkLabel_RemoteStartSocket.TabStop = True
-        Me.LinkLabel_RemoteStartSocket.Text = "Start Socket"
-        Me.LinkLabel_RemoteStartSocket.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavRemoteDeviceStatus.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavRemoteDeviceStatus.FlatAppearance.BorderSize = 0
+        Me.Button_NavRemoteDeviceStatus.FlatAppearance.MouseDownBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavRemoteDeviceStatus.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavRemoteDeviceStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavRemoteDeviceStatus.ForeColor = System.Drawing.Color.Gray
+        Me.Button_NavRemoteDeviceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Button_NavRemoteDeviceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRemoteDeviceStatus.Location = New System.Drawing.Point(0, 265)
+        Me.Button_NavRemoteDeviceStatus.Name = "Button_NavRemoteDeviceStatus"
+        Me.Button_NavRemoteDeviceStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
+        Me.Button_NavRemoteDeviceStatus.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavRemoteDeviceStatus.TabIndex = 47
+        Me.Button_NavRemoteDeviceStatus.Text = "Remote Device Status"
+        Me.Button_NavRemoteDeviceStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRemoteDeviceStatus.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavRemoteDeviceStatus.UseVisualStyleBackColor = True
         '
-        'LinkLabel_VMTStartOscServer
+        'Button_NavVirtualControllers
         '
-        Me.LinkLabel_VMTStartOscServer.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_VMTStartOscServer.AutoSize = True
-        Me.LinkLabel_VMTStartOscServer.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_VMTStartOscServer.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_VMTStartOscServer.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMTStartOscServer.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.LinkLabel_VMTStartOscServer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_VMTStartOscServer.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_VMTStartOscServer.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_VMTStartOscServer.Location = New System.Drawing.Point(48, 472)
-        Me.LinkLabel_VMTStartOscServer.Margin = New System.Windows.Forms.Padding(48, 8, 3, 0)
-        Me.LinkLabel_VMTStartOscServer.Name = "LinkLabel_VMTStartOscServer"
-        Me.LinkLabel_VMTStartOscServer.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_VMTStartOscServer.Size = New System.Drawing.Size(108, 19)
-        Me.LinkLabel_VMTStartOscServer.TabIndex = 20
-        Me.LinkLabel_VMTStartOscServer.TabStop = True
-        Me.LinkLabel_VMTStartOscServer.Text = "Start OSC Server"
-        Me.LinkLabel_VMTStartOscServer.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavVirtualControllers.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavVirtualControllers.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavVirtualControllers.FlatAppearance.BorderSize = 0
+        Me.Button_NavVirtualControllers.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavVirtualControllers.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavVirtualControllers.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavVirtualControllers.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavVirtualControllers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.Button_NavVirtualControllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVirtualControllers.Location = New System.Drawing.Point(0, 237)
+        Me.Button_NavVirtualControllers.Name = "Button_NavVirtualControllers"
+        Me.Button_NavVirtualControllers.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavVirtualControllers.Size = New System.Drawing.Size(228, 28)
+        Me.Button_NavVirtualControllers.TabIndex = 46
+        Me.Button_NavVirtualControllers.Text = "Virtual Controllers"
+        Me.Button_NavVirtualControllers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVirtualControllers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavVirtualControllers.UseVisualStyleBackColor = True
         '
-        'LinkLabel_Updates
+        'Panel4
         '
-        Me.LinkLabel_Updates.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_Updates.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_Updates.AutoSize = True
-        Me.LinkLabel_Updates.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_Updates.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_Updates.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Updates.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_16x16_32
-        Me.LinkLabel_Updates.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_Updates.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_Updates.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Updates.Location = New System.Drawing.Point(17, 698)
-        Me.LinkLabel_Updates.Margin = New System.Windows.Forms.Padding(8, 3, 3, 3)
-        Me.LinkLabel_Updates.Name = "LinkLabel_Updates"
-        Me.LinkLabel_Updates.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_Updates.Size = New System.Drawing.Size(122, 19)
-        Me.LinkLabel_Updates.TabIndex = 19
-        Me.LinkLabel_Updates.TabStop = True
-        Me.LinkLabel_Updates.Text = "Check For Updates"
-        Me.LinkLabel_Updates.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel4.Location = New System.Drawing.Point(0, 229)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(228, 8)
+        Me.Panel4.TabIndex = 45
         '
-        'LinkLabel_Github
+        'Button_NavPsvrStatus
         '
-        Me.LinkLabel_Github.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_Github.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_Github.AutoSize = True
-        Me.LinkLabel_Github.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_Github.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_Github.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Github.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netcenter_7_16x16_32
-        Me.LinkLabel_Github.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_Github.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_Github.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Github.Location = New System.Drawing.Point(17, 676)
-        Me.LinkLabel_Github.Margin = New System.Windows.Forms.Padding(8, 3, 3, 0)
-        Me.LinkLabel_Github.Name = "LinkLabel_Github"
-        Me.LinkLabel_Github.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_Github.Size = New System.Drawing.Size(62, 19)
-        Me.LinkLabel_Github.TabIndex = 18
-        Me.LinkLabel_Github.TabStop = True
-        Me.LinkLabel_Github.Text = "GitHub"
-        Me.LinkLabel_Github.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavPsvrStatus.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavPsvrStatus.FlatAppearance.BorderSize = 0
+        Me.Button_NavPsvrStatus.FlatAppearance.MouseDownBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavPsvrStatus.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavPsvrStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavPsvrStatus.ForeColor = System.Drawing.Color.Gray
+        Me.Button_NavPsvrStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Button_NavPsvrStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavPsvrStatus.Location = New System.Drawing.Point(0, 205)
+        Me.Button_NavPsvrStatus.Name = "Button_NavPsvrStatus"
+        Me.Button_NavPsvrStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
+        Me.Button_NavPsvrStatus.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavPsvrStatus.TabIndex = 43
+        Me.Button_NavPsvrStatus.Text = "PSVR Management Status"
+        Me.Button_NavPsvrStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavPsvrStatus.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavPsvrStatus.UseVisualStyleBackColor = True
         '
-        'Label_Version
+        'Button_NavPsvrManagement
         '
-        Me.Label_Version.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label_Version.AutoSize = True
-        Me.Label_Version.BackColor = System.Drawing.Color.GhostWhite
-        Me.Label_Version.ForeColor = System.Drawing.Color.Black
-        Me.Label_Version.Location = New System.Drawing.Point(17, 723)
-        Me.Label_Version.Margin = New System.Windows.Forms.Padding(8, 3, 3, 16)
-        Me.Label_Version.Name = "Label_Version"
-        Me.Label_Version.Size = New System.Drawing.Size(66, 13)
-        Me.Label_Version.TabIndex = 2
-        Me.Label_Version.Text = "Version: 1.0"
+        Me.Button_NavPsvrManagement.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavPsvrManagement.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavPsvrManagement.FlatAppearance.BorderSize = 0
+        Me.Button_NavPsvrManagement.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavPsvrManagement.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavPsvrManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavPsvrManagement.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavPsvrManagement.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.Button_NavPsvrManagement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavPsvrManagement.Location = New System.Drawing.Point(0, 177)
+        Me.Button_NavPsvrManagement.Name = "Button_NavPsvrManagement"
+        Me.Button_NavPsvrManagement.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavPsvrManagement.Size = New System.Drawing.Size(228, 28)
+        Me.Button_NavPsvrManagement.TabIndex = 42
+        Me.Button_NavPsvrManagement.Text = "PlayStation VR Management"
+        Me.Button_NavPsvrManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavPsvrManagement.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavPsvrManagement.UseVisualStyleBackColor = True
         '
-        'LinkLabel_Trackers
+        'Panel2
         '
-        Me.LinkLabel_Trackers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_Trackers.AutoSize = True
-        Me.LinkLabel_Trackers.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_Trackers.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_Trackers.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_Trackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_Trackers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_Trackers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Trackers.Location = New System.Drawing.Point(17, 391)
-        Me.LinkLabel_Trackers.Margin = New System.Windows.Forms.Padding(8, 8, 3, 0)
-        Me.LinkLabel_Trackers.Name = "LinkLabel_Trackers"
-        Me.LinkLabel_Trackers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_Trackers.Size = New System.Drawing.Size(103, 19)
-        Me.LinkLabel_Trackers.TabIndex = 2
-        Me.LinkLabel_Trackers.TabStop = True
-        Me.LinkLabel_Trackers.Text = "Virtual Trackers"
-        Me.LinkLabel_Trackers.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 169)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(228, 8)
+        Me.Panel2.TabIndex = 44
         '
-        'LinkLabel_HMDs
+        'Button_NavRunServiceConfigTool
         '
-        Me.LinkLabel_HMDs.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_HMDs.AutoSize = True
-        Me.LinkLabel_HMDs.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_HMDs.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_HMDs.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_HMDs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_HMDs.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_HMDs.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_HMDs.Location = New System.Drawing.Point(17, 364)
-        Me.LinkLabel_HMDs.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
-        Me.LinkLabel_HMDs.Name = "LinkLabel_HMDs"
-        Me.LinkLabel_HMDs.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_HMDs.Size = New System.Drawing.Size(182, 19)
-        Me.LinkLabel_HMDs.TabIndex = 1
-        Me.LinkLabel_HMDs.TabStop = True
-        Me.LinkLabel_HMDs.Text = "Virtual Head-Mounted Devices"
-        Me.LinkLabel_HMDs.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Button_NavRunServiceConfigTool.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavRunServiceConfigTool.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavRunServiceConfigTool.FlatAppearance.BorderSize = 0
+        Me.Button_NavRunServiceConfigTool.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRunServiceConfigTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRunServiceConfigTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavRunServiceConfigTool.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavRunServiceConfigTool.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_16x16_32
+        Me.Button_NavRunServiceConfigTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRunServiceConfigTool.Location = New System.Drawing.Point(0, 145)
+        Me.Button_NavRunServiceConfigTool.Name = "Button_NavRunServiceConfigTool"
+        Me.Button_NavRunServiceConfigTool.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
+        Me.Button_NavRunServiceConfigTool.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavRunServiceConfigTool.TabIndex = 41
+        Me.Button_NavRunServiceConfigTool.Text = "Run Service Config Tool"
+        Me.Button_NavRunServiceConfigTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRunServiceConfigTool.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavRunServiceConfigTool.UseVisualStyleBackColor = True
+        '
+        'Button_NavRestartService
+        '
+        Me.Button_NavRestartService.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavRestartService.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavRestartService.FlatAppearance.BorderSize = 0
+        Me.Button_NavRestartService.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRestartService.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRestartService.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavRestartService.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavRestartService.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
+        Me.Button_NavRestartService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRestartService.Location = New System.Drawing.Point(0, 121)
+        Me.Button_NavRestartService.Name = "Button_NavRestartService"
+        Me.Button_NavRestartService.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
+        Me.Button_NavRestartService.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavRestartService.TabIndex = 40
+        Me.Button_NavRestartService.Text = "Restart Service"
+        Me.Button_NavRestartService.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRestartService.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavRestartService.UseVisualStyleBackColor = True
+        '
+        'Button_NavRunService
+        '
+        Me.Button_NavRunService.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavRunService.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavRunService.FlatAppearance.BorderSize = 0
+        Me.Button_NavRunService.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRunService.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRunService.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavRunService.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavRunService.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
+        Me.Button_NavRunService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRunService.Location = New System.Drawing.Point(0, 97)
+        Me.Button_NavRunService.Name = "Button_NavRunService"
+        Me.Button_NavRunService.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
+        Me.Button_NavRunService.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavRunService.TabIndex = 39
+        Me.Button_NavRunService.Text = "Run Service"
+        Me.Button_NavRunService.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRunService.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavRunService.UseVisualStyleBackColor = True
+        '
+        'Button_NavServiceStatus
+        '
+        Me.Button_NavServiceStatus.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavServiceStatus.FlatAppearance.BorderSize = 0
+        Me.Button_NavServiceStatus.FlatAppearance.MouseDownBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavServiceStatus.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavServiceStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavServiceStatus.ForeColor = System.Drawing.Color.Gray
+        Me.Button_NavServiceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
+        Me.Button_NavServiceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavServiceStatus.Location = New System.Drawing.Point(0, 73)
+        Me.Button_NavServiceStatus.Name = "Button_NavServiceStatus"
+        Me.Button_NavServiceStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
+        Me.Button_NavServiceStatus.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavServiceStatus.TabIndex = 38
+        Me.Button_NavServiceStatus.Text = "Service Management Status"
+        Me.Button_NavServiceStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavServiceStatus.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavServiceStatus.UseVisualStyleBackColor = True
+        '
+        'Button_NavServiceManagement
+        '
+        Me.Button_NavServiceManagement.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavServiceManagement.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Button_NavServiceManagement.FlatAppearance.BorderSize = 0
+        Me.Button_NavServiceManagement.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavServiceManagement.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavServiceManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavServiceManagement.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavServiceManagement.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
+        Me.Button_NavServiceManagement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavServiceManagement.Location = New System.Drawing.Point(0, 45)
+        Me.Button_NavServiceManagement.Name = "Button_NavServiceManagement"
+        Me.Button_NavServiceManagement.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavServiceManagement.Size = New System.Drawing.Size(228, 28)
+        Me.Button_NavServiceManagement.TabIndex = 37
+        Me.Button_NavServiceManagement.Text = "Service Management"
+        Me.Button_NavServiceManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavServiceManagement.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavServiceManagement.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.BackColor = System.Drawing.Color.GhostWhite
+        Me.Label2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.Black
+        Me.Label2.Location = New System.Drawing.Point(0, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Padding = New System.Windows.Forms.Padding(16, 16, 3, 16)
+        Me.Label2.Size = New System.Drawing.Size(84, 45)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "Navigation"
         '
         'Panel3
         '
@@ -531,46 +521,101 @@ Partial Class FormMain
         Me.Panel3.Size = New System.Drawing.Size(1, 761)
         Me.Panel3.TabIndex = 0
         '
-        'LinkLabel_Controllers
+        'Panel7
         '
-        Me.LinkLabel_Controllers.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_Controllers.AutoSize = True
-        Me.LinkLabel_Controllers.BackColor = System.Drawing.Color.GhostWhite
-        Me.LinkLabel_Controllers.DisabledLinkColor = System.Drawing.Color.Gray
-        Me.LinkLabel_Controllers.ForeColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
-        Me.LinkLabel_Controllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_Controllers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_Controllers.LinkColor = System.Drawing.Color.Navy
-        Me.LinkLabel_Controllers.Location = New System.Drawing.Point(17, 275)
-        Me.LinkLabel_Controllers.Margin = New System.Windows.Forms.Padding(8, 16, 3, 0)
-        Me.LinkLabel_Controllers.Name = "LinkLabel_Controllers"
-        Me.LinkLabel_Controllers.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_Controllers.Size = New System.Drawing.Size(119, 19)
-        Me.LinkLabel_Controllers.TabIndex = 0
-        Me.LinkLabel_Controllers.TabStop = True
-        Me.LinkLabel_Controllers.Text = "Virtual Controllers"
-        Me.LinkLabel_Controllers.VisitedLinkColor = System.Drawing.Color.Navy
+        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel7.Location = New System.Drawing.Point(0, 313)
+        Me.Panel7.Name = "Panel7"
+        Me.Panel7.Size = New System.Drawing.Size(228, 8)
+        Me.Panel7.TabIndex = 58
         '
-        'Label2
+        'Button_NavVersion
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.Color.GhostWhite
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(17, 41)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(8, 32, 3, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(65, 13)
-        Me.Label2.TabIndex = 0
-        Me.Label2.Text = "Navigation"
+        Me.Button_NavVersion.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Button_NavVersion.FlatAppearance.BorderSize = 0
+        Me.Button_NavVersion.FlatAppearance.MouseDownBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavVersion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.Button_NavVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavVersion.ForeColor = System.Drawing.Color.Gray
+        Me.Button_NavVersion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVersion.Location = New System.Drawing.Point(0, 737)
+        Me.Button_NavVersion.Name = "Button_NavVersion"
+        Me.Button_NavVersion.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavVersion.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavVersion.TabIndex = 59
+        Me.Button_NavVersion.Text = "Version: 1.0"
+        Me.Button_NavVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavVersion.UseVisualStyleBackColor = True
+        '
+        'Button_NavUpdate
+        '
+        Me.Button_NavUpdate.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavUpdate.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Button_NavUpdate.FlatAppearance.BorderSize = 0
+        Me.Button_NavUpdate.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavUpdate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavUpdate.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavUpdate.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1607_16x16_32
+        Me.Button_NavUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavUpdate.Location = New System.Drawing.Point(0, 713)
+        Me.Button_NavUpdate.Name = "Button_NavUpdate"
+        Me.Button_NavUpdate.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavUpdate.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavUpdate.TabIndex = 60
+        Me.Button_NavUpdate.Text = "Check for Updates"
+        Me.Button_NavUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavUpdate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavUpdate.UseVisualStyleBackColor = True
+        '
+        'Button_NavGitHub
+        '
+        Me.Button_NavGitHub.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavGitHub.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Button_NavGitHub.FlatAppearance.BorderSize = 0
+        Me.Button_NavGitHub.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavGitHub.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavGitHub.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavGitHub.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavGitHub.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netcenter_7_16x16_32
+        Me.Button_NavGitHub.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavGitHub.Location = New System.Drawing.Point(0, 689)
+        Me.Button_NavGitHub.Name = "Button_NavGitHub"
+        Me.Button_NavGitHub.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavGitHub.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavGitHub.TabIndex = 61
+        Me.Button_NavGitHub.Text = "GitHub"
+        Me.Button_NavGitHub.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavGitHub.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavGitHub.UseVisualStyleBackColor = True
+        '
+        'Button_NavRunSteamVR
+        '
+        Me.Button_NavRunSteamVR.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button_NavRunSteamVR.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Button_NavRunSteamVR.FlatAppearance.BorderSize = 0
+        Me.Button_NavRunSteamVR.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRunSteamVR.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender
+        Me.Button_NavRunSteamVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button_NavRunSteamVR.ForeColor = System.Drawing.Color.Black
+        Me.Button_NavRunSteamVR.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5323_16x16_32
+        Me.Button_NavRunSteamVR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRunSteamVR.Location = New System.Drawing.Point(0, 665)
+        Me.Button_NavRunSteamVR.Name = "Button_NavRunSteamVR"
+        Me.Button_NavRunSteamVR.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
+        Me.Button_NavRunSteamVR.Size = New System.Drawing.Size(228, 24)
+        Me.Button_NavRunSteamVR.TabIndex = 62
+        Me.Button_NavRunSteamVR.Text = "Launch SteamVR"
+        Me.Button_NavRunSteamVR.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button_NavRunSteamVR.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_NavRunSteamVR.UseVisualStyleBackColor = True
         '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1055, 761)
+        Me.ClientSize = New System.Drawing.Size(1059, 761)
         Me.Controls.Add(Me.Panel_Pages)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -585,29 +630,34 @@ Partial Class FormMain
 
     End Sub
     Friend WithEvents Panel_Pages As Panel
-    Friend WithEvents Label_Version As Label
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents LinkLabel_Controllers As LinkLabel
     Friend WithEvents Label2 As Label
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents LinkLabel_HMDs As LinkLabel
-    Friend WithEvents LinkLabel_Trackers As LinkLabel
-    Friend WithEvents LinkLabel_RunPSMS As LinkLabel
-    Friend WithEvents LinkLabel_RunPSMSTool As LinkLabel
-    Friend WithEvents LinkLabel_RestartPSMS As LinkLabel
     Friend WithEvents ToolTip_Service As ToolTip
-    Friend WithEvents LinkLabel_Github As LinkLabel
-    Friend WithEvents LinkLabel_Updates As LinkLabel
-    Friend WithEvents LinkLabel_RemoteStartSocket As LinkLabel
-    Friend WithEvents LinkLabel_RunSteamVR As LinkLabel
-    Friend WithEvents LinkLabel_StartPage As LinkLabel
-    Friend WithEvents LinkLabel_VMT As LinkLabel
-    Friend WithEvents Label_VmtStatus As LinkLabel
-    Friend WithEvents LinkLabel_VMTStartOscServer As LinkLabel
-    Friend WithEvents LinkLabel_PSVR As LinkLabel
-    Friend WithEvents Label_RemoteDeviceStatus As LinkLabel
-    Friend WithEvents Label_ServiceStatus As LinkLabel
-    Friend WithEvents Label_PsvrStatus As LinkLabel
-    Friend WithEvents LinkLabel_PlayCalibStatus As LinkLabel
-    Friend WithEvents LinkLabel_PlayCalibStart As LinkLabel
+    Friend WithEvents Button_NavServiceManagement As Button
+    Friend WithEvents Button_NavServiceStatus As Button
+    Friend WithEvents Button_NavRunService As Button
+    Friend WithEvents Button_NavRestartService As Button
+    Friend WithEvents Button_NavRunServiceConfigTool As Button
+    Friend WithEvents Button_NavPsvrManagement As Button
+    Friend WithEvents Button_NavPsvrStatus As Button
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents Button_NavVirtualControllers As Button
+    Friend WithEvents Button_NavRemoteDeviceStatus As Button
+    Friend WithEvents Button_NavStartRemoteSocket As Button
+    Friend WithEvents Button_NavHeadMountedDisplay As Button
+    Friend WithEvents Button_NavVirtualTrackers As Button
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents Button_NavVirtualMotionTrackers As Button
+    Friend WithEvents Panel6 As Panel
+    Friend WithEvents Button_NavStartOsc As Button
+    Friend WithEvents Button_NavOscStatus As Button
+    Friend WithEvents Button_NavStartPlayCalib As Button
+    Friend WithEvents Button_NavPlayCalibStatus As Button
+    Friend WithEvents Panel7 As Panel
+    Friend WithEvents Button_NavUpdate As Button
+    Friend WithEvents Button_NavVersion As Button
+    Friend WithEvents Button_NavRunSteamVR As Button
+    Friend WithEvents Button_NavGitHub As Button
 End Class

@@ -53,6 +53,129 @@ Public Class FormMain
         VIRTUAL_MOTION_TRACKERS
     End Enum
 
+    Class ClassUpdateChecker
+        Implements IDisposable
+
+        Private g_mUpdaterThread As Threading.Thread = Nothing
+
+        Private g_mFormMain As FormMain
+
+        Public Sub New(_mFormMain As FormMain)
+            g_mFormMain = _mFormMain
+        End Sub
+
+        Public Sub StartUpdateCheck()
+            If (g_mUpdaterThread IsNot Nothing AndAlso g_mUpdaterThread.IsAlive) Then
+                Return
+            End If
+
+            g_mUpdaterThread = New Threading.Thread(AddressOf UpdateCheckThread)
+            g_mUpdaterThread.Priority = Threading.ThreadPriority.Lowest
+            g_mUpdaterThread.IsBackground = True
+            g_mUpdaterThread.Start()
+        End Sub
+
+        Private Sub UpdateCheckThread()
+            Try
+                Threading.Thread.Sleep(2500)
+
+                Dim sLocationInfo As String = ""
+
+                If (True) Then
+#If DEBUG AndAlso ALWAYS_SHOW_UPDATE Then
+                    ClassUtils.AsyncInvoke(g_mFormMain,
+                                            Sub()
+                                                g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
+                                                g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
+
+                                                g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
+                                            End Sub)
+#Else
+                    If (ClassUpdate.ClassVdm.CheckUpdateAvailable(Application.ExecutablePath, sLocationInfo)) Then
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   g_mFormMain.Button_NavUpdate.Text = "New Update Available!"
+                                                   g_mFormMain.Button_NavUpdate.Font = New Font(g_mFormMain.Button_NavUpdate.Font, FontStyle.Bold)
+
+                                                   g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
+                                               End Sub)
+                    End If
+#End If
+                End If
+
+                If (True) Then
+                    Dim mConfig As New ClassServiceInfo
+                    mConfig.LoadConfig()
+
+                    If (mConfig.FileExist) Then
+#If DEBUG AndAlso ALWAYS_SHOW_UPDATE Then
+                        ClassUtils.AsyncInvoke(g_mFormMain,
+                                                Sub()
+                                                    g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
+                                                End Sub)
+
+                        ClassUtils.AsyncInvoke(g_mFormMain,
+                                                 Sub()
+                                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
+                                                 End Sub)
+#Else
+                        If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
+                            ClassUtils.AsyncInvoke(Sub()
+                                                       g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
+                                                   End Sub)
+                        End If
+#End If
+                    Else
+                        ClassUtils.AsyncInvoke(Sub()
+                                                   g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
+                                               End Sub)
+                    End If
+                End If
+
+            Catch ex As Threading.ThreadAbortException
+                Throw
+            Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLog(ex)
+            End Try
+        End Sub
+
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' To detect redundant calls
+
+        ' IDisposable
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not disposedValue Then
+                If disposing Then
+                    ' TODO: dispose managed state (managed objects).
+                    If (g_mUpdaterThread IsNot Nothing AndAlso g_mUpdaterThread.IsAlive) Then
+                        g_mUpdaterThread.Abort()
+                        g_mUpdaterThread.Join()
+                        g_mUpdaterThread = Nothing
+                    End If
+                End If
+
+                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+                ' TODO: set large fields to null.
+            End If
+            disposedValue = True
+        End Sub
+
+        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
+        'Protected Overrides Sub Finalize()
+        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' This code added by Visual Basic to correctly implement the disposable pattern.
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
+            Dispose(True)
+            ' TODO: uncomment the following line if Finalize() is overridden above.
+            ' GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+    End Class
+
     Public Sub New()
         Try
             ProcessCommandline(False)
@@ -189,7 +312,7 @@ Public Class FormMain
         g_UCRestartSteamVR.SendToBack()
         g_UCRestartSteamVR.Visible = False
 
-        Label_Version.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
+        Button_NavVersion.Text = String.Format("Version: {0}", Application.ProductVersion.ToString)
 
         CreateControl()
     End Sub
@@ -666,6 +789,9 @@ Public Class FormMain
     End Sub
 
     Public Sub SelectPage(iPage As ENUM_PAGE)
+        Dim mSleectColor As Color = Color.Lavender
+        Dim mNormalColor As Color = Color.GhostWhite
+
         Select Case (iPage)
             Case ENUM_PAGE.STARTPAGE
                 g_mUCStartPage.Visible = True
@@ -675,12 +801,12 @@ Public Class FormMain
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
-                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Bold)
-                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
-                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+                Button_NavServiceManagement.BackColor = mSleectColor
+                Button_NavPsvrManagement.BackColor = mNormalColor
+                Button_NavVirtualControllers.BackColor = mNormalColor
+                Button_NavHeadMountedDisplay.BackColor = mNormalColor
+                Button_NavVirtualTrackers.BackColor = mNormalColor
+                Button_NavVirtualMotionTrackers.BackColor = mNormalColor
 
             Case ENUM_PAGE.PLAYSTATION_VR
                 g_mUCStartPage.Visible = False
@@ -690,12 +816,12 @@ Public Class FormMain
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
-                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Bold)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
-                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+                Button_NavServiceManagement.BackColor = mNormalColor
+                Button_NavPsvrManagement.BackColor = mSleectColor
+                Button_NavVirtualControllers.BackColor = mNormalColor
+                Button_NavHeadMountedDisplay.BackColor = mNormalColor
+                Button_NavVirtualTrackers.BackColor = mNormalColor
+                Button_NavVirtualMotionTrackers.BackColor = mNormalColor
 
             Case ENUM_PAGE.VIRTUAL_CONTROLLERS
                 g_mUCStartPage.Visible = False
@@ -705,12 +831,12 @@ Public Class FormMain
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
-                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Bold)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
-                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+                Button_NavServiceManagement.BackColor = mNormalColor
+                Button_NavPsvrManagement.BackColor = mNormalColor
+                Button_NavVirtualControllers.BackColor = mSleectColor
+                Button_NavHeadMountedDisplay.BackColor = mNormalColor
+                Button_NavVirtualTrackers.BackColor = mNormalColor
+                Button_NavVirtualMotionTrackers.BackColor = mNormalColor
 
             Case ENUM_PAGE.VIRTUAL_HMDS
                 g_mUCStartPage.Visible = False
@@ -720,12 +846,12 @@ Public Class FormMain
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = False
 
-                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Bold)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
-                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+                Button_NavServiceManagement.BackColor = mNormalColor
+                Button_NavPsvrManagement.BackColor = mNormalColor
+                Button_NavVirtualControllers.BackColor = mNormalColor
+                Button_NavHeadMountedDisplay.BackColor = mSleectColor
+                Button_NavVirtualTrackers.BackColor = mNormalColor
+                Button_NavVirtualMotionTrackers.BackColor = mNormalColor
 
             Case ENUM_PAGE.VIRTUAL_TRACKERS
                 g_mUCStartPage.Visible = False
@@ -735,12 +861,12 @@ Public Class FormMain
                 g_mUCVirtualTrackers.Visible = True
                 g_mUCVirtualMotionTracker.Visible = False
 
-                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Bold)
-                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Regular)
+                Button_NavServiceManagement.BackColor = mNormalColor
+                Button_NavPsvrManagement.BackColor = mNormalColor
+                Button_NavVirtualControllers.BackColor = mNormalColor
+                Button_NavHeadMountedDisplay.BackColor = mNormalColor
+                Button_NavVirtualTrackers.BackColor = mSleectColor
+                Button_NavVirtualMotionTrackers.BackColor = mNormalColor
 
             Case ENUM_PAGE.VIRTUAL_MOTION_TRACKERS
                 g_mUCStartPage.Visible = False
@@ -750,12 +876,12 @@ Public Class FormMain
                 g_mUCVirtualTrackers.Visible = False
                 g_mUCVirtualMotionTracker.Visible = True
 
-                LinkLabel_StartPage.Font = New Font(LinkLabel_StartPage.Font, FontStyle.Regular)
-                LinkLabel_PSVR.Font = New Font(LinkLabel_PSVR.Font, FontStyle.Regular)
-                LinkLabel_Controllers.Font = New Font(LinkLabel_Controllers.Font, FontStyle.Regular)
-                LinkLabel_HMDs.Font = New Font(LinkLabel_HMDs.Font, FontStyle.Regular)
-                LinkLabel_Trackers.Font = New Font(LinkLabel_Trackers.Font, FontStyle.Regular)
-                LinkLabel_VMT.Font = New Font(LinkLabel_VMT.Font, FontStyle.Bold)
+                Button_NavServiceManagement.BackColor = mNormalColor
+                Button_NavPsvrManagement.BackColor = mNormalColor
+                Button_NavVirtualControllers.BackColor = mNormalColor
+                Button_NavHeadMountedDisplay.BackColor = mNormalColor
+                Button_NavVirtualTrackers.BackColor = mNormalColor
+                Button_NavVirtualMotionTrackers.BackColor = mSleectColor
         End Select
     End Sub
 
@@ -803,122 +929,6 @@ Public Class FormMain
 
         Return Nothing
     End Function
-
-
-    Public Sub LinkLabel_StartPage_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_StartPage.LinkClicked
-        SelectPage(ENUM_PAGE.STARTPAGE)
-    End Sub
-
-    Private Sub LinkLabel_PSVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PSVR.LinkClicked
-        SelectPage(ENUM_PAGE.PLAYSTATION_VR)
-    End Sub
-
-    Public Sub LinkLabel_Controllers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Controllers.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-    End Sub
-
-    Public Sub LinkLabel_HMDs_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_HMDs.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
-    End Sub
-
-    Public Sub LinkLabel_Trackers_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Trackers.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
-    End Sub
-
-    Private Sub LinkLabel_VMT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMT.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-    End Sub
-
-    Public Sub LinkLabel_RemoteStartSocket_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RemoteStartSocket.LinkClicked
-        If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
-        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
-
-        g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket_Click()
-        g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
-    End Sub
-
-    Public Sub LinkLabel_VMTStartOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_VMTStartOscServer.LinkClicked
-        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
-            Return
-        End If
-
-        If (g_mUCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
-
-        If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
-            g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscPause_Click()
-        Else
-            g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscRun_Click()
-        End If
-
-    End Sub
-
-    Public Sub LinkLabel1LinkLabel_VMTPauseOscServer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
-        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
-
-        g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscPause_Click()
-    End Sub
-
-    Private Sub LinkLabel_VmtManagement_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Label_VmtStatus.LinkClicked
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
-    End Sub
-
-    Public Sub LinkLabel_RunPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMS.LinkClicked
-        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
-
-        Dim mServiceInfo As New ClassServiceInfo
-        If (mServiceInfo.IsServiceRunning <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE) Then
-            g_mUCStartPage.LinkLabel_ServiceStop_Click()
-        Else
-            g_mUCStartPage.LinkLabel_ServiceRun_Click()
-        End If
-    End Sub
-
-    Public Sub LinkLabel_RestartPSMS_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RestartPSMS.LinkClicked
-        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
-        g_mUCStartPage.LinkLabel_ServiceRestart_Click()
-    End Sub
-
-    Public Sub LinkLabel_RunPSMSTool_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunPSMSTool.LinkClicked
-        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.STARTPAGE)
-        g_mUCStartPage.LinkLabel_ConfigToolRun_Click()
-    End Sub
-
-    Private Sub LinkLabel_PlayCalibStart_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibStart.LinkClicked
-        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
-            Return
-        End If
-
-        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
-        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_PlayspaceCalib
-        g_mUCVirtualMotionTracker.g_UCVmtPlayspaceCalib.Button_PlaySpaceManualCalib_Click()
-    End Sub
 
     Private Sub ToolTip_Service_Popup(sender As Object, e As PopupEventArgs) Handles ToolTip_Service.Popup
         Try
@@ -1011,15 +1021,105 @@ Public Class FormMain
         End Using
     End Sub
 
-    Private Sub LinkLabel_Github_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Github.LinkClicked
-        Try
-            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
-        Catch ex As Exception
-            ClassAdvancedExceptionLogging.WriteToLog(ex)
-        End Try
+    Private Sub Button_NavServiceManagement_Click(sender As Object, e As EventArgs) Handles Button_NavServiceManagement.Click
+        SelectPage(ENUM_PAGE.STARTPAGE)
     End Sub
 
-    Private Sub LinkLabel_Updates_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_Updates.LinkClicked
+    Private Sub Button_RunService_Click(sender As Object, e As EventArgs) Handles Button_NavRunService.Click
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.STARTPAGE)
+
+        Dim mServiceInfo As New ClassServiceInfo
+        If (mServiceInfo.IsServiceRunning <> ClassServiceInfo.ENUM_SERVICE_PROCESS_TYPE.NONE) Then
+            g_mUCStartPage.LinkLabel_ServiceStop_Click()
+        Else
+            g_mUCStartPage.LinkLabel_ServiceRun_Click()
+        End If
+    End Sub
+
+    Private Sub Button_RestartService_Click(sender As Object, e As EventArgs) Handles Button_NavRestartService.Click
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ServiceRestart_Click()
+    End Sub
+
+    Private Sub Button_RunServiceConfigTool_Click(sender As Object, e As EventArgs) Handles Button_NavRunServiceConfigTool.Click
+        If (g_mUCStartPage Is Nothing OrElse g_mUCStartPage.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.STARTPAGE)
+        g_mUCStartPage.LinkLabel_ConfigToolRun_Click()
+    End Sub
+
+    Private Sub Button_NavPsvrManagement_Click(sender As Object, e As EventArgs) Handles Button_NavPsvrManagement.Click
+        SelectPage(ENUM_PAGE.PLAYSTATION_VR)
+    End Sub
+
+    Private Sub Button_NavVirtualControllers_Click(sender As Object, e As EventArgs) Handles Button_NavVirtualControllers.Click
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+    End Sub
+
+    Private Sub Button_NavStartRemoteSocket_Click(sender As Object, e As EventArgs) Handles Button_NavStartRemoteSocket.Click
+        If (g_mUCVirtualControllers.g_mUCRemoteDevices Is Nothing OrElse g_mUCVirtualControllers.g_mUCRemoteDevices.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_CONTROLLERS)
+        g_mUCVirtualControllers.TabControl1.SelectedTab = g_mUCVirtualControllers.TabPage_RemoteSettings
+
+        g_mUCVirtualControllers.g_mUCRemoteDevices.Button_StartSocket_Click()
+        g_mUCVirtualControllers.g_mUCRemoteDevices.CheckBox_AllowNewDevices.Checked = True
+    End Sub
+
+    Private Sub Button_NavHeadMountedDisplay_Click(sender As Object, e As EventArgs) Handles Button_NavHeadMountedDisplay.Click
+        SelectPage(ENUM_PAGE.VIRTUAL_HMDS)
+    End Sub
+
+    Private Sub Button_NavVirtualTrackers_Click(sender As Object, e As EventArgs) Handles Button_NavVirtualTrackers.Click
+        SelectPage(ENUM_PAGE.VIRTUAL_TRACKERS)
+    End Sub
+
+    Private Sub Button_NavVirtualMotionTrackers_Click(sender As Object, e As EventArgs) Handles Button_NavVirtualMotionTrackers.Click
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+    End Sub
+
+    Private Sub Button_NavStartOsc_Click(sender As Object, e As EventArgs) Handles Button_NavStartOsc.Click
+        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
+            Return
+        End If
+
+        If (g_mUCVirtualMotionTracker.g_ClassOscServer Is Nothing) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_Management
+
+        If (g_mUCVirtualMotionTracker.g_ClassOscServer.IsRunning AndAlso Not g_mUCVirtualMotionTracker.g_ClassOscServer.m_SuspendRequests) Then
+            g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscPause_Click()
+        Else
+            g_mUCVirtualMotionTracker.g_UCVmtManagement.LinkLabel_OscRun_Click()
+        End If
+    End Sub
+
+    Private Sub Button_NavStartPlayCalib_Click(sender As Object, e As EventArgs) Handles Button_NavStartPlayCalib.Click
+        If (g_mUCVirtualMotionTracker Is Nothing OrElse g_mUCVirtualMotionTracker.IsDisposed) Then
+            Return
+        End If
+
+        SelectPage(ENUM_PAGE.VIRTUAL_MOTION_TRACKERS)
+        g_mUCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_mUCVirtualMotionTracker.TabPage_PlayspaceCalib
+        g_mUCVirtualMotionTracker.g_UCVmtPlayspaceCalib.Button_PlaySpaceManualCalib_Click()
+    End Sub
+
+    Private Sub Button_NavUpdate_Click(sender As Object, e As EventArgs) Handles Button_NavUpdate.Click
         Try
             Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager/releases")
         Catch ex As Exception
@@ -1027,7 +1127,15 @@ Public Class FormMain
         End Try
     End Sub
 
-    Private Sub LinkLabel_RunSteamVR_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_RunSteamVR.LinkClicked
+    Private Sub Button_NavGitHub_Click(sender As Object, e As EventArgs) Handles Button_NavGitHub.Click
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx-Virtual-Device-Manager")
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLog(ex)
+        End Try
+    End Sub
+
+    Private Sub Button_NavRunSteamVR_Click(sender As Object, e As EventArgs) Handles Button_NavRunSteamVR.Click
         Try
             Process.Start("steam://rungameid/250820")
         Catch ex As Exception
@@ -1110,126 +1218,4 @@ Public Class FormMain
         End Try
     End Sub
 
-    Class ClassUpdateChecker
-        Implements IDisposable
-
-        Private g_mUpdaterThread As Threading.Thread = Nothing
-
-        Private g_mFormMain As FormMain
-
-        Public Sub New(_mFormMain As FormMain)
-            g_mFormMain = _mFormMain
-        End Sub
-
-        Public Sub StartUpdateCheck()
-            If (g_mUpdaterThread IsNot Nothing AndAlso g_mUpdaterThread.IsAlive) Then
-                Return
-            End If
-
-            g_mUpdaterThread = New Threading.Thread(AddressOf UpdateCheckThread)
-            g_mUpdaterThread.Priority = Threading.ThreadPriority.Lowest
-            g_mUpdaterThread.IsBackground = True
-            g_mUpdaterThread.Start()
-        End Sub
-
-        Private Sub UpdateCheckThread()
-            Try
-                Threading.Thread.Sleep(2500)
-
-                Dim sLocationInfo As String = ""
-
-                If (True) Then
-#If DEBUG AndAlso ALWAYS_SHOW_UPDATE Then
-                    ClassUtils.AsyncInvoke(g_mFormMain,
-                                            Sub()
-                                                g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
-                                                g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
-
-                                                g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
-                                            End Sub)
-#Else
-                    If (ClassUpdate.ClassVdm.CheckUpdateAvailable(Application.ExecutablePath, sLocationInfo)) Then
-                        ClassUtils.AsyncInvoke(Sub()
-                                                   g_mFormMain.LinkLabel_Updates.Text = "New Update Available!"
-                                                   g_mFormMain.LinkLabel_Updates.Font = New Font(g_mFormMain.LinkLabel_Updates.Font, FontStyle.Bold)
-
-                                                   g_mFormMain.g_mUCStartPage.Panel_VdmUpdate.Visible = True
-                                               End Sub)
-                    End If
-#End If
-                End If
-
-                If (True) Then
-                    Dim mConfig As New ClassServiceInfo
-                    mConfig.LoadConfig()
-
-                    If (mConfig.FileExist) Then
-#If DEBUG AndAlso ALWAYS_SHOW_UPDATE Then
-                        ClassUtils.AsyncInvoke(g_mFormMain,
-                                                Sub()
-                                                    g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
-                                                End Sub)
-
-                        ClassUtils.AsyncInvoke(g_mFormMain,
-                                                 Sub()
-                                                     g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
-                                                 End Sub)
-#Else
-                        If (ClassUpdate.ClassPsms.CheckUpdateAvailable(mConfig.m_FileName, sLocationInfo)) Then
-                            ClassUtils.AsyncInvoke(Sub()
-                                                       g_mFormMain.g_mUCStartPage.Panel_PsmsxUpdate.Visible = True
-                                                   End Sub)
-                        End If
-#End If
-                    Else
-                        ClassUtils.AsyncInvoke(Sub()
-                                                   g_mFormMain.g_mUCStartPage.Panel_PsmsxInstall.Visible = True
-                                               End Sub)
-                    End If
-                End If
-
-            Catch ex As Threading.ThreadAbortException
-                Throw
-            Catch ex As Exception
-                ClassAdvancedExceptionLogging.WriteToLog(ex)
-            End Try
-        End Sub
-
-#Region "IDisposable Support"
-        Private disposedValue As Boolean ' To detect redundant calls
-
-        ' IDisposable
-        Protected Overridable Sub Dispose(disposing As Boolean)
-            If Not disposedValue Then
-                If disposing Then
-                    ' TODO: dispose managed state (managed objects).
-                    If (g_mUpdaterThread IsNot Nothing AndAlso g_mUpdaterThread.IsAlive) Then
-                        g_mUpdaterThread.Abort()
-                        g_mUpdaterThread.Join()
-                        g_mUpdaterThread = Nothing
-                    End If
-                End If
-
-                ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                ' TODO: set large fields to null.
-            End If
-            disposedValue = True
-        End Sub
-
-        ' TODO: override Finalize() only if Dispose(disposing As Boolean) above has code to free unmanaged resources.
-        'Protected Overrides Sub Finalize()
-        '    ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
-        '    Dispose(False)
-        '    MyBase.Finalize()
-        'End Sub
-
-        ' This code added by Visual Basic to correctly implement the disposable pattern.
-        Public Sub Dispose() Implements IDisposable.Dispose
-            ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
-            Dispose(True)
-            ' TODO: uncomment the following line if Finalize() is overridden above.
-            ' GC.SuppressFinalize(Me)
-        End Sub
-#End Region
-    End Class
 End Class

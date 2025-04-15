@@ -199,43 +199,43 @@ Public Class UCVmtManagement
                 Panel_OscStatus.BackColor = Color.FromArgb(224, 224, 224)
 
                 ' Label Status in MainForm
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Uninitialized"
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_WHITE_16
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Text = "OSC Uninitialized"
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Image = My.Resources.Status_WHITE_16
 
             Case ENUM_OSC_CONNECTION_STATUS.CONNECTED
                 Label_OscStatus.Text = "OSC Connected"
                 Panel_OscStatus.BackColor = Color.FromArgb(0, 192, 0)
 
                 ' Label Status in MainForm
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Connected"
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_GREEN_16
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Text = "OSC Connected"
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Image = My.Resources.Status_GREEN_16
 
             Case ENUM_OSC_CONNECTION_STATUS.DISCONNETED
                 Label_OscStatus.Text = "OSC Disconnected"
                 Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
 
                 ' Label Status in MainForm
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Disconnected"
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Text = "OSC Disconnected"
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Image = My.Resources.Status_RED_16
 
             Case ENUM_OSC_CONNECTION_STATUS.TIMEOUT
                 Label_OscStatus.Text = "OSC Timeout"
                 Panel_OscStatus.BackColor = Color.FromArgb(192, 0, 0)
 
                 ' Label Status in MainForm
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Text = "OSC Timeout"
-                g_UCVirtualMotionTracker.g_mFormMain.Label_VmtStatus.Image = My.Resources.Status_RED_16
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Text = "OSC Timeout"
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavOscStatus.Image = My.Resources.Status_RED_16
 
         End Select
 
         Select Case (i)
             Case ENUM_OSC_CONNECTION_STATUS.CONNECTED, ENUM_OSC_CONNECTION_STATUS.TIMEOUT
-                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Text = "Pause OSC Server"
-                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Image = My.Resources.imageres_5315_16x16_32
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavStartOsc.Text = "Pause OSC Server"
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavStartOsc.Image = My.Resources.imageres_5315_16x16_32
 
             Case Else
-                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Text = "Start OSC Server"
-                g_UCVirtualMotionTracker.g_mFormMain.LinkLabel_VMTStartOscServer.Image = My.Resources.imageres_5341_16x16_32
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavStartOsc.Text = "Start OSC Server"
+                g_UCVirtualMotionTracker.g_mFormMain.Button_NavStartOsc.Image = My.Resources.imageres_5341_16x16_32
         End Select
     End Sub
 
