@@ -108,17 +108,17 @@ Partial Class UCVirtualControllers
         Me.ComboBox_VirtualControllerCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_VirtualControllerCount.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VirtualControllerCount.FormattingEnabled = True
-        Me.ComboBox_VirtualControllerCount.Location = New System.Drawing.Point(184, 16)
-        Me.ComboBox_VirtualControllerCount.Margin = New System.Windows.Forms.Padding(3, 16, 32, 3)
+        Me.ComboBox_VirtualControllerCount.Location = New System.Drawing.Point(155, 16)
+        Me.ComboBox_VirtualControllerCount.Margin = New System.Windows.Forms.Padding(3, 16, 16, 3)
         Me.ComboBox_VirtualControllerCount.Name = "ComboBox_VirtualControllerCount"
-        Me.ComboBox_VirtualControllerCount.Size = New System.Drawing.Size(544, 21)
+        Me.ComboBox_VirtualControllerCount.Size = New System.Drawing.Size(496, 21)
         Me.ComboBox_VirtualControllerCount.TabIndex = 10
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(32, 19)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
+        Me.Label5.Location = New System.Drawing.Point(16, 19)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(16, 16, 6, 6)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(130, 13)
         Me.Label5.TabIndex = 9
@@ -158,8 +158,8 @@ Partial Class UCVirtualControllers
         Me.CheckBox_PSmoveEmu.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_PSmoveEmu.AutoSize = True
         Me.CheckBox_PSmoveEmu.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_PSmoveEmu.Location = New System.Drawing.Point(654, 53)
-        Me.CheckBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 3, 32, 3)
+        Me.CheckBox_PSmoveEmu.Location = New System.Drawing.Point(670, 44)
+        Me.CheckBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
         Me.CheckBox_PSmoveEmu.Name = "CheckBox_PSmoveEmu"
         Me.CheckBox_PSmoveEmu.Size = New System.Drawing.Size(74, 18)
         Me.CheckBox_PSmoveEmu.TabIndex = 14
@@ -169,8 +169,8 @@ Partial Class UCVirtualControllers
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(32, 54)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
+        Me.Label3.Location = New System.Drawing.Point(16, 46)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(16, 16, 6, 6)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(104, 13)
         Me.Label3.TabIndex = 13
@@ -183,10 +183,10 @@ Partial Class UCVirtualControllers
         Me.ComboBox_PSmoveEmu.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_PSmoveEmu.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_PSmoveEmu.FormattingEnabled = True
-        Me.ComboBox_PSmoveEmu.Location = New System.Drawing.Point(184, 51)
-        Me.ComboBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 6, 16, 3)
+        Me.ComboBox_PSmoveEmu.Location = New System.Drawing.Point(155, 43)
+        Me.ComboBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
         Me.ComboBox_PSmoveEmu.Name = "ComboBox_PSmoveEmu"
-        Me.ComboBox_PSmoveEmu.Size = New System.Drawing.Size(457, 21)
+        Me.ComboBox_PSmoveEmu.Size = New System.Drawing.Size(496, 21)
         Me.ComboBox_PSmoveEmu.TabIndex = 12
         '
         'TabPage_RemoteSettings

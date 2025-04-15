@@ -96,16 +96,17 @@ Partial Class UCVirtualHMDs
         Me.ComboBox_VirtualHMDCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_VirtualHMDCount.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VirtualHMDCount.FormattingEnabled = True
-        Me.ComboBox_VirtualHMDCount.Location = New System.Drawing.Point(199, 80)
+        Me.ComboBox_VirtualHMDCount.Location = New System.Drawing.Point(131, 83)
+        Me.ComboBox_VirtualHMDCount.Margin = New System.Windows.Forms.Padding(3, 16, 16, 3)
         Me.ComboBox_VirtualHMDCount.Name = "ComboBox_VirtualHMDCount"
-        Me.ComboBox_VirtualHMDCount.Size = New System.Drawing.Size(488, 21)
+        Me.ComboBox_VirtualHMDCount.Size = New System.Drawing.Size(653, 21)
         Me.ComboBox_VirtualHMDCount.TabIndex = 8
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(32, 83)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(32, 16, 6, 6)
+        Me.Label5.Location = New System.Drawing.Point(16, 86)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(16, 16, 6, 6)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(106, 13)
         Me.Label5.TabIndex = 7
