@@ -40,13 +40,18 @@ Partial Class FormMain
         Me.Button_NavStartOsc = New System.Windows.Forms.Button()
         Me.Button_NavOscStatus = New System.Windows.Forms.Button()
         Me.Button_NavVirtualMotionTrackers = New System.Windows.Forms.Button()
+        Me.Panel6 = New System.Windows.Forms.Panel()
         Me.Button_NavVirtualTrackers = New System.Windows.Forms.Button()
+        Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Button_NavHeadMountedDisplay = New System.Windows.Forms.Button()
+        Me.Panel7 = New System.Windows.Forms.Panel()
         Me.Button_NavStartRemoteSocket = New System.Windows.Forms.Button()
         Me.Button_NavRemoteDeviceStatus = New System.Windows.Forms.Button()
         Me.Button_NavVirtualControllers = New System.Windows.Forms.Button()
+        Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Button_NavPsvrStatus = New System.Windows.Forms.Button()
         Me.Button_NavPsvrManagement = New System.Windows.Forms.Button()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Button_NavRunServiceConfigTool = New System.Windows.Forms.Button()
         Me.Button_NavRestartService = New System.Windows.Forms.Button()
         Me.Button_NavRunService = New System.Windows.Forms.Button()
@@ -54,11 +59,6 @@ Partial Class FormMain
         Me.Button_NavServiceManagement = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.Panel6 = New System.Windows.Forms.Panel()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -298,6 +298,14 @@ Partial Class FormMain
         Me.Button_NavVirtualMotionTrackers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_NavVirtualMotionTrackers.UseVisualStyleBackColor = True
         '
+        'Panel6
+        '
+        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel6.Location = New System.Drawing.Point(0, 365)
+        Me.Panel6.Name = "Panel6"
+        Me.Panel6.Size = New System.Drawing.Size(228, 8)
+        Me.Panel6.TabIndex = 52
+        '
         'Button_NavVirtualTrackers
         '
         Me.Button_NavVirtualTrackers.Cursor = System.Windows.Forms.Cursors.Hand
@@ -319,6 +327,14 @@ Partial Class FormMain
         Me.Button_NavVirtualTrackers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_NavVirtualTrackers.UseVisualStyleBackColor = True
         '
+        'Panel5
+        '
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel5.Location = New System.Drawing.Point(0, 333)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(228, 8)
+        Me.Panel5.TabIndex = 51
+        '
         'Button_NavHeadMountedDisplay
         '
         Me.Button_NavHeadMountedDisplay.Cursor = System.Windows.Forms.Cursors.Hand
@@ -339,6 +355,14 @@ Partial Class FormMain
         Me.Button_NavHeadMountedDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.Button_NavHeadMountedDisplay.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_NavHeadMountedDisplay.UseVisualStyleBackColor = True
+        '
+        'Panel7
+        '
+        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel7.Location = New System.Drawing.Point(0, 301)
+        Me.Panel7.Name = "Panel7"
+        Me.Panel7.Size = New System.Drawing.Size(228, 8)
+        Me.Panel7.TabIndex = 58
         '
         'Button_NavStartRemoteSocket
         '
@@ -402,6 +426,14 @@ Partial Class FormMain
         Me.Button_NavVirtualControllers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_NavVirtualControllers.UseVisualStyleBackColor = True
         '
+        'Panel4
+        '
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel4.Location = New System.Drawing.Point(0, 221)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(228, 8)
+        Me.Panel4.TabIndex = 45
+        '
         'Button_NavPsvrStatus
         '
         Me.Button_NavPsvrStatus.Dock = System.Windows.Forms.DockStyle.Top
@@ -442,6 +474,14 @@ Partial Class FormMain
         Me.Button_NavPsvrManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.Button_NavPsvrManagement.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_NavPsvrManagement.UseVisualStyleBackColor = True
+        '
+        'Panel2
+        '
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 165)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(228, 8)
+        Me.Panel2.TabIndex = 44
         '
         'Button_NavRunServiceConfigTool
         '
@@ -569,46 +609,6 @@ Partial Class FormMain
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(1, 761)
         Me.Panel3.TabIndex = 0
-        '
-        'Panel6
-        '
-        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel6.Location = New System.Drawing.Point(0, 365)
-        Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(228, 8)
-        Me.Panel6.TabIndex = 52
-        '
-        'Panel5
-        '
-        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel5.Location = New System.Drawing.Point(0, 333)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(228, 8)
-        Me.Panel5.TabIndex = 51
-        '
-        'Panel7
-        '
-        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel7.Location = New System.Drawing.Point(0, 301)
-        Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(228, 8)
-        Me.Panel7.TabIndex = 58
-        '
-        'Panel4
-        '
-        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel4.Location = New System.Drawing.Point(0, 221)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(228, 8)
-        Me.Panel4.TabIndex = 45
-        '
-        'Panel2
-        '
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel2.Location = New System.Drawing.Point(0, 165)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(228, 8)
-        Me.Panel2.TabIndex = 44
         '
         'FormMain
         '
