@@ -111,7 +111,7 @@ Partial Class UCVirtualControllers
         Me.ComboBox_VirtualControllerCount.Location = New System.Drawing.Point(184, 16)
         Me.ComboBox_VirtualControllerCount.Margin = New System.Windows.Forms.Padding(3, 16, 32, 3)
         Me.ComboBox_VirtualControllerCount.Name = "ComboBox_VirtualControllerCount"
-        Me.ComboBox_VirtualControllerCount.Size = New System.Drawing.Size(512, 21)
+        Me.ComboBox_VirtualControllerCount.Size = New System.Drawing.Size(544, 21)
         Me.ComboBox_VirtualControllerCount.TabIndex = 10
         '
         'Label5
@@ -132,11 +132,11 @@ Partial Class UCVirtualControllers
         Me.TabControl1.Controls.Add(Me.TabPage_General)
         Me.TabControl1.Controls.Add(Me.TabPage_RemoteSettings)
         Me.TabControl1.Controls.Add(Me.TabPage_ControllerAttachments)
-        Me.TabControl1.Location = New System.Drawing.Point(32, 75)
-        Me.TabControl1.Margin = New System.Windows.Forms.Padding(32, 8, 32, 32)
+        Me.TabControl1.Location = New System.Drawing.Point(16, 75)
+        Me.TabControl1.Margin = New System.Windows.Forms.Padding(16, 8, 16, 16)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(736, 493)
+        Me.TabControl1.Size = New System.Drawing.Size(768, 509)
         Me.TabControl1.TabIndex = 11
         '
         'TabPage_General
@@ -149,7 +149,7 @@ Partial Class UCVirtualControllers
         Me.TabPage_General.Controls.Add(Me.ComboBox_PSmoveEmu)
         Me.TabPage_General.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_General.Name = "TabPage_General"
-        Me.TabPage_General.Size = New System.Drawing.Size(728, 467)
+        Me.TabPage_General.Size = New System.Drawing.Size(760, 483)
         Me.TabPage_General.TabIndex = 2
         Me.TabPage_General.Text = "General"
         '
@@ -158,7 +158,7 @@ Partial Class UCVirtualControllers
         Me.CheckBox_PSmoveEmu.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_PSmoveEmu.AutoSize = True
         Me.CheckBox_PSmoveEmu.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_PSmoveEmu.Location = New System.Drawing.Point(622, 53)
+        Me.CheckBox_PSmoveEmu.Location = New System.Drawing.Point(654, 53)
         Me.CheckBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 3, 32, 3)
         Me.CheckBox_PSmoveEmu.Name = "CheckBox_PSmoveEmu"
         Me.CheckBox_PSmoveEmu.Size = New System.Drawing.Size(74, 18)
@@ -186,7 +186,7 @@ Partial Class UCVirtualControllers
         Me.ComboBox_PSmoveEmu.Location = New System.Drawing.Point(184, 51)
         Me.ComboBox_PSmoveEmu.Margin = New System.Windows.Forms.Padding(3, 6, 16, 3)
         Me.ComboBox_PSmoveEmu.Name = "ComboBox_PSmoveEmu"
-        Me.ComboBox_PSmoveEmu.Size = New System.Drawing.Size(425, 21)
+        Me.ComboBox_PSmoveEmu.Size = New System.Drawing.Size(457, 21)
         Me.ComboBox_PSmoveEmu.TabIndex = 12
         '
         'TabPage_RemoteSettings
@@ -194,7 +194,7 @@ Partial Class UCVirtualControllers
         Me.TabPage_RemoteSettings.BackColor = System.Drawing.Color.White
         Me.TabPage_RemoteSettings.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_RemoteSettings.Name = "TabPage_RemoteSettings"
-        Me.TabPage_RemoteSettings.Size = New System.Drawing.Size(728, 467)
+        Me.TabPage_RemoteSettings.Size = New System.Drawing.Size(760, 483)
         Me.TabPage_RemoteSettings.TabIndex = 0
         Me.TabPage_RemoteSettings.Text = "Remote Devices"
         '
@@ -203,7 +203,7 @@ Partial Class UCVirtualControllers
         Me.TabPage_ControllerAttachments.BackColor = System.Drawing.Color.White
         Me.TabPage_ControllerAttachments.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_ControllerAttachments.Name = "TabPage_ControllerAttachments"
-        Me.TabPage_ControllerAttachments.Size = New System.Drawing.Size(728, 467)
+        Me.TabPage_ControllerAttachments.Size = New System.Drawing.Size(760, 483)
         Me.TabPage_ControllerAttachments.TabIndex = 1
         Me.TabPage_ControllerAttachments.Text = "Controller Attachments"
         '

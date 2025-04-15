@@ -74,11 +74,11 @@ Partial Class UCVirtualMotionTracker
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_Settings)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_PlayspaceCalib)
         Me.TabControl_Vmt.Controls.Add(Me.TabPage_Overrides)
-        Me.TabControl_Vmt.Location = New System.Drawing.Point(16, 104)
-        Me.TabControl_Vmt.Margin = New System.Windows.Forms.Padding(16)
+        Me.TabControl_Vmt.Location = New System.Drawing.Point(16, 96)
+        Me.TabControl_Vmt.Margin = New System.Windows.Forms.Padding(16, 8, 16, 16)
         Me.TabControl_Vmt.Name = "TabControl_Vmt"
         Me.TabControl_Vmt.SelectedIndex = 0
-        Me.TabControl_Vmt.Size = New System.Drawing.Size(768, 480)
+        Me.TabControl_Vmt.Size = New System.Drawing.Size(768, 488)
         Me.TabControl_Vmt.TabIndex = 22
         '
         'TabPage_Management
@@ -86,7 +86,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Management.BackColor = System.Drawing.Color.White
         Me.TabPage_Management.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Management.Name = "TabPage_Management"
-        Me.TabPage_Management.Size = New System.Drawing.Size(760, 454)
+        Me.TabPage_Management.Size = New System.Drawing.Size(760, 462)
         Me.TabPage_Management.TabIndex = 4
         Me.TabPage_Management.Text = "Management"
         '
