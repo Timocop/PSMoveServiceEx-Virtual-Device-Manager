@@ -33,7 +33,6 @@ Partial Class FormTroubleshootLogs
         Me.Button_LogCopy = New System.Windows.Forms.Button()
         Me.Button_LogRefresh = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.TabControl_Logs = New System.Windows.Forms.TabControl()
         Me.TabControl_Diagnostic = New System.Windows.Forms.TabControl()
         Me.TabPage_Issues = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -49,6 +48,9 @@ Partial Class FormTroubleshootLogs
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TextBox_DeviceConfig = New System.Windows.Forms.TextBox()
         Me.TabPage_Logs = New System.Windows.Forms.TabPage()
+        Me.TextBox_Logs = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ComboBox_Logs = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.TabControl_Diagnostic.SuspendLayout()
         Me.TabPage_Issues.SuspendLayout()
@@ -130,17 +132,6 @@ Partial Class FormTroubleshootLogs
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(784, 1)
         Me.Panel2.TabIndex = 0
-        '
-        'TabControl_Logs
-        '
-        Me.TabControl_Logs.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl_Logs.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl_Logs.Multiline = True
-        Me.TabControl_Logs.Name = "TabControl_Logs"
-        Me.TabControl_Logs.Padding = New System.Drawing.Point(0, 0)
-        Me.TabControl_Logs.SelectedIndex = 0
-        Me.TabControl_Logs.Size = New System.Drawing.Size(752, 469)
-        Me.TabControl_Logs.TabIndex = 1
         '
         'TabControl_Diagnostic
         '
@@ -305,12 +296,52 @@ Partial Class FormTroubleshootLogs
         'TabPage_Logs
         '
         Me.TabPage_Logs.BackColor = System.Drawing.Color.White
-        Me.TabPage_Logs.Controls.Add(Me.TabControl_Logs)
+        Me.TabPage_Logs.Controls.Add(Me.ComboBox_Logs)
+        Me.TabPage_Logs.Controls.Add(Me.Label1)
+        Me.TabPage_Logs.Controls.Add(Me.TextBox_Logs)
         Me.TabPage_Logs.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Logs.Name = "TabPage_Logs"
         Me.TabPage_Logs.Size = New System.Drawing.Size(752, 469)
         Me.TabPage_Logs.TabIndex = 0
         Me.TabPage_Logs.Text = "Logs"
+        '
+        'TextBox_Logs
+        '
+        Me.TextBox_Logs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBox_Logs.BackColor = System.Drawing.Color.White
+        Me.TextBox_Logs.Location = New System.Drawing.Point(3, 56)
+        Me.TextBox_Logs.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
+        Me.TextBox_Logs.Multiline = True
+        Me.TextBox_Logs.Name = "TextBox_Logs"
+        Me.TextBox_Logs.ReadOnly = True
+        Me.TextBox_Logs.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.TextBox_Logs.Size = New System.Drawing.Size(746, 410)
+        Me.TextBox_Logs.TabIndex = 0
+        Me.TextBox_Logs.WordWrap = False
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(16, 19)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(34, 13)
+        Me.Label1.TabIndex = 1
+        Me.Label1.Text = "Logs:"
+        '
+        'ComboBox_Logs
+        '
+        Me.ComboBox_Logs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboBox_Logs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox_Logs.FormattingEnabled = True
+        Me.ComboBox_Logs.Location = New System.Drawing.Point(69, 16)
+        Me.ComboBox_Logs.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
+        Me.ComboBox_Logs.Name = "ComboBox_Logs"
+        Me.ComboBox_Logs.Size = New System.Drawing.Size(667, 21)
+        Me.ComboBox_Logs.TabIndex = 2
         '
         'FormTroubleshootLogs
         '
@@ -340,6 +371,7 @@ Partial Class FormTroubleshootLogs
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
         Me.TabPage_Logs.ResumeLayout(False)
+        Me.TabPage_Logs.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -348,7 +380,6 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents Button_LogCopy As Button
     Friend WithEvents Button_LogRefresh As Button
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents TabControl_Logs As TabControl
     Friend WithEvents Button_LogSave As Button
     Friend WithEvents Button_LogLoad As Button
     Friend WithEvents TabControl_Diagnostic As TabControl
@@ -366,4 +397,7 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents ColumnHeader1 As ColumnHeader
     Friend WithEvents ColumnHeader2 As ColumnHeader
     Friend WithEvents ColumnHeader3 As ColumnHeader
+    Friend WithEvents ComboBox_Logs As ComboBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents TextBox_Logs As TextBox
 End Class

@@ -15,6 +15,20 @@
     Private g_bInitRefresh As Boolean = False
     Private g_bSilentRefresh As Boolean = False
 
+    Structure STRUC_LOG_COMBOBOX_ITEM
+        Dim sText As String
+        Dim sLog As String
+
+        Public Sub New(_Text As String, _Log As String)
+            sText = _Text
+            sLog = _Log
+        End Sub
+
+        Public Overrides Function ToString() As String
+            Return sText
+        End Function
+    End Structure
+
     Public Sub New(_FormMain As FormMain, bRefresh As Boolean, bSilentRefresh As Boolean)
         g_mFormMain = _FormMain
         g_bInitRefresh = bRefresh
@@ -424,37 +438,16 @@
 
     Private Sub RefreshDisplayLogs()
         Try
-            TabControl_Logs.SuspendLayout()
-
-            For i = TabControl_Logs.TabCount - 1 To 0 Step -1
-                TabControl_Logs.TabPages(i).Dispose()
-            Next
+            ComboBox_Logs.BeginUpdate()
+            ComboBox_Logs.Items.Clear()
 
             SyncLock m_LogContent.m_Lock
                 For Each mItem In m_LogContent.m_Content
-                    Dim mTab As New TabPage(mItem.Key)
-                    mTab.BackColor = Color.White
-
-                    Dim mTextBox As New TextBox
-                    mTextBox.SuspendLayout()
-                    mTextBox.Parent = mTab
-
-                    mTextBox.Multiline = True
-                    mTextBox.WordWrap = False
-                    mTextBox.ReadOnly = True
-                    mTextBox.BackColor = Color.White
-
-                    mTextBox.Text = mItem.Value
-                    mTextBox.Dock = DockStyle.Fill
-                    mTextBox.BorderStyle = BorderStyle.None
-                    mTextBox.ScrollBars = ScrollBars.Both
-                    mTextBox.ResumeLayout()
-
-                    TabControl_Logs.TabPages.Add(mTab)
+                    ComboBox_Logs.Items.Add(New STRUC_LOG_COMBOBOX_ITEM(mItem.Key, mItem.Value))
                 Next
             End SyncLock
         Finally
-            TabControl_Logs.ResumeLayout()
+            ComboBox_Logs.EndUpdate()
         End Try
     End Sub
 
@@ -534,6 +527,21 @@
         End If
 
         ClassUtils.UpdateTextBoxNoScroll(TextBox_DeviceConfig, CStr(ListView_Devices.SelectedItems(0).Tag))
+    End Sub
+
+    Private Sub ComboBox_Logs_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_Logs.SelectedIndexChanged
+        If (ComboBox_Logs.SelectedItem Is Nothing) Then
+            TextBox_Logs.Text = ""
+            Return
+        End If
+
+        If (TypeOf ComboBox_Logs.SelectedItem IsNot STRUC_LOG_COMBOBOX_ITEM) Then
+            TextBox_Logs.Text = ""
+            Return
+        End If
+
+        Dim mSleectedItem = DirectCast(ComboBox_Logs.SelectedItem, STRUC_LOG_COMBOBOX_ITEM)
+        TextBox_Logs.Text = mSleectedItem.sLog
     End Sub
 
     Private Sub FormTroubleshootLogs_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
