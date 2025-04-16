@@ -448,6 +448,10 @@ Public Class FormTroubleshootLogs
                     ComboBox_Logs.Items.Add(New STRUC_LOG_COMBOBOX_ITEM(mItem.Key, mItem.Value))
                 Next
             End SyncLock
+
+            If (ComboBox_Logs.Items.Count > 0) Then
+                ComboBox_Logs.SelectedIndex = 0
+            End If
         Finally
             ComboBox_Logs.EndUpdate()
         End Try
