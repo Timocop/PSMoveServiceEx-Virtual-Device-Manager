@@ -1,4 +1,6 @@
-﻿Public Class FormTroubleshootLogs
+﻿Imports System.Web.Script.Serialization
+
+Public Class FormTroubleshootLogs
     ReadOnly SECTION_BUFFER As String = New String("#"c, 32)
 
     ReadOnly NOTHING_SELECTED As String = "Nothing selected. Refresh to generate or load a log, then click an entry above to show more details about the issue."
@@ -452,41 +454,79 @@
     End Sub
 
     Private Sub RefreshDevices()
-        Try
-            ListView_Devices.BeginUpdate()
-            ListView_Devices.Items.Clear()
+        Dim mDevicesProperties As New Dictionary(Of String, String)
 
-            Dim mDevices = New ClassLogManageServiceDevices(g_mFormMain, m_LogContent)
-            Dim mService = New ClassLogService(g_mFormMain, m_LogContent)
+        Dim mDevices = New ClassLogManageServiceDevices(g_mFormMain, m_LogContent)
+        Dim mService = New ClassLogService(g_mFormMain, m_LogContent)
 
-            Dim mDeviceList = mDevices.GetDevices()
+        Dim mDeviceList = mDevices.GetDevices()
 
-            For i = mDeviceList.Length - 1 To 0 Step -1
-                Dim mDeviceConfig = mService.FindConfigFromSerial(mDeviceList(i).sSerial)
+        For i = mDeviceList.Length - 1 To 0 Step -1
+            Dim mDeviceConfig = mService.FindConfigFromSerial(mDeviceList(i).sSerial)
 
-                Dim mItem As New ListViewItem(New String() {
-                                              mDeviceList(i).iType.ToString,
-                                              CStr(mDeviceList(i).iId),
-                                              mDeviceList(i).sSerial
-                })
+            Dim sName As String = String.Format("{0} {1} ({2})", mDeviceList(i).iType.ToString, mDeviceList(i).iId, mDeviceList(i).sSerial)
+            Dim sConfig As String = ""
 
-                If (mDeviceConfig Is Nothing) Then
-                    mItem.Tag = ""
-                Else
-                    mItem.Tag = mDeviceConfig.SaveToString()
-                End If
-
-                ListView_Devices.Items.Add(mItem)
-            Next
-
-            If (ListView_Devices.Items.Count = 0) Then
-                ListView_Devices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize)
-            Else
-                ListView_Devices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
+            If (mDeviceConfig IsNot Nothing) Then
+                sConfig = mDeviceConfig.SaveToString()
             End If
+
+            mDevicesProperties(sName) = sConfig
+        Next
+
+        Try
+            TreeView_DeviceProperties.BeginUpdate()
+            TreeView_DeviceProperties.Nodes.Clear()
+
+            For Each mItem In mDevicesProperties
+                PopulateTreeViewWithJson(TreeView_DeviceProperties, mItem.Key, mItem.Value)
+            Next
         Finally
-            ListView_Devices.EndUpdate()
+            TreeView_DeviceProperties.EndUpdate()
         End Try
+    End Sub
+
+    Private Sub PopulateTreeViewWithJson(mTreeView As TreeView, sRootName As String, sJson As String)
+        Dim mJson As New JavaScriptSerializer()
+        Dim mJsonData As Object = mJson.DeserializeObject(sJson)
+
+        If (mJsonData Is Nothing) Then
+            Return
+        End If
+
+        Dim mNode As New TreeNode(sRootName)
+        mTreeView.Nodes.Add(mNode)
+
+        PopulateTreeViewWithJsonRecursive(mJsonData, mNode)
+    End Sub
+
+    Private Sub PopulateTreeViewWithJsonRecursive(mJsonData As Object, mParentNode As TreeNode)
+        Select Case (True)
+            Case (TypeOf mJsonData Is IDictionary(Of String, Object))
+                For Each mItem As KeyValuePair(Of String, Object) In CType(mJsonData, IDictionary(Of String, Object))
+                    Dim mNode As New TreeNode(mItem.Key)
+                    mParentNode.Nodes.Add(mNode)
+                    PopulateTreeViewWithJsonRecursive(mItem.Value, mNode)
+                Next
+
+            Case (TypeOf mJsonData Is IList)
+                Dim i As Integer = 0
+                For Each mItem In CType(mJsonData, IList)
+                    Dim mNode As New TreeNode(CStr(i))
+
+                    mParentNode.Nodes.Add(mNode)
+
+                    PopulateTreeViewWithJsonRecursive(mItem, mNode)
+                    i += 1
+                Next
+
+            Case Else
+                Dim sValue As String = If(mJsonData IsNot Nothing, mJsonData.ToString(), "null")
+                'mParentNode.Nodes.Add(New TreeNode(sValue))
+
+                mParentNode.Text = String.Format("{0} = {1}", mParentNode.Text, sValue)
+
+        End Select
     End Sub
 
     Private Sub ListView_Issues_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Issues.SelectedIndexChanged
@@ -515,18 +555,6 @@
         sInfo.AppendLine()
 
         TextBox_IssueInfo.Text = sInfo.ToString
-    End Sub
-
-    Private Sub ListView_Devices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Devices.SelectedIndexChanged
-        If (ListView_Devices.SelectedItems.Count < 1) Then
-            Return
-        End If
-
-        If (ListView_Devices.SelectedItems(0).Tag Is Nothing) Then
-            Return
-        End If
-
-        ClassUtils.UpdateTextBoxNoScroll(TextBox_DeviceConfig, CStr(ListView_Devices.SelectedItems(0).Tag))
     End Sub
 
     Private Sub ComboBox_Logs_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_Logs.SelectedIndexChanged
