@@ -479,7 +479,14 @@ Public Class FormTroubleshootLogs
             TreeView_DeviceProperties.Nodes.Clear()
 
             For Each mItem In mDevicesProperties
-                PopulateTreeViewWithJson(TreeView_DeviceProperties, mItem.Key, mItem.Value)
+                Try
+                    PopulateTreeViewWithJson(TreeView_DeviceProperties, mItem.Key, mItem.Value)
+                Catch ex As Exception
+                    'Just in case the Json is malformed, show error
+                    Dim mNode As New TreeNode(mItem.Key)
+                    TreeView_DeviceProperties.Nodes.Add(mNode)
+                    mNode.Nodes.Add(New TreeNode(String.Format("ERROR: {0}", ex.Message)))
+                End Try
             Next
         Finally
             TreeView_DeviceProperties.EndUpdate()
