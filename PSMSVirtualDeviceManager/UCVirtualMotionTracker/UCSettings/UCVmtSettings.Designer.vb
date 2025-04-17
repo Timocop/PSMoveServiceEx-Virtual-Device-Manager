@@ -861,9 +861,9 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.NumericUpDown_BulbOffsetX)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label6)
         Me.GroupBox_HmdViewPositionOffset.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox_HmdViewPositionOffset.Location = New System.Drawing.Point(3, 327)
+        Me.GroupBox_HmdViewPositionOffset.Location = New System.Drawing.Point(3, 321)
         Me.GroupBox_HmdViewPositionOffset.Name = "GroupBox_HmdViewPositionOffset"
-        Me.GroupBox_HmdViewPositionOffset.Size = New System.Drawing.Size(780, 482)
+        Me.GroupBox_HmdViewPositionOffset.Size = New System.Drawing.Size(780, 487)
         Me.GroupBox_HmdViewPositionOffset.TabIndex = 6
         Me.GroupBox_HmdViewPositionOffset.TabStop = False
         Me.GroupBox_HmdViewPositionOffset.Text = "Viewpoint Position Offset"
@@ -874,7 +874,7 @@ Partial Class UCVmtSettings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UcInformation4.BackColor = System.Drawing.Color.White
         Me.UcInformation4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcInformation4.Location = New System.Drawing.Point(19, 423)
+        Me.UcInformation4.Location = New System.Drawing.Point(19, 64)
         Me.UcInformation4.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
         Me.UcInformation4.m_ReadMoreAction = Nothing
         Me.UcInformation4.m_ReadMoreText = "Go to settings"
@@ -883,7 +883,7 @@ Partial Class UCVmtSettings
     " tracking issues occur."
         Me.UcInformation4.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
         Me.UcInformation4.Name = "UcInformation4"
-        Me.UcInformation4.Size = New System.Drawing.Size(742, 53)
+        Me.UcInformation4.Size = New System.Drawing.Size(742, 51)
         Me.UcInformation4.TabIndex = 74
         '
         'UcInformation2
@@ -905,7 +905,7 @@ Partial Class UCVmtSettings
         'Label27
         '
         Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(330, 122)
+        Me.Label27.Location = New System.Drawing.Point(330, 179)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(21, 13)
         Me.Label27.TabIndex = 58
@@ -914,7 +914,7 @@ Partial Class UCVmtSettings
         'Label24
         '
         Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(330, 94)
+        Me.Label24.Location = New System.Drawing.Point(330, 151)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(21, 13)
         Me.Label24.TabIndex = 57
@@ -923,7 +923,7 @@ Partial Class UCVmtSettings
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(330, 66)
+        Me.Label12.Location = New System.Drawing.Point(330, 123)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(21, 13)
         Me.Label12.TabIndex = 56
@@ -933,7 +933,7 @@ Partial Class UCVmtSettings
         '
         Me.Panel1.Controls.Add(Me.Panel_BulbOffset)
         Me.Panel1.Controls.Add(Me.PictureBoxQuality_HmdViewOffset)
-        Me.Panel1.Location = New System.Drawing.Point(19, 161)
+        Me.Panel1.Location = New System.Drawing.Point(19, 218)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(256, 256)
@@ -963,7 +963,7 @@ Partial Class UCVmtSettings
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(19, 122)
+        Me.Label9.Location = New System.Drawing.Point(19, 179)
         Me.Label9.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(156, 13)
@@ -973,7 +973,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_BulbOffsetZ
         '
         Me.NumericUpDown_BulbOffsetZ.Controls.Add(Me.UcNumericUpDownBig20)
-        Me.NumericUpDown_BulbOffsetZ.Location = New System.Drawing.Point(201, 120)
+        Me.NumericUpDown_BulbOffsetZ.Location = New System.Drawing.Point(201, 177)
         Me.NumericUpDown_BulbOffsetZ.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
         Me.NumericUpDown_BulbOffsetZ.Name = "NumericUpDown_BulbOffsetZ"
         Me.NumericUpDown_BulbOffsetZ.Size = New System.Drawing.Size(123, 22)
@@ -998,7 +998,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_BulbOffsetY
         '
         Me.NumericUpDown_BulbOffsetY.Controls.Add(Me.UcNumericUpDownBig19)
-        Me.NumericUpDown_BulbOffsetY.Location = New System.Drawing.Point(201, 92)
+        Me.NumericUpDown_BulbOffsetY.Location = New System.Drawing.Point(201, 149)
         Me.NumericUpDown_BulbOffsetY.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
         Me.NumericUpDown_BulbOffsetY.Name = "NumericUpDown_BulbOffsetY"
         Me.NumericUpDown_BulbOffsetY.Size = New System.Drawing.Size(123, 22)
@@ -1023,7 +1023,7 @@ Partial Class UCVmtSettings
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(19, 94)
+        Me.Label7.Location = New System.Drawing.Point(19, 151)
         Me.Label7.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(155, 13)
@@ -1033,7 +1033,7 @@ Partial Class UCVmtSettings
         'NumericUpDown_BulbOffsetX
         '
         Me.NumericUpDown_BulbOffsetX.Controls.Add(Me.UcNumericUpDownBig17)
-        Me.NumericUpDown_BulbOffsetX.Location = New System.Drawing.Point(201, 64)
+        Me.NumericUpDown_BulbOffsetX.Location = New System.Drawing.Point(201, 121)
         Me.NumericUpDown_BulbOffsetX.Minimum = New Decimal(New Integer() {100, 0, 0, -2147483648})
         Me.NumericUpDown_BulbOffsetX.Name = "NumericUpDown_BulbOffsetX"
         Me.NumericUpDown_BulbOffsetX.Size = New System.Drawing.Size(123, 22)
@@ -1058,7 +1058,7 @@ Partial Class UCVmtSettings
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(19, 66)
+        Me.Label6.Location = New System.Drawing.Point(19, 123)
         Me.Label6.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(156, 13)
@@ -1082,7 +1082,7 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewOrientationOffset.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox_HmdViewOrientationOffset.Location = New System.Drawing.Point(3, 89)
         Me.GroupBox_HmdViewOrientationOffset.Name = "GroupBox_HmdViewOrientationOffset"
-        Me.GroupBox_HmdViewOrientationOffset.Size = New System.Drawing.Size(780, 238)
+        Me.GroupBox_HmdViewOrientationOffset.Size = New System.Drawing.Size(780, 232)
         Me.GroupBox_HmdViewOrientationOffset.TabIndex = 7
         Me.GroupBox_HmdViewOrientationOffset.TabStop = False
         Me.GroupBox_HmdViewOrientationOffset.Text = "Viewpoint Orientation Offset"
@@ -1093,7 +1093,7 @@ Partial Class UCVmtSettings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UcInformation3.BackColor = System.Drawing.Color.White
         Me.UcInformation3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.UcInformation3.Location = New System.Drawing.Point(19, 201)
+        Me.UcInformation3.Location = New System.Drawing.Point(19, 79)
         Me.UcInformation3.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
         Me.UcInformation3.m_ReadMoreAction = Nothing
         Me.UcInformation3.m_ReadMoreText = ""
@@ -1124,7 +1124,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdViewOffsetPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdViewOffsetPreset.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdViewOffsetPreset.FormattingEnabled = True
-        Me.ComboBox_HmdViewOffsetPreset.Location = New System.Drawing.Point(201, 174)
+        Me.ComboBox_HmdViewOffsetPreset.Location = New System.Drawing.Point(201, 200)
         Me.ComboBox_HmdViewOffsetPreset.Name = "ComboBox_HmdViewOffsetPreset"
         Me.ComboBox_HmdViewOffsetPreset.Size = New System.Drawing.Size(177, 21)
         Me.ComboBox_HmdViewOffsetPreset.TabIndex = 74
@@ -1132,7 +1132,7 @@ Partial Class UCVmtSettings
         'Label34
         '
         Me.Label34.AutoSize = True
-        Me.Label34.Location = New System.Drawing.Point(330, 148)
+        Me.Label34.Location = New System.Drawing.Point(330, 174)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(48, 13)
         Me.Label34.TabIndex = 67
@@ -1141,7 +1141,7 @@ Partial Class UCVmtSettings
         'Label35
         '
         Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(330, 120)
+        Me.Label35.Location = New System.Drawing.Point(330, 146)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(48, 13)
         Me.Label35.TabIndex = 66
@@ -1150,7 +1150,7 @@ Partial Class UCVmtSettings
         'Label36
         '
         Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(330, 92)
+        Me.Label36.Location = New System.Drawing.Point(330, 118)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(48, 13)
         Me.Label36.TabIndex = 65
@@ -1159,7 +1159,7 @@ Partial Class UCVmtSettings
         'Label37
         '
         Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(19, 148)
+        Me.Label37.Location = New System.Drawing.Point(19, 174)
         Me.Label37.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(29, 13)
@@ -1170,7 +1170,7 @@ Partial Class UCVmtSettings
         '
         Me.NumericUpDown_HmdViewOffsetZ.Controls.Add(Me.UcNumericUpDownBig21)
         Me.NumericUpDown_HmdViewOffsetZ.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.NumericUpDown_HmdViewOffsetZ.Location = New System.Drawing.Point(201, 146)
+        Me.NumericUpDown_HmdViewOffsetZ.Location = New System.Drawing.Point(201, 172)
         Me.NumericUpDown_HmdViewOffsetZ.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.NumericUpDown_HmdViewOffsetZ.Minimum = New Decimal(New Integer() {180, 0, 0, -2147483648})
         Me.NumericUpDown_HmdViewOffsetZ.Name = "NumericUpDown_HmdViewOffsetZ"
@@ -1197,7 +1197,7 @@ Partial Class UCVmtSettings
         '
         Me.NumericUpDown_HmdViewOffsetY.Controls.Add(Me.UcNumericUpDownBig22)
         Me.NumericUpDown_HmdViewOffsetY.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.NumericUpDown_HmdViewOffsetY.Location = New System.Drawing.Point(201, 118)
+        Me.NumericUpDown_HmdViewOffsetY.Location = New System.Drawing.Point(201, 144)
         Me.NumericUpDown_HmdViewOffsetY.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.NumericUpDown_HmdViewOffsetY.Minimum = New Decimal(New Integer() {180, 0, 0, -2147483648})
         Me.NumericUpDown_HmdViewOffsetY.Name = "NumericUpDown_HmdViewOffsetY"
@@ -1223,7 +1223,7 @@ Partial Class UCVmtSettings
         'Label38
         '
         Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(19, 120)
+        Me.Label38.Location = New System.Drawing.Point(19, 146)
         Me.Label38.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(35, 13)
@@ -1234,7 +1234,7 @@ Partial Class UCVmtSettings
         '
         Me.NumericUpDown_HmdViewOffsetX.Controls.Add(Me.UcNumericUpDownBig23)
         Me.NumericUpDown_HmdViewOffsetX.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.NumericUpDown_HmdViewOffsetX.Location = New System.Drawing.Point(201, 90)
+        Me.NumericUpDown_HmdViewOffsetX.Location = New System.Drawing.Point(201, 116)
         Me.NumericUpDown_HmdViewOffsetX.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.NumericUpDown_HmdViewOffsetX.Minimum = New Decimal(New Integer() {180, 0, 0, -2147483648})
         Me.NumericUpDown_HmdViewOffsetX.Name = "NumericUpDown_HmdViewOffsetX"
@@ -1260,7 +1260,7 @@ Partial Class UCVmtSettings
         'Label39
         '
         Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(19, 92)
+        Me.Label39.Location = New System.Drawing.Point(19, 118)
         Me.Label39.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(30, 13)
