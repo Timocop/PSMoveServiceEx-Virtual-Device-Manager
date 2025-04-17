@@ -115,6 +115,8 @@ Public Class UCControllerAttachments
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call. 
+        UcInformation1.m_ReadMoreAction = AddressOf ShowHelpControllerAttachmentsHelp
+
         For i = 0 To ClassSerivceConst.PSMOVESERVICE_MAX_CONTROLLER_COUNT - 1
             Dim mItem As New ToolStripMenuItem("Controller ID: " & CStr(i))
 
@@ -250,7 +252,7 @@ Public Class UCControllerAttachments
         End Try
     End Sub
 
-    Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
+    Private Sub ShowHelpControllerAttachmentsHelp()
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpControllerAttachments
         mMsg.ShowDialog(g_mUCVirtualControllers.g_mFormMain)

@@ -140,6 +140,8 @@ Public Class UCRemoteDevices
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        UcInformation1.m_ReadMoreAction = AddressOf ShowRemoteDevicesHelp
+
         g_mClassStrackerSocket = New ClassTrackerSocket(Me)
 
         m_SocketPort = DEFAULT_SOCKET_PORT
@@ -971,7 +973,7 @@ Public Class UCRemoteDevices
         End Class
     End Class
 
-    Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
+    Private Sub ShowRemoteDevicesHelp()
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpRemoteDevices
         mMsg.ShowDialog(g_mUCVirtualControllers.g_mFormMain)

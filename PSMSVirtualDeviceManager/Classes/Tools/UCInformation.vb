@@ -17,8 +17,7 @@ Public Class UCInformation
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        LinkLabel_MoreInfo.Visible = False
+        ' Add any initialization after the InitializeComponent() call. 
     End Sub
 
     <Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design", GetType(UITypeEditor))>
@@ -31,18 +30,27 @@ Public Class UCInformation
         End Set
     End Property
 
+    Public Property m_ReadMoreText As String
+        Get
+            Return LinkLabel_MoreInfo.Text
+        End Get
+        Set(value As String)
+            LinkLabel_MoreInfo.Text = value
+
+            If (LinkLabel_MoreInfo.Text.Length > 0) Then
+                LinkLabel_MoreInfo.Visible = True
+            Else
+                LinkLabel_MoreInfo.Visible = True
+            End If
+        End Set
+    End Property
+
     Public Property m_ReadMoreAction As Action
         Get
             Return g_mReadMoreAction
         End Get
         Set(value As Action)
             g_mReadMoreAction = value
-
-            If (g_mReadMoreAction IsNot Nothing) Then
-                LinkLabel_MoreInfo.Visible = True
-            Else
-                LinkLabel_MoreInfo.Visible = False
-            End If
         End Set
     End Property
 

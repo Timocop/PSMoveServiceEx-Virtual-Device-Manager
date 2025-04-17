@@ -12,6 +12,7 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        UcInformation1.m_ReadMoreAction = AddressOf ShowSettings
 
         Try
             g_bIgnoreEvents = True
@@ -27,6 +28,14 @@
         End Try
 
         CreateControl()
+    End Sub
+
+    Private Sub ShowSettings()
+        g_UCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_UCVirtualMotionTracker.TabPage_Settings
+        g_UCVirtualMotionTracker.g_UCVmtSettings.TabControl_SettingsDevices.SelectedTab = g_UCVirtualMotionTracker.g_UCVmtSettings.TabPage_SettingsPSmove
+
+        ' Weird focus  
+        g_UCVirtualMotionTracker.g_UCVmtSettings.Label_ScrollFocus.Focus()
     End Sub
 
     Public Sub Init()

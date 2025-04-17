@@ -123,10 +123,11 @@
   <metadata name="ContextMenuStrip_Autostart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="Label1.Text" xml:space="preserve">
-    <value>You can attach controllers to each other to create joint-based controllers that don't need LEDs but still provide enough information for emulated 6-DoF tracking by orbiting around the parent controller.</value>
-  </data>
   <metadata name="Timer_Attachment.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>449, 17</value>
   </metadata>
+  <data name="UcInformation1.m_Text" xml:space="preserve">
+    <value>You can attach controllers to each other to create joint-based controllers that don't need LEDs but still provide enough information for emulated 6-DoF tracking by orbiting around the parent controller.
+</value>
+  </data>
 </root>

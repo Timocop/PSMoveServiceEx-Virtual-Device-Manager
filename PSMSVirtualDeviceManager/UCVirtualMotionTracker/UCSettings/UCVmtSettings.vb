@@ -53,6 +53,10 @@ Public Class UCVmtSettings
         Label_ScrollFocus.Text = ""
         GroupBox_Distortion.Visible = False
 
+        UcInformation4.m_ReadMoreAction = AddressOf ShowSettingsOther
+        UcInformation8.m_ReadMoreAction = AddressOf ShowPlayspaceCalibration
+        UcInformation9.m_ReadMoreAction = AddressOf ShowToucpadShortcutHelp
+
         Try
             g_bIgnoreEvents = True
 
@@ -391,8 +395,7 @@ Public Class UCVmtSettings
         End Function
     End Class
 
-
-    Private Sub LinkLabel_TouchpadShortcutHelp_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_TouchpadShortcutHelp.LinkClicked
+    Private Sub ShowToucpadShortcutHelp()
         Dim mMsg As New FormRtfHelp
         mMsg.RichTextBox_Help.Rtf = My.Resources.HelpTouchpadShortcuts
         mMsg.ShowDialog(g_UCVirtualMotionTracker.g_mFormMain)
@@ -959,7 +962,7 @@ Public Class UCVmtSettings
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub LinkLabel_PlayCalibShowSettings2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_PlayCalibShowSettings2.LinkClicked
+    Private Sub ShowPlayspaceCalibration()
         g_UCVirtualMotionTracker.TabControl_Vmt.SelectedTab = g_UCVirtualMotionTracker.TabPage_Settings
         TabControl_SettingsDevices.SelectedTab = TabPage_SettingsPlayspace
 
@@ -1187,7 +1190,7 @@ Public Class UCVmtSettings
         End If
     End Sub
 
-    Private Sub LinkLabel_EnableVelocityPerFrame_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EnableVelocityPerFrame.LinkClicked
+    Private Sub ShowSettingsOther()
         TabControl_SettingsDevices.SelectedTab = TabPage_SettingsOther
 
         CheckBox_EnableManualVelocity.Focus()

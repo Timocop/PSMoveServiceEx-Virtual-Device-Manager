@@ -68,12 +68,11 @@ Partial Class UCVmtPlayspaceCalib
         Me.ComboBox_PlayCalibControllerID = New System.Windows.Forms.ComboBox()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.LinkLabel_PlayCalibShowSettings = New System.Windows.Forms.LinkLabel()
-        Me.Label27 = New System.Windows.Forms.Label()
         Me.Button_PlaySpaceManualCalib = New System.Windows.Forms.Button()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.ClassPictureBoxQuality3 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.ToolTip_Default = New System.Windows.Forms.ToolTip(Me.components)
+        Me.UcInformation1 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.UcInformation5 = New PSMSVirtualDeviceManager.UCInformation()
         CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_PlayCalibPrepTime.SuspendLayout()
         Me.Panel_PlayCalibSteps.SuspendLayout()
@@ -88,7 +87,6 @@ Partial Class UCVmtPlayspaceCalib
         Me.Panel7.SuspendLayout()
         CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'NumericUpDown_PlayCalibPrepTime
@@ -145,8 +143,8 @@ Partial Class UCVmtPlayspaceCalib
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel9)
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel7)
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel5)
-        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 200)
-        Me.Panel_PlayCalibSteps.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 212)
+        Me.Panel_PlayCalibSteps.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.Panel_PlayCalibSteps.Name = "Panel_PlayCalibSteps"
         Me.Panel_PlayCalibSteps.Size = New System.Drawing.Size(768, 367)
         Me.Panel_PlayCalibSteps.TabIndex = 79
@@ -498,7 +496,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.ComboBox_PlayCalibControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_PlayCalibControllerID.FormattingEnabled = True
         Me.ComboBox_PlayCalibControllerID.Location = New System.Drawing.Point(168, 65)
-        Me.ComboBox_PlayCalibControllerID.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
+        Me.ComboBox_PlayCalibControllerID.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
         Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(132, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 78
@@ -523,26 +521,11 @@ Partial Class UCVmtPlayspaceCalib
         Me.LinkLabel_PlayCalibShowSettings.LinkColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_PlayCalibShowSettings.Location = New System.Drawing.Point(236, 125)
         Me.LinkLabel_PlayCalibShowSettings.Name = "LinkLabel_PlayCalibShowSettings"
-        Me.LinkLabel_PlayCalibShowSettings.Size = New System.Drawing.Size(80, 13)
+        Me.LinkLabel_PlayCalibShowSettings.Size = New System.Drawing.Size(188, 13)
         Me.LinkLabel_PlayCalibShowSettings.TabIndex = 72
         Me.LinkLabel_PlayCalibShowSettings.TabStop = True
-        Me.LinkLabel_PlayCalibShowSettings.Text = "Show settings"
+        Me.LinkLabel_PlayCalibShowSettings.Text = "Go to playspace calibration settngs"
         Me.LinkLabel_PlayCalibShowSettings.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'Label27
-        '
-        Me.Label27.AutoSize = True
-        Me.Label27.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label27.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label27.Location = New System.Drawing.Point(16, 149)
-        Me.Label27.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label27.Size = New System.Drawing.Size(646, 32)
-        Me.Label27.TabIndex = 76
-        Me.Label27.Text = "        PSMove controllers do not need manual calibration; use the buttons SELECT" &
-    "+START to recenter the playspace instead. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        See settings for more detail" &
-    "s."
         '
         'Button_PlaySpaceManualCalib
         '
@@ -556,29 +539,6 @@ Partial Class UCVmtPlayspaceCalib
         Me.Button_PlaySpaceManualCalib.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.Button_PlaySpaceManualCalib.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.Button_PlaySpaceManualCalib.UseVisualStyleBackColor = True
-        '
-        'Label24
-        '
-        Me.Label24.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label24.Location = New System.Drawing.Point(38, 16)
-        Me.Label24.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(746, 33)
-        Me.Label24.TabIndex = 74
-        Me.Label24.Text = resources.GetString("Label24.Text")
-        '
-        'ClassPictureBoxQuality3
-        '
-        Me.ClassPictureBoxQuality3.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.ClassPictureBoxQuality3.Location = New System.Drawing.Point(16, 16)
-        Me.ClassPictureBoxQuality3.m_HighQuality = False
-        Me.ClassPictureBoxQuality3.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.ClassPictureBoxQuality3.Name = "ClassPictureBoxQuality3"
-        Me.ClassPictureBoxQuality3.Size = New System.Drawing.Size(16, 16)
-        Me.ClassPictureBoxQuality3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ClassPictureBoxQuality3.TabIndex = 73
-        Me.ClassPictureBoxQuality3.TabStop = False
         '
         'ToolTip_Info
         '
@@ -596,25 +556,57 @@ Partial Class UCVmtPlayspaceCalib
         Me.ToolTip_Default.InitialDelay = 100
         Me.ToolTip_Default.ReshowDelay = 20
         '
+        'UcInformation1
+        '
+        Me.UcInformation1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation1.BackColor = System.Drawing.Color.White
+        Me.UcInformation1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation1.Location = New System.Drawing.Point(16, 149)
+        Me.UcInformation1.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation1.m_ReadMoreAction = Nothing
+        Me.UcInformation1.m_ReadMoreText = "Go to settings"
+        Me.UcInformation1.m_Text = "PSMove controllers do not need manual calibration; use the buttons SELECT+START t" &
+    "o recenter the playspace instead. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "See settings for more details."
+        Me.UcInformation1.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
+        Me.UcInformation1.Name = "UcInformation1"
+        Me.UcInformation1.Size = New System.Drawing.Size(768, 57)
+        Me.UcInformation1.TabIndex = 83
+        '
+        'UcInformation5
+        '
+        Me.UcInformation5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation5.BackColor = System.Drawing.Color.White
+        Me.UcInformation5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation5.Location = New System.Drawing.Point(16, 16)
+        Me.UcInformation5.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation5.m_ReadMoreAction = Nothing
+        Me.UcInformation5.m_ReadMoreText = ""
+        Me.UcInformation5.m_Text = resources.GetString("UcInformation5.m_Text")
+        Me.UcInformation5.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
+        Me.UcInformation5.Name = "UcInformation5"
+        Me.UcInformation5.Size = New System.Drawing.Size(768, 43)
+        Me.UcInformation5.TabIndex = 82
+        '
         'UCVmtPlayspaceCalib
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.UcInformation1)
+        Me.Controls.Add(Me.UcInformation5)
         Me.Controls.Add(Me.NumericUpDown_PlayCalibPrepTime)
         Me.Controls.Add(Me.Label41)
         Me.Controls.Add(Me.Panel_PlayCalibSteps)
         Me.Controls.Add(Me.ComboBox_PlayCalibControllerID)
         Me.Controls.Add(Me.Label28)
         Me.Controls.Add(Me.LinkLabel_PlayCalibShowSettings)
-        Me.Controls.Add(Me.Label27)
         Me.Controls.Add(Me.Button_PlaySpaceManualCalib)
-        Me.Controls.Add(Me.Label24)
-        Me.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVmtPlayspaceCalib"
-        Me.Size = New System.Drawing.Size(800, 584)
+        Me.Size = New System.Drawing.Size(800, 595)
         CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_PlayCalibPrepTime.ResumeLayout(False)
         Me.NumericUpDown_PlayCalibPrepTime.PerformLayout()
@@ -635,7 +627,6 @@ Partial Class UCVmtPlayspaceCalib
         Me.Panel7.PerformLayout()
         CType(Me.ClassPictureBoxQuality_CalibStep1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel5.ResumeLayout(False)
-        CType(Me.ClassPictureBoxQuality3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -680,11 +671,10 @@ Partial Class UCVmtPlayspaceCalib
     Friend WithEvents ComboBox_PlayCalibControllerID As ComboBox
     Friend WithEvents Label28 As Label
     Friend WithEvents LinkLabel_PlayCalibShowSettings As LinkLabel
-    Friend WithEvents Label27 As Label
     Friend WithEvents Button_PlaySpaceManualCalib As Button
-    Friend WithEvents Label24 As Label
-    Friend WithEvents ClassPictureBoxQuality3 As ClassPictureBoxQuality
     Friend WithEvents UcNumericUpDownBig1 As UCNumericUpDownBig
     Friend WithEvents ToolTip_Info As ToolTip
     Friend WithEvents ToolTip_Default As ToolTip
+    Friend WithEvents UcInformation5 As UCInformation
+    Friend WithEvents UcInformation1 As UCInformation
 End Class

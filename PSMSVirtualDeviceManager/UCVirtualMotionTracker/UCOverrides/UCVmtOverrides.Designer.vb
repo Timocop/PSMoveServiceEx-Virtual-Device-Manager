@@ -95,11 +95,14 @@ Partial Class UCVmtOverrides
         '
         'UcInformation1
         '
+        Me.UcInformation1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UcInformation1.BackColor = System.Drawing.Color.White
         Me.UcInformation1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.UcInformation1.Location = New System.Drawing.Point(16, 16)
         Me.UcInformation1.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
         Me.UcInformation1.m_ReadMoreAction = Nothing
+        Me.UcInformation1.m_ReadMoreText = ""
         Me.UcInformation1.m_Text = resources.GetString("UcInformation1.m_Text")
         Me.UcInformation1.Margin = New System.Windows.Forms.Padding(16)
         Me.UcInformation1.Name = "UcInformation1"

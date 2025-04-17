@@ -123,8 +123,8 @@
   <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>273, 25</value>
   </metadata>
-  <data name="Label24.Text" xml:space="preserve">
-    <value>The Playspace calibrator synchronizes the PSMoveServiceEx tracking universe with another one.
+  <data name="UcInformation5.m_Text" xml:space="preserve">
+    <value>The Playspace calibrator synchronizes the PSMoveServiceEx tracking universe with another.
 If you are using third-party head-mounted displays, this step is required to utilize both tracking methods simultaneously.</value>
   </data>
 </root>

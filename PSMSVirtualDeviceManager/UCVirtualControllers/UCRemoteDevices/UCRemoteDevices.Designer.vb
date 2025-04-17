@@ -29,19 +29,16 @@ Partial Class UCRemoteDevices
         Me.Timer_SocketCheck = New System.Windows.Forms.Timer(Me.components)
         Me.CheckBox_AllowNewDevices = New System.Windows.Forms.CheckBox()
         Me.LinkLabel_EditPort = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label_ConnectedDevices = New System.Windows.Forms.Label()
         Me.ListView_RemoteDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Timer_RemoteDevices = New System.Windows.Forms.Timer(Me.components)
-        Me.PictureBox1 = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel_AvailableRemoteDevices = New System.Windows.Forms.Panel()
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.UcInformation1 = New PSMSVirtualDeviceManager.UCInformation()
         Me.Panel_AvailableRemoteDevices.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -116,33 +113,6 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_EditPort.Text = "Edit port"
         Me.LinkLabel_EditPort.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'LinkLabel_ReadMore
-        '
-        Me.LinkLabel_ReadMore.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_ReadMore.AutoSize = True
-        Me.LinkLabel_ReadMore.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ReadMore.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel_ReadMore.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_ReadMore.Location = New System.Drawing.Point(38, 49)
-        Me.LinkLabel_ReadMore.Name = "LinkLabel_ReadMore"
-        Me.LinkLabel_ReadMore.Size = New System.Drawing.Size(62, 13)
-        Me.LinkLabel_ReadMore.TabIndex = 18
-        Me.LinkLabel_ReadMore.TabStop = True
-        Me.LinkLabel_ReadMore.Text = "Read more"
-        Me.LinkLabel_ReadMore.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label1.Location = New System.Drawing.Point(38, 16)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(3, 16, 16, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(746, 33)
-        Me.Label1.TabIndex = 17
-        Me.Label1.Text = "With custom remote devices equipped with IMUs, you can modify the orientation dat" &
-    "a and inputs of controllers." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
-        '
         'Label_ConnectedDevices
         '
         Me.Label_ConnectedDevices.AutoSize = True
@@ -179,18 +149,6 @@ Partial Class UCRemoteDevices
         '
         Me.Timer_RemoteDevices.Enabled = True
         Me.Timer_RemoteDevices.Interval = 500
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.PictureBox1.Location = New System.Drawing.Point(16, 16)
-        Me.PictureBox1.m_HighQuality = False
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 16
-        Me.PictureBox1.TabStop = False
         '
         'Panel_AvailableRemoteDevices
         '
@@ -242,20 +200,35 @@ Partial Class UCRemoteDevices
         '
         'Panel1
         '
-        Me.Panel1.Controls.Add(Me.PictureBox1)
+        Me.Panel1.Controls.Add(Me.UcInformation1)
         Me.Panel1.Controls.Add(Me.Panel_AvailableRemoteDevices)
         Me.Panel1.Controls.Add(Me.Label_Port)
         Me.Panel1.Controls.Add(Me.Label_ConnectedDevices)
         Me.Panel1.Controls.Add(Me.Button_StartSocket)
-        Me.Panel1.Controls.Add(Me.LinkLabel_ReadMore)
         Me.Panel1.Controls.Add(Me.CheckBox_AllowNewDevices)
-        Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Controls.Add(Me.LinkLabel_EditPort)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(800, 297)
         Me.Panel1.TabIndex = 22
+        '
+        'UcInformation1
+        '
+        Me.UcInformation1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation1.BackColor = System.Drawing.Color.White
+        Me.UcInformation1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation1.Location = New System.Drawing.Point(16, 16)
+        Me.UcInformation1.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation1.m_ReadMoreAction = Nothing
+        Me.UcInformation1.m_ReadMoreText = "Read more"
+        Me.UcInformation1.m_Text = "With custom remote devices equipped with IMUs, you can modify the orientation dat" &
+    "a and inputs of controllers." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.UcInformation1.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
+        Me.UcInformation1.Name = "UcInformation1"
+        Me.UcInformation1.Size = New System.Drawing.Size(768, 41)
+        Me.UcInformation1.TabIndex = 23
         '
         'UCRemoteDevices
         '
@@ -268,7 +241,6 @@ Partial Class UCRemoteDevices
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCRemoteDevices"
         Me.Size = New System.Drawing.Size(800, 600)
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel_AvailableRemoteDevices.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
@@ -284,9 +256,6 @@ Partial Class UCRemoteDevices
     Friend WithEvents Timer_SocketCheck As Timer
     Friend WithEvents CheckBox_AllowNewDevices As CheckBox
     Friend WithEvents LinkLabel_EditPort As LinkLabel
-    Friend WithEvents LinkLabel_ReadMore As LinkLabel
-    Friend WithEvents Label1 As Label
-    Friend WithEvents PictureBox1 As ClassPictureBoxQuality
     Friend WithEvents Label_ConnectedDevices As Label
     Friend WithEvents ListView_RemoteDevices As ClassListViewEx
     Friend WithEvents ColumnHeader1 As ColumnHeader
@@ -296,4 +265,5 @@ Partial Class UCRemoteDevices
     Friend WithEvents Label12 As Label
     Friend WithEvents Panel10 As Panel
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents UcInformation1 As UCInformation
 End Class

@@ -75,8 +75,8 @@ Partial Class UCVmtSettings
         Me.ComboBox_PsvrRenderResolution = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsHMD = New System.Windows.Forms.TabPage()
         Me.GroupBox_HmdViewPositionOffset = New System.Windows.Forms.GroupBox()
-        Me.LinkLabel_EnableVelocityPerFrame = New System.Windows.Forms.LinkLabel()
-        Me.Label32 = New System.Windows.Forms.Label()
+        Me.UcInformation4 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.UcInformation2 = New PSMSVirtualDeviceManager.UCInformation()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -92,10 +92,10 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_BulbOffsetX = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig17 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox_HmdViewOrientationOffset = New System.Windows.Forms.GroupBox()
+        Me.UcInformation3 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.UcInformation1 = New PSMSVirtualDeviceManager.UCInformation()
         Me.ComboBox_HmdViewOffsetPreset = New System.Windows.Forms.ComboBox()
-        Me.Label41 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label36 = New System.Windows.Forms.Label()
@@ -108,7 +108,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_HmdViewOffsetX = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig23 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label39 = New System.Windows.Forms.Label()
-        Me.Label33 = New System.Windows.Forms.Label()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.ComboBox_HmdPoseOverrideType = New System.Windows.Forms.ComboBox()
         Me.Label43 = New System.Windows.Forms.Label()
@@ -116,27 +115,26 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdPoseOverridesControllerId = New System.Windows.Forms.ComboBox()
         Me.TabPage_SettingsPSmove = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.UcInformation8 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.UcInformation7 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.UcInformation6 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.UcInformation5 = New PSMSVirtualDeviceManager.UCInformation()
         Me.LinkLabel_HmdRecenterFromOverride = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel_PlayCalibShowSettings2 = New System.Windows.Forms.LinkLabel()
         Me.Label_ScrollFocus = New System.Windows.Forms.Label()
-        Me.Label25 = New System.Windows.Forms.Label()
         Me.CheckBox_PlayCalibEnabled = New System.Windows.Forms.CheckBox()
         Me.NumericUpDown_RecenterButtonTime = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig7 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Button_ResetRecenter = New System.Windows.Forms.Button()
-        Me.Label20 = New System.Windows.Forms.Label()
         Me.ComboBox_HmdRecenterFromDevice = New System.Windows.Forms.ComboBox()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.ComboBox_HmdRecenterMethod = New System.Windows.Forms.ComboBox()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
         Me.CheckBox_HmdRecenterEnabled = New System.Windows.Forms.CheckBox()
         Me.ComboBox_RecenterFromDevice = New System.Windows.Forms.ComboBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.ComboBox_RecenterMethod = New System.Windows.Forms.ComboBox()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
         Me.CheckBox_ControllerRecenterEnabled = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.CheckBox_HybridGripToggle = New System.Windows.Forms.CheckBox()
@@ -146,6 +144,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_OculusButtonLayout = New System.Windows.Forms.ComboBox()
         Me.Label_TouchpadTouchAreaDeg = New System.Windows.Forms.Label()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.UcInformation9 = New PSMSVirtualDeviceManager.UCInformation()
         Me.CheckBox_HtcTouchpadShortcuts = New System.Windows.Forms.CheckBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ComboBox_HtcGrabButtonMethod = New System.Windows.Forms.ComboBox()
@@ -155,7 +154,6 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_HtcTouchpadClickDeadzone = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig6 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label22 = New System.Windows.Forms.Label()
-        Me.LinkLabel_TouchpadShortcutHelp = New System.Windows.Forms.LinkLabel()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.NumericUpDown_JoystickArea = New System.Windows.Forms.NumericUpDown()
         Me.UcNumericUpDownBig5 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
@@ -850,8 +848,8 @@ Partial Class UCVmtSettings
         '
         'GroupBox_HmdViewPositionOffset
         '
-        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.LinkLabel_EnableVelocityPerFrame)
-        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label32)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.UcInformation4)
+        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.UcInformation2)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label27)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label24)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label12)
@@ -862,7 +860,6 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label7)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.NumericUpDown_BulbOffsetX)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label6)
-        Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label2)
         Me.GroupBox_HmdViewPositionOffset.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox_HmdViewPositionOffset.Location = New System.Drawing.Point(3, 327)
         Me.GroupBox_HmdViewPositionOffset.Name = "GroupBox_HmdViewPositionOffset"
@@ -871,35 +868,39 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewPositionOffset.TabStop = False
         Me.GroupBox_HmdViewPositionOffset.Text = "Viewpoint Position Offset"
         '
-        'LinkLabel_EnableVelocityPerFrame
+        'UcInformation4
         '
-        Me.LinkLabel_EnableVelocityPerFrame.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_EnableVelocityPerFrame.AutoSize = True
-        Me.LinkLabel_EnableVelocityPerFrame.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_EnableVelocityPerFrame.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_EnableVelocityPerFrame.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_EnableVelocityPerFrame.Location = New System.Drawing.Point(39, 455)
-        Me.LinkLabel_EnableVelocityPerFrame.Margin = New System.Windows.Forms.Padding(36, 3, 3, 0)
-        Me.LinkLabel_EnableVelocityPerFrame.Name = "LinkLabel_EnableVelocityPerFrame"
-        Me.LinkLabel_EnableVelocityPerFrame.Size = New System.Drawing.Size(75, 13)
-        Me.LinkLabel_EnableVelocityPerFrame.TabIndex = 72
-        Me.LinkLabel_EnableVelocityPerFrame.TabStop = True
-        Me.LinkLabel_EnableVelocityPerFrame.Text = "Go to setting"
-        Me.LinkLabel_EnableVelocityPerFrame.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        Me.UcInformation4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation4.BackColor = System.Drawing.Color.White
+        Me.UcInformation4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation4.Location = New System.Drawing.Point(19, 423)
+        Me.UcInformation4.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
+        Me.UcInformation4.m_ReadMoreAction = Nothing
+        Me.UcInformation4.m_ReadMoreText = "Go to settings"
+        Me.UcInformation4.m_Text = "Changing viewpoint offsets may affect the velocity of the head-mounted display ne" &
+    "gatively." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "It is recommended to enable ""Calculate velocity per frame instead"" if" &
+    " tracking issues occur."
+        Me.UcInformation4.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
+        Me.UcInformation4.Name = "UcInformation4"
+        Me.UcInformation4.Size = New System.Drawing.Size(742, 53)
+        Me.UcInformation4.TabIndex = 74
         '
-        'Label32
+        'UcInformation2
         '
-        Me.Label32.AutoSize = True
-        Me.Label32.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
-        Me.Label32.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label32.Location = New System.Drawing.Point(16, 423)
-        Me.Label32.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(501, 26)
-        Me.Label32.TabIndex = 59
-        Me.Label32.Text = "        Changing viewpoint offsets may affect the velocity of the head-mounted di" &
-    "splay negatively." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "        It is recommended to enable ""Calculate velocity per f" &
-    "rame instead"" if tracking issues occur."
+        Me.UcInformation2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation2.BackColor = System.Drawing.Color.White
+        Me.UcInformation2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation2.Location = New System.Drawing.Point(19, 21)
+        Me.UcInformation2.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation2.m_ReadMoreAction = Nothing
+        Me.UcInformation2.m_ReadMoreText = ""
+        Me.UcInformation2.m_Text = resources.GetString("UcInformation2.m_Text")
+        Me.UcInformation2.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
+        Me.UcInformation2.Name = "UcInformation2"
+        Me.UcInformation2.Size = New System.Drawing.Size(742, 37)
+        Me.UcInformation2.TabIndex = 73
         '
         'Label27
         '
@@ -1064,22 +1065,11 @@ Partial Class UCVmtSettings
         Me.Label6.TabIndex = 47
         Me.Label6.Text = "Tracking LED bulb location X:"
         '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label2.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label2.Location = New System.Drawing.Point(19, 21)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(622, 26)
-        Me.Label2.TabIndex = 46
-        Me.Label2.Text = resources.GetString("Label2.Text")
-        '
         'GroupBox_HmdViewOrientationOffset
         '
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.UcInformation3)
+        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.UcInformation1)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.ComboBox_HmdViewOffsetPreset)
-        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label41)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label34)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label35)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label36)
@@ -1089,7 +1079,6 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label38)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.NumericUpDown_HmdViewOffsetX)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label39)
-        Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label33)
         Me.GroupBox_HmdViewOrientationOffset.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox_HmdViewOrientationOffset.Location = New System.Drawing.Point(3, 89)
         Me.GroupBox_HmdViewOrientationOffset.Name = "GroupBox_HmdViewOrientationOffset"
@@ -1097,6 +1086,38 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewOrientationOffset.TabIndex = 7
         Me.GroupBox_HmdViewOrientationOffset.TabStop = False
         Me.GroupBox_HmdViewOrientationOffset.Text = "Viewpoint Orientation Offset"
+        '
+        'UcInformation3
+        '
+        Me.UcInformation3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation3.BackColor = System.Drawing.Color.White
+        Me.UcInformation3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation3.Location = New System.Drawing.Point(19, 201)
+        Me.UcInformation3.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
+        Me.UcInformation3.m_ReadMoreAction = Nothing
+        Me.UcInformation3.m_ReadMoreText = ""
+        Me.UcInformation3.m_Text = "These offsets are not used to correct orientation drift. Use recenting instead."
+        Me.UcInformation3.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
+        Me.UcInformation3.Name = "UcInformation3"
+        Me.UcInformation3.Size = New System.Drawing.Size(742, 31)
+        Me.UcInformation3.TabIndex = 76
+        '
+        'UcInformation1
+        '
+        Me.UcInformation1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation1.BackColor = System.Drawing.Color.White
+        Me.UcInformation1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation1.Location = New System.Drawing.Point(19, 21)
+        Me.UcInformation1.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation1.m_ReadMoreAction = Nothing
+        Me.UcInformation1.m_ReadMoreText = ""
+        Me.UcInformation1.m_Text = resources.GetString("UcInformation1.m_Text")
+        Me.UcInformation1.Margin = New System.Windows.Forms.Padding(16, 3, 16, 3)
+        Me.UcInformation1.Name = "UcInformation1"
+        Me.UcInformation1.Size = New System.Drawing.Size(742, 52)
+        Me.UcInformation1.TabIndex = 75
         '
         'ComboBox_HmdViewOffsetPreset
         '
@@ -1107,20 +1128,6 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdViewOffsetPreset.Name = "ComboBox_HmdViewOffsetPreset"
         Me.ComboBox_HmdViewOffsetPreset.Size = New System.Drawing.Size(177, 21)
         Me.ComboBox_HmdViewOffsetPreset.TabIndex = 74
-        '
-        'Label41
-        '
-        Me.Label41.AutoSize = True
-        Me.Label41.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
-        Me.Label41.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label41.Location = New System.Drawing.Point(19, 203)
-        Me.Label41.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label41.Name = "Label41"
-        Me.Label41.Padding = New System.Windows.Forms.Padding(0, 3, 0, 3)
-        Me.Label41.Size = New System.Drawing.Size(426, 19)
-        Me.Label41.TabIndex = 73
-        Me.Label41.Text = "        These offsets are not used to correct orientation drift! Use recenting in" &
-    "stead!"
         '
         'Label34
         '
@@ -1260,18 +1267,6 @@ Partial Class UCVmtSettings
         Me.Label39.TabIndex = 59
         Me.Label39.Text = "Roll:"
         '
-        'Label33
-        '
-        Me.Label33.AutoSize = True
-        Me.Label33.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label33.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label33.Location = New System.Drawing.Point(19, 21)
-        Me.Label33.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.Label33.Name = "Label33"
-        Me.Label33.Size = New System.Drawing.Size(611, 52)
-        Me.Label33.TabIndex = 47
-        Me.Label33.Text = resources.GetString("Label33.Text")
-        '
         'GroupBox8
         '
         Me.GroupBox8.Controls.Add(Me.ComboBox_HmdPoseOverrideType)
@@ -1341,34 +1336,101 @@ Partial Class UCVmtSettings
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.UcInformation8)
+        Me.GroupBox1.Controls.Add(Me.UcInformation7)
+        Me.GroupBox1.Controls.Add(Me.UcInformation6)
+        Me.GroupBox1.Controls.Add(Me.UcInformation5)
         Me.GroupBox1.Controls.Add(Me.LinkLabel_HmdRecenterFromOverride)
-        Me.GroupBox1.Controls.Add(Me.LinkLabel_PlayCalibShowSettings2)
         Me.GroupBox1.Controls.Add(Me.Label_ScrollFocus)
-        Me.GroupBox1.Controls.Add(Me.Label25)
         Me.GroupBox1.Controls.Add(Me.CheckBox_PlayCalibEnabled)
         Me.GroupBox1.Controls.Add(Me.NumericUpDown_RecenterButtonTime)
         Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.Button_ResetRecenter)
-        Me.GroupBox1.Controls.Add(Me.Label20)
         Me.GroupBox1.Controls.Add(Me.ComboBox_HmdRecenterFromDevice)
         Me.GroupBox1.Controls.Add(Me.Label18)
         Me.GroupBox1.Controls.Add(Me.ComboBox_HmdRecenterMethod)
         Me.GroupBox1.Controls.Add(Me.Label19)
-        Me.GroupBox1.Controls.Add(Me.Label16)
         Me.GroupBox1.Controls.Add(Me.CheckBox_HmdRecenterEnabled)
         Me.GroupBox1.Controls.Add(Me.ComboBox_RecenterFromDevice)
         Me.GroupBox1.Controls.Add(Me.Label15)
         Me.GroupBox1.Controls.Add(Me.ComboBox_RecenterMethod)
         Me.GroupBox1.Controls.Add(Me.Label14)
-        Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.CheckBox_ControllerRecenterEnabled)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox1.Location = New System.Drawing.Point(3, 347)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 405)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(780, 526)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Recenter Settings"
+        '
+        'UcInformation8
+        '
+        Me.UcInformation8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation8.BackColor = System.Drawing.Color.White
+        Me.UcInformation8.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation8.Location = New System.Drawing.Point(51, 407)
+        Me.UcInformation8.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation8.m_ReadMoreAction = Nothing
+        Me.UcInformation8.m_ReadMoreText = "Go to playspace calibration settings"
+        Me.UcInformation8.m_Text = resources.GetString("UcInformation8.m_Text")
+        Me.UcInformation8.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
+        Me.UcInformation8.Name = "UcInformation8"
+        Me.UcInformation8.Size = New System.Drawing.Size(710, 71)
+        Me.UcInformation8.TabIndex = 76
+        '
+        'UcInformation7
+        '
+        Me.UcInformation7.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation7.BackColor = System.Drawing.Color.White
+        Me.UcInformation7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation7.Location = New System.Drawing.Point(51, 234)
+        Me.UcInformation7.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
+        Me.UcInformation7.m_ReadMoreAction = Nothing
+        Me.UcInformation7.m_ReadMoreText = ""
+        Me.UcInformation7.m_Text = "Only PSMoveServiceEx supported trackers can be recentered!"
+        Me.UcInformation7.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
+        Me.UcInformation7.Name = "UcInformation7"
+        Me.UcInformation7.Size = New System.Drawing.Size(710, 21)
+        Me.UcInformation7.TabIndex = 75
+        '
+        'UcInformation6
+        '
+        Me.UcInformation6.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation6.BackColor = System.Drawing.Color.White
+        Me.UcInformation6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation6.Location = New System.Drawing.Point(51, 186)
+        Me.UcInformation6.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation6.m_ReadMoreAction = Nothing
+        Me.UcInformation6.m_ReadMoreText = ""
+        Me.UcInformation6.m_Text = "Holding the START button on the PSmove controller will recenter the target tracke" &
+    "rs orientation. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This is useful for trackers without magnetometers which experi" &
+    "ence yaw drift over time."
+        Me.UcInformation6.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
+        Me.UcInformation6.Name = "UcInformation6"
+        Me.UcInformation6.Size = New System.Drawing.Size(710, 42)
+        Me.UcInformation6.TabIndex = 74
+        '
+        'UcInformation5
+        '
+        Me.UcInformation5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation5.BackColor = System.Drawing.Color.White
+        Me.UcInformation5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation5.Location = New System.Drawing.Point(51, 45)
+        Me.UcInformation5.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation5.m_ReadMoreAction = Nothing
+        Me.UcInformation5.m_ReadMoreText = ""
+        Me.UcInformation5.m_Text = "Holding the SELECT button on the PSmove controller will recenter the controllers " &
+    "orientation. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This is useful for controllers without magnetometers which experi" &
+    "ence yaw drift over time."
+        Me.UcInformation5.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
+        Me.UcInformation5.Name = "UcInformation5"
+        Me.UcInformation5.Size = New System.Drawing.Size(710, 44)
+        Me.UcInformation5.TabIndex = 73
         '
         'LinkLabel_HmdRecenterFromOverride
         '
@@ -1385,22 +1447,6 @@ Partial Class UCVmtSettings
         Me.LinkLabel_HmdRecenterFromOverride.Text = "Set from Head-mounted Display SteamVR tracker overrides"
         Me.LinkLabel_HmdRecenterFromOverride.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'LinkLabel_PlayCalibShowSettings2
-        '
-        Me.LinkLabel_PlayCalibShowSettings2.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_PlayCalibShowSettings2.AutoSize = True
-        Me.LinkLabel_PlayCalibShowSettings2.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_PlayCalibShowSettings2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_PlayCalibShowSettings2.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_PlayCalibShowSettings2.Location = New System.Drawing.Point(48, 457)
-        Me.LinkLabel_PlayCalibShowSettings2.Margin = New System.Windows.Forms.Padding(48, 3, 3, 0)
-        Me.LinkLabel_PlayCalibShowSettings2.Name = "LinkLabel_PlayCalibShowSettings2"
-        Me.LinkLabel_PlayCalibShowSettings2.Size = New System.Drawing.Size(191, 13)
-        Me.LinkLabel_PlayCalibShowSettings2.TabIndex = 71
-        Me.LinkLabel_PlayCalibShowSettings2.TabStop = True
-        Me.LinkLabel_PlayCalibShowSettings2.Text = "Show playspace calibration settings"
-        Me.LinkLabel_PlayCalibShowSettings2.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
         'Label_ScrollFocus
         '
         Me.Label_ScrollFocus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1410,19 +1456,6 @@ Partial Class UCVmtSettings
         Me.Label_ScrollFocus.Size = New System.Drawing.Size(92, 13)
         Me.Label_ScrollFocus.TabIndex = 70
         Me.Label_ScrollFocus.Text = "<<FOR FOCUS>"
-        '
-        'Label25
-        '
-        Me.Label25.AutoSize = True
-        Me.Label25.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label25.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label25.Location = New System.Drawing.Point(48, 406)
-        Me.Label25.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label25.Size = New System.Drawing.Size(574, 45)
-        Me.Label25.TabIndex = 66
-        Me.Label25.Text = resources.GetString("Label25.Text")
         '
         'CheckBox_PlayCalibEnabled
         '
@@ -1490,20 +1523,6 @@ Partial Class UCVmtSettings
         "set.")
         Me.Button_ResetRecenter.UseVisualStyleBackColor = True
         '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Label20.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_101_16x16_32
-        Me.Label20.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label20.Location = New System.Drawing.Point(48, 223)
-        Me.Label20.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label20.Size = New System.Drawing.Size(348, 19)
-        Me.Label20.TabIndex = 58
-        Me.Label20.Text = "        Only PSMoveServiceEx supported trackers can be recentered!"
-        '
         'ComboBox_HmdRecenterFromDevice
         '
         Me.ComboBox_HmdRecenterFromDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -1536,7 +1555,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_HmdRecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdRecenterMethod.FormattingEnabled = True
         Me.ComboBox_HmdRecenterMethod.Location = New System.Drawing.Point(201, 261)
-        Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
+        Me.ComboBox_HmdRecenterMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_HmdRecenterMethod.Name = "ComboBox_HmdRecenterMethod"
         Me.ComboBox_HmdRecenterMethod.Size = New System.Drawing.Size(531, 21)
         Me.ComboBox_HmdRecenterMethod.TabIndex = 55
@@ -1550,19 +1569,6 @@ Partial Class UCVmtSettings
         Me.Label19.Size = New System.Drawing.Size(98, 13)
         Me.Label19.TabIndex = 54
         Me.Label19.Text = "Recenter method:"
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label16.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label16.Location = New System.Drawing.Point(48, 185)
-        Me.Label16.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label16.Size = New System.Drawing.Size(534, 32)
-        Me.Label16.TabIndex = 52
-        Me.Label16.Text = resources.GetString("Label16.Text")
         '
         'CheckBox_HmdRecenterEnabled
         '
@@ -1608,7 +1614,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_RecenterMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_RecenterMethod.FormattingEnabled = True
         Me.ComboBox_RecenterMethod.Location = New System.Drawing.Point(201, 95)
-        Me.ComboBox_RecenterMethod.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
+        Me.ComboBox_RecenterMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_RecenterMethod.Name = "ComboBox_RecenterMethod"
         Me.ComboBox_RecenterMethod.Size = New System.Drawing.Size(531, 21)
         Me.ComboBox_RecenterMethod.TabIndex = 48
@@ -1622,19 +1628,6 @@ Partial Class UCVmtSettings
         Me.Label14.Size = New System.Drawing.Size(98, 13)
         Me.Label14.TabIndex = 47
         Me.Label14.Text = "Recenter method:"
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.Label11.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label11.Location = New System.Drawing.Point(45, 44)
-        Me.Label11.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label11.Size = New System.Drawing.Size(520, 32)
-        Me.Label11.TabIndex = 45
-        Me.Label11.Text = resources.GetString("Label11.Text")
         '
         'CheckBox_ControllerRecenterEnabled
         '
@@ -1661,7 +1654,7 @@ Partial Class UCVmtSettings
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox2.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(780, 344)
+        Me.GroupBox2.Size = New System.Drawing.Size(780, 402)
         Me.GroupBox2.TabIndex = 46
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Controller Emulation Settings"
@@ -1670,7 +1663,7 @@ Partial Class UCVmtSettings
         '
         Me.CheckBox_HybridGripToggle.AutoSize = True
         Me.CheckBox_HybridGripToggle.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_HybridGripToggle.Location = New System.Drawing.Point(16, 315)
+        Me.CheckBox_HybridGripToggle.Location = New System.Drawing.Point(16, 375)
         Me.CheckBox_HybridGripToggle.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_HybridGripToggle.Name = "CheckBox_HybridGripToggle"
         Me.CheckBox_HybridGripToggle.Size = New System.Drawing.Size(127, 18)
@@ -1684,7 +1677,7 @@ Partial Class UCVmtSettings
         Me.GroupBox6.Controls.Add(Me.Label8)
         Me.GroupBox6.Controls.Add(Me.ComboBox_OculusButtonLayout)
         Me.GroupBox6.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox6.Location = New System.Drawing.Point(3, 175)
+        Me.GroupBox6.Location = New System.Drawing.Point(3, 235)
         Me.GroupBox6.Name = "GroupBox6"
         Me.GroupBox6.Size = New System.Drawing.Size(774, 79)
         Me.GroupBox6.TabIndex = 55
@@ -1729,7 +1722,7 @@ Partial Class UCVmtSettings
         'Label_TouchpadTouchAreaDeg
         '
         Me.Label_TouchpadTouchAreaDeg.AutoSize = True
-        Me.Label_TouchpadTouchAreaDeg.Location = New System.Drawing.Point(327, 289)
+        Me.Label_TouchpadTouchAreaDeg.Location = New System.Drawing.Point(327, 349)
         Me.Label_TouchpadTouchAreaDeg.Name = "Label_TouchpadTouchAreaDeg"
         Me.Label_TouchpadTouchAreaDeg.Size = New System.Drawing.Size(41, 13)
         Me.Label_TouchpadTouchAreaDeg.TabIndex = 53
@@ -1737,6 +1730,7 @@ Partial Class UCVmtSettings
         '
         'GroupBox5
         '
+        Me.GroupBox5.Controls.Add(Me.UcInformation9)
         Me.GroupBox5.Controls.Add(Me.CheckBox_HtcTouchpadShortcuts)
         Me.GroupBox5.Controls.Add(Me.Label4)
         Me.GroupBox5.Controls.Add(Me.ComboBox_HtcGrabButtonMethod)
@@ -1745,14 +1739,30 @@ Partial Class UCVmtSettings
         Me.GroupBox5.Controls.Add(Me.CheckBox_HtcTouchpadShortcutClick)
         Me.GroupBox5.Controls.Add(Me.NumericUpDown_HtcTouchpadClickDeadzone)
         Me.GroupBox5.Controls.Add(Me.Label22)
-        Me.GroupBox5.Controls.Add(Me.LinkLabel_TouchpadShortcutHelp)
         Me.GroupBox5.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox5.Location = New System.Drawing.Point(3, 18)
         Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(774, 157)
+        Me.GroupBox5.Size = New System.Drawing.Size(774, 217)
         Me.GroupBox5.TabIndex = 54
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "HTC Vive Controller"
+        '
+        'UcInformation9
+        '
+        Me.UcInformation9.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation9.BackColor = System.Drawing.Color.White
+        Me.UcInformation9.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation9.Location = New System.Drawing.Point(51, 45)
+        Me.UcInformation9.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation9.m_ReadMoreAction = Nothing
+        Me.UcInformation9.m_ReadMoreText = "Read more"
+        Me.UcInformation9.m_Text = "By using touchpad emulation, you can simplify navigation in games and enjoy a mor" &
+    "e comfortable gaming experience without constantly moving your controller."
+        Me.UcInformation9.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
+        Me.UcInformation9.Name = "UcInformation9"
+        Me.UcInformation9.Size = New System.Drawing.Size(704, 52)
+        Me.UcInformation9.TabIndex = 74
         '
         'CheckBox_HtcTouchpadShortcuts
         '
@@ -1769,7 +1779,7 @@ Partial Class UCVmtSettings
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(20, 72)
+        Me.Label4.Location = New System.Drawing.Point(20, 130)
         Me.Label4.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(129, 13)
@@ -1783,7 +1793,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_HtcGrabButtonMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HtcGrabButtonMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HtcGrabButtonMethod.FormattingEnabled = True
-        Me.ComboBox_HtcGrabButtonMethod.Location = New System.Drawing.Point(198, 124)
+        Me.ComboBox_HtcGrabButtonMethod.Location = New System.Drawing.Point(198, 182)
         Me.ComboBox_HtcGrabButtonMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_HtcGrabButtonMethod.Name = "ComboBox_HtcGrabButtonMethod"
         Me.ComboBox_HtcGrabButtonMethod.Size = New System.Drawing.Size(531, 21)
@@ -1792,7 +1802,7 @@ Partial Class UCVmtSettings
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(20, 127)
+        Me.Label5.Location = New System.Drawing.Point(20, 185)
         Me.Label5.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(114, 13)
@@ -1806,7 +1816,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_HtcTouchpadClickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HtcTouchpadClickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HtcTouchpadClickMethod.FormattingEnabled = True
-        Me.ComboBox_HtcTouchpadClickMethod.Location = New System.Drawing.Point(198, 69)
+        Me.ComboBox_HtcTouchpadClickMethod.Location = New System.Drawing.Point(198, 127)
         Me.ComboBox_HtcTouchpadClickMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_HtcTouchpadClickMethod.Name = "ComboBox_HtcTouchpadClickMethod"
         Me.ComboBox_HtcTouchpadClickMethod.Size = New System.Drawing.Size(531, 21)
@@ -1816,7 +1826,7 @@ Partial Class UCVmtSettings
         '
         Me.CheckBox_HtcTouchpadShortcutClick.AutoSize = True
         Me.CheckBox_HtcTouchpadShortcutClick.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_HtcTouchpadShortcutClick.Location = New System.Drawing.Point(52, 45)
+        Me.CheckBox_HtcTouchpadShortcutClick.Location = New System.Drawing.Point(52, 103)
         Me.CheckBox_HtcTouchpadShortcutClick.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_HtcTouchpadShortcutClick.Name = "CheckBox_HtcTouchpadShortcutClick"
         Me.CheckBox_HtcTouchpadShortcutClick.Size = New System.Drawing.Size(224, 18)
@@ -1829,7 +1839,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_HtcTouchpadClickDeadzone.Controls.Add(Me.UcNumericUpDownBig6)
         Me.NumericUpDown_HtcTouchpadClickDeadzone.DecimalPlaces = 2
         Me.NumericUpDown_HtcTouchpadClickDeadzone.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
-        Me.NumericUpDown_HtcTouchpadClickDeadzone.Location = New System.Drawing.Point(198, 96)
+        Me.NumericUpDown_HtcTouchpadClickDeadzone.Location = New System.Drawing.Point(198, 154)
         Me.NumericUpDown_HtcTouchpadClickDeadzone.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.NumericUpDown_HtcTouchpadClickDeadzone.Name = "NumericUpDown_HtcTouchpadClickDeadzone"
         Me.NumericUpDown_HtcTouchpadClickDeadzone.Size = New System.Drawing.Size(120, 22)
@@ -1856,35 +1866,17 @@ Partial Class UCVmtSettings
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(20, 98)
+        Me.Label22.Location = New System.Drawing.Point(20, 156)
         Me.Label22.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(144, 13)
         Me.Label22.TabIndex = 49
         Me.Label22.Text = "Touchpad click dead-zone:"
         '
-        'LinkLabel_TouchpadShortcutHelp
-        '
-        Me.LinkLabel_TouchpadShortcutHelp.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_TouchpadShortcutHelp.AutoSize = True
-        Me.LinkLabel_TouchpadShortcutHelp.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_TouchpadShortcutHelp.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_102_16x16_32
-        Me.LinkLabel_TouchpadShortcutHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LinkLabel_TouchpadShortcutHelp.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_TouchpadShortcutHelp.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_TouchpadShortcutHelp.Location = New System.Drawing.Point(252, 20)
-        Me.LinkLabel_TouchpadShortcutHelp.Name = "LinkLabel_TouchpadShortcutHelp"
-        Me.LinkLabel_TouchpadShortcutHelp.Padding = New System.Windows.Forms.Padding(18, 3, 0, 3)
-        Me.LinkLabel_TouchpadShortcutHelp.Size = New System.Drawing.Size(91, 19)
-        Me.LinkLabel_TouchpadShortcutHelp.TabIndex = 48
-        Me.LinkLabel_TouchpadShortcutHelp.TabStop = True
-        Me.LinkLabel_TouchpadShortcutHelp.Text = "What is this?"
-        Me.LinkLabel_TouchpadShortcutHelp.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(13, 289)
+        Me.Label23.Location = New System.Drawing.Point(13, 349)
         Me.Label23.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(176, 13)
@@ -1896,7 +1888,7 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_JoystickArea.Controls.Add(Me.UcNumericUpDownBig5)
         Me.NumericUpDown_JoystickArea.DecimalPlaces = 2
         Me.NumericUpDown_JoystickArea.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
-        Me.NumericUpDown_JoystickArea.Location = New System.Drawing.Point(201, 287)
+        Me.NumericUpDown_JoystickArea.Location = New System.Drawing.Point(201, 347)
         Me.NumericUpDown_JoystickArea.Name = "NumericUpDown_JoystickArea"
         Me.NumericUpDown_JoystickArea.Size = New System.Drawing.Size(120, 22)
         Me.NumericUpDown_JoystickArea.TabIndex = 52
@@ -1922,7 +1914,7 @@ Partial Class UCVmtSettings
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(13, 263)
+        Me.Label10.Location = New System.Drawing.Point(13, 323)
         Me.Label10.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(147, 13)
@@ -1936,7 +1928,7 @@ Partial Class UCVmtSettings
         Me.ComboBox_JoystickMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_JoystickMethod.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_JoystickMethod.FormattingEnabled = True
-        Me.ComboBox_JoystickMethod.Location = New System.Drawing.Point(201, 260)
+        Me.ComboBox_JoystickMethod.Location = New System.Drawing.Point(201, 320)
         Me.ComboBox_JoystickMethod.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
         Me.ComboBox_JoystickMethod.Name = "ComboBox_JoystickMethod"
         Me.ComboBox_JoystickMethod.Size = New System.Drawing.Size(528, 21)
@@ -2618,26 +2610,21 @@ Partial Class UCVmtSettings
     Friend WithEvents TabPage_SettingsPSmove As TabPage
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents LinkLabel_HmdRecenterFromOverride As LinkLabel
-    Friend WithEvents LinkLabel_PlayCalibShowSettings2 As LinkLabel
     Friend WithEvents Label_ScrollFocus As Label
-    Friend WithEvents Label25 As Label
     Friend WithEvents CheckBox_PlayCalibEnabled As CheckBox
     Friend WithEvents NumericUpDown_RecenterButtonTime As NumericUpDown
     Friend WithEvents UcNumericUpDownBig7 As UCNumericUpDownBig
     Friend WithEvents Label13 As Label
     Friend WithEvents Button_ResetRecenter As Button
-    Friend WithEvents Label20 As Label
     Friend WithEvents ComboBox_HmdRecenterFromDevice As ComboBox
     Friend WithEvents Label18 As Label
     Friend WithEvents ComboBox_HmdRecenterMethod As ComboBox
     Friend WithEvents Label19 As Label
-    Friend WithEvents Label16 As Label
     Friend WithEvents CheckBox_HmdRecenterEnabled As CheckBox
     Friend WithEvents ComboBox_RecenterFromDevice As ComboBox
     Friend WithEvents Label15 As Label
     Friend WithEvents ComboBox_RecenterMethod As ComboBox
     Friend WithEvents Label14 As Label
-    Friend WithEvents Label11 As Label
     Friend WithEvents CheckBox_ControllerRecenterEnabled As CheckBox
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents Label_TouchpadTouchAreaDeg As Label
@@ -2647,7 +2634,6 @@ Partial Class UCVmtSettings
     Friend WithEvents NumericUpDown_HtcTouchpadClickDeadzone As NumericUpDown
     Friend WithEvents UcNumericUpDownBig6 As UCNumericUpDownBig
     Friend WithEvents Label22 As Label
-    Friend WithEvents LinkLabel_TouchpadShortcutHelp As LinkLabel
     Friend WithEvents ComboBox_JoystickMethod As ComboBox
     Friend WithEvents Label10 As Label
     Friend WithEvents CheckBox_HtcTouchpadShortcutClick As CheckBox
@@ -2701,7 +2687,6 @@ Partial Class UCVmtSettings
     Friend WithEvents CheckBox_EnableManualVelocity As CheckBox
     Friend WithEvents TabPage_SettingsHMD As TabPage
     Friend WithEvents GroupBox_HmdViewPositionOffset As GroupBox
-    Friend WithEvents Label2 As Label
     Friend WithEvents Label9 As Label
     Friend WithEvents NumericUpDown_BulbOffsetZ As NumericUpDown
     Friend WithEvents UcNumericUpDownBig20 As UCNumericUpDownBig
@@ -2720,10 +2705,7 @@ Partial Class UCVmtSettings
     Friend WithEvents Label31 As Label
     Friend WithEvents Label30 As Label
     Friend WithEvents Label28 As Label
-    Friend WithEvents Label32 As Label
-    Friend WithEvents LinkLabel_EnableVelocityPerFrame As LinkLabel
     Friend WithEvents GroupBox_HmdViewOrientationOffset As GroupBox
-    Friend WithEvents Label33 As Label
     Friend WithEvents Label34 As Label
     Friend WithEvents Label35 As Label
     Friend WithEvents Label36 As Label
@@ -2736,11 +2718,19 @@ Partial Class UCVmtSettings
     Friend WithEvents NumericUpDown_HmdViewOffsetX As NumericUpDown
     Friend WithEvents UcNumericUpDownBig23 As UCNumericUpDownBig
     Friend WithEvents Label39 As Label
-    Friend WithEvents Label41 As Label
     Friend WithEvents ComboBox_HmdViewOffsetPreset As ComboBox
     Friend WithEvents GroupBox8 As GroupBox
     Friend WithEvents ComboBox_HmdPoseOverrideType As ComboBox
     Friend WithEvents Label43 As Label
     Friend WithEvents Label42 As Label
     Friend WithEvents ComboBox_HmdPoseOverridesControllerId As ComboBox
+    Friend WithEvents UcInformation1 As UCInformation
+    Friend WithEvents UcInformation2 As UCInformation
+    Friend WithEvents UcInformation3 As UCInformation
+    Friend WithEvents UcInformation4 As UCInformation
+    Friend WithEvents UcInformation8 As UCInformation
+    Friend WithEvents UcInformation7 As UCInformation
+    Friend WithEvents UcInformation6 As UCInformation
+    Friend WithEvents UcInformation5 As UCInformation
+    Friend WithEvents UcInformation9 As UCInformation
 End Class

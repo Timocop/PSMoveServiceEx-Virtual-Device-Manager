@@ -35,7 +35,7 @@ Partial Class UCInformation
         Me.Panel_Color.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel_Color.Location = New System.Drawing.Point(0, 0)
         Me.Panel_Color.Name = "Panel_Color"
-        Me.Panel_Color.Size = New System.Drawing.Size(4, 55)
+        Me.Panel_Color.Size = New System.Drawing.Size(3, 55)
         Me.Panel_Color.TabIndex = 0
         '
         'Label_Text
@@ -43,10 +43,11 @@ Partial Class UCInformation
         Me.Label_Text.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label_Text.Location = New System.Drawing.Point(32, 3)
+        Me.Label_Text.ForeColor = System.Drawing.Color.Black
+        Me.Label_Text.Location = New System.Drawing.Point(31, 3)
         Me.Label_Text.Margin = New System.Windows.Forms.Padding(3)
         Me.Label_Text.Name = "Label_Text"
-        Me.Label_Text.Size = New System.Drawing.Size(556, 49)
+        Me.Label_Text.Size = New System.Drawing.Size(557, 49)
         Me.Label_Text.TabIndex = 2
         Me.Label_Text.Text = "Information Text"
         '
@@ -58,19 +59,19 @@ Partial Class UCInformation
         Me.LinkLabel_MoreInfo.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_MoreInfo.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_MoreInfo.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MoreInfo.Location = New System.Drawing.Point(32, 39)
+        Me.LinkLabel_MoreInfo.Location = New System.Drawing.Point(31, 39)
         Me.LinkLabel_MoreInfo.Margin = New System.Windows.Forms.Padding(3)
         Me.LinkLabel_MoreInfo.Name = "LinkLabel_MoreInfo"
-        Me.LinkLabel_MoreInfo.Size = New System.Drawing.Size(63, 13)
+        Me.LinkLabel_MoreInfo.Size = New System.Drawing.Size(62, 13)
         Me.LinkLabel_MoreInfo.TabIndex = 22
         Me.LinkLabel_MoreInfo.TabStop = True
-        Me.LinkLabel_MoreInfo.Text = "Read More"
+        Me.LinkLabel_MoreInfo.Text = "Read more"
         Me.LinkLabel_MoreInfo.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'ClassPictureBox_Icon
         '
         Me.ClassPictureBox_Icon.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
-        Me.ClassPictureBox_Icon.Location = New System.Drawing.Point(10, 3)
+        Me.ClassPictureBox_Icon.Location = New System.Drawing.Point(9, 3)
         Me.ClassPictureBox_Icon.m_HighQuality = True
         Me.ClassPictureBox_Icon.Name = "ClassPictureBox_Icon"
         Me.ClassPictureBox_Icon.Size = New System.Drawing.Size(16, 16)
