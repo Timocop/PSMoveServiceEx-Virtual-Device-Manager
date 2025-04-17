@@ -77,7 +77,7 @@ Partial Class UCControllerAttachments
         Me.ListView_Attachments.Margin = New System.Windows.Forms.Padding(16)
         Me.ListView_Attachments.MultiSelect = False
         Me.ListView_Attachments.Name = "ListView_Attachments"
-        Me.ListView_Attachments.Size = New System.Drawing.Size(766, 120)
+        Me.ListView_Attachments.Size = New System.Drawing.Size(766, 119)
         Me.ListView_Attachments.TabIndex = 0
         Me.ListView_Attachments.UseCompatibleStateImageBehavior = False
         Me.ListView_Attachments.View = System.Windows.Forms.View.Details
@@ -188,10 +188,10 @@ Partial Class UCControllerAttachments
         Me.Panel_AvailableAttachments.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel_AvailableAttachments.Controls.Add(Me.ListView_Attachments)
         Me.Panel_AvailableAttachments.Controls.Add(Me.Panel8)
-        Me.Panel_AvailableAttachments.Location = New System.Drawing.Point(16, 120)
-        Me.Panel_AvailableAttachments.Margin = New System.Windows.Forms.Padding(16)
+        Me.Panel_AvailableAttachments.Location = New System.Drawing.Point(16, 121)
+        Me.Panel_AvailableAttachments.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.Panel_AvailableAttachments.Name = "Panel_AvailableAttachments"
-        Me.Panel_AvailableAttachments.Size = New System.Drawing.Size(768, 164)
+        Me.Panel_AvailableAttachments.Size = New System.Drawing.Size(768, 163)
         Me.Panel_AvailableAttachments.TabIndex = 22
         '
         'Panel8

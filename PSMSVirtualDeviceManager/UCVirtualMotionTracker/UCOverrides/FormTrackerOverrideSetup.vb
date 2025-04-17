@@ -6,6 +6,7 @@
     End Enum
 
     Structure STRUC_DIALOG_RESULT
+        Public bIsValid As Boolean
         Public bCustomTracker As Boolean
         Public iVMTTracker As Integer
         Public sCustomTrackerName As String
@@ -79,11 +80,13 @@
                     mResult.bCustomTracker = False
 
                     mResult.iVMTTracker = CInt(ComboBox_VMTTracker.SelectedItem)
+                    mResult.bIsValid = True
 
                 Case RadioButton_Custom.Checked
                     mResult.bCustomTracker = True
 
                     mResult.sCustomTrackerName = ComboBox_CustomTracker.Text
+                    mResult.bIsValid = True
 
             End Select
 

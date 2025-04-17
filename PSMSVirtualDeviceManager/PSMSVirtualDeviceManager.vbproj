@@ -413,6 +413,12 @@
     <Compile Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UCVirtualTrackers\FormVideoInputDeviceSelection.Designer.vb">
+      <DependentUpon>FormVideoInputDeviceSelection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCVirtualTrackers\FormVideoInputDeviceSelection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UCVirtualTrackers\UCVirtualTrackerItem.Designer.vb">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>
     </Compile>
@@ -519,6 +525,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualControllers\UCRemoteDevices\UCRemoteDevices.resx">
       <DependentUpon>UCRemoteDevices.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCVirtualTrackers\FormVideoInputDeviceSelection.resx">
+      <DependentUpon>FormVideoInputDeviceSelection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UCVirtualTrackers\UCVirtualTrackerItem.resx">
       <DependentUpon>UCVirtualTrackerItem.vb</DependentUpon>
