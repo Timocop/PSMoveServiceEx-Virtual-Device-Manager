@@ -94,7 +94,7 @@ Partial Class UCVmtPlayspaceCalib
         'NumericUpDown_PlayCalibPrepTime
         '
         Me.NumericUpDown_PlayCalibPrepTime.Controls.Add(Me.UcNumericUpDownBig1)
-        Me.NumericUpDown_PlayCalibPrepTime.Location = New System.Drawing.Point(168, 134)
+        Me.NumericUpDown_PlayCalibPrepTime.Location = New System.Drawing.Point(168, 92)
         Me.NumericUpDown_PlayCalibPrepTime.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
         Me.NumericUpDown_PlayCalibPrepTime.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.NumericUpDown_PlayCalibPrepTime.Name = "NumericUpDown_PlayCalibPrepTime"
@@ -122,7 +122,7 @@ Partial Class UCVmtPlayspaceCalib
         'Label41
         '
         Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(16, 136)
+        Me.Label41.Location = New System.Drawing.Point(16, 94)
         Me.Label41.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(146, 13)
@@ -145,7 +145,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel9)
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel7)
         Me.Panel_PlayCalibSteps.Controls.Add(Me.Panel5)
-        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 213)
+        Me.Panel_PlayCalibSteps.Location = New System.Drawing.Point(16, 200)
         Me.Panel_PlayCalibSteps.Margin = New System.Windows.Forms.Padding(16)
         Me.Panel_PlayCalibSteps.Name = "Panel_PlayCalibSteps"
         Me.Panel_PlayCalibSteps.Size = New System.Drawing.Size(768, 367)
@@ -497,8 +497,8 @@ Partial Class UCVmtPlayspaceCalib
         Me.ComboBox_PlayCalibControllerID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_PlayCalibControllerID.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_PlayCalibControllerID.FormattingEnabled = True
-        Me.ComboBox_PlayCalibControllerID.Location = New System.Drawing.Point(168, 104)
-        Me.ComboBox_PlayCalibControllerID.Margin = New System.Windows.Forms.Padding(3, 3, 48, 3)
+        Me.ComboBox_PlayCalibControllerID.Location = New System.Drawing.Point(168, 65)
+        Me.ComboBox_PlayCalibControllerID.Margin = New System.Windows.Forms.Padding(3, 16, 48, 3)
         Me.ComboBox_PlayCalibControllerID.Name = "ComboBox_PlayCalibControllerID"
         Me.ComboBox_PlayCalibControllerID.Size = New System.Drawing.Size(132, 21)
         Me.ComboBox_PlayCalibControllerID.TabIndex = 78
@@ -507,7 +507,7 @@ Partial Class UCVmtPlayspaceCalib
         'Label28
         '
         Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(16, 107)
+        Me.Label28.Location = New System.Drawing.Point(16, 68)
         Me.Label28.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(76, 13)
@@ -521,7 +521,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.LinkLabel_PlayCalibShowSettings.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_PlayCalibShowSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_PlayCalibShowSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_PlayCalibShowSettings.Location = New System.Drawing.Point(236, 70)
+        Me.LinkLabel_PlayCalibShowSettings.Location = New System.Drawing.Point(236, 125)
         Me.LinkLabel_PlayCalibShowSettings.Name = "LinkLabel_PlayCalibShowSettings"
         Me.LinkLabel_PlayCalibShowSettings.Size = New System.Drawing.Size(80, 13)
         Me.LinkLabel_PlayCalibShowSettings.TabIndex = 72
@@ -534,8 +534,8 @@ Partial Class UCVmtPlayspaceCalib
         Me.Label27.AutoSize = True
         Me.Label27.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.user32_104_16x16_32
         Me.Label27.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Label27.Location = New System.Drawing.Point(13, 162)
-        Me.Label27.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
+        Me.Label27.Location = New System.Drawing.Point(16, 149)
+        Me.Label27.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Label27.Name = "Label27"
         Me.Label27.Padding = New System.Windows.Forms.Padding(3)
         Me.Label27.Size = New System.Drawing.Size(646, 32)
@@ -547,8 +547,8 @@ Partial Class UCVmtPlayspaceCalib
         'Button_PlaySpaceManualCalib
         '
         Me.Button_PlaySpaceManualCalib.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.Button_PlaySpaceManualCalib.Location = New System.Drawing.Point(16, 65)
-        Me.Button_PlaySpaceManualCalib.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_PlaySpaceManualCalib.Location = New System.Drawing.Point(16, 120)
+        Me.Button_PlaySpaceManualCalib.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.Button_PlaySpaceManualCalib.Name = "Button_PlaySpaceManualCalib"
         Me.Button_PlaySpaceManualCalib.Size = New System.Drawing.Size(214, 23)
         Me.Button_PlaySpaceManualCalib.TabIndex = 75
@@ -614,7 +614,7 @@ Partial Class UCVmtPlayspaceCalib
         Me.Controls.Add(Me.ClassPictureBoxQuality3)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "UCVmtPlayspaceCalib"
-        Me.Size = New System.Drawing.Size(800, 597)
+        Me.Size = New System.Drawing.Size(800, 584)
         CType(Me.NumericUpDown_PlayCalibPrepTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.NumericUpDown_PlayCalibPrepTime.ResumeLayout(False)
         Me.NumericUpDown_PlayCalibPrepTime.PerformLayout()
