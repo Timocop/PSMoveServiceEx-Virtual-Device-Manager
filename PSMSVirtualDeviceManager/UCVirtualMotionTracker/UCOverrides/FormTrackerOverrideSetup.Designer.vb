@@ -25,6 +25,8 @@ Partial Class FormTrackerOverrideSetup
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormTrackerOverrideSetup))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Button_Cancel = New System.Windows.Forms.Button()
+        Me.Button_Add = New System.Windows.Forms.Button()
         Me.RadioButton_VMT = New System.Windows.Forms.RadioButton()
         Me.RadioButton_Custom = New System.Windows.Forms.RadioButton()
         Me.ComboBox_OverrideType = New System.Windows.Forms.ComboBox()
@@ -34,8 +36,6 @@ Partial Class FormTrackerOverrideSetup
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ComboBox_CustomTracker = New System.Windows.Forms.ComboBox()
-        Me.Button_Cancel = New System.Windows.Forms.Button()
-        Me.Button_Add = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -59,6 +59,35 @@ Partial Class FormTrackerOverrideSetup
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(477, 1)
         Me.Panel2.TabIndex = 2
+        '
+        'Button_Cancel
+        '
+        Me.Button_Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.Button_Cancel.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.Button_Cancel.Location = New System.Drawing.Point(255, 12)
+        Me.Button_Cancel.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
+        Me.Button_Cancel.Name = "Button_Cancel"
+        Me.Button_Cancel.Size = New System.Drawing.Size(100, 28)
+        Me.Button_Cancel.TabIndex = 1
+        Me.Button_Cancel.Text = "Cancel"
+        Me.Button_Cancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Cancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_Cancel.UseVisualStyleBackColor = True
+        '
+        'Button_Add
+        '
+        Me.Button_Add.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_Add.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.wmploc_474_16x16_32
+        Me.Button_Add.Location = New System.Drawing.Point(361, 12)
+        Me.Button_Add.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
+        Me.Button_Add.Name = "Button_Add"
+        Me.Button_Add.Size = New System.Drawing.Size(100, 28)
+        Me.Button_Add.TabIndex = 0
+        Me.Button_Add.Text = "Add"
+        Me.Button_Add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button_Add.UseVisualStyleBackColor = True
         '
         'RadioButton_VMT
         '
@@ -94,9 +123,9 @@ Partial Class FormTrackerOverrideSetup
         Me.ComboBox_OverrideType.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_OverrideType.FormattingEnabled = True
         Me.ComboBox_OverrideType.Location = New System.Drawing.Point(175, 217)
-        Me.ComboBox_OverrideType.Margin = New System.Windows.Forms.Padding(16)
+        Me.ComboBox_OverrideType.Margin = New System.Windows.Forms.Padding(16, 16, 48, 16)
         Me.ComboBox_OverrideType.Name = "ComboBox_OverrideType"
-        Me.ComboBox_OverrideType.Size = New System.Drawing.Size(229, 21)
+        Me.ComboBox_OverrideType.Size = New System.Drawing.Size(245, 21)
         Me.ComboBox_OverrideType.TabIndex = 3
         '
         'ComboBox_VMTTracker
@@ -107,9 +136,9 @@ Partial Class FormTrackerOverrideSetup
         Me.ComboBox_VMTTracker.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_VMTTracker.FormattingEnabled = True
         Me.ComboBox_VMTTracker.Location = New System.Drawing.Point(175, 58)
-        Me.ComboBox_VMTTracker.Margin = New System.Windows.Forms.Padding(16, 16, 64, 16)
+        Me.ComboBox_VMTTracker.Margin = New System.Windows.Forms.Padding(16, 16, 48, 16)
         Me.ComboBox_VMTTracker.Name = "ComboBox_VMTTracker"
-        Me.ComboBox_VMTTracker.Size = New System.Drawing.Size(229, 21)
+        Me.ComboBox_VMTTracker.Size = New System.Drawing.Size(245, 21)
         Me.ComboBox_VMTTracker.TabIndex = 4
         '
         'Label_VMTTracker
@@ -158,39 +187,10 @@ Partial Class FormTrackerOverrideSetup
         Me.ComboBox_CustomTracker.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_CustomTracker.FormattingEnabled = True
         Me.ComboBox_CustomTracker.Location = New System.Drawing.Point(175, 139)
-        Me.ComboBox_CustomTracker.Margin = New System.Windows.Forms.Padding(16, 16, 64, 16)
+        Me.ComboBox_CustomTracker.Margin = New System.Windows.Forms.Padding(16, 16, 48, 16)
         Me.ComboBox_CustomTracker.Name = "ComboBox_CustomTracker"
-        Me.ComboBox_CustomTracker.Size = New System.Drawing.Size(229, 21)
+        Me.ComboBox_CustomTracker.Size = New System.Drawing.Size(245, 21)
         Me.ComboBox_CustomTracker.TabIndex = 10
-        '
-        'Button_Cancel
-        '
-        Me.Button_Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Button_Cancel.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.Button_Cancel.Location = New System.Drawing.Point(255, 12)
-        Me.Button_Cancel.Margin = New System.Windows.Forms.Padding(3, 16, 3, 16)
-        Me.Button_Cancel.Name = "Button_Cancel"
-        Me.Button_Cancel.Size = New System.Drawing.Size(100, 28)
-        Me.Button_Cancel.TabIndex = 1
-        Me.Button_Cancel.Text = "Cancel"
-        Me.Button_Cancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.Button_Cancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.Button_Cancel.UseVisualStyleBackColor = True
-        '
-        'Button_Add
-        '
-        Me.Button_Add.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Add.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.wmploc_474_16x16_32
-        Me.Button_Add.Location = New System.Drawing.Point(361, 12)
-        Me.Button_Add.Margin = New System.Windows.Forms.Padding(3, 16, 16, 16)
-        Me.Button_Add.Name = "Button_Add"
-        Me.Button_Add.Size = New System.Drawing.Size(100, 28)
-        Me.Button_Add.TabIndex = 0
-        Me.Button_Add.Text = "Add"
-        Me.Button_Add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.Button_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.Button_Add.UseVisualStyleBackColor = True
         '
         'FormTrackerOverrideSetup
         '

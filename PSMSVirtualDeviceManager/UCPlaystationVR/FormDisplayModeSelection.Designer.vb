@@ -92,7 +92,7 @@ Partial Class FormDisplayModeSelection
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.RadioButton_ModeDirect)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 195)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 207)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(529, 105)
         Me.GroupBox1.TabIndex = 2
@@ -127,7 +127,7 @@ Partial Class FormDisplayModeSelection
         Me.GroupBox2.Controls.Add(Me.RadioButton_ModeVirtual)
         Me.GroupBox2.Location = New System.Drawing.Point(12, 82)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(529, 107)
+        Me.GroupBox2.Size = New System.Drawing.Size(529, 119)
         Me.GroupBox2.TabIndex = 3
         Me.GroupBox2.TabStop = False
         '
@@ -137,7 +137,7 @@ Partial Class FormDisplayModeSelection
         Me.Label3.Location = New System.Drawing.Point(3, 18)
         Me.Label3.Name = "Label3"
         Me.Label3.Padding = New System.Windows.Forms.Padding(3)
-        Me.Label3.Size = New System.Drawing.Size(523, 86)
+        Me.Label3.Size = New System.Drawing.Size(523, 98)
         Me.Label3.TabIndex = 2
         Me.Label3.Text = resources.GetString("Label3.Text")
         '

@@ -51,7 +51,7 @@ Partial Class UCRemoteDevices
         '
         Me.Label_Port.AutoSize = True
         Me.Label_Port.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_Port.Location = New System.Drawing.Point(16, 78)
+        Me.Label_Port.Location = New System.Drawing.Point(16, 76)
         Me.Label_Port.Margin = New System.Windows.Forms.Padding(16, 16, 3, 0)
         Me.Label_Port.Name = "Label_Port"
         Me.Label_Port.Size = New System.Drawing.Size(104, 13)
@@ -74,8 +74,8 @@ Partial Class UCRemoteDevices
         '
         Me.Button_StartSocket.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_StartSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
-        Me.Button_StartSocket.Location = New System.Drawing.Point(664, 73)
-        Me.Button_StartSocket.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
+        Me.Button_StartSocket.Location = New System.Drawing.Point(664, 82)
+        Me.Button_StartSocket.Margin = New System.Windows.Forms.Padding(3, 3, 16, 16)
         Me.Button_StartSocket.Name = "Button_StartSocket"
         Me.Button_StartSocket.Size = New System.Drawing.Size(120, 23)
         Me.Button_StartSocket.TabIndex = 2
@@ -94,7 +94,7 @@ Partial Class UCRemoteDevices
         Me.CheckBox_AllowNewDevices.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CheckBox_AllowNewDevices.AutoSize = True
         Me.CheckBox_AllowNewDevices.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_AllowNewDevices.Location = New System.Drawing.Point(532, 77)
+        Me.CheckBox_AllowNewDevices.Location = New System.Drawing.Point(532, 85)
         Me.CheckBox_AllowNewDevices.Name = "CheckBox_AllowNewDevices"
         Me.CheckBox_AllowNewDevices.Size = New System.Drawing.Size(126, 18)
         Me.CheckBox_AllowNewDevices.TabIndex = 3
@@ -108,7 +108,7 @@ Partial Class UCRemoteDevices
         Me.LinkLabel_EditPort.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_EditPort.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
         Me.LinkLabel_EditPort.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_EditPort.Location = New System.Drawing.Point(224, 77)
+        Me.LinkLabel_EditPort.Location = New System.Drawing.Point(219, 76)
         Me.LinkLabel_EditPort.Name = "LinkLabel_EditPort"
         Me.LinkLabel_EditPort.Size = New System.Drawing.Size(52, 13)
         Me.LinkLabel_EditPort.TabIndex = 4
@@ -147,8 +147,8 @@ Partial Class UCRemoteDevices
         '
         Me.Label_ConnectedDevices.AutoSize = True
         Me.Label_ConnectedDevices.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_ConnectedDevices.Location = New System.Drawing.Point(16, 94)
-        Me.Label_ConnectedDevices.Margin = New System.Windows.Forms.Padding(16, 3, 3, 0)
+        Me.Label_ConnectedDevices.Location = New System.Drawing.Point(16, 92)
+        Me.Label_ConnectedDevices.Margin = New System.Windows.Forms.Padding(16, 3, 3, 16)
         Me.Label_ConnectedDevices.Name = "Label_ConnectedDevices"
         Me.Label_ConnectedDevices.Size = New System.Drawing.Size(116, 13)
         Me.Label_ConnectedDevices.TabIndex = 19

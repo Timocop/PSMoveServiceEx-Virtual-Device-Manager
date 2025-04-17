@@ -41,11 +41,11 @@ Partial Class FormTroubleshootLogs
         Me.ImageList_Issues = New System.Windows.Forms.ImageList(Me.components)
         Me.TextBox_IssueInfo = New System.Windows.Forms.TextBox()
         Me.TabPage_Devices = New System.Windows.Forms.TabPage()
-        Me.TabPage_Logs = New System.Windows.Forms.TabPage()
-        Me.TextBox_Logs = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.ComboBox_Logs = New System.Windows.Forms.ComboBox()
         Me.TreeView_DeviceProperties = New System.Windows.Forms.TreeView()
+        Me.TabPage_Logs = New System.Windows.Forms.TabPage()
+        Me.ComboBox_Logs = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.TextBox_Logs = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.TabControl_Diagnostic.SuspendLayout()
         Me.TabPage_Issues.SuspendLayout()
@@ -220,6 +220,16 @@ Partial Class FormTroubleshootLogs
         Me.TabPage_Devices.TabIndex = 2
         Me.TabPage_Devices.Text = "Devices"
         '
+        'TreeView_DeviceProperties
+        '
+        Me.TreeView_DeviceProperties.BackColor = System.Drawing.Color.White
+        Me.TreeView_DeviceProperties.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TreeView_DeviceProperties.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TreeView_DeviceProperties.Location = New System.Drawing.Point(0, 0)
+        Me.TreeView_DeviceProperties.Name = "TreeView_DeviceProperties"
+        Me.TreeView_DeviceProperties.Size = New System.Drawing.Size(752, 469)
+        Me.TreeView_DeviceProperties.TabIndex = 0
+        '
         'TabPage_Logs
         '
         Me.TabPage_Logs.BackColor = System.Drawing.Color.White
@@ -232,53 +242,41 @@ Partial Class FormTroubleshootLogs
         Me.TabPage_Logs.TabIndex = 0
         Me.TabPage_Logs.Text = "Logs"
         '
-        'TextBox_Logs
-        '
-        Me.TextBox_Logs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBox_Logs.BackColor = System.Drawing.Color.White
-        Me.TextBox_Logs.Location = New System.Drawing.Point(3, 56)
-        Me.TextBox_Logs.Margin = New System.Windows.Forms.Padding(3, 16, 3, 3)
-        Me.TextBox_Logs.Multiline = True
-        Me.TextBox_Logs.Name = "TextBox_Logs"
-        Me.TextBox_Logs.ReadOnly = True
-        Me.TextBox_Logs.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.TextBox_Logs.Size = New System.Drawing.Size(746, 410)
-        Me.TextBox_Logs.TabIndex = 0
-        Me.TextBox_Logs.WordWrap = False
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(16, 19)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(34, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Logs:"
-        '
         'ComboBox_Logs
         '
         Me.ComboBox_Logs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ComboBox_Logs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_Logs.FormattingEnabled = True
-        Me.ComboBox_Logs.Location = New System.Drawing.Point(69, 16)
-        Me.ComboBox_Logs.Margin = New System.Windows.Forms.Padding(16, 16, 16, 3)
+        Me.ComboBox_Logs.Location = New System.Drawing.Point(43, 3)
         Me.ComboBox_Logs.Name = "ComboBox_Logs"
-        Me.ComboBox_Logs.Size = New System.Drawing.Size(667, 21)
+        Me.ComboBox_Logs.Size = New System.Drawing.Size(706, 21)
         Me.ComboBox_Logs.TabIndex = 2
         '
-        'TreeView_DeviceProperties
+        'Label1
         '
-        Me.TreeView_DeviceProperties.BackColor = System.Drawing.Color.White
-        Me.TreeView_DeviceProperties.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TreeView_DeviceProperties.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TreeView_DeviceProperties.Location = New System.Drawing.Point(0, 0)
-        Me.TreeView_DeviceProperties.Name = "TreeView_DeviceProperties"
-        Me.TreeView_DeviceProperties.Size = New System.Drawing.Size(752, 469)
-        Me.TreeView_DeviceProperties.TabIndex = 0
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(3, 6)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(34, 13)
+        Me.Label1.TabIndex = 1
+        Me.Label1.Text = "Logs:"
+        '
+        'TextBox_Logs
+        '
+        Me.TextBox_Logs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBox_Logs.BackColor = System.Drawing.Color.White
+        Me.TextBox_Logs.Location = New System.Drawing.Point(3, 30)
+        Me.TextBox_Logs.Multiline = True
+        Me.TextBox_Logs.Name = "TextBox_Logs"
+        Me.TextBox_Logs.ReadOnly = True
+        Me.TextBox_Logs.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.TextBox_Logs.Size = New System.Drawing.Size(746, 436)
+        Me.TextBox_Logs.TabIndex = 0
+        Me.TextBox_Logs.WordWrap = False
         '
         'FormTroubleshootLogs
         '

@@ -139,8 +139,8 @@ Partial Class UCControllerAttachments
         'Button_Autostart
         '
         Me.Button_Autostart.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5353_16x16_32
-        Me.Button_Autostart.Location = New System.Drawing.Point(16, 78)
-        Me.Button_Autostart.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
+        Me.Button_Autostart.Location = New System.Drawing.Point(16, 79)
+        Me.Button_Autostart.Margin = New System.Windows.Forms.Padding(16, 16, 3, 16)
         Me.Button_Autostart.Name = "Button_Autostart"
         Me.Button_Autostart.Size = New System.Drawing.Size(180, 23)
         Me.Button_Autostart.TabIndex = 12
@@ -153,8 +153,8 @@ Partial Class UCControllerAttachments
         '
         Me.Button_AddAttachment.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button_AddAttachment.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.DevicePairing_6101_16x16_32
-        Me.Button_AddAttachment.Location = New System.Drawing.Point(634, 78)
-        Me.Button_AddAttachment.Margin = New System.Windows.Forms.Padding(3, 3, 16, 3)
+        Me.Button_AddAttachment.Location = New System.Drawing.Point(634, 79)
+        Me.Button_AddAttachment.Margin = New System.Windows.Forms.Padding(3, 3, 16, 16)
         Me.Button_AddAttachment.Name = "Button_AddAttachment"
         Me.Button_AddAttachment.Size = New System.Drawing.Size(150, 23)
         Me.Button_AddAttachment.TabIndex = 8

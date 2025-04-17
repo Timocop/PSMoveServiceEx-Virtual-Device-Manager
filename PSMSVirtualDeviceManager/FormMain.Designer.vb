@@ -206,7 +206,7 @@ Partial Class FormMain
         Me.Button_NavStartPlayCalib.ForeColor = System.Drawing.Color.Black
         Me.Button_NavStartPlayCalib.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
         Me.Button_NavStartPlayCalib.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavStartPlayCalib.Location = New System.Drawing.Point(0, 469)
+        Me.Button_NavStartPlayCalib.Location = New System.Drawing.Point(0, 485)
         Me.Button_NavStartPlayCalib.Name = "Button_NavStartPlayCalib"
         Me.Button_NavStartPlayCalib.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
         Me.Button_NavStartPlayCalib.Size = New System.Drawing.Size(228, 24)
@@ -226,7 +226,7 @@ Partial Class FormMain
         Me.Button_NavPlayCalibStatus.ForeColor = System.Drawing.Color.Gray
         Me.Button_NavPlayCalibStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
         Me.Button_NavPlayCalibStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavPlayCalibStatus.Location = New System.Drawing.Point(0, 445)
+        Me.Button_NavPlayCalibStatus.Location = New System.Drawing.Point(0, 461)
         Me.Button_NavPlayCalibStatus.Name = "Button_NavPlayCalibStatus"
         Me.Button_NavPlayCalibStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
         Me.Button_NavPlayCalibStatus.Size = New System.Drawing.Size(228, 24)
@@ -247,7 +247,7 @@ Partial Class FormMain
         Me.Button_NavStartOsc.ForeColor = System.Drawing.Color.Black
         Me.Button_NavStartOsc.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
         Me.Button_NavStartOsc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavStartOsc.Location = New System.Drawing.Point(0, 421)
+        Me.Button_NavStartOsc.Location = New System.Drawing.Point(0, 437)
         Me.Button_NavStartOsc.Name = "Button_NavStartOsc"
         Me.Button_NavStartOsc.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
         Me.Button_NavStartOsc.Size = New System.Drawing.Size(228, 24)
@@ -267,7 +267,7 @@ Partial Class FormMain
         Me.Button_NavOscStatus.ForeColor = System.Drawing.Color.Gray
         Me.Button_NavOscStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
         Me.Button_NavOscStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavOscStatus.Location = New System.Drawing.Point(0, 397)
+        Me.Button_NavOscStatus.Location = New System.Drawing.Point(0, 413)
         Me.Button_NavOscStatus.Name = "Button_NavOscStatus"
         Me.Button_NavOscStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
         Me.Button_NavOscStatus.Size = New System.Drawing.Size(228, 24)
@@ -288,7 +288,7 @@ Partial Class FormMain
         Me.Button_NavVirtualMotionTrackers.ForeColor = System.Drawing.Color.Black
         Me.Button_NavVirtualMotionTrackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_NavVirtualMotionTrackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavVirtualMotionTrackers.Location = New System.Drawing.Point(0, 373)
+        Me.Button_NavVirtualMotionTrackers.Location = New System.Drawing.Point(0, 389)
         Me.Button_NavVirtualMotionTrackers.Name = "Button_NavVirtualMotionTrackers"
         Me.Button_NavVirtualMotionTrackers.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
         Me.Button_NavVirtualMotionTrackers.Size = New System.Drawing.Size(228, 24)
@@ -301,7 +301,7 @@ Partial Class FormMain
         'Panel6
         '
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel6.Location = New System.Drawing.Point(0, 365)
+        Me.Panel6.Location = New System.Drawing.Point(0, 381)
         Me.Panel6.Name = "Panel6"
         Me.Panel6.Size = New System.Drawing.Size(228, 8)
         Me.Panel6.TabIndex = 52
@@ -317,7 +317,7 @@ Partial Class FormMain
         Me.Button_NavVirtualTrackers.ForeColor = System.Drawing.Color.Black
         Me.Button_NavVirtualTrackers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_NavVirtualTrackers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavVirtualTrackers.Location = New System.Drawing.Point(0, 341)
+        Me.Button_NavVirtualTrackers.Location = New System.Drawing.Point(0, 357)
         Me.Button_NavVirtualTrackers.Name = "Button_NavVirtualTrackers"
         Me.Button_NavVirtualTrackers.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
         Me.Button_NavVirtualTrackers.Size = New System.Drawing.Size(228, 24)
@@ -330,7 +330,7 @@ Partial Class FormMain
         'Panel5
         '
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel5.Location = New System.Drawing.Point(0, 333)
+        Me.Panel5.Location = New System.Drawing.Point(0, 349)
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(228, 8)
         Me.Panel5.TabIndex = 51
@@ -346,7 +346,7 @@ Partial Class FormMain
         Me.Button_NavHeadMountedDisplay.ForeColor = System.Drawing.Color.Black
         Me.Button_NavHeadMountedDisplay.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_NavHeadMountedDisplay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavHeadMountedDisplay.Location = New System.Drawing.Point(0, 309)
+        Me.Button_NavHeadMountedDisplay.Location = New System.Drawing.Point(0, 325)
         Me.Button_NavHeadMountedDisplay.Name = "Button_NavHeadMountedDisplay"
         Me.Button_NavHeadMountedDisplay.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
         Me.Button_NavHeadMountedDisplay.Size = New System.Drawing.Size(228, 24)
@@ -359,7 +359,7 @@ Partial Class FormMain
         'Panel7
         '
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel7.Location = New System.Drawing.Point(0, 301)
+        Me.Panel7.Location = New System.Drawing.Point(0, 317)
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(228, 8)
         Me.Panel7.TabIndex = 58
@@ -375,7 +375,7 @@ Partial Class FormMain
         Me.Button_NavStartRemoteSocket.ForeColor = System.Drawing.Color.Black
         Me.Button_NavStartRemoteSocket.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
         Me.Button_NavStartRemoteSocket.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavStartRemoteSocket.Location = New System.Drawing.Point(0, 277)
+        Me.Button_NavStartRemoteSocket.Location = New System.Drawing.Point(0, 293)
         Me.Button_NavStartRemoteSocket.Name = "Button_NavStartRemoteSocket"
         Me.Button_NavStartRemoteSocket.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
         Me.Button_NavStartRemoteSocket.Size = New System.Drawing.Size(228, 24)
@@ -395,7 +395,7 @@ Partial Class FormMain
         Me.Button_NavRemoteDeviceStatus.ForeColor = System.Drawing.Color.Gray
         Me.Button_NavRemoteDeviceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
         Me.Button_NavRemoteDeviceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavRemoteDeviceStatus.Location = New System.Drawing.Point(0, 253)
+        Me.Button_NavRemoteDeviceStatus.Location = New System.Drawing.Point(0, 269)
         Me.Button_NavRemoteDeviceStatus.Name = "Button_NavRemoteDeviceStatus"
         Me.Button_NavRemoteDeviceStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
         Me.Button_NavRemoteDeviceStatus.Size = New System.Drawing.Size(228, 24)
@@ -416,7 +416,7 @@ Partial Class FormMain
         Me.Button_NavVirtualControllers.ForeColor = System.Drawing.Color.Black
         Me.Button_NavVirtualControllers.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_NavVirtualControllers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavVirtualControllers.Location = New System.Drawing.Point(0, 229)
+        Me.Button_NavVirtualControllers.Location = New System.Drawing.Point(0, 245)
         Me.Button_NavVirtualControllers.Name = "Button_NavVirtualControllers"
         Me.Button_NavVirtualControllers.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
         Me.Button_NavVirtualControllers.Size = New System.Drawing.Size(228, 24)
@@ -429,7 +429,7 @@ Partial Class FormMain
         'Panel4
         '
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel4.Location = New System.Drawing.Point(0, 221)
+        Me.Panel4.Location = New System.Drawing.Point(0, 237)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(228, 8)
         Me.Panel4.TabIndex = 45
@@ -444,7 +444,7 @@ Partial Class FormMain
         Me.Button_NavPsvrStatus.ForeColor = System.Drawing.Color.Gray
         Me.Button_NavPsvrStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
         Me.Button_NavPsvrStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavPsvrStatus.Location = New System.Drawing.Point(0, 197)
+        Me.Button_NavPsvrStatus.Location = New System.Drawing.Point(0, 213)
         Me.Button_NavPsvrStatus.Name = "Button_NavPsvrStatus"
         Me.Button_NavPsvrStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
         Me.Button_NavPsvrStatus.Size = New System.Drawing.Size(228, 24)
@@ -465,7 +465,7 @@ Partial Class FormMain
         Me.Button_NavPsvrManagement.ForeColor = System.Drawing.Color.Black
         Me.Button_NavPsvrManagement.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_NavPsvrManagement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavPsvrManagement.Location = New System.Drawing.Point(0, 173)
+        Me.Button_NavPsvrManagement.Location = New System.Drawing.Point(0, 189)
         Me.Button_NavPsvrManagement.Name = "Button_NavPsvrManagement"
         Me.Button_NavPsvrManagement.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
         Me.Button_NavPsvrManagement.Size = New System.Drawing.Size(228, 24)
@@ -478,7 +478,7 @@ Partial Class FormMain
         'Panel2
         '
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel2.Location = New System.Drawing.Point(0, 165)
+        Me.Panel2.Location = New System.Drawing.Point(0, 181)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(228, 8)
         Me.Panel2.TabIndex = 44
@@ -494,7 +494,7 @@ Partial Class FormMain
         Me.Button_NavRunServiceConfigTool.ForeColor = System.Drawing.Color.Black
         Me.Button_NavRunServiceConfigTool.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.mmcshext_128_16x16_32
         Me.Button_NavRunServiceConfigTool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavRunServiceConfigTool.Location = New System.Drawing.Point(0, 141)
+        Me.Button_NavRunServiceConfigTool.Location = New System.Drawing.Point(0, 157)
         Me.Button_NavRunServiceConfigTool.Name = "Button_NavRunServiceConfigTool"
         Me.Button_NavRunServiceConfigTool.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
         Me.Button_NavRunServiceConfigTool.Size = New System.Drawing.Size(228, 24)
@@ -515,7 +515,7 @@ Partial Class FormMain
         Me.Button_NavRestartService.ForeColor = System.Drawing.Color.Black
         Me.Button_NavRestartService.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.shell32_16739_16x16_32
         Me.Button_NavRestartService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavRestartService.Location = New System.Drawing.Point(0, 117)
+        Me.Button_NavRestartService.Location = New System.Drawing.Point(0, 133)
         Me.Button_NavRestartService.Name = "Button_NavRestartService"
         Me.Button_NavRestartService.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
         Me.Button_NavRestartService.Size = New System.Drawing.Size(228, 24)
@@ -536,7 +536,7 @@ Partial Class FormMain
         Me.Button_NavRunService.ForeColor = System.Drawing.Color.Black
         Me.Button_NavRunService.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.imageres_5341_16x16_32
         Me.Button_NavRunService.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavRunService.Location = New System.Drawing.Point(0, 93)
+        Me.Button_NavRunService.Location = New System.Drawing.Point(0, 109)
         Me.Button_NavRunService.Name = "Button_NavRunService"
         Me.Button_NavRunService.Padding = New System.Windows.Forms.Padding(48, 0, 0, 0)
         Me.Button_NavRunService.Size = New System.Drawing.Size(228, 24)
@@ -556,7 +556,7 @@ Partial Class FormMain
         Me.Button_NavServiceStatus.ForeColor = System.Drawing.Color.Gray
         Me.Button_NavServiceStatus.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.Status_WHITE_16
         Me.Button_NavServiceStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavServiceStatus.Location = New System.Drawing.Point(0, 69)
+        Me.Button_NavServiceStatus.Location = New System.Drawing.Point(0, 85)
         Me.Button_NavServiceStatus.Name = "Button_NavServiceStatus"
         Me.Button_NavServiceStatus.Padding = New System.Windows.Forms.Padding(32, 0, 0, 0)
         Me.Button_NavServiceStatus.Size = New System.Drawing.Size(228, 24)
@@ -577,7 +577,7 @@ Partial Class FormMain
         Me.Button_NavServiceManagement.ForeColor = System.Drawing.Color.Black
         Me.Button_NavServiceManagement.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.odbcint_1439_16x16_32
         Me.Button_NavServiceManagement.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button_NavServiceManagement.Location = New System.Drawing.Point(0, 45)
+        Me.Button_NavServiceManagement.Location = New System.Drawing.Point(0, 61)
         Me.Button_NavServiceManagement.Name = "Button_NavServiceManagement"
         Me.Button_NavServiceManagement.Padding = New System.Windows.Forms.Padding(16, 0, 0, 0)
         Me.Button_NavServiceManagement.Size = New System.Drawing.Size(228, 24)
@@ -596,8 +596,8 @@ Partial Class FormMain
         Me.Label2.ForeColor = System.Drawing.Color.Black
         Me.Label2.Location = New System.Drawing.Point(0, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Padding = New System.Windows.Forms.Padding(16, 16, 3, 16)
-        Me.Label2.Size = New System.Drawing.Size(84, 45)
+        Me.Label2.Padding = New System.Windows.Forms.Padding(16, 32, 3, 16)
+        Me.Label2.Size = New System.Drawing.Size(84, 61)
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Navigation"
         '
