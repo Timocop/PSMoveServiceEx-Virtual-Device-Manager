@@ -14,7 +14,7 @@ Public Class UCVirtualTrackerItem
 
     Public g_mUCVirtualTrackers As UCVirtualTrackers
 
-    Private g_iStatisLastTrackerId As Integer = -1
+    Private g_mStatusLastSettings As New Dictionary(Of String, Object)
     Private g_iStatusHideHeight As Integer = 0
     Private g_iStatusShowHeight As Integer = g_iStatusHideHeight
     Private g_bHasStatusError As Boolean = False
@@ -23,6 +23,7 @@ Public Class UCVirtualTrackerItem
     Private g_bStatusDistortionError As Boolean = False
     Private g_bStatusDistortionAngle As Single = 0.0F
     Private g_bStatusDistortionWarning As Boolean = False
+    Private g_bStatusResolutionWarning As Boolean = False
     Private g_bStatusBadPoseError As Boolean = False
     Private g_mStatusBadPoseQuatentions As New Dictionary(Of String, Quaternion)
 
@@ -263,6 +264,10 @@ Public Class UCVirtualTrackerItem
                     g_mClassCaptureLogic.m_PipeSecondaryIndex
                 }
 
+                Dim bIsPlayStationCamera As Boolean = g_mClassCaptureLogic.m_IsPlayStationCamera
+                Dim bIsConnected As Boolean = g_mClassCaptureLogic.m_PipeConnected
+                Dim iResolution As ClassCaptureLogic.ENUM_RESOLUTION = g_mClassCaptureLogic.m_CameraResolution
+
                 ' Check if disabled
                 If (True) Then
                     If (iPipeIndexes(0) < 0) Then
@@ -277,10 +282,28 @@ Public Class UCVirtualTrackerItem
                     End If
                 End If
 
-                Dim bTrackerIdChanged As Boolean = False
-                If (g_iStatisLastTrackerId <> iPipeIndexes(0)) Then
-                    g_iStatisLastTrackerId = iPipeIndexes(0)
-                    bTrackerIdChanged = True
+                Dim bConfigChanged As Boolean = False
+
+                If (True) Then
+                    If (Not g_mStatusLastSettings.ContainsKey("iPipeIndexes") OrElse CInt(g_mStatusLastSettings("iPipeIndexes")) <> iPipeIndexes(0)) Then
+                        g_mStatusLastSettings("iPipeIndexes") = iPipeIndexes(0)
+                        bConfigChanged = True
+                    End If
+
+                    If (Not g_mStatusLastSettings.ContainsKey("bIsPlayStationCamera") OrElse CBool(g_mStatusLastSettings("bIsPlayStationCamera")) <> bIsPlayStationCamera) Then
+                        g_mStatusLastSettings("bIsPlayStationCamera") = bIsPlayStationCamera
+                        bConfigChanged = True
+                    End If
+
+                    If (Not g_mStatusLastSettings.ContainsKey("bIsConnected") OrElse CBool(g_mStatusLastSettings("bIsConnected")) <> bIsConnected) Then
+                        g_mStatusLastSettings("bIsConnected") = bIsConnected
+                        bConfigChanged = True
+                    End If
+
+                    If (Not g_mStatusLastSettings.ContainsKey("iResolution") OrElse CInt(g_mStatusLastSettings("iResolution")) <> iResolution) Then
+                        g_mStatusLastSettings("iResolution") = CInt(iResolution)
+                        bConfigChanged = True
+                    End If
                 End If
 
                 ' Check configs
@@ -289,7 +312,7 @@ Public Class UCVirtualTrackerItem
                     If (Not String.IsNullOrEmpty(sConfigPath)) Then
                         Dim sConfigFiles As New List(Of String)
 
-                        If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                        If (bIsPlayStationCamera) Then
                             sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(0))))
                             sConfigFiles.Add(IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iPipeIndexes(1))))
                         Else
@@ -306,7 +329,7 @@ Public Class UCVirtualTrackerItem
                             Dim mLastWriteTime = IO.File.GetLastWriteTime(sConfigFile)
 
                             ' Only check if the file changed since last time 
-                            If (Not bTrackerIdChanged) Then
+                            If (Not bConfigChanged) Then
                                 If (g_mStatusConfigDate.ContainsKey(sConfigFile.ToLowerInvariant)) Then
                                     If (mLastWriteTime = g_mStatusConfigDate(sConfigFile.ToLowerInvariant)) Then
                                         Continue For
@@ -325,6 +348,32 @@ Public Class UCVirtualTrackerItem
                                 g_mStatusBadPoseQuatentions(sConfigFile.ToLowerInvariant) = mConfigPose.mOrientation
                             End If
 
+                            ' Check tracker resolution
+                            If (True) Then
+                                Dim mConfigTracker As New ClassServiceConfig(sConfigFile)
+                                mConfigTracker.LoadConfig()
+
+                                Dim bCorrectResolution As Boolean = False
+
+                                Dim iResolutionWidth As Double = Double.Parse(mConfigTracker.GetValue(Of String)("", "frame_width", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                                If (iResolutionWidth > 0.0) Then
+                                    Select Case (iResolution)
+                                        Case ClassCaptureLogic.ENUM_RESOLUTION.SD
+                                            If (CInt(iResolutionWidth) = 640) Then
+                                                bCorrectResolution = True
+                                            End If
+
+                                        Case ClassCaptureLogic.ENUM_RESOLUTION.HD
+                                            If (CInt(iResolutionWidth) = 1920) Then
+                                                bCorrectResolution = True
+                                            End If
+
+                                    End Select
+                                End If
+
+                                g_bStatusResolutionWarning = (Not bCorrectResolution)
+                            End If
+
                             ' Check camera distortion values
                             If (True) Then
                                 Dim mConfigCameraDistortion As New ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM
@@ -332,7 +381,7 @@ Public Class UCVirtualTrackerItem
 
                                 ' The PS4 Cam requires precomputed distortion.
                                 Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
-                                If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+                                If (bIsPlayStationCamera) Then
                                     If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, mConstCameraDistortion)) Then
                                         Dim bCorrectDistort As Boolean = (
                                                 CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
@@ -392,7 +441,7 @@ Public Class UCVirtualTrackerItem
                         ' Check for bad PS4 cam pose calibration
                         If (True) Then
                             If (bConfigUpdated) Then
-                                If (g_mClassCaptureLogic.m_IsPlayStationCamera AndAlso sConfigFiles.Count = 2) Then
+                                If (bIsPlayStationCamera AndAlso sConfigFiles.Count = 2) Then
                                     If (g_mStatusBadPoseQuatentions.ContainsKey(sConfigFiles(0).ToLowerInvariant) AndAlso g_mStatusBadPoseQuatentions.ContainsKey(sConfigFiles(1).ToLowerInvariant)) Then
                                         Dim mPose1 = g_mStatusBadPoseQuatentions(sConfigFiles(0).ToLowerInvariant)
                                         Dim mPose2 = g_mStatusBadPoseQuatentions(sConfigFiles(1).ToLowerInvariant)
@@ -413,6 +462,17 @@ Public Class UCVirtualTrackerItem
                         End If
                     End If
 
+                    If (g_bStatusResolutionWarning) Then
+                        sTitle = "Incorrect resolution set"
+
+                        Dim sText As New Text.StringBuilder
+                        sText.AppendLine("The current resolution of the video input devices does not match with the virtual tracker!")
+                        sMessage = sText.ToString
+
+                        iStatusType = 2
+                        Exit While
+                    End If
+
                     If (g_bStatusDistortionError) Then
                         sTitle = "Incorrect distortion values"
 
@@ -427,7 +487,7 @@ Public Class UCVirtualTrackerItem
 
                 ' Check if connected to PSMS-EX
                 If (True) Then
-                    If (Not g_mClassCaptureLogic.m_PipeConnected) Then
+                    If (Not bIsConnected) Then
                         sTitle = "Virtual tracker not connected to PSMoveServiceEx"
 
                         Dim sText As New Text.StringBuilder
