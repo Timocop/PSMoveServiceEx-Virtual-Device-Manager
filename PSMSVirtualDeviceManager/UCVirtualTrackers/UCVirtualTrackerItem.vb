@@ -266,7 +266,7 @@ Public Class UCVirtualTrackerItem
 
                 Dim bIsPlayStationCamera As Boolean = g_mClassCaptureLogic.m_IsPlayStationCamera
                 Dim bIsConnected As Boolean = g_mClassCaptureLogic.m_PipeConnected
-                Dim iResolution As ClassCaptureLogic.ENUM_RESOLUTION = g_mClassCaptureLogic.m_CameraResolution
+                Dim iResolutionWidth As Integer = g_mClassCaptureLogic.GetCameraResolutionSize().Width
 
                 ' Check if disabled
                 If (True) Then
@@ -300,8 +300,8 @@ Public Class UCVirtualTrackerItem
                         bConfigChanged = True
                     End If
 
-                    If (Not g_mStatusLastSettings.ContainsKey("iResolution") OrElse CInt(g_mStatusLastSettings("iResolution")) <> iResolution) Then
-                        g_mStatusLastSettings("iResolution") = CInt(iResolution)
+                    If (Not g_mStatusLastSettings.ContainsKey("iResolutionWidth") OrElse CInt(g_mStatusLastSettings("iResolutionWidth")) <> iResolutionWidth) Then
+                        g_mStatusLastSettings("iResolutionWidth") = iResolutionWidth
                         bConfigChanged = True
                     End If
                 End If
@@ -355,20 +355,11 @@ Public Class UCVirtualTrackerItem
 
                                 Dim bCorrectResolution As Boolean = False
 
-                                Dim iResolutionWidth As Double = Double.Parse(mConfigTracker.GetValue(Of String)("", "frame_width", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
-                                If (iResolutionWidth > 0.0) Then
-                                    Select Case (iResolution)
-                                        Case ClassCaptureLogic.ENUM_RESOLUTION.SD
-                                            If (CInt(iResolutionWidth) = 640) Then
-                                                bCorrectResolution = True
-                                            End If
-
-                                        Case ClassCaptureLogic.ENUM_RESOLUTION.HD
-                                            If (CInt(iResolutionWidth) = 1920) Then
-                                                bCorrectResolution = True
-                                            End If
-
-                                    End Select
+                                Dim iTrackerResolutionWidth As Double = Double.Parse(mConfigTracker.GetValue(Of String)("", "frame_width", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                                If (iTrackerResolutionWidth > 0.0) Then
+                                    If (CInt(iTrackerResolutionWidth) = iResolutionWidth) Then
+                                        bCorrectResolution = True
+                                    End If
                                 End If
 
                                 g_bStatusResolutionWarning = (Not bCorrectResolution)
@@ -463,10 +454,10 @@ Public Class UCVirtualTrackerItem
                     End If
 
                     If (g_bStatusResolutionWarning) Then
-                        sTitle = "Incorrect resolution set"
+                        sTitle = "Virtual tracker resolution mismatch"
 
                         Dim sText As New Text.StringBuilder
-                        sText.AppendLine("The current resolution of the video input devices does not match with the virtual tracker!")
+                        sText.AppendLine("The current resolution of the video input devices does not match with the virtual tracker resolution. Change the resolution of the video input device to set the virtual tracker resolution.")
                         sMessage = sText.ToString
 
                         iStatusType = 2
@@ -812,6 +803,65 @@ Public Class UCVirtualTrackerItem
 
         MessageBox.Show("This video input device needs to be restarted in order for changes to take effect!", "Device restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         SetRequireRestart(True)
+
+        Try
+            SetVirtualTrackerResolutionUsingCamera()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+    End Sub
+
+    Private Sub SetVirtualTrackerResolutionUsingCamera()
+        Dim mIds As New List(Of Integer)
+        If (g_mClassCaptureLogic.m_IsPlayStationCamera) Then
+            mIds.Add(g_mClassCaptureLogic.m_PipePrimaryIndex)
+            mIds.Add(g_mClassCaptureLogic.m_PipeSecondaryIndex)
+        Else
+            mIds.Add(g_mClassCaptureLogic.m_PipePrimaryIndex)
+        End If
+
+        Dim bHadBadResolution As Boolean = False
+
+        For Each iTrackerID As Integer In mIds
+            If (iTrackerID < 0) Then
+                Throw New ArgumentException("Tracker id is invalid")
+            End If
+
+            Dim sConfigPath As String = ClassServiceConfig.GetConfigPath()
+            If (String.IsNullOrEmpty(sConfigPath)) Then
+                Throw New ArgumentException("Config path does not exist")
+            End If
+
+            Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
+            If (Not IO.File.Exists(sConfigFile)) Then
+                Throw New ArgumentException(String.Format("Config file '{0}' does not exist", sConfigFile))
+            End If
+
+            Dim mConfigTracker As New ClassServiceConfig(sConfigFile)
+            mConfigTracker.LoadConfig()
+
+            Dim bCorrectResolution As Boolean = False
+            Dim iResolutionWidth As Double = Double.Parse(mConfigTracker.GetValue(Of String)("", "frame_width", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            If (iResolutionWidth > 0.0) Then
+                If (CInt(iResolutionWidth) = g_mClassCaptureLogic.GetCameraResolutionSize().Width) Then
+                    bCorrectResolution = True
+                End If
+            End If
+
+            If (Not bCorrectResolution) Then
+                mConfigTracker.SetValue(Of Double)("", "frame_width", g_mClassCaptureLogic.GetCameraResolutionSize().Width)
+
+                mConfigTracker.SaveConfig()
+
+                bHadBadResolution = True
+            End If
+        Next
+
+        If (bHadBadResolution) Then
+            MessageBox.Show("Virtual tracker resolution changed! PSMoveServiceEx needs to be restarted in order for changes to take effect!", "PSMoveServiceEx restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+            g_mUCVirtualTrackers.g_mFormMain.PromptRestartPSMoveService()
+        End If
     End Sub
 
     Private Sub ComboBox_CameraFramerate_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_CameraFramerate.SelectedIndexChanged
@@ -912,7 +962,7 @@ Public Class UCVirtualTrackerItem
             Next
 
             ComboBox_CameraLensDistortion.SelectedIndex = 0
-            MessageBox.Show("Tracker distortion preset has been applied! PSMoveServiceEx needs to be restarted in order for changes to take effect!", "PSMoveServiceEx restart required", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("Tracker distortion preset has been applied! PSMoveServiceEx needs to be restarted in order for changes to take effect!", "PSMoveServiceEx restart required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
             g_mUCVirtualTrackers.g_mFormMain.PromptRestartPSMoveService()
         Catch ex As Exception
@@ -2526,7 +2576,7 @@ Public Class UCVirtualTrackerItem
             Return
         End If
 
-        MessageBox.Show("Manually changing the properties of video input devices is for debugging purposes only and is not saved!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        MessageBox.Show("Manually changing the properties of video input devices is for debugging purposes only and are not saved!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
         g_mClassCaptureLogic.m_Capture.Settings = 0
         g_mClassCaptureLogic.m_Capture.Settings = 1
