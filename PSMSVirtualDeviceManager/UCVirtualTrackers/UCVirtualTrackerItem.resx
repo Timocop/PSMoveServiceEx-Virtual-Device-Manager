@@ -138,12 +138,13 @@ Keep in mind that higher resolutions can impose much more system demands and doe
   </data>
   <data name="CheckBox_DeviceSupersampling.ToolTip" xml:space="preserve">
     <value>Supersampling involves capturing higher-resolution images from the video input device and then reducing their size through downscaling to create smoother images. 
-However, this process requires more processing power.</value>
+This may be required on some video input devices that can not reach higher framerates on lower resolutions.</value>
   </data>
   <data name="CheckBox_UseMjpg.ToolTip" xml:space="preserve">
-    <value>The difference between YUY2 and MJPG is that YUY2 produces higher-quality images compared to MJPG. 
-However, the downside is that YUY2 requires more USB bandwidth as it does not use any compression. 
-If you experience stuttering or a low framerate on higher resolutions, use MJPG.</value>
+    <value>YUY2 produces higher-quality uncompressed images, but this also requires more USB bandwidth. YUY2 may not work with high-resolution images.
+MJPG compresses its images, which reduces USB bandwidth requirements but can also introduce compression artifacts and additional compression latency.
+
+If you experience stuttering or a slow frame rate at higher resolutions, use MJPG.</value>
   </data>
   <data name="ComboBox_ImageInterpolation.ToolTip" xml:space="preserve">
     <value>The image interpolation method is used when the image is not at the recommended resolution. 
