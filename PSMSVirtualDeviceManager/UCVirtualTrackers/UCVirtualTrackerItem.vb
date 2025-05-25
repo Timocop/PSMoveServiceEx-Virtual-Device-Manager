@@ -2466,6 +2466,8 @@ Public Class UCVirtualTrackerItem
             Return
         End If
 
+        MessageBox.Show("Changing video input devices properties manually is only for debugging purposes and will not be saved!", "Warning", MessageBoxButtons.OK)
+
         g_mClassCaptureLogic.m_Capture.Settings = 0
         g_mClassCaptureLogic.m_Capture.Settings = 1
     End Sub
