@@ -272,8 +272,8 @@ Partial Class UCVirtualTrackerItem
         '
         Me.TabControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.TabPage_DeviceProperties)
         Me.TabControl1.Controls.Add(Me.TabPage_TrackerProperties)
+        Me.TabControl1.Controls.Add(Me.TabPage_DeviceProperties)
         Me.TabControl1.Location = New System.Drawing.Point(16, 30)
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.TabControl1.Name = "TabControl1"
