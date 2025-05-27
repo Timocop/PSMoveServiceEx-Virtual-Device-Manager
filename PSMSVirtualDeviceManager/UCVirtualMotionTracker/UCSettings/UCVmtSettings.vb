@@ -396,9 +396,10 @@ Public Class UCVmtSettings
     End Class
 
     Private Sub ShowToucpadShortcutHelp()
-        Dim mMsg As New FormRtfHelp
-        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpTouchpadShortcuts
-        mMsg.ShowDialog(g_UCVirtualMotionTracker.g_mFormMain)
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx/wiki/VDM-%E2%80%90-VMT-Touchpad-Shortcuts")
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub CheckBox_JoystickShortcuts_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox_HtcTouchpadShortcuts.CheckedChanged

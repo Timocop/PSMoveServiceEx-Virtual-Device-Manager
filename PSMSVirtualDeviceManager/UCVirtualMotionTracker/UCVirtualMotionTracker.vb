@@ -92,9 +92,10 @@ Public Class UCVirtualMotionTracker
     End Sub
 
     Private Sub LinkLabel_ReadMore_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_ReadMore.LinkClicked
-        Dim mMsg As New FormRtfHelp
-        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpVirtualMotionTracker
-        mMsg.ShowDialog(g_mFormMain)
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx/wiki/VDM-%E2%80%90-Virtual-Motion-Tracker")
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub CleanUp()

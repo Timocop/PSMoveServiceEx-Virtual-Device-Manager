@@ -998,9 +998,10 @@ Public Class UCRemoteDevices
     End Class
 
     Private Sub ShowRemoteDevicesHelp()
-        Dim mMsg As New FormRtfHelp
-        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpRemoteDevices
-        mMsg.ShowDialog(g_mUCVirtualControllers.g_mFormMain)
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx/wiki/VDM-%E2%80%90-Remote-Devices")
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub ListView_RemoteDevices_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_RemoteDevices.SelectedIndexChanged

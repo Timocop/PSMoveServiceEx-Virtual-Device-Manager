@@ -2563,9 +2563,10 @@ Public Class UCVirtualTrackerItem
     End Class
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim mHelp As New FormRtfHelp
-        mHelp.RichTextBox_Help.Rtf = My.Resources.HelpVirtualTracker
-        mHelp.ShowDialog(g_mUCVirtualTrackers.g_mFormMain)
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx/wiki/VDM-%E2%80%90-Virtual-Tracker-Properties")
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub LinkLabel_MiscSettings_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_MiscSettings.LinkClicked

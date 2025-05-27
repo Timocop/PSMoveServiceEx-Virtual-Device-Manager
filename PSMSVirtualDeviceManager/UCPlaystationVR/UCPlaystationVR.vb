@@ -539,8 +539,9 @@
     End Sub
 
     Private Sub LinkLabel_EnableDirectMode_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel_EnableDirectMode.LinkClicked
-        Dim mMsg As New FormRtfHelp
-        mMsg.RichTextBox_Help.Rtf = My.Resources.HelpDirectModeSteamVR
-        mMsg.ShowDialog(g_FormMain)
+        Try
+            Process.Start("https://github.com/Timocop/PSMoveServiceEx/wiki/VDM-%E2%80%90-PlayStation-VR-Display-Modes")
+        Catch ex As Exception
+        End Try
     End Sub
 End Class
