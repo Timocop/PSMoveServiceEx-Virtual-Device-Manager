@@ -186,22 +186,46 @@ Public Class UCRemoteDevices
         Try
             Dim sAddress As String = "127.0.0.1"
 
+            ' Loop through all network interfaces
             For Each mAdapter As NetworkInterface In NetworkInterface.GetAllNetworkInterfaces()
                 If (mAdapter.OperationalStatus <> OperationalStatus.Up) Then
                     Continue For
                 End If
 
-                Dim bSuccess As Boolean = False
+                If (mAdapter.NetworkInterfaceType = NetworkInterfaceType.Loopback OrElse
+                    mAdapter.NetworkInterfaceType = NetworkInterfaceType.Tunnel) Then
+                    Continue For
+                End If
 
-                For Each mAddress In mAdapter.GetIPProperties().UnicastAddresses
-                    If (mAddress.Address.AddressFamily = AddressFamily.InterNetwork AndAlso mAddress.IsDnsEligible) Then
-                        sAddress = mAddress.Address.ToString()
-                        bSuccess = True
+                Dim mProp As IPInterfaceProperties = mAdapter.GetIPProperties()
+
+                ' Check if the adapter has a default gateway (indicates router connection)
+                Dim bHasGateway As Boolean = False
+                For Each mGate As GatewayIPAddressInformation In mProp.GatewayAddresses
+                    If (mGate.Address.AddressFamily = AddressFamily.InterNetwork) Then
+                        bHasGateway = True
+                        Exit For
+                    End If
+                Next
+                If (Not bHasGateway) Then
+                    Continue For
+                End If
+
+                For Each mAddress As UnicastIPAddressInformation In mProp.UnicastAddresses
+                    If (mAddress.Address.AddressFamily <> AddressFamily.InterNetwork) Then
+                        Continue For
+                    End If
+
+                    Dim sIP As String = mAddress.Address.ToString()
+
+                    ' Skip self-assigned (APIPA) and invalid IPs
+                    If (Not sIP.StartsWith("169.254.") AndAlso Not sIP.StartsWith("192.168.99.") AndAlso sIP <> "0.0.0.0") Then
+                        sAddress = sIP
                         Exit For
                     End If
                 Next
 
-                If (bSuccess) Then
+                If (sAddress <> "127.0.0.1") Then
                     Exit For
                 End If
             Next
