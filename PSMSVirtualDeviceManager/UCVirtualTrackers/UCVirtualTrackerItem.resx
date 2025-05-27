@@ -120,15 +120,17 @@
   <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="CheckBox_AutoDetectSettings.ToolTip" xml:space="preserve">
+    <value>When enabled, Virtual Device Manager will automatically adjust the video input device properties using PSMoveServiceEx tracker settings.
+Use PSMoveServiceEx Config Tool to change device properties instead.
+(Recommended)</value>
+  </data>
   <data name="ComboBox_CameraFramerate.ToolTip" xml:space="preserve">
     <value>Select the target framerate at which you want the video input device to run.
 If the target framerate is not supported, it will revert to the lowest nearest framerate.
 Avoid high refresh rates at high resolutions as this will affect system performance and degrades tracking quality!
 The best combinations are 480p@60Hz or 1080p@30Hz.</value>
   </data>
-  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <data name="ComboBox_CameraResolution.ToolTip" xml:space="preserve">
     <value>You can operate your video input device at different resolutions. 
 It's recommended to use 480p for multi-camera setups and 1080p for single-camera setups.
@@ -147,11 +149,6 @@ If you experience stuttering or a slow frame rate at higher resolutions, use MJP
   <data name="ComboBox_ImageInterpolation.ToolTip" xml:space="preserve">
     <value>The image interpolation method is used when the image is not at the recommended resolution. 
 Using more advanced interpolation methods can lead to decreased performance but better image quality when the image is scaled.</value>
-  </data>
-  <data name="CheckBox_AutoDetectSettings.ToolTip" xml:space="preserve">
-    <value>When enabled, Virtual Device Manager will automatically adjust the video input device properties using PSMoveServiceEx tracker settings.
-Use PSMoveServiceEx Config Tool to change device properties instead.
-(Its recommended to keep this enabled)</value>
   </data>
   <metadata name="Timer_Status.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>128, 19</value>
