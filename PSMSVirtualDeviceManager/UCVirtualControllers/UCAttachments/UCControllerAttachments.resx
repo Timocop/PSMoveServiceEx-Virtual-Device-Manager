@@ -127,7 +127,6 @@
     <value>449, 17</value>
   </metadata>
   <data name="UcInformation1.m_Text" xml:space="preserve">
-    <value>You can attach controllers to each other to create joint-based controllers that don't need LEDs but still provide enough information for emulated 6-DoF tracking by orbiting around the parent controller.
-</value>
+    <value>You can link controllers together to create joint-based systems that simulate 6-DoF tracking without optical tracking. These child controllers derive their position by orbiting around the parent controller.</value>
   </data>
 </root>

@@ -27,6 +27,7 @@ Partial Class UCVirtualMotionTracker
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UCVirtualMotionTracker))
         Me.LinkLabel_ReadMore = New System.Windows.Forms.LinkLabel()
         Me.TabControl_Vmt = New System.Windows.Forms.TabControl()
         Me.TabPage_Management = New System.Windows.Forms.TabPage()
@@ -96,7 +97,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Trackers.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Trackers.Name = "TabPage_Trackers"
         Me.TabPage_Trackers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 454)
+        Me.TabPage_Trackers.Size = New System.Drawing.Size(760, 462)
         Me.TabPage_Trackers.TabIndex = 0
         Me.TabPage_Trackers.Text = "Trackers"
         '
@@ -106,7 +107,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Settings.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Settings.Name = "TabPage_Settings"
         Me.TabPage_Settings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_Settings.Size = New System.Drawing.Size(760, 454)
+        Me.TabPage_Settings.Size = New System.Drawing.Size(760, 462)
         Me.TabPage_Settings.TabIndex = 3
         Me.TabPage_Settings.Text = "Settings"
         '
@@ -115,7 +116,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_PlayspaceCalib.BackColor = System.Drawing.Color.White
         Me.TabPage_PlayspaceCalib.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_PlayspaceCalib.Name = "TabPage_PlayspaceCalib"
-        Me.TabPage_PlayspaceCalib.Size = New System.Drawing.Size(760, 454)
+        Me.TabPage_PlayspaceCalib.Size = New System.Drawing.Size(760, 462)
         Me.TabPage_PlayspaceCalib.TabIndex = 5
         Me.TabPage_PlayspaceCalib.Text = "Playspace Calibration"
         '
@@ -124,7 +125,7 @@ Partial Class UCVirtualMotionTracker
         Me.TabPage_Overrides.BackColor = System.Drawing.Color.White
         Me.TabPage_Overrides.Location = New System.Drawing.Point(4, 22)
         Me.TabPage_Overrides.Name = "TabPage_Overrides"
-        Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 454)
+        Me.TabPage_Overrides.Size = New System.Drawing.Size(760, 462)
         Me.TabPage_Overrides.TabIndex = 2
         Me.TabPage_Overrides.Text = "SteamVR Tracker Overrides"
         '
@@ -176,9 +177,7 @@ Partial Class UCVirtualMotionTracker
         Me.Label42.Name = "Label42"
         Me.Label42.Size = New System.Drawing.Size(731, 51)
         Me.Label42.TabIndex = 2
-        Me.Label42.Text = "Virtual Motion Trackers (VMT) lets you to create SteamVR and OSC trackers." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "These" &
-    " trackers can be used for body trackers, hand trackers, or to replace the 6-DoF " &
-    "position of head-mounted displays" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.Label42.Text = resources.GetString("Label42.Text")
         '
         'Label43
         '

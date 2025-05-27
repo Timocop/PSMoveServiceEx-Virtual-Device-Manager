@@ -123,6 +123,10 @@
   <metadata name="Timer_VMTTrackers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>18, 18</value>
   </metadata>
+  <data name="Label42.Text" xml:space="preserve">
+    <value>Virtual Motion Trackers (VMT) lets you to create SteamVR and OSC trackers.
+These trackers can be used for body trackers, hand trackers, head-mounted displays or to replace pose of other third-party trackers.</value>
+  </data>
   <metadata name="ToolTip_Default.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>275, 24</value>
   </metadata>
