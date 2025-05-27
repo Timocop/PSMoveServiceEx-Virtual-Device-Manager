@@ -2102,32 +2102,34 @@ Public Class UCVirtualTrackerItem
                                     If (m_IsPlayStationCamera) Then
                                         For i = 0 To m_CaptureFrameLength - 1
                                             OpenCvSharp.Cv2.CopyTo(
-                                                mFrame(PS4CAM_EYE_HEIGHT_PADDING, mFrame.Rows - PS4CAM_EYE_HEIGHT_PADDING, 0 + PS4CAM_EYE_STARTPADDING + (PS4CAM_EYE_WDITH * i), PS4CAM_EYE_STARTPADDING + PS4CAM_EYE_WDITH + (PS4CAM_EYE_WDITH * i)),
-                                                mCopyFrame1)
+                                                mFrame(PS4CAM_EYE_HEIGHT_PADDING,
+                                                            mFrame.Rows - PS4CAM_EYE_HEIGHT_PADDING,
+                                                            0 + PS4CAM_EYE_STARTPADDING + (PS4CAM_EYE_WDITH * i),
+                                                            PS4CAM_EYE_STARTPADDING + PS4CAM_EYE_WDITH + (PS4CAM_EYE_WDITH * i)),
+                                                        mCopyFrame1)
 
                                             OpenCvSharp.Cv2.Resize(mCopyFrame1, mCopyFrame2, New OpenCvSharp.Size(m_CaptureFrame(i).Cols, m_CaptureFrame(i).Rows), 0, 0, OpenCvSharp.InterpolationFlags.Linear)
-                                            OpenCvSharp.Cv2.Flip(mCopyFrame2, mCopyFrame1, OpenCvSharp.FlipMode.Y)
-                                            OpenCvSharp.Cv2.CopyTo(mCopyFrame1, m_CaptureFrame(i))
+                                            OpenCvSharp.Cv2.Flip(mCopyFrame2, m_CaptureFrame(i), OpenCvSharp.FlipMode.Y)
                                         Next
                                     Else
                                         ' Sometimes setting resolutions on devices wont work. (e.g. Kinect One)
-                                        ' We NEED to resize the image to 640x480 because our buffer is only that size!
+                                        ' We NEED to resize the image to 640x480 because our buffer is only that size! 
                                         If (mFrame.Cols <> m_CaptureFrame(0).Cols OrElse mFrame.Rows <> m_CaptureFrame(0).Rows) Then
                                             Dim mInterpolation As OpenCvSharp.InterpolationFlags = GetImageInterpolation()
 
-                                            OpenCvSharp.Cv2.Resize(mFrame, mCopyFrame1, New OpenCvSharp.Size(m_CaptureFrame(0).Cols, m_CaptureFrame(0).Rows), 0, 0, mInterpolation)
-                                            OpenCvSharp.Cv2.CopyTo(mCopyFrame1, mFrame)
+                                            If (m_FlipImage) Then
+                                                OpenCvSharp.Cv2.Resize(mFrame, mCopyFrame1, New OpenCvSharp.Size(m_CaptureFrame(0).Cols, m_CaptureFrame(0).Rows), 0, 0, mInterpolation)
+                                                OpenCvSharp.Cv2.Flip(mCopyFrame1, m_CaptureFrame(0), OpenCvSharp.FlipMode.Y)
+                                            Else
+                                                OpenCvSharp.Cv2.Resize(mFrame, m_CaptureFrame(0), New OpenCvSharp.Size(m_CaptureFrame(0).Cols, m_CaptureFrame(0).Rows), 0, 0, mInterpolation)
+                                            End If
+                                        Else
+                                            If (m_FlipImage) Then
+                                                OpenCvSharp.Cv2.Flip(mFrame, m_CaptureFrame(0), OpenCvSharp.FlipMode.Y)
+                                            Else
+                                                OpenCvSharp.Cv2.CopyTo(mFrame, m_CaptureFrame(0))
+                                            End If
                                         End If
-
-
-                                        ' PSEyes have their Y flipped.
-                                        ' But some video input devices do Not. So flip them here instead.
-                                        If (m_FlipImage) Then
-                                            OpenCvSharp.Cv2.Flip(mFrame, mCopyFrame1, OpenCvSharp.FlipMode.Y)
-                                            OpenCvSharp.Cv2.CopyTo(mCopyFrame1, mFrame)
-                                        End If
-
-                                        mFrame.CopyTo(m_CaptureFrame(0))
                                     End If
 
                                     For i = 0 To g_mPipEvent.Length - 1
