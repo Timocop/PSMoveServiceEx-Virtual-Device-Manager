@@ -143,6 +143,10 @@
         End Get
     End Property
 
+    Private Sub FormButtonInput_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        CleanUp()
+    End Sub
+
     Private Sub CleanUp()
         If (g_mThreadButtonDetection IsNot Nothing AndAlso g_mThreadButtonDetection.IsAlive) Then
             g_mThreadButtonDetection.Abort()
