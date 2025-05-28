@@ -131,6 +131,10 @@ Set the custom tracking LED bulb to the position located on your head-mounted di
     <value>Holding the SELECT+START button on the PSmove controller while moving both the head-mounted display and controller forward, will recenter the playspace to the head-mounted display. 
 Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
   </data>
+  <data name="UcInformation6.m_Text" xml:space="preserve">
+    <value>Holding the START button on the PSmove controller will recenter the target head-mounted display orientation. 
+This is useful for head-mounted displays without magnetometers which experience yaw drift over time.</value>
+  </data>
   <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>37, 27</value>
   </metadata>

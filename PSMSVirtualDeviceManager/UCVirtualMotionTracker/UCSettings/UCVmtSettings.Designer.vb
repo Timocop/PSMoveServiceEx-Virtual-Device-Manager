@@ -1390,7 +1390,7 @@ Partial Class UCVmtSettings
         Me.UcInformation7.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
         Me.UcInformation7.m_ReadMoreAction = Nothing
         Me.UcInformation7.m_ReadMoreText = ""
-        Me.UcInformation7.m_Text = "Only PSMoveServiceEx supported trackers can be recentered!"
+        Me.UcInformation7.m_Text = "Only PSMoveServiceEx supported head-mounted displays can be recentered!"
         Me.UcInformation7.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
         Me.UcInformation7.Name = "UcInformation7"
         Me.UcInformation7.Size = New System.Drawing.Size(710, 21)
@@ -1406,9 +1406,7 @@ Partial Class UCVmtSettings
         Me.UcInformation6.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
         Me.UcInformation6.m_ReadMoreAction = Nothing
         Me.UcInformation6.m_ReadMoreText = ""
-        Me.UcInformation6.m_Text = "Holding the START button on the PSmove controller will recenter the target tracke" &
-    "rs orientation. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This is useful for trackers without magnetometers which experi" &
-    "ence yaw drift over time."
+        Me.UcInformation6.m_Text = resources.GetString("UcInformation6.m_Text")
         Me.UcInformation6.Margin = New System.Windows.Forms.Padding(48, 3, 16, 3)
         Me.UcInformation6.Name = "UcInformation6"
         Me.UcInformation6.Size = New System.Drawing.Size(710, 42)
@@ -1577,9 +1575,9 @@ Partial Class UCVmtSettings
         Me.CheckBox_HmdRecenterEnabled.Location = New System.Drawing.Point(16, 162)
         Me.CheckBox_HmdRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 16, 3, 3)
         Me.CheckBox_HmdRecenterEnabled.Name = "CheckBox_HmdRecenterEnabled"
-        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(275, 18)
+        Me.CheckBox_HmdRecenterEnabled.Size = New System.Drawing.Size(355, 18)
         Me.CheckBox_HmdRecenterEnabled.TabIndex = 51
-        Me.CheckBox_HmdRecenterEnabled.Text = "Enable remote orientation recentering shortcut"
+        Me.CheckBox_HmdRecenterEnabled.Text = "Enable head-mounted display orientation recentering shortcut"
         Me.CheckBox_HmdRecenterEnabled.UseVisualStyleBackColor = True
         '
         'ComboBox_RecenterFromDevice
@@ -1636,9 +1634,9 @@ Partial Class UCVmtSettings
         Me.CheckBox_ControllerRecenterEnabled.Location = New System.Drawing.Point(16, 21)
         Me.CheckBox_ControllerRecenterEnabled.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
         Me.CheckBox_ControllerRecenterEnabled.Name = "CheckBox_ControllerRecenterEnabled"
-        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(236, 18)
+        Me.CheckBox_ControllerRecenterEnabled.Size = New System.Drawing.Size(289, 18)
         Me.CheckBox_ControllerRecenterEnabled.TabIndex = 0
-        Me.CheckBox_ControllerRecenterEnabled.Text = "Enable orientation recentering shortcut"
+        Me.CheckBox_ControllerRecenterEnabled.Text = "Enable controller orientation recentering shortcut"
         Me.CheckBox_ControllerRecenterEnabled.UseVisualStyleBackColor = True
         '
         'GroupBox2
