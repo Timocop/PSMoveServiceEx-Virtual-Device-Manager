@@ -127,6 +127,9 @@ Set the custom tracking LED bulb to the position located on your head-mounted di
   <data name="UcInformation1.m_Text" xml:space="preserve">
     <value>Adjust your viewing angle orientation if your viewing angle does not match what is displayed on your head-mounted display. This is used if you for example use a third-party head-mounted display (e.g PhoneVR) and override its pose using PSMoveServiceEx controllers and SteamVR overrides.</value>
   </data>
+  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>37, 27</value>
+  </metadata>
   <data name="UcInformation8.m_Text" xml:space="preserve">
     <value>Holding the SELECT+START button on the PSmove controller while moving both the head-mounted display and controller forward, will recenter the playspace to the head-mounted display. 
 Otherwise use manual playspace calibration in the tab "Playspace Calibration" instead.</value>
@@ -135,9 +138,6 @@ Otherwise use manual playspace calibration in the tab "Playspace Calibration" in
     <value>Holding the START button on the PSmove controller will recenter the target head-mounted display orientation. 
 This is useful for head-mounted displays without magnetometers which experience yaw drift over time.</value>
   </data>
-  <metadata name="ToolTip_Info.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>37, 27</value>
-  </metadata>
   <data name="CheckBox_EnableManualVelocity.ToolTip" xml:space="preserve">
     <value>When enabled, the velocity between the current and previous frame is calculated without using the PSMoveServiceEx device velocity.
 This may not be optimal because the PSMoveServiceEx velocity is already included in position and orientation.
