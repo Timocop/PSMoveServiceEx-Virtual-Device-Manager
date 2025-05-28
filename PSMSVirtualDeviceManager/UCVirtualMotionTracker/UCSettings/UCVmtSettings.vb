@@ -346,6 +346,7 @@ Public Class UCVmtSettings
             ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdViewOffsetZ, mClassSettings.m_HmdSettings.m_ViewRotationOffset.Z)
             ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HmdPoseOverridesControllerId, mClassSettings.m_HmdSettings.m_HmdPoseOverrideControllerId + 1)
             ClassMathUtils.SetComboBoxSelectedIndexClamp(ComboBox_HmdPoseOverrideType, mClassSettings.m_HmdSettings.m_HmdPoseOverrideType)
+            ClassMathUtils.SetNumericUpDownValueClamp(NumericUpDown_HmdNoTrackingHeight, mClassSettings.m_HmdSettings.m_HmdNoTrackingHeight)
             ' $TODO Replace all with ClampValue()
 
             'Misc Settings
@@ -1231,7 +1232,15 @@ Public Class UCVmtSettings
         g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
     End Sub
 
-    Private Sub CleanUp()
+    Private Sub NumericUpDown_HmdNoTrackingHeight_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDown_HmdNoTrackingHeight.ValueChanged
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
 
+        g_UCVirtualMotionTracker.g_ClassSettings.m_HmdSettings.m_HmdNoTrackingHeight = NumericUpDown_HmdNoTrackingHeight.Value
+        g_UCVirtualMotionTracker.g_ClassSettings.SetUnsavedState(True)
+    End Sub
+
+    Private Sub CleanUp()
     End Sub
 End Class

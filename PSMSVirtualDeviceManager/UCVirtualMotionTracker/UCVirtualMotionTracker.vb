@@ -540,6 +540,7 @@ Public Class UCVirtualMotionTracker
             Private g_mViewRotationOffset As Vector3 = Vector3.Zero
             Private g_iHmdPoseOverrideControllerId As Integer = -1
             Private g_iHmdPoseOverrideType As ENUM_POSE_OVERRIDE_TYPE = ENUM_POSE_OVERRIDE_TYPE.POSITION_ORIENTATION
+            Private g_iHmdNoTrackingHeight As Single = 120.0
 
 
             Public Property m_UseCustomDistortion As Boolean
@@ -786,6 +787,23 @@ Public Class UCVirtualMotionTracker
                 End Get
                 Set(value As ENUM_POSE_OVERRIDE_TYPE)
                     g_iHmdPoseOverrideType = value
+                End Set
+            End Property
+
+            Public Property m_HmdNoTrackingHeight As Single
+                Get
+                    Return g_iHmdNoTrackingHeight
+                End Get
+                Set(value As Single)
+                    If (value < 0) Then
+                        value = 0
+                    End If
+
+                    If (value > 9999) Then
+                        value = 9999
+                    End If
+
+                    g_iHmdNoTrackingHeight = value
                 End Set
             End Property
 
@@ -1382,6 +1400,8 @@ Public Class UCVirtualMotionTracker
                             Integer.Parse(mIni.ReadKeyValue("HmdSettings", "HmdPoseOverrideControllerId", "-1"))
                         m_HmdSettings.m_HmdPoseOverrideType =
                             CType(Integer.Parse(mIni.ReadKeyValue("HmdSettings", "HmdPoseOverrideType", CStr(CInt(STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE.POSITION_ORIENTATION)))), STRUC_HMD_SETTINGS.ENUM_POSE_OVERRIDE_TYPE)
+                        m_HmdSettings.m_HmdNoTrackingHeight =
+                            Single.Parse(mIni.ReadKeyValue("HmdSettings", "HmdNoTrackingHeight", "120.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
                         ' Misc Settings 
                         g_mMiscSettings.m_DisableBaseStationSpawning =
@@ -1536,6 +1556,7 @@ Public Class UCVirtualMotionTracker
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HmdPoseOverrideControllerId", CStr(m_HmdSettings.m_HmdPoseOverrideControllerId)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HmdPoseOverrideType", CStr(CInt(m_HmdSettings.m_HmdPoseOverrideType))))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("HmdSettings", "HmdNoTrackingHeight", m_HmdSettings.m_HmdNoTrackingHeight.ToString(Globalization.CultureInfo.InvariantCulture)))
 
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "DisableBaseStationSpawning", If(g_mMiscSettings.m_DisableBaseStationSpawning, "true", "false")))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("MiscSettings", "EnableHepticFeedback", If(g_mMiscSettings.m_EnableHepticFeedback, "true", "false")))

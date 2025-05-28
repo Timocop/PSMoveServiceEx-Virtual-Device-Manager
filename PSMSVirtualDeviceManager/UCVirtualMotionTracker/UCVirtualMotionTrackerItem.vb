@@ -1431,6 +1431,7 @@ Public Class UCVirtualMotionTrackerItem
                         Dim mViewRotationOffset = mClassSettings.m_HmdSettings.m_ViewRotationOffset
                         Dim iPoseOverrideControllerId = mClassSettings.m_HmdSettings.m_HmdPoseOverrideControllerId
                         Dim iPoseOverrideType = mClassSettings.m_HmdSettings.m_HmdPoseOverrideType
+                        Dim iHmdNoTrackingHeight = mClassSettings.m_HmdSettings.m_HmdNoTrackingHeight
 
                         ' Get misc settings
                         Dim bDisableBaseStationSpawning As Boolean = mClassSettings.m_MiscSettings.m_DisableBaseStationSpawning
@@ -1498,6 +1499,12 @@ Public Class UCVirtualMotionTrackerItem
                                                     mRawOrientation = mHmdOverrideControllerData.m_Orientation
                                                     mRawOrientationVelocity = mHmdOverrideControllerData.m_OrientationVelocity
                                             End Select
+                                        End If
+
+                                        ' Set height if no tracker is available
+                                        If (iHmdNoTrackingHeight > 0 AndAlso mServiceClient.m_TrackerData(0) Is Nothing) Then
+                                            mRawPosition = New Vector3(0, iHmdNoTrackingHeight, 0)
+                                            mRawPositionVelocity = Vector3.Zero
                                         End If
 
                                         Dim mCalibratedPosition = mRawPosition
@@ -1691,8 +1698,8 @@ Public Class UCVirtualMotionTrackerItem
                                 End If
                             End If
                         Else
-                                ' Get controller data
-                                m_ControllerData = mServiceClient.m_ControllerData(m_Index)
+                            ' Get controller data
+                            m_ControllerData = mServiceClient.m_ControllerData(m_Index)
 
                             If (m_ControllerData IsNot Nothing) Then
                                 iOutputSeqNum = m_ControllerData.m_OutputSeqNum

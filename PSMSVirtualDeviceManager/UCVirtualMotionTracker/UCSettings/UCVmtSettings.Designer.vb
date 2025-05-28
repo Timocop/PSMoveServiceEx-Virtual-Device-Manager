@@ -109,6 +109,10 @@ Partial Class UCVmtSettings
         Me.UcNumericUpDownBig23 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
         Me.Label39 = New System.Windows.Forms.Label()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.NumericUpDown_HmdNoTrackingHeight = New System.Windows.Forms.NumericUpDown()
+        Me.UcNumericUpDownBig24 = New PSMSVirtualDeviceManager.UCNumericUpDownBig()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.ComboBox_HmdPoseOverrideType = New System.Windows.Forms.ComboBox()
         Me.Label43 = New System.Windows.Forms.Label()
         Me.Label42 = New System.Windows.Forms.Label()
@@ -239,6 +243,8 @@ Partial Class UCVmtSettings
         CType(Me.NumericUpDown_HmdViewOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.NumericUpDown_HmdViewOffsetX.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
+        CType(Me.NumericUpDown_HmdNoTrackingHeight, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.NumericUpDown_HmdNoTrackingHeight.SuspendLayout()
         Me.TabPage_SettingsPSmove.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown_RecenterButtonTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -861,7 +867,7 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.NumericUpDown_BulbOffsetX)
         Me.GroupBox_HmdViewPositionOffset.Controls.Add(Me.Label6)
         Me.GroupBox_HmdViewPositionOffset.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox_HmdViewPositionOffset.Location = New System.Drawing.Point(3, 321)
+        Me.GroupBox_HmdViewPositionOffset.Location = New System.Drawing.Point(3, 347)
         Me.GroupBox_HmdViewPositionOffset.Name = "GroupBox_HmdViewPositionOffset"
         Me.GroupBox_HmdViewPositionOffset.Size = New System.Drawing.Size(780, 487)
         Me.GroupBox_HmdViewPositionOffset.TabIndex = 6
@@ -1080,7 +1086,7 @@ Partial Class UCVmtSettings
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.NumericUpDown_HmdViewOffsetX)
         Me.GroupBox_HmdViewOrientationOffset.Controls.Add(Me.Label39)
         Me.GroupBox_HmdViewOrientationOffset.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox_HmdViewOrientationOffset.Location = New System.Drawing.Point(3, 89)
+        Me.GroupBox_HmdViewOrientationOffset.Location = New System.Drawing.Point(3, 115)
         Me.GroupBox_HmdViewOrientationOffset.Name = "GroupBox_HmdViewOrientationOffset"
         Me.GroupBox_HmdViewOrientationOffset.Size = New System.Drawing.Size(780, 232)
         Me.GroupBox_HmdViewOrientationOffset.TabIndex = 7
@@ -1269,6 +1275,9 @@ Partial Class UCVmtSettings
         '
         'GroupBox8
         '
+        Me.GroupBox8.Controls.Add(Me.Label11)
+        Me.GroupBox8.Controls.Add(Me.NumericUpDown_HmdNoTrackingHeight)
+        Me.GroupBox8.Controls.Add(Me.Label2)
         Me.GroupBox8.Controls.Add(Me.ComboBox_HmdPoseOverrideType)
         Me.GroupBox8.Controls.Add(Me.Label43)
         Me.GroupBox8.Controls.Add(Me.Label42)
@@ -1276,10 +1285,58 @@ Partial Class UCVmtSettings
         Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox8.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(780, 86)
+        Me.GroupBox8.Size = New System.Drawing.Size(780, 112)
         Me.GroupBox8.TabIndex = 8
         Me.GroupBox8.TabStop = False
         Me.GroupBox8.Text = "Settings"
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(330, 79)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(21, 13)
+        Me.Label11.TabIndex = 62
+        Me.Label11.Text = "cm"
+        '
+        'NumericUpDown_HmdNoTrackingHeight
+        '
+        Me.NumericUpDown_HmdNoTrackingHeight.Controls.Add(Me.UcNumericUpDownBig24)
+        Me.NumericUpDown_HmdNoTrackingHeight.Increment = New Decimal(New Integer() {5, 0, 0, 0})
+        Me.NumericUpDown_HmdNoTrackingHeight.Location = New System.Drawing.Point(201, 77)
+        Me.NumericUpDown_HmdNoTrackingHeight.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.NumericUpDown_HmdNoTrackingHeight.Name = "NumericUpDown_HmdNoTrackingHeight"
+        Me.NumericUpDown_HmdNoTrackingHeight.Size = New System.Drawing.Size(123, 22)
+        Me.NumericUpDown_HmdNoTrackingHeight.TabIndex = 61
+        Me.ToolTip_Default.SetToolTip(Me.NumericUpDown_HmdNoTrackingHeight, "If no optical tracking is available, set the head-mounted display at this height." &
+        "" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This is useful if you play games using a gamepad or games that do not need tra" &
+        "cking.")
+        '
+        'UcNumericUpDownBig24
+        '
+        Me.UcNumericUpDownBig24.AutoSize = True
+        Me.UcNumericUpDownBig24.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UcNumericUpDownBig24.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.UcNumericUpDownBig24.Dock = System.Windows.Forms.DockStyle.Right
+        Me.UcNumericUpDownBig24.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcNumericUpDownBig24.Location = New System.Drawing.Point(57, 0)
+        Me.UcNumericUpDownBig24.m_bDockOnControl = True
+        Me.UcNumericUpDownBig24.m_NumericUpDown = Me.NumericUpDown_HmdNoTrackingHeight
+        Me.UcNumericUpDownBig24.m_ResetValue = New Decimal(New Integer() {120, 0, 0, 0})
+        Me.UcNumericUpDownBig24.m_ResetVisible = True
+        Me.UcNumericUpDownBig24.Name = "UcNumericUpDownBig24"
+        Me.UcNumericUpDownBig24.Size = New System.Drawing.Size(66, 22)
+        Me.UcNumericUpDownBig24.TabIndex = 27
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(19, 79)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(16, 8, 3, 3)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(145, 13)
+        Me.Label2.TabIndex = 6
+        Me.Label2.Text = "No optical tracking height:"
         '
         'ComboBox_HmdPoseOverrideType
         '
@@ -2516,6 +2573,9 @@ Partial Class UCVmtSettings
         Me.NumericUpDown_HmdViewOffsetX.PerformLayout()
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
+        CType(Me.NumericUpDown_HmdNoTrackingHeight, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.NumericUpDown_HmdNoTrackingHeight.ResumeLayout(False)
+        Me.NumericUpDown_HmdNoTrackingHeight.PerformLayout()
         Me.TabPage_SettingsPSmove.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
@@ -2731,4 +2791,8 @@ Partial Class UCVmtSettings
     Friend WithEvents UcInformation6 As UCInformation
     Friend WithEvents UcInformation5 As UCInformation
     Friend WithEvents UcInformation9 As UCInformation
+    Friend WithEvents Label11 As Label
+    Friend WithEvents NumericUpDown_HmdNoTrackingHeight As NumericUpDown
+    Friend WithEvents UcNumericUpDownBig24 As UCNumericUpDownBig
+    Friend WithEvents Label2 As Label
 End Class
