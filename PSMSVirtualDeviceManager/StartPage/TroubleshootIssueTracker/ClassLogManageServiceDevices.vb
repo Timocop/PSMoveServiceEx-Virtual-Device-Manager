@@ -258,7 +258,7 @@ Public Class ClassLogManageServiceDevices
             LOG_ISSUE_NO_OPTICAL_TRACKING,
             "No trackers are detected, so optical device tracking is unavailable.",
             "Add trackers such as PlayStation Eyes, Webcams or PlayStation 4 Stereo Cameras to enable optical tracking.",
-            ENUM_LOG_ISSUE_TYPE.ERROR
+            ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim iTrackerCount As Integer = 0
