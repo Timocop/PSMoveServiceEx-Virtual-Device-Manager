@@ -6,8 +6,9 @@
     Private g_mThreadLock As New Object
 
     Enum ENUM_DEVICE_TYPE
-        KEYBOARD
-        CONTROLLER
+        KEYBOARD = (1 << 0)
+        CONTROLLER = (1 << 1)
+        ALL = &HFFFF
     End Enum
     Private g_iDeviceType As ENUM_DEVICE_TYPE = ENUM_DEVICE_TYPE.KEYBOARD
 
@@ -22,17 +23,25 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        Dim sInfoText As New Text.StringBuilder
+        sInfoText.AppendLine("Please press a button combination.")
 
-        Select Case (_DeviceType)
-            Case ENUM_DEVICE_TYPE.KEYBOARD
-                g_mKeyboardHook = New ClassKeyboardHook()
 
-            Case ENUM_DEVICE_TYPE.CONTROLLER
-                For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
-                    g_mControllerHook(i) = New ClassControllerHook(CType(i, ClassControllerHook.ENUM_PLAYER_INDEX))
-                Next
+        If ((g_iDeviceType And ENUM_DEVICE_TYPE.KEYBOARD) <> 0) Then
+            g_mKeyboardHook = New ClassKeyboardHook()
 
-        End Select
+            sInfoText.AppendLine(" - Waiting for keyboard input - ")
+        End If
+
+        If ((g_iDeviceType And ENUM_DEVICE_TYPE.CONTROLLER) <> 0) Then
+            For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
+                g_mControllerHook(i) = New ClassControllerHook(CType(i, ClassControllerHook.ENUM_PLAYER_INDEX))
+            Next
+
+            sInfoText.AppendLine(" - Waiting for Xbox controller input - ")
+        End If
+
+        Label_BindingInfo.Text = sInfoText.ToString
     End Sub
 
     Private Sub FormButtonInput_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -42,25 +51,51 @@
     End Sub
 
     Private Sub ThreadButtonDetection()
-        Dim bHasPressed As Boolean = False
+        Dim bHasKeyboardPressed As Boolean = False
+        Dim bHasControllerPressed As Boolean = False
 
         Try
             While True
                 Try
-                    Select Case (m_DeviceType)
-                        Case ENUM_DEVICE_TYPE.KEYBOARD
-                            g_mKeyboardHook.Update()
+                    If ((m_DeviceType And ENUM_DEVICE_TYPE.KEYBOARD) <> 0) Then
+                        g_mKeyboardHook.Update()
 
-                            If (g_mKeyboardHook.AnyButtonDown()) Then
-                                bHasPressed = True
+                        If (g_mKeyboardHook.AnyButtonDown()) Then
+                            bHasKeyboardPressed = True
+
+                            SyncLock g_mThreadLock
+                                For Each iKey In g_mKeyboardHook.GetButtonDown()
+                                    g_iKeyboardKeys.Add(iKey)
+                                Next
+                            End SyncLock
+                        Else
+                            If (bHasKeyboardPressed) Then
+                                ClassUtils.AsyncInvoke(Sub()
+                                                           Me.DialogResult = DialogResult.OK
+                                                           Me.Close()
+                                                       End Sub)
+                                Return
+                            End If
+                        End If
+                    End If
+
+                    If ((m_DeviceType And ENUM_DEVICE_TYPE.CONTROLLER) <> 0) Then
+                        For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
+                            If (Not g_mControllerHook(i).IsConnected) Then
+                                Continue For
+                            End If
+
+                            g_mControllerHook(i).Update()
+
+                            If (g_mControllerHook(i).AnyButtonDown()) Then
+                                bHasControllerPressed = True
 
                                 SyncLock g_mThreadLock
-                                    For Each iKey In g_mKeyboardHook.GetButtonDown()
-                                        g_iKeyboardKeys.Add(iKey)
-                                    Next
+                                    g_iControllerIndex = CType(i, ClassControllerHook.ENUM_PLAYER_INDEX)
+                                    g_iControllerKeys = (g_iControllerKeys Or g_mControllerHook(i).GetButtonDown)
                                 End SyncLock
                             Else
-                                If (bHasPressed) Then
+                                If (bHasControllerPressed) Then
                                     ClassUtils.AsyncInvoke(Sub()
                                                                Me.DialogResult = DialogResult.OK
                                                                Me.Close()
@@ -68,34 +103,8 @@
                                     Return
                                 End If
                             End If
-
-                        Case ENUM_DEVICE_TYPE.CONTROLLER
-                            For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
-                                If (Not g_mControllerHook(i).IsConnected) Then
-                                    Continue For
-                                End If
-
-                                g_mControllerHook(i).Update()
-
-                                If (g_mControllerHook(i).AnyButtonDown()) Then
-                                    bHasPressed = True
-
-                                    SyncLock g_mThreadLock
-                                        g_iControllerIndex = CType(i, ClassControllerHook.ENUM_PLAYER_INDEX)
-                                        g_iControllerKeys = (g_iControllerKeys Or g_mControllerHook(i).GetButtonDown)
-                                    End SyncLock
-                                Else
-                                    If (bHasPressed) Then
-                                        ClassUtils.AsyncInvoke(Sub()
-                                                                   Me.DialogResult = DialogResult.OK
-                                                                   Me.Close()
-                                                               End Sub)
-                                        Return
-                                    End If
-                                End If
-                            Next
-
-                    End Select
+                        Next
+                    End If
                 Catch ex As Threading.ThreadAbortException
                     Throw
                 Catch ex As Exception

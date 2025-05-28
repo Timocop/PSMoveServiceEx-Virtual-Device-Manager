@@ -69,25 +69,35 @@ Public Class ClassKeyboardHook
     End Sub
 
     Public Function AnyButtonDown() As Boolean
-        Return (g_iCurrentKeys.Count > 0)
+        SyncLock g_mThreadLock
+            Return (g_iCurrentKeys.Count > 0)
+        End SyncLock
     End Function
 
     Public Function GetButtonDown() As Keys()
-        Return g_iCurrentKeys.ToArray
+        SyncLock g_mThreadLock
+            Return g_iCurrentKeys.ToArray
+        End SyncLock
     End Function
 
     Public Function IsButtonDown(iKey As Keys) As Boolean
-        Return g_iCurrentKeys.Contains(iKey)
+        SyncLock g_mThreadLock
+            Return g_iCurrentKeys.Contains(iKey)
+        End SyncLock
     End Function
 
     Public Function IsButtonPressed(iKey As Keys) As Boolean
-        Return (g_iCurrentKeys.Contains(iKey) AndAlso
-               Not g_iLastKeys.Contains(iKey))
+        SyncLock g_mThreadLock
+            Return (g_iCurrentKeys.Contains(iKey) AndAlso
+                   Not g_iLastKeys.Contains(iKey))
+        End SyncLock
     End Function
 
     Public Function IsButtonReleased(iKey As Keys) As Boolean
-        Return (Not g_iCurrentKeys.Contains(iKey) AndAlso
-                g_iLastKeys.Contains(iKey))
+        SyncLock g_mThreadLock
+            Return (Not g_iCurrentKeys.Contains(iKey) AndAlso
+                    g_iLastKeys.Contains(iKey))
+        End SyncLock
     End Function
 
     Private Sub InstallHook()

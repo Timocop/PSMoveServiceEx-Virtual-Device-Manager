@@ -39,7 +39,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.TextBox_Pos = New System.Windows.Forms.TextBox()
         Me.TimerPose = New System.Windows.Forms.Timer(Me.components)
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
@@ -63,12 +62,17 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.LinkLabel_HmdViewPointOffset = New System.Windows.Forms.LinkLabel()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.TextBox_TrackerRecenterKey = New System.Windows.Forms.TextBox()
+        Me.Button_TrackerRecenterBindingChange = New System.Windows.Forms.Button()
+        Me.Button_TrackerRecenterBindingClear = New System.Windows.Forms.Button()
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Panel_Status.SuspendLayout()
-        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip_TrackerRecenter.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
+        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ComboBox_DeviceID
@@ -196,17 +200,6 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Panel_Status.Size = New System.Drawing.Size(585, 75)
         Me.Panel_Status.TabIndex = 36
         '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
-        '
         'Label_StatusMessage
         '
         Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -275,7 +268,7 @@ Partial Class UCVirtualMotionTrackerItem
         Me.ComboBox_HmdViewPointOffset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox_HmdViewPointOffset.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ComboBox_HmdViewPointOffset.FormattingEnabled = True
-        Me.ComboBox_HmdViewPointOffset.Location = New System.Drawing.Point(157, 6)
+        Me.ComboBox_HmdViewPointOffset.Location = New System.Drawing.Point(171, 6)
         Me.ComboBox_HmdViewPointOffset.Name = "ComboBox_HmdViewPointOffset"
         Me.ComboBox_HmdViewPointOffset.Size = New System.Drawing.Size(150, 21)
         Me.ComboBox_HmdViewPointOffset.TabIndex = 45
@@ -411,6 +404,10 @@ Partial Class UCVirtualMotionTrackerItem
         'TabPage2
         '
         Me.TabPage2.BackColor = System.Drawing.Color.White
+        Me.TabPage2.Controls.Add(Me.Button_TrackerRecenterBindingClear)
+        Me.TabPage2.Controls.Add(Me.Button_TrackerRecenterBindingChange)
+        Me.TabPage2.Controls.Add(Me.TextBox_TrackerRecenterKey)
+        Me.TabPage2.Controls.Add(Me.Label5)
         Me.TabPage2.Controls.Add(Me.LinkLabel_HmdViewPointOffset)
         Me.TabPage2.Controls.Add(Me.Label1)
         Me.TabPage2.Controls.Add(Me.ComboBox_HmdViewPointOffset)
@@ -428,13 +425,64 @@ Partial Class UCVirtualMotionTrackerItem
         Me.LinkLabel_HmdViewPointOffset.ForeColor = System.Drawing.Color.RoyalBlue
         Me.LinkLabel_HmdViewPointOffset.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.LinkLabel_HmdViewPointOffset.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_HmdViewPointOffset.Location = New System.Drawing.Point(313, 9)
+        Me.LinkLabel_HmdViewPointOffset.Location = New System.Drawing.Point(327, 9)
         Me.LinkLabel_HmdViewPointOffset.Name = "LinkLabel_HmdViewPointOffset"
         Me.LinkLabel_HmdViewPointOffset.Size = New System.Drawing.Size(75, 13)
         Me.LinkLabel_HmdViewPointOffset.TabIndex = 73
         Me.LinkLabel_HmdViewPointOffset.TabStop = True
         Me.LinkLabel_HmdViewPointOffset.Text = "Go to setting"
         Me.LinkLabel_HmdViewPointOffset.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(6, 38)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(3)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(159, 13)
+        Me.Label5.TabIndex = 75
+        Me.Label5.Text = "Keyboard/Controller recenter:"
+        '
+        'TextBox_TrackerRecenterKey
+        '
+        Me.TextBox_TrackerRecenterKey.BackColor = System.Drawing.Color.White
+        Me.TextBox_TrackerRecenterKey.Location = New System.Drawing.Point(171, 35)
+        Me.TextBox_TrackerRecenterKey.Name = "TextBox_TrackerRecenterKey"
+        Me.TextBox_TrackerRecenterKey.ReadOnly = True
+        Me.TextBox_TrackerRecenterKey.Size = New System.Drawing.Size(231, 22)
+        Me.TextBox_TrackerRecenterKey.TabIndex = 76
+        '
+        'Button_TrackerRecenterBindingChange
+        '
+        Me.Button_TrackerRecenterBindingChange.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_TrackerRecenterBindingChange.Location = New System.Drawing.Point(408, 35)
+        Me.Button_TrackerRecenterBindingChange.Name = "Button_TrackerRecenterBindingChange"
+        Me.Button_TrackerRecenterBindingChange.Size = New System.Drawing.Size(59, 23)
+        Me.Button_TrackerRecenterBindingChange.TabIndex = 77
+        Me.Button_TrackerRecenterBindingChange.Text = "Edit..."
+        Me.ToolTip1.SetToolTip(Me.Button_TrackerRecenterBindingChange, "Use keyboard or controller bindings to recenter this tracker")
+        Me.Button_TrackerRecenterBindingChange.UseVisualStyleBackColor = True
+        '
+        'Button_TrackerRecenterBindingClear
+        '
+        Me.Button_TrackerRecenterBindingClear.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.Button_TrackerRecenterBindingClear.Location = New System.Drawing.Point(473, 35)
+        Me.Button_TrackerRecenterBindingClear.Name = "Button_TrackerRecenterBindingClear"
+        Me.Button_TrackerRecenterBindingClear.Size = New System.Drawing.Size(30, 23)
+        Me.Button_TrackerRecenterBindingClear.TabIndex = 78
+        Me.Button_TrackerRecenterBindingClear.Text = "X"
+        Me.Button_TrackerRecenterBindingClear.UseVisualStyleBackColor = True
+        '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
         '
         'UCVirtualMotionTrackerItem
         '
@@ -455,13 +503,13 @@ Partial Class UCVirtualMotionTrackerItem
         Me.Size = New System.Drawing.Size(617, 343)
         Me.Panel_Status.ResumeLayout(False)
         Me.Panel_Status.PerformLayout()
-        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip_TrackerRecenter.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage1.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
+        CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -501,4 +549,8 @@ Partial Class UCVirtualMotionTrackerItem
     Friend WithEvents Label4 As Label
     Friend WithEvents ComboBox_SteamTrackerRole As ComboBox
     Friend WithEvents LinkLabel_HmdViewPointOffset As LinkLabel
+    Friend WithEvents Button_TrackerRecenterBindingChange As Button
+    Friend WithEvents TextBox_TrackerRecenterKey As TextBox
+    Friend WithEvents Label5 As Label
+    Friend WithEvents Button_TrackerRecenterBindingClear As Button
 End Class

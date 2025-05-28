@@ -836,7 +836,11 @@ Public Class UCVirtualMotionTrackerItem
         Private g_iVmtTracker As Integer = -1
         Private g_iVmtTrackerRole As ENUM_TRACKER_ROLE = ENUM_TRACKER_ROLE.GENERIC_TRACKER
         Private g_bUseHmdViewPointOffset As Boolean = False
+
         Private g_mOscThread As Threading.Thread = Nothing
+
+        Private g_mClassKeyboardHook As ClassKeyboardHook
+        Private g_mClassControllerHook(ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1) As ClassControllerHook
 
         Private g_mJointOffset As Vector3 = Vector3.Zero
         Private g_mControllerOffset As Vector3 = Vector3.Zero
@@ -852,6 +856,129 @@ Public Class UCVirtualMotionTrackerItem
         Private g_mOscDataPack As New STRUC_OSC_DATA_PACK()
         Private g_mHeptic As New STRUC_HEPTIC_ITEM
         Private g_mResetRecenter As Boolean = False
+
+        Structure STRUC_RECENTER_BINDING
+            Private iKeyboardKeys As Keys()
+            Private iControllerKeys As ClassControllerHook.ClassWin32.XInputButtons
+
+            Property m_KeyboardKeys As Keys()
+                Get
+                    If (iKeyboardKeys Is Nothing) Then
+                        Return {}
+                    End If
+
+                    Return iKeyboardKeys
+                End Get
+                Set(value As Keys())
+                    iKeyboardKeys = value
+                End Set
+            End Property
+
+            Property m_ControllerKeys As ClassControllerHook.ClassWin32.XInputButtons
+                Get
+                    Return iControllerKeys
+                End Get
+                Set(value As ClassControllerHook.ClassWin32.XInputButtons)
+                    iControllerKeys = value
+                End Set
+            End Property
+
+            Public Function ParseKeyboardKeysFromString(sText As String) As Boolean
+                Dim mKeys As New HashSet(Of Keys)
+
+                For Each sKeys As String In sText.Split(","c)
+                    Dim iKey As Integer
+                    If (Not Integer.TryParse(sKeys, iKey)) Then
+                        Return False
+                    End If
+
+                    If (iKey = 0) Then
+                        Continue For
+                    End If
+
+                    mKeys.Add(CType(iKey, Keys))
+                Next
+
+                m_KeyboardKeys = mKeys.ToArray
+                Return True
+            End Function
+
+            Public Function ParseControllerKeysFromString(sText As String) As Boolean
+                Dim iKey As UShort
+                If (Not UShort.TryParse(sText, iKey)) Then
+                    Return False
+                End If
+
+                m_ControllerKeys = CType(iKey, ClassControllerHook.ClassWin32.XInputButtons)
+                Return True
+            End Function
+
+            Public Function GetKeyboardKeysString() As String
+                Dim mKeys As New List(Of String)
+
+                For Each iKey As Keys In m_KeyboardKeys
+                    mKeys.Add(CStr(CInt(iKey)))
+                Next
+
+                If (mKeys.Count = 0) Then
+                    Return "0"
+                End If
+
+                Return String.Join(",", mKeys.ToArray)
+            End Function
+
+            Public Function GetControllerKeysString() As String
+                Return CStr(m_ControllerKeys)
+            End Function
+
+            Public Overrides Function ToString() As String
+                Dim sButtons As New Text.StringBuilder
+                Dim bButtonsAdded As Boolean = False
+
+                If (m_KeyboardKeys.Length > 0) Then
+                    bButtonsAdded = True
+                    sButtons.AppendLine("Keyboard: ")
+
+                    Dim iButtonIndex As Integer = 0
+
+                    For i = 0 To m_KeyboardKeys.Length - 1
+                        If (iButtonIndex > 0) Then
+                            sButtons.Append(" + ")
+                        End If
+
+                        sButtons.Append(m_KeyboardKeys(i).ToString)
+                        iButtonIndex += 1
+                    Next
+                End If
+
+                If (m_ControllerKeys <> 0) Then
+                    If (bButtonsAdded) Then
+                        sButtons.Append(" / ")
+                    End If
+
+                    bButtonsAdded = True
+                    sButtons.Append("Controller: ")
+
+                    Dim iButtonIndex As Integer = 0
+
+                    For i = 0 To 16
+                        Dim iVal = (1 << i)
+
+                        If ((m_ControllerKeys And iVal) <> 0) Then
+                            If (iButtonIndex > 0) Then
+                                sButtons.Append(" + ")
+                            End If
+
+                            sButtons.Append(CType(iVal, ClassControllerHook.ClassWin32.XInputButtons).ToString)
+                            iButtonIndex += 1
+                        End If
+                    Next
+                End If
+
+                Return sButtons.ToString
+            End Function
+        End Structure
+        Private g_mRecenterBinding As New STRUC_RECENTER_BINDING
 
         Class STURC_PLAYSPACE_CALIBRATION_STATUS
             Public Enum ENUM_PLAYSPACE_CALIBRATION_STATUS
@@ -1071,6 +1198,16 @@ Public Class UCVirtualMotionTrackerItem
 
             g_mPlayspaceCalibrationState = New STURC_PLAYSPACE_CALIBRATION_STATUS
             g_mPlayspaceCalibration = New STURC_PLAYSPACE_CALIBRATION(g_mPlayspaceCalibrationState)
+
+            Try
+                g_mClassKeyboardHook = New ClassKeyboardHook
+
+                For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
+                    g_mClassControllerHook(i) = New ClassControllerHook(CType(i, ClassControllerHook.ENUM_PLAYER_INDEX))
+                Next
+            Catch ex As Exception
+                ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+            End Try
         End Sub
 
         Property m_Index As Integer
@@ -1144,6 +1281,19 @@ Public Class UCVirtualMotionTrackerItem
             Set(value As Boolean)
                 SyncLock g_mThreadLock
                     g_bUseHmdViewPointOffset = value
+                End SyncLock
+            End Set
+        End Property
+
+        Property m_RecenterBinding As STRUC_RECENTER_BINDING
+            Get
+                SyncLock g_mThreadLock
+                    Return g_mRecenterBinding
+                End SyncLock
+            End Get
+            Set(value As STRUC_RECENTER_BINDING)
+                SyncLock g_mThreadLock
+                    g_mRecenterBinding = value
                 End SyncLock
             End Set
         End Property
@@ -1538,7 +1688,14 @@ Public Class UCVirtualMotionTrackerItem
 
                                         ' $TODO Do something cool?
 
-                                        'Do Hmd/remote recenter 
+                                        ' Trigger recentering when using keyboard/controller bindings
+                                        Dim bDoBindingRecenter As Boolean = False
+                                        InternalBindingRecentering(bDoBindingRecenter)
+                                        If (bDoBindingRecenter) Then
+                                            StartHmdRecenter()
+                                        End If
+
+                                        ' Do Hmd/remote recenter 
                                         InternalRecenterHmd(bEnableHmdRecenter,
                                                             mServiceClient,
                                                             iRecenterButtonTimeMs,
@@ -1773,6 +1930,13 @@ Public Class UCVirtualMotionTrackerItem
                                                 }
 
                                                 Dim bJoystickTrigger As Boolean = m_PSMoveData.m_MoveButton
+
+                                                ' Trigger recentering when using keyboard/controller bindings
+                                                Dim bDoBindingRecenter As Boolean = False
+                                                InternalBindingRecentering(bDoBindingRecenter)
+                                                If (bDoBindingRecenter) Then
+                                                    StartControllerRecenter()
+                                                End If
 
                                                 'Do playspace recenter
                                                 InternalPlayspaceRecenterLogic(bEnabledPlayspaceRecenter,
@@ -2190,6 +2354,53 @@ Public Class UCVirtualMotionTrackerItem
                     Threading.Thread.Sleep(1000)
                 End If
             End While
+        End Sub
+
+        Private Sub InternalBindingRecentering(ByRef bDoBindingRecenter As Boolean)
+            If (g_UCVirtualMotionTrackerItem Is Nothing OrElse
+                g_UCVirtualMotionTrackerItem.g_UCVirtualMotionTracker Is Nothing) Then
+                Return
+            End If
+
+            ' Recenter using keyboard and controller bindings
+            If (m_RecenterBinding.m_KeyboardKeys.Length > 0) Then
+                Dim mKeyboardHook = g_mClassKeyboardHook
+
+                If (mKeyboardHook IsNot Nothing) Then
+                    mKeyboardHook.Update()
+
+                    Dim bSuccess As Boolean = True
+                    For Each iKey In m_RecenterBinding.m_KeyboardKeys
+                        If (Not mKeyboardHook.IsButtonDown(iKey)) Then
+                            bSuccess = False
+                            Exit For
+                        End If
+                    Next
+
+                    If (bSuccess) Then
+                        bDoBindingRecenter = True
+                    End If
+                End If
+            End If
+
+            If (m_RecenterBinding.m_ControllerKeys <> 0) Then
+                For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
+                    Dim mControllerHook = g_mClassControllerHook(i)
+
+                    If (mControllerHook IsNot Nothing) Then
+                        If (Not mControllerHook.IsConnected()) Then
+                            Continue For
+                        End If
+
+                        mControllerHook.Update()
+
+                        If (mControllerHook.IsButtonDown(m_RecenterBinding.m_ControllerKeys)) Then
+                            bDoBindingRecenter = True
+                        End If
+                    End If
+                Next
+            End If
+
         End Sub
 
         Class STRUC_CALCULATE_VELOCITY_MANUAL_DATA
@@ -3422,6 +3633,18 @@ Public Class UCVirtualMotionTrackerItem
                         g_mOscThread.Join()
                         g_mOscThread = Nothing
                     End If
+
+                    If (g_mClassKeyboardHook IsNot Nothing) Then
+                        g_mClassKeyboardHook.Dispose()
+                        g_mClassKeyboardHook = Nothing
+                    End If
+
+                    For i = 0 To ClassControllerHook.ENUM_PLAYER_INDEX.__MAX - 1
+                        If (g_mClassControllerHook(i) IsNot Nothing) Then
+                            g_mClassControllerHook(i).Dispose()
+                            g_mClassControllerHook(i) = Nothing
+                        End If
+                    Next
                 End If
 
                 ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
@@ -3471,7 +3694,8 @@ Public Class UCVirtualMotionTrackerItem
                         Using mIni As New ClassIni(mStream)
                             Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
 
-                            ' Nothing?
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingKeyboard", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetKeyboardKeysString())))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingController", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetControllerKeysString())))
 
                             mIni.WriteKeyValue(mIniContent.ToArray)
                         End Using
@@ -3487,6 +3711,9 @@ Public Class UCVirtualMotionTrackerItem
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
                             mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "HmdViewPointOffset", CStr(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset.SelectedIndex)))
+
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingKeyboard", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetKeyboardKeysString())))
+                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingController", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetControllerKeysString())))
 
                             mIni.WriteKeyValue(mIniContent.ToArray)
                         End Using
@@ -3509,9 +3736,11 @@ Public Class UCVirtualMotionTrackerItem
 
                     Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                         Using mIni As New ClassIni(mStream)
-
-                            ' Nothing?
-
+                            Dim mBinding As New ClassIO.STRUC_RECENTER_BINDING
+                            mBinding.ParseKeyboardKeysFromString(mIni.ReadKeyValue(sDevicePath, "RecenterBindingKeyboard", "0"))
+                            mBinding.ParseControllerKeysFromString(mIni.ReadKeyValue(sDevicePath, "RecenterBindingController", "0"))
+                            g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding = mBinding
+                            g_mUCRemoteDeviceItem.TextBox_TrackerRecenterKey.Text = mBinding.ToString
                         End Using
                     End Using
                 Else
@@ -3523,6 +3752,12 @@ Public Class UCVirtualMotionTrackerItem
                             ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerID", "0")))
                             ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole, CInt(mIni.ReadKeyValue(sDevicePath, "VMTTrackerRole", "0")))
                             ClassMathUtils.SetComboBoxSelectedIndexClamp(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset, CInt(mIni.ReadKeyValue(sDevicePath, "HmdViewPointOffset", "1")))
+
+                            Dim mBinding As New ClassIO.STRUC_RECENTER_BINDING
+                            mBinding.ParseKeyboardKeysFromString(mIni.ReadKeyValue(sDevicePath, "RecenterBindingKeyboard", "0"))
+                            mBinding.ParseControllerKeysFromString(mIni.ReadKeyValue(sDevicePath, "RecenterBindingController", "0"))
+                            g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding = mBinding
+                            g_mUCRemoteDeviceItem.TextBox_TrackerRecenterKey.Text = mBinding.ToString
                         End Using
                     End Using
                 End If
@@ -3590,5 +3825,40 @@ Public Class UCVirtualMotionTrackerItem
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
+    End Sub
+
+    Private Sub Button_TrackerRecenterBindingChange_Click(sender As Object, e As EventArgs) Handles Button_TrackerRecenterBindingChange.Click
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Using mInput As New FormButtonInput(FormButtonInput.ENUM_DEVICE_TYPE.ALL)
+            If (mInput.ShowDialog(Me) = DialogResult.OK) Then
+                UpdateTrackerTitle()
+
+                Dim mNewBinding As New ClassIO.STRUC_RECENTER_BINDING
+                If (mInput.m_KeyboardKeys.Length > 0) Then
+                    mNewBinding.m_KeyboardKeys = mInput.m_KeyboardKeys
+
+                ElseIf (mInput.m_ControllerKeys <> 0) Then
+                    mNewBinding.m_ControllerKeys = mInput.m_ControllerKeys
+                End If
+
+                g_mClassIO.m_RecenterBinding = mNewBinding
+                TextBox_TrackerRecenterKey.Text = g_mClassIO.m_RecenterBinding.ToString
+                SetUnsavedState(True)
+            End If
+        End Using
+    End Sub
+
+    Private Sub Button_TrackerRecenterBindingClear_Click(sender As Object, e As EventArgs) Handles Button_TrackerRecenterBindingClear.Click
+        If (g_bIgnoreEvents) Then
+            Return
+        End If
+
+        Dim mNewBinding As New ClassIO.STRUC_RECENTER_BINDING
+        g_mClassIO.m_RecenterBinding = mNewBinding
+        TextBox_TrackerRecenterKey.Text = g_mClassIO.m_RecenterBinding.ToString
+        SetUnsavedState(True)
     End Sub
 End Class

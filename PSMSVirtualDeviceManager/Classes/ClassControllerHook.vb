@@ -60,62 +60,85 @@ Public Class ClassControllerHook
     Private g_iPlayerIndex As ENUM_PLAYER_INDEX
     Private g_mCurrentState As New ClassWin32.XInputState
     Private g_mPreviousState As New ClassWin32.XInputState
+    Private g_mThreadLock As New Object
 
     Public Sub New(playerIndex As ENUM_PLAYER_INDEX)
         g_iPlayerIndex = playerIndex
     End Sub
 
     Public Sub Update()
-        g_mPreviousState = g_mCurrentState
-        ClassWin32.XInputGetState(g_iPlayerIndex, g_mCurrentState)
+        SyncLock g_mThreadLock
+            g_mPreviousState = g_mCurrentState
+            ClassWin32.XInputGetState(g_iPlayerIndex, g_mCurrentState)
+        End SyncLock
     End Sub
 
     Public Function AnyButtonDown() As Boolean
-        Return (g_mCurrentState.Gamepad.Buttons <> 0)
+        SyncLock g_mThreadLock
+            Return (g_mCurrentState.Gamepad.Buttons <> 0)
+        End SyncLock
     End Function
 
     Public Function GetButtonDown() As ClassWin32.XInputButtons
-        Return g_mCurrentState.Gamepad.Buttons
+        SyncLock g_mThreadLock
+            Return g_mCurrentState.Gamepad.Buttons
+        End SyncLock
     End Function
 
     Public Function IsButtonDown(iButton As ClassWin32.XInputButtons) As Boolean
-        Return (g_mCurrentState.Gamepad.Buttons And iButton) = iButton
+        SyncLock g_mThreadLock
+            Return (g_mCurrentState.Gamepad.Buttons And iButton) = iButton
+        End SyncLock
     End Function
 
     Public Function IsButtonPressed(iButton As ClassWin32.XInputButtons) As Boolean
-        Return (g_mCurrentState.Gamepad.Buttons And iButton) = iButton AndAlso
+        SyncLock g_mThreadLock
+            Return (g_mCurrentState.Gamepad.Buttons And iButton) = iButton AndAlso
                (g_mPreviousState.Gamepad.Buttons And iButton) <> iButton
+        End SyncLock
     End Function
 
     Public Function IsButtonReleased(iButton As ClassWin32.XInputButtons) As Boolean
-        Return (g_mCurrentState.Gamepad.Buttons And iButton) <> iButton AndAlso
+        SyncLock g_mThreadLock
+            Return (g_mCurrentState.Gamepad.Buttons And iButton) <> iButton AndAlso
                (g_mPreviousState.Gamepad.Buttons And iButton) = iButton
+        End SyncLock
     End Function
 
     Public Function GetLeftTrigger() As Single
-        Return g_mCurrentState.Gamepad.LeftTrigger / 255.0F
+        SyncLock g_mThreadLock
+            Return g_mCurrentState.Gamepad.LeftTrigger / 255.0F
+        End SyncLock
     End Function
 
     Public Function GetRightTrigger() As Single
-        Return g_mCurrentState.Gamepad.RightTrigger / 255.0F
+        SyncLock g_mThreadLock
+            Return g_mCurrentState.Gamepad.RightTrigger / 255.0F
+        End SyncLock
     End Function
 
     Public Function GetLeftThumbstick() As Vector2
-        Dim x As Single = g_mCurrentState.Gamepad.ThumbLX / 32768.0F
-        Dim y As Single = g_mCurrentState.Gamepad.ThumbLY / 32768.0F
-        Return New Vector2(If(Math.Abs(x) < 0.1F, 0.0F, x), If(Math.Abs(y) < 0.1F, 0.0F, y))
+        SyncLock g_mThreadLock
+            Dim x As Single = g_mCurrentState.Gamepad.ThumbLX / 32768.0F
+            Dim y As Single = g_mCurrentState.Gamepad.ThumbLY / 32768.0F
+            Return New Vector2(If(Math.Abs(x) < 0.1F, 0.0F, x), If(Math.Abs(y) < 0.1F, 0.0F, y))
+        End SyncLock
     End Function
 
     Public Function GetRightThumbstick() As Vector2
-        Dim x As Single = g_mCurrentState.Gamepad.ThumbRX / 32768.0F
-        Dim y As Single = g_mCurrentState.Gamepad.ThumbRY / 32768.0F
-        Return New Vector2(If(Math.Abs(x) < 0.1F, 0.0F, x), If(Math.Abs(y) < 0.1F, 0.0F, y))
+        SyncLock g_mThreadLock
+            Dim x As Single = g_mCurrentState.Gamepad.ThumbRX / 32768.0F
+            Dim y As Single = g_mCurrentState.Gamepad.ThumbRY / 32768.0F
+            Return New Vector2(If(Math.Abs(x) < 0.1F, 0.0F, x), If(Math.Abs(y) < 0.1F, 0.0F, y))
+        End SyncLock
     End Function
 
     Public Function IsConnected() As Boolean
         Try
-            Dim state As ClassWin32.XInputState
-            Return ClassWin32.XInputGetState(g_iPlayerIndex, state) = 0
+            SyncLock g_mThreadLock
+                Dim state As ClassWin32.XInputState
+                Return ClassWin32.XInputGetState(g_iPlayerIndex, state) = 0
+            End SyncLock
         Catch ex As Exception
             Return False
         End Try

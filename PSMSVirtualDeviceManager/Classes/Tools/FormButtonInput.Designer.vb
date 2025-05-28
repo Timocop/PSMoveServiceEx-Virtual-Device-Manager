@@ -26,18 +26,18 @@ Partial Class FormButtonInput
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label_BindingInfo = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
-        'Label1
+        'Label_BindingInfo
         '
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label1.Location = New System.Drawing.Point(0, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(330, 77)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Please press a button combination to progress..."
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label_BindingInfo.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label_BindingInfo.Location = New System.Drawing.Point(0, 0)
+        Me.Label_BindingInfo.Name = "Label_BindingInfo"
+        Me.Label_BindingInfo.Size = New System.Drawing.Size(330, 77)
+        Me.Label_BindingInfo.TabIndex = 0
+        Me.Label_BindingInfo.Text = "Please press a button combination to progress..."
+        Me.Label_BindingInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'FormButtonInput
         '
@@ -45,7 +45,7 @@ Partial Class FormButtonInput
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(330, 77)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.Label_BindingInfo)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MaximizeBox = False
@@ -54,10 +54,10 @@ Partial Class FormButtonInput
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Recording button input..."
+        Me.Text = "Recording input..."
         Me.ResumeLayout(False)
 
     End Sub
 
-    Friend WithEvents Label1 As Label
+    Friend WithEvents Label_BindingInfo As Label
 End Class
