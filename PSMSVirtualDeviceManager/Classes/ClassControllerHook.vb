@@ -53,6 +53,8 @@ Public Class ClassControllerHook
         PLAYER_1
         PLAYER_2
         PLAYER_3
+
+        __MAX
     End Enum
 
     Private g_iPlayerIndex As ENUM_PLAYER_INDEX
@@ -67,6 +69,14 @@ Public Class ClassControllerHook
         g_mPreviousState = g_mCurrentState
         ClassWin32.XInputGetState(g_iPlayerIndex, g_mCurrentState)
     End Sub
+
+    Public Function AnyButtonDown() As Boolean
+        Return (g_mCurrentState.Gamepad.Buttons <> 0)
+    End Function
+
+    Public Function GetButtonDown() As ClassWin32.XInputButtons
+        Return g_mCurrentState.Gamepad.Buttons
+    End Function
 
     Public Function IsButtonDown(iButton As ClassWin32.XInputButtons) As Boolean
         Return (g_mCurrentState.Gamepad.Buttons And iButton) = iButton

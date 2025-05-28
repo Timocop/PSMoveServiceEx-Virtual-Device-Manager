@@ -50,13 +50,47 @@ Public Class ClassKeyboardHook
         End Structure
     End Class
 
+    Public Sub New()
+        InstallHook()
+    End Sub
+
+    Private g_mThreadLock As New Object
     Private g_mHookHandle As IntPtr = IntPtr.Zero
     Private g_mHookProc As ClassWin32.HookProc = Nothing
+    Private g_iLastKeys As New HashSet(Of Keys)
+    Private g_iCurrentKeys As New HashSet(Of Keys)
+    Private g_iStateKeys As New HashSet(Of Keys)
 
-    Public Event KeyPressedDown(iKey As Keys)
-    Public Event KeyPressedUp(iKey As Keys)
+    Public Sub Update()
+        SyncLock g_mThreadLock
+            g_iLastKeys = g_iCurrentKeys
+            g_iCurrentKeys = g_iStateKeys
+        End SyncLock
+    End Sub
 
-    Public Sub InstallHook()
+    Public Function AnyButtonDown() As Boolean
+        Return (g_iCurrentKeys.Count > 0)
+    End Function
+
+    Public Function GetButtonDown() As Keys()
+        Return g_iCurrentKeys.ToArray
+    End Function
+
+    Public Function IsButtonDown(iKey As Keys) As Boolean
+        Return g_iCurrentKeys.Contains(iKey)
+    End Function
+
+    Public Function IsButtonPressed(iKey As Keys) As Boolean
+        Return (g_iCurrentKeys.Contains(iKey) AndAlso
+               Not g_iLastKeys.Contains(iKey))
+    End Function
+
+    Public Function IsButtonReleased(iKey As Keys) As Boolean
+        Return (Not g_iCurrentKeys.Contains(iKey) AndAlso
+                g_iLastKeys.Contains(iKey))
+    End Function
+
+    Private Sub InstallHook()
         If (g_mHookHandle <> IntPtr.Zero) Then
             Return
         End If
@@ -74,7 +108,7 @@ Public Class ClassKeyboardHook
         End If
     End Sub
 
-    Public Sub UninstallHook()
+    Private Sub UninstallHook()
         If (g_mHookHandle <> IntPtr.Zero) Then
             ClassWin32.UnhookWindowsHookEx(g_mHookHandle)
             g_mHookHandle = IntPtr.Zero
@@ -85,13 +119,16 @@ Public Class ClassKeyboardHook
         If (nCode >= 0) Then
             Dim mInfo As ClassWin32.KBDLLHOOKSTRUCT = CType(Marshal.PtrToStructure(lParam, GetType(ClassWin32.KBDLLHOOKSTRUCT)), ClassWin32.KBDLLHOOKSTRUCT)
 
-            Select Case (CInt(wParam))
-                Case ClassWin32.WM_KEYDOWN, ClassWin32.WM_SYSKEYDOWN
-                    RaiseEvent KeyPressedDown(CType(mInfo.vkCode, Keys))
+            SyncLock g_mThreadLock
+                Select Case (CInt(wParam))
+                    Case ClassWin32.WM_KEYDOWN, ClassWin32.WM_SYSKEYDOWN
+                        g_iStateKeys.Add(CType(mInfo.vkCode, Keys))
 
-                Case ClassWin32.WM_KEYUP, ClassWin32.WM_SYSKEYUP
-                    RaiseEvent KeyPressedUp(CType(mInfo.vkCode, Keys))
-            End Select
+                    Case ClassWin32.WM_KEYUP, ClassWin32.WM_SYSKEYUP
+                        g_iStateKeys.Remove(CType(mInfo.vkCode, Keys))
+
+                End Select
+            End SyncLock
 
         End If
 
