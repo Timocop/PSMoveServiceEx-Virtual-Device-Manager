@@ -23,6 +23,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_RESOLUTION_PSVR As String = "Tracker resolution too low for Head-mounted Display"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_FPS As String = "Tracker bad framrate"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_TIMEOUT As String = "Tracker possible timeout"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_FACING_EXCLUDED As String = "Facing trackers triangulation excluded"
 
 
     Enum ENUM_DEVICE_TYPE
@@ -211,6 +212,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckPs4CameraColorSensitivity())
         mIssues.AddRange(CheckTrackerResolutionWithPSVR())
         mIssues.AddRange(CheckFps())
+        mIssues.AddRange(CheckFacingTrackers())
         Return mIssues.ToArray
     End Function
 
@@ -863,6 +865,96 @@ Public Class ClassLogManageServiceDevices
         Next
 
         Return mIssues.ToArray
+    End Function
+
+    Public Function CheckFacingTrackers() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mProcessedTrackerPairs As New HashSet(Of Integer)
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_TRACKER_FACING_EXCLUDED,
+            "Excluded triangulation between tracker id {0} and tracker id {1} that are facing each other with an angle {2} in degrees.",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        Dim mTrackerConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+
+        Dim iAngleLimit As Single = Single.Parse(mTrackerConfig.GetValue("", "tracker_deviation_exclude_angle", "35.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                Continue For
+            End If
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim mTrackerOrientation As New Quaternion(
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "w", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            )
+
+            For Each mDeviceOther In GetDevices()
+                If (mDeviceOther.iId < 0) Then
+                    Continue For
+                End If
+
+                If (mDeviceOther.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                    Continue For
+                End If
+
+                If (mDeviceOther.iId = mDevice.iId) Then
+                    Continue For
+                End If
+
+                Dim mDeviceOtherConfig = mServiceLog.FindConfigFromSerial(mDeviceOther.sSerial)
+                If (mDeviceOtherConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                ' Dont process the same pair multiple times
+                Dim iTrackerPairBits As Integer = (1 << mDevice.iId) Or (1 << mDeviceOther.iId)
+                If (mProcessedTrackerPairs.Contains(iTrackerPairBits)) Then
+                    Continue For
+                End If
+
+                mProcessedTrackerPairs.Add(iTrackerPairBits)
+
+                Dim mOtherTrackerOrientation As New Quaternion(
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\orientation", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\orientation", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\orientation", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\orientation", "w", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                )
+
+                Dim fAngleDiff As Single = ClassMathUtils.CalculateAngleDegreesDifference(mTrackerOrientation, mOtherTrackerOrientation)
+                If (fAngleDiff > 180.0F - iAngleLimit) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDeviceOther.iId, CInt(Math.Abs(fAngleDiff - 180.0F)))
+                    mIssues.Add(mIssue)
+                End If
+            Next
+
+
+        Next
+
+            Return mIssues.ToArray
     End Function
 
     Private Function IsHueInRange(iTarget As Integer, iCenter As Integer, iRange As Integer) As Boolean

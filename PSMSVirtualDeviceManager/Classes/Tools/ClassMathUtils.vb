@@ -152,26 +152,25 @@ Public Class ClassMathUtils
         Return New Quaternion(0F, CSng(Math.Sin(angle / 2)), 0F, CSng(Math.Cos(angle / 2)))
     End Function
 
-    Public Shared Function CalculateAngleDegreesDifference(quaternion1 As Quaternion, quaternion2 As Quaternion) As Single
+    Public Shared Function CalculateAngleDegreesDifference(q1 As Quaternion, q2 As Quaternion) As Single
         ' Convert both quaternions to unit quaternions
-        quaternion1 = Quaternion.Normalize(quaternion1)
-        quaternion2 = Quaternion.Normalize(quaternion2)
+        q1 = Quaternion.Normalize(q1)
+        q2 = Quaternion.Normalize(q2)
 
-        ' Calculate the dot product between the two quaternions
-        Dim dotProduct As Single = Quaternion.Dot(quaternion1, quaternion2)
+        ' Compute the dot product between the two quaternions
+        Dim dotProduct = q1.W * q2.W + q1.X * q2.X + q1.Y * q2.Y + q1.Z * q2.Z
 
-        ' Clamp the dot product to the range [-1, 1] to avoid numerical errors
-        If (dotProduct < -1.0F) Then
-            dotProduct = -1.0F
-        End If
-        If (dotProduct > 1.0F) Then
-            dotProduct = 1.0F
-        End If
+        ' Ensure the dot product is within [-1, 1] to avoid floating point errors
+        dotProduct = CSng(Math.Min(Math.Max(dotProduct, -1.0), 1.0))
 
-        ' Calculate the angle between the two quaternions
-        Dim angle As Single = CSng(Math.Acos(dotProduct))
+        ' Calculate the angle in radians (twice the angle because quaternions double-cover the rotation space)
+        Dim angleRad = 2.0 * Math.Acos(Math.Abs(dotProduct))
 
-        Return CSng(angle * (180.0F / Math.PI))
+        ' Convert to degrees
+        Dim angleDeg = angleRad * (180.0 / Math.PI)
+
+        ' Return the smallest angle (0-180 degrees)
+        Return CSng(Math.Min(angleDeg, 360.0 - angleDeg))
     End Function
 
     Public Shared Function QuaternionFromAngularVelocity(angularVelocity As Vector3, dt As Double) As Quaternion
