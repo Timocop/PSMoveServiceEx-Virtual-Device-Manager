@@ -17,7 +17,9 @@ Public Class ClassLogManagerSteamVrDrivers
     ' The following drivers can cause conflicts with the VDM SteamVR driver. Mostly because they access the same hardware, which isnt possible.
     Private ReadOnly g_mBadDrivers As String() = {
         "psmove",       'Legacy PSMoveService VRBridge. Its dead and unsupported. VDM SteamVR driver is the successor.
-        "trinuspsvr",   'TrinusVR. Conflicts with PSVR hardware access.
+        "trinuspsvr"   'TrinusVR. Conflicts with PSVR hardware access.
+    }
+    Private ReadOnly g_mWarnDrivers As String() = {
         "driver4vr",    'Driver4VR. PSVR support dropped. Conflicts with PS4 Camera and PSVR hardware access.
         "ivry"          'iVRy. PSVR support outdated and PSMS module broken? Conflicts with PSVR and PS4 Camera hardware access.
     }
@@ -181,9 +183,10 @@ Public Class ClassLogManagerSteamVrDrivers
             ENUM_LOG_ISSUE_TYPE.INFO
         )
 
+        'ENUM_LOG_ISSUE_TYPE changed dynamicly
         Dim mBadTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_CONFLICT_THIRD_PARTY_DRIVER,
-            "The third-party SteamVR driver '{0}' in '{1}' is not compatible with the virtual motion tracker SteamVR driver or may causes issues or crashes when activated.",
+            "The third-party SteamVR driver '{0}' in '{1}' may not compatible with the virtual motion tracker SteamVR driver or may causes issues or crashes when activated.",
             "Uninstall or deactivate the conflicting third-party SteamVR driver '{0}'.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -213,19 +216,32 @@ Public Class ClassLogManagerSteamVrDrivers
                         Continue For
                     End If
 
+                    If (Not mDriver.bEnabled) Then
+                        Continue For
+                    End If
+
                     If (mDriver.sDriverName.ToLowerInvariant = ClassVmtConst.VMT_DRIVER_NAME.ToLowerInvariant) Then
                         Continue For
                     End If
 
                     For Each sBadDriver In g_mBadDrivers
-                        If (String.IsNullOrEmpty(mDriver.sDriverName)) Then
-                            Continue For
-                        End If
-
                         If (mDriver.sDriverName.ToLowerInvariant = sBadDriver.ToLowerInvariant) Then
                             Dim mIssue As New STRUC_LOG_ISSUE(mBadTemplate)
                             mIssue.sDescription = String.Format(mIssue.sDescription, mDriver.sDriverName, mDriver.sDriverPath)
                             mIssue.sSolution = String.Format(mIssue.sSolution, mDriver.sDriverName)
+                            mIssue.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+                            mIssues.Add(mIssue)
+
+                            bBadFound = True
+                        End If
+                    Next
+
+                    For Each sBadDriver In g_mWarnDrivers
+                        If (mDriver.sDriverName.ToLowerInvariant = sBadDriver.ToLowerInvariant) Then
+                            Dim mIssue As New STRUC_LOG_ISSUE(mBadTemplate)
+                            mIssue.sDescription = String.Format(mIssue.sDescription, mDriver.sDriverName, mDriver.sDriverPath)
+                            mIssue.sSolution = String.Format(mIssue.sSolution, mDriver.sDriverName)
+                            mIssue.iType = ENUM_LOG_ISSUE_TYPE.WARNING
                             mIssues.Add(mIssue)
 
                             bBadFound = True
