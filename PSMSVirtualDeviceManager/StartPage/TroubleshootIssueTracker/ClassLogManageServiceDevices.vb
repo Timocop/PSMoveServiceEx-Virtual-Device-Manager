@@ -24,6 +24,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_FPS As String = "Tracker bad framrate"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_TIMEOUT As String = "Tracker possible timeout"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_FACING_EXCLUDED As String = "Facing trackers triangulation excluded"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_SYNC_MODE As String = "Tracker distance too small for current synchronization mode"
 
 
     Enum ENUM_DEVICE_TYPE
@@ -213,6 +214,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckTrackerResolutionWithPSVR())
         mIssues.AddRange(CheckFps())
         mIssues.AddRange(CheckFacingTrackers())
+        mIssues.AddRange(CheckTrackerDistanceSyncMode())
         Return mIssues.ToArray
     End Function
 
@@ -950,11 +952,103 @@ Public Class ClassLogManageServiceDevices
                     mIssues.Add(mIssue)
                 End If
             Next
-
-
         Next
 
-            Return mIssues.ToArray
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckTrackerDistanceSyncMode() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Const MAX_TRACKER_DISTANCE_CM As Integer = 100
+        Const TRACKER_SYNC_FASTEST_AVAILABLE As Integer = 1
+
+        Dim mProcessedTrackerPairs As New HashSet(Of Integer)
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_TRACKER_SYNC_MODE,
+            "The distance between tracker id {0} and tracker id {1} is too short ({2} cm apart) for the current tracker synchronization mode and my result tracking issues.",
+            "Set the tracker synchronization mode to 'Wait All' in PSMoveServiceEx Config Tool 'Advanced Settings' or increase the distance between both trackers.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+
+        Dim mTrackerConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+
+        Dim iTrackerSyncMode As Integer = Integer.Parse(mTrackerConfig.GetValue("", "tracker_sync_mode", "0"))
+
+        ' Check if 'Fastest Available' sync mode
+        If (iTrackerSyncMode <> TRACKER_SYNC_FASTEST_AVAILABLE) Then
+            Return {}
+        End If
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                Continue For
+            End If
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim mTrackerPosition As New Vector3(
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            )
+
+            For Each mDeviceOther In GetDevices()
+                If (mDeviceOther.iId < 0) Then
+                    Continue For
+                End If
+
+                If (mDeviceOther.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                    Continue For
+                End If
+
+                If (mDeviceOther.iId = mDevice.iId) Then
+                    Continue For
+                End If
+
+                Dim mDeviceOtherConfig = mServiceLog.FindConfigFromSerial(mDeviceOther.sSerial)
+                If (mDeviceOtherConfig Is Nothing) Then
+                    Continue For
+                End If
+
+                ' Dont process the same pair multiple times
+                Dim iTrackerPairBits As Integer = (1 << mDevice.iId) Or (1 << mDeviceOther.iId)
+                If (mProcessedTrackerPairs.Contains(iTrackerPairBits)) Then
+                    Continue For
+                End If
+
+                mProcessedTrackerPairs.Add(iTrackerPairBits)
+
+                Dim mOtherTrackerPosition As New Vector3(
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                )
+
+                Dim fTrackerDistance As Single = Vector3.Distance(mTrackerPosition, mOtherTrackerPosition)
+                If (fTrackerDistance < MAX_TRACKER_DISTANCE_CM) Then
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDeviceOther.iId, CInt(fTrackerDistance))
+                    mIssues.Add(mIssue)
+                End If
+            Next
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Private Function IsHueInRange(iTarget As Integer, iCenter As Integer, iRange As Integer) As Boolean
