@@ -12,6 +12,7 @@ Public Class FormTroubleshootLogs
     Private g_mLogContent As New ClassLogDiagnostics.ClassLogContent()
     Private g_mProgress As FormLoading = Nothing
     Private g_mLogJobs As New List(Of ClassLogDiagnostics.ILogAction)
+    Private g_sLoadedFile As String = ""
 
     Private g_mFormMain As FormMain
     Private g_bInitRefresh As Boolean = False
@@ -55,6 +56,25 @@ Public Class FormTroubleshootLogs
         TextBox_IssueInfo.Text = NOTHING_SELECTED
     End Sub
 
+    Property m_LoadedFile As String
+        Get
+            Return g_sLoadedFile
+        End Get
+        Set(value As String)
+            g_sLoadedFile = value
+
+            UpdateTitle()
+        End Set
+    End Property
+
+    Private Sub UpdateTitle()
+        If (String.IsNullOrEmpty(m_LoadedFile)) Then
+            Me.Text = String.Format("Logs and Diagnostics")
+        Else
+            Me.Text = String.Format("Logs and Diagnostics ({0})", IO.Path.GetFileName(m_LoadedFile))
+        End If
+    End Sub
+
     Private Sub Button_LogRefresh_Click(sender As Object, e As EventArgs) Handles Button_LogRefresh.Click
         RereshLogs(False)
     End Sub
@@ -85,6 +105,8 @@ Public Class FormTroubleshootLogs
                 End If
             End If
         End If
+
+        m_LoadedFile = ""
 
         StartLogAnalysis(True, True, True, True, bSilent)
     End Sub
@@ -144,6 +166,7 @@ Public Class FormTroubleshootLogs
                         Next
                     End Using
 
+                    m_LoadedFile = mForm.FileName
 
                     StartLogAnalysis(False, True, True, True, False)
                 End If
