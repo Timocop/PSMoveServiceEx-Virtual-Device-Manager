@@ -120,7 +120,7 @@
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="UcInformation1.m_Text" xml:space="preserve">
+    <value>If no third-party head-mounted display is available or if third-party drivers are present, disable 'Require Head-Mounted Display' and enable 'Activate Multiple Drivers' to ensure the Virtual Motion Tracker SteamVR driver loads correctly.</value>
+  </data>
 </root>

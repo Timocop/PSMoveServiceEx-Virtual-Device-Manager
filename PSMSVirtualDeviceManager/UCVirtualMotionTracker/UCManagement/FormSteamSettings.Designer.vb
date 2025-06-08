@@ -23,6 +23,7 @@ Partial Class FormSteamSettings
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSteamSettings))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Button2 = New System.Windows.Forms.Button()
@@ -36,12 +37,13 @@ Partial Class FormSteamSettings
         Me.CheckBox_EnableMirror = New System.Windows.Forms.CheckBox()
         Me.CheckBox_EnablePerfGraph = New System.Windows.Forms.CheckBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.LinkLabel_ResetForcedDrvier = New System.Windows.Forms.LinkLabel()
         Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
+        Me.LinkLabel_ResetForcedDrvier = New System.Windows.Forms.LinkLabel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.CheckBox_AutostartService = New System.Windows.Forms.CheckBox()
         Me.CheckBox_AutostartRemoteDevices = New System.Windows.Forms.CheckBox()
         Me.CheckBox_AutostartOscServer = New System.Windows.Forms.CheckBox()
+        Me.UcInformation1 = New PSMSVirtualDeviceManager.UCInformation()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -63,9 +65,9 @@ Partial Class FormSteamSettings
         Me.Panel1.Controls.Add(Me.Button1)
         Me.Panel1.Controls.Add(Me.Panel2)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 326)
+        Me.Panel1.Location = New System.Drawing.Point(0, 396)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(464, 48)
+        Me.Panel1.Size = New System.Drawing.Size(546, 48)
         Me.Panel1.TabIndex = 23
         '
         'Button2
@@ -73,7 +75,7 @@ Partial Class FormSteamSettings
         Me.Button2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button2.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button2.Location = New System.Drawing.Point(254, 13)
+        Me.Button2.Location = New System.Drawing.Point(336, 13)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(96, 23)
         Me.Button2.TabIndex = 2
@@ -85,7 +87,7 @@ Partial Class FormSteamSettings
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button1.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Button1.Location = New System.Drawing.Point(356, 13)
+        Me.Button1.Location = New System.Drawing.Point(438, 13)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(96, 23)
         Me.Button1.TabIndex = 1
@@ -98,7 +100,7 @@ Partial Class FormSteamSettings
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(464, 1)
+        Me.Panel2.Size = New System.Drawing.Size(546, 1)
         Me.Panel2.TabIndex = 0
         '
         'CheckBox_EnableNullDriver
@@ -204,6 +206,21 @@ Partial Class FormSteamSettings
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "Info"
         '
+        'CheckBox_Autostart
+        '
+        Me.CheckBox_Autostart.AutoSize = True
+        Me.CheckBox_Autostart.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_Autostart.Location = New System.Drawing.Point(25, 284)
+        Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
+        Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
+        Me.CheckBox_Autostart.Size = New System.Drawing.Size(240, 18)
+        Me.CheckBox_Autostart.TabIndex = 32
+        Me.CheckBox_Autostart.Text = "Enable Virtual Device Manager Autostart"
+        Me.ToolTip1.SetToolTip(Me.CheckBox_Autostart, "If enabled, Virtual Device Manager will automatically run whenever SteamVR is run" &
+        "ning. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Use the following additional settings below to automatically start certa" &
+        "in Virtual Device Manager modules.")
+        Me.CheckBox_Autostart.UseVisualStyleBackColor = True
+        '
         'LinkLabel_ResetForcedDrvier
         '
         Me.LinkLabel_ResetForcedDrvier.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
@@ -221,36 +238,21 @@ Partial Class FormSteamSettings
         Me.LinkLabel_ResetForcedDrvier.Visible = False
         Me.LinkLabel_ResetForcedDrvier.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
-        'CheckBox_Autostart
-        '
-        Me.CheckBox_Autostart.AutoSize = True
-        Me.CheckBox_Autostart.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_Autostart.Location = New System.Drawing.Point(25, 212)
-        Me.CheckBox_Autostart.Margin = New System.Windows.Forms.Padding(16, 3, 3, 3)
-        Me.CheckBox_Autostart.Name = "CheckBox_Autostart"
-        Me.CheckBox_Autostart.Size = New System.Drawing.Size(240, 18)
-        Me.CheckBox_Autostart.TabIndex = 32
-        Me.CheckBox_Autostart.Text = "Enable Virtual Device Manager Autostart"
-        Me.ToolTip1.SetToolTip(Me.CheckBox_Autostart, "If enabled, Virtual Device Manager will automatically run whenever SteamVR is run" &
-        "ning. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Use the following additional settings below to automatically start certa" &
-        "in Virtual Device Manager modules.")
-        Me.CheckBox_Autostart.UseVisualStyleBackColor = True
-        '
         'Panel3
         '
         Me.Panel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel3.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.Panel3.Location = New System.Drawing.Point(12, 205)
+        Me.Panel3.Location = New System.Drawing.Point(12, 277)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(440, 1)
+        Me.Panel3.Size = New System.Drawing.Size(522, 1)
         Me.Panel3.TabIndex = 33
         '
         'CheckBox_AutostartService
         '
         Me.CheckBox_AutostartService.AutoSize = True
         Me.CheckBox_AutostartService.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_AutostartService.Location = New System.Drawing.Point(57, 236)
+        Me.CheckBox_AutostartService.Location = New System.Drawing.Point(57, 308)
         Me.CheckBox_AutostartService.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_AutostartService.Name = "CheckBox_AutostartService"
         Me.CheckBox_AutostartService.Size = New System.Drawing.Size(165, 18)
@@ -262,7 +264,7 @@ Partial Class FormSteamSettings
         '
         Me.CheckBox_AutostartRemoteDevices.AutoSize = True
         Me.CheckBox_AutostartRemoteDevices.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_AutostartRemoteDevices.Location = New System.Drawing.Point(57, 260)
+        Me.CheckBox_AutostartRemoteDevices.Location = New System.Drawing.Point(57, 332)
         Me.CheckBox_AutostartRemoteDevices.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_AutostartRemoteDevices.Name = "CheckBox_AutostartRemoteDevices"
         Me.CheckBox_AutostartRemoteDevices.Size = New System.Drawing.Size(210, 18)
@@ -274,7 +276,7 @@ Partial Class FormSteamSettings
         '
         Me.CheckBox_AutostartOscServer.AutoSize = True
         Me.CheckBox_AutostartOscServer.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_AutostartOscServer.Location = New System.Drawing.Point(57, 284)
+        Me.CheckBox_AutostartOscServer.Location = New System.Drawing.Point(57, 356)
         Me.CheckBox_AutostartOscServer.Margin = New System.Windows.Forms.Padding(48, 3, 3, 3)
         Me.CheckBox_AutostartOscServer.Name = "CheckBox_AutostartOscServer"
         Me.CheckBox_AutostartOscServer.Size = New System.Drawing.Size(186, 18)
@@ -282,12 +284,28 @@ Partial Class FormSteamSettings
         Me.CheckBox_AutostartOscServer.Text = "Start OSC Server automatically"
         Me.CheckBox_AutostartOscServer.UseVisualStyleBackColor = True
         '
+        'UcInformation1
+        '
+        Me.UcInformation1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation1.BackColor = System.Drawing.Color.White
+        Me.UcInformation1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation1.Location = New System.Drawing.Point(25, 204)
+        Me.UcInformation1.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.INFORMATION
+        Me.UcInformation1.m_ReadMoreAction = Nothing
+        Me.UcInformation1.m_ReadMoreText = "Change those settings"
+        Me.UcInformation1.m_Text = resources.GetString("UcInformation1.m_Text")
+        Me.UcInformation1.Name = "UcInformation1"
+        Me.UcInformation1.Size = New System.Drawing.Size(509, 67)
+        Me.UcInformation1.TabIndex = 37
+        '
         'FormSteamSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(464, 374)
+        Me.ClientSize = New System.Drawing.Size(546, 444)
+        Me.Controls.Add(Me.UcInformation1)
         Me.Controls.Add(Me.CheckBox_AutostartOscServer)
         Me.Controls.Add(Me.CheckBox_AutostartRemoteDevices)
         Me.Controls.Add(Me.CheckBox_AutostartService)
@@ -338,4 +356,5 @@ Partial Class FormSteamSettings
     Friend WithEvents CheckBox_AutostartService As CheckBox
     Friend WithEvents CheckBox_AutostartRemoteDevices As CheckBox
     Friend WithEvents CheckBox_AutostartOscServer As CheckBox
+    Friend WithEvents UcInformation1 As UCInformation
 End Class

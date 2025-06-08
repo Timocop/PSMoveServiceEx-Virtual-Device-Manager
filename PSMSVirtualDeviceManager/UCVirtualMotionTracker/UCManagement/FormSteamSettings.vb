@@ -24,6 +24,12 @@
             End If
         End If
 
+        UcInformation1.m_ReadMoreAction = AddressOf InfoChangeSettings
+    End Sub
+
+    Private Sub InfoChangeSettings()
+        CheckBox_RequireHmd.Checked = False
+        CheckBox_EnableMultipleDrivers.Checked = True
     End Sub
 
     Private Sub FormSteamSettings_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
