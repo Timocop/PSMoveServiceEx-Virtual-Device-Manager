@@ -7,7 +7,6 @@ Public Class ClassLogService
     Public Shared ReadOnly SECTION_PSMOVESERVICEEX As String = "PSMoveServiceEx"
 
     Public Shared ReadOnly LOG_ISSUE_EMPTY As String = "Log is unavailable"
-    Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_VERSION As String = "Outdated PSMoveServiceEx version"
     Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_FPS As String = "PSMoveServiceEx framerate too low"
     Public Shared ReadOnly LOG_ISSUE_BAD_LEGACY_SERVICE As String = "Legacy PSMoveService configuration detected"
     Public Shared ReadOnly LOG_ISSUE_CONFIG_RESET As String = "Some configurations have been factory reset"
@@ -115,7 +114,6 @@ Public Class ClassLogService
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckEmpty())
-        mIssues.AddRange(CheckVersion())
         mIssues.AddRange(CheckFps())
         mIssues.AddRange(CheckLegacy())
         mIssues.AddRange(CheckConfigReset())
@@ -155,60 +153,6 @@ Public Class ClassLogService
         If (sContent Is Nothing OrElse sContent.Trim.Length = 0) Then
             mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
-
-        Return mIssues.ToArray
-    End Function
-
-    Public Function CheckVersion() As STRUC_LOG_ISSUE()
-        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
-
-        Dim sContent As String = GetSectionContent()
-        If (sContent Is Nothing) Then
-            Return mIssues.ToArray
-        End If
-
-        Dim mTemplate As New STRUC_LOG_ISSUE(
-            LOG_ISSUE_BAD_SERVICE_VERSION,
-            "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features.",
-            "Udpate PSMoveServiceEx.",
-            ENUM_LOG_ISSUE_TYPE.WARNING
-        )
-
-        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
-        For i = 0 To sLines.Length - 1
-            Dim sLine As String = sLines(i)
-
-            If (Not sLine.StartsWith("[")) Then
-                Continue For
-            End If
-
-            If (sLine.Contains("Starting PSMoveServiceEx")) Then
-                Dim mMatch As Match = Regex.Match(sLine, "Starting PSMoveServiceEx v(?<Version>\d+\.\d+\.\d+\.\d+)", RegexOptions.IgnoreCase)
-
-                If (mMatch.Success AndAlso mMatch.Groups("Version").Success) Then
-                    Try
-                        Dim sCurrentVersion As String = mMatch.Groups("Version").Value
-                        Dim sNextVersion As String = ClassUpdate.ClassPsms.GetNextVersion(Nothing)
-
-                        sNextVersion = Regex.Match(sNextVersion, "[0-9\.]+").Value
-                        sCurrentVersion = Regex.Match(sCurrentVersion, "[0-9\.]+").Value
-
-                        If (New Version(sNextVersion) > New Version(sCurrentVersion)) Then
-                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
-
-                            mIssues.Add(mNewIssue)
-                        End If
-                    Catch ex As Threading.ThreadAbortException
-                        Throw
-                    Catch ex As Exception
-                        ' Ignore any connection issues
-                    End Try
-                End If
-
-                Exit For
-            End If
-        Next
 
         Return mIssues.ToArray
     End Function

@@ -1,10 +1,13 @@
-﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
+﻿Imports System.Text.RegularExpressions
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogProcesses
     Implements ILogAction
 
     Public Shared ReadOnly SECTION_PROCESSES As String = "Running Processes"
     Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_PATH As String = "PSMoveServiceEx not installed using Virtual Device Manager"
+    Public Shared ReadOnly LOG_ISSUE_BAD_SERVICE_VERSION As String = "Outdated PSMoveServiceEx version"
+    Public Shared ReadOnly LOG_ISSUE_BAD_MANAGER_VERSION As String = "Outdated PSMoveServiceEx - Virtual Device Manager version"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
@@ -72,6 +75,8 @@ Public Class ClassLogProcesses
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckServicePath())
+        mIssues.AddRange(CheckServiceVersion())
+        mIssues.AddRange(CheckManagerVersion())
         Return mIssues.ToArray
     End Function
 
@@ -127,7 +132,94 @@ Public Class ClassLogProcesses
             End If
         End If
 
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckServiceVersion() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
             Return mIssues.ToArray
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BAD_SERVICE_VERSION,
+            "This PSMoveServiceEx version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features.",
+            "Udpate PSMoveServiceEx.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        For Each mProcess In GetProcesses()
+            Select Case (mProcess.sName.ToLowerInvariant)
+                Case "PSMoveService".ToLowerInvariant,
+                     "PSMoveServiceAdmin".ToLowerInvariant
+                    Dim sCurrentVersion As String = mProcess.sFileVersion
+
+                    Try
+                        Dim sNextVersion As String = ClassUpdate.ClassPsms.GetNextVersion(Nothing)
+
+                        sNextVersion = Regex.Match(sNextVersion, "[0-9\.]+").Value
+                        sCurrentVersion = Regex.Match(sCurrentVersion, "[0-9\.]+").Value
+
+                        If (New Version(sNextVersion) > New Version(sCurrentVersion)) Then
+                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
+
+                            mIssues.Add(mNewIssue)
+                        End If
+                    Catch ex As Threading.ThreadAbortException
+                        Throw
+                    Catch ex As Exception
+                        ' Ignore any connection issues
+                    End Try
+            End Select
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckManagerVersion() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BAD_MANAGER_VERSION,
+            "This PSMoveServiceEx - Virtual Device Manager version is outdated (Current: v{0} / Newest: v{1}) and could still have issues that already have been fixed or missing new features.",
+            "Udpate PSMoveServiceEx - Virtual Device Manager.",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        For Each mProcess In GetProcesses()
+            Select Case (mProcess.sName.ToLowerInvariant)
+                Case "PSMSVirtualDeviceManager".ToLowerInvariant
+                    Dim sCurrentVersion As String = mProcess.sFileVersion
+
+                    Try
+                        Dim sNextVersion As String = ClassUpdate.ClassVdm.GetNextVersion(Nothing)
+
+                        sNextVersion = Regex.Match(sNextVersion, "[0-9\.]+").Value
+                        sCurrentVersion = Regex.Match(sCurrentVersion, "[0-9\.]+").Value
+
+                        If (New Version(sNextVersion) > New Version(sCurrentVersion)) Then
+                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, New Version(sCurrentVersion).ToString, New Version(sNextVersion).ToString)
+
+                            mIssues.Add(mNewIssue)
+                        End If
+                    Catch ex As Threading.ThreadAbortException
+                        Throw
+                    Catch ex As Exception
+                        ' Ignore any connection issues
+                    End Try
+            End Select
+        Next
+
+        Return mIssues.ToArray
     End Function
 
     Public Function GetProcesses() As STRUC_PROCESS_ITEM()
