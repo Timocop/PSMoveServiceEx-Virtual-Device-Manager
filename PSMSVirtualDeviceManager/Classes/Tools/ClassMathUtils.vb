@@ -153,24 +153,34 @@ Public Class ClassMathUtils
     End Function
 
     Public Shared Function CalculateAngleDegreesDifference(q1 As Quaternion, q2 As Quaternion) As Single
-        ' Convert both quaternions to unit quaternions
         q1 = Quaternion.Normalize(q1)
         q2 = Quaternion.Normalize(q2)
 
-        ' Compute the dot product between the two quaternions
         Dim dotProduct = q1.W * q2.W + q1.X * q2.X + q1.Y * q2.Y + q1.Z * q2.Z
-
-        ' Ensure the dot product is within [-1, 1] to avoid floating point errors
         dotProduct = CSng(Math.Min(Math.Max(dotProduct, -1.0), 1.0))
 
-        ' Calculate the angle in radians (twice the angle because quaternions double-cover the rotation space)
         Dim angleRad = 2.0 * Math.Acos(Math.Abs(dotProduct))
-
-        ' Convert to degrees
         Dim angleDeg = angleRad * (180.0 / Math.PI)
 
-        ' Return the smallest angle (0-180 degrees)
         Return CSng(Math.Min(angleDeg, 360.0 - angleDeg))
+    End Function
+
+    Public Shared Function CalculateAngleDegreesDifferenceFov(p1 As Vector3, q1 As Quaternion, p2 As Vector3, q2 As Quaternion) As Single
+        q1 = Quaternion.Normalize(q1)
+        q2 = Quaternion.Normalize(q2)
+
+        Dim directionToTarget As Vector3 = p2 - p1
+        If (directionToTarget.Length < Single.Epsilon) Then
+            Return 0.0F
+        End If
+
+        Dim forward = RotateVector(q1, Vector3.UnitZ)
+
+        directionToTarget = Vector3.Normalize(directionToTarget)
+
+        Dim angle As Single = CSng(Math.Acos(Vector3.Dot(forward, directionToTarget)) * (180.0F / Math.PI))
+
+        Return angle
     End Function
 
     Public Shared Function QuaternionFromAngularVelocity(angularVelocity As Vector3, dt As Double) As Quaternion

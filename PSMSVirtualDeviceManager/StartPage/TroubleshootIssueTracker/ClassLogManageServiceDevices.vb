@@ -911,6 +911,11 @@ Public Class ClassLogManageServiceDevices
                 Single.Parse(mDeviceConfig.GetValue("pose\orientation", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
                 Single.Parse(mDeviceConfig.GetValue("pose\orientation", "w", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
             )
+            Dim mTrackerPosition As New Vector3(
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            )
 
             For Each mDeviceOther In GetDevices()
                 If (mDeviceOther.iId < 0) Then
@@ -944,11 +949,18 @@ Public Class ClassLogManageServiceDevices
                     Single.Parse(mDeviceOtherConfig.GetValue("pose\orientation", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
                     Single.Parse(mDeviceOtherConfig.GetValue("pose\orientation", "w", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                 )
+                Dim mOtherTrackerPosition As New Vector3(
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                    Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+                )
 
-                Dim fAngleDiff As Single = ClassMathUtils.CalculateAngleDegreesDifference(mTrackerOrientation, mOtherTrackerOrientation)
-                If (fAngleDiff > 180.0F - iAngleLimit) Then
+                Dim fAngleDiff1 As Single = ClassMathUtils.CalculateAngleDegreesDifferenceFov(mTrackerPosition, mTrackerOrientation, mOtherTrackerPosition, mOtherTrackerOrientation)
+                Dim fAngleDiff2 As Single = ClassMathUtils.CalculateAngleDegreesDifferenceFov(mOtherTrackerPosition, mOtherTrackerOrientation, mTrackerPosition, mTrackerOrientation)
+
+                If (Math.Abs(fAngleDiff1) < iAngleLimit AndAlso Math.Abs(fAngleDiff2) < iAngleLimit) Then
                     Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDeviceOther.iId, CInt(Math.Abs(fAngleDiff - 180.0F)))
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.iId, mDeviceOther.iId, CInt((Math.Abs(fAngleDiff1) + Math.Abs(fAngleDiff2)) / 2))
                     mIssues.Add(mIssue)
                 End If
             Next
