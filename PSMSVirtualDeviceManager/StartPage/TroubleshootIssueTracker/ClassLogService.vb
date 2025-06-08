@@ -366,6 +366,8 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
+        Dim mFaieldController As New HashSet(Of Integer)
+
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BLUETOOTH_ADDRESS_FAIL,
             "PSMoveServiceEx failed to asign the host address to the controller id {0}.",
@@ -387,10 +389,13 @@ Public Class ClassLogService
                 If (mMatch.Success AndAlso mMatch.Groups("ID").Success) Then
                     Dim iControllerID As Integer = CInt(mMatch.Groups("ID").Value)
 
-                    Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                    mNewIssue.sDescription = String.Format(mTemplate.sDescription, iControllerID)
+                    If (Not mFaieldController.Contains(iControllerID)) Then
+                        mFaieldController.Add(iControllerID)
 
-                    mIssues.Add(mNewIssue)
+                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                        mNewIssue.sDescription = String.Format(mTemplate.sDescription, iControllerID)
+                        mIssues.Add(mNewIssue)
+                    End If
                 End If
             End If
         Next
@@ -405,6 +410,8 @@ Public Class ClassLogService
         If (sContent Is Nothing) Then
             Return mIssues.ToArray
         End If
+
+        Dim mFailedDevices As New HashSet(Of String)
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_FAIL,
@@ -428,10 +435,15 @@ Public Class ClassLogService
                     Dim iDeviceID As Integer = CInt(mMatch.Groups("DeviceID").Value)
                     Dim sPath As String = CStr(mMatch.Groups("Path").Value)
 
-                    Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                    mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceID, sPath)
+                    Dim sDevicekey = String.Format("{0}/{1}", iDeviceID, sPath)
 
-                    mIssues.Add(mNewIssue)
+                    If (Not mFailedDevices.Contains(sDevicekey)) Then
+                        mFailedDevices.Add(sDevicekey)
+
+                        Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                        mNewIssue.sDescription = String.Format(mTemplate.sDescription, iDeviceID, sPath)
+                        mIssues.Add(mNewIssue)
+                    End If
                 End If
             End If
         Next
@@ -769,6 +781,8 @@ Public Class ClassLogService
             Return mIssues.ToArray
         End If
 
+        Dim mClosedDevices As New HashSet(Of String)
+
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_DEVICE_TIMEOUT,
             "PSMoveServiceEx closed {0} id {1} due to timeout (no data received), typically caused by connection issues.",
@@ -813,9 +827,15 @@ Public Class ClassLogService
 
                             iState = CONST_SEARCH_CLOSED_DEVICE
 
-                            Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
-                            mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceType, iStateDeviceId)
-                            mIssues.Add(mNewIssue)
+                            Dim sDevicekey = String.Format("{0}/{1}", sDeviceType, iStateDeviceId)
+
+                            If (Not mClosedDevices.Contains(sDevicekey)) Then
+                                mClosedDevices.Add(sDevicekey)
+
+                                Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                                mNewIssue.sDescription = String.Format(mTemplate.sDescription, sDeviceType, iStateDeviceId)
+                                mIssues.Add(mNewIssue)
+                            End If
                         End If
                     End If
             End Select
