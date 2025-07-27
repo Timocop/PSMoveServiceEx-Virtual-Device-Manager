@@ -1,5 +1,4 @@
-﻿Imports System.Numerics
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 
 Public Class ClassUtils
     Class ClassWin32
@@ -29,6 +28,15 @@ Public Class ClassUtils
             Dim currentTopLine As Integer = GetTopVisibleLine(tb)
             SendMessage(tb.Handle, EM_LINESCROLL, 0, lineIndex - currentTopLine)
         End Sub
+
+        <DllImport("kernel32.dll", CharSet:=CharSet.Unicode)>
+        Public Shared Function CreateFile(lpFileName As String, dwDesiredAccess As Integer, dwShareMode As Integer, lpSecurityAttributes As IntPtr, dwCreationDisposition As Integer, dwFlagsAndAttributes As Integer, hTemplateFile As IntPtr) As IntPtr
+        End Function
+
+        <DllImport("kernel32.dll")>
+        Public Shared Function CloseHandle(hObject As IntPtr) As Boolean
+        End Function
+
     End Class
 
     Public Shared Sub SuspendDrawing(tb As TextBox)
@@ -250,4 +258,20 @@ Public Class ClassUtils
             End Using
         End Using
     End Function
+
+    Public Shared Function FileHasZoneIdentifier(filePath As String) As Boolean
+        Const GENERIC_READ As Integer = &H80000000
+        Const OPEN_EXISTING As Integer = 3
+        Const INVALID_HANDLE_VALUE As Integer = -1
+
+        Dim hFile = ClassWin32.CreateFile(String.Format("{0}:Zone.Identifier", filePath), GENERIC_READ, 0, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero)
+
+        If (hFile.ToInt32() = INVALID_HANDLE_VALUE) Then
+            Return False
+        End If
+
+        ClassWin32.CloseHandle(hFile)
+        Return True
+    End Function
+
 End Class

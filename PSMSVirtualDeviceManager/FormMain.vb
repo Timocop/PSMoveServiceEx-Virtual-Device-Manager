@@ -178,6 +178,32 @@ Public Class FormMain
 
     Public Sub New()
         Try
+            ' Windows Explorer keeps blocking files because the zip has been downlaoded from the internet.
+            ' Sadly, blocked files can not run elevated such as for installing drivers.
+            ' So abort right here.
+            Dim sExeConfig As String = String.Format("{0}.config", Application.ExecutablePath)
+
+            If (IO.File.Exists(sExeConfig)) Then
+                If (ClassUtils.FileHasZoneIdentifier(sExeConfig)) Then
+                    Dim sBlockedMessage As New Text.StringBuilder
+                    sBlockedMessage.AppendLine("Windows Security blocked PSMoveServiceEx - Virtual Device Manager because it has been downloaded from the internet or another computer.")
+                    sBlockedMessage.AppendLine()
+                    sBlockedMessage.AppendLine("Make sure you unblock the PSMoveServiceEx - Virtual Device Manager ZIP archive you have downloaded (Right-Click on the ZIP archive, open properties and check 'Unblock') before extracting it.")
+                    sBlockedMessage.AppendLine("You can also use a third-party archive manager such as 7zip or WinRAR to extract the archive instead.")
+                    sBlockedMessage.AppendLine()
+                    sBlockedMessage.AppendLine("Application will now close.")
+
+                    MessageBox.Show(sBlockedMessage.ToString, "Windows Security Warning", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+                    Environment.Exit(-1)
+                    End
+                End If
+            End If
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
+
+        Try
             ProcessCommandline(False)
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
