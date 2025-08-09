@@ -118,10 +118,24 @@
         End SyncLock
     End Sub
 
-    Public Sub RunFirmwareUploader()
+    Public Function GetFirmwareInstallerPath() As String
         Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassLibusbDriver.DRV_PS4CAM_ROOT_NAME)
         Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, ClassLibusbDriver.DRV_PS4CAM_FIRMWARE_NAME)
+
+        Return sInstallerPath
+    End Function
+
+    Public Function GetFirmwarePath() As String
+        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), ClassLibusbDriver.DRV_PS4CAM_ROOT_NAME)
         Dim sFirmwarePath As String = IO.Path.Combine(sRootFolder, ClassLibusbDriver.DRV_PS4CAM_FIRMWARE_BIN_NAME)
+
+        Return sFirmwarePath
+    End Function
+
+    Public Sub RunFirmwareUploader()
+        Dim sInstallerPath As String = GetFirmwareInstallerPath()
+        Dim sFirmwarePath As String = GetFirmwarePath()
+        Dim sRootFolder As String = IO.Path.GetDirectoryName(sInstallerPath)
 
         If (Not IO.File.Exists(sFirmwarePath)) Then
             Throw New ArgumentException("Firmware file does not exist")

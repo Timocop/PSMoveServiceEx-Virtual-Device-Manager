@@ -24,6 +24,7 @@ Public Class FormMain
     Private g_bAutoClose As Boolean = False
     Private g_bAllowRestartPrompt As Boolean = False
     Private g_bInit As Boolean = False
+    Private g_ForceReinstall As Boolean = False
 
     Private g_mMutex As Threading.Mutex
     Private Const MUTEX_NAME As String = "PSMoveServiceEx_VDM_Mutex"
@@ -181,24 +182,35 @@ Public Class FormMain
             ' Windows Explorer keeps blocking files because the zip has been downlaoded from the internet.
             ' Sadly, blocked files can not run elevated such as for installing drivers.
             ' So abort right here.
-            Dim sExeConfig As String = String.Format("{0}.config", Application.ExecutablePath)
+            Dim sCheckedFiles As New List(Of String)
+            sCheckedFiles.Add(String.Format("{0}.config", Application.ExecutablePath))
+            sCheckedFiles.Add((New ClassLibusbDriver).GetDriverInstallerPath())
+            sCheckedFiles.Add((New ClassCameraFirmwareWatchdog).GetFirmwareInstallerPath())
 
-            If (IO.File.Exists(sExeConfig)) Then
-                If (ClassUtils.FileHasZoneIdentifier(sExeConfig)) Then
-                    Dim sBlockedMessage As New Text.StringBuilder
-                    sBlockedMessage.AppendLine("Windows Security blocked PSMoveServiceEx - Virtual Device Manager because it has been downloaded from the internet or another computer.")
-                    sBlockedMessage.AppendLine()
-                    sBlockedMessage.AppendLine("Make sure you unblock the PSMoveServiceEx - Virtual Device Manager ZIP archive you have downloaded (Right-Click on the ZIP archive, open properties and check 'Unblock') before extracting it.")
-                    sBlockedMessage.AppendLine("You can also use a third-party archive manager such as 7zip or WinRAR to extract the archive instead.")
-                    sBlockedMessage.AppendLine()
-                    sBlockedMessage.AppendLine("Application will now close.")
+            For Each sFile As String In sCheckedFiles
+                If (IO.File.Exists(sFile)) Then
+                    If (ClassUtils.FileHasZoneIdentifier(sFile)) Then
+                        Dim sBlockedMessage As New Text.StringBuilder
+                        sBlockedMessage.AppendLine("Windows Security blocked PSMoveServiceEx - Virtual Device Manager because it has been downloaded from the internet or another computer.")
+                        sBlockedMessage.AppendLine()
+                        sBlockedMessage.AppendLine("Make sure you unblock the PSMoveServiceEx - Virtual Device Manager ZIP archive you have downloaded (Right-Click on the ZIP archive, open properties and check 'Unblock') before extracting it.")
+                        sBlockedMessage.AppendLine()
+                        sBlockedMessage.AppendLine("Click OK to reinstall PSMoveServiceEx - Virtual Device Manager using the automatic updater to resolve the issue.")
+                        sBlockedMessage.AppendLine("Click CANCEL to close the program and do it manually.")
 
-                    MessageBox.Show(sBlockedMessage.ToString, "Windows Security Warning", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Select Case (MessageBox.Show(sBlockedMessage.ToString, "Windows Security Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Error))
+                            Case DialogResult.OK
+                                g_ForceReinstall = True
 
-                    Environment.Exit(-1)
-                    End
+                            Case Else
+                                Environment.Exit(-1)
+                                End
+                        End Select
+
+                        Exit For
+                    End If
                 End If
-            End If
+            Next
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
@@ -375,6 +387,10 @@ Public Class FormMain
         Catch ex As Exception
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
+
+        If (g_ForceReinstall) Then
+            g_mUCStartPage.StartVdmUpdateDownload()
+        End If
 
         g_bAllowRestartPrompt = True
     End Sub

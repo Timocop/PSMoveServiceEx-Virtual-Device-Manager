@@ -337,6 +337,13 @@ Public Class ClassLibusbDriver
     Public Sub New()
     End Sub
 
+    Public Function GetDriverInstallerPath() As String
+        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_WDI_ROOT_NAME)
+        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_WDI_INSTALLER_NAME)
+
+        Return sInstallerPath
+    End Function
+
     Public Function InstallPlaystation4CamDriver64() As ENUM_WDI_ERROR
         For Each mConfig As STRUC_DEVICE_DRIVER_INFO In DRV_PS4CAM_WINUSB_CONFIGS
             'Remove device first so we speed up the driver installation using WDI
@@ -739,8 +746,8 @@ Public Class ClassLibusbDriver
     End Function
 
     Private Function InternalInstallDriver64(mInfo As STRUC_DEVICE_DRIVER_INFO) As ENUM_WDI_ERROR
-        Dim sRootFolder As String = IO.Path.Combine(IO.Path.GetDirectoryName(Application.ExecutablePath), DRV_WDI_ROOT_NAME)
-        Dim sInstallerPath As String = IO.Path.Combine(sRootFolder, DRV_WDI_INSTALLER_NAME)
+        Dim sInstallerPath As String = GetDriverInstallerPath()
+        Dim sRootFolder As String = IO.Path.GetDirectoryName(sInstallerPath)
 
         Using mProcess As New Process
             mProcess.StartInfo.FileName = sInstallerPath
