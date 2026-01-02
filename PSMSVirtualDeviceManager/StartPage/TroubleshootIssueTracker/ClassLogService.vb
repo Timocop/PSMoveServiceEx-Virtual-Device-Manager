@@ -168,7 +168,7 @@ Public Class ClassLogService
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_BAD_SERVICE_FPS,
             "PSMoveServiceEx is running at a very low framerate {0} (minimum {1}) which can cause bad tracking quality.",
-            "Upgrade your computers CPU.",
+            "Upgrade your computers CPU or increase performance by stopping unessecary background applications.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
 

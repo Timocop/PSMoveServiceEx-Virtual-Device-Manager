@@ -6,6 +6,9 @@ Public Class ClassLogManagerHardware
     Public Shared ReadOnly SECTION_CONNECTED_HARDWARE As String = "Connected Hardware"
 
     Public Shared ReadOnly LOG_ISSUE_NO_DRIVERS_INSTALLED As String = "Required drivers not installed"
+    Public Shared ReadOnly LOG_ISSUE_MULTI_BLUETOOTH_INSTALLED As String = "Multiple bluetooth radios enabled"
+    Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_INSTALLED As String = "Bluetooth radio found"
+    Public Shared ReadOnly LOG_ISSUE_NO_BLUETOOTH_INSTALLED As String = "No bluetooth radio found"
 
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
@@ -140,6 +143,7 @@ Public Class ClassLogManagerHardware
     Public Function GetIssues() As STRUC_LOG_ISSUE() Implements ILogAction.GetIssues
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
         mIssues.AddRange(CheckBadDrivers())
+        mIssues.AddRange(CheckBluetoothRadios())
         Return mIssues.ToArray
     End Function
 
@@ -176,6 +180,75 @@ Public Class ClassLogManagerHardware
             mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.sPath, mDevice.sName)
             mIssues.Add(mIssue)
         Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckBluetoothRadios() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplateMultiBluetooth As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_MULTI_BLUETOOTH_INSTALLED,
+            "Multiple bluetooth radios such as '{0}' ({1}) are enabled at the same time which can cause issues with controller pairing.",
+            "Disable other bluetooth radios using 'Service Management > Manage Connected Devices' and only keep a single radio enabled." &
+                "Compatible USB bluetooth radios should be prefered and build-in radios disabled. See PSMoveServiceEx GitHub Wiki for more details.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mTemplateBluetooth As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_BLUETOOTH_INSTALLED,
+            "A bluetooth radio '{0}' ({1})  has been found!",
+            "",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim mTemplateNoBluetooth As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_NO_BLUETOOTH_INSTALLED,
+            "No bluetooth radios have been found! You will be unable to pair any PlayStation Move controllers.",
+            "Buy a bluetooth radio if you want to pair your PlayStation Move controllers. Make sure you buy one of the compatible and tested bluetooth radios listed on the PSMoveServiceEx GitHub Wiki. Unknown and untested radios might not work!",
+            ENUM_LOG_ISSUE_TYPE.WARNING
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mRadioList As New List(Of KeyValuePair(Of String, String))
+
+        ' Check if ID even point to existing devices
+        For Each mDevice In GetDevices()
+            If (String.IsNullOrEmpty(mDevice.sService)) Then
+                Continue For
+            End If
+
+            If (mDevice.sService.ToLowerInvariant <> "BTHUSB".ToLowerInvariant) Then
+                Continue For
+            End If
+
+            If (mDevice.iConfigFlags <> 0) Then
+                Continue For
+            End If
+
+            mRadioList.Add(New KeyValuePair(Of String, String)(mDevice.sName, mDevice.sPath))
+        Next
+
+        Select Case (mRadioList.Count)
+            Case 0
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplateNoBluetooth)
+                mIssues.Add(mIssue)
+            Case 1
+                For Each mItem In mRadioList
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplateBluetooth)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mItem.Key, mItem.Value)
+                    mIssues.Add(mIssue)
+                Next
+            Case Else
+                For Each mItem In mRadioList
+                    Dim mIssue As New STRUC_LOG_ISSUE(mTemplateMultiBluetooth)
+                    mIssue.sDescription = String.Format(mIssue.sDescription, mItem.Key, mItem.Value)
+                    mIssues.Add(mIssue)
+                Next
+        End Select
 
         Return mIssues.ToArray
     End Function
