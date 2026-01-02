@@ -201,6 +201,15 @@
     <Compile Include="Classes\Service\ClassServiceInfo.vb" />
     <Compile Include="Classes\Service\ClassSteamVRConfig.vb" />
     <Compile Include="Classes\ClassUpdate.vb" />
+    <Compile Include="Classes\Tools\ClassTreeViewBuffered.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Tools\ClassTreeViewColumns.designer.vb">
+      <DependentUpon>ClassTreeViewColumns.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Tools\ClassTreeViewColumns.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Classes\Tools\ClassUtils.vb" />
     <Compile Include="Classes\Service\ClassVmtConst.vb" />
     <Compile Include="Classes\Tools\FormButtonInput.Designer.vb">
@@ -439,6 +448,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Classes\Tools\ClassTreeViewColumns.resx">
+      <DependentUpon>ClassTreeViewColumns.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Classes\Tools\FormButtonInput.resx">
       <DependentUpon>FormButtonInput.vb</DependentUpon>
     </EmbeddedResource>

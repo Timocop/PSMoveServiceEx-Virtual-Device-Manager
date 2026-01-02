@@ -32,6 +32,34 @@ Public Class FormTroubleshootLogs
         End Function
     End Structure
 
+    Class ClassTreeNodeIssue
+        Inherits TreeNode
+
+        Public m_Message As String
+        Public m_Description As String
+        Public m_Solution As String
+        Public m_Module As String
+        Public m_ImageKey As String
+
+        Public Sub New(_Message As String, _Description As String, _Solution As String, _Module As String, _ImageKey As String)
+            MyBase.New()
+
+            Me.Text = _Message
+            Me.Tag = New String() {
+                 _Description
+            }
+
+            Me.ImageKey = _ImageKey
+            Me.SelectedImageKey = _ImageKey
+
+            m_Message = _Message
+            m_Description = _Description
+            m_Solution = _Solution
+            m_Module = _Module
+            m_ImageKey = _ImageKey
+        End Sub
+    End Class
+
     Public Sub New(_FormMain As FormMain, bRefresh As Boolean, bSilentRefresh As Boolean)
         g_mFormMain = _FormMain
         g_bInitRefresh = bRefresh
@@ -49,6 +77,15 @@ Public Class FormTroubleshootLogs
         ImageList_Issues.Images.Add("Warn", My.Resources.user32_101_16x16_32)
         ImageList_Issues.Images.Add("Error", My.Resources.imageres_5337_16x16_32)
         ImageList_Issues.Images.Add("Good", My.Resources.netshell_1610_32x32_32)
+        ImageList_Issues.Images.Add("StatusGreen", My.Resources.Status_GREEN_16)
+        ImageList_Issues.Images.Add("StatusOk", My.Resources.Status_WHITE_16)
+        ImageList_Issues.Images.Add("StatusOrange", My.Resources.Status_YELLOW_16)
+        ImageList_Issues.Images.Add("StatusRed", My.Resources.Status_RED_16)
+
+        ClassTreeViewColumns_Issues.m_Columns.Add("Issue", CInt(ClassTreeViewColumns_Issues.m_TreeView.Width * 0.5))
+        ClassTreeViewColumns_Issues.m_TreeView.ImageList = ImageList_Issues
+
+        AddHandler ClassTreeViewColumns_Issues.m_TreeView.NodeMouseClick, AddressOf TreeViewColumns_Issues_NodeMouseClick
 
         g_mLogJobs.Clear()
         g_mLogJobs.AddRange(ClassLogDiagnostics.GetAllJobs(g_mFormMain, m_LogContent))
@@ -179,25 +216,33 @@ Public Class FormTroubleshootLogs
     Private Function GetCombinedLogs() As String
         Dim sContent As New Text.StringBuilder
 
-        If (ListView_Issues.Items.Count > 0) Then
+        If (ClassTreeViewColumns_Issues.m_TreeView.Nodes.Count > 0) Then
             sContent.AppendFormat("{0} {1} {2}", SECTION_BUFFER, SECTION_DETAILED_LOG_SUMMARY, SECTION_BUFFER).AppendLine()
             sContent.AppendLine()
 
-            For Each mItem As ListViewItem In ListView_Issues.Items
-                Dim sMessage As String = mItem.SubItems(0).Text
-                Dim sDescription As String = mItem.SubItems(1).Text
-                Dim sSolution As String = mItem.SubItems(2).Text
-                Dim sModule As String = mItem.SubItems(3).Text
+            For Each mRootNode As TreeNode In ClassTreeViewColumns_Issues.m_TreeView.Nodes
+                For Each mNode As TreeNode In mRootNode.Nodes
+                    Dim mIssueNode = TryCast(mNode, ClassTreeNodeIssue)
+                    If (mIssueNode Is Nothing) Then
+                        Continue For
+                    End If
 
-                If (String.IsNullOrEmpty(sMessage) OrElse sMessage.Trim.Length = 0) Then
-                    Continue For
-                End If
+                    Dim sMessage As String = mIssueNode.m_Message
+                    Dim sDescription As String = mIssueNode.m_Description
+                    Dim sSolution As String = mIssueNode.m_Solution
+                    Dim sModule As String = mIssueNode.m_Module
 
-                sContent.AppendFormat("Name: {0}", sMessage.Replace(Environment.NewLine, " ")).AppendLine()
-                sContent.AppendFormat(" - Description: {0}", sDescription.Replace(Environment.NewLine, " ")).AppendLine()
-                sContent.AppendFormat(" - Solution: {0}", sSolution.Replace(Environment.NewLine, " ")).AppendLine()
-                sContent.AppendFormat(" - Module: {0}", sModule.Replace(Environment.NewLine, " ")).AppendLine()
-                sContent.AppendLine()
+                    If (String.IsNullOrEmpty(sMessage) OrElse sMessage.Trim.Length = 0) Then
+                        Continue For
+                    End If
+
+                    sContent.AppendFormat("Name: {0}", sMessage.Replace(Environment.NewLine, " ")).AppendLine()
+                    sContent.AppendFormat(" - Description: {0}", sDescription.Replace(Environment.NewLine, " ")).AppendLine()
+                    sContent.AppendFormat(" - Solution: {0}", sSolution.Replace(Environment.NewLine, " ")).AppendLine()
+                    sContent.AppendFormat(" - Module: {0}", sModule.Replace(Environment.NewLine, " ")).AppendLine()
+                    sContent.AppendLine()
+                Next
+
             Next
 
 
@@ -418,45 +463,80 @@ Public Class FormTroubleshootLogs
         Next
 
         ClassUtils.AsyncInvoke(Sub()
-                                   ListView_Issues.Items.Clear()
-
-                                   ListView_Issues.BeginUpdate()
+                                   ClassTreeViewColumns_Issues.m_TreeView.Nodes.Clear()
+                                   ClassTreeViewColumns_Issues.m_TreeView.BeginUpdate()
                                    Try
+                                       Dim bEverythingGood As Boolean = True
+
                                        For Each mItem In mIssues
-                                           Dim mNewItem As New ListViewItem(New String() {
-                                                   mItem.Value.sMessage,
-                                                   mItem.Value.sDescription,
-                                                   mItem.Value.sSolution,
-                                                   mItem.Key
-                                               })
+                                           Dim mTreeNodes As TreeNode() = ClassTreeViewColumns_Issues.m_TreeView.Nodes.Find(mItem.Key, False)
+                                           Dim mTreeNode As TreeNode = Nothing
 
-                                           mNewItem.ImageIndex = 0
-
+                                           Dim sImageKey As String = ""
                                            Select Case (mItem.Value.iType)
                                                Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.INFO
-                                                   mNewItem.ImageKey = "Info"
+                                                   sImageKey = "Info"
                                                Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.WARNING
-                                                   mNewItem.ImageKey = "Warn"
+                                                   sImageKey = "Warn"
+                                                   bEverythingGood = False
                                                Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR
-                                                   mNewItem.ImageKey = "Error"
+                                                   sImageKey = "Error"
+                                                   bEverythingGood = False
                                            End Select
 
-                                           ListView_Issues.Items.Add(mNewItem)
+                                           If (mTreeNodes.Length < 1) Then
+                                               mTreeNode = New TreeNode(mItem.Key)
+                                               mTreeNode.Name = mItem.Key
+
+                                               mTreeNode.ImageKey = "StatusOk"
+                                               mTreeNode.SelectedImageKey = "StatusOk"
+
+                                               ClassTreeViewColumns_Issues.m_TreeView.Nodes.Add(mTreeNode)
+                                           Else
+                                               mTreeNode = mTreeNodes(0)
+                                           End If
+
+                                           Dim iCurrentStatus As ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.INFO
+                                           If (Not String.IsNullOrEmpty(mTreeNode.ImageKey)) Then
+                                               Select Case (mTreeNode.ImageKey)
+                                                   Case "StatusOk"
+                                                       iCurrentStatus = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.INFO
+                                                   Case "StatusOrange"
+                                                       iCurrentStatus = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.WARNING
+                                                   Case "StatusRed"
+                                                       iCurrentStatus = ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR
+                                               End Select
+                                           End If
+
+                                           If (mItem.Value.iType > iCurrentStatus) Then
+                                               Dim sNewStatus As String = "StatusOk"
+                                               Select Case (mItem.Value.iType)
+                                                   Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.INFO
+                                                       sNewStatus = "StatusOk"
+                                                   Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.WARNING
+                                                       sNewStatus = "StatusOrange"
+                                                   Case ClassLogDiagnostics.ENUM_LOG_ISSUE_TYPE.ERROR
+                                                       sNewStatus = "StatusRed"
+                                               End Select
+
+                                               mTreeNode.ImageKey = sNewStatus
+                                               mTreeNode.SelectedImageKey = sNewStatus
+                                           End If
+
+                                           mTreeNode.Nodes.Add(New ClassTreeNodeIssue(mItem.Value.sMessage, mItem.Value.sDescription, mItem.Value.sSolution, mItem.Key, sImageKey))
                                        Next
 
-                                       If (ListView_Issues.Items.Count < 1) Then
-                                           Dim mNewItem As New ListViewItem(New String() {
-                                                    "No issues have been found",
-                                                    "",
-                                                    "",
-                                                    ""
-                                                })
+                                       If (bEverythingGood) Then
+                                           Dim mNewItem As New TreeNode("No issues have been found!")
 
-                                           mNewItem.ImageKey = "Good"
-                                           ListView_Issues.Items.Add(mNewItem)
+                                           mNewItem.ImageKey = "StatusGreen"
+                                           mNewItem.SelectedImageKey = "StatusGreen"
+                                           ClassTreeViewColumns_Issues.m_TreeView.Nodes.Add(mNewItem)
                                        End If
                                    Finally
-                                       ListView_Issues.EndUpdate()
+                                       ClassTreeViewColumns_Issues.m_TreeView.Sort()
+                                       ClassTreeViewColumns_Issues.m_TreeView.EndUpdate()
+                                       ClassTreeViewColumns_Issues.m_TreeView.ExpandAll()
                                    End Try
                                End Sub)
     End Sub
@@ -563,29 +643,35 @@ Public Class FormTroubleshootLogs
         End Select
     End Sub
 
-    Private Sub ListView_Issues_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView_Issues.SelectedIndexChanged
-        If (ListView_Issues.SelectedItems.Count < 1) Then
+    Private Sub TreeViewColumns_Issues_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs)
+        ClassTreeViewColumns_Issues.m_TreeView.SelectedNode = e.Node
+
+        If (ClassTreeViewColumns_Issues.m_TreeView.SelectedNode Is Nothing) Then
             TextBox_IssueInfo.Text = NOTHING_SELECTED
             Return
         End If
 
-        Dim mItem As ListViewItem = ListView_Issues.SelectedItems(0)
+        Dim mNode As ClassTreeNodeIssue = TryCast(ClassTreeViewColumns_Issues.m_TreeView.SelectedNode, ClassTreeNodeIssue)
+        If (mNode Is Nothing) Then
+            TextBox_IssueInfo.Text = NOTHING_SELECTED
+            Return
+        End If
 
         Dim sInfo As New Text.StringBuilder
         sInfo.AppendLine("Message:")
-        sInfo.AppendLine(mItem.SubItems(0).Text)
+        sInfo.AppendLine(mNode.m_Message)
         sInfo.AppendLine()
 
         sInfo.AppendLine("Description:")
-        sInfo.AppendLine(mItem.SubItems(1).Text)
+        sInfo.AppendLine(mNode.m_Description)
         sInfo.AppendLine()
 
         sInfo.AppendLine("Solution:")
-        sInfo.AppendLine(mItem.SubItems(2).Text)
+        sInfo.AppendLine(mNode.m_Solution)
         sInfo.AppendLine()
 
         sInfo.AppendLine("Module:")
-        sInfo.AppendLine(mItem.SubItems(3).Text)
+        sInfo.AppendLine(mNode.m_Module)
         sInfo.AppendLine()
 
         TextBox_IssueInfo.Text = sInfo.ToString
@@ -611,6 +697,8 @@ Public Class FormTroubleshootLogs
     End Sub
 
     Private Sub CleanUp()
+        RemoveHandler ClassTreeViewColumns_Issues.m_TreeView.NodeMouseClick, AddressOf TreeViewColumns_Issues_NodeMouseClick
+
         If (g_mThread IsNot Nothing AndAlso g_mThread.IsAlive) Then
             g_mThread.Abort()
             g_mThread.Join()

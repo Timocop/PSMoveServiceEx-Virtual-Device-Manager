@@ -15,7 +15,7 @@ Public Class ClassLogManagerVirtualTrackers
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_RESOLUTION_MISMATCH As String = "Virtual tracker and video input device resolution mismatch"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_CODEC As String = "Virtual tracker bad codec set"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_OPTIMAL_CODEC As String = "Virtual tracker set optimal codec"
-    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS As String = "Virtual tracker bad framrate"
+    Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS As String = "Virtual tracker bad framerate"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_AUTO_SETTINGS As String = "Video input device properties set manually"
 
     Structure STRUC_DEVICE_ITEM
@@ -275,7 +275,7 @@ Public Class ClassLogManagerVirtualTrackers
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_VIRTUAL_TRACKER_RESSOURCE_HEAVY,
             "Virtual tracker resolution and framerate is too high for virtual input device id {0} ({1}). Using too high settings demands more system resosurces.",
-            "Its recommended to use either high resolution and lower framrate or lower resolution and high framerate. Not both resolution and framerate on high.",
+            "Its recommended to use either high resolution and lower framerate or lower resolution and high framerate. Not both resolution and framerate on high.",
             ENUM_LOG_ISSUE_TYPE.WARNING
         )
 

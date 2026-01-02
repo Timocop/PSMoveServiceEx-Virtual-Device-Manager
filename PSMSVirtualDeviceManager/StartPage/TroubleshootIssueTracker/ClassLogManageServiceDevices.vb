@@ -21,7 +21,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_BAD_ACCELEROMETER As String = "Uncalibrated accelerometer"
     Public Shared ReadOnly LOG_ISSUE_PS4CAM_COLOR_SENSTIVITY As String = "Unoptimal color detection sensitivity"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_RESOLUTION_PSVR As String = "Tracker resolution too low for Head-mounted Display"
-    Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_FPS As String = "Bad tracker framrate"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_FPS As String = "Bad tracker framerate"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_TIMEOUT As String = "Possible tracker timeout"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_FACING_EXCLUDED As String = "Facing trackers triangulation excluded"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_SYNC_MODE As String = "Tracker distance too small for current synchronization mode"
@@ -888,6 +888,9 @@ Public Class ClassLogManageServiceDevices
         Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
 
         Dim mTrackerConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+        If (mTrackerConfig Is Nothing) Then
+            Return {}
+        End If
 
         Dim iAngleLimit As Single = Single.Parse(mTrackerConfig.GetValue("", "tracker_deviation_exclude_angle", "35.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
 
@@ -991,6 +994,9 @@ Public Class ClassLogManageServiceDevices
         Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
 
         Dim mTrackerConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+        If (mTrackerConfig Is Nothing) Then
+            Return {}
+        End If
 
         Dim iTrackerSyncMode As Integer = Integer.Parse(mTrackerConfig.GetValue("", "tracker_sync_mode", "0"))
 

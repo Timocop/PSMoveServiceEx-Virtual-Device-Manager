@@ -36,8 +36,6 @@ Partial Class FormTroubleshootLogs
         Me.TabControl_Diagnostic = New System.Windows.Forms.TabControl()
         Me.TabPage_Issues = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.ListView_Issues = New System.Windows.Forms.ListView()
-        Me.ColumnHeader_Message = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ImageList_Issues = New System.Windows.Forms.ImageList(Me.components)
         Me.TextBox_IssueInfo = New System.Windows.Forms.TextBox()
         Me.TabPage_Devices = New System.Windows.Forms.TabPage()
@@ -46,6 +44,7 @@ Partial Class FormTroubleshootLogs
         Me.ComboBox_Logs = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TextBox_Logs = New System.Windows.Forms.TextBox()
+        Me.ClassTreeViewColumns_Issues = New PSMSVirtualDeviceManager.ClassTreeViewColumns()
         Me.Panel1.SuspendLayout()
         Me.TabControl_Diagnostic.SuspendLayout()
         Me.TabPage_Issues.SuspendLayout()
@@ -158,7 +157,7 @@ Partial Class FormTroubleshootLogs
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.ListView_Issues)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.ClassTreeViewColumns_Issues)
         '
         'SplitContainer1.Panel2
         '
@@ -166,29 +165,6 @@ Partial Class FormTroubleshootLogs
         Me.SplitContainer1.Size = New System.Drawing.Size(752, 469)
         Me.SplitContainer1.SplitterDistance = 250
         Me.SplitContainer1.TabIndex = 1
-        '
-        'ListView_Issues
-        '
-        Me.ListView_Issues.BackColor = System.Drawing.Color.White
-        Me.ListView_Issues.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_Issues.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader_Message})
-        Me.ListView_Issues.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView_Issues.FullRowSelect = True
-        Me.ListView_Issues.HideSelection = False
-        Me.ListView_Issues.Location = New System.Drawing.Point(0, 0)
-        Me.ListView_Issues.MultiSelect = False
-        Me.ListView_Issues.Name = "ListView_Issues"
-        Me.ListView_Issues.Size = New System.Drawing.Size(752, 250)
-        Me.ListView_Issues.SmallImageList = Me.ImageList_Issues
-        Me.ListView_Issues.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.ListView_Issues.TabIndex = 0
-        Me.ListView_Issues.UseCompatibleStateImageBehavior = False
-        Me.ListView_Issues.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader_Message
-        '
-        Me.ColumnHeader_Message.Text = "Message"
-        Me.ColumnHeader_Message.Width = 721
         '
         'ImageList_Issues
         '
@@ -278,6 +254,15 @@ Partial Class FormTroubleshootLogs
         Me.TextBox_Logs.TabIndex = 0
         Me.TextBox_Logs.WordWrap = False
         '
+        'ClassTreeViewColumns_Issues
+        '
+        Me.ClassTreeViewColumns_Issues.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ClassTreeViewColumns_Issues.Location = New System.Drawing.Point(0, 0)
+        Me.ClassTreeViewColumns_Issues.m_GridView = False
+        Me.ClassTreeViewColumns_Issues.Name = "ClassTreeViewColumns_Issues"
+        Me.ClassTreeViewColumns_Issues.Size = New System.Drawing.Size(752, 250)
+        Me.ClassTreeViewColumns_Issues.TabIndex = 0
+        '
         'FormTroubleshootLogs
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -312,9 +297,7 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents TabControl_Diagnostic As TabControl
     Friend WithEvents TabPage_Logs As TabPage
     Friend WithEvents TabPage_Issues As TabPage
-    Friend WithEvents ListView_Issues As ListView
     Friend WithEvents ImageList_Issues As ImageList
-    Friend WithEvents ColumnHeader_Message As ColumnHeader
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TextBox_IssueInfo As TextBox
     Friend WithEvents TabPage_Devices As TabPage
@@ -324,4 +307,5 @@ Partial Class FormTroubleshootLogs
     Friend WithEvents TreeView_DeviceProperties As TreeView
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents ClassTreeViewColumns_Issues As ClassTreeViewColumns
 End Class
