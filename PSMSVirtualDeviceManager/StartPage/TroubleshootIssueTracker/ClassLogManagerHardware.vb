@@ -163,7 +163,7 @@ Public Class ClassLogManagerHardware
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_NO_DRIVERS_INSTALLED,
-            "Drivers for device {0} ({1}) are not installed and may not be working correctly.",
+            "Drivers for device '{0}' ({1}) are not installed and may not be working correctly.",
             "Install all nessecary drivers.",
             ENUM_LOG_ISSUE_TYPE.ERROR
         )
@@ -177,7 +177,7 @@ Public Class ClassLogManagerHardware
             End If
 
             Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-            mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.sPath, mDevice.sName)
+            mIssue.sDescription = String.Format(mIssue.sDescription, mDevice.sName, mDevice.sPath)
             mIssues.Add(mIssue)
         Next
 
