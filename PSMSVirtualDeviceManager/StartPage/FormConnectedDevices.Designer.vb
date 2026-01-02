@@ -202,6 +202,9 @@ Partial Class FormConnectedDevices
         '
         'TabControl_Devices
         '
+        Me.TabControl_Devices.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl_Devices.Controls.Add(Me.TabPage_Devices)
         Me.TabControl_Devices.Controls.Add(Me.TabPage_Bluetooth)
         Me.TabControl_Devices.Location = New System.Drawing.Point(12, 12)
@@ -254,7 +257,7 @@ Partial Class FormConnectedDevices
         '
         Me.ContextMenuStrip_Bluetooth.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem_BluetoothRefresh, Me.ToolStripSeparator3, Me.ToolStripMenuItem_BluetoothOpenSystem})
         Me.ContextMenuStrip_Bluetooth.Name = "ContextMenuStrip_Devices"
-        Me.ContextMenuStrip_Bluetooth.Size = New System.Drawing.Size(256, 76)
+        Me.ContextMenuStrip_Bluetooth.Size = New System.Drawing.Size(256, 54)
         '
         'ToolStripMenuItem_BluetoothRefresh
         '
