@@ -102,10 +102,12 @@ Public Class ClassLogManagerPSVR
         Dim mDisplayStatusSolution As New Dictionary(Of ENUM_DEVICE_DISPLAY_STATUS, String)
 
         mUsbStatusSolution(ENUM_DEVICE_USB_STATUS.DRIVER_ISSUE) = "Install the PlayStation VR drivers found in 'PlayStation VR Management'."
+        mUsbStatusSolution(ENUM_DEVICE_USB_STATUS.CONNECTED_NO_DATA) = "Run PSMoveServiceEx to receive data from your PlayStation VR head-mounted display."
         mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.WAITING_FOR_RELOAD) = "PlayStation VR display configuration has been changed. Restart the PlayStation VR or re-plug the HDMI cable."
         mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.BAD_FREQUENCY) = "Increase the PlayStation VR display frequency found in 'PlayStation VR Management'."
         mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.DISABLED) = "Enable the PlayStation VR display in the Windows display settings and set it to 'Extended'."
         mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.MIRRROED) = "Set the PlayStation VR display in the Windows display settings to 'Extended'."
+        mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.NOT_CONFIGURED) = "Configure the PlayStation VR display for Virtual-Mode or Direct-Mode found in 'PlayStation VR Management'."
         mDisplayStatusSolution(ENUM_DEVICE_DISPLAY_STATUS.UNSUPPORTED) = "Contact support."
 
         Select Case (iHdmiStatus)
