@@ -25,6 +25,7 @@ Public Class ClassLogManageServiceDevices
     Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_TIMEOUT As String = "Possible tracker timeout"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_FACING_EXCLUDED As String = "Facing trackers triangulation excluded"
     Public Shared ReadOnly LOG_ISSUE_TRACKER_SYNC_MODE As String = "Tracker distance too small for current synchronization mode"
+    Public Shared ReadOnly LOG_ISSUE_TRACKER_BAD_POSE As String = "Uncalibrated tracker pose"
 
 
     Enum ENUM_DEVICE_TYPE
@@ -215,6 +216,7 @@ Public Class ClassLogManageServiceDevices
         mIssues.AddRange(CheckFps())
         mIssues.AddRange(CheckFacingTrackers())
         mIssues.AddRange(CheckTrackerDistanceSyncMode())
+        mIssues.AddRange(CheckBadPoseTrackers())
         Return mIssues.ToArray
     End Function
 
@@ -920,6 +922,11 @@ Public Class ClassLogManageServiceDevices
                 Single.Parse(mDeviceConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
             )
 
+            ' Uncalibrated
+            If (CInt(mTrackerPosition.X) = 0 AndAlso CInt(mTrackerPosition.Y) = 0 AndAlso CInt(mTrackerPosition.Z) = 0) Then
+                Continue For
+            End If
+
             For Each mDeviceOther In GetDevices()
                 If (mDeviceOther.iId < 0) Then
                     Continue For
@@ -957,6 +964,11 @@ Public Class ClassLogManageServiceDevices
                     Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
                     Single.Parse(mDeviceOtherConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
                 )
+
+                ' Uncalibrated
+                If (CInt(mOtherTrackerPosition.X) = 0 AndAlso CInt(mOtherTrackerPosition.Y) = 0 AndAlso CInt(mOtherTrackerPosition.Z) = 0) Then
+                    Continue For
+                End If
 
                 Dim fAngleDiff1 As Single = ClassMathUtils.CalculateAngleDegreesDifferenceFov(mTrackerPosition, mTrackerOrientation, mOtherTrackerPosition, mOtherTrackerOrientation)
                 Dim fAngleDiff2 As Single = ClassMathUtils.CalculateAngleDegreesDifferenceFov(mOtherTrackerPosition, mOtherTrackerOrientation, mTrackerPosition, mTrackerOrientation)
@@ -1065,6 +1077,73 @@ Public Class ClassLogManageServiceDevices
                 End If
             Next
         Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckBadPoseTrackers() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_TRACKER_BAD_POSE,
+            "Tracker id {0} pose has not been calibrated and will cause tracking issues.",
+            "Do tracker pose calibration using PSMoveServiceEx Config Tool to make tracking work correctly with multiple cameras.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+         
+        Dim iTrackerCount As Integer = 0
+        Dim iUncalibratedTrackers As New HashSet(Of Integer)
+
+        For Each mDevice In GetDevices()
+            If (mDevice.iId < 0) Then
+                Continue For
+            End If
+
+            If (mDevice.iType <> ENUM_DEVICE_TYPE.TRACKER) Then
+                Continue For
+            End If
+
+            Dim mDeviceConfig = mServiceLog.FindConfigFromSerial(mDevice.sSerial)
+            If (mDeviceConfig Is Nothing) Then
+                Continue For
+            End If
+
+            Dim mTrackerOrientation As New Quaternion(
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\orientation", "w", "1.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            )
+            Dim mTrackerPosition As New Vector3(
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "x", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "y", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture),
+                Single.Parse(mDeviceConfig.GetValue("pose\position", "z", "0.0"), Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture)
+            )
+
+            iTrackerCount += 1
+
+            ' Calibrated, i hope
+            If (CInt(mTrackerPosition.X) <> 0 OrElse CInt(mTrackerPosition.Y) <> 0 OrElse CInt(mTrackerPosition.Z) <> 0) Then
+                Continue For
+            End If
+
+            iUncalibratedTrackers.Add(mDevice.iId)
+        Next
+
+        ' Single tracker tracking does not need pose calibration.
+        If (iTrackerCount > 1) Then
+            For Each iTrackerId In iUncalibratedTrackers
+                Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+                mIssue.sDescription = String.Format(mIssue.sDescription, iTrackerId)
+                mIssues.Add(mIssue)
+            Next
+        End If
 
         Return mIssues.ToArray
     End Function
