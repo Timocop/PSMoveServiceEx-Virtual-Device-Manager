@@ -536,7 +536,11 @@ Public Class FormTroubleshootLogs
                                    Finally
                                        ClassTreeViewColumns_Issues.m_TreeView.Sort()
                                        ClassTreeViewColumns_Issues.m_TreeView.EndUpdate()
+
                                        ClassTreeViewColumns_Issues.m_TreeView.ExpandAll()
+                                       If (ClassTreeViewColumns_Issues.m_TreeView.Nodes.Count > 0) Then
+                                           ClassTreeViewColumns_Issues.m_TreeView.Nodes(0).EnsureVisible()
+                                       End If
                                    End Try
                                End Sub)
     End Sub
