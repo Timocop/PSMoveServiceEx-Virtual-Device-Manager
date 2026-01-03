@@ -36,7 +36,7 @@ Partial Class FormTroubleshootLogs
         Me.TabControl_Diagnostic = New System.Windows.Forms.TabControl()
         Me.TabPage_Issues = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.ImageList_Issues = New System.Windows.Forms.ImageList(Me.components)
+        Me.ClassTreeViewColumns_Issues = New PSMSVirtualDeviceManager.ClassTreeViewColumns()
         Me.TextBox_IssueInfo = New System.Windows.Forms.TextBox()
         Me.TabPage_Devices = New System.Windows.Forms.TabPage()
         Me.TreeView_DeviceProperties = New System.Windows.Forms.TreeView()
@@ -44,7 +44,7 @@ Partial Class FormTroubleshootLogs
         Me.ComboBox_Logs = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TextBox_Logs = New System.Windows.Forms.TextBox()
-        Me.ClassTreeViewColumns_Issues = New PSMSVirtualDeviceManager.ClassTreeViewColumns()
+        Me.ImageList_Issues = New System.Windows.Forms.ImageList(Me.components)
         Me.Panel1.SuspendLayout()
         Me.TabControl_Diagnostic.SuspendLayout()
         Me.TabPage_Issues.SuspendLayout()
@@ -151,6 +151,7 @@ Partial Class FormTroubleshootLogs
         '
         Me.SplitContainer1.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
@@ -166,11 +167,16 @@ Partial Class FormTroubleshootLogs
         Me.SplitContainer1.SplitterDistance = 250
         Me.SplitContainer1.TabIndex = 1
         '
-        'ImageList_Issues
+        'ClassTreeViewColumns_Issues
         '
-        Me.ImageList_Issues.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
-        Me.ImageList_Issues.ImageSize = New System.Drawing.Size(16, 16)
-        Me.ImageList_Issues.TransparentColor = System.Drawing.Color.Transparent
+        Me.ClassTreeViewColumns_Issues.AutoScroll = True
+        Me.ClassTreeViewColumns_Issues.BackColor = System.Drawing.SystemColors.Window
+        Me.ClassTreeViewColumns_Issues.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ClassTreeViewColumns_Issues.Location = New System.Drawing.Point(0, 0)
+        Me.ClassTreeViewColumns_Issues.m_GridView = False
+        Me.ClassTreeViewColumns_Issues.Name = "ClassTreeViewColumns_Issues"
+        Me.ClassTreeViewColumns_Issues.Size = New System.Drawing.Size(752, 250)
+        Me.ClassTreeViewColumns_Issues.TabIndex = 0
         '
         'TextBox_IssueInfo
         '
@@ -254,14 +260,11 @@ Partial Class FormTroubleshootLogs
         Me.TextBox_Logs.TabIndex = 0
         Me.TextBox_Logs.WordWrap = False
         '
-        'ClassTreeViewColumns_Issues
+        'ImageList_Issues
         '
-        Me.ClassTreeViewColumns_Issues.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ClassTreeViewColumns_Issues.Location = New System.Drawing.Point(0, 0)
-        Me.ClassTreeViewColumns_Issues.m_GridView = False
-        Me.ClassTreeViewColumns_Issues.Name = "ClassTreeViewColumns_Issues"
-        Me.ClassTreeViewColumns_Issues.Size = New System.Drawing.Size(752, 250)
-        Me.ClassTreeViewColumns_Issues.TabIndex = 0
+        Me.ImageList_Issues.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+        Me.ImageList_Issues.ImageSize = New System.Drawing.Size(16, 16)
+        Me.ImageList_Issues.TransparentColor = System.Drawing.Color.Transparent
         '
         'FormTroubleshootLogs
         '
