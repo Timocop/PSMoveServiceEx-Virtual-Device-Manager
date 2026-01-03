@@ -154,7 +154,6 @@ Public Class UCVirtualMotionTracker
         Private g_bSuspendRequest As Boolean = False
         Private g_mLastResponse As Date
         Private g_mReceivedResponse As New Queue(Of Long)
-        Private g_iJitter As Double = 0.0
         Private g_iLatency As Double = 0.0
 
         Public Sub New()
@@ -199,14 +198,6 @@ Public Class UCVirtualMotionTracker
             Get
                 SyncLock _ThreadLock
                     Return g_mLastResponse
-                End SyncLock
-            End Get
-        End Property
-
-        ReadOnly Property m_Jitter As Double
-            Get
-                SyncLock _ThreadLock
-                    Return g_iJitter
                 End SyncLock
             End Get
         End Property
@@ -259,14 +250,11 @@ Public Class UCVirtualMotionTracker
 
                             If (iTimeSinceEpoch <> 0) Then
                                 g_iLatency = MeasureLatency(iTimeSinceEpoch)
-                                g_iJitter = MeasureJitter(iTimeSinceEpoch)
                             Else
                                 g_iLatency = 0
-                                g_iJitter = 0
                             End If
                         Else
                             g_iLatency = 0
-                            g_iJitter = 0
                         End If
                     End SyncLock
 
@@ -285,35 +273,6 @@ Public Class UCVirtualMotionTracker
 
             Return Math.Max(0, iDurationMs - iTimePacketMs)
         End Function
-
-        Private Function MeasureJitter(iTimePacketMs As Long) As Double
-            Const MAX_HISTORY = 10
-            Dim iJitterSum As Long = 0
-
-            g_mReceivedResponse.Enqueue(iTimePacketMs)
-
-            If (g_mReceivedResponse.Count > MAX_HISTORY) Then
-                g_mReceivedResponse.Dequeue()
-            End If
-
-            If (g_mReceivedResponse.Count < 2) Then
-                Return 0.0
-            End If
-
-            Dim iPrevInterval As Long = 0
-            For i = 1 To g_mReceivedResponse.Count - 1
-                Dim iInterval As Long = (g_mReceivedResponse(i) - g_mReceivedResponse(i - 1))
-
-                If (i > 1) Then
-                    iJitterSum += Math.Abs(iInterval - iPrevInterval)
-                End If
-
-                iPrevInterval = iInterval
-            Next
-
-            Return iJitterSum / (g_mReceivedResponse.Count - 1)
-        End Function
-
 
         Public Sub SendHmdPose(iSeq As Integer,
                                iTimeoffset As Double,
