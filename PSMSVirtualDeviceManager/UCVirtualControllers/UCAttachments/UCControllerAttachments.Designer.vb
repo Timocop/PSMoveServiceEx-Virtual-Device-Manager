@@ -44,6 +44,7 @@ Partial Class UCControllerAttachments
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.UcInformation1 = New PSMSVirtualDeviceManager.UCInformation()
+        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ContextMenuStrip_Attachments.SuspendLayout()
         Me.Panel_AvailableAttachments.SuspendLayout()
         Me.Panel8.SuspendLayout()
@@ -129,7 +130,7 @@ Partial Class UCControllerAttachments
         'ListView_Attachments
         '
         Me.ListView_Attachments.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView_Attachments.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
+        Me.ListView_Attachments.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader3, Me.ColumnHeader1, Me.ColumnHeader2})
         Me.ListView_Attachments.ContextMenuStrip = Me.ContextMenuStrip_Attachments
         Me.ListView_Attachments.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_Attachments.FullRowSelect = True
@@ -146,12 +147,12 @@ Partial Class UCControllerAttachments
         'ColumnHeader1
         '
         Me.ColumnHeader1.Text = "Controller ID"
-        Me.ColumnHeader1.Width = 150
+        Me.ColumnHeader1.Width = 125
         '
         'ColumnHeader2
         '
         Me.ColumnHeader2.Text = "Parent Controller ID"
-        Me.ColumnHeader2.Width = 150
+        Me.ColumnHeader2.Width = 125
         '
         'Panel8
         '
@@ -215,6 +216,11 @@ Partial Class UCControllerAttachments
         Me.UcInformation1.Size = New System.Drawing.Size(768, 57)
         Me.UcInformation1.TabIndex = 24
         '
+        'ColumnHeader3
+        '
+        Me.ColumnHeader3.Text = "Name"
+        Me.ColumnHeader3.Width = 250
+        '
         'UCControllerAttachments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -250,4 +256,5 @@ Partial Class UCControllerAttachments
     Friend WithEvents Panel10 As Panel
     Friend WithEvents Panel1 As Panel
     Friend WithEvents UcInformation1 As UCInformation
+    Friend WithEvents ColumnHeader3 As ColumnHeader
 End Class

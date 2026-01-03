@@ -15,7 +15,7 @@ Public Class UCControllerAttachments
         Public g_UCControllerAttachments As UCControllerAttachments
 
         Public Sub New(_Id As Integer, _UCControllerAttachments As UCControllerAttachments)
-            MyBase.New(New String() {"", ""})
+            MyBase.New(New String() {"", "", ""})
 
             g_UCControllerAttachments = _UCControllerAttachments
             g_UCControllerAttachmentsItem = New UCControllerAttachmentsItem(_Id, _UCControllerAttachments)
@@ -25,8 +25,9 @@ Public Class UCControllerAttachments
         End Sub
 
         Public Sub UpdateItem()
-            Const LISTVIEW_SUBITEM_INDEX As Integer = 0
-            Const LISTVIEW_SUBITEM_PARENTID As Integer = 1
+            Const LISTVIEW_SUBITEM_NAME As Integer = 0
+            Const LISTVIEW_SUBITEM_INDEX As Integer = 1
+            Const LISTVIEW_SUBITEM_PARENTID As Integer = 2
 
             If (g_UCControllerAttachmentsItem Is Nothing OrElse g_UCControllerAttachmentsItem.IsDisposed) Then
                 Return
@@ -36,6 +37,7 @@ Public Class UCControllerAttachments
                 Return
             End If
 
+            Me.SubItems(LISTVIEW_SUBITEM_NAME).Text = CStr(g_UCControllerAttachmentsItem.m_Nickname)
             Me.SubItems(LISTVIEW_SUBITEM_INDEX).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_Index)
             Me.SubItems(LISTVIEW_SUBITEM_PARENTID).Text = CStr(g_UCControllerAttachmentsItem.g_mClassIO.m_ParentController)
 

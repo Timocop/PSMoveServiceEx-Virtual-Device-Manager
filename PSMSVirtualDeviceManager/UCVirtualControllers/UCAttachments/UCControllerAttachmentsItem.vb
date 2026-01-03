@@ -115,10 +115,15 @@ Public Class UCControllerAttachmentsItem
 
         TextBox_TrackerName.Text = "Attachment Name: "
 
-        If (iControllerID > -1 AndAlso Not String.IsNullOrEmpty(m_Nickname)) Then
+        If (iControllerID < 0) Then
+            TextBox_TrackerName.Text &= "Invalid"
+            Return
+        End If
+
+        If (Not String.IsNullOrEmpty(m_Nickname)) Then
             TextBox_TrackerName.Text &= m_Nickname
         Else
-            TextBox_TrackerName.Text &= "Invalid"
+            TextBox_TrackerName.Text &= "Unnamed"
         End If
     End Sub
 
