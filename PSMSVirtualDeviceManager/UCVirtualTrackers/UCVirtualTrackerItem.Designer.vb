@@ -45,11 +45,6 @@ Partial Class UCVirtualTrackerItem
         Me.Button_ConfigSave = New System.Windows.Forms.Button()
         Me.CheckBox_Autostart = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
-        Me.CheckBox_AutoDetectSettings = New System.Windows.Forms.CheckBox()
-        Me.LinkLabel_MiscSettings = New System.Windows.Forms.LinkLabel()
-        Me.Label_DeviceResolution = New System.Windows.Forms.Label()
-        Me.Label_DeviceCodec = New System.Windows.Forms.Label()
         Me.TabPage_TrackerProperties = New System.Windows.Forms.TabPage()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.ComboBox_CameraFramerate = New System.Windows.Forms.ComboBox()
@@ -65,24 +60,29 @@ Partial Class UCVirtualTrackerItem
         Me.Label5 = New System.Windows.Forms.Label()
         Me.CheckBox_FlipHorizontal = New System.Windows.Forms.CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.TabPage_DeviceProperties = New System.Windows.Forms.TabPage()
+        Me.CheckBox_AutoDetectSettings = New System.Windows.Forms.CheckBox()
+        Me.LinkLabel_MiscSettings = New System.Windows.Forms.LinkLabel()
+        Me.Label_DeviceResolution = New System.Windows.Forms.Label()
+        Me.Label_DeviceCodec = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox_Fps = New System.Windows.Forms.TextBox()
         Me.ToolTip_Info = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel_Preview = New System.Windows.Forms.Panel()
         Me.Panel_Status = New System.Windows.Forms.Panel()
-        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         Me.Label_StatusMessage = New System.Windows.Forms.Label()
         Me.Label_StatusTitle = New System.Windows.Forms.Label()
         Me.Timer_Status = New System.Windows.Forms.Timer(Me.components)
         Me.Timer_FpsCounter = New System.Windows.Forms.Timer(Me.components)
+        Me.PictureBox_StatusImage = New PSMSVirtualDeviceManager.ClassPictureBoxQuality()
         CType(Me.PictureBox_CaptureImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceExposure, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceGamma, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBar_DeviceConstrast, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
-        Me.TabPage_DeviceProperties.SuspendLayout()
         Me.TabPage_TrackerProperties.SuspendLayout()
+        Me.TabPage_DeviceProperties.SuspendLayout()
         Me.Panel_Preview.SuspendLayout()
         Me.Panel_Status.SuspendLayout()
         CType(Me.PictureBox_StatusImage, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -281,77 +281,6 @@ Partial Class UCVirtualTrackerItem
         Me.TabControl1.Size = New System.Drawing.Size(468, 226)
         Me.TabControl1.TabIndex = 21
         '
-        'TabPage_DeviceProperties
-        '
-        Me.TabPage_DeviceProperties.BackColor = System.Drawing.Color.White
-        Me.TabPage_DeviceProperties.Controls.Add(Me.CheckBox_AutoDetectSettings)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.LinkLabel_MiscSettings)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceResolution)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceCodec)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.Label3)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceExposure)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.Label4)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceConstrast)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceGain)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.Label8)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.Label7)
-        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceGamma)
-        Me.TabPage_DeviceProperties.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage_DeviceProperties.Name = "TabPage_DeviceProperties"
-        Me.TabPage_DeviceProperties.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(460, 200)
-        Me.TabPage_DeviceProperties.TabIndex = 0
-        Me.TabPage_DeviceProperties.Text = "Device Properties"
-        '
-        'CheckBox_AutoDetectSettings
-        '
-        Me.CheckBox_AutoDetectSettings.AutoSize = True
-        Me.CheckBox_AutoDetectSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.CheckBox_AutoDetectSettings.Location = New System.Drawing.Point(9, 138)
-        Me.CheckBox_AutoDetectSettings.Margin = New System.Windows.Forms.Padding(6, 3, 3, 3)
-        Me.CheckBox_AutoDetectSettings.Name = "CheckBox_AutoDetectSettings"
-        Me.CheckBox_AutoDetectSettings.Size = New System.Drawing.Size(180, 18)
-        Me.CheckBox_AutoDetectSettings.TabIndex = 22
-        Me.CheckBox_AutoDetectSettings.Text = "Automatically detect settings"
-        Me.ToolTip_Info.SetToolTip(Me.CheckBox_AutoDetectSettings, resources.GetString("CheckBox_AutoDetectSettings.ToolTip"))
-        Me.CheckBox_AutoDetectSettings.UseVisualStyleBackColor = True
-        '
-        'LinkLabel_MiscSettings
-        '
-        Me.LinkLabel_MiscSettings.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
-        Me.LinkLabel_MiscSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel_MiscSettings.AutoSize = True
-        Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
-        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(379, 184)
-        Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
-        Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
-        Me.LinkLabel_MiscSettings.TabIndex = 21
-        Me.LinkLabel_MiscSettings.TabStop = True
-        Me.LinkLabel_MiscSettings.Text = "Misc Settings"
-        Me.LinkLabel_MiscSettings.VisitedLinkColor = System.Drawing.Color.RoyalBlue
-        '
-        'Label_DeviceResolution
-        '
-        Me.Label_DeviceResolution.AutoSize = True
-        Me.Label_DeviceResolution.Location = New System.Drawing.Point(9, 119)
-        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
-        Me.Label_DeviceResolution.Name = "Label_DeviceResolution"
-        Me.Label_DeviceResolution.Size = New System.Drawing.Size(120, 13)
-        Me.Label_DeviceResolution.TabIndex = 20
-        Me.Label_DeviceResolution.Text = "Resolution: Unknown"
-        '
-        'Label_DeviceCodec
-        '
-        Me.Label_DeviceCodec.AutoSize = True
-        Me.Label_DeviceCodec.Location = New System.Drawing.Point(9, 97)
-        Me.Label_DeviceCodec.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
-        Me.Label_DeviceCodec.Name = "Label_DeviceCodec"
-        Me.Label_DeviceCodec.Size = New System.Drawing.Size(96, 13)
-        Me.Label_DeviceCodec.TabIndex = 19
-        Me.Label_DeviceCodec.Text = "Codec: Unknown"
-        '
         'TabPage_TrackerProperties
         '
         Me.TabPage_TrackerProperties.BackColor = System.Drawing.Color.White
@@ -540,6 +469,77 @@ Partial Class UCVirtualTrackerItem
         Me.Label2.TabIndex = 11
         Me.Label2.Text = "Flip image horizontally:"
         '
+        'TabPage_DeviceProperties
+        '
+        Me.TabPage_DeviceProperties.BackColor = System.Drawing.Color.White
+        Me.TabPage_DeviceProperties.Controls.Add(Me.CheckBox_AutoDetectSettings)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.LinkLabel_MiscSettings)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceResolution)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label_DeviceCodec)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label3)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceExposure)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label4)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceConstrast)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceGain)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label8)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.Label7)
+        Me.TabPage_DeviceProperties.Controls.Add(Me.TrackBar_DeviceGamma)
+        Me.TabPage_DeviceProperties.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage_DeviceProperties.Name = "TabPage_DeviceProperties"
+        Me.TabPage_DeviceProperties.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage_DeviceProperties.Size = New System.Drawing.Size(460, 200)
+        Me.TabPage_DeviceProperties.TabIndex = 0
+        Me.TabPage_DeviceProperties.Text = "Device Properties"
+        '
+        'CheckBox_AutoDetectSettings
+        '
+        Me.CheckBox_AutoDetectSettings.AutoSize = True
+        Me.CheckBox_AutoDetectSettings.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.CheckBox_AutoDetectSettings.Location = New System.Drawing.Point(9, 138)
+        Me.CheckBox_AutoDetectSettings.Margin = New System.Windows.Forms.Padding(6, 3, 3, 3)
+        Me.CheckBox_AutoDetectSettings.Name = "CheckBox_AutoDetectSettings"
+        Me.CheckBox_AutoDetectSettings.Size = New System.Drawing.Size(180, 18)
+        Me.CheckBox_AutoDetectSettings.TabIndex = 22
+        Me.CheckBox_AutoDetectSettings.Text = "Automatically detect settings"
+        Me.ToolTip_Info.SetToolTip(Me.CheckBox_AutoDetectSettings, resources.GetString("CheckBox_AutoDetectSettings.ToolTip"))
+        Me.CheckBox_AutoDetectSettings.UseVisualStyleBackColor = True
+        '
+        'LinkLabel_MiscSettings
+        '
+        Me.LinkLabel_MiscSettings.ActiveLinkColor = System.Drawing.Color.CornflowerBlue
+        Me.LinkLabel_MiscSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LinkLabel_MiscSettings.AutoSize = True
+        Me.LinkLabel_MiscSettings.ForeColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_MiscSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel_MiscSettings.LinkColor = System.Drawing.Color.RoyalBlue
+        Me.LinkLabel_MiscSettings.Location = New System.Drawing.Point(379, 184)
+        Me.LinkLabel_MiscSettings.Name = "LinkLabel_MiscSettings"
+        Me.LinkLabel_MiscSettings.Size = New System.Drawing.Size(75, 13)
+        Me.LinkLabel_MiscSettings.TabIndex = 21
+        Me.LinkLabel_MiscSettings.TabStop = True
+        Me.LinkLabel_MiscSettings.Text = "Misc Settings"
+        Me.LinkLabel_MiscSettings.VisitedLinkColor = System.Drawing.Color.RoyalBlue
+        '
+        'Label_DeviceResolution
+        '
+        Me.Label_DeviceResolution.AutoSize = True
+        Me.Label_DeviceResolution.Location = New System.Drawing.Point(9, 119)
+        Me.Label_DeviceResolution.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
+        Me.Label_DeviceResolution.Name = "Label_DeviceResolution"
+        Me.Label_DeviceResolution.Size = New System.Drawing.Size(120, 13)
+        Me.Label_DeviceResolution.TabIndex = 20
+        Me.Label_DeviceResolution.Text = "Resolution: Unknown"
+        '
+        'Label_DeviceCodec
+        '
+        Me.Label_DeviceCodec.AutoSize = True
+        Me.Label_DeviceCodec.Location = New System.Drawing.Point(9, 97)
+        Me.Label_DeviceCodec.Margin = New System.Windows.Forms.Padding(6, 6, 3, 3)
+        Me.Label_DeviceCodec.Name = "Label_DeviceCodec"
+        Me.Label_DeviceCodec.Size = New System.Drawing.Size(96, 13)
+        Me.Label_DeviceCodec.TabIndex = 19
+        Me.Label_DeviceCodec.Text = "Codec: Unknown"
+        '
         'Button1
         '
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -602,17 +602,6 @@ Partial Class UCVirtualTrackerItem
         Me.Panel_Status.Size = New System.Drawing.Size(766, 59)
         Me.Panel_Status.TabIndex = 37
         '
-        'PictureBox_StatusImage
-        '
-        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
-        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox_StatusImage.m_HighQuality = False
-        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
-        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
-        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox_StatusImage.TabIndex = 2
-        Me.PictureBox_StatusImage.TabStop = False
-        '
         'Label_StatusMessage
         '
         Me.Label_StatusMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -645,6 +634,17 @@ Partial Class UCVirtualTrackerItem
         Me.Timer_FpsCounter.Enabled = True
         Me.Timer_FpsCounter.Interval = 500
         '
+        'PictureBox_StatusImage
+        '
+        Me.PictureBox_StatusImage.Image = Global.PSMSVirtualDeviceManager.My.Resources.Resources.netshell_1608_16x16_32
+        Me.PictureBox_StatusImage.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox_StatusImage.m_HighQuality = False
+        Me.PictureBox_StatusImage.Name = "PictureBox_StatusImage"
+        Me.PictureBox_StatusImage.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox_StatusImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox_StatusImage.TabIndex = 2
+        Me.PictureBox_StatusImage.TabStop = False
+        '
         'UCVirtualTrackerItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -670,10 +670,10 @@ Partial Class UCVirtualTrackerItem
         CType(Me.TrackBar_DeviceGamma, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBar_DeviceConstrast, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
-        Me.TabPage_DeviceProperties.ResumeLayout(False)
-        Me.TabPage_DeviceProperties.PerformLayout()
         Me.TabPage_TrackerProperties.ResumeLayout(False)
         Me.TabPage_TrackerProperties.PerformLayout()
+        Me.TabPage_DeviceProperties.ResumeLayout(False)
+        Me.TabPage_DeviceProperties.PerformLayout()
         Me.Panel_Preview.ResumeLayout(False)
         Me.Panel_Status.ResumeLayout(False)
         Me.Panel_Status.PerformLayout()

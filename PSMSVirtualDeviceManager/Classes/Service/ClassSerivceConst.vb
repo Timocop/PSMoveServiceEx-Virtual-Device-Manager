@@ -1,9 +1,25 @@
 ﻿Imports System.Numerics
 
 Public Class ClassSerivceConst
+    ' $TODO: Should be updated when PSMoveServiceEx updates. Probably best to add these to the CAPI.NET library?
     Public Const PSMOVESERVICE_MAX_TRACKER_COUNT As Integer = 8
     Public Const PSMOVESERVICE_MAX_CONTROLLER_COUNT As Integer = 10
     Public Const PSMOVESERVICE_MAX_HMD_COUNT As Integer = 4
+
+    Public Const PSMOVESERVICE_TRACKER_CONFIG_VERSION As Integer = 7
+    Public Const PSMOVESERVICE_TRACKER_LENS_VERSION As Integer = 1
+    Public Const PSMOVESERVICE_HMD_MORPHEUS_CONFIG_VERSION As Integer = 2
+    Public Const PSMOVESERVICE_HMD_VIRTUAL_CONFIG_VERSION As Integer = 1
+    Public Const PSMOVESERVICE_CONTROLLER_DS4_CONFIG_VERSION As Integer = 3
+    Public Const PSMOVESERVICE_CONTROLLER_PSMOVE_CONFIG_VERSION As Integer = 2
+    Public Const PSMOVESERVICE_CONTROLLER_VIRTUAL_CONFIG_VERSION As Integer = 1
+
+    Public Const PSMOVESERVICE_MANAGER_HMD_CONFIG_VERSION As Integer = 1
+    Public Const PSMOVESERVICE_MANAGER_CONTROLLER_CONFIG_VERSION As Integer = 1
+    Public Const PSMOVESERVICE_MANAGER_TRACKER_CONFIG_VERSION As Integer = 3
+    Public Const PSMOVESERVICE_MANAGER_NETWORK_CONFIG_VERSION As Integer = 1
+    Public Const PSMOVESERVICE_MANAGER_USB_CONFIG_VERSION As Integer = 1
+    Public Const PSMOVESERVICE_MANAGER_DEVICE_CONFIG_VERSION As Integer = 1
 
     Class ClassCameraPose
         Structure STRUC_CAMERA_POSE_ITEM

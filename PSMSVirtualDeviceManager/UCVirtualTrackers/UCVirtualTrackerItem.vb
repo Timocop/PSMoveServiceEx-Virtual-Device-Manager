@@ -832,8 +832,14 @@ Public Class UCVirtualTrackerItem
             End If
 
             Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
+
+            ' Make sure we create a new config with the correct version so it wont get nuked when PSMoveServiceEx starts
             If (Not IO.File.Exists(sConfigFile)) Then
-                Throw New ArgumentException(String.Format("Config file '{0}' does not exist", sConfigFile))
+                Dim mTempConfig As New ClassServiceConfig(sConfigFile)
+                mTempConfig.LoadConfig()
+                mTempConfig.SetValue(Of Integer)("", "version", ClassSerivceConst.PSMOVESERVICE_TRACKER_CONFIG_VERSION)
+                mTempConfig.SetValue(Of Integer)("", "lens_calibration_version", ClassSerivceConst.PSMOVESERVICE_TRACKER_LENS_VERSION)
+                mTempConfig.SaveConfig()
             End If
 
             Dim mConfigTracker As New ClassServiceConfig(sConfigFile)
@@ -956,6 +962,15 @@ Public Class UCVirtualTrackerItem
                 End If
 
                 Dim sConfigFile As String = IO.Path.Combine(sConfigPath, String.Format("PS3EyeTrackerConfig_virtual_{0}.json", iTrackerID))
+
+                ' Make sure we create a new config with the correct version so it wont get nuked when PSMoveServiceEx starts
+                If (Not IO.File.Exists(sConfigFile)) Then
+                    Dim mTempConfig As New ClassServiceConfig(sConfigFile)
+                    mTempConfig.LoadConfig()
+                    mTempConfig.SetValue(Of Integer)("", "version", ClassSerivceConst.PSMOVESERVICE_TRACKER_CONFIG_VERSION)
+                    mTempConfig.SetValue(Of Integer)("", "lens_calibration_version", ClassSerivceConst.PSMOVESERVICE_TRACKER_LENS_VERSION)
+                    mTempConfig.SaveConfig()
+                End If
 
                 mDistort.mDistort.SaveToConfig(sConfigFile)
             Next
