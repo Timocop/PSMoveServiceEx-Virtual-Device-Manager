@@ -2869,38 +2869,78 @@ Public Class UCVirtualMotionTrackerItem
                                 iMinDistance = m_PlayspaceCalibration.m_MinDistance
                             End If
 
-                            Dim mControllerPosBeginXZ = mControllerPosBegin
-                            Dim mControllerPosEndXZ = mControllerPosEnd
-                            Dim mFromDevicePosBeginXZ = mFromDevicePosBegin
-                            Dim mFromDevicePosEndXZ = mFromDevicePosEnd
+                            If (bAllowFinishCalibration) Then
+                                Dim bIsStaticDevice As Boolean = (mFromDevicePosBegin = mFromDevicePosEnd)
 
-                            mControllerPosBeginXZ.Y = 0.0F
-                            mControllerPosEndXZ.Y = 0.0F
-                            mFromDevicePosBeginXZ.Y = 0.0F
-                            mFromDevicePosEndXZ.Y = 0.0F
+                                Dim mControllerPosBeginXZ = mControllerPosBegin
+                                Dim mControllerPosEndXZ = mControllerPosEnd
+                                Dim mFromDevicePosBeginXZ = mFromDevicePosBegin
+                                Dim mFromDevicePosEndXZ = mFromDevicePosEnd
+                                mControllerPosBeginXZ.Y = 0.0F
+                                mControllerPosEndXZ.Y = 0.0F
+                                mFromDevicePosBeginXZ.Y = 0.0F
+                                mFromDevicePosEndXZ.Y = 0.0F
 
-                            If (bAllowFinishCalibration AndAlso
-                                    Math.Abs(Vector3.Distance(mControllerPosBeginXZ, mControllerPosEndXZ)) > iMinDistance AndAlso
-                                    Math.Abs(Vector3.Distance(mFromDevicePosBeginXZ, mFromDevicePosEndXZ)) > iMinDistance) Then
+                                ' $HACK If we got a statis device (no optical tracking), just move the end by the controller distance as a quick workaround. 
+                                If (bIsStaticDevice) Then
+                                    If (Math.Abs(Vector3.Distance(mControllerPosBeginXZ, mControllerPosEndXZ)) > iMinDistance) Then
 
-                                Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerPosEndXZ - mControllerPosBeginXZ, Vector3.UnitY)
-                                Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFromDevicePosEndXZ - mFromDevicePosBeginXZ, Vector3.UnitY)
-                                Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
+                                        ' $TODO Fix inversted direction when End/Begin is swapped. Shoudl result in same direction.
+                                        Dim mControllerDir As Vector3 = (mControllerPosEndXZ - mControllerPosBeginXZ)
+                                        Dim mCOntrollerDistance As Single = mControllerDir.Length()
 
-                                mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mFromDevicePosEnd - mControllerPosEnd
-                                mClassControllerSettings.m_PlayspaceSettings.m_AngOffset = mVecDiff
-                                mClassControllerSettings.m_PlayspaceSettings.m_HmdAngOffset = mFromDeviceOrientation
+                                        Dim mFromDeviceYaw As Quaternion = ClassMathUtils.ExtractYawQuaternion(mFromDeviceOrientation, -Vector3.UnitZ)
+                                        Dim mFormDeviceForward As Vector3 = ClassMathUtils.RotateVector(mFromDeviceYaw, Vector3.UnitZ)
+                                        mFormDeviceForward.Y = 0.0F
+                                        mFormDeviceForward = Vector3.Normalize(mFormDeviceForward)
 
-                                mClassControllerSettings.m_PlayspaceSettings.m_PointControllerEndPos = mControllerPosEnd
-                                mClassControllerSettings.m_PlayspaceSettings.m_PointHmdEndPos = mFromDevicePosEnd
-                                mClassControllerSettings.m_PlayspaceSettings.m_Valid = True
+                                        Dim mFormDeviceForwardDistance As Vector3 = mFormDeviceForward * mCOntrollerDistance
+                                        Dim mStaticDevicePosEnd As Vector3 = mFromDevicePosBegin + mFormDeviceForwardDistance
 
-                                'Save settings after calibration is done 
-                                mData.mPlayspaceRecenterCalibrationSave = True
+                                        Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerDir, Vector3.UnitY)
+                                        Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFormDeviceForward, Vector3.UnitY)
+                                        Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
 
-                                ' Stop when manual calibration when done. PSmove calibration should continue when the button is stopped pressed.
-                                If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
-                                    m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                        mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mStaticDevicePosEnd - mControllerPosEnd
+                                        mClassControllerSettings.m_PlayspaceSettings.m_AngOffset = mVecDiff
+                                        mClassControllerSettings.m_PlayspaceSettings.m_HmdAngOffset = mFromDeviceOrientation
+
+                                        mClassControllerSettings.m_PlayspaceSettings.m_PointControllerEndPos = mControllerPosEnd
+                                        mClassControllerSettings.m_PlayspaceSettings.m_PointHmdEndPos = mStaticDevicePosEnd
+                                        mClassControllerSettings.m_PlayspaceSettings.m_Valid = True
+
+                                        'Save settings after calibration is done 
+                                        mData.mPlayspaceRecenterCalibrationSave = True
+
+                                        ' Stop when manual calibration when done. PSmove calibration should continue when the button is stopped pressed.
+                                        If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                            m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                        End If
+                                    End If
+                                Else
+                                    If (Math.Abs(Vector3.Distance(mControllerPosBeginXZ, mControllerPosEndXZ)) > iMinDistance AndAlso
+                                            Math.Abs(Vector3.Distance(mFromDevicePosBeginXZ, mFromDevicePosEndXZ)) > iMinDistance) Then
+
+                                        Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerPosEndXZ - mControllerPosBeginXZ, Vector3.UnitY)
+                                        Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFromDevicePosEndXZ - mFromDevicePosBeginXZ, Vector3.UnitY)
+                                        Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
+
+                                        mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mFromDevicePosEnd - mControllerPosEnd
+                                        mClassControllerSettings.m_PlayspaceSettings.m_AngOffset = mVecDiff
+                                        mClassControllerSettings.m_PlayspaceSettings.m_HmdAngOffset = mFromDeviceOrientation
+
+                                        mClassControllerSettings.m_PlayspaceSettings.m_PointControllerEndPos = mControllerPosEnd
+                                        mClassControllerSettings.m_PlayspaceSettings.m_PointHmdEndPos = mFromDevicePosEnd
+                                        mClassControllerSettings.m_PlayspaceSettings.m_Valid = True
+
+                                        'Save settings after calibration is done 
+                                        mData.mPlayspaceRecenterCalibrationSave = True
+
+                                        ' Stop when manual calibration when done. PSmove calibration should continue when the button is stopped pressed.
+                                        If (m_PlayspaceCalibration.GetStatus = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.MANUAL_RUNNING) Then
+                                            m_PlayspaceCalibrationState.m_Status = STURC_PLAYSPACE_CALIBRATION_STATUS.ENUM_PLAYSPACE_CALIBRATION_STATUS.DONE
+                                        End If
+                                    End If
                                 End If
                             End If
                         Else
@@ -2989,7 +3029,7 @@ Public Class UCVirtualMotionTrackerItem
                                 ' Make sure the distance is big enough to get the angle.
                                 If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
                                     Dim mQuatDirection = ClassMathUtils.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                    Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                                    Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, -Vector3.UnitZ)
 
                                     mRecenterQuat = mQuatDirection * Quaternion.Conjugate(mControllerYaw)
 
@@ -3002,7 +3042,7 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (bDoFactoryRecenter) Then
-                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, -Vector3.UnitZ)
 
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassMathUtils.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
@@ -3121,7 +3161,7 @@ Public Class UCVirtualMotionTrackerItem
                                     ' Make sure the distance is big enough to get the angle.
                                     If (Math.Abs(Vector3.Distance(mControllerPos, mFromDevicePos)) > 1.0F) Then
                                         Dim mQuatDirection = ClassMathUtils.FromVectorToVector(mFromDevicePos, mControllerPos)
-                                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, -Vector3.UnitZ)
 
                                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * mQuatDirection
 
@@ -3139,7 +3179,7 @@ Public Class UCVirtualMotionTrackerItem
                     End Select
 
                     If (bDoFactoryRecenter) Then
-                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, New Vector3(0, 0, -1))
+                        Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCalibratedOrientation, -Vector3.UnitZ)
 
                         mRecenterQuat = Quaternion.Conjugate(mControllerYaw) * ClassMathUtils.LookRotation(Vector3.UnitX, Vector3.UnitY)
 
@@ -3198,7 +3238,7 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (True) Then
                     Dim mCurrentOrientation = mRecenterQuat * mPSMoveData.m_Orientation
-                    Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCurrentOrientation, New Vector3(0, 0, -1))
+                    Dim mControllerYaw = ClassMathUtils.ExtractYawQuaternion(mCurrentOrientation, -Vector3.UnitZ)
                     Dim mCurrentOrientationRelative = Quaternion.Conjugate(mControllerYaw) * mCurrentOrientation
 
                     If (iControllerJoystickMethod = UCVirtualMotionTracker.ClassSettings.STRUC_CONTROLLER_SETTINGS.ENUM_CONTROLLER_JOYSTICK_METHOD.USE_ORIENTATION) Then
@@ -3214,7 +3254,7 @@ Public Class UCVirtualMotionTrackerItem
 
                         Dim mNewJoystickPosition = ClassMathUtils.RotateVector(
                             Quaternion.Conjugate(Quaternion.Conjugate(mData.mJoystickPressedLastOrientation) * mCurrentOrientationRelative),
-                            New Vector3(0, -1, 0))
+                            -Vector3.UnitY)
 
                         mData.mJoystickPostion = mData.mJoystickPostion - (mNewJoystickPosition / (iControllerJoystickAreaCm / TOUCHPAD_GYRO_MULTI))
 

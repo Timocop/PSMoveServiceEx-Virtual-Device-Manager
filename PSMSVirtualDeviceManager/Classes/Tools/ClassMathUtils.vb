@@ -85,19 +85,19 @@ Public Class ClassMathUtils
         Return LookRotation(mTo - mFrom, Vector3.UnitY)
     End Function
 
-    Public Shared Function LookRotation(ByRef forward As Vector3, ByRef up As Vector3) As Quaternion
-        forward = Vector3.Normalize(forward)
-        Dim right As Vector3 = Vector3.Normalize(Vector3.Cross(up, forward))
-        up = Vector3.Cross(forward, right)
+    Public Shared Function LookRotation(forward As Vector3, up As Vector3) As Quaternion
+        Dim forwardNorm = Vector3.Normalize(forward)
+        Dim right As Vector3 = Vector3.Normalize(Vector3.Cross(up, forwardNorm))
+        Dim upCross = Vector3.Cross(forwardNorm, right)
         Dim m00 = right.X
         Dim m01 = right.Y
         Dim m02 = right.Z
-        Dim m10 = up.X
-        Dim m11 = up.Y
-        Dim m12 = up.Z
-        Dim m20 = forward.X
-        Dim m21 = forward.Y
-        Dim m22 = forward.Z
+        Dim m10 = upCross.X
+        Dim m11 = upCross.Y
+        Dim m12 = upCross.Z
+        Dim m20 = forwardNorm.X
+        Dim m21 = forwardNorm.Y
+        Dim m22 = forwardNorm.Z
 
 
         Dim num8 As Single = m00 + m11 + m22
