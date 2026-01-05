@@ -2887,18 +2887,20 @@ Public Class UCVirtualMotionTrackerItem
 
                                         ' $TODO Fix inversted direction when End/Begin is swapped. Shoudl result in same direction.
                                         Dim mControllerDir As Vector3 = (mControllerPosEndXZ - mControllerPosBeginXZ)
-                                        Dim mCOntrollerDistance As Single = mControllerDir.Length()
+                                        Dim mControllerDistance As Single = mControllerDir.Length()
 
                                         Dim mFromDeviceYaw As Quaternion = ClassMathUtils.ExtractYawQuaternion(mFromDeviceOrientation, -Vector3.UnitZ)
                                         Dim mFormDeviceForward As Vector3 = ClassMathUtils.RotateVector(mFromDeviceYaw, Vector3.UnitZ)
                                         mFormDeviceForward.Y = 0.0F
                                         mFormDeviceForward = Vector3.Normalize(mFormDeviceForward)
 
-                                        Dim mFormDeviceForwardDistance As Vector3 = mFormDeviceForward * mCOntrollerDistance
+                                        Dim mFormDeviceForwardDistance As Vector3 = mFormDeviceForward * mControllerDistance
                                         Dim mStaticDevicePosEnd As Vector3 = mFromDevicePosBegin + mFormDeviceForwardDistance
+                                        Dim mStaticDevicePosEndXZ As Vector3 = mStaticDevicePosEnd
+                                        mStaticDevicePosEndXZ.Y = 0.0F
 
-                                        Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerDir, Vector3.UnitY)
-                                        Dim mRelDeviceVec = ClassMathUtils.LookRotation(mFormDeviceForward, Vector3.UnitY)
+                                        Dim mRelControllerVec = ClassMathUtils.LookRotation(mControllerPosEndXZ - mControllerPosBeginXZ, Vector3.UnitY)
+                                        Dim mRelDeviceVec = ClassMathUtils.LookRotation(mStaticDevicePosEndXZ - mFromDevicePosBeginXZ, Vector3.UnitY)
                                         Dim mVecDiff = Quaternion.Conjugate(mRelDeviceVec) * mRelControllerVec
 
                                         mClassControllerSettings.m_PlayspaceSettings.m_PosOffset = mStaticDevicePosEnd - mControllerPosEnd
