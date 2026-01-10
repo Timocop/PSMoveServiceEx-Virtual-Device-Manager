@@ -69,13 +69,29 @@ Public Class ClassSerivceConst
     Class ClassCameraDistortion
         Enum ENUM_CAMERA_DISTORTION_TYPE
             PSEYE
-            PS4CAM
+            PS4CAM_SD
+            PS4CAM_HD
             GENERIC
+
+            __MAX
         End Enum
 
         Public Shared ReadOnly PSMOVESERVICE_KNOWN_DISTORTION As STRUC_CAMERA_DISTORTION_ITEM() = {
-            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation Eye", ENUM_CAMERA_DISTORTION_TYPE.PSEYE, 554.2563, 554.2563, 320, 240, -0.10771770030260086, 0.1213262677192688, 0.04875476285815239, 0.000917330733500421, 0.00010589254816295579), 'Error: Unknown
-            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation 4 Stereo Camera", ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, 424.84967041015625, 515.53033447265625, 308.64697265625, 248.89617919921875, -0.021186288446187973, 0.049334883689880371, -0.062413521111011505, -0.00082370272139087319, 0.0016732711810618639) 'Error: 0.152170
+            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation Eye",
+                                             ENUM_CAMERA_DISTORTION_TYPE.PSEYE,
+                                             554.2563, 554.2563,
+                                             320, 240,
+                                             -0.10771770030260086, 0.1213262677192688, 0.04875476285815239, 0.000917330733500421, 0.00010589254816295579), 'Error: Unknown
+            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation 4 Stereo Camera (1080p)",
+                                             ENUM_CAMERA_DISTORTION_TYPE.PS4CAM_HD,
+                                             430.62008666992188, 521.9111328125,
+                                             310.31588745117188, 248.12663269042969,
+                                             -0.012369713746011257, 0.029541162773966789, -0.040692344307899475, 0.00077318056719377637, -0.0011542978463694453), 'Error: 0.152170
+            New STRUC_CAMERA_DISTORTION_ITEM("PlayStation 4 Stereo Camera (480p)",
+                                             ENUM_CAMERA_DISTORTION_TYPE.PS4CAM_SD,
+                                             431.31747436523438, 522.7071533203125,
+                                             306.66439819335938, 250.34086608886719,
+                                             -0.0078428452834486961, 0.00922972708940506, -0.02076520211994648, 0.000541943998541683, -0.0013074720045551658) 'Error: 0.099504
         }
 
         Structure STRUC_CAMERA_DISTORTION_ITEM

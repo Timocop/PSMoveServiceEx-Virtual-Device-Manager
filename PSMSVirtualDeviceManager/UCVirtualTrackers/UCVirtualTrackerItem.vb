@@ -372,7 +372,16 @@ Public Class UCVirtualTrackerItem
                                 ' The PS4 Cam requires precomputed distortion.
                                 Dim mConstCameraDistortion As ClassSerivceConst.ClassCameraDistortion.STRUC_CAMERA_DISTORTION_ITEM = Nothing
                                 If (bIsPlayStationCamera) Then
-                                    If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM, mConstCameraDistortion)) Then
+                                    Dim iCameraByResolution = ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.GENERIC
+                                    Select Case (iResolutionWidth)
+                                        Case 640
+                                            iCameraByResolution = ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM_SD
+                                        Case 1920
+                                            iCameraByResolution = ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM_HD
+                                    End Select
+
+                                    If (iCameraByResolution <> ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.GENERIC AndAlso
+                                        ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(iCameraByResolution, mConstCameraDistortion)) Then
                                         Dim bCorrectDistort As Boolean = (
                                                 CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
                                                 CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
@@ -397,21 +406,22 @@ Public Class UCVirtualTrackerItem
                                     Dim bCorrectDistort As Boolean = False
                                     Dim iBadTypes = {
                                         ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PSEYE,
-                                        ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM
+                                        ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM_SD,
+                                        ClassSerivceConst.ClassCameraDistortion.ENUM_CAMERA_DISTORTION_TYPE.PS4CAM_HD
                                     }
                                     For Each iType In iBadTypes
                                         ' Dont allow PSEye and PS4Cam calibrations
                                         If (ClassSerivceConst.ClassCameraDistortion.GetKnownDistortionByType(iType, mConstCameraDistortion)) Then
                                             bCorrectDistort = (
-                                                    CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
-                                                    CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
-                                                    CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
-                                                    CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
-                                                    CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
+                                                        CSng(mConfigCameraDistortion.iFocalLengthX) = CSng(mConstCameraDistortion.iFocalLengthX) AndAlso
+                                                        CSng(mConfigCameraDistortion.iFocalLengthY) = CSng(mConstCameraDistortion.iFocalLengthY) AndAlso
+                                                        CSng(mConfigCameraDistortion.iPrincipalX) = CSng(mConstCameraDistortion.iPrincipalX) AndAlso
+                                                        CSng(mConfigCameraDistortion.iPrincipalY) = CSng(mConstCameraDistortion.iPrincipalY) AndAlso
+                                                        CSng(mConfigCameraDistortion.iDistortionK1) = CSng(mConstCameraDistortion.iDistortionK1) AndAlso
+                                                        CSng(mConfigCameraDistortion.iDistortionK2) = CSng(mConstCameraDistortion.iDistortionK2) AndAlso
+                                                        CSng(mConfigCameraDistortion.iDistortionK3) = CSng(mConstCameraDistortion.iDistortionK3) AndAlso
+                                                        CSng(mConfigCameraDistortion.iDistortionP1) = CSng(mConstCameraDistortion.iDistortionP1) AndAlso
+                                                        CSng(mConfigCameraDistortion.iDistortionP2) = CSng(mConstCameraDistortion.iDistortionP2))
 
                                             If (bCorrectDistort) Then
                                                 Exit For
