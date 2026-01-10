@@ -1874,10 +1874,10 @@ Public Class UCVirtualMotionTrackerItem
                                     iLastOutputSeqNumFailures = 0
                                     iLastOutputSeqNum = iOutputSeqNum
 
-                                    Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
-                                    Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
-
                                     SyncLock g_mThreadLock
+                                        Dim iBatteryValue As Single = m_ControllerData.m_BatteryLevel
+                                        Dim bIsVirtualCOntroller As Boolean = m_ControllerData.m_Serial.StartsWith("VirtualController")
+
                                         Dim mRawPosition = m_ControllerData.m_Position
                                         Dim mRawOrientation = m_ControllerData.m_Orientation
                                         Dim mRawPositionVelocity = m_ControllerData.m_PositionVelocity
@@ -2408,8 +2408,8 @@ Public Class UCVirtualMotionTrackerItem
             Public mLastOrientation As Quaternion
             Public mLastVelocityPosition As Vector3
             Public mLastVelocityOrientation As Vector3
-            Public mLastPositionTime As Date
-            Public mLastOrientationTime As Date
+            Public mLastPositionTicks As Long
+            Public mLastOrientationTicks As Long
             Public mNormalizedPositionDelta As Queue(Of Double)
             Public mNormalizedOrientationDelta As Queue(Of Double)
             Public iVelocityPositionDelta As Double
@@ -2420,8 +2420,8 @@ Public Class UCVirtualMotionTrackerItem
                 mLastOrientation = Quaternion.Identity
                 mLastVelocityPosition = Vector3.Zero
                 mLastVelocityOrientation = Vector3.Zero
-                mLastPositionTime = Now
-                mLastOrientationTime = Now
+                mLastPositionTicks = ClassHighPrecisionTimer.GetTicks()
+                mLastOrientationTicks = ClassHighPrecisionTimer.GetTicks()
                 mNormalizedPositionDelta = New Queue(Of Double)
                 mNormalizedOrientationDelta = New Queue(Of Double)
                 iVelocityPositionDelta = 0.0
@@ -2438,21 +2438,20 @@ Public Class UCVirtualMotionTrackerItem
             Const VELOCITY_POSITION_SMOOTHING = 0.4
             Const VELOCITY_ORIENTATION_SMOOTHING = 0.2
 
-            Dim mNow As Date = Now
+            Dim iNowTicks As Long = ClassHighPrecisionTimer.GetTicks()
 
             ' Linear Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mData.mLastPositionTime)
-                Dim iDeltaTime As Double = mDelta.TotalSeconds
+                Dim iDeltaTime As Double = ClassHighPrecisionTimer.ElapsedSeconds(iNowTicks, mData.mLastPositionTicks)
 
                 If (mPosition <> mData.mLastPosition) Then
-                    mData.mLastPositionTime = mNow
+                    mData.mLastPositionTicks = iNowTicks
 
                     mData.mNormalizedPositionDelta.Enqueue(iDeltaTime)
                     If (mData.mNormalizedPositionDelta.Count > 30) Then
                         mData.mNormalizedPositionDelta.Dequeue()
                     End If
-                    Dim iAvgiDeltaTime = mData.mNormalizedPositionDelta.Average()
+                    Dim iAvgDeltaTime = mData.mNormalizedPositionDelta.Average()
 
                     Dim mNewVelocity = New Vector3(
                         mPosition.X - mData.mLastPosition.X,
@@ -2462,7 +2461,7 @@ Public Class UCVirtualMotionTrackerItem
                     mData.mLastVelocityPosition = ClassMathUtils.ExponentialLowpassFilter(VELOCITY_POSITION_SMOOTHING, mNewVelocity, mData.mLastVelocityPosition)
 
                     mData.mLastPosition = mPosition
-                    mData.iVelocityPositionDelta = iAvgiDeltaTime
+                    mData.iVelocityPositionDelta = iAvgDeltaTime
                 End If
 
                 If (mData.iVelocityPositionDelta > Double.Epsilon AndAlso mData.iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
@@ -2481,11 +2480,10 @@ Public Class UCVirtualMotionTrackerItem
 
             ' Angular Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mData.mLastOrientationTime)
-                Dim iDeltaTime As Double = mDelta.TotalSeconds
+                Dim iDeltaTime As Double = ClassHighPrecisionTimer.ElapsedSeconds(iNowTicks, mData.mLastOrientationTicks)
 
                 If (mOrientation <> mData.mLastOrientation) Then
-                    mData.mLastOrientationTime = mNow
+                    mData.mLastOrientationTicks = iNowTicks
 
                     mData.mNormalizedOrientationDelta.Enqueue(iDeltaTime)
                     If (mData.mNormalizedOrientationDelta.Count > 30) Then
@@ -2518,8 +2516,8 @@ Public Class UCVirtualMotionTrackerItem
             Public mLastRawOrientation As Quaternion
             Public mLastVelocityPosition As Vector3
             Public mLastVelocityOrientation As Vector3
-            Public mLastPositionTime As Date
-            Public mLastOrientationTime As Date
+            Public mLastPositionTicks As Long
+            Public mLastOrientationTicks As Long
             Public mNormalizedPositionDelta As Queue(Of Double)
             Public mNormalizedOrientationDelta As Queue(Of Double)
             Public iVelocityPositionDelta As Double
@@ -2530,8 +2528,8 @@ Public Class UCVirtualMotionTrackerItem
                 mLastRawOrientation = Quaternion.Identity
                 mLastVelocityPosition = Vector3.Zero
                 mLastVelocityOrientation = Vector3.Zero
-                mLastPositionTime = Now
-                mLastOrientationTime = Now
+                mLastPositionTicks = ClassHighPrecisionTimer.GetTicks()
+                mLastOrientationTicks = ClassHighPrecisionTimer.GetTicks()
                 mNormalizedPositionDelta = New Queue(Of Double)
                 mNormalizedOrientationDelta = New Queue(Of Double)
                 iVelocityPositionDelta = 0.0
@@ -2539,23 +2537,24 @@ Public Class UCVirtualMotionTrackerItem
             End Sub
         End Class
 
-        Private Sub InternalCalculateVelocity(ByRef mRawPosition As Vector3, ByRef mRawOrientation As Quaternion,
-                                                ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
-                                                ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
-                                                ByRef iVelocityTimeOffset As Single,
-                                                ByRef mData As STRUC_CALCULATE_VELOCITY_DATA)
-            Const MIN_VELOCITY_FREQ = (1.0 / 10.0)
-            Const MAX_VELOCITY_FREQ = (1.0 / 2500.0)
+        Private Sub InternalCalculateVelocity(
+            ByRef mRawPosition As Vector3, ByRef mRawOrientation As Quaternion,
+            ByRef mPosition As Vector3, ByRef mOrientation As Quaternion,
+            ByRef mVelocityPosition As Vector3, ByRef mVelocityOrientation As Vector3,
+            ByRef iVelocityTimeOffset As Single,
+            ByRef mData As STRUC_CALCULATE_VELOCITY_DATA)
 
-            Dim mNow As Date = Now
+            Const MIN_VELOCITY_FREQ As Double = (1.0 / 10.0)
+            Const MAX_VELOCITY_FREQ As Double = (1.0 / 2500.0)
+
+            Dim iNowTicks As Long = ClassHighPrecisionTimer.GetTicks()
 
             ' Linear Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mData.mLastPositionTime)
-                Dim iDeltaTime As Double = mDelta.TotalSeconds
+                Dim iDeltaTime As Double = ClassHighPrecisionTimer.ElapsedSeconds(iNowTicks, mData.mLastPositionTicks)
 
                 If (mData.mLastRawPosition <> mRawPosition) Then
-                    mData.mLastPositionTime = mNow
+                    mData.mLastPositionTicks = iNowTicks
 
                     mData.mNormalizedPositionDelta.Enqueue(iDeltaTime)
                     If (mData.mNormalizedPositionDelta.Count > 30) Then
@@ -2569,10 +2568,10 @@ Public Class UCVirtualMotionTrackerItem
 
                 If (mData.iVelocityPositionDelta > Double.Epsilon AndAlso mData.iVelocityPositionDelta <= MIN_VELOCITY_FREQ AndAlso iDeltaTime <= MIN_VELOCITY_FREQ) Then
                     mPosition = New Vector3(
-                        CSng(mPosition.X - (mVelocityPosition.X * mData.iVelocityPositionDelta)),
-                        CSng(mPosition.Y - (mVelocityPosition.Y * mData.iVelocityPositionDelta)),
-                        CSng(mPosition.Z - (mVelocityPosition.Z * mData.iVelocityPositionDelta))
-                    )
+                      CSng(mPosition.X - (mVelocityPosition.X * mData.iVelocityPositionDelta)),
+                      CSng(mPosition.Y - (mVelocityPosition.Y * mData.iVelocityPositionDelta)),
+                      CSng(mPosition.Z - (mVelocityPosition.Z * mData.iVelocityPositionDelta))
+                  )
                 Else
                     mVelocityPosition = Vector3.Zero
                 End If
@@ -2580,11 +2579,10 @@ Public Class UCVirtualMotionTrackerItem
 
             ' Angular Velocity
             If (True) Then
-                Dim mDelta As TimeSpan = (mNow - mData.mLastOrientationTime)
-                Dim iDeltaTime As Double = mDelta.TotalSeconds
+                Dim iDeltaTime As Double = ClassHighPrecisionTimer.ElapsedSeconds(iNowTicks, mData.mLastOrientationTicks)
 
                 If (mData.mLastRawOrientation <> mRawOrientation) Then
-                    mData.mLastOrientationTime = mNow
+                    mData.mLastOrientationTicks = iNowTicks
 
                     mData.mNormalizedOrientationDelta.Enqueue(iDeltaTime)
                     If (mData.mNormalizedOrientationDelta.Count > 30) Then
@@ -2606,17 +2604,20 @@ Public Class UCVirtualMotionTrackerItem
 
         Class STRUC_HEPTIC_FEEDBACK_DATA
             Public mRumbleLastTimeSendValid As Boolean
-            Public mRumbleLastTimeSend As Date
+            Public mRumbleLastTimeSendTicks As Long
 
             Public Sub New()
                 mRumbleLastTimeSendValid = False
-                mRumbleLastTimeSend = Now
+                mRumbleLastTimeSendTicks = ClassHighPrecisionTimer.GetTicks()
             End Sub
         End Class
 
         Private Sub InternalHepticFeedbackLogic(ByRef bEnableHepticFeedback As Boolean,
                                                 ByRef mServiceClient As ClassServiceClient,
                                                 ByRef mData As STRUC_HEPTIC_FEEDBACK_DATA)
+
+            Dim iNowTicks As Long = ClassHighPrecisionTimer.GetTicks()
+
             If (bEnableHepticFeedback) Then
                 Const MAX_RUMBLE_UPODATE_RATE As Single = 33.0F
                 Const MAX_PULSE_MICROSECONDS As Single = 5000.0F
@@ -2634,9 +2635,9 @@ Public Class UCVirtualMotionTrackerItem
                 Dim bTimoutElapsed As Boolean = True
 
                 If (mData.mRumbleLastTimeSendValid) Then
-                    Dim mLastSend As TimeSpan = (Now - mData.mRumbleLastTimeSend)
+                    Dim iElapsedMs = ClassHighPrecisionTimer.ElapsedMilliseconds(iNowTicks, mData.mRumbleLastTimeSendTicks)
 
-                    bTimoutElapsed = (mLastSend.TotalMilliseconds > MAX_RUMBLE_UPODATE_RATE)
+                    bTimoutElapsed = (iElapsedMs > MAX_RUMBLE_UPODATE_RATE)
                 End If
 
                 If (bTimoutElapsed) Then
@@ -2658,7 +2659,7 @@ Public Class UCVirtualMotionTrackerItem
 
                     mServiceClient.SetControllerRumble(g_iIndex, fRumble)
 
-                    mData.mRumbleLastTimeSend = Now
+                    mData.mRumbleLastTimeSendTicks = iNowTicks
                     mData.mRumbleLastTimeSendValid = True
 
                     SyncLock g_mThreadLock

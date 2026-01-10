@@ -177,6 +177,7 @@
     <Compile Include="Classes\ClassCameraFirmwareWatchdog.vb" />
     <Compile Include="Classes\ClassControllerHook.vb" />
     <Compile Include="Classes\ClassDevicesNotify.vb" />
+    <Compile Include="Classes\ClassHighPrecisionTimer.vb" />
     <Compile Include="Classes\ClassKeyboardHook.vb" />
     <Compile Include="Classes\ClassMonitor.vb" />
     <Compile Include="Classes\ClassSteamVRRenderWatchdog.vb" />
