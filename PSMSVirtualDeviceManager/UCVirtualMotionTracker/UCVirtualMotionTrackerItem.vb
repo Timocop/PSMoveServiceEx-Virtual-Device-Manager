@@ -2603,12 +2603,10 @@ Public Class UCVirtualMotionTrackerItem
         End Sub
 
         Class STRUC_HEPTIC_FEEDBACK_DATA
-            Public mRumbleLastTimeSendValid As Boolean
             Public mRumbleLastTimeSendTicks As Long
 
             Public Sub New()
-                mRumbleLastTimeSendValid = False
-                mRumbleLastTimeSendTicks = ClassHighPrecisionTimer.GetTicks()
+                mRumbleLastTimeSendTicks = 0
             End Sub
         End Class
 
@@ -2616,9 +2614,9 @@ Public Class UCVirtualMotionTrackerItem
                                                 ByRef mServiceClient As ClassServiceClient,
                                                 ByRef mData As STRUC_HEPTIC_FEEDBACK_DATA)
 
-            Dim iNowTicks As Long = ClassHighPrecisionTimer.GetTicks()
-
             If (bEnableHepticFeedback) Then
+                Dim iNowTicks As Long = ClassHighPrecisionTimer.GetTicks()
+
                 Const MAX_RUMBLE_UPODATE_RATE As Single = 33.0F
                 Const MAX_PULSE_MICROSECONDS As Single = 5000.0F
 
@@ -2631,16 +2629,9 @@ Public Class UCVirtualMotionTrackerItem
                 End SyncLock
 
                 Dim fHapticPulseDurationMicroSec As Single = (fHepticDuraction * 1000000.0F)
+                Dim iElapsedMs = ClassHighPrecisionTimer.ElapsedMilliseconds(iNowTicks, mData.mRumbleLastTimeSendTicks)
 
-                Dim bTimoutElapsed As Boolean = True
-
-                If (mData.mRumbleLastTimeSendValid) Then
-                    Dim iElapsedMs = ClassHighPrecisionTimer.ElapsedMilliseconds(iNowTicks, mData.mRumbleLastTimeSendTicks)
-
-                    bTimoutElapsed = (iElapsedMs > MAX_RUMBLE_UPODATE_RATE)
-                End If
-
-                If (bTimoutElapsed) Then
+                If (mData.mRumbleLastTimeSendTicks = 0 OrElse iElapsedMs > MAX_RUMBLE_UPODATE_RATE) Then
                     Dim fRumble As Single = (fHapticPulseDurationMicroSec / MAX_PULSE_MICROSECONDS) * fHelpticAmplitude
 
                     If (fHepticDuraction > 0.0F) Then
@@ -2660,7 +2651,6 @@ Public Class UCVirtualMotionTrackerItem
                     mServiceClient.SetControllerRumble(g_iIndex, fRumble)
 
                     mData.mRumbleLastTimeSendTicks = iNowTicks
-                    mData.mRumbleLastTimeSendValid = True
 
                     SyncLock g_mThreadLock
                         g_mHeptic.Clear()
