@@ -139,7 +139,11 @@ Public Class UCControllerAttachments
 
         g_bInit = True
 
-        AutostartLoad()
+        Try
+            AutostartLoad()
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
+        End Try
     End Sub
 
     Private Sub AutostartLoad()

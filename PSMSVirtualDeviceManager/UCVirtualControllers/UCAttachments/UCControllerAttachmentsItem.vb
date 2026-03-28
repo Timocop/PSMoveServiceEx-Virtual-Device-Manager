@@ -142,23 +142,27 @@ Public Class UCControllerAttachmentsItem
     End Sub
 
     Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ControllerID.SelectedIndexChanged
-        SetTrackerNameText()
-
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
         Try
-            g_bIgnoreUnsaved = True
-            g_mClassConfig.LoadConfig()
-        Finally
-            g_bIgnoreUnsaved = False
+            SetTrackerNameText()
+
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            Try
+                g_bIgnoreUnsaved = True
+                g_mClassConfig.LoadConfig()
+            Finally
+                g_bIgnoreUnsaved = False
+            End Try
+
+            g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
+            g_mClassIO.Enable()
+
+            SetUnsavedState(False)
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
-
-        g_mClassIO.m_Index = CInt(ComboBox_ControllerID.SelectedItem)
-        g_mClassIO.Enable()
-
-        SetUnsavedState(False)
     End Sub
 
     Private Sub ComboBox_ParentControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_ParentControllerID.SelectedIndexChanged

@@ -399,26 +399,30 @@ Public Class UCVirtualMotionTrackerItem
     End Sub
 
     Private Sub ComboBox_ControllerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_DeviceID.SelectedIndexChanged
-        UpdateTrackerTitle()
-
-        If (g_bIgnoreEvents) Then
-            Return
-        End If
-
         Try
-            g_bIgnoreUnsaved = True
-            g_mClassConfig.LoadConfig()
-        Finally
-            g_bIgnoreUnsaved = False
+            UpdateTrackerTitle()
+
+            If (g_bIgnoreEvents) Then
+                Return
+            End If
+
+            Try
+                g_bIgnoreUnsaved = True
+                g_mClassConfig.LoadConfig()
+            Finally
+                g_bIgnoreUnsaved = False
+            End Try
+
+            g_mClassIO.m_Index = CInt(ComboBox_DeviceID.SelectedItem)
+            g_mClassIO.Enable()
+
+            UpdateTrackerRoleComboBox()
+            g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
+
+            SetUnsavedState(False)
+        Catch ex As Exception
+            ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         End Try
-
-        g_mClassIO.m_Index = CInt(ComboBox_DeviceID.SelectedItem)
-        g_mClassIO.Enable()
-
-        UpdateTrackerRoleComboBox()
-        g_UCVirtualMotionTracker.g_mFormMain.PromptRestartSteamVR()
-
-        SetUnsavedState(False)
     End Sub
 
     Private Sub ComboBox_VMTTrackerID_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_VMTTrackerID.SelectedIndexChanged
