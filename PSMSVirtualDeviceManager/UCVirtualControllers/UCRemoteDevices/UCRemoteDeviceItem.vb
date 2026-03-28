@@ -729,17 +729,13 @@ Public Class UCRemoteDeviceItem
 
                 Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_REMOTE, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Recenter.W", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "YawOffset", CStr(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset.Value)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
-
-                        mIni.WriteKeyValue(mIniContent.ToArray)
+                        mIni.WriteKeyValue(sDevicePath, "Recenter.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.X.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Recenter.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Y.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Recenter.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.Z.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Recenter.W", g_mUCRemoteDeviceItem.g_mClassIO.m_ResetOrientation.W.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "YawOffset", CStr(g_mUCRemoteDeviceItem.NumericUpDown_YawOffset.Value))
+                        mIni.WriteKeyValue(sDevicePath, "ControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ControllerID.SelectedIndex))
+                        mIni.WriteKeyValue(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname)
                     End Using
                 End Using
             End SyncLock

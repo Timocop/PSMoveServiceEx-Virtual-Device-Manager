@@ -213,11 +213,7 @@ Public Class UCControllerAttachments
 
                 Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
-
-                        mIni.WriteKeyValue(mIniContent.ToArray)
+                        mIni.WriteKeyValue("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false"))
                     End Using
                 End Using
             End SyncLock

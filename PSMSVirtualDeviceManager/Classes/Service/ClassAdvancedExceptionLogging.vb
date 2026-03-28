@@ -1,14 +1,30 @@
 ﻿Public Class ClassAdvancedExceptionLogging
-    Private Shared g_mLogThread As Threading.Thread = Nothing
-    Private Shared g_mLogPool As New ClassIni()
-
     Private Shared g_mThreadLock As New Object
 
-    Private Shared g_mLoggingTime As New TimeSpan(0, 1, 0)
+    Private Shared g_mMaxLoggingKeep As New TimeSpan(30, 0, 0, 0)
     Private Shared g_bHasLoadedFromFile As Boolean = False
-    Private Shared g_mExceptionQueue As New Queue(Of ClassIni.STRUC_INI_CONTENT())
-    Private Shared g_mExceptionCounter As New Dictionary(Of Integer, Integer)
     Private Shared g_bEnableLogging As Boolean = False
+    Private Shared g_mExceptionDictionary As New Dictionary(Of Integer, STRUC_EXCEPTION_INFO)
+
+    Private Structure STRUC_EXCEPTION_INFO
+        Dim sMessage As String
+        Dim sStackTrace As String
+        Dim mDate As Date
+        Dim iCount As Integer
+        Dim sProductVersion As String
+
+        Sub New(_Message As String,
+                _StackTrace As String,
+                _Date As Date,
+                _Count As Integer,
+                _ProductVersion As String)
+            sMessage = _Message
+            sStackTrace = _StackTrace
+            mDate = _Date
+            iCount = _Count
+            sProductVersion = _ProductVersion
+        End Sub
+    End Structure
 
     Public Shared Sub LoadPoolFromFile()
         SyncLock g_mThreadLock
@@ -16,12 +32,26 @@
                 Return
             End If
 
-            If (IO.File.Exists(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)) Then
-                g_mLogPool.ParseFromFile(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
-            End If
+            Try
+                If (IO.File.Exists(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)) Then
+                    Using mIni As New ClassIni(ClassConfigConst.PATH_LOG_APPLICATION_ERROR, IO.FileMode.OpenOrCreate)
+                        For Each sSection In mIni.GetSectionNames
+                            Dim iChecksum As Integer = CInt(sSection)
 
-            g_mExceptionQueue.Clear()
-            g_bHasLoadedFromFile = True
+                            g_mExceptionDictionary(iChecksum) = New STRUC_EXCEPTION_INFO(
+                                mIni.ReadKeyValue(sSection, "Message"),
+                                mIni.ReadKeyValue(sSection, "StackTrace"),
+                                Date.Parse(mIni.ReadKeyValue(sSection, "Date"), Globalization.CultureInfo.InvariantCulture),
+                                CInt(mIni.ReadKeyValue(sSection, "Count")),
+                                mIni.ReadKeyValue(sSection, "Version")
+                            )
+                        Next
+                    End Using
+                End If
+            Catch ex As Exception
+            End Try
+
+            m_HasLoadedFromFile = True
         End SyncLock
     End Sub
 
@@ -31,11 +61,27 @@
                 Return
             End If
 
-            If (Not g_bHasLoadedFromFile) Then
+            If (Not m_HasLoadedFromFile) Then
                 Return
             End If
 
-            g_mLogPool.ExportToFile(ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
+            Try
+                Using mIni As New ClassIni(ClassConfigConst.PATH_LOG_APPLICATION_ERROR, IO.FileMode.OpenOrCreate)
+                    For Each mItem In g_mExceptionDictionary
+                        If (mItem.Value.mDate + g_mMaxLoggingKeep < Now) Then
+                            mIni.RemoveSection(CStr(mItem.Key))
+                            Continue For
+                        End If
+
+                        mIni.WriteKeyValue(CStr(mItem.Key), "Message", mItem.Value.sMessage)
+                        mIni.WriteKeyValue(CStr(mItem.Key), "StackTrace", mItem.Value.sStackTrace)
+                        mIni.WriteKeyValue(CStr(mItem.Key), "Date", mItem.Value.mDate.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(CStr(mItem.Key), "Count", CStr(mItem.Value.iCount))
+                        mIni.WriteKeyValue(CStr(mItem.Key), "Version", mItem.Value.sProductVersion)
+                    Next
+                End Using
+            Catch ex As Exception
+            End Try
         End SyncLock
     End Sub
 
@@ -57,29 +103,19 @@
                 Return
             End If
 
-            Dim iChecksum As Integer = ClassUtils.CreateChecksum(sFullException, 0)
+            Dim iChecksum As Integer = CreateChecksum(sFullException, 0)
             Dim sMessageSingle As String = sMessage.Replace(vbCrLf, "\n").Replace(vbLf, "\n")
             Dim sStackTraceSingle As String = sStackTrace.Replace(vbCrLf, "\n").Replace(vbLf, "\n")
             Dim iExceptionCount As Integer = 0
 
             SyncLock g_mThreadLock
-                If (g_mExceptionCounter.ContainsKey(iChecksum)) Then
-                    iExceptionCount = g_mExceptionCounter(iChecksum)
+                If (g_mExceptionDictionary.ContainsKey(iChecksum)) Then
+                    iExceptionCount = g_mExceptionDictionary(iChecksum).iCount
                 End If
-            End SyncLock
 
-            iExceptionCount += 1
+                iExceptionCount += 1
 
-            Dim mList As New List(Of ClassIni.STRUC_INI_CONTENT)
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Message", sMessageSingle))
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "StackTrace", sStackTraceSingle))
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Date", Date.Now.ToString(Globalization.CultureInfo.InvariantCulture)))
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Count", CStr(iExceptionCount)))
-            mList.Add(New ClassIni.STRUC_INI_CONTENT(CStr(iChecksum), "Version", Application.ProductVersion))
-
-            SyncLock g_mThreadLock
-                g_mExceptionCounter(iChecksum) = iExceptionCount
-                g_mExceptionQueue.Enqueue(mList.ToArray)
+                g_mExceptionDictionary(iChecksum) = New STRUC_EXCEPTION_INFO(sMessageSingle, sStackTraceSingle, Now, iExceptionCount, Application.ProductVersion)
             End SyncLock
         Catch what As Exception
             ' Huh what?!
@@ -100,87 +136,22 @@
         Set(value As Boolean)
             SyncLock g_mThreadLock
                 g_bEnableLogging = value
-
-                If (Not value AndAlso m_AutoFlushToFile) Then
-                    m_AutoFlushToFile = False
-                End If
             End SyncLock
         End Set
     End Property
 
-    Shared Property m_AutoFlushToFile As Boolean
+    Private Shared Property m_HasLoadedFromFile As Boolean
         Get
             SyncLock g_mThreadLock
-                If (g_mLogThread IsNot Nothing AndAlso g_mLogThread.IsAlive) Then
-                    Return True
-                End If
-
-                Return False
+                Return g_bHasLoadedFromFile
             End SyncLock
         End Get
         Set(value As Boolean)
             SyncLock g_mThreadLock
-                If (value) Then
-                    If (g_mLogThread Is Nothing OrElse Not g_mLogThread.IsAlive) Then
-                        g_mLogThread = New Threading.Thread(AddressOf AutoFlushThread)
-                        g_mLogThread.Priority = Threading.ThreadPriority.Lowest
-                        g_mLogThread.IsBackground = True
-                        g_mLogThread.Start()
-                    End If
-                Else
-                    If (g_mLogThread IsNot Nothing AndAlso g_mLogThread.IsAlive) Then
-                        g_mLogThread.Abort()
-                        g_mLogThread.Join()
-                        g_mLogThread = Nothing
-
-                        FlushToLog()
-                        WritePoolToFile()
-                    End If
-                End If
+                g_bHasLoadedFromFile = value
             End SyncLock
         End Set
     End Property
-
-    Private Shared Sub AutoFlushThread()
-        While True
-            Try
-                SyncLock g_mThreadLock
-                    If (Not g_bHasLoadedFromFile) Then
-                        LoadPoolFromFile()
-                    Else
-                        FlushToLog()
-                        WritePoolToFile()
-                    End If
-                End SyncLock
-            Catch ex As Threading.ThreadAbortException
-                Throw
-            Catch ex As Exception
-                ' Ignore
-            End Try
-
-            Dim iSleepTime As Integer = 0
-
-            SyncLock g_mThreadLock
-                iSleepTime = CInt(g_mLoggingTime.TotalMilliseconds)
-            End SyncLock
-
-            Threading.Thread.Sleep(iSleepTime)
-        End While
-    End Sub
-
-    Public Shared Sub FlushToLog()
-        SyncLock g_mThreadLock
-            If (g_bHasLoadedFromFile) Then
-                Dim mLogList As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                While (g_mExceptionQueue.Count > 0)
-                    mLogList.AddRange(g_mExceptionQueue.Dequeue())
-                End While
-
-                g_mLogPool.WriteKeyValue(mLogList.ToArray)
-            End If
-        End SyncLock
-    End Sub
 
     Public Shared Function GetDebugStackTrace(sText As String) As String
 #If DEBUG Then
@@ -196,5 +167,15 @@
 #Else
         Throw New ArgumentException("Only available in debug mode")
 #End If
+    End Function
+
+    Private Shared Function CreateChecksum(sText As String, iSalt As Integer) As Integer
+        Dim iSum As Integer = iSalt
+
+        For i = 0 To sText.Length - 1
+            iSum = iSum * 101 + AscW(sText(i))
+        Next
+
+        Return iSum
     End Function
 End Class

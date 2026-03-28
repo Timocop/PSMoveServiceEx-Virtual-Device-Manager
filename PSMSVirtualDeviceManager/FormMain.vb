@@ -237,7 +237,7 @@ Public Class FormMain
 
         Try
             ClassAdvancedExceptionLogging.m_EnableLogging = True
-            ClassAdvancedExceptionLogging.m_AutoFlushToFile = True
+            ClassAdvancedExceptionLogging.LoadPoolFromFile()
         Catch ex As Exception
             ' Do nothing
         End Try
@@ -1046,7 +1046,7 @@ Public Class FormMain
         End Try
 
         Try
-            ClassAdvancedExceptionLogging.m_AutoFlushToFile = False
+            ClassAdvancedExceptionLogging.WritePoolToFile()
         Catch ex As Exception
             ' Do nothing
         End Try
@@ -1254,9 +1254,9 @@ Public Class FormMain
         End Try
 
         Try
-            ClassAdvancedExceptionLogging.m_AutoFlushToFile = False
+            ClassAdvancedExceptionLogging.WritePoolToFile()
         Catch ex As Exception
-            ' DO nothing
+            ' Do nothing
         End Try
     End Sub
 

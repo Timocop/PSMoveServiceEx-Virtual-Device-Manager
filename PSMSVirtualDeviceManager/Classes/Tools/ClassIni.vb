@@ -5,7 +5,11 @@
     Private g_mStreamWriter As IO.StreamWriter
     Private g_mStreamReader As IO.StreamReader
 
-    Structure STRUC_INI_CONTENT
+    Private g_mIniContent As New Dictionary(Of String, Dictionary(Of String, String))
+    Private g_bHasLoaded As Boolean = False
+    Private g_bHasChanged As Boolean = False
+
+    Structure STRUC_INI_ITEM
         Dim sSection As String
         Dim sKey As String
         Dim sValue As String
@@ -19,177 +23,200 @@
 
     Public Sub New()
         Me.New(New IO.MemoryStream())
+
+        Load()
     End Sub
 
     Public Sub New(sContent As String)
         Me.New(New IO.MemoryStream())
 
         g_mStreamWriter.Write(sContent)
+
+        Load()
     End Sub
 
     Public Sub New(sFile As String, iMode As IO.FileMode)
         Me.New(New IO.FileStream(sFile, iMode, IO.FileAccess.ReadWrite))
+
+        Load()
     End Sub
 
     Public Sub New(mStream As IO.Stream)
         g_mStream = mStream
 
-        If (g_mStream.CanWrite) Then
+        If (mStream.CanWrite) Then
             g_mStreamWriter = New IO.StreamWriter(mStream)
             g_mStreamWriter.AutoFlush = True
         End If
 
-        If (g_mStream.CanRead) Then
+        If (mStream.CanRead) Then
             g_mStreamReader = New IO.StreamReader(mStream)
         End If
+
+        Load()
     End Sub
 
-    ''' <summary>
-    ''' Reads a key value.
-    ''' </summary>
-    ''' <param name="sFromSection">The section.</param>
-    ''' <param name="sFromKey">The key.</param>
-    ''' <returns>The value from the key, otherwise Nothing.</returns>
-    Public Function ReadKeyValue(sFromSection As String, sFromKey As String) As String
-        Try
-            For Each mContent In ReadEverything()
-                If (mContent.sSection = sFromSection AndAlso mContent.sKey = sFromKey) Then
-                    Return mContent.sValue
-                End If
-            Next
-        Catch : End Try
+    Public ReadOnly Property m_ReadOnly As Boolean
+        Get
+            Return (Not g_mStream.CanWrite)
+        End Get
+    End Property
 
-        Return Nothing
+    Public Function ReadKeyValue(sSection As String, sKey As String) As String
+        If (Not g_mIniContent.ContainsKey(sSection)) Then
+            Return Nothing
+        End If
+
+        If (Not g_mIniContent(sSection).ContainsKey(sKey)) Then
+            Return Nothing
+        End If
+
+        Return g_mIniContent(sSection)(sKey)
     End Function
 
-    ''' <summary>
-    ''' Reads a key value.
-    ''' </summary>
-    ''' <param name="sFromSection">The section.</param>
-    ''' <param name="sFromKey">The key.</param>
-    ''' <param name="sReturnIfNothing">If fails or nothing found it will return this value.</param>
-    ''' <returns>The value from the key, otherwise it will return 'sReturnIfNothing'.</returns>
-    Public Function ReadKeyValue(sFromSection As String, sFromKey As String, sReturnIfNothing As String) As String
-        Try
-            For Each mContent In ReadEverything()
-                If (mContent.sSection = sFromSection AndAlso mContent.sKey = sFromKey) Then
-                    Return mContent.sValue
-                End If
-            Next
-        Catch : End Try
+    Public Function ReadKeyValue(sSection As String, sKey As String, sReturnIfNothing As String) As String
+        If (Not g_mIniContent.ContainsKey(sSection)) Then
+            Return sReturnIfNothing
+        End If
 
-        Return sReturnIfNothing
+        If (Not g_mIniContent(sSection).ContainsKey(sKey)) Then
+            Return sReturnIfNothing
+        End If
+
+        Return g_mIniContent(sSection)(sKey)
     End Function
 
-    ''' <summary>
-    ''' Reads a key value. Instead of returning Nothing, it will throw an exeption.
-    ''' </summary>
-    ''' <param name="sFromSection">The section.</param>
-    ''' <param name="sFromKey">The key.</param>
-    ''' <returns>The value from the key, otherwise Nothing.</returns>
-    Public Function ReadKeyValueThrow(sFromSection As String, sFromKey As String) As String
-        For Each mContent In ReadEverything()
-            If (mContent.sSection = sFromSection AndAlso mContent.sKey = sFromKey) Then
-                Return mContent.sValue
-            End If
-        Next
+    Public Function ReadKeyValueThrow(sSection As String, sKey As String) As String
+        If (Not g_mIniContent.ContainsKey(sSection)) Then
+            Throw New ArgumentException("Can not find INI section")
+        End If
 
-        Throw New ArgumentException("Can't find INI section or key")
+        If (Not g_mIniContent(sSection).ContainsKey(sKey)) Then
+            Throw New ArgumentException("Can not find INI key")
+        End If
+
+        Return g_mIniContent(sSection)(sKey)
     End Function
 
-    Public Sub RemoveKeyValue(sFromSection As String, sFromKey As String)
-        WriteKeyValue({New STRUC_INI_CONTENT(sFromSection, sFromKey, Nothing)})
+    Public Sub RemoveSection(sSection As String)
+        If (Not g_mIniContent.ContainsKey(sSection)) Then
+            Return
+        End If
+
+        g_mIniContent.Remove(sSection)
+
+        g_bHasChanged = True
     End Sub
 
-    Public Sub WriteKeyValue(sFromSection As String, sFromKey As String, Optional sFromValue As String = Nothing)
-        WriteKeyValue({New STRUC_INI_CONTENT(sFromSection, sFromKey, sFromValue)})
+    Public Sub RemoveKeyValue(sSection As String, sKey As String)
+        If (Not g_mIniContent.ContainsKey(sSection)) Then
+            Return
+        End If
+
+        If (Not g_mIniContent(sSection).ContainsKey(sKey)) Then
+            Return
+        End If
+
+        g_mIniContent(sSection).Remove(sKey)
+
+        g_bHasChanged = True
     End Sub
 
-    Public Sub WriteKeyValue(mContent As STRUC_INI_CONTENT)
-        WriteKeyValue({mContent})
-    End Sub
-
-    Public Sub WriteKeyValue(mContent As STRUC_INI_CONTENT())
-        Dim lContents As New List(Of STRUC_INI_CONTENT)(ReadEverything())
-
-        For j = 0 To mContent.Length - 1
-            Dim bFoundContent As Boolean = False
-
-            While True
-                For i = 0 To lContents.Count - 1
-                    If (lContents(i).sSection = mContent(j).sSection AndAlso lContents(i).sKey = mContent(j).sKey) Then
-                        If (mContent(j).sValue Is Nothing) Then
-                            lContents.RemoveAt(i)
-                            Continue While
-                        Else
-                            lContents(i) = mContent(j)
-                            bFoundContent = True
-                        End If
-                    End If
-                Next
-
-                Exit While
-            End While
-
-            If (Not bFoundContent AndAlso mContent(j).sValue IsNot Nothing) Then
-                lContents.Add(mContent(j))
-            End If
-        Next
-
-        'Process write to file
-        Dim lSectionNames As New List(Of String)
-        For i = 0 To lContents.Count - 1
-            If (lSectionNames.Contains(lContents(i).sSection)) Then
-                Continue For
+    Public Sub WriteKeyValue(sSection As String, sKey As String, Optional sValue As String = Nothing)
+        If (sValue Is Nothing) Then
+            RemoveKeyValue(sSection, sKey)
+        Else
+            If (Not g_mIniContent.ContainsKey(sSection)) Then
+                g_mIniContent(sSection) = New Dictionary(Of String, String)
             End If
 
-            lSectionNames.Add(lContents(i).sSection)
-        Next
+            g_mIniContent(sSection)(sKey) = sValue
+        End If
 
-        'Sort items and write to file
-        Dim SB As New Text.StringBuilder
-        For Each sSection In lSectionNames
-            SB.AppendFormat("[{0}]", sSection).AppendLine()
+        g_bHasChanged = True
+    End Sub
 
-            For Each mItem In lContents
-                If (mItem.sSection = sSection) Then
-                    SB.AppendLine(mItem.sKey & "=" & mItem.sValue)
-                End If
+    Public Function GetAllItems() As STRUC_INI_ITEM()
+        Dim mTotalItems As New List(Of STRUC_INI_ITEM)
+
+        For Each mItem In g_mIniContent
+            For Each mKeys In mItem.Value
+                mTotalItems.Add(New STRUC_INI_ITEM(mItem.Key, mKeys.Key, mKeys.Value))
             Next
         Next
 
+        Return mTotalItems.ToArray
+    End Function
+
+    Public Function GetSectionNames() As String()
+        Dim sKeys As New List(Of String)
+        For Each sKey In g_mIniContent.Keys
+            sKeys.Add(sKey)
+        Next
+
+        Return sKeys.ToArray
+    End Function
+
+    Public Function GetSectionKeys(sSection As String) As KeyValuePair(Of String, String)()
+        If (Not g_mIniContent.ContainsKey(sSection)) Then
+            Return {}
+        End If
+
+        Dim mKeys As New List(Of KeyValuePair(Of String, String))
+
+        For Each mItem In g_mIniContent(sSection)
+            mKeys.Add(New KeyValuePair(Of String, String)(mItem.Key, mItem.Value))
+        Next
+
+        Return mKeys.ToArray
+    End Function
+
+    Public Sub ExportToFile(sFile As String)
+        If (Not Save(False)) Then
+            Return
+        End If
+
+        g_mStream.Seek(0, IO.SeekOrigin.Begin)
+
+        Using mFile As New IO.FileStream(sFile, IO.FileMode.OpenOrCreate, IO.FileAccess.Write, IO.FileShare.Read, 4096, IO.FileOptions.SequentialScan)
+            mFile.SetLength(0)
+
+            CopyStream(g_mStream, mFile, 1024 * 8)
+        End Using
+    End Sub
+
+    Public Function ExportToString() As String
+        If (Not Save(False)) Then
+            Return ""
+        End If
+
+        g_mStream.Seek(0, IO.SeekOrigin.Begin)
+        Return g_mStreamReader.ReadToEnd
+    End Function
+
+    Public Sub ParseFromFile(sFile As String)
+        g_mStream.Seek(0, IO.SeekOrigin.Begin)
+        g_mStream.SetLength(0)
+
+        Using mFile As New IO.FileStream(sFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.ReadWrite, 4096, IO.FileOptions.SequentialScan)
+            CopyStream(mFile, g_mStream, 1024 * 8)
+        End Using
+
+        Load()
+    End Sub
+
+    Public Sub ParseFromString(sText As String)
         g_mStreamWriter.BaseStream.Seek(0, IO.SeekOrigin.Begin)
         g_mStreamWriter.BaseStream.SetLength(0)
-        g_mStreamWriter.Write(SB.ToString)
+        g_mStreamWriter.Write(sText)
+
+        Load()
     End Sub
 
-    ''' <summary>
-    ''' Gets all section names.
-    ''' </summary>
-    ''' <returns>All section names.</returns>
-    Public Function GetSectionNames() As String()
-        Dim mContent = ReadEverything()
-
-        Dim lSectionNames As New List(Of String)
-        For i = 0 To mContent.Length - 1
-            If (lSectionNames.Contains(mContent(i).sSection)) Then
-                Continue For
-            End If
-
-            lSectionNames.Add(mContent(i).sSection)
-        Next
-
-        Return lSectionNames.ToArray
-    End Function
-
-    ''' <summary>
-    ''' Parses the ini file and reads everything.
-    ''' </summary>
-    ''' <returns></returns>
-    Public Function ReadEverything() As STRUC_INI_CONTENT()
-        Dim lContents As New List(Of STRUC_INI_CONTENT)
-
+    Private Sub Load()
         Dim sCurrentSection As String = ""
+
+        g_mIniContent.Clear()
 
         g_mStreamReader.BaseStream.Seek(0, IO.SeekOrigin.Begin)
 
@@ -207,65 +234,69 @@
             Dim sSection As String = GetSectionFromLine(sLine)
             If (sSection IsNot Nothing) Then
                 sCurrentSection = sSection
-            End If
-
-            Dim mContent As STRUC_INI_CONTENT = GetKeyAndValueFromLine(sLine)
-            If (mContent.sSection Is Nothing) Then
                 Continue While
             End If
-            mContent.sSection = sCurrentSection
 
-            lContents.Add(mContent)
+            Dim mContent = GetKeyAndValueFromLine(sLine)
+            If (mContent.Key Is Nothing OrElse mContent.Value Is Nothing) Then
+                Continue While
+            End If
+
+            If (Not g_mIniContent.ContainsKey(sCurrentSection)) Then
+                g_mIniContent(sCurrentSection) = New Dictionary(Of String, String)
+            End If
+
+            g_mIniContent(sCurrentSection)(mContent.Key) = mContent.Value
         End While
 
-        Return lContents.ToArray
-    End Function
-
-    ''' <summary>
-    ''' Exports the IO.Stream content to file.
-    ''' </summary>
-    ''' <param name="sFile"></param>
-    Public Sub ExportToFile(sFile As String)
-        g_mStream.Seek(0, IO.SeekOrigin.Begin)
-
-        Using mFile As New IO.FileStream(sFile, IO.FileMode.OpenOrCreate, IO.FileAccess.Write)
-            mFile.SetLength(0)
-
-            CopyStream(g_mStream, mFile, 1024 * 8)
-        End Using
+        g_bHasLoaded = True
+        g_bHasChanged = False
     End Sub
 
-    ''' <summary>
-    ''' Exports the IO.Stream content to string.
-    ''' </summary>
-    ''' <returns></returns>
-    Public Function ExportToString() As String
-        g_mStream.Seek(0, IO.SeekOrigin.Begin)
-        Return g_mStreamReader.ReadToEnd
-    End Function
+    Private Function Save(Optional bOnlyChanged As Boolean = True) As Boolean
+        If (Not g_bHasLoaded) Then
+            Return False
+        End If
 
-    ''' <summary>
-    ''' Parses the file content to IO.Stream.
-    ''' </summary>
-    ''' <param name="sFile"></param>
-    Public Sub ParseFromFile(sFile As String)
-        g_mStream.Seek(0, IO.SeekOrigin.Begin)
-        g_mStream.SetLength(0)
+        If (bOnlyChanged) Then
+            If (Not g_bHasChanged) Then
+                Return False
+            End If
+        End If
 
-        Using mFile As New IO.FileStream(sFile, IO.FileMode.Open, IO.FileAccess.Read)
-            CopyStream(mFile, g_mStream, 1024 * 8)
-        End Using
-    End Sub
+        Dim sContentWriter As New Text.StringBuilder
 
-    ''' <summary>
-    ''' Parses the string content to IO.Stream.
-    ''' </summary>
-    ''' <param name="sText"></param>
-    Public Sub ParseFromString(sText As String)
+        For Each mItem In g_mIniContent
+            Dim sSectionWriter As New Text.StringBuilder
+            Dim bKeysInSection As Boolean = False
+
+            sSectionWriter.AppendFormat("[{0}]", mItem.Key).AppendLine()
+
+            For Each mKeys In mItem.Value
+                If (String.IsNullOrEmpty(mKeys.Key)) Then
+                    Continue For
+                End If
+
+                If (String.IsNullOrEmpty(mKeys.Value)) Then
+                    Continue For
+                End If
+
+                sSectionWriter.AppendFormat("{0}={1}", mKeys.Key, mKeys.Value).AppendLine()
+                bKeysInSection = True
+            Next
+
+            If (bKeysInSection) Then
+                sContentWriter.Append(sSectionWriter.ToString)
+            End If
+        Next
+
         g_mStreamWriter.BaseStream.Seek(0, IO.SeekOrigin.Begin)
         g_mStreamWriter.BaseStream.SetLength(0)
-        g_mStreamWriter.Write(sText)
-    End Sub
+        g_mStreamWriter.Write(sContentWriter.ToString)
+
+        g_bHasChanged = False
+        Return True
+    End Function
 
     Private Sub CopyStream(mInput As IO.Stream, mOutput As IO.Stream, iBufferSize As Integer)
         Dim iBuffer As Byte() = New Byte(iBufferSize - 1) {}
@@ -277,11 +308,6 @@
         Loop While iBytesRead > 0
     End Sub
 
-    ''' <summary>
-    ''' Gets the section name from the current line. 
-    ''' </summary>
-    ''' <param name="sLine">The line in the ini file.</param>
-    ''' <returns>Returns the section name, otherwise nothing if not found.</returns>
     Private Function GetSectionFromLine(sLine As String) As String
         If (sLine.TrimStart.StartsWith("["c) AndAlso sLine.TrimEnd.EndsWith("]"c)) Then
             Return sLine.Trim.Trim("["c, "]"c)
@@ -290,23 +316,18 @@
         End If
     End Function
 
-    ''' <summary>
-    ''' Parses the current line into key=value.
-    ''' </summary>
-    ''' <param name="sLine">The line in the ini file.</param>
-    ''' <returns>Return the current line as STRUC_INI_CONTENT, otherwise Nothing.</returns>
-    Private Function GetKeyAndValueFromLine(sLine As String) As STRUC_INI_CONTENT
+    Private Function GetKeyAndValueFromLine(sLine As String) As KeyValuePair(Of String, String)
         sLine = sLine.Trim
 
         Dim iAssignIndex As Integer = sLine.IndexOf("="c)
         If (iAssignIndex < 0) Then
-            Return Nothing
+            Return New KeyValuePair(Of String, String)(Nothing, Nothing)
         End If
 
         Dim sKey As String = sLine.Substring(0, iAssignIndex)
         Dim sValue As String = sLine.Remove(0, iAssignIndex + 1)
 
-        Return New STRUC_INI_CONTENT("", sKey, sValue)
+        Return New KeyValuePair(Of String, String)(sKey, sValue)
     End Function
 
 #Region "IDisposable Support"
@@ -316,6 +337,10 @@
     Protected Overridable Sub Dispose(disposing As Boolean)
         If Not disposedValue Then
             If disposing Then
+                If (g_mStreamWriter IsNot Nothing) Then
+                    Save()
+                End If
+
                 ' TODO: dispose managed state (managed objects).
                 If (g_mStreamWriter IsNot Nothing) Then
                     g_mStreamWriter.Dispose()

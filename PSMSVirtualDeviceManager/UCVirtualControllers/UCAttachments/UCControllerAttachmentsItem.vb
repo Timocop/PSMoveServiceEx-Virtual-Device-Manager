@@ -746,21 +746,17 @@ Public Class UCControllerAttachmentsItem
 
                 Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_ATTACHMENT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
-                        Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.X", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Joint.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "JointYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_JointYawCorrection)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Controller.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ControllerYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerYawCorrection)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "ParentControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID.SelectedIndex)))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "OnlyJointOffset", If(g_mUCRemoteDeviceItem.g_mClassIO.m_OnlyJointOffset, "True", "False")))
-                        mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname))
-
-                        mIni.WriteKeyValue(mIniContent.ToArray)
+                        mIni.WriteKeyValue(sDevicePath, "Joint.X", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.X.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Joint.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Joint.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_JointOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "JointYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_JointYawCorrection))
+                        mIni.WriteKeyValue(sDevicePath, "Controller.X", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.X.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Controller.Y", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Y.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "Controller.Z", g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerOffset.Z.ToString(Globalization.CultureInfo.InvariantCulture))
+                        mIni.WriteKeyValue(sDevicePath, "ControllerYawCorrection", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_ControllerYawCorrection))
+                        mIni.WriteKeyValue(sDevicePath, "ParentControllerID", CStr(g_mUCRemoteDeviceItem.ComboBox_ParentControllerID.SelectedIndex))
+                        mIni.WriteKeyValue(sDevicePath, "OnlyJointOffset", If(g_mUCRemoteDeviceItem.g_mClassIO.m_OnlyJointOffset, "True", "False"))
+                        mIni.WriteKeyValue(sDevicePath, "Nickname", g_mUCRemoteDeviceItem.g_sNickname)
                     End Using
                 End Using
             End SyncLock

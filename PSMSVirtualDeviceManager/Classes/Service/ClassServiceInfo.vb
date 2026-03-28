@@ -90,11 +90,7 @@
 
             Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_SETTINGS, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                 Using mIni As New ClassIni(mStream)
-                    Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                    mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Settings", "PSMoveServiceLocation", m_FileName))
-
-                    mIni.WriteKeyValue(mIniContent.ToArray)
+                    mIni.WriteKeyValue("Settings", "PSMoveServiceLocation", m_FileName)
                 End Using
             End Using
         End SyncLock

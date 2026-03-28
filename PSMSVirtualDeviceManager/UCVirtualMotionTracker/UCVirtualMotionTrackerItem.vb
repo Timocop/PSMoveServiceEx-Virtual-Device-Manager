@@ -3725,12 +3725,8 @@ Public Class UCVirtualMotionTrackerItem
 
                     Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                         Using mIni As New ClassIni(mStream)
-                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingKeyboard", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetKeyboardKeysString())))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingController", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetControllerKeysString())))
-
-                            mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue(sDevicePath, "RecenterBindingKeyboard", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetKeyboardKeysString()))
+                            mIni.WriteKeyValue(sDevicePath, "RecenterBindingController", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetControllerKeysString()))
                         End Using
                     End Using
                 Else
@@ -3739,16 +3735,12 @@ Public Class UCVirtualMotionTrackerItem
 
                     Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                         Using mIni As New ClassIni(mStream)
-                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
+                            mIni.WriteKeyValue(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex))
+                            mIni.WriteKeyValue(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex))
+                            mIni.WriteKeyValue(sDevicePath, "HmdViewPointOffset", CStr(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset.SelectedIndex))
 
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerID", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerID.SelectedIndex)))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "VMTTrackerRole", CStr(g_mUCRemoteDeviceItem.ComboBox_VMTTrackerRole.SelectedIndex)))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "HmdViewPointOffset", CStr(g_mUCRemoteDeviceItem.ComboBox_HmdViewPointOffset.SelectedIndex)))
-
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingKeyboard", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetKeyboardKeysString())))
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT(sDevicePath, "RecenterBindingController", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetControllerKeysString())))
-
-                            mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue(sDevicePath, "RecenterBindingKeyboard", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetKeyboardKeysString()))
+                            mIni.WriteKeyValue(sDevicePath, "RecenterBindingController", CStr(g_mUCRemoteDeviceItem.g_mClassIO.m_RecenterBinding.GetControllerKeysString()))
                         End Using
                     End Using
                 End If

@@ -153,17 +153,9 @@ Public Class UCVmtTrackers
                 Using mStream As New IO.FileStream(ClassConfigConst.PATH_CONFIG_VMT, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
                     Using mIni As New ClassIni(mStream)
                         If (bIsHMD) Then
-                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("AutostartHmd", CStr(iIndex), If(mItem.Checked, "true", "false")))
-
-                            mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue("AutostartHmd", CStr(iIndex), If(mItem.Checked, "true", "false"))
                         Else
-                            Dim mIniContent As New List(Of ClassIni.STRUC_INI_CONTENT)
-
-                            mIniContent.Add(New ClassIni.STRUC_INI_CONTENT("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false")))
-
-                            mIni.WriteKeyValue(mIniContent.ToArray)
+                            mIni.WriteKeyValue("Autostart", CStr(iIndex), If(mItem.Checked, "true", "false"))
                         End If
                     End Using
                 End Using

@@ -198,16 +198,6 @@ Public Class ClassUtils
         Return mText.ToString()
     End Function
 
-    Public Shared Function CreateChecksum(sText As String, iSalt As Integer) As Integer
-        Dim iSum As Integer = iSalt
-
-        For i = 0 To sText.Length - 1
-            iSum = iSum * 101 + AscW(sText(i))
-        Next
-
-        Return iSum
-    End Function
-
     Public Shared Sub SetControlDoubleBuffering(cControl As Control, value As Boolean)
         Dim controlProperty As Reflection.PropertyInfo = GetType(Control).GetProperty("DoubleBuffered", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
         controlProperty.SetValue(cControl, value, Nothing)

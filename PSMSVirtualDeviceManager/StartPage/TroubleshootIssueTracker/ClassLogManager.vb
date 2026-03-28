@@ -14,6 +14,9 @@ Public Class ClassLogManager
     End Sub
 
     Public Sub Generate(bSilent As Boolean) Implements ILogAction.Generate
+        'Write the exception log for debugging purposes.
+        ClassAdvancedExceptionLogging.WritePoolToFile()
+
         Dim mManagerLogs As New Dictionary(Of String, String)
         mManagerLogs("VDM INI Application Exceptions") = (ClassConfigConst.PATH_LOG_APPLICATION_ERROR)
         mManagerLogs("VDM INI Settings") = (ClassConfigConst.PATH_CONFIG_SETTINGS)
