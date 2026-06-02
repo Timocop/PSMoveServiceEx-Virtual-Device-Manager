@@ -44,6 +44,7 @@ Partial Class UCVirtualTrackers
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.Timer_VideoInputDevices = New System.Windows.Forms.Timer(Me.components)
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.UcInformation_WebcamPrivacy = New PSMSVirtualDeviceManager.UCInformation()
         Me.ListView_VideoDevices = New PSMSVirtualDeviceManager.ClassListViewEx()
         Me.ColumnHeader_Id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader_TrackerId = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -108,7 +109,7 @@ Partial Class UCVirtualTrackers
         '
         Me.Panel_Devices.AutoSize = True
         Me.Panel_Devices.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel_Devices.Location = New System.Drawing.Point(0, 348)
+        Me.Panel_Devices.Location = New System.Drawing.Point(0, 345)
         Me.Panel_Devices.Margin = New System.Windows.Forms.Padding(32, 16, 32, 32)
         Me.Panel_Devices.MinimumSize = New System.Drawing.Size(0, 32)
         Me.Panel_Devices.Name = "Panel_Devices"
@@ -163,7 +164,7 @@ Partial Class UCVirtualTrackers
         Me.Panel_AvailableDevices.Location = New System.Drawing.Point(16, 101)
         Me.Panel_AvailableDevices.Margin = New System.Windows.Forms.Padding(16, 3, 16, 16)
         Me.Panel_AvailableDevices.Name = "Panel_AvailableDevices"
-        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(768, 167)
+        Me.Panel_AvailableDevices.Size = New System.Drawing.Size(768, 119)
         Me.Panel_AvailableDevices.TabIndex = 7
         '
         'ContextMenuStrip_VideoInputDevice
@@ -226,6 +227,7 @@ Partial Class UCVirtualTrackers
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.UcInformation_WebcamPrivacy)
         Me.Panel2.Controls.Add(Me.Label5)
         Me.Panel2.Controls.Add(Me.Panel_AvailableDevices)
         Me.Panel2.Controls.Add(Me.ComboBox_VirtualTrackerCount)
@@ -233,8 +235,24 @@ Partial Class UCVirtualTrackers
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 64)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(800, 284)
+        Me.Panel2.Size = New System.Drawing.Size(800, 281)
         Me.Panel2.TabIndex = 8
+        '
+        'UcInformation_WebcamPrivacy
+        '
+        Me.UcInformation_WebcamPrivacy.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UcInformation_WebcamPrivacy.BackColor = System.Drawing.Color.White
+        Me.UcInformation_WebcamPrivacy.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.UcInformation_WebcamPrivacy.Location = New System.Drawing.Point(16, 225)
+        Me.UcInformation_WebcamPrivacy.m_InfoType = PSMSVirtualDeviceManager.UCInformation.ENUM_INFO_TYPE.WARNING
+        Me.UcInformation_WebcamPrivacy.m_ReadMoreAction = Nothing
+        Me.UcInformation_WebcamPrivacy.m_ReadMoreText = "Open Windows Privacy Settings"
+        Me.UcInformation_WebcamPrivacy.m_Text = "In order to add video input devices you have to allow access to cameras in the Wi" &
+    "ndows privacy settings."
+        Me.UcInformation_WebcamPrivacy.Name = "UcInformation_WebcamPrivacy"
+        Me.UcInformation_WebcamPrivacy.Size = New System.Drawing.Size(768, 37)
+        Me.UcInformation_WebcamPrivacy.TabIndex = 8
         '
         'ListView_VideoDevices
         '
@@ -248,7 +266,7 @@ Partial Class UCVirtualTrackers
         Me.ListView_VideoDevices.Location = New System.Drawing.Point(0, 42)
         Me.ListView_VideoDevices.MultiSelect = False
         Me.ListView_VideoDevices.Name = "ListView_VideoDevices"
-        Me.ListView_VideoDevices.Size = New System.Drawing.Size(766, 123)
+        Me.ListView_VideoDevices.Size = New System.Drawing.Size(766, 75)
         Me.ListView_VideoDevices.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListView_VideoDevices.TabIndex = 1
         Me.ListView_VideoDevices.UseCompatibleStateImageBehavior = False
@@ -333,4 +351,5 @@ Partial Class UCVirtualTrackers
     Friend WithEvents ToolStripMenuItem_VideoReconnect As ToolStripMenuItem
     Friend WithEvents ColumnHeader_TrackerId As ColumnHeader
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents UcInformation_WebcamPrivacy As UCInformation
 End Class

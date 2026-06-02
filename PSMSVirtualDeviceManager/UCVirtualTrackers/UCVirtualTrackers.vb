@@ -11,6 +11,9 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.  
+
+        UcInformation_WebcamPrivacy.m_ReadMoreAction = AddressOf OpenWindowsPrivacySettings
+
         Try
             g_bIgnoreEvents = True
 
@@ -57,6 +60,13 @@
             ClassAdvancedExceptionLogging.WriteToLogMessageBox(ex)
         Finally
             g_bIgnoreEvents = False
+        End Try
+    End Sub
+
+    Private Sub OpenWindowsPrivacySettings()
+        Try
+            Process.Start("ms-settings:privacy-webcam")
+        Catch ex As Exception
         End Try
     End Sub
 
@@ -319,6 +329,10 @@
     End Sub
 
     Public Sub AddNewDevice(mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
+        If (Not ClassVideoInputDevices.GetCameraAccessAllowed()) Then
+            Throw New ArgumentException("Windows privacy settings have restricted access to video input devices! Enable access to video input devices in the Windows privacy settings.")
+        End If
+
         For Each mUCVirtualTrackerItem In GetAllDevices()
             If (mUCVirtualTrackerItem.m_DevicePath = mDeviceInfo.m_Path) Then
                 Throw New ArgumentException("Device already in the list")

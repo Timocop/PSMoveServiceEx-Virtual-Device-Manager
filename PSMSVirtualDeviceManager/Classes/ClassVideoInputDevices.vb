@@ -1,5 +1,6 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Runtime.InteropServices.ComTypes
+Imports Microsoft.Win32
 
 Public Class ClassVideoInputDevices
     Private Class FilterCategory     ' uuids.h  :  CLSID_* 
@@ -12,6 +13,32 @@ Public Class ClassVideoInputDevices
         Public Shared ReadOnly SystemDeviceEnum As Guid = New Guid(&H62BE5D10, &H60EB, &H11D0, &HBD, &H3B, &H0, &HA0, &HC9, &H11, &HCE, &H86)
     End Class
 
+    Public Shared Function GetCameraAccessAllowed() As Boolean
+        Dim mWebcamKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam", False)
+        Dim mWebcamNonPackagedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam\NonPackaged", False)
+
+        Dim sWebcamAllowed As String = TryCast(mWebcamKey.GetValue("Value", Nothing, RegistryValueOptions.None), String)
+        Dim sWebcamNonPackagedAllowed As String = TryCast(mWebcamNonPackagedKey.GetValue("Value", Nothing, RegistryValueOptions.None), String)
+
+        Dim bWebcamAllowed As Boolean = False
+        Dim bWebcamNonPackagedAllowed As Boolean = False
+
+        ' Check if Webcams are allowed in general (UWP apps + Win32 apps)
+        If (sWebcamAllowed IsNot Nothing AndAlso sWebcamAllowed = "Allow") Then
+            bWebcamAllowed = True
+        Else
+            bWebcamAllowed = False
+        End If
+
+        ' Check if webcams are allowed for Win32 apps
+        If (sWebcamNonPackagedAllowed IsNot Nothing AndAlso sWebcamNonPackagedAllowed = "Allow") Then
+            bWebcamNonPackagedAllowed = True
+        Else
+            bWebcamNonPackagedAllowed = False
+        End If
+
+        Return (bWebcamAllowed AndAlso bWebcamNonPackagedAllowed)
+    End Function
 
     Public Shared Function GetDevicesOfVideoInput(ByRef mDeviceList As List(Of ClassDeviceInfo)) As Boolean
         Return GetDevicesOfVideoInputInternal(FilterCategory.VideoInputDevice, mDeviceList)

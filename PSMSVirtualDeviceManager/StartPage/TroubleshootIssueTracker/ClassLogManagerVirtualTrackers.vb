@@ -1,4 +1,5 @@
-﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
+﻿Imports Microsoft.Win32
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 Imports PSMSVirtualDeviceManager.UCVirtualTrackerItem.ClassCaptureLogic
 
 Public Class ClassLogManagerVirtualTrackers
@@ -17,6 +18,13 @@ Public Class ClassLogManagerVirtualTrackers
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_OPTIMAL_CODEC As String = "Virtual tracker set optimal codec"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_BAD_FPS As String = "Virtual tracker bad framerate"
     Public Shared ReadOnly LOG_ISSUE_VIRTUAL_TRACKER_AUTO_SETTINGS As String = "Video input device properties set manually"
+    Public Shared ReadOnly LOG_ISSUE_PRIVACY_WEBCAM_DISABLED As String = "Video input device access denied by Windows privacy settings"
+
+    Structure STRUC_GENERIC_ITEM
+        Dim bPrivacyWebcamAllowed As Boolean
+
+        Dim bIsValid As Boolean
+    End Structure
 
     Structure STRUC_DEVICE_ITEM
         Dim sPath As String
@@ -57,6 +65,15 @@ Public Class ClassLogManagerVirtualTrackers
 
         ' Not thread-safe
         ClassUtils.SyncInvoke(Sub()
+
+                                  sTrackersList.Append("[Generic]").AppendLine()
+                                  ' Check if Webcams are allowed in general (UWP apps + Win32 apps)
+                                  If (ClassVideoInputDevices.GetCameraAccessAllowed()) Then
+                                      sTrackersList.AppendFormat("PrivacyWebcamAllowed={0}", "true").AppendLine()
+                                  Else
+                                      sTrackersList.AppendFormat("PrivacyWebcamAllowed={0}", "false").AppendLine()
+                                  End If
+
                                   Dim mTrackers = g_mFormMain.g_mUCVirtualTrackers.GetAllDevices()
                                   For Each mItem In mTrackers
                                       sTrackersList.AppendFormat("[{0}]", mItem.m_DevicePath).AppendLine()
@@ -102,6 +119,7 @@ Public Class ClassLogManagerVirtualTrackers
         mIssues.AddRange(CheckCodec())
         mIssues.AddRange(CheckFps())
         mIssues.AddRange(CheckAutoDetectSettings())
+        mIssues.AddRange(CheckWebcamPrivacySettings())
         Return mIssues.ToArray
     End Function
 
@@ -470,6 +488,101 @@ Public Class ClassLogManagerVirtualTrackers
         Return mIssues.ToArray
     End Function
 
+    Public Function CheckWebcamPrivacySettings() As STRUC_LOG_ISSUE()
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return {}
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_PRIVACY_WEBCAM_DISABLED,
+            "Windows privacy settings restricted access to Webcams for apps. You will be unable to add video input devices while this restriction is active.",
+            "Enable Webcam access for apps in the Windows privacy settings.",
+            ENUM_LOG_ISSUE_TYPE.INFO
+        )
+
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim bIsUsingVirtualTracker As Boolean = False
+
+        Dim mServiceLog As New ClassLogService(g_mFormMain, g_ClassLogContent)
+        Dim mServiceConfig = mServiceLog.FindConfigFromSerial("TrackerManagerConfig")
+        If (mServiceConfig IsNot Nothing) Then
+            Dim sServiceCount As String = mServiceConfig.GetValue("", "virtual_tracker_count", "")
+
+            If (Not String.IsNullOrEmpty(sServiceCount)) Then
+                Dim iServiceCount As Integer = CInt(sServiceCount)
+                If (iServiceCount > 0) Then
+                    bIsUsingVirtualTracker = True
+                End If
+            End If
+        End If
+
+        Dim mGenericConfig = GetGenericConfig()
+        If (Not mGenericConfig.bIsValid) Then
+            Return {}
+        End If
+
+        If (Not mGenericConfig.bPrivacyWebcamAllowed) Then
+            Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
+
+            If (bIsUsingVirtualTracker) Then
+                mIssue.iType = ENUM_LOG_ISSUE_TYPE.ERROR
+            Else
+                mIssue.iType = ENUM_LOG_ISSUE_TYPE.WARNING
+            End If
+
+            mIssues.Add(mIssue)
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
+
+    Public Function GetGenericConfig() As STRUC_GENERIC_ITEM
+        Dim mGenericIssue As New STRUC_GENERIC_ITEM
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return mGenericIssue
+        End If
+
+        Dim mConfigProp As New Dictionary(Of String, String)
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = sLines.Length - 1 To 0 Step -1
+            Dim sLine As String = sLines(i).Trim
+
+            If (sLine.StartsWith("["c) AndAlso sLine.EndsWith("]"c)) Then
+                Dim sConfigItem As String = sLine.Substring(1, sLine.Length - 2)
+
+                If (sConfigItem = "Generic") Then
+                    mGenericIssue.bIsValid = True
+
+                    ' Optional 
+                    If (mConfigProp.ContainsKey("PrivacyWebcamAllowed")) Then
+                        mGenericIssue.bPrivacyWebcamAllowed = (mConfigProp("PrivacyWebcamAllowed").ToLowerInvariant = "true")
+                    Else
+                        ' Older log, just assume its true
+                        mGenericIssue.bPrivacyWebcamAllowed = True
+                    End If
+                End If
+
+                mConfigProp.Clear()
+            End If
+
+            If (sLine.Contains("="c)) Then
+                Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
+                Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
+
+                mConfigProp(sKey) = sValue
+            End If
+        Next
+
+        Return mGenericIssue
+    End Function
+
+
     Public Function GetDevices() As STRUC_DEVICE_ITEM()
         Dim sContent As String = GetSectionContent()
         If (sContent Is Nothing) Then
@@ -477,7 +590,7 @@ Public Class ClassLogManagerVirtualTrackers
         End If
 
         Dim mDeviceList As New List(Of STRUC_DEVICE_ITEM)
-        Dim mDevoceProp As New Dictionary(Of String, String)
+        Dim mDeviceProp As New Dictionary(Of String, String)
 
         Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
         For i = sLines.Length - 1 To 0 Step -1
@@ -486,126 +599,128 @@ Public Class ClassLogManagerVirtualTrackers
             If (sLine.StartsWith("[") AndAlso sLine.EndsWith("]"c)) Then
                 Dim sDevicePath As String = sLine.Substring(1, sLine.Length - 2)
 
-                Dim mNewDevice As New STRUC_DEVICE_ITEM
+                If (sDevicePath <> "Generic") Then
+                    Dim mNewDevice As New STRUC_DEVICE_ITEM
 
-                mNewDevice.sPath = sDevicePath
+                    mNewDevice.sPath = sDevicePath
 
-                ' Required
-                While True
-                    If (mDevoceProp.ContainsKey("DeviceIndex")) Then
-                        mNewDevice.iDeviceIndex = CInt(mDevoceProp("DeviceIndex"))
-                    Else
+                    ' Required
+                    While True
+                        If (mDeviceProp.ContainsKey("DeviceIndex")) Then
+                            mNewDevice.iDeviceIndex = CInt(mDeviceProp("DeviceIndex"))
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("PipePrimaryIndex")) Then
+                            mNewDevice.iPipePrimaryIndex = CInt(mDeviceProp("PipePrimaryIndex"))
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("PipeSecondaryIndex")) Then
+                            mNewDevice.iPipeSecondaryIndex = CInt(mDeviceProp("PipeSecondaryIndex"))
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("CameraFramerate")) Then
+                            mNewDevice.iCameraFramerate = CInt(mDeviceProp("CameraFramerate"))
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("CameraResolution")) Then
+                            mNewDevice.iCameraResolution = CType(CInt(mDeviceProp("CameraResolution")), ENUM_RESOLUTION)
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("FlipImage")) Then
+                            mNewDevice.bFlipImage = (mDeviceProp("FlipImage").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("ImageInterpolation")) Then
+                            mNewDevice.iImageInterpolation = CType(CInt(mDeviceProp("ImageInterpolation")), ENUM_INTERPOLATION)
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("Initialized")) Then
+                            mNewDevice.bInitialized = (mDeviceProp("Initialized").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("IsPlayStationCamera")) Then
+                            mNewDevice.bIsPlayStationCamera = (mDeviceProp("IsPlayStationCamera").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("PipeConnected")) Then
+                            mNewDevice.bPipeConnected = (mDeviceProp("PipeConnected").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("Supersampling")) Then
+                            mNewDevice.bSupersampling = (mDeviceProp("Supersampling").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("UseMJPG")) Then
+                            mNewDevice.bUseMJPG = (mDeviceProp("UseMJPG").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("HasStatusError")) Then
+                            mNewDevice.bHasStatusError = (mDeviceProp("HasStatusError").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("HasStatusErrorMessage")) Then
+                            mNewDevice.sHasStatusErrorMessage = mDeviceProp("HasStatusErrorMessage")
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("FpsCaptureCounter")) Then
+                            mNewDevice.iFpsCaptureCounter = CInt(mDeviceProp("FpsCaptureCounter"))
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("FpsPipeCounter")) Then
+                            mNewDevice.iFpsPipeCounter = CInt(mDeviceProp("FpsPipeCounter"))
+                        Else
+                            Exit While
+                        End If
+
+                        If (mDeviceProp.ContainsKey("AutoDetectSettings")) Then
+                            mNewDevice.bAutoDetectSettings = (mDeviceProp("AutoDetectSettings").ToLowerInvariant = "true")
+                        Else
+                            Exit While
+                        End If
+
+                        mDeviceList.Add(mNewDevice)
                         Exit While
-                    End If
+                    End While
+                End If
 
-                    If (mDevoceProp.ContainsKey("PipePrimaryIndex")) Then
-                        mNewDevice.iPipePrimaryIndex = CInt(mDevoceProp("PipePrimaryIndex"))
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("PipeSecondaryIndex")) Then
-                        mNewDevice.iPipeSecondaryIndex = CInt(mDevoceProp("PipeSecondaryIndex"))
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("CameraFramerate")) Then
-                        mNewDevice.iCameraFramerate = CInt(mDevoceProp("CameraFramerate"))
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("CameraResolution")) Then
-                        mNewDevice.iCameraResolution = CType(CInt(mDevoceProp("CameraResolution")), ENUM_RESOLUTION)
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("FlipImage")) Then
-                        mNewDevice.bFlipImage = (mDevoceProp("FlipImage").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("ImageInterpolation")) Then
-                        mNewDevice.iImageInterpolation = CType(CInt(mDevoceProp("ImageInterpolation")), ENUM_INTERPOLATION)
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("Initialized")) Then
-                        mNewDevice.bInitialized = (mDevoceProp("Initialized").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("IsPlayStationCamera")) Then
-                        mNewDevice.bIsPlayStationCamera = (mDevoceProp("IsPlayStationCamera").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("PipeConnected")) Then
-                        mNewDevice.bPipeConnected = (mDevoceProp("PipeConnected").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("Supersampling")) Then
-                        mNewDevice.bSupersampling = (mDevoceProp("Supersampling").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("UseMJPG")) Then
-                        mNewDevice.bUseMJPG = (mDevoceProp("UseMJPG").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("HasStatusError")) Then
-                        mNewDevice.bHasStatusError = (mDevoceProp("HasStatusError").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("HasStatusErrorMessage")) Then
-                        mNewDevice.sHasStatusErrorMessage = mDevoceProp("HasStatusErrorMessage")
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("FpsCaptureCounter")) Then
-                        mNewDevice.iFpsCaptureCounter = CInt(mDevoceProp("FpsCaptureCounter"))
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("FpsPipeCounter")) Then
-                        mNewDevice.iFpsPipeCounter = CInt(mDevoceProp("FpsPipeCounter"))
-                    Else
-                        Exit While
-                    End If
-
-                    If (mDevoceProp.ContainsKey("AutoDetectSettings")) Then
-                        mNewDevice.bAutoDetectSettings = (mDevoceProp("AutoDetectSettings").ToLowerInvariant = "true")
-                    Else
-                        Exit While
-                    End If
-
-                    mDeviceList.Add(mNewDevice)
-                    Exit While
-                End While
-
-                mDevoceProp.Clear()
+                mDeviceProp.Clear()
             End If
 
             If (sLine.Contains("="c)) Then
                 Dim sKey As String = sLine.Substring(0, sLine.IndexOf("="c))
                 Dim sValue As String = sLine.Remove(0, sLine.IndexOf("="c) + 1)
 
-                mDevoceProp(sKey) = sValue
+                mDeviceProp(sKey) = sValue
             End If
         Next
 
