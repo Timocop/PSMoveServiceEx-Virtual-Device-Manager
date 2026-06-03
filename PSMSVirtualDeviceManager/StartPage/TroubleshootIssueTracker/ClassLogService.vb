@@ -21,6 +21,7 @@ Public Class ClassLogService
     Public Shared ReadOnly LOG_ISSUE_DEVICE_TIMEOUT As String = "Device timed out"
     Public Shared ReadOnly LOG_ISSUE_SERVICE_LOG_INCOMPLETE As String = "PSMoveServiceEx log incomplete"
     Public Shared ReadOnly LOG_ISSUE_DEVICE_BAD_TRACKING As String = "Bad device tracking deviations"
+    Public Shared ReadOnly LOG_ISSUE_CONFIG_CORRUPTION As String = "PSMoveServiceEx configuration corrupted"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
@@ -127,6 +128,7 @@ Public Class ClassLogService
         mIssues.AddRange(CheckDeviceTimeout())
         mIssues.AddRange(CheckIncomplete())
         mIssues.AddRange(CheckBadDeviations())
+        mIssues.AddRange(CheckServiceConfigCorruption())
         Return mIssues.ToArray
     End Function
 
@@ -954,6 +956,44 @@ Public Class ClassLogService
                 Dim mNewIssue As New STRUC_LOG_ISSUE(mWarnTemplate)
                 mNewIssue.sDescription = String.Format(mNewIssue.sDescription, sDeviceType, iDeviceId, iTrackerId, iTotalBadCount)
                 mIssues.Add(mNewIssue)
+            End If
+        Next
+
+        Return mIssues.ToArray
+    End Function
+
+    Public Function CheckServiceConfigCorruption() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_CONFIG_CORRUPTION,
+            "A service configuration file ({0}) got corrupted and is unable to get parsed by PSMoveServiceEx.",
+            "Factory Reset PSMoveServiceEx or delete the shown configuration file to fix the configuration. Do not shut down your computer while PSMoveServiceEx is running to avoid configuration corruption.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim sLines As String() = sContent.Split(New String() {vbNewLine, vbLf}, 0)
+        For i = 0 To sLines.Length - 1
+            Dim sLine As String = sLines(i)
+
+            If (Not sLine.StartsWith("[")) Then
+                Continue For
+            End If
+
+            If (sLine.Contains("EXCEPTION - PSMoveServiceEx")) Then
+                Dim mMatch As Match = Regex.Match(sLine, "EXCEPTION \- PSMoveServiceEx \- (?<File>(.*?)\.json)\([0-9]+\)\: expected value", RegexOptions.IgnoreCase)
+                If (mMatch.Success) Then
+                    Dim sConfigFile As String = mMatch.Groups("File").Value
+
+                    Dim mNewIssue As New STRUC_LOG_ISSUE(mTemplate)
+                    mNewIssue.sDescription = String.Format(mTemplate.sDescription, sConfigFile)
+                    mIssues.Add(mNewIssue)
+                End If
             End If
         Next
 
