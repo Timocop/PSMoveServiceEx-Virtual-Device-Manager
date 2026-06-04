@@ -1,4 +1,5 @@
-﻿Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
+﻿Imports System.Text.RegularExpressions
+Imports PSMSVirtualDeviceManager.ClassLogDiagnostics
 
 Public Class ClassLogDxdiag
     Implements ILogAction
@@ -9,6 +10,7 @@ Public Class ClassLogDxdiag
     Public Shared ReadOnly LOG_ISSUE_BLUETOOTH_BANDWIDTH_DEVICES As String = "Possible Bluetooth bandwidth issues"
     Public Shared ReadOnly LOG_ISSUE_NOT_ENOUGH_USB_HOST_CONTROLLERS As String = "Not enough USB 3.0 Host Controllers"
     Public Shared ReadOnly LOG_ISSUE_USB_HOST_CONTROLLER As String = "USB 3.0 Host Controller"
+    Public Shared ReadOnly LOG_ISSUE_MIN_SYSTEM_REQUIREMENT As String = "Minimum system requirements not met"
 
     Private g_mFormMain As FormMain
     Private g_ClassLogContent As ClassLogContent
@@ -69,6 +71,7 @@ Public Class ClassLogDxdiag
         mIssues.AddRange(CheckEmpty())
         mIssues.AddRange(CheckMultipleBluetoothDevices())
         mIssues.AddRange(CheckMultipleUsbControllers())
+        mIssues.AddRange(CheckMinimalRequirements())
         Return mIssues.ToArray
     End Function
 
@@ -206,6 +209,64 @@ Public Class ClassLogDxdiag
         Next
 
         If (iUsbHostCount < 2) Then
+            mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
+        End If
+
+        Return mIssues.ToArray
+    End Function
+
+    Private Function CheckMinimalRequirements() As STRUC_LOG_ISSUE()
+        Dim mIssues As New List(Of STRUC_LOG_ISSUE)
+
+        Dim sContent As String = GetSectionContent()
+        If (sContent Is Nothing) Then
+            Return mIssues.ToArray
+        End If
+
+        Dim mTemplate As New STRUC_LOG_ISSUE(
+            LOG_ISSUE_MIN_SYSTEM_REQUIREMENT,
+            "This computer does not meet the recommended system requirements to run PSMoveServiceEx smoothly.",
+            "It is time to upgrade.",
+            ENUM_LOG_ISSUE_TYPE.ERROR
+        )
+
+        Dim sLine As String = ""
+        Dim iFoundCpuCore As Integer = -1
+        Dim iFoundMemorySize As Integer = -1
+
+        Dim mHostControllers As New List(Of String)
+
+        Dim sLines As String() = FindSection("System Information", sContent)
+        If (sLines Is Nothing OrElse sLines.Length < 1) Then
+            Return mIssues.ToArray
+        End If
+
+        For i = sLines.Length - 1 To 0 Step -1
+            If (sLines(i).TrimStart.StartsWith("Processor:")) Then
+                sLine = sLines(i).Trim
+
+                Dim mCpuMatch As Match = Regex.Match(sLine, "Processor\: (.*?) \((?<Cores>[0-9]+) CPUs\)\,", RegexOptions.IgnoreCase)
+                If (mCpuMatch.Success) Then
+                    iFoundCpuCore = CInt(mCpuMatch.Groups("Cores").Value)
+                End If
+
+                sLine = ""
+            End If
+
+            If (sLines(i).TrimStart.StartsWith("Available OS Memory:")) Then
+                sLine = sLines(i).Trim
+
+                Dim mMemoryMatch As Match = Regex.Match(sLine, "Available OS Memory\: (?<Memory>([0-9]+))MB RAM", RegexOptions.IgnoreCase)
+                If (mMemoryMatch.Success) Then
+                    iFoundMemorySize = CInt(mMemoryMatch.Groups("Memory").Value)
+                End If
+
+                sLine = ""
+            End If
+        Next
+
+        If ((iFoundCpuCore > -1 AndAlso iFoundCpuCore < 4) OrElse
+            (iFoundMemorySize > -1 AndAlso iFoundMemorySize < (4 * 1024))) Then
             mIssues.Add(New STRUC_LOG_ISSUE(mTemplate))
         End If
 
