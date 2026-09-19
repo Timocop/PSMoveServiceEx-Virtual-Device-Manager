@@ -496,9 +496,9 @@ Public Class ClassLogManagerVirtualTrackers
 
         Dim mTemplate As New STRUC_LOG_ISSUE(
             LOG_ISSUE_PRIVACY_WEBCAM_DISABLED,
-            "Windows privacy settings restricted access to Webcams for apps. You will be unable to add video input devices while this restriction is active.",
+            "Windows privacy settings may restricted apps to access Webcams. Check your Windows privacy settings.",
             "Enable Webcam access for apps in the Windows privacy settings.",
-            ENUM_LOG_ISSUE_TYPE.INFO
+            ENUM_LOG_ISSUE_TYPE.WARNING
         )
 
         Dim mIssues As New List(Of STRUC_LOG_ISSUE)
@@ -525,12 +525,6 @@ Public Class ClassLogManagerVirtualTrackers
 
         If (Not mGenericConfig.bPrivacyWebcamAllowed) Then
             Dim mIssue As New STRUC_LOG_ISSUE(mTemplate)
-
-            If (bIsUsingVirtualTracker) Then
-                mIssue.iType = ENUM_LOG_ISSUE_TYPE.ERROR
-            Else
-                mIssue.iType = ENUM_LOG_ISSUE_TYPE.WARNING
-            End If
 
             mIssues.Add(mIssue)
         End If

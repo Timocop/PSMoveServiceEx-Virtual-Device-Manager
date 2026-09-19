@@ -329,9 +329,10 @@
     End Sub
 
     Public Sub AddNewDevice(mDeviceInfo As ClassVideoInputDevices.ClassDeviceInfo)
-        If (Not ClassVideoInputDevices.GetCameraAccessAllowed()) Then
-            Throw New ArgumentException("Windows privacy settings have restricted access to video input devices! Enable access to video input devices in the Windows privacy settings.")
-        End If
+        ' $TODO Does not work properly.
+        'If (Not ClassVideoInputDevices.GetCameraAccessAllowed()) Then
+        '    Throw New ArgumentException("Windows privacy settings have restricted access to video input devices! Enable access to video input devices in the Windows privacy settings.")
+        'End If
 
         For Each mUCVirtualTrackerItem In GetAllDevices()
             If (mUCVirtualTrackerItem.m_DevicePath = mDeviceInfo.m_Path) Then
